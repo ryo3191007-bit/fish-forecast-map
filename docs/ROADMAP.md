@@ -1,53 +1,53 @@
-# Roadmap
+# ロードマップ
 
-## Phase 0: Project bootstrap
+## Phase 0: プロジェクト初期化
 
-- Create repository.
-- Set up GitHub/Codex workflow.
-- Add README, AGENTS.md, and docs.
-- Create first implementation Issue.
+- GitHubリポジトリを作成する。
+- GitHub/Codex連携の作業フローを整える。
+- README、AGENTS.md、docs配下の初期ドキュメントを作成する。
+- 最初の実装Issueを作成する。
 
-## Phase 1: MVP application shell
+## Phase 1: MVPアプリの土台作成
 
-- Create Next.js + TypeScript project.
-- Add basic layout and navigation.
-- Add mock domain types and sample data.
-- Add basic CI.
+- Next.js + TypeScriptプロジェクトを作成する。
+- 基本レイアウトとナビゲーションを追加する。
+- ドメイン型とサンプルデータを追加する。
+- 基本CIを追加する。
 
-## Phase 2: Fishing reports UI
+## Phase 2: 釣果情報UI
 
-- Fishing report list.
-- Fishing report cards.
-- Fishing report registration form using local/mock state.
-- Species filter.
+- 釣果情報一覧を作成する。
+- 釣果情報カードを作成する。
+- モックデータ/ローカル状態を使った釣果登録フォームを作成する。
+- 魚種フィルタを追加する。
 
-## Phase 3: Map UI
+## Phase 3: 地図UI
 
-- 2D map view.
-- Mock markers for fishing reports.
-- Marker popup/card.
-- Filter integration.
+- 2D地図画面を作成する。
+- モック釣果地点のマーカーを表示する。
+- マーカーのポップアップ/カードを表示する。
+- フィルタと地図表示を連動させる。
 
-## Phase 4: Forecast score v1
+## Phase 4: 釣れそう度スコア v1
 
-- Rule-based reference score.
-- Score explanation text.
-- Disclaimer display.
+- ルールベースの参考スコアを実装する。
+- スコアの理由を表示する。
+- 注意書きを表示する。
 
-## Phase 5: Supabase planning and integration
+## Phase 5: Supabase設計・連携
 
-- Database schema.
-- Read/write reports.
-- Optional authentication.
+- データベーススキーマを設計する。
+- 釣果情報の読み書きを実装する。
+- 必要に応じて認証を追加する。
 
-## Phase 6: External data planning
+## Phase 6: 外部データ利用の検討
 
-- Define legal ingestion policy per source.
-- Start with manual URL/text extraction.
-- Prefer RSS, official APIs, or permission-based sources.
+- 情報源ごとの法務・利用条件を整理する。
+- 最初は手動URL/本文からの抽出を検討する。
+- RSS、公式API、許可を得た情報源を優先する。
 
-## Phase 7: Advanced map and seafloor visualization
+## Phase 7: 高度な地図・海底地形表示
 
-- Depth/bathymetry layer.
-- Optional 3D seafloor visualization.
-- Performance optimization.
+- 水深/海底地形レイヤーを追加する。
+- 任意で3D海底地形表示を追加する。
+- 描画性能を最適化する。
