@@ -35,11 +35,7 @@ export function FishingMap({ reports }: FishingMapProps) {
     const markers = reports.map((report) => {
       const marker = new maplibregl.Marker({ color: scoreColor(report.forecast.score) })
         .setLngLat([report.longitude, report.latitude])
-        .setPopup(
-          new maplibregl.Popup({ offset: 16 }).setHTML(
-            `<strong>${report.spotName}</strong><br />${report.species} / ${report.forecast.score}点<br />${report.forecast.reasons[0]}`,
-          ),
-        )
+        .setPopup(new maplibregl.Popup({ offset: 16 }).setDOMContent(createPopupContent(report)))
         .addTo(map);
       return marker;
     });
@@ -48,6 +44,22 @@ export function FishingMap({ reports }: FishingMapProps) {
   }, [reports]);
 
   return <div ref={containerRef} className="map" aria-label="釣果地点マップ" />;
+}
+
+function createPopupContent(report: FishingReport) {
+  const popup = document.createElement("div");
+
+  const spotName = document.createElement("strong");
+  spotName.textContent = report.spotName;
+
+  const summary = document.createElement("div");
+  summary.textContent = `${report.species} / ${report.forecast.score}点`;
+
+  const reason = document.createElement("div");
+  reason.textContent = report.forecast.reasons[0] ?? "";
+
+  popup.append(spotName, summary, reason);
+  return popup;
 }
 
 function scoreColor(score: number) {
