@@ -1,8 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import { fishSpeciesNames, type FishSpeciesName } from "@/domain/fishing";
+import type { FishingEnvironment } from "@/domain/environment";
+import { fetchFishingEnvironment } from "@/services/openMeteo";
+import { EnvironmentPanel } from "./EnvironmentPanel";
 import { FishingMap } from "./FishingMap";
 
 const disclaimer = "釣れそう度は、取得可能な釣果情報と簡易ルールに基づく参考情報です。実際の釣果を保証するものではありません。";
@@ -20,6 +23,10 @@ export function FishingDashboard() {
   const [selectedArea, setSelectedArea] = useState<string | "all">("all");
   const [selectedSort, setSelectedSort] = useState<SortOption>("scoreDesc");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [environment, setEnvironment] = useState<FishingEnvironment | null>(null);
+  const [environmentError, setEnvironmentError] = useState<string | null>(null);
+  const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(false);
+  const environmentCacheRef = useRef(new Map<string, FishingEnvironment>());
   const speciesCounts = useMemo(() => {
     return fishSpeciesNames.map((species) => ({
       species,
@@ -60,6 +67,53 @@ export function FishingDashboard() {
       return Date.parse(a.reportDate) - Date.parse(b.reportDate);
     });
   }, [normalizedKeyword, selectedArea, selectedSort, selectedSpecies]);
+
+  const representativeReport = reports[0];
+
+  useEffect(() => {
+    if (!representativeReport) {
+      setEnvironment(null);
+      setEnvironmentError(null);
+      setIsEnvironmentLoading(false);
+      return;
+    }
+
+    const cacheKey = `${representativeReport.latitude},${representativeReport.longitude}`;
+    const cachedEnvironment = environmentCacheRef.current.get(cacheKey);
+    if (cachedEnvironment) {
+      setEnvironment(cachedEnvironment);
+      setEnvironmentError(null);
+      setIsEnvironmentLoading(false);
+      return;
+    }
+
+    const abortController = new AbortController();
+    setIsEnvironmentLoading(true);
+    setEnvironmentError(null);
+
+    fetchFishingEnvironment(
+      {
+        spotName: representativeReport.spotName,
+        latitude: representativeReport.latitude,
+        longitude: representativeReport.longitude,
+      },
+      abortController.signal,
+    )
+      .then((nextEnvironment) => {
+        environmentCacheRef.current.set(cacheKey, nextEnvironment);
+        setEnvironment(nextEnvironment);
+      })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setEnvironment(null);
+        setEnvironmentError("Open-Meteoから環境データを取得できませんでした。");
+      })
+      .finally(() => {
+        if (!abortController.signal.aborted) setIsEnvironmentLoading(false);
+      });
+
+    return () => abortController.abort();
+  }, [representativeReport]);
 
   const speciesLabel = selectedSpecies === "all" ? "すべての魚種" : selectedSpecies;
   const areaLabel = selectedArea === "all" ? "すべてのエリア" : selectedArea;
@@ -198,8 +252,16 @@ export function FishingDashboard() {
         </div>
       </div>
 
-      <div className="mapSection">
-        <FishingMap reports={reports} />
+      <div className="mapEnvironmentGrid">
+        <div className="mapSection">
+          <FishingMap reports={reports} />
+        </div>
+        <EnvironmentPanel
+          report={representativeReport}
+          environment={environment}
+          isLoading={isEnvironmentLoading}
+          error={environmentError}
+        />
       </div>
 
       <p className="notice">{disclaimer}</p>

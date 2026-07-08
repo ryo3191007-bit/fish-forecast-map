@@ -10,6 +10,7 @@ type FishingMapProps = { reports: FishingReport[] };
 export function FishingMap({ reports }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const hasAdjustedBoundsRef = useRef(false);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -20,7 +21,9 @@ export function FishingMap({ reports }: FishingMapProps) {
       center: [129.95, 33.48],
       zoom: 8.2,
     });
-    mapRef.current.addControl(new maplibregl.NavigationControl({ showCompass: false }));
+    mapRef.current.addControl(
+      new maplibregl.NavigationControl({ showCompass: false }),
+    );
 
     return () => {
       mapRef.current?.remove();
@@ -30,12 +33,39 @@ export function FishingMap({ reports }: FishingMapProps) {
 
   useEffect(() => {
     const map = mapRef.current;
+    if (!map || reports.length === 0) return;
+
+    const adjustMapBounds = () => {
+      fitMapToReports(map, reports, hasAdjustedBoundsRef.current);
+      hasAdjustedBoundsRef.current = true;
+    };
+
+    if (map.loaded()) {
+      adjustMapBounds();
+      return;
+    }
+
+    map.once("load", adjustMapBounds);
+
+    return () => {
+      map.off("load", adjustMapBounds);
+    };
+  }, [reports]);
+
+  useEffect(() => {
+    const map = mapRef.current;
     if (!map) return;
 
     const markers = reports.map((report) => {
-      const marker = new maplibregl.Marker({ color: scoreColor(report.forecast.score) })
+      const marker = new maplibregl.Marker({
+        color: scoreColor(report.forecast.score),
+      })
         .setLngLat([report.longitude, report.latitude])
-        .setPopup(new maplibregl.Popup({ offset: 16 }).setDOMContent(createPopupContent(report)))
+        .setPopup(
+          new maplibregl.Popup({ offset: 16 }).setDOMContent(
+            createPopupContent(report),
+          ),
+        )
         .addTo(map);
       return marker;
     });
@@ -95,4 +125,44 @@ function scoreColor(score: number) {
   if (score >= 70) return "#f97316";
   if (score >= 60) return "#0ea5e9";
   return "#64748b";
+}
+
+function fitMapToReports(
+  map: maplibregl.Map,
+  reports: FishingReport[],
+  hasAdjustedBounds: boolean,
+) {
+  if (reports.length === 1) {
+    const [report] = reports;
+    map.easeTo({
+      center: [report.longitude, report.latitude],
+      zoom: Math.min(Math.max(map.getZoom(), 12.5), 13),
+      duration: hasAdjustedBounds ? 700 : 0,
+      essential: true,
+    });
+    return;
+  }
+
+  const bounds = reports.reduce(
+    (nextBounds, report) => {
+      return nextBounds.extend([report.longitude, report.latitude]);
+    },
+    new maplibregl.LngLatBounds(
+      [reports[0].longitude, reports[0].latitude],
+      [reports[0].longitude, reports[0].latitude],
+    ),
+  );
+
+  const containerWidth = map.getContainer().clientWidth;
+  const padding =
+    containerWidth < 640
+      ? { top: 56, bottom: 56, left: 32, right: 32 }
+      : { top: 72, bottom: 72, left: 88, right: 88 };
+
+  map.fitBounds(bounds, {
+    padding,
+    maxZoom: hasAdjustedBounds ? 12 : 10.5,
+    duration: hasAdjustedBounds ? 700 : 0,
+    essential: true,
+  });
 }
