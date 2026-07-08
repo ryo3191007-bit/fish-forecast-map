@@ -1,47 +1,47 @@
-# Architecture
+# アーキテクチャ
 
-## Initial architecture
+## 初期アーキテクチャ
 
-MVP v0.1 should be implemented as a frontend-first web application using mock data.
+MVP v0.1は、モックデータを利用するフロントエンド中心のWebアプリとして実装します。
 
-Recommended stack:
+推奨構成は以下です。
 
-- Frontend: Next.js + TypeScript.
-- Styling: Tailwind CSS or simple CSS modules.
-- Map: MapLibre GL JS or Leaflet.
-- Data: local mock data first.
-- CI: GitHub Actions for install, lint, typecheck, and build.
+- フロントエンド: Next.js + TypeScript。
+- スタイリング: Tailwind CSS またはシンプルな CSS Modules。
+- 地図: 初期実装では MapLibre GL JS または Leaflet。
+- データ: まずはローカルのモックデータ。
+- CI: GitHub Actionsで install、lint、typecheck、buildを確認。
 
-## Planned stages
+## 段階的な構成
 
-### Stage 1: Mock-data MVP
+### Stage 1: モックデータMVP
 
-- Static/mock fishing reports.
-- Map markers.
-- Species filter.
-- Rule-based score.
-- No database.
-- No external scraping.
+- 静的/モックの釣果情報。
+- 地図マーカー表示。
+- 魚種フィルタ。
+- ルールベースの釣れそう度スコア。
+- データベースなし。
+- 外部スクレイピングなし。
 
-### Stage 2: Database persistence
+### Stage 2: データ永続化
 
-- Supabase/PostgreSQL.
-- Tables for fishing reports, fish species, fishing spots, sources, and forecast scores.
-- Optional authentication later.
+- Supabase/PostgreSQLを導入。
+- 釣果情報、魚種、釣り場、出典、予測スコア用のテーブルを作成。
+- 必要に応じて後から認証機能を追加。
 
-### Stage 3: Data enrichment
+### Stage 3: データ拡張
 
-- Tide data where free and legally usable.
-- Weather, wind, wave, or sea-temperature data where free and legally usable.
-- User-provided URL/text extraction for fishing reports.
+- 利用条件を満たす無料の潮汐データ。
+- 利用条件を満たす無料の天気、風、波、水温データ。
+- ユーザー提供のURL/本文からの釣果情報抽出。
 
-### Stage 4: Advanced visualization
+### Stage 4: 高度な可視化
 
-- Bathymetry/depth layer.
-- Seafloor topography layer.
-- Optional 3D view using Three.js, deck.gl, or CesiumJS.
+- 水深/海底地形レイヤー。
+- 海底地形表示。
+- Three.js、deck.gl、CesiumJSなどを使った任意の3D表示。
 
-## Domain model draft
+## ドメインモデル案
 
 ### FishingReport
 
@@ -82,25 +82,25 @@ Recommended stack:
 ### ForecastScore
 
 - speciesId
-- areaName or spotId
+- areaName または spotId
 - score
 - reasons
 - calculatedAt
 
-## Forecast score v1
+## 釣れそう度スコア v1
 
-The first forecast/reference score should be rule-based and explainable.
+最初の釣れそう度スコアは、説明可能なルールベースで実装します。
 
-Example factors:
+スコア要素の例は以下です。
 
-- Recent reports in the same area.
-- Same species reports.
-- Month/season fit.
-- Spot historical weight from mock data.
-- Optional method match.
+- 同じエリアの直近釣果。
+- 同じ魚種の釣果。
+- 月/季節との相性。
+- モックデータ上の釣り場実績重み。
+- 必要に応じた釣り方の一致。
 
-The app should display reasons, not just the score.
+アプリ上では、スコアだけでなく理由も表示します。
 
-## Future API/data notes
+## 将来のAPI/データ方針
 
-Do not add paid APIs or automated scraping without an approved Issue.
+承認済みのIssueがない限り、有料APIや自動スクレイピングは追加しません。
