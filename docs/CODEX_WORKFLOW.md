@@ -1,74 +1,74 @@
-# Codex Workflow
+# Codex作業フロー
 
-## Purpose
+## 目的
 
-This project uses GitHub Issues and Pull Requests as the command interface for Codex.
+このプロジェクトでは、GitHub IssueとPull RequestをCodexへの作業指示インターフェースとして利用します。
 
-ChatGPT acts as commander/project lead. Codex acts as implementation worker.
+ChatGPTが司令塔/プロジェクトリードとして作業を整理し、Codexが実装担当として作業します。
 
-## Standard workflow
+## 標準フロー
 
-1. ChatGPT creates or drafts a GitHub Issue.
-2. The Issue describes one small task.
-3. Codex is invoked from the Issue or PR when available.
-4. Codex opens a Pull Request.
-5. ChatGPT reviews the PR and CI result.
-6. If needed, ChatGPT posts a follow-up instruction such as a fix request.
-7. Human owner gives final approval before merge.
+1. ChatGPTがGitHub Issueを作成、またはIssue文面を作成する。
+2. Issueには小さな1タスクだけを記載する。
+3. 利用可能な場合、IssueまたはPRからCodexを起動する。
+4. CodexがPull Requestを作成する。
+5. ChatGPTがPR内容とCI結果をレビューする。
+6. 修正が必要な場合、ChatGPTが追加指示をコメントする。
+7. ユーザーが最終承認してからマージする。
 
-## Task size rule
+## タスクサイズのルール
 
-1 task = 1 Issue = 1 Pull Request.
+1タスク = 1 Issue = 1 Pull Request とします。
 
-Do not bundle unrelated features, refactors, UI changes, and infrastructure changes into one PR.
+無関係な機能追加、リファクタリング、UI変更、インフラ変更を1つのPRにまとめないでください。
 
-## Issue format
+## Issueの形式
 
-Each implementation Issue should include:
+実装Issueには以下を含めます。
 
-- Purpose.
-- Background.
-- Scope.
-- Out of scope.
-- Implementation notes.
-- Acceptance criteria.
-- Codex instruction.
+- 目的。
+- 背景。
+- 対象範囲。
+- 対象外。
+- 実装メモ。
+- 受け入れ条件。
+- Codexへの指示。
 
-## PR expectations
+## PRの期待内容
 
-Each PR should include:
+各PRには以下を含めます。
 
-- What changed.
-- Why it changed.
-- Screenshots for UI changes when possible.
-- How to test.
-- Known limitations.
-- Whether docs were updated.
+- 変更内容。
+- 変更理由。
+- UI変更がある場合は可能な範囲でスクリーンショット。
+- 動作確認方法。
+- 既知の制約。
+- ドキュメント更新の有無。
 
-## Review policy
+## レビュー方針
 
-ChatGPT reviews:
+ChatGPTは以下をレビューします。
 
-- Scope control.
-- Docs consistency.
-- UI/UX consistency.
-- Data policy compliance.
-- Cost policy compliance.
-- CI/build status.
+- スコープがIssueから逸脱していないか。
+- ドキュメントと実装が一致しているか。
+- UI/UXに大きな違和感がないか。
+- データ利用ポリシーに反していないか。
+- コスト方針に反していないか。
+- CI/buildが通っているか。
 
-Claude/Gemini or other AI reviewers may be used only for important design, data policy, or UX reviews.
+Claude/Geminiなどの外部AIレビューは、重要な設計、データポリシー、UXレビューで価値がある場合に限定して利用します。
 
-## Token-saving policy
+## トークン節約方針
 
-- Keep Issues focused.
-- Keep docs as the source of truth.
-- Avoid repeating full project context in every prompt.
-- Prefer mock data and small PRs early.
-- Use Codex for implementation, not broad product brainstorming.
-- Use external AI reviewers only when their review is expected to add value.
+- Issueは小さく、明確にする。
+- ドキュメントを正本として扱う。
+- 毎回プロジェクト全体の説明を繰り返さない。
+- 初期段階ではモックデータと小さなPRを優先する。
+- Codexには実装を任せ、広すぎる企画相談はさせない。
+- 外部AIレビューは、効果が見込める場合に限定する。
 
-## Example Codex instruction
+## Codexへの指示例
 
 ```text
-@codex Please implement this Issue in a small PR. Read AGENTS.md and the relevant docs first. Keep the change scoped to this Issue. Ensure lint/typecheck/build pass.
+@codex このIssueを小さなPRで実装してください。作業前にAGENTS.mdと関連ドキュメントを読んでください。変更範囲はこのIssueに限定してください。可能な限りlint/typecheck/buildが通る状態にしてください。
 ```
