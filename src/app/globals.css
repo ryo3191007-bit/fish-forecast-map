@@ -129,6 +129,7 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
 .environmentMetrics dd { color: #f8fdff; }
 .environmentState { margin: 0 0 14px; padding: 14px 16px; border: 1px dashed rgba(125, 211, 252, .38); border-radius: 16px; background: rgba(2, 8, 23, .32); color: #dffbff; font-weight: 800; line-height: 1.7; }
 .environmentState.error { border-color: rgba(251, 146, 60, .6); color: #fed7aa; }
+.environmentState.warning { border-color: rgba(250, 204, 21, .55); color: #fef3c7; }
 .environmentNote { margin: 14px 0 0; color: #a9cfe0; font-size: .82rem; line-height: 1.7; }
 @media (max-width: 760px) { .environmentHeader, .environmentContent { grid-template-columns: 1fr; display: grid; } .environmentBadge { justify-self: start; } }
 @media (max-width: 520px) { .environmentMetrics { grid-template-columns: 1fr; } }

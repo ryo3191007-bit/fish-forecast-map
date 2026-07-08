@@ -32,10 +32,21 @@ type HourlyResponse = {
 };
 
 export async function fetchFishingEnvironment(point: EnvironmentPoint, signal?: AbortSignal): Promise<FishingEnvironment> {
-  const [weather, marine] = await Promise.all([
+  const [weatherResult, marineResult] = await Promise.allSettled([
     fetchOpenMeteoWeather(point, signal),
     fetchOpenMeteoMarine(point, signal),
   ]);
+
+  if (signal?.aborted) {
+    throw new DOMException("Open-Meteo request was aborted.", "AbortError");
+  }
+
+  const weather = weatherResult.status === "fulfilled" ? weatherResult.value : null;
+  const marine = marineResult.status === "fulfilled" ? marineResult.value : null;
+
+  if (!weather && !marine) {
+    throw new Error("Open-Meteo weather and marine requests failed.");
+  }
 
   return {
     point,
@@ -72,7 +83,7 @@ export async function fetchOpenMeteoWeather(point: EnvironmentPoint, signal?: Ab
 }
 
 export async function fetchOpenMeteoMarine(point: EnvironmentPoint, signal?: AbortSignal): Promise<MarineEnvironment | null> {
-  const data = await fetchJson(buildOpenMeteoUrl(MARINE_ENDPOINT, point, marineHourlyFields), signal);
+  const data = await fetchJson(buildOpenMeteoUrl(MARINE_ENDPOINT, point, marineHourlyFields, { cellSelection: "sea" }), signal);
   const hourly = data.hourly;
   if (!hourly) return null;
 
@@ -92,7 +103,12 @@ export async function fetchOpenMeteoMarine(point: EnvironmentPoint, signal?: Abo
   };
 }
 
-function buildOpenMeteoUrl(endpoint: string, point: EnvironmentPoint, hourlyFields: string[]) {
+function buildOpenMeteoUrl(
+  endpoint: string,
+  point: EnvironmentPoint,
+  hourlyFields: string[],
+  options: { cellSelection?: "sea" | "nearest" } = {},
+) {
   const params = new URLSearchParams({
     latitude: point.latitude.toString(),
     longitude: point.longitude.toString(),
@@ -100,6 +116,10 @@ function buildOpenMeteoUrl(endpoint: string, point: EnvironmentPoint, hourlyFiel
     timezone: "Asia/Tokyo",
     forecast_days: "1",
   });
+
+  if (options.cellSelection) {
+    params.set("cell_selection", options.cellSelection);
+  }
 
   return `${endpoint}?${params.toString()}`;
 }

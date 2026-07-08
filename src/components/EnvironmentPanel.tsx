@@ -10,6 +10,7 @@ type EnvironmentPanelProps = {
 
 export function EnvironmentPanel({ report, environment, isLoading, error }: EnvironmentPanelProps) {
   const targetName = report?.spotName ?? "対象地点なし";
+  const partialStateMessage = getPartialStateMessage(environment);
 
   return (
     <aside className="environmentPanel" aria-live="polite">
@@ -31,6 +32,7 @@ export function EnvironmentPanel({ report, environment, isLoading, error }: Envi
         <p className="environmentState">この地点で表示できる環境データがありません。</p>
       ) : (
         <div className="environmentContent">
+          {partialStateMessage ? <p className="environmentState warning">{partialStateMessage}</p> : null}
           <MetricGroup
             title="天気"
             items={[
@@ -60,6 +62,13 @@ export function EnvironmentPanel({ report, environment, isLoading, error }: Envi
       </p>
     </aside>
   );
+}
+
+function getPartialStateMessage(environment: FishingEnvironment | null) {
+  if (!environment) return null;
+  if (environment.weather && !environment.marine) return "天気データのみ表示中です。海況データを取得できませんでした。";
+  if (!environment.weather && environment.marine) return "海況データのみ表示中です。天気データを取得できませんでした。";
+  return null;
 }
 
 function MetricGroup({ title, items }: { title: string; items: [string, string][] }) {
