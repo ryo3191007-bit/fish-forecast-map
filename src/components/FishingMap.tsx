@@ -48,7 +48,8 @@ export function FishingMap({ reports }: FishingMapProps) {
       <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
       {reports.length === 0 ? (
         <div className="mapEmpty" aria-hidden="true">
-          表示できるマーカーはありません
+          <strong>表示できるマーカーはありません</strong>
+          <span>条件を変更するか、フィルタをリセットしてください。</span>
         </div>
       ) : null}
     </div>
@@ -59,17 +60,34 @@ function createPopupContent(report: FishingReport) {
   const popup = document.createElement("div");
 
   const spotName = document.createElement("strong");
+  spotName.className = "mapPopupTitle";
   spotName.textContent = report.spotName;
 
   popup.className = "mapPopup";
 
   const summary = document.createElement("div");
-  summary.textContent = `${report.areaName} / ${report.species} / ${report.forecast.score}点`;
+  summary.className = "mapPopupSummary";
+
+  const score = document.createElement("span");
+  score.className = "mapPopupScore";
+  score.textContent = `${report.forecast.score}点`;
+
+  const species = document.createElement("span");
+  species.textContent = report.species;
+
+  const place = document.createElement("span");
+  place.textContent = report.areaName;
+
+  summary.append(score, species, place);
+
+  const method = document.createElement("p");
+  method.className = "mapPopupMeta";
+  method.textContent = `${report.method} / ${report.reportDate}`;
 
   const reason = document.createElement("p");
   reason.textContent = report.forecast.reasons[0] ?? "";
 
-  popup.append(spotName, summary, reason);
+  popup.append(spotName, summary, method, reason);
   return popup;
 }
 
