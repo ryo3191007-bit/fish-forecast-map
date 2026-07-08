@@ -9,18 +9,34 @@ const disclaimer = "釣れそう度は、取得可能な釣果情報と簡易ル
 
 export function FishingDashboard() {
   const [selectedSpecies, setSelectedSpecies] = useState<FishSpeciesName | "all">("all");
+  const [selectedArea, setSelectedArea] = useState<string | "all">("all");
   const speciesCounts = useMemo(() => {
     return fishSpeciesNames.map((species) => ({
       species,
       count: mockFishingReports.filter((report) => report.species === species).length,
     }));
   }, []);
+  const areaCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    mockFishingReports.forEach((report) => {
+      counts.set(report.areaName, (counts.get(report.areaName) ?? 0) + 1);
+    });
+
+    return Array.from(counts, ([areaName, count]) => ({ areaName, count }));
+  }, []);
+
   const reports = useMemo(
-    () => selectedSpecies === "all" ? mockFishingReports : mockFishingReports.filter((report) => report.species === selectedSpecies),
-    [selectedSpecies],
+    () => mockFishingReports.filter((report) => {
+      const matchesSpecies = selectedSpecies === "all" || report.species === selectedSpecies;
+      const matchesArea = selectedArea === "all" || report.areaName === selectedArea;
+
+      return matchesSpecies && matchesArea;
+    }),
+    [selectedArea, selectedSpecies],
   );
 
-  const resultLabel = selectedSpecies === "all" ? "すべての魚種" : selectedSpecies;
+  const speciesLabel = selectedSpecies === "all" ? "すべての魚種" : selectedSpecies;
+  const areaLabel = selectedArea === "all" ? "すべてのエリア" : selectedArea;
 
   return (
     <section className="dashboard" id="map">
@@ -28,12 +44,12 @@ export function FishingDashboard() {
         <div>
           <p className="eyebrow">MVP v0.1 / mock only</p>
           <h2>糸島西岸〜平戸方面のモック釣果マップ</h2>
-          <p className="muted">魚種で絞り込み、地図マーカーと一覧で釣れそう度の根拠を確認できます。</p>
+          <p className="muted">魚種とエリアで絞り込み、地図マーカーと一覧で釣れそう度の根拠を確認できます。</p>
           <p className="resultSummary" aria-live="polite">
-            {resultLabel} / 全{mockFishingReports.length}件中 {reports.length}件を表示中
+            魚種: {speciesLabel} / エリア: {areaLabel} / 全{mockFishingReports.length}件中 {reports.length}件を表示中
           </p>
         </div>
-        <div className="filterControls" aria-label="魚種フィルタ">
+        <div className="filterControls" aria-label="釣果フィルタ">
           <div className="filterHeader">
             <span>魚種フィルタ</span>
             <span className="filterHint">タップして絞り込み</span>
@@ -61,6 +77,34 @@ export function FishingDashboard() {
               </button>
             ))}
           </div>
+
+          <div className="filterHeader areaFilterHeader">
+            <span>エリアフィルタ</span>
+            <span className="filterHint">魚種とAND条件</span>
+          </div>
+          <div className="speciesChips areaChips" role="group" aria-label="表示するエリアを選択">
+            <button
+              type="button"
+              className={selectedArea === "all" ? "speciesChip active" : "speciesChip"}
+              aria-pressed={selectedArea === "all"}
+              onClick={() => setSelectedArea("all")}
+            >
+              <span>すべてのエリア</span>
+              <strong>{mockFishingReports.length}</strong>
+            </button>
+            {areaCounts.map(({ areaName, count }) => (
+              <button
+                type="button"
+                className={selectedArea === areaName ? "speciesChip active" : "speciesChip"}
+                aria-pressed={selectedArea === areaName}
+                key={areaName}
+                onClick={() => setSelectedArea(areaName)}
+              >
+                <span>{areaName}</span>
+                <strong>{count}</strong>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -83,7 +127,7 @@ export function FishingDashboard() {
           <div className="emptyState" role="status">
             <p className="eyebrow">No reports</p>
             <h3>該当する釣果情報がありません</h3>
-            <p>魚種フィルタを「すべて」に戻すか、別の魚種を選択してください。MVPではモックデータのみを表示しています。</p>
+            <p>魚種フィルタやエリアフィルタを「すべて」に戻すか、別の条件を選択してください。MVPではモックデータのみを表示しています。</p>
           </div>
         ) : reports.map((report) => (
           <article className="card" key={report.id}>
