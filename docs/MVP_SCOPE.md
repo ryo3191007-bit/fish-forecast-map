@@ -1,57 +1,61 @@
-# MVP Scope
+# MVPスコープ
 
-## MVP v0.1 goal
+## MVP v0.1 の目的
 
-Build the smallest useful version of the fishing forecast map app with mock data.
+釣果予測マップアプリの最小構成を、モックデータで作成します。
 
-The purpose is to validate the product flow and UI before adding database, data ingestion, prediction sophistication, or 3D visualization.
+目的は、データベース、外部データ取り込み、高度な予測、3D表示を追加する前に、プロダクトの基本導線とUIを検証することです。
 
-## In scope
+## 対象範囲
 
-- Next.js + TypeScript web app.
-- Mock fishing report data.
-- Top page.
-- Fishing report list.
-- Fishing report card or detail-style display.
-- Fishing report registration form using mock/local state first.
-- Map screen with report markers.
-- Fish species filter.
-- Simple explainable rule-based forecast score.
-- Disclaimer that scores are reference information and do not guarantee catch.
-- Basic CI for lint/typecheck/build.
+MVP v0.1では以下を対象とします。
 
-## Out of scope
+- Next.js + TypeScriptのWebアプリ。
+- モック釣果データ。
+- トップページ。
+- 釣果情報一覧。
+- 釣果情報カード、または詳細表示に近いUI。
+- モックデータ/ローカル状態を使った釣果登録フォーム。
+- 釣果地点のマーカーを表示する地図画面。
+- 魚種フィルタ。
+- 説明可能な簡易ルールベースの釣れそう度スコア。
+- 釣れそう度は釣果を保証しないという注意書き。
+- lint、typecheck、buildの基本CI。
 
-- External fishing-site scraping.
-- Automated article ingestion.
-- 3D seafloor rendering.
-- Paid APIs.
-- Complex machine-learning prediction.
-- Login/authentication.
-- Production database writes.
-- Mobile app release.
-- Reposting full third-party article text.
+## 対象外
 
-## Initial target area
+MVP v0.1では以下を対象外とします。
 
-The initial sample area is Sagami Bay and nearby coastal areas.
+- 外部の釣果サイトの自動スクレイピング。
+- 釣果記事の自動取り込み。
+- 3D海底地形表示。
+- 有料APIの利用。
+- 複雑な機械学習による予測。
+- ログイン/認証。
+- 本番データベースへの書き込み。
+- モバイルアプリとしてのリリース。
+- 第三者サイトの記事本文の丸ごと再掲載。
 
-This can be represented with mock coordinates first. Exact spot accuracy is not required for MVP v0.1.
+## 初期対象エリア
 
-## Initial fish species examples
+初期サンプルエリアは、相模湾および周辺沿岸エリアとします。
 
-- Yellowfin tuna / キハダ
-- Skipjack tuna / カツオ
-- Yellowtail / ブリ・ワラサ
-- Horse mackerel / マアジ
-- Mackerel / サバ
-- Dolphinfish / シイラ
-- Alfonsino / キンメダイ
+MVP v0.1ではモック座標で表現して構いません。地点精度の高さは、この段階では必須ではありません。
 
-## MVP success criteria
+## 初期魚種例
 
-- A user can open the app and understand the concept quickly.
-- A user can view mock fishing reports in list and map form.
-- A user can filter by species.
-- A user can see a reference score and understand its reason.
-- The app can be extended later without rewriting everything.
+- キハダ。
+- カツオ。
+- ブリ・ワラサ。
+- マアジ。
+- サバ。
+- シイラ。
+- キンメダイ。
+
+## MVPの成功基準
+
+- ユーザーがアプリを開いて、何ができるアプリかすぐ理解できる。
+- モック釣果情報を一覧と地図で確認できる。
+- 魚種で絞り込みできる。
+- 釣れそう度スコアと、その理由を確認できる。
+- 後続フェーズで拡張しやすい構成になっている。
