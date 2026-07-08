@@ -1,104 +1,106 @@
 # AGENTS.md
 
-## Project
+## プロジェクト概要
 
-This repository contains a fishing forecast map web application.
+このリポジトリは、釣果予測マップアプリを開発するためのリポジトリです。
 
-The goal is to visualize fishing reports, fishing areas, fish species, and simple forecast scores on a map. The app may eventually support seafloor/topography layers and structured ingestion of fishing report articles, but the MVP must stay small and cheap.
+目的は、釣果情報、釣り場、魚種、簡易的な釣れそう度スコアを地図上で可視化することです。将来的には海底地形レイヤー、釣具店や釣果サイトの情報取り込み、潮汐・天気・水温データ連携などを追加する可能性があります。
 
-## Roles
+ただし、MVPでは機能を小さく保ち、低コストで安全に検証できる範囲に限定します。
 
-- Human owner: final approval and product direction.
-- ChatGPT: commander/project lead. Responsible for requirements, task decomposition, issue text, review, and merge recommendations.
-- Codex: implementation worker. Works from GitHub Issues and Pull Requests.
-- Claude/Gemini or other AI reviewers: optional review support for important design, data policy, and UX decisions only.
+## 役割分担
 
-## Cost priorities
+- ユーザー: 最終承認、方向性判断、プロダクト方針の決定を行う。
+- ChatGPT: 司令塔/プロジェクトリードとして、要件整理、タスク分解、Issue作成、レビュー、マージ判断の補助を行う。
+- Codex: 実装担当として、GitHub IssueとPull Requestを単位に作業する。
+- Claude/Geminiなどの外部AI: 必要な場合のみ、重要な設計、データポリシー、UXレビューの補助として利用する。
 
-Optimize in this order:
+## 優先順位
 
-1. Monthly cost within the user's existing ChatGPT Plus budget when possible.
-2. Token savings.
-3. Quality.
-4. Productivity.
+作業では以下の順に優先します。
 
-Avoid paid APIs, paid hosting, paid maps, and paid model inference unless explicitly approved in an Issue.
+1. 既存のChatGPT Plus利用範囲を中心に、月額コストを抑えること。
+2. トークン消費を抑えること。
+3. 品質を維持すること。
+4. 生産性を高めること。
 
-## Workflow
+明示的な承認がない限り、有料API、有料ホスティング、有料地図サービス、有料モデル推論は導入しません。
 
-- 1 task = 1 GitHub Issue = 1 Pull Request.
-- Do not bundle unrelated changes.
-- Read this file and the relevant files under `docs/` before editing.
-- Keep implementation aligned with the docs.
-- If implementation and docs disagree, update the docs or ask for clarification in the PR.
-- Keep PRs small enough to review.
-- Ensure lint/build/typecheck/test pass before marking work ready.
+## 作業ルール
 
-## Current MVP rules
+- 1タスク = 1 GitHub Issue = 1 Pull Request とします。
+- 無関係な変更を1つのPRにまとめないでください。
+- 作業前に、このファイルと `docs/` 配下の関連ドキュメントを確認してください。
+- 実装とドキュメントの内容を一致させてください。
+- 実装とドキュメントが矛盾する場合は、PR内で確認するか、必要に応じてドキュメントも更新してください。
+- PRはレビューしやすい小さな単位にしてください。
+- 可能な限り、lint、typecheck、build、testが通る状態にしてください。
 
-For MVP v0.1:
+## MVP v0.1 のルール
 
-- Use mock data first.
-- Do not implement external fishing-site scraping yet.
-- Do not implement 3D seafloor rendering yet.
-- Do not implement paid APIs.
-- Do not implement complex machine-learning prediction yet.
-- Use a simple, explainable rule-based score.
-- Store source attribution for fishing reports.
-- Do not republish full third-party article text.
+MVP v0.1では以下を守ります。
 
-## Recommended tech stack
+- 最初はモックデータを使用します。
+- 外部の釣果サイトの自動スクレイピングは実装しません。
+- 3D海底地形表示は実装しません。
+- 有料APIは実装しません。
+- 複雑な機械学習による予測は実装しません。
+- 釣れそう度は、説明可能な簡易ルールベースのスコアにします。
+- 釣果情報には出典情報を持たせます。
+- 第三者サイトの記事本文を丸ごと再掲載しません。
 
-- Frontend: Next.js + TypeScript.
-- Styling: Tailwind CSS or simple CSS modules.
-- Map: MapLibre GL JS or Leaflet for the first map implementation.
-- Database: Supabase/PostgreSQL later; mock data first.
-- CI: GitHub Actions for install, lint, typecheck, and build.
-- Future 3D: Three.js, deck.gl, or CesiumJS.
+## 推奨技術スタック
 
-## Code style
+- フロントエンド: Next.js + TypeScript。
+- スタイリング: Tailwind CSS またはシンプルな CSS Modules。
+- 地図: 初期実装では MapLibre GL JS または Leaflet。
+- データベース: 後続フェーズで Supabase/PostgreSQL。MVPではモックデータを使用。
+- CI: GitHub Actionsで install、lint、typecheck、buildを確認。
+- 将来の3D表示: Three.js、deck.gl、CesiumJSのいずれかを検討。
 
-- Prefer TypeScript types for domain entities.
-- Keep UI components small and readable.
-- Keep domain logic separated from UI.
-- Add comments only where they clarify non-obvious logic.
-- Do not hard-code secrets.
-- Do not commit `.env` files.
+## コード方針
 
-## Domain terms
+- ドメインエンティティにはTypeScriptの型を定義してください。
+- UIコンポーネントは小さく、読みやすく保ってください。
+- UIとドメインロジックはできるだけ分離してください。
+- コメントは、意図が分かりづらい処理を補足する場合に限定してください。
+- シークレット情報をハードコードしないでください。
+- `.env` ファイルはコミットしないでください。
 
-- Fishing report: observed catch information.
-- Fishing spot: a point or area where fishing happened or is predicted.
-- Fish species: target species such as tuna, yellowtail, horse mackerel, mackerel, dolphinfish, or alfonsino.
-- Forecast score: explainable reference score, not a guarantee of catch.
-- Source: URL or manually entered attribution for a fishing report.
+## ドメイン用語
 
-## Data safety and legal constraints
+- 釣果情報: 実際に釣れた魚、場所、日時、釣り方などの記録。
+- 釣り場: 釣果があった地点、または予測対象となる地点・海域。
+- 魚種: キハダ、カツオ、ブリ・ワラサ、マアジ、サバ、シイラ、キンメダイなどの対象魚。
+- 釣れそう度スコア: 釣果を保証するものではなく、参考情報として表示する説明可能なスコア。
+- 出典: 釣果情報の元になったURL、サイト名、手入力情報など。
 
-Fishing report data from shops, blogs, SNS, or news sites must be treated carefully.
+## データ利用・法務上の制約
 
-- Respect site terms, robots.txt, copyright, and access load.
-- Prefer manual entry, RSS, official APIs, or permission-based sources.
-- Store extracted facts and source URLs, not full article copies.
-- Show clear attribution.
-- Do not claim the app guarantees fishing results.
+釣具店、ブログ、SNS、ニュースサイトなどの釣果情報は慎重に扱います。
 
-## Pull Request expectations
+- 各サイトの利用規約、robots.txt、著作権、アクセス負荷に配慮してください。
+- 最初は手入力、RSS、公式API、許可を得た情報源、ユーザー提供のURL/本文を優先します。
+- 保存するのは抽出した事実情報と出典URLを中心にし、記事本文の丸ごと保存は避けます。
+- 出典を明示してください。
+- アプリ上で釣果を保証する表現をしないでください。
 
-Each PR should include:
+## Pull Requestの期待内容
 
-- What changed.
-- Why it changed.
-- Screenshots for UI changes when possible.
-- How to test.
-- Known limitations.
-- Whether docs were updated.
+各PRには以下を記載してください。
 
-## Prohibited unless explicitly approved
+- 変更内容。
+- 変更理由。
+- UI変更がある場合は可能な範囲でスクリーンショット。
+- 動作確認方法。
+- 既知の制約。
+- ドキュメント更新の有無。
 
-- Paid API integration.
-- Automated high-frequency scraping.
-- Reposting full third-party fishing articles.
-- Collecting precise user location without consent.
-- Storing secrets in the repository.
-- Large architecture rewrites without an Issue.
+## 明示的な承認なしに禁止すること
+
+- 有料APIの導入。
+- 高頻度の自動スクレイピング。
+- 第三者サイトの釣果記事本文の丸ごと再掲載。
+- ユーザーの正確な現在地を同意なく収集すること。
+- シークレット情報をリポジトリに保存すること。
+- Issueなしの大規模な設計変更。
