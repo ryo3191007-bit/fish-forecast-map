@@ -1,71 +1,71 @@
-# Data Policy
+# データ利用ポリシー
 
-## Purpose
+## 目的
 
-This project may use fishing report data from shops, blogs, SNS, official announcements, user submissions, or other public sources in the future.
+このプロジェクトでは、将来的に釣具店、ブログ、SNS、公式発表、ユーザー投稿などの釣果情報を扱う可能性があります。
 
-The MVP starts with mock data and manual entry to avoid legal, copyright, and access-load risks.
+MVPでは、法務リスク、著作権リスク、アクセス負荷の問題を避けるため、モックデータと手入力を中心に開始します。
 
-## Core principles
+## 基本方針
 
-- Respect website terms of service.
-- Respect robots.txt where applicable.
-- Respect copyright.
-- Avoid unnecessary access load.
-- Prefer official APIs, RSS, permission-based sources, or user-provided text/URLs.
-- Store extracted facts and source URLs, not full article copies.
-- Show source attribution clearly.
-- Do not claim the app guarantees fishing results.
+- 各サイトの利用規約を尊重する。
+- 必要に応じてrobots.txtを確認し、尊重する。
+- 著作権に配慮する。
+- 不要なアクセス負荷をかけない。
+- 公式API、RSS、許可を得た情報源、ユーザー提供の本文/URLを優先する。
+- 保存するのは抽出した事実情報と出典URLを中心にし、第三者サイトの記事本文を丸ごと保存しない。
+- 出典を明示する。
+- アプリが釣果を保証するような表現はしない。
 
-## Allowed for MVP v0.1
+## MVP v0.1 で許可すること
 
-- Mock fishing report data.
-- Manually entered report data.
-- Source name and source URL fields.
-- Short factual summaries created by the user.
+- モック釣果データの利用。
+- 手入力した釣果情報の利用。
+- 出典名と出典URLの保存。
+- ユーザー自身が作成した短い事実要約の保存。
 
-## Not allowed for MVP v0.1
+## MVP v0.1 で禁止すること
 
-- Automated high-frequency scraping.
-- Reposting full third-party article text.
-- Copying images from third-party sites.
-- Circumventing access controls.
-- Paid data APIs without explicit approval.
+- 高頻度の自動スクレイピング。
+- 第三者サイトの記事本文の丸ごと再掲載。
+- 第三者サイトの画像コピー。
+- アクセス制限の回避。
+- 明示的な承認なしの有料データAPI利用。
 
-## Future ingestion approach
+## 将来の取り込み方針
 
-When ingestion is added later, prefer this order:
+釣果情報の取り込みを追加する場合は、以下の優先順位で検討します。
 
-1. Official APIs.
-2. RSS feeds.
-3. Permission-based partner sources.
-4. User-provided URL/text extraction.
-5. Low-frequency crawling only when legally and technically acceptable.
+1. 公式API。
+2. RSSフィード。
+3. 許可を得た提携元データ。
+4. ユーザーが提供したURL/本文からの抽出。
+5. 法的・技術的に問題がない範囲での低頻度クローリング。
 
-## Data fields to store
+## 保存するデータ項目
 
-Store structured facts such as:
+保存対象は、以下のような構造化された事実情報を中心にします。
 
-- Report date.
-- Area or spot name.
-- Approximate latitude/longitude when available and appropriate.
-- Fish species.
-- Catch count or result level.
-- Size or weight.
-- Fishing method.
-- Source name.
-- Source URL.
-- Created/updated timestamp.
+- 釣果日。
+- エリア名、または釣り場名。
+- 必要かつ適切な場合の概略緯度/経度。
+- 魚種。
+- 釣果数、または釣果レベル。
+- サイズ、重量。
+- 釣り方。
+- 出典名。
+- 出典URL。
+- 作成日時/更新日時。
 
-Avoid storing:
+保存を避けるものは以下です。
 
-- Full article body from third-party sites.
-- Third-party images.
-- Personal data not needed for the app.
-- Precise user location without consent.
+- 第三者サイトの記事本文全文。
+- 第三者サイトの画像。
+- アプリに不要な個人情報。
+- 同意のない正確なユーザー現在地。
 
-## Disclaimer language
+## 注意書き文言
 
-The app should display a disclaimer similar to:
+アプリ上では、以下のような注意書きを表示します。
 
-> Forecast scores are reference information based on available reports and simple rules. They do not guarantee fishing results.
+> 釣れそう度は、取得可能な釣果情報と簡易ルールに基づく参考情報です。実際の釣果を保証するものではありません。
