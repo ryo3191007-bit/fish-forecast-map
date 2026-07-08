@@ -1,49 +1,49 @@
-# Requirements
+# 要件定義
 
-## Product summary
+## プロダクト概要
 
-Fishing forecast map helps users review fishing reports and understand where, when, and what species may be worth targeting.
+釣果予測マップは、釣果情報を地図上で確認し、どのエリアで、いつ、どの魚種を狙うとよさそうかを検討するためのWebアプリです。
 
-The first goal is not to guarantee catches. The app provides reference information based on recent reports, seasonality, spots, species, and simple scoring rules.
+このアプリは釣果を保証するものではありません。直近の釣果、季節性、釣り場、魚種、簡易スコアをもとに、参考情報を提供します。
 
-## Target users
+## 想定ユーザー
 
-- Recreational anglers planning where to fish.
-- Anglers who want to compare recent reports by species and area.
-- Users who want a map-first view of fishing information.
+- 週末や休日に釣りに行く場所を検討したい一般の釣り人。
+- 魚種やエリアごとの最近の釣果を比較したい人。
+- 地図ベースで釣果情報を見たい人。
 
-## Core value
+## 提供価値
 
-- See recent fishing reports on a map.
-- Filter reports by species and area.
-- Understand why a spot/species has a high or low reference score.
-- Keep source attribution for fishing report information.
+- 最近の釣果情報を地図上で確認できる。
+- 魚種やエリアで釣果情報を絞り込める。
+- 釣れそう度スコアの理由を確認できる。
+- 釣果情報の出典を確認できる。
 
-## MVP v0.1 functional requirements
+## MVP v0.1 の機能要件
 
-- Show a top page with project summary and navigation.
-- Show a fishing report list using mock data.
-- Show fishing report cards with date, area, species, catch result, method, and source.
-- Show a fishing report registration form using local/mock state first.
-- Show a map screen with fishing report markers.
-- Allow filtering by fish species.
-- Calculate a simple explainable forecast/reference score.
-- Show a disclaimer that scores do not guarantee catches.
+- アプリ概要と主要導線を表示するトップページを用意する。
+- モックデータを使って釣果情報一覧を表示する。
+- 釣果情報カードに、日付、エリア、魚種、釣果、釣り方、出典を表示する。
+- モックデータ/ローカル状態を使った釣果登録フォームを用意する。
+- 地図画面に釣果地点のマーカーを表示する。
+- 魚種で絞り込みできるようにする。
+- 説明可能な簡易ルールベースの釣れそう度スコアを計算する。
+- 釣れそう度は釣果を保証するものではない、という注意書きを表示する。
 
-## Non-functional requirements
+## 非機能要件
 
-- Keep monthly cost as close to zero as possible beyond existing ChatGPT Plus usage.
-- Prefer free/open-source libraries.
-- Keep implementation simple and maintainable.
-- Avoid paid APIs until explicitly approved.
-- Avoid storing secrets in the repository.
-- Keep data policy visible in documentation.
+- 既存のChatGPT Plus利用範囲を中心に、追加の月額コストをできるだけ抑える。
+- 無料、またはオープンソースのライブラリを優先する。
+- 実装はシンプルで保守しやすい構成にする。
+- 明示的な承認がない限り、有料APIを導入しない。
+- シークレット情報をリポジトリに保存しない。
+- データ利用ポリシーをドキュメントに明記する。
 
-## Future requirements
+## 将来追加したい要件
 
-- Supabase/PostgreSQL persistence.
-- Tide, weather, wind, wave, or sea-temperature data where legally usable and free.
-- Fishing report ingestion from user-provided text or URLs.
-- Permission-based or RSS/API-based fishing report ingestion.
-- 2D depth or bathymetry layers.
-- Optional 3D seafloor visualization.
+- Supabase/PostgreSQLによるデータ永続化。
+- 利用条件を満たす無料の潮汐、天気、風、波、水温データ連携。
+- ユーザーが提供したURLや本文からの釣果情報抽出。
+- RSS、公式API、許可を得た情報源からの釣果情報取り込み。
+- 2Dの水深/海底地形レイヤー。
+- 3D海底地形表示。
