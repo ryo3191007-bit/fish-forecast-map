@@ -19,6 +19,7 @@ export function FishingDashboard() {
   const [selectedSpecies, setSelectedSpecies] = useState<FishSpeciesName | "all">("all");
   const [selectedArea, setSelectedArea] = useState<string | "all">("all");
   const [selectedSort, setSelectedSort] = useState<SortOption>("scoreDesc");
+  const [searchKeyword, setSearchKeyword] = useState("");
   const speciesCounts = useMemo(() => {
     return fishSpeciesNames.map((species) => ({
       species,
@@ -34,12 +35,23 @@ export function FishingDashboard() {
     return Array.from(counts, ([areaName, count]) => ({ areaName, count }));
   }, []);
 
+  const normalizedKeyword = searchKeyword.trim().toLowerCase();
+
   const reports = useMemo(() => {
     const filteredReports = mockFishingReports.filter((report) => {
       const matchesSpecies = selectedSpecies === "all" || report.species === selectedSpecies;
       const matchesArea = selectedArea === "all" || report.areaName === selectedArea;
+      const searchableText = [
+        report.spotName,
+        report.areaName,
+        report.species,
+        report.method,
+        report.sourceName,
+        ...report.forecast.reasons,
+      ].join(" ").toLowerCase();
+      const matchesKeyword = normalizedKeyword === "" || searchableText.includes(normalizedKeyword);
 
-      return matchesSpecies && matchesArea;
+      return matchesSpecies && matchesArea && matchesKeyword;
     });
 
     return [...filteredReports].sort((a, b) => {
@@ -47,11 +59,12 @@ export function FishingDashboard() {
       if (selectedSort === "dateDesc") return Date.parse(b.reportDate) - Date.parse(a.reportDate);
       return Date.parse(a.reportDate) - Date.parse(b.reportDate);
     });
-  }, [selectedArea, selectedSort, selectedSpecies]);
+  }, [normalizedKeyword, selectedArea, selectedSort, selectedSpecies]);
 
   const speciesLabel = selectedSpecies === "all" ? "すべての魚種" : selectedSpecies;
   const areaLabel = selectedArea === "all" ? "すべてのエリア" : selectedArea;
   const sortLabel = sortOptions.find((option) => option.value === selectedSort)?.label ?? "釣れそう度が高い順";
+  const searchLabel = normalizedKeyword === "" ? "指定なし" : `「${searchKeyword.trim()}」`;
 
   return (
     <section className="dashboard" id="map">
@@ -59,9 +72,9 @@ export function FishingDashboard() {
         <div>
           <p className="eyebrow">MVP v0.1 / mock only</p>
           <h2>糸島西岸〜平戸方面のモック釣果マップ</h2>
-          <p className="muted">魚種とエリアで絞り込み、地図マーカーと一覧で釣れそう度の根拠を確認できます。</p>
+          <p className="muted">魚種・エリア・キーワードで絞り込み、地図マーカーと一覧で釣れそう度の根拠を確認できます。</p>
           <p className="resultSummary" aria-live="polite">
-            魚種: {speciesLabel} / エリア: {areaLabel} / 並び順: {sortLabel} / 全{mockFishingReports.length}件中 {reports.length}件を表示中
+            魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 全{mockFishingReports.length}件中 {reports.length}件を表示中
           </p>
         </div>
         <div className="filterControls" aria-label="釣果フィルタ">
@@ -121,6 +134,32 @@ export function FishingDashboard() {
             ))}
           </div>
 
+          <div className="filterHeader keywordFilterHeader">
+            <span>キーワード検索</span>
+            <span className="filterHint">場所・魚種・釣り方など</span>
+          </div>
+          <div className="searchControl">
+            <label className="sortSelectLabel" htmlFor="report-search">釣果情報を検索</label>
+            <div className="searchInputRow">
+              <input
+                id="report-search"
+                className="searchInput"
+                type="search"
+                value={searchKeyword}
+                onChange={(event) => setSearchKeyword(event.target.value)}
+                placeholder="例: 芥屋、アジ、サビキ"
+              />
+              <button
+                type="button"
+                className="clearSearchButton"
+                onClick={() => setSearchKeyword("")}
+                disabled={searchKeyword.length === 0}
+              >
+                クリア
+              </button>
+            </div>
+          </div>
+
           <div className="filterHeader sortFilterHeader">
             <span>並び替え</span>
             <span className="filterHint">絞り込み後に適用</span>
@@ -160,7 +199,7 @@ export function FishingDashboard() {
           <div className="emptyState" role="status">
             <p className="eyebrow">No reports</p>
             <h3>該当する釣果情報がありません</h3>
-            <p>魚種フィルタやエリアフィルタを「すべて」に戻すか、別の条件を選択してください。MVPではモックデータのみを表示しています。</p>
+            <p>魚種・エリア・キーワード検索の条件を変更するか、検索をクリアしてください。MVPではモックデータのみを表示しています。</p>
           </div>
         ) : reports.map((report) => (
           <article className="card" key={report.id}>
