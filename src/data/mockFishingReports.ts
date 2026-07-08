@@ -10,7 +10,7 @@ export const fishSpecies: FishSpecies[] = fishSpeciesNames.map((nameJa) => ({
 
 const mockSource = {
   sourceName: "MVPモックデータ",
-  sourceUrl: "/docs/DATA_POLICY.md",
+  sourceUrl: "https://github.com/ryo3191007-bit/fish-forecast-map/blob/main/docs/DATA_POLICY.md",
 };
 
 export const mockFishingReports: FishingReport[] = [
