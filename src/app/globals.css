@@ -17,25 +17,45 @@ h2, h3, p { margin-top: 0; }
 .heroCard, .panel, .card { border: 1px solid rgba(15, 23, 42, .09); border-radius: 24px; background: rgba(255,255,255,.92); box-shadow: 0 20px 60px rgba(15, 23, 42, .16); }
 .heroCard { color: #0f172a; padding: 24px; }
 .heroCard span, .score { color: #ea580c; }
-.dashboard { padding: 28px clamp(16px, 4vw, 56px) 56px; }
-.panel { padding: 20px; margin-bottom: 18px; display: flex; justify-content: space-between; gap: 20px; align-items: flex-end; }
+.dashboard { padding: 32px clamp(16px, 4vw, 56px) 64px; }
+.panel { padding: clamp(18px, 3vw, 26px); margin-bottom: 22px; display: flex; justify-content: space-between; gap: 24px; align-items: flex-end; }
+.filters h2 { margin-bottom: 10px; font-size: clamp(1.35rem, 2.8vw, 2rem); }
+.filters .muted { max-width: 760px; line-height: 1.75; }
 .muted { color: #475569; }
-.resultSummary { margin: 12px 0 0; color: #0f766e; font-weight: 800; }
-label { display: grid; gap: 8px; font-weight: 800; min-width: 220px; }
-select { border: 1px solid #cbd5e1; border-radius: 12px; padding: 10px 12px; font: inherit; background: white; }
-.mapShell { position: relative; }
-.map { height: 520px; width: 100%; border-radius: 28px; overflow: hidden; border: 1px solid rgba(15, 23, 42, .16); box-shadow: 0 22px 70px rgba(15, 23, 42, .24); }
-.mapEmpty { position: absolute; inset: 20px; display: grid; place-items: center; border-radius: 20px; background: rgba(15, 23, 42, .62); color: white; font-weight: 800; text-align: center; pointer-events: none; }
-.notice { margin: 16px 0 22px; padding: 14px 16px; border-left: 5px solid #f97316; border-radius: 14px; background: #fff7ed; color: #7c2d12; font-weight: 700; }
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
-.card, .emptyState { padding: 18px; }
+.resultSummary { margin: 14px 0 0; color: #0f766e; font-weight: 800; }
+label { display: grid; gap: 8px; font-weight: 800; min-width: 240px; color: #164e63; }
+select { border: 1px solid #cbd5e1; border-radius: 14px; padding: 12px 14px; font: inherit; background: white; color: #0f172a; box-shadow: 0 8px 20px rgba(15, 23, 42, .08); }
+.mapSection { margin-bottom: 18px; }
+.mapShell { position: relative; border-radius: 30px; background: rgba(255,255,255,.55); padding: 8px; box-shadow: 0 24px 80px rgba(15, 23, 42, .18); }
+.map { height: clamp(420px, 58vw, 580px); width: 100%; border-radius: 24px; overflow: hidden; border: 1px solid rgba(15, 23, 42, .16); }
+.mapEmpty { position: absolute; inset: 28px; display: grid; place-items: center; border-radius: 20px; background: rgba(15, 23, 42, .62); color: white; font-weight: 800; text-align: center; pointer-events: none; }
+.mapPopup { display: grid; gap: 5px; max-width: 220px; color: #0f172a; line-height: 1.45; }
+.mapPopup strong { color: #075985; font-size: .95rem; }
+.mapPopup p { margin: 0; color: #475569; }
+.notice { margin: 18px 0 26px; padding: 16px 18px 16px 20px; border-left: 5px solid #f97316; border-radius: 16px; background: #fff7ed; color: #7c2d12; font-weight: 700; line-height: 1.7; }
+.sectionHeading { display: flex; justify-content: space-between; gap: 18px; align-items: flex-end; margin: 0 0 14px; }
+.sectionHeading h2 { margin-bottom: 0; }
+.sectionHeading .muted { max-width: 420px; margin-bottom: 2px; line-height: 1.7; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.card, .emptyState { padding: 20px; }
 .emptyState { grid-column: 1 / -1; border: 1px dashed #94a3b8; border-radius: 24px; background: rgba(255,255,255,.78); color: #334155; text-align: center; }
-.cardHeader { display: flex; justify-content: space-between; gap: 14px; }
-.score { font-size: 2rem; }
+.emptyState p:last-child { margin-bottom: 0; line-height: 1.7; }
+.card { display: grid; gap: 16px; }
+.cardHeader { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.cardHeader h3 { margin-bottom: 0; line-height: 1.35; }
+.scoreBox { flex: 0 0 auto; display: grid; justify-items: end; gap: 2px; padding: 10px 12px; border-radius: 18px; background: #fff7ed; border: 1px solid #fed7aa; }
+.scoreBox > span { color: #9a3412; font-size: .72rem; font-weight: 800; }
+.score { font-size: 2.05rem; line-height: 1; }
 .score span { font-size: 1rem; }
-.facts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 14px 0; }
+.cardSummary { display: flex; flex-wrap: wrap; gap: 8px; }
+.cardSummary span { padding: 6px 10px; border-radius: 999px; background: #e0f2fe; color: #075985; font-size: .86rem; font-weight: 800; }
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; }
+.facts div { padding: 10px 12px; border-radius: 14px; background: rgba(241, 245, 249, .82); }
+.sourceFact { grid-column: 1 / -1; }
 dt { color: #64748b; font-size: .78rem; }
-dd { margin: 0; font-weight: 700; }
-.reasons { padding-left: 20px; color: #334155; line-height: 1.6; }
-@media (max-width: 760px) { .heroGrid, .panel { grid-template-columns: 1fr; display: grid; } .heroCard { display: none; } .map { height: 420px; } label { min-width: 0; } }
-@media (max-width: 420px) { .hero { padding-top: 18px; } .nav div { width: 100%; } .map { height: 360px; border-radius: 20px; } .facts { grid-template-columns: 1fr; } }
+dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
+.reasonBlock { padding: 14px 16px; border-radius: 16px; background: rgba(236, 253, 245, .72); border: 1px solid #bbf7d0; }
+.reasonBlock > p { margin-bottom: 8px; color: #047857; font-size: .82rem; font-weight: 800; }
+.reasons { margin: 0; padding-left: 20px; color: #334155; line-height: 1.7; }
+@media (max-width: 760px) { .heroGrid, .panel, .sectionHeading { grid-template-columns: 1fr; display: grid; } .heroCard { display: none; } .panel { align-items: stretch; } label { min-width: 0; } .cards { grid-template-columns: 1fr; } }
+@media (max-width: 420px) { .hero { padding-top: 18px; } .nav div { width: 100%; } .dashboard { padding-inline: 12px; } .mapShell { padding: 5px; border-radius: 23px; } .map { height: 360px; border-radius: 18px; } .mapEmpty { inset: 18px; } .cardHeader { display: grid; } .scoreBox { justify-items: start; width: 100%; } .facts { grid-template-columns: 1fr; } }
