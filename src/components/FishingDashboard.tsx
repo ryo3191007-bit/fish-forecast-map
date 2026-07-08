@@ -65,6 +65,13 @@ export function FishingDashboard() {
   const areaLabel = selectedArea === "all" ? "すべてのエリア" : selectedArea;
   const sortLabel = sortOptions.find((option) => option.value === selectedSort)?.label ?? "釣れそう度が高い順";
   const searchLabel = normalizedKeyword === "" ? "指定なし" : `「${searchKeyword.trim()}」`;
+  const isInitialState = selectedSpecies === "all" && selectedArea === "all" && selectedSort === "scoreDesc" && searchKeyword.length === 0;
+  const resetFilters = () => {
+    setSelectedSpecies("all");
+    setSelectedArea("all");
+    setSearchKeyword("");
+    setSelectedSort("scoreDesc");
+  };
 
   return (
     <section className="dashboard" id="map">
@@ -161,21 +168,32 @@ export function FishingDashboard() {
           </div>
 
           <div className="filterHeader sortFilterHeader">
-            <span>並び替え</span>
+            <span>並び替え・リセット</span>
             <span className="filterHint">絞り込み後に適用</span>
           </div>
-          <div className="sortControl">
-            <label className="sortSelectLabel" htmlFor="report-sort">現在の並び順</label>
-            <select
-              id="report-sort"
-              className="sortSelect"
-              value={selectedSort}
-              onChange={(event) => setSelectedSort(event.target.value as SortOption)}
+          <div className="sortResetGrid">
+            <div className="sortControl">
+              <label className="sortSelectLabel" htmlFor="report-sort">現在の並び順</label>
+              <select
+                id="report-sort"
+                className="sortSelect"
+                value={selectedSort}
+                onChange={(event) => setSelectedSort(event.target.value as SortOption)}
+              >
+                {sortOptions.map((option) => (
+                  <option value={option.value} key={option.value}>{option.label}</option>
+                ))}
+              </select>
+            </div>
+            <button
+              type="button"
+              className="resetFiltersButton"
+              onClick={resetFilters}
+              disabled={isInitialState}
+              aria-disabled={isInitialState}
             >
-              {sortOptions.map((option) => (
-                <option value={option.value} key={option.value}>{option.label}</option>
-              ))}
-            </select>
+              条件をリセット
+            </button>
           </div>
         </div>
       </div>
@@ -199,7 +217,7 @@ export function FishingDashboard() {
           <div className="emptyState" role="status">
             <p className="eyebrow">No reports</p>
             <h3>該当する釣果情報がありません</h3>
-            <p>魚種・エリア・キーワード検索の条件を変更するか、検索をクリアしてください。MVPではモックデータのみを表示しています。</p>
+            <p>魚種・エリア・キーワード検索の条件を変更するか、「条件をリセット」で初期表示に戻してください。MVPではモックデータのみを表示しています。</p>
           </div>
         ) : reports.map((report) => (
           <article className="card" key={report.id}>
@@ -214,9 +232,11 @@ export function FishingDashboard() {
               </div>
             </div>
 
-            <div className="cardSummary">
-              <span>{report.species}</span>
-              <span>{report.method}</span>
+            <div className="cardSummary" aria-label="釣果概要">
+              <span>魚種: {report.species}</span>
+              <span>釣り方: {report.method}</span>
+              <span>場所: {report.areaName}</span>
+              <span>日付: {report.reportDate}</span>
               <span>{report.catchCount}匹 / {report.sizeCm}cm</span>
             </div>
 
