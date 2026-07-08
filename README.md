@@ -1,63 +1,63 @@
 # fish-forecast-map
 
-Fishing forecast map is a web application for visualizing fishing reports, fishing spots, target fish species, and simple explainable forecast scores on a map.
+釣果予測マップは、釣果情報、釣り場、対象魚種、簡易的な釣れそう度スコアを地図上で確認できるWebアプリです。
 
-The first version focuses on a small, low-cost MVP using mock data. Later versions may add Supabase, fishing report ingestion, tide/weather/sea-temperature data, and 3D seafloor visualization.
+最初のバージョンでは、モックデータを使って低コストなMVPを作ります。後続フェーズで、Supabase、釣果情報の取り込み、潮汐・天気・水温データ、3D海底地形表示などを追加する想定です。
 
 ## MVP v0.1
 
-MVP v0.1 will provide:
+MVP v0.1では以下を提供します。
 
-- A simple top page.
-- Fishing report list.
-- Fishing report cards or detail view.
-- Fishing report registration form using mock/local state first.
-- Map screen with report markers.
-- Fish species filter.
-- Simple explainable rule-based forecast score.
-- Clear disclaimer that scores are reference information and do not guarantee catch.
+- シンプルなトップページ。
+- 釣果情報一覧。
+- 釣果情報カード、または詳細表示に近い表示。
+- モックデータ/ローカル状態を使った釣果登録フォーム。
+- 釣果地点を表示する地図画面。
+- 魚種フィルタ。
+- 説明可能な簡易ルールベースの釣れそう度スコア。
+- 釣れそう度は釣果を保証するものではなく、参考情報であることの注意書き。
 
-## Out of scope for MVP v0.1
+## MVP v0.1 ではやらないこと
 
-- External fishing-site scraping.
-- 3D seafloor rendering.
-- Paid APIs.
-- Complex machine-learning prediction.
-- Login/authentication.
-- Production database writes.
-- Reposting full third-party article text.
+- 外部の釣果サイトの自動スクレイピング。
+- 3D海底地形表示。
+- 有料APIの利用。
+- 複雑な機械学習による予測。
+- ログイン/認証。
+- 本番データベースへの書き込み。
+- 第三者サイトの記事本文の丸ごと再掲載。
 
-## Cost policy
+## コスト方針
 
-Optimize in this order:
+以下の順に優先します。
 
-1. Stay within the user's existing ChatGPT Plus budget when possible.
-2. Save tokens.
-3. Maintain quality.
-4. Improve productivity.
+1. 既存のChatGPT Plus利用範囲を中心に、月額コストを抑えること。
+2. トークン消費を抑えること。
+3. 品質を維持すること。
+4. 生産性を高めること。
 
-Do not introduce paid APIs, paid hosting, paid maps, or paid model inference unless explicitly approved.
+明示的な承認がない限り、有料API、有料ホスティング、有料地図サービス、有料モデル推論は導入しません。
 
-## Development workflow
+## 開発フロー
 
-- ChatGPT acts as commander/project lead.
-- Codex acts as implementation worker through GitHub Issues and Pull Requests.
-- 1 task = 1 GitHub Issue = 1 Pull Request.
-- Keep Pull Requests small and reviewable.
-- Keep docs and implementation consistent.
-- CI must pass before merge.
+- ChatGPTが司令塔/プロジェクトリードとして動きます。
+- CodexはGitHub IssueとPull Requestを単位に実装担当として動きます。
+- 1タスク = 1 GitHub Issue = 1 Pull Request とします。
+- PRは小さく、レビューしやすい単位にします。
+- ドキュメントと実装を一致させます。
+- マージ前にCIが通っていることを確認します。
 
-See `AGENTS.md` and `docs/CODEX_WORKFLOW.md` for details.
+詳細は `AGENTS.md` と `docs/CODEX_WORKFLOW.md` を参照してください。
 
-## Legal and data caution
+## データ利用上の注意
 
-Fishing report data from shops, blogs, SNS, or news sites must respect terms, robots.txt, copyright, and access load. Store extracted facts and source URLs, not full article copies.
+釣具店、ブログ、SNS、ニュースサイトなどの釣果情報を扱う場合は、利用規約、robots.txt、著作権、アクセス負荷に配慮します。保存するのは抽出した事実情報と出典URLを中心とし、第三者サイトの記事本文を丸ごと保存・再掲載しません。
 
-## Local development
+## ローカル開発
 
-Application code has not been created yet.
+アプリケーションコードはまだ作成していません。
 
-Expected future commands:
+今後の想定コマンドは以下です。
 
 ```bash
 npm install
