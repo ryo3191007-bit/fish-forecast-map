@@ -51,8 +51,10 @@ h2, h3, p { margin-top: 0; }
 .resultSummary { margin: 14px 0 0; color: #67e8f9; font-weight: 800; }
 .filterControls { flex: 0 1 520px; display: grid; gap: 10px; color: #dffbff; }
 .filterHeader { display: flex; justify-content: space-between; gap: 12px; align-items: center; font-weight: 800; }
+.areaFilterHeader { margin-top: 6px; padding-top: 12px; border-top: 1px solid rgba(125, 211, 252, .16); }
 .filterHint { color: #93c5fd; font-size: .78rem; font-weight: 700; }
 .speciesChips { display: flex; flex-wrap: wrap; gap: 8px; max-height: 158px; overflow-y: auto; padding: 2px 2px 4px; }
+.areaChips { max-height: 104px; }
 .speciesChip { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; border: 1px solid rgba(125, 211, 252, .38); border-radius: 999px; padding: 9px 12px; background: rgba(8, 47, 73, .68); color: #dffbff; font: inherit; font-size: .9rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 18px rgba(0, 0, 0, .18), inset 0 1px 0 rgba(255,255,255,.07); transition: transform .15s ease, border-color .15s ease, background .15s ease, color .15s ease, box-shadow .15s ease; }
 .speciesChip:hover { transform: translateY(-1px); border-color: #67e8f9; background: rgba(14, 116, 144, .72); box-shadow: 0 0 22px rgba(34, 211, 238, .18); }
 .speciesChip:focus-visible { outline: 3px solid rgba(34, 211, 238, .42); outline-offset: 2px; }
