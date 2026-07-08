@@ -23,8 +23,16 @@ h2, h3, p { margin-top: 0; }
 .filters .muted { max-width: 760px; line-height: 1.75; }
 .muted { color: #475569; }
 .resultSummary { margin: 14px 0 0; color: #0f766e; font-weight: 800; }
-label { display: grid; gap: 8px; font-weight: 800; min-width: 240px; color: #164e63; }
-select { border: 1px solid #cbd5e1; border-radius: 14px; padding: 12px 14px; font: inherit; background: white; color: #0f172a; box-shadow: 0 8px 20px rgba(15, 23, 42, .08); }
+.filterControls { flex: 0 1 520px; display: grid; gap: 10px; color: #164e63; }
+.filterHeader { display: flex; justify-content: space-between; gap: 12px; align-items: center; font-weight: 800; }
+.filterHint { color: #64748b; font-size: .78rem; font-weight: 700; }
+.speciesChips { display: flex; flex-wrap: wrap; gap: 8px; max-height: 158px; overflow-y: auto; padding: 2px 2px 4px; }
+.speciesChip { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; border: 1px solid #bae6fd; border-radius: 999px; padding: 9px 12px; background: rgba(240, 249, 255, .88); color: #075985; font: inherit; font-size: .9rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 18px rgba(15, 23, 42, .06); transition: transform .15s ease, border-color .15s ease, background .15s ease, color .15s ease; }
+.speciesChip:hover { transform: translateY(-1px); border-color: #38bdf8; background: white; }
+.speciesChip:focus-visible { outline: 3px solid rgba(14, 165, 233, .35); outline-offset: 2px; }
+.speciesChip strong { min-width: 1.75rem; border-radius: 999px; padding: 2px 7px; background: white; color: #0f766e; text-align: center; font-size: .78rem; line-height: 1.45; }
+.speciesChip.active { border-color: #f97316; background: #fff7ed; color: #9a3412; box-shadow: 0 10px 22px rgba(249, 115, 22, .16); }
+.speciesChip.active strong { background: #fed7aa; color: #7c2d12; }
 .mapSection { margin-bottom: 18px; }
 .mapShell { position: relative; border-radius: 30px; background: rgba(255,255,255,.55); padding: 8px; box-shadow: 0 24px 80px rgba(15, 23, 42, .18); }
 .map { height: clamp(420px, 58vw, 580px); width: 100%; border-radius: 24px; overflow: hidden; border: 1px solid rgba(15, 23, 42, .16); }
@@ -57,5 +65,5 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
 .reasonBlock { padding: 14px 16px; border-radius: 16px; background: rgba(236, 253, 245, .72); border: 1px solid #bbf7d0; }
 .reasonBlock > p { margin-bottom: 8px; color: #047857; font-size: .82rem; font-weight: 800; }
 .reasons { margin: 0; padding-left: 20px; color: #334155; line-height: 1.7; }
-@media (max-width: 760px) { .heroGrid, .panel, .sectionHeading { grid-template-columns: 1fr; display: grid; } .heroCard { display: none; } .panel { align-items: stretch; } label { min-width: 0; } .cards { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .heroGrid, .panel, .sectionHeading { grid-template-columns: 1fr; display: grid; } .heroCard { display: none; } .panel { align-items: stretch; } .filterControls { flex-basis: auto; } .speciesChips { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; max-height: none; padding-bottom: 8px; scroll-snap-type: x proximity; } .speciesChip { flex: 0 0 auto; scroll-snap-align: start; } .cards { grid-template-columns: 1fr; } }
 @media (max-width: 420px) { .hero { padding-top: 18px; } .nav div { width: 100%; } .dashboard { padding-inline: 12px; } .mapShell { padding: 5px; border-radius: 23px; } .map { height: 360px; border-radius: 18px; } .mapEmpty { inset: 18px; } .cardHeader { display: grid; } .scoreBox { justify-items: start; width: 100%; } .facts { grid-template-columns: 1fr; } }
