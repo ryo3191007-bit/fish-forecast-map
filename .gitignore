@@ -30,3 +30,6 @@ Thumbs.db
 # エディタ設定
 .vscode/
 .idea/
+
+# TypeScript
+*.tsbuildinfo
