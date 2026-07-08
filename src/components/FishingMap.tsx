@@ -61,10 +61,12 @@ function createPopupContent(report: FishingReport) {
   const spotName = document.createElement("strong");
   spotName.textContent = report.spotName;
 
-  const summary = document.createElement("div");
-  summary.textContent = `${report.species} / ${report.forecast.score}点`;
+  popup.className = "mapPopup";
 
-  const reason = document.createElement("div");
+  const summary = document.createElement("div");
+  summary.textContent = `${report.areaName} / ${report.species} / ${report.forecast.score}点`;
+
+  const reason = document.createElement("p");
   reason.textContent = report.forecast.reasons[0] ?? "";
 
   popup.append(spotName, summary, reason);

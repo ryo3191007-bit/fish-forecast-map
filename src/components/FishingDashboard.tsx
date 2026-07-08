@@ -34,8 +34,19 @@ export function FishingDashboard() {
         </label>
       </div>
 
-      <FishingMap reports={reports} />
+      <div className="mapSection">
+        <FishingMap reports={reports} />
+      </div>
+
       <p className="notice">{disclaimer}</p>
+
+      <div className="sectionHeading">
+        <div>
+          <p className="eyebrow">Catch reports</p>
+          <h2>釣果情報一覧</h2>
+        </div>
+        <p className="muted">スコア、魚種、釣り方、根拠をカードごとに確認できます。</p>
+      </div>
 
       <div className="cards" id="reports">
         {reports.length === 0 ? (
@@ -51,17 +62,32 @@ export function FishingDashboard() {
                 <p className="eyebrow">{report.areaName}</p>
                 <h3>{report.spotName}</h3>
               </div>
-              <strong className="score">{report.forecast.score}<span>点</span></strong>
+              <div className="scoreBox" aria-label={`釣れそう度 ${report.forecast.score}点`}>
+                <span>釣れそう度</span>
+                <strong className="score">{report.forecast.score}<span>点</span></strong>
+              </div>
             </div>
+
+            <div className="cardSummary">
+              <span>{report.species}</span>
+              <span>{report.method}</span>
+              <span>{report.catchCount}匹 / {report.sizeCm}cm</span>
+            </div>
+
             <dl className="facts">
               <div><dt>日付</dt><dd>{report.reportDate}</dd></div>
+              <div><dt>場所</dt><dd>{report.areaName}</dd></div>
               <div><dt>魚種</dt><dd>{report.species}</dd></div>
               <div><dt>釣果数</dt><dd>{report.catchCount}</dd></div>
               <div><dt>サイズ</dt><dd>{report.sizeCm}cm</dd></div>
               <div><dt>釣り方</dt><dd>{report.method}</dd></div>
-              <div><dt>出典</dt><dd><a href={report.sourceUrl}>{report.sourceName}</a></dd></div>
+              <div className="sourceFact"><dt>出典</dt><dd><a href={report.sourceUrl}>{report.sourceName}</a></dd></div>
             </dl>
-            <ul className="reasons">{report.forecast.reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul>
+
+            <div className="reasonBlock">
+              <p>スコア根拠</p>
+              <ul className="reasons">{report.forecast.reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul>
+            </div>
           </article>
         ))}
       </div>
