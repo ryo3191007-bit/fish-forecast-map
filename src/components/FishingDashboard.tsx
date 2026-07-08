@@ -21,6 +21,9 @@ export function FishingDashboard() {
           <p className="eyebrow">MVP v0.1 / mock only</p>
           <h2>糸島西岸〜平戸方面のモック釣果マップ</h2>
           <p className="muted">魚種で絞り込み、地図マーカーと一覧で釣れそう度の根拠を確認できます。</p>
+          <p className="resultSummary" aria-live="polite">
+            {selectedSpecies === "all" ? "すべての魚種" : selectedSpecies} / {reports.length}件を表示中
+          </p>
         </div>
         <label>
           魚種フィルタ
@@ -35,7 +38,13 @@ export function FishingDashboard() {
       <p className="notice">{disclaimer}</p>
 
       <div className="cards" id="reports">
-        {reports.map((report) => (
+        {reports.length === 0 ? (
+          <div className="emptyState" role="status">
+            <p className="eyebrow">No reports</p>
+            <h3>該当する釣果情報がありません</h3>
+            <p>魚種フィルタを「すべて」に戻すか、別の魚種を選択してください。MVPではモックデータのみを表示しています。</p>
+          </div>
+        ) : reports.map((report) => (
           <article className="card" key={report.id}>
             <div className="cardHeader">
               <div>

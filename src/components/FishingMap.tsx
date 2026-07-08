@@ -43,7 +43,16 @@ export function FishingMap({ reports }: FishingMapProps) {
     return () => markers.forEach((marker) => marker.remove());
   }, [reports]);
 
-  return <div ref={containerRef} className="map" aria-label="釣果地点マップ" />;
+  return (
+    <div className="mapShell">
+      <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
+      {reports.length === 0 ? (
+        <div className="mapEmpty" aria-hidden="true">
+          表示できるマーカーはありません
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 function createPopupContent(report: FishingReport) {
