@@ -7,9 +7,18 @@ import { FishingMap } from "./FishingMap";
 
 const disclaimer = "釣れそう度は、取得可能な釣果情報と簡易ルールに基づく参考情報です。実際の釣果を保証するものではありません。";
 
+type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
+
+const sortOptions: { value: SortOption; label: string }[] = [
+  { value: "scoreDesc", label: "釣れそう度が高い順" },
+  { value: "dateDesc", label: "日付が新しい順" },
+  { value: "dateAsc", label: "日付が古い順" },
+];
+
 export function FishingDashboard() {
   const [selectedSpecies, setSelectedSpecies] = useState<FishSpeciesName | "all">("all");
   const [selectedArea, setSelectedArea] = useState<string | "all">("all");
+  const [selectedSort, setSelectedSort] = useState<SortOption>("scoreDesc");
   const speciesCounts = useMemo(() => {
     return fishSpeciesNames.map((species) => ({
       species,
@@ -25,18 +34,24 @@ export function FishingDashboard() {
     return Array.from(counts, ([areaName, count]) => ({ areaName, count }));
   }, []);
 
-  const reports = useMemo(
-    () => mockFishingReports.filter((report) => {
+  const reports = useMemo(() => {
+    const filteredReports = mockFishingReports.filter((report) => {
       const matchesSpecies = selectedSpecies === "all" || report.species === selectedSpecies;
       const matchesArea = selectedArea === "all" || report.areaName === selectedArea;
 
       return matchesSpecies && matchesArea;
-    }),
-    [selectedArea, selectedSpecies],
-  );
+    });
+
+    return [...filteredReports].sort((a, b) => {
+      if (selectedSort === "scoreDesc") return b.forecast.score - a.forecast.score;
+      if (selectedSort === "dateDesc") return Date.parse(b.reportDate) - Date.parse(a.reportDate);
+      return Date.parse(a.reportDate) - Date.parse(b.reportDate);
+    });
+  }, [selectedArea, selectedSort, selectedSpecies]);
 
   const speciesLabel = selectedSpecies === "all" ? "すべての魚種" : selectedSpecies;
   const areaLabel = selectedArea === "all" ? "すべてのエリア" : selectedArea;
+  const sortLabel = sortOptions.find((option) => option.value === selectedSort)?.label ?? "釣れそう度が高い順";
 
   return (
     <section className="dashboard" id="map">
@@ -46,7 +61,7 @@ export function FishingDashboard() {
           <h2>糸島西岸〜平戸方面のモック釣果マップ</h2>
           <p className="muted">魚種とエリアで絞り込み、地図マーカーと一覧で釣れそう度の根拠を確認できます。</p>
           <p className="resultSummary" aria-live="polite">
-            魚種: {speciesLabel} / エリア: {areaLabel} / 全{mockFishingReports.length}件中 {reports.length}件を表示中
+            魚種: {speciesLabel} / エリア: {areaLabel} / 並び順: {sortLabel} / 全{mockFishingReports.length}件中 {reports.length}件を表示中
           </p>
         </div>
         <div className="filterControls" aria-label="釣果フィルタ">
@@ -105,6 +120,24 @@ export function FishingDashboard() {
               </button>
             ))}
           </div>
+
+          <div className="filterHeader sortFilterHeader">
+            <span>並び替え</span>
+            <span className="filterHint">絞り込み後に適用</span>
+          </div>
+          <div className="sortControl">
+            <label className="sortSelectLabel" htmlFor="report-sort">現在の並び順</label>
+            <select
+              id="report-sort"
+              className="sortSelect"
+              value={selectedSort}
+              onChange={(event) => setSelectedSort(event.target.value as SortOption)}
+            >
+              {sortOptions.map((option) => (
+                <option value={option.value} key={option.value}>{option.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -119,7 +152,7 @@ export function FishingDashboard() {
           <p className="eyebrow">Catch reports</p>
           <h2>釣果情報一覧</h2>
         </div>
-        <p className="muted">スコア、魚種、釣り方、根拠をカードごとに確認できます。</p>
+        <p className="muted">{sortLabel}で表示中です。スコア、魚種、釣り方、根拠をカードごとに確認できます。</p>
       </div>
 
       <div className="cards" id="reports">
