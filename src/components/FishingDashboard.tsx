@@ -3,15 +3,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { fishingSpots } from "@/data/fishingSpots";
 import { mockFishingReports } from "@/data/mockFishingReports";
-import { fishSpeciesNames, type FishSpeciesName } from "@/domain/fishing";
+import { fishSpeciesNames, type FishSpeciesName, type FishingReport } from "@/domain/fishing";
 import type { FishingEnvironment } from "@/domain/environment";
 import { fetchFishingEnvironment } from "@/services/openMeteo";
 import { EnvironmentPanel } from "./EnvironmentPanel";
 import { FishingMap } from "./FishingMap";
+import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 
 const disclaimer = "SCOREは、取得可能な釣果情報と簡易ルールに基づく参考情報です。実際の釣果を保証するものではありません。";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
+type ReportView = "reports" | "areas";
 
 const sortOptions: { value: SortOption; label: string }[] = [
   { value: "scoreDesc", label: "SCOREが高い順" },
@@ -24,6 +26,7 @@ export function FishingDashboard() {
   const [selectedArea, setSelectedArea] = useState<string | "all">("all");
   const [selectedSort, setSelectedSort] = useState<SortOption>("scoreDesc");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [reportView, setReportView] = useState<ReportView>("reports");
   const [environmentSpotId, setEnvironmentSpotId] = useState(fishingSpots[0]?.id ?? "");
   const [environment, setEnvironment] = useState<FishingEnvironment | null>(null);
   const [environmentError, setEnvironmentError] = useState<string | null>(null);
@@ -69,6 +72,35 @@ export function FishingDashboard() {
       return Date.parse(a.reportDate) - Date.parse(b.reportDate);
     });
   }, [normalizedKeyword, selectedArea, selectedSort, selectedSpecies]);
+
+  const areaEvaluations = useMemo(() => {
+    const groupedReports = new Map<string, FishingReport[]>();
+    reports.forEach((report) => {
+      const key = report.spotName || report.areaName;
+      groupedReports.set(key, [...(groupedReports.get(key) ?? []), report]);
+    });
+
+    return Array.from(groupedReports, ([placeName, placeReports]) => {
+      const averageScore = Math.round(placeReports.reduce((total, report) => total + report.forecast.score, 0) / placeReports.length);
+      const latestReport = [...placeReports].sort((a, b) => Date.parse(b.reportDate) - Date.parse(a.reportDate))[0];
+      const representativeSpecies = Array.from(new Set(placeReports.map((report) => report.species))).slice(0, 3);
+      const bestReason = [...placeReports].sort((a, b) => b.forecast.score - a.forecast.score)[0]?.forecast.reasons[0] ?? "既存のモック釣果から簡易集計しています。";
+
+      return {
+        placeName,
+        areaName: latestReport.areaName,
+        averageScore,
+        representativeSpecies,
+        latestReportDate: latestReport.reportDate,
+        reportCount: placeReports.length,
+        memo: bestReason,
+      };
+    }).sort((a, b) => {
+      if (selectedSort === "dateDesc") return Date.parse(b.latestReportDate) - Date.parse(a.latestReportDate);
+      if (selectedSort === "dateAsc") return Date.parse(a.latestReportDate) - Date.parse(b.latestReportDate);
+      return b.averageScore - a.averageScore;
+    });
+  }, [reports, selectedSort]);
 
   const environmentSpot = useMemo(() => {
     return fishingSpots.find((spot) => spot.id === environmentSpotId) ?? fishingSpots[0];
@@ -283,52 +315,45 @@ export function FishingDashboard() {
         </div>
 
 
-      <div className="cards" id="reports">
-        {reports.length === 0 ? (
-          <div className="emptyState" role="status">
-            <p className="eyebrow">No reports</p>
-            <h3>該当する釣果情報がありません</h3>
-            <p>魚種・エリア・キーワード検索の条件を変更するか、「条件をリセット」で初期表示に戻してください。MVPではモックデータのみを表示しています。</p>
-          </div>
-        ) : reports.map((report) => (
-          <article className="card" key={report.id}>
-            <div className="cardHeader">
-              <div>
-                <p className="eyebrow">{report.areaName}</p>
-                <h3>{report.spotName}</h3>
-              </div>
-              <div className="scoreBox" aria-label={`SCORE ${report.forecast.score}点`}>
-                <span>SCORE</span>
-                <strong className="score">{report.forecast.score}<span>点</span></strong>
-              </div>
-            </div>
-
-            <div className="cardSummary" aria-label="釣果概要">
-              <span>魚種: {report.species}</span>
-              <span>釣り方: {report.method}</span>
-              <span>場所: {report.areaName}</span>
-              <span>地点ID: {report.spotId}</span>
-              <span>日付: {report.reportDate}</span>
-              <span>{report.catchCount}匹 / {report.sizeCm}cm</span>
-            </div>
-
-            <dl className="facts">
-              <div><dt>日付</dt><dd>{report.reportDate}</dd></div>
-              <div><dt>場所</dt><dd>{report.areaName}</dd></div>
-              <div><dt>魚種</dt><dd>{report.species}</dd></div>
-              <div><dt>釣果数</dt><dd>{report.catchCount}</dd></div>
-              <div><dt>サイズ</dt><dd>{report.sizeCm}cm</dd></div>
-              <div><dt>釣り方</dt><dd>{report.method}</dd></div>
-              <div className="sourceFact"><dt>出典</dt><dd><a href={report.sourceUrl}>{report.sourceName}</a></dd></div>
-            </dl>
-
-            <div className="reasonBlock">
-              <p>スコア根拠</p>
-              <ul className="reasons">{report.forecast.reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul>
-            </div>
-          </article>
-        ))}
+      <div className="reportViewBar" role="group" aria-label="釣果情報一覧の表示切替">
+        <button type="button" className={reportView === "reports" ? "reportViewButton active" : "reportViewButton"} aria-pressed={reportView === "reports"} onClick={() => setReportView("reports")}>釣果一覧</button>
+        <button type="button" className={reportView === "areas" ? "reportViewButton active" : "reportViewButton"} aria-pressed={reportView === "areas"} onClick={() => setReportView("areas")}>地点評価一覧</button>
       </div>
+
+      {reportView === "reports" ? (
+        <>
+          <ExternalCatchMemoSection />
+          <div className="cards" id="reports">
+            {reports.length === 0 ? (
+              <div className="emptyState" role="status">
+                <p className="eyebrow">No reports</p>
+                <h3>該当する釣果情報がありません</h3>
+                <p>魚種・エリア・キーワード検索の条件を変更するか、「条件をリセット」で初期表示に戻してください。MVPではモックデータのみを表示しています。</p>
+              </div>
+            ) : reports.map((report) => (
+              <article className="card" key={report.id}>
+                <div className="cardHeader"><div><p className="eyebrow">{report.areaName}</p><h3>{report.species} / {report.areaName}</h3><p className="muted">{report.spotName}</p></div><div className="scoreBox" aria-label={`SCORE ${report.forecast.score}点`}><span>SCORE</span><strong className="score">{report.forecast.score}<span>点</span></strong></div></div>
+                <div className="cardSummary" aria-label="釣果概要"><span>魚種: {report.species}</span><span>釣り方: {report.method}</span><span>場所: {report.areaName}</span><span>地点ID: {report.spotId}</span><span>日付: {report.reportDate}</span><span>{report.catchCount}匹 / {report.sizeCm}cm</span></div>
+                <dl className="facts"><div><dt>日付</dt><dd>{report.reportDate}</dd></div><div><dt>場所</dt><dd>{report.areaName}</dd></div><div><dt>魚種</dt><dd>{report.species}</dd></div><div><dt>釣果数</dt><dd>{report.catchCount}</dd></div><div><dt>サイズ</dt><dd>{report.sizeCm}cm</dd></div><div><dt>釣り方</dt><dd>{report.method}</dd></div><div className="sourceFact"><dt>出典</dt><dd><a href={report.sourceUrl}>{report.sourceName}</a></dd></div></dl>
+                <div className="reasonBlock"><p>スコア根拠</p><ul className="reasons">{report.forecast.reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul></div>
+              </article>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="cards" id="reports">
+          {areaEvaluations.length === 0 ? (
+            <div className="emptyState" role="status"><p className="eyebrow">No areas</p><h3>該当する地点評価がありません</h3><p>フィルタ条件を変更してください。</p></div>
+          ) : areaEvaluations.map((evaluation) => (
+            <article className="card" key={`${evaluation.placeName}-${evaluation.areaName}`}>
+              <div className="cardHeader"><div><p className="eyebrow">{evaluation.areaName}</p><h3>{evaluation.placeName}</h3></div><div className="scoreBox" aria-label={`平均SCORE ${evaluation.averageScore}点`}><span>平均SCORE</span><strong className="score">{evaluation.averageScore}<span>点</span></strong></div></div>
+              <div className="cardSummary"><span>代表魚種: {evaluation.representativeSpecies.join(" / ")}</span><span>直近釣果日: {evaluation.latestReportDate}</span><span>釣果件数: {evaluation.reportCount}</span></div>
+              <dl className="facts"><div><dt>地点/エリア</dt><dd>{evaluation.placeName}</dd></div><div><dt>評価値</dt><dd>平均SCORE {evaluation.averageScore}点</dd></div><div><dt>代表魚種</dt><dd>{evaluation.representativeSpecies.join("、")}</dd></div><div><dt>直近釣果日</dt><dd>{evaluation.latestReportDate}</dd></div></dl>
+              <div className="reasonBlock"><p>簡易メモ</p><p className="muted">{evaluation.memo}</p></div>
+            </article>
+          ))}
+        </div>
+      )}
     </section>
   );
 }
