@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { fishingSpots } from "@/data/fishingSpots";
 import { mockFishingReports } from "@/data/mockFishingReports";
-import { externalSources } from "@/data/externalSources";
 import { fishSpeciesNames, type FishSpeciesName, type FishingReport } from "@/domain/fishing";
 import type { FishingEnvironment } from "@/domain/environment";
 import { fetchFishingEnvironment } from "@/services/openMeteo";
@@ -11,7 +10,6 @@ import { EnvironmentPanel } from "./EnvironmentPanel";
 import { FishingMap } from "./FishingMap";
 import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
-import type { ExternalCatchConfidence } from "@/domain/externalCatch";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { applyExternalMemoScoreAdjustments } from "@/domain/externalMemoScore";
 
@@ -19,9 +17,6 @@ const disclaimer = "SCOREは、取得可能な釣果情報と簡易ルールに�
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type ReportView = "reports" | "areas";
-type DataTypeFilter = "all" | "mock" | "external";
-type LinkStatusFilter = "all" | "mapped" | "unlinked";
-type ConfidenceFilter = "all" | ExternalCatchConfidence;
 
 const reportSortOptions: { value: SortOption; label: string }[] = [
   { value: "dateDesc", label: "日付が新しい順" },
@@ -40,10 +35,6 @@ export function FishingDashboard() {
   const [selectedSort, setSelectedSort] = useState<SortOption>("dateDesc");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [reportView, setReportView] = useState<ReportView>("reports");
-  const [selectedDataType, setSelectedDataType] = useState<DataTypeFilter>("all");
-  const [selectedSourceId, setSelectedSourceId] = useState<string | "all">("all");
-  const [selectedConfidence, setSelectedConfidence] = useState<ConfidenceFilter>("all");
-  const [selectedLinkStatus, setSelectedLinkStatus] = useState<LinkStatusFilter>("all");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const { memos: externalMemos, persistMemos, storageError } = useExternalCatchMemos();
@@ -80,36 +71,30 @@ export function FishingDashboard() {
     const filteredReports = adjustedMockFishingReports.filter((report) => {
       const matchesSpecies = selectedSpecies === "all" || report.species === selectedSpecies;
       const matchesArea = selectedArea === "all" || report.areaName === selectedArea;
-      const matchesDataType = selectedDataType !== "external";
-      const matchesDate = (!startDate || report.reportDate >= startDate) && (!endDate || report.reportDate <= endDate);
+      const matchesDate = reportView !== "reports" || ((!startDate || report.reportDate >= startDate) && (!endDate || report.reportDate <= endDate));
       const searchableText = [report.spotName, report.areaName, report.species, report.method, report.sourceName, ...report.forecast.reasons].join(" ").toLowerCase();
-      return matchesSpecies && matchesArea && matchesDataType && matchesDate && (normalizedKeyword === "" || searchableText.includes(normalizedKeyword));
+      return matchesSpecies && matchesArea && matchesDate && (normalizedKeyword === "" || searchableText.includes(normalizedKeyword));
     });
     return [...filteredReports].sort((a, b) => {
       if (selectedSort === "scoreDesc") return b.forecast.score - a.forecast.score;
       if (selectedSort === "dateDesc") return Date.parse(b.reportDate) - Date.parse(a.reportDate);
       return Date.parse(a.reportDate) - Date.parse(b.reportDate);
     });
-  }, [adjustedMockFishingReports, endDate, normalizedKeyword, selectedArea, selectedDataType, selectedSort, selectedSpecies, startDate]);
+  }, [adjustedMockFishingReports, endDate, normalizedKeyword, reportView, selectedArea, selectedSort, selectedSpecies, startDate]);
 
   const filteredExternalMemos = useMemo(() => {
     const filteredMemos = externalMemos.filter((memo) => {
-      const hasLinkedSpot = Boolean(memo.spotId && fishingSpots.some((spot) => spot.id === memo.spotId));
       const matchesSpecies = selectedSpecies === "all" || memo.species === selectedSpecies;
       const matchesArea = selectedArea === "all" || memo.areaName === selectedArea;
-      const matchesDataType = selectedDataType !== "mock";
-      const matchesSource = selectedSourceId === "all" || memo.sourceId === selectedSourceId;
-      const matchesConfidence = selectedConfidence === "all" || memo.confidence === selectedConfidence;
-      const matchesLink = selectedLinkStatus === "all" || (selectedLinkStatus === "mapped" ? hasLinkedSpot : !hasLinkedSpot);
-      const matchesDate = (!startDate || memo.caughtDate >= startDate) && (!endDate || memo.caughtDate <= endDate);
+      const matchesDate = reportView !== "reports" || ((!startDate || memo.caughtDate >= startDate) && (!endDate || memo.caughtDate <= endDate));
       const searchableText = [memo.estimatedSpotName, memo.areaName, memo.species, memo.method, memo.sourceName, memo.userMemo].join(" ").toLowerCase();
-      return matchesSpecies && matchesArea && matchesDataType && matchesSource && matchesConfidence && matchesLink && matchesDate && (normalizedKeyword === "" || searchableText.includes(normalizedKeyword));
+      return matchesSpecies && matchesArea && matchesDate && (normalizedKeyword === "" || searchableText.includes(normalizedKeyword));
     });
     return [...filteredMemos].sort((a, b) => {
       if (selectedSort === "dateAsc") return Date.parse(a.caughtDate) - Date.parse(b.caughtDate);
       return Date.parse(b.caughtDate) - Date.parse(a.caughtDate);
     });
-  }, [endDate, externalMemos, normalizedKeyword, selectedArea, selectedConfidence, selectedDataType, selectedLinkStatus, selectedSort, selectedSourceId, selectedSpecies, startDate]);
+  }, [endDate, externalMemos, normalizedKeyword, reportView, selectedArea, selectedSort, selectedSpecies, startDate]);
 
   const areaEvaluations = useMemo(() => {
     const groupedReports = new Map<string, FishingReport[]>();
@@ -195,7 +180,7 @@ export function FishingDashboard() {
   const activeSortOptions = reportView === "reports" ? reportSortOptions : areaSortOptions;
   const sortLabel = activeSortOptions.find((option) => option.value === selectedSort)?.label ?? (reportView === "reports" ? "日付が新しい順" : "平均SCOREが高い順");
   const searchLabel = normalizedKeyword === "" ? "指定なし" : `「${searchKeyword.trim()}」`;
-  const isInitialState = selectedSpecies === "all" && selectedArea === "all" && selectedSort === "dateDesc" && searchKeyword.length === 0 && selectedDataType === "all" && selectedSourceId === "all" && selectedConfidence === "all" && selectedLinkStatus === "all" && startDate === "" && endDate === "";
+  const isInitialState = selectedSpecies === "all" && selectedArea === "all" && selectedSort === "dateDesc" && searchKeyword.length === 0 && startDate === "" && endDate === "";
   useEffect(() => {
     if (reportView === "reports" && selectedSort === "scoreDesc") {
       setSelectedSort("dateDesc");
@@ -207,10 +192,6 @@ export function FishingDashboard() {
     setSelectedArea("all");
     setSearchKeyword("");
     setSelectedSort("dateDesc");
-    setSelectedDataType("all");
-    setSelectedSourceId("all");
-    setSelectedConfidence("all");
-    setSelectedLinkStatus("all");
     setStartDate("");
     setEndDate("");
   };
@@ -336,18 +317,18 @@ export function FishingDashboard() {
             </div>
           </div>
 
-          <div className="filterHeader keywordFilterHeader">
-            <span>外部メモ・釣果期間フィルタ</span>
-            <span className="filterHint">外部メモにも適用</span>
-          </div>
-          <div className="advancedFilterGrid">
-            <label className="sortSelectLabel">データ種別<select className="sortSelect" value={selectedDataType} onChange={(event) => setSelectedDataType(event.target.value as DataTypeFilter)}><option value="all">すべて</option><option value="mock">モック釣果</option><option value="external">外部メモ</option></select></label>
-            <label className="sortSelectLabel">外部メモの情報元<select className="sortSelect" value={selectedSourceId} onChange={(event) => setSelectedSourceId(event.target.value)}><option value="all">すべて</option>{externalSources.map((source) => <option key={source.sourceId} value={source.sourceId}>{source.sourceName}</option>)}</select></label>
-            <label className="sortSelectLabel">信頼度<select className="sortSelect" value={selectedConfidence} onChange={(event) => setSelectedConfidence(event.target.value as ConfidenceFilter)}><option value="all">すべて</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select></label>
-            <label className="sortSelectLabel">釣り場紐づけ<select className="sortSelect" value={selectedLinkStatus} onChange={(event) => setSelectedLinkStatus(event.target.value as LinkStatusFilter)}><option value="all">すべて</option><option value="mapped">地図表示あり</option><option value="unlinked">未紐づけ</option></select></label>
-            <label className="sortSelectLabel">釣果期間の開始日<input className="searchInput" type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></label>
-            <label className="sortSelectLabel">釣果期間の終了日<input className="searchInput" type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} /></label>
-          </div>
+          {reportView === "reports" ? (
+            <>
+              <div className="filterHeader keywordFilterHeader">
+                <span>外部メモ・釣果期間フィルタ</span>
+                <span className="filterHint">開始日と終了日で絞り込み</span>
+              </div>
+              <div className="advancedFilterGrid">
+                <label className="sortSelectLabel">釣果期間の開始日<input className="searchInput" type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></label>
+                <label className="sortSelectLabel">釣果期間の終了日<input className="searchInput" type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} /></label>
+              </div>
+            </>
+          ) : null}
 
           <div className="filterHeader sortFilterHeader">
             <span>並び替え・リセット</span>
