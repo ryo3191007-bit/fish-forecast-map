@@ -8,7 +8,6 @@ export default function Home() {
           <div>
             <a href="#map">地図</a>
             <a href="#reports">一覧</a>
-            <a href="#external-memos">外部メモ</a>
           </div>
         </nav>
         <div className="heroGrid">

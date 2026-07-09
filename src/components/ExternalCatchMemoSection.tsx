@@ -130,9 +130,19 @@ export function ExternalCatchMemoSection() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [editingId, setEditingId] = useState<string | null>(null);
   const [storageError, setStorageError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const editingMemo = useMemo(() => memos.find((memo) => memo.id === editingId), [editingId, memos]);
 
   useEffect(() => setMemos(loadMemos()), []);
+
+  useEffect(() => {
+    if (!isModalOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsModalOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isModalOpen]);
 
   const saveMemos = (nextMemos: ExternalCatchMemo[]) => {
     try {
@@ -183,41 +193,65 @@ export function ExternalCatchMemoSection() {
   };
 
   return (
-    <section className="externalMemoSection" id="external-memos" aria-labelledby="external-memos-heading">
-      <div className="sectionHeading">
+    <>
+      <div className="externalMemoLaunch" aria-labelledby="external-memos-launch-heading">
         <div>
           <p className="eyebrow">Manual external sources</p>
-          <h2 id="external-memos-heading">外部釣果メモ</h2>
+          <h3 id="external-memos-launch-heading">外部釣果メモ登録</h3>
+          <p className="muted">URL先を自動取得せず、確認した事実情報と出典だけをブラウザに保存します。</p>
         </div>
-        <p className="muted">URL先は自動取得せず、ユーザーが確認した事実情報と出典だけをlocalStorageに保存します。</p>
+        <button type="button" className="button" onClick={() => setIsModalOpen(true)}>
+          外部釣果メモ登録
+        </button>
       </div>
-      {storageError ? <p className="externalMemoError" role="alert">{storageError}</p> : null}
-      <form className="externalMemoForm" onSubmit={submitMemo} noValidate>
-        <label>情報元URL*<input value={form.sourceUrl} onChange={(e) => updateForm("sourceUrl", e.target.value)} placeholder="https://example.com/report" /></label>
-        {errors.sourceUrl ? <p className="fieldError">{errors.sourceUrl}</p> : null}
-        <label>情報元*<select value={form.sourceId} onChange={(e) => updateForm("sourceId", e.target.value)}><option value="">選択してください</option>{externalSources.map((source) => <option key={source.sourceId} value={source.sourceId}>{source.sourceName}</option>)}</select></label>
-        {errors.sourceId ? <p className="fieldError">{errors.sourceId}</p> : null}
-        <div className="externalMemoGrid">
-          <label>魚種*<select value={form.species} onChange={(e) => updateForm("species", e.target.value)}><option value="">選択してください</option>{fishSpeciesNames.map((species) => <option key={species} value={species}>{species}</option>)}</select></label>
-          <label>釣果日*<input type="date" value={form.caughtDate} onChange={(e) => updateForm("caughtDate", e.target.value)} /></label>
-          <label>エリア*<input value={form.areaName} onChange={(e) => updateForm("areaName", e.target.value)} placeholder="例: 唐津湾" /></label>
-          <label>推定地点名<input value={form.estimatedSpotName} onChange={(e) => updateForm("estimatedSpotName", e.target.value)} placeholder="例: 呼子周辺" /></label>
-          <label>釣り方<select value={form.method} onChange={(e) => updateForm("method", e.target.value)}><option value="">未選択</option>{methodOptions.map((method) => <option key={method} value={method}>{method}</option>)}</select></label>
-          <label>信頼度<select value={form.confidence} onChange={(e) => updateForm("confidence", e.target.value)}>{confidenceOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
-          <label>匹数<input type="number" min="0" value={form.catchCount} onChange={(e) => updateForm("catchCount", e.target.value)} /></label>
-          <label>サイズcm<input type="number" min="0" value={form.sizeCm} onChange={(e) => updateForm("sizeCm", e.target.value)} /></label>
-          <label className="externalMemoWide">釣り場マスター紐づけ<select value={form.spotId} onChange={(e) => updateForm("spotId", e.target.value)}><option value="">紐づけなし</option>{fishingSpots.map((spot) => <option key={spot.id} value={spot.id}>{spot.name} / {spot.areaName}</option>)}</select></label>
-          <label className="externalMemoWide">ユーザーメモ<textarea value={form.userMemo} onChange={(e) => updateForm("userMemo", e.target.value)} maxLength={240} placeholder="本文やコメント全文ではなく、自分用の短いメモだけを保存" /></label>
+
+      {isModalOpen ? (
+        <div className="externalMemoOverlay" role="presentation" onMouseDown={() => setIsModalOpen(false)}>
+          <section
+            className="externalMemoModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="external-memos-heading"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className="externalMemoModalHeader">
+              <div>
+                <p className="eyebrow">Manual external sources</p>
+                <h2 id="external-memos-heading">外部釣果メモ登録</h2>
+                <p className="muted">フォーム、登録済みメモの一覧、編集、削除、出典URLを開く操作をこの画面で行います。</p>
+              </div>
+              <button type="button" className="externalMemoClose" onClick={() => setIsModalOpen(false)} aria-label="外部釣果メモ登録を閉じる">×</button>
+            </div>
+            {storageError ? <p className="externalMemoError" role="alert">{storageError}</p> : null}
+            <form className="externalMemoForm" onSubmit={submitMemo} noValidate>
+              <label>情報元URL*<input value={form.sourceUrl} onChange={(e) => updateForm("sourceUrl", e.target.value)} placeholder="https://example.com/report" /></label>
+              {errors.sourceUrl ? <p className="fieldError">{errors.sourceUrl}</p> : null}
+              <label>情報元*<select value={form.sourceId} onChange={(e) => updateForm("sourceId", e.target.value)}><option value="">選択してください</option>{externalSources.map((source) => <option key={source.sourceId} value={source.sourceId}>{source.sourceName}</option>)}</select></label>
+              {errors.sourceId ? <p className="fieldError">{errors.sourceId}</p> : null}
+              <div className="externalMemoGrid">
+                <label>魚種*<select value={form.species} onChange={(e) => updateForm("species", e.target.value)}><option value="">選択してください</option>{fishSpeciesNames.map((species) => <option key={species} value={species}>{species}</option>)}</select></label>
+                <label>釣果日*<input type="date" value={form.caughtDate} onChange={(e) => updateForm("caughtDate", e.target.value)} /></label>
+                <label>エリア*<input value={form.areaName} onChange={(e) => updateForm("areaName", e.target.value)} placeholder="例: 唐津湾" /></label>
+                <label>推定地点名<input value={form.estimatedSpotName} onChange={(e) => updateForm("estimatedSpotName", e.target.value)} placeholder="例: 呼子周辺" /></label>
+                <label>釣り方<select value={form.method} onChange={(e) => updateForm("method", e.target.value)}><option value="">未選択</option>{methodOptions.map((method) => <option key={method} value={method}>{method}</option>)}</select></label>
+                <label>信頼度<select value={form.confidence} onChange={(e) => updateForm("confidence", e.target.value)}>{confidenceOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
+                <label>匹数<input type="number" min="0" value={form.catchCount} onChange={(e) => updateForm("catchCount", e.target.value)} /></label>
+                <label>サイズcm<input type="number" min="0" value={form.sizeCm} onChange={(e) => updateForm("sizeCm", e.target.value)} /></label>
+                <label className="externalMemoWide">釣り場マスター紐づけ<select value={form.spotId} onChange={(e) => updateForm("spotId", e.target.value)}><option value="">紐づけなし</option>{fishingSpots.map((spot) => <option key={spot.id} value={spot.id}>{spot.name} / {spot.areaName}</option>)}</select></label>
+                <label className="externalMemoWide">ユーザーメモ<textarea value={form.userMemo} onChange={(e) => updateForm("userMemo", e.target.value)} maxLength={240} placeholder="本文やコメント全文ではなく、自分用の短いメモだけを保存" /></label>
+              </div>
+              {errors.species || errors.caughtDate || errors.areaName || errors.catchCount || errors.sizeCm ? <p className="fieldError">{errors.species ?? errors.caughtDate ?? errors.areaName ?? errors.catchCount ?? errors.sizeCm}</p> : null}
+              <div className="externalMemoActions"><button className="button" type="submit">{editingId ? "更新する" : "登録する"}</button>{editingId ? <button type="button" className="clearSearchButton" onClick={resetForm}>編集をキャンセル</button> : null}</div>
+            </form>
+            <div className="externalMemoList" aria-live="polite">
+              {memos.length === 0 ? <p className="emptyState">登録済みの外部釣果メモはありません。</p> : memos.map((memo) => {
+                const linkedSpot = memo.spotId ? fishingSpots.find((spot) => spot.id === memo.spotId) : undefined;
+                return <article className="card" key={memo.id}><div className="cardHeader"><div><p className="eyebrow">{memo.sourceName}</p><h3>{memo.species} / {memo.areaName}</h3></div></div><div className="cardSummary"><span>釣果日: {memo.caughtDate}</span><span>推定地点: {memo.estimatedSpotName ?? "未入力"}</span><span>信頼度: {memo.confidence}</span><span>釣り場: {linkedSpot ? linkedSpot.name : "未紐づけ"}</span></div><dl className="facts"><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>更新日時</dt><dd>{new Date(memo.updatedAt).toLocaleString("ja-JP")}</dd></div><div className="sourceFact"><dt>出典URL</dt><dd><a href={memo.sourceUrl} target="_blank" rel="noreferrer">別タブで開く</a></dd></div></dl>{memo.userMemo ? <p className="externalMemoNote">{memo.userMemo}</p> : null}<div className="externalMemoActions"><button type="button" className="clearSearchButton" onClick={() => startEdit(memo)}>編集</button><button type="button" className="clearSearchButton" onClick={() => deleteMemo(memo.id)}>削除</button></div></article>;
+              })}
+            </div>
+          </section>
         </div>
-        {errors.species || errors.caughtDate || errors.areaName || errors.catchCount || errors.sizeCm ? <p className="fieldError">{errors.species ?? errors.caughtDate ?? errors.areaName ?? errors.catchCount ?? errors.sizeCm}</p> : null}
-        <div className="externalMemoActions"><button className="button" type="submit">{editingId ? "更新する" : "登録する"}</button>{editingId ? <button type="button" className="clearSearchButton" onClick={resetForm}>編集をキャンセル</button> : null}</div>
-      </form>
-      <div className="externalMemoList" aria-live="polite">
-        {memos.length === 0 ? <p className="emptyState">登録済みの外部釣果メモはありません。</p> : memos.map((memo) => {
-          const linkedSpot = memo.spotId ? fishingSpots.find((spot) => spot.id === memo.spotId) : undefined;
-          return <article className="card" key={memo.id}><div className="cardHeader"><div><p className="eyebrow">{memo.sourceName}</p><h3>{memo.species} / {memo.areaName}</h3></div></div><div className="cardSummary"><span>釣果日: {memo.caughtDate}</span><span>推定地点: {memo.estimatedSpotName ?? "未入力"}</span><span>信頼度: {memo.confidence}</span><span>釣り場: {linkedSpot ? linkedSpot.name : "未紐づけ"}</span></div><dl className="facts"><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>更新日時</dt><dd>{new Date(memo.updatedAt).toLocaleString("ja-JP")}</dd></div><div className="sourceFact"><dt>出典URL</dt><dd><a href={memo.sourceUrl} target="_blank" rel="noreferrer">別タブで開く</a></dd></div></dl>{memo.userMemo ? <p className="externalMemoNote">{memo.userMemo}</p> : null}<div className="externalMemoActions"><button type="button" className="clearSearchButton" onClick={() => startEdit(memo)}>編集</button><button type="button" className="clearSearchButton" onClick={() => deleteMemo(memo.id)}>削除</button></div></article>;
-        })}
-      </div>
-    </section>
+      ) : null}
+    </>
   );
 }
