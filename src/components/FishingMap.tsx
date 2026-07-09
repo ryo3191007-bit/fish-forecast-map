@@ -2,8 +2,10 @@
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { fishingSpots } from "@/data/fishingSpots";
 import type { FishingReport } from "@/domain/fishing";
+import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import {
   GSI_AERIAL_TILE_ATTRIBUTION,
   GSI_AERIAL_TILE_NOTE,
@@ -11,9 +13,11 @@ import {
 } from "@/domain/mapLayer";
 import { MapLayerToggle } from "./MapLayerToggle";
 
-type FishingMapProps = { reports: FishingReport[] };
+type FishingMapProps = { reports: FishingReport[]; externalMemos: ExternalCatchMemo[] };
 
-export function FishingMap({ reports }: FishingMapProps) {
+type MappableExternalMemo = ExternalCatchMemo & { latitude: number; longitude: number; spotName: string };
+
+export function FishingMap({ reports, externalMemos }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
@@ -39,12 +43,18 @@ export function FishingMap({ reports }: FishingMapProps) {
     };
   }, []);
 
+  const mappableExternalMemos = useMemo(() => externalMemos.flatMap((memo): MappableExternalMemo[] => {
+    const spot = memo.spotId ? fishingSpots.find((item) => item.id === memo.spotId) : undefined;
+    return spot ? [{ ...memo, latitude: spot.latitude, longitude: spot.longitude, spotName: spot.name }] : [];
+  }), [externalMemos]);
+
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || reports.length === 0) return;
+    const markerPoints = [...reports, ...mappableExternalMemos];
+    if (!map || markerPoints.length === 0) return;
 
     const adjustMapBounds = () => {
-      fitMapToReports(map, reports, hasAdjustedBoundsRef.current);
+      fitMapToPoints(map, markerPoints, hasAdjustedBoundsRef.current);
       hasAdjustedBoundsRef.current = true;
     };
 
@@ -58,7 +68,7 @@ export function FishingMap({ reports }: FishingMapProps) {
     return () => {
       map.off("load", adjustMapBounds);
     };
-  }, [reports]);
+  }, [mappableExternalMemos, reports]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -78,7 +88,7 @@ export function FishingMap({ reports }: FishingMapProps) {
     const map = mapRef.current;
     if (!map) return;
 
-    const markers = reports.map((report) => {
+    const reportMarkers = reports.map((report) => {
       const marker = new maplibregl.Marker({
         color: scoreColor(report.forecast.score),
       })
@@ -92,8 +102,15 @@ export function FishingMap({ reports }: FishingMapProps) {
       return marker;
     });
 
-    return () => markers.forEach((marker) => marker.remove());
-  }, [reports]);
+    const memoMarkers = mappableExternalMemos.map((memo) => {
+      return new maplibregl.Marker({ color: "#a855f7" })
+        .setLngLat([memo.longitude, memo.latitude])
+        .setPopup(new maplibregl.Popup({ offset: 16 }).setDOMContent(createExternalMemoPopupContent(memo)))
+        .addTo(map);
+    });
+
+    return () => [...reportMarkers, ...memoMarkers].forEach((marker) => marker.remove());
+  }, [mappableExternalMemos, reports]);
 
   return (
     <div className="mapShell">
@@ -105,7 +122,7 @@ export function FishingMap({ reports }: FishingMapProps) {
           <span>{GSI_AERIAL_TILE_NOTE}</span>
         </div>
       ) : null}
-      {reports.length === 0 ? (
+      {reports.length === 0 && mappableExternalMemos.length === 0 ? (
         <div className="mapEmpty" aria-hidden="true">
           <strong>表示できるマーカーはありません</strong>
           <span>条件を変更するか、フィルタをリセットしてください。</span>
@@ -150,15 +167,45 @@ function createPopupContent(report: FishingReport) {
   return popup;
 }
 
+function createExternalMemoPopupContent(memo: MappableExternalMemo) {
+  const popup = document.createElement("div");
+  popup.className = "mapPopup";
+  const title = document.createElement("strong");
+  title.className = "mapPopupTitle";
+  title.textContent = memo.estimatedSpotName ?? memo.spotName;
+  const summary = document.createElement("div");
+  summary.className = "mapPopupSummary";
+  const badge = document.createElement("span");
+  badge.className = "mapPopupExternal";
+  badge.textContent = "外部メモ / 手動メモ";
+  const species = document.createElement("span");
+  species.textContent = String(memo.species);
+  const area = document.createElement("span");
+  area.textContent = memo.areaName;
+  summary.append(badge, species, area);
+  const meta = document.createElement("p");
+  meta.className = "mapPopupMeta";
+  meta.textContent = `${memo.caughtDate} / ${memo.sourceName} / 信頼度: ${memo.confidence}`;
+  const note = document.createElement("p");
+  note.textContent = `${memo.spotName}に参考表示しています。SCOREには未反映です。`;
+  const link = document.createElement("a");
+  link.href = memo.sourceUrl;
+  link.target = "_blank";
+  link.rel = "noreferrer";
+  link.textContent = "出典URLを開く";
+  popup.append(title, summary, meta, note, link);
+  return popup;
+}
+
 function scoreColor(score: number) {
   if (score >= 70) return "#f97316";
   if (score >= 60) return "#0ea5e9";
   return "#64748b";
 }
 
-function fitMapToReports(
+function fitMapToPoints(
   map: maplibregl.Map,
-  reports: FishingReport[],
+  reports: { latitude: number; longitude: number }[],
   hasAdjustedBounds: boolean,
 ) {
   if (reports.length === 1) {

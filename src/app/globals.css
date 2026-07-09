@@ -174,3 +174,10 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
 .externalMemoModal .externalMemoForm { margin-bottom: 20px; }
 @media (max-width: 760px) { .externalMemoLaunch, .externalMemoModalHeader { display: grid; } .externalMemoLaunch .button { width: 100%; justify-content: center; } .reportViewBar { display: grid; grid-template-columns: 1fr 1fr; width: 100%; border-radius: 18px; } .reportViewButton { border-radius: 14px; } }
 @media (max-width: 620px) { .externalMemoOverlay { padding: 8px; align-items: stretch; } .externalMemoModal { max-height: calc(100vh - 16px); border-radius: 22px; } }
+.advancedFilterGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 12px; border-radius: 18px; background: rgba(15, 23, 42, .4); border: 1px solid rgba(125, 211, 252, .18); }
+.advancedFilterGrid label { display: grid; gap: 6px; }
+.externalMemoCard { border-color: rgba(216, 180, 254, .42); background: linear-gradient(145deg, rgba(88, 28, 135, .46), rgba(15, 23, 42, .82)); }
+.externalScoreBox { background: rgba(88, 28, 135, .38); border-color: rgba(216, 180, 254, .38); }
+.mapPopupSummary .mapPopupExternal { background: #f3e8ff; color: #6b21a8; }
+@media (max-width: 900px) { .advancedFilterGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .advancedFilterGrid { grid-template-columns: 1fr; } }

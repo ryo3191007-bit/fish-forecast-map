@@ -3,17 +3,24 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { fishingSpots } from "@/data/fishingSpots";
 import { mockFishingReports } from "@/data/mockFishingReports";
+import { externalSources } from "@/data/externalSources";
 import { fishSpeciesNames, type FishSpeciesName, type FishingReport } from "@/domain/fishing";
 import type { FishingEnvironment } from "@/domain/environment";
 import { fetchFishingEnvironment } from "@/services/openMeteo";
 import { EnvironmentPanel } from "./EnvironmentPanel";
 import { FishingMap } from "./FishingMap";
 import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
+import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
+import type { ExternalCatchConfidence } from "@/domain/externalCatch";
+import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 
 const disclaimer = "SCOREは、取得可能な釣果情報と簡易ルールに基づく参考情報です。実際の釣果を保証するものではありません。";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type ReportView = "reports" | "areas";
+type DataTypeFilter = "all" | "mock" | "external";
+type LinkStatusFilter = "all" | "mapped" | "unlinked";
+type ConfidenceFilter = "all" | ExternalCatchConfidence;
 
 const sortOptions: { value: SortOption; label: string }[] = [
   { value: "scoreDesc", label: "SCOREが高い順" },
@@ -27,6 +34,13 @@ export function FishingDashboard() {
   const [selectedSort, setSelectedSort] = useState<SortOption>("scoreDesc");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [reportView, setReportView] = useState<ReportView>("reports");
+  const [selectedDataType, setSelectedDataType] = useState<DataTypeFilter>("all");
+  const [selectedSourceId, setSelectedSourceId] = useState<string | "all">("all");
+  const [selectedConfidence, setSelectedConfidence] = useState<ConfidenceFilter>("all");
+  const [selectedLinkStatus, setSelectedLinkStatus] = useState<LinkStatusFilter>("all");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const { memos: externalMemos, persistMemos, storageError } = useExternalCatchMemos();
   const [environmentSpotId, setEnvironmentSpotId] = useState(fishingSpots[0]?.id ?? "");
   const [environment, setEnvironment] = useState<FishingEnvironment | null>(null);
   const [environmentError, setEnvironmentError] = useState<string | null>(null);
@@ -35,17 +49,20 @@ export function FishingDashboard() {
   const speciesCounts = useMemo(() => {
     return fishSpeciesNames.map((species) => ({
       species,
-      count: mockFishingReports.filter((report) => report.species === species).length,
+      count: mockFishingReports.filter((report) => report.species === species).length + externalMemos.filter((memo) => memo.species === species).length,
     }));
-  }, []);
+  }, [externalMemos]);
   const areaCounts = useMemo(() => {
     const counts = new Map<string, number>();
     mockFishingReports.forEach((report) => {
       counts.set(report.areaName, (counts.get(report.areaName) ?? 0) + 1);
     });
+    externalMemos.forEach((memo) => {
+      counts.set(memo.areaName, (counts.get(memo.areaName) ?? 0) + 1);
+    });
 
     return Array.from(counts, ([areaName, count]) => ({ areaName, count }));
-  }, []);
+  }, [externalMemos]);
 
   const normalizedKeyword = searchKeyword.trim().toLowerCase();
 
@@ -53,25 +70,36 @@ export function FishingDashboard() {
     const filteredReports = mockFishingReports.filter((report) => {
       const matchesSpecies = selectedSpecies === "all" || report.species === selectedSpecies;
       const matchesArea = selectedArea === "all" || report.areaName === selectedArea;
-      const searchableText = [
-        report.spotName,
-        report.areaName,
-        report.species,
-        report.method,
-        report.sourceName,
-        ...report.forecast.reasons,
-      ].join(" ").toLowerCase();
-      const matchesKeyword = normalizedKeyword === "" || searchableText.includes(normalizedKeyword);
-
-      return matchesSpecies && matchesArea && matchesKeyword;
+      const matchesDataType = selectedDataType !== "external";
+      const matchesDate = (!startDate || report.reportDate >= startDate) && (!endDate || report.reportDate <= endDate);
+      const searchableText = [report.spotName, report.areaName, report.species, report.method, report.sourceName, ...report.forecast.reasons].join(" ").toLowerCase();
+      return matchesSpecies && matchesArea && matchesDataType && matchesDate && (normalizedKeyword === "" || searchableText.includes(normalizedKeyword));
     });
-
     return [...filteredReports].sort((a, b) => {
       if (selectedSort === "scoreDesc") return b.forecast.score - a.forecast.score;
       if (selectedSort === "dateDesc") return Date.parse(b.reportDate) - Date.parse(a.reportDate);
       return Date.parse(a.reportDate) - Date.parse(b.reportDate);
     });
-  }, [normalizedKeyword, selectedArea, selectedSort, selectedSpecies]);
+  }, [endDate, normalizedKeyword, selectedArea, selectedDataType, selectedSort, selectedSpecies, startDate]);
+
+  const filteredExternalMemos = useMemo(() => {
+    const filteredMemos = externalMemos.filter((memo) => {
+      const hasLinkedSpot = Boolean(memo.spotId && fishingSpots.some((spot) => spot.id === memo.spotId));
+      const matchesSpecies = selectedSpecies === "all" || memo.species === selectedSpecies;
+      const matchesArea = selectedArea === "all" || memo.areaName === selectedArea;
+      const matchesDataType = selectedDataType !== "mock";
+      const matchesSource = selectedSourceId === "all" || memo.sourceId === selectedSourceId;
+      const matchesConfidence = selectedConfidence === "all" || memo.confidence === selectedConfidence;
+      const matchesLink = selectedLinkStatus === "all" || (selectedLinkStatus === "mapped" ? hasLinkedSpot : !hasLinkedSpot);
+      const matchesDate = (!startDate || memo.caughtDate >= startDate) && (!endDate || memo.caughtDate <= endDate);
+      const searchableText = [memo.estimatedSpotName, memo.areaName, memo.species, memo.method, memo.sourceName, memo.userMemo].join(" ").toLowerCase();
+      return matchesSpecies && matchesArea && matchesDataType && matchesSource && matchesConfidence && matchesLink && matchesDate && (normalizedKeyword === "" || searchableText.includes(normalizedKeyword));
+    });
+    return [...filteredMemos].sort((a, b) => {
+      if (selectedSort === "dateAsc") return Date.parse(a.caughtDate) - Date.parse(b.caughtDate);
+      return Date.parse(b.caughtDate) - Date.parse(a.caughtDate);
+    });
+  }, [endDate, externalMemos, normalizedKeyword, selectedArea, selectedConfidence, selectedDataType, selectedLinkStatus, selectedSort, selectedSourceId, selectedSpecies, startDate]);
 
   const areaEvaluations = useMemo(() => {
     const groupedReports = new Map<string, FishingReport[]>();
@@ -94,13 +122,14 @@ export function FishingDashboard() {
         latestReportDate: latestReport.reportDate,
         reportCount: placeReports.length,
         memo: bestReason,
+        externalMemoCount: externalMemos.filter((memo) => memo.spotId && placeReports.some((report) => report.spotId === memo.spotId)).length,
       };
     }).sort((a, b) => {
       if (selectedSort === "dateDesc") return Date.parse(b.latestReportDate) - Date.parse(a.latestReportDate);
       if (selectedSort === "dateAsc") return Date.parse(a.latestReportDate) - Date.parse(b.latestReportDate);
       return b.averageScore - a.averageScore;
     });
-  }, [reports, selectedSort]);
+  }, [externalMemos, reports, selectedSort]);
 
   const environmentSpot = useMemo(() => {
     return fishingSpots.find((spot) => spot.id === environmentSpotId) ?? fishingSpots[0];
@@ -155,12 +184,18 @@ export function FishingDashboard() {
   const areaLabel = selectedArea === "all" ? "すべてのエリア" : selectedArea;
   const sortLabel = sortOptions.find((option) => option.value === selectedSort)?.label ?? "SCOREが高い順";
   const searchLabel = normalizedKeyword === "" ? "指定なし" : `「${searchKeyword.trim()}」`;
-  const isInitialState = selectedSpecies === "all" && selectedArea === "all" && selectedSort === "scoreDesc" && searchKeyword.length === 0;
+  const isInitialState = selectedSpecies === "all" && selectedArea === "all" && selectedSort === "scoreDesc" && searchKeyword.length === 0 && selectedDataType === "all" && selectedSourceId === "all" && selectedConfidence === "all" && selectedLinkStatus === "all" && startDate === "" && endDate === "";
   const resetFilters = () => {
     setSelectedSpecies("all");
     setSelectedArea("all");
     setSearchKeyword("");
     setSelectedSort("scoreDesc");
+    setSelectedDataType("all");
+    setSelectedSourceId("all");
+    setSelectedConfidence("all");
+    setSelectedLinkStatus("all");
+    setStartDate("");
+    setEndDate("");
   };
 
   return (
@@ -171,14 +206,14 @@ export function FishingDashboard() {
           <h2>糸島西岸〜平戸方面のモック釣果マップ</h2>
           <p className="muted">魚種・エリア・キーワードで絞り込み、地図マーカーと一覧でSCOREの根拠を確認できます。</p>
           <p className="resultSummary" aria-live="polite">
-            魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 釣り場マスター{fishingSpots.length}地点 / 全{mockFishingReports.length}件中 {reports.length}件を表示中
+            魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 釣り場マスター{fishingSpots.length}地点 / 全{mockFishingReports.length + externalMemos.length}件中 {reports.length + filteredExternalMemos.length}件を表示中
           </p>
         </div>
       </div>
 
       <div className="mapEnvironmentGrid">
         <div className="mapSection">
-          <FishingMap reports={reports} />
+          <FishingMap reports={reports} externalMemos={filteredExternalMemos} />
         </div>
         <EnvironmentPanel
           selectedSpot={environmentSpot}
@@ -214,7 +249,7 @@ export function FishingDashboard() {
               onClick={() => setSelectedSpecies("all")}
             >
               <span>すべて</span>
-              <strong>{mockFishingReports.length}</strong>
+              <strong>{mockFishingReports.length + externalMemos.length}</strong>
             </button>
             {speciesCounts.map(({ species, count }) => (
               <button
@@ -242,7 +277,7 @@ export function FishingDashboard() {
               onClick={() => setSelectedArea("all")}
             >
               <span>すべてのエリア</span>
-              <strong>{mockFishingReports.length}</strong>
+              <strong>{mockFishingReports.length + externalMemos.length}</strong>
             </button>
             {areaCounts.map(({ areaName, count }) => (
               <button
@@ -284,6 +319,19 @@ export function FishingDashboard() {
             </div>
           </div>
 
+          <div className="filterHeader keywordFilterHeader">
+            <span>外部メモ・期間フィルタ</span>
+            <span className="filterHint">外部メモにも適用</span>
+          </div>
+          <div className="advancedFilterGrid">
+            <label className="sortSelectLabel">データ種別<select className="sortSelect" value={selectedDataType} onChange={(event) => setSelectedDataType(event.target.value as DataTypeFilter)}><option value="all">すべて</option><option value="mock">モック釣果</option><option value="external">外部メモ</option></select></label>
+            <label className="sortSelectLabel">外部メモの情報元<select className="sortSelect" value={selectedSourceId} onChange={(event) => setSelectedSourceId(event.target.value)}><option value="all">すべて</option>{externalSources.map((source) => <option key={source.sourceId} value={source.sourceId}>{source.sourceName}</option>)}</select></label>
+            <label className="sortSelectLabel">信頼度<select className="sortSelect" value={selectedConfidence} onChange={(event) => setSelectedConfidence(event.target.value as ConfidenceFilter)}><option value="all">すべて</option><option value="high">high</option><option value="medium">medium</option><option value="low">low</option></select></label>
+            <label className="sortSelectLabel">釣り場紐づけ<select className="sortSelect" value={selectedLinkStatus} onChange={(event) => setSelectedLinkStatus(event.target.value as LinkStatusFilter)}><option value="all">すべて</option><option value="mapped">地図表示あり</option><option value="unlinked">未紐づけ</option></select></label>
+            <label className="sortSelectLabel">開始日<input className="searchInput" type="date" value={startDate} onChange={(event) => setStartDate(event.target.value)} /></label>
+            <label className="sortSelectLabel">終了日<input className="searchInput" type="date" value={endDate} onChange={(event) => setEndDate(event.target.value)} /></label>
+          </div>
+
           <div className="filterHeader sortFilterHeader">
             <span>並び替え・リセット</span>
             <span className="filterHint">絞り込み後に適用</span>
@@ -322,15 +370,15 @@ export function FishingDashboard() {
 
       {reportView === "reports" ? (
         <>
-          <ExternalCatchMemoSection />
+          <ExternalCatchMemoSection memos={externalMemos} onMemosChange={persistMemos} storageError={storageError} />
           <div className="cards" id="reports">
-            {reports.length === 0 ? (
+            {reports.length === 0 && filteredExternalMemos.length === 0 ? (
               <div className="emptyState" role="status">
                 <p className="eyebrow">No reports</p>
                 <h3>該当する釣果情報がありません</h3>
                 <p>魚種・エリア・キーワード検索の条件を変更するか、「条件をリセット」で初期表示に戻してください。MVPではモックデータのみを表示しています。</p>
               </div>
-            ) : reports.map((report) => (
+            ) : <> {reports.map((report) => (
               <article className="card" key={report.id}>
                 <div className="cardHeader"><div><p className="eyebrow">{report.areaName}</p><h3>{report.species} / {report.areaName}</h3><p className="muted">{report.spotName}</p></div><div className="scoreBox" aria-label={`SCORE ${report.forecast.score}点`}><span>SCORE</span><strong className="score">{report.forecast.score}<span>点</span></strong></div></div>
                 <div className="cardSummary" aria-label="釣果概要"><span>魚種: {report.species}</span><span>釣り方: {report.method}</span><span>場所: {report.areaName}</span><span>地点ID: {report.spotId}</span><span>日付: {report.reportDate}</span><span>{report.catchCount}匹 / {report.sizeCm}cm</span></div>
@@ -338,6 +386,8 @@ export function FishingDashboard() {
                 <div className="reasonBlock"><p>スコア根拠</p><ul className="reasons">{report.forecast.reasons.map((reason) => <li key={reason}>{reason}</li>)}</ul></div>
               </article>
             ))}
+            {filteredExternalMemos.map((memo) => <ExternalMemoCard key={memo.id} memo={memo} />)}
+          </>}
           </div>
         </>
       ) : (
@@ -347,13 +397,25 @@ export function FishingDashboard() {
           ) : areaEvaluations.map((evaluation) => (
             <article className="card" key={`${evaluation.placeName}-${evaluation.areaName}`}>
               <div className="cardHeader"><div><p className="eyebrow">{evaluation.areaName}</p><h3>{evaluation.placeName}</h3></div><div className="scoreBox" aria-label={`平均SCORE ${evaluation.averageScore}点`}><span>平均SCORE</span><strong className="score">{evaluation.averageScore}<span>点</span></strong></div></div>
-              <div className="cardSummary"><span>代表魚種: {evaluation.representativeSpecies.join(" / ")}</span><span>直近釣果日: {evaluation.latestReportDate}</span><span>釣果件数: {evaluation.reportCount}</span></div>
+              <div className="cardSummary"><span>代表魚種: {evaluation.representativeSpecies.join(" / ")}</span><span>直近釣果日: {evaluation.latestReportDate}</span><span>釣果件数: {evaluation.reportCount}</span><span>外部メモ件数: {evaluation.externalMemoCount}（参考 / SCORE未反映）</span></div>
               <dl className="facts"><div><dt>地点/エリア</dt><dd>{evaluation.placeName}</dd></div><div><dt>評価値</dt><dd>平均SCORE {evaluation.averageScore}点</dd></div><div><dt>代表魚種</dt><dd>{evaluation.representativeSpecies.join("、")}</dd></div><div><dt>直近釣果日</dt><dd>{evaluation.latestReportDate}</dd></div></dl>
-              <div className="reasonBlock"><p>簡易メモ</p><p className="muted">{evaluation.memo}</p></div>
+              <div className="reasonBlock"><p>簡易メモ</p><p className="muted">{evaluation.memo}</p><p className="muted">外部メモは参考メモとして件数のみ表示し、平均SCOREには未反映です。</p></div>
             </article>
           ))}
         </div>
       )}
     </section>
+  );
+}
+
+
+function ExternalMemoCard({ memo }: { memo: ExternalCatchMemo }) {
+  const linkedSpot = memo.spotId ? fishingSpots.find((spot) => spot.id === memo.spotId) : undefined;
+  return (
+    <article className="card externalMemoCard">
+      <div className="cardHeader"><div><p className="eyebrow">外部メモ / 手動メモ</p><h3>{memo.species} / {memo.areaName}</h3><p className="muted">SCORE未計算・SCOREには未反映です。</p></div><div className="scoreBox externalScoreBox"><span>SCORE</span><strong>未計算</strong></div></div>
+      <div className="cardSummary"><span>外部メモ</span><span>釣果日: {memo.caughtDate}</span><span>推定地点: {memo.estimatedSpotName ?? "未入力"}</span><span>{linkedSpot ? `地図表示あり: ${linkedSpot.name}` : "未紐づけ / 地図未表示"}</span></div>
+      <dl className="facts"><div><dt>魚種</dt><dd>{memo.species}</dd></div><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>情報元名</dt><dd>{memo.sourceName}</dd></div><div><dt>信頼度</dt><dd>{memo.confidence}</dd></div><div><dt>釣り場マスター</dt><dd>{linkedSpot ? `${linkedSpot.name}に紐づけ` : "未紐づけ / 地図未表示"}</dd></div><div className="sourceFact"><dt>出典URL</dt><dd><a href={memo.sourceUrl} target="_blank" rel="noreferrer">別タブで開く</a></dd></div></dl>
+    </article>
   );
 }
