@@ -4,7 +4,11 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import type { FishingReport } from "@/domain/fishing";
-import { GSI_SEAMLESS_PHOTO_ATTRIBUTION, type MapLayerMode } from "@/domain/mapLayer";
+import {
+  GSI_AERIAL_TILE_ATTRIBUTION,
+  GSI_AERIAL_TILE_NOTE,
+  type MapLayerMode,
+} from "@/domain/mapLayer";
 import { MapLayerToggle } from "./MapLayerToggle";
 
 type FishingMapProps = { reports: FishingReport[] };
@@ -60,7 +64,8 @@ export function FishingMap({ reports }: FishingMapProps) {
     const map = mapRef.current;
     if (!map) return;
 
-    const applyLayerMode = () => setAerialLayerVisibility(map, mapLayerMode === "aerial");
+    const applyLayerMode = () =>
+      setAerialLayerVisibility(map, mapLayerMode === "aerial");
     if (map.loaded()) applyLayerMode();
     else map.once("load", applyLayerMode);
 
@@ -96,8 +101,8 @@ export function FishingMap({ reports }: FishingMapProps) {
       <MapLayerToggle value={mapLayerMode} onChange={setMapLayerMode} />
       {mapLayerMode === "aerial" ? (
         <div className="mapAttribution" aria-label="航空写真の出典">
-          {GSI_SEAMLESS_PHOTO_ATTRIBUTION}
-          <span>航空写真はズーム14〜18付近を中心に表示されます。</span>
+          {GSI_AERIAL_TILE_ATTRIBUTION}
+          <span>{GSI_AERIAL_TILE_NOTE}</span>
         </div>
       ) : null}
       {reports.length === 0 ? (
@@ -191,40 +196,78 @@ function fitMapToReports(
   });
 }
 
-
-function addAerialPhotoLayer(map: maplibregl.Map | null) {
-  if (!map || map.getSource("gsi-seamless-photo")) return;
-
-  map.addSource("gsi-seamless-photo", {
-    type: "raster",
-    tiles: ["https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg"],
-    tileSize: 256,
+const GSI_AERIAL_TILE_LAYERS = [
+  {
+    id: "gsi-modis",
+    tiles: ["https://cyberjapandata.gsi.go.jp/xyz/modis/{z}/{x}/{y}.png"],
+    minzoom: 2,
+    maxzoom: 8,
+    opacity: 0.95,
+  },
+  {
+    id: "gsi-lndst",
+    tiles: ["https://cyberjapandata.gsi.go.jp/xyz/lndst/{z}/{x}/{y}.png"],
+    minzoom: 8,
+    maxzoom: 14,
+    opacity: 0.92,
+  },
+  {
+    id: "gsi-seamless-photo",
+    tiles: [
+      "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
+    ],
     minzoom: 14,
     maxzoom: 18,
-    attribution: GSI_SEAMLESS_PHOTO_ATTRIBUTION,
-  });
+    opacity: 0.92,
+  },
+] as const;
 
-  map.addLayer(
-    {
-      id: "gsi-seamless-photo",
-      type: "raster",
-      source: "gsi-seamless-photo",
-      minzoom: 0,
-      maxzoom: 20,
-      layout: { visibility: "none" },
-      paint: { "raster-opacity": 0.92 },
-    },
-    firstSymbolLayerId(map),
-  );
+function addAerialPhotoLayer(map: maplibregl.Map | null) {
+  if (!map) return;
+
+  for (const layer of GSI_AERIAL_TILE_LAYERS) {
+    if (!map.getSource(layer.id)) {
+      map.addSource(layer.id, {
+        type: "raster",
+        tiles: [...layer.tiles],
+        tileSize: 256,
+        minzoom: layer.minzoom,
+        maxzoom: layer.maxzoom,
+        attribution: GSI_AERIAL_TILE_ATTRIBUTION,
+      });
+    }
+
+    if (!map.getLayer(layer.id)) {
+      map.addLayer(
+        {
+          id: layer.id,
+          type: "raster",
+          source: layer.id,
+          minzoom: layer.minzoom,
+          maxzoom: layer.maxzoom,
+          layout: { visibility: "none" },
+          paint: { "raster-opacity": layer.opacity },
+        },
+        firstSymbolLayerId(map),
+      );
+    }
+  }
 }
 
 function setAerialLayerVisibility(map: maplibregl.Map, isVisible: boolean) {
-  if (!map.getLayer("gsi-seamless-photo")) {
+  if (GSI_AERIAL_TILE_LAYERS.some((layer) => !map.getLayer(layer.id))) {
     addAerialPhotoLayer(map);
   }
-  if (!map.getLayer("gsi-seamless-photo")) return;
 
-  map.setLayoutProperty("gsi-seamless-photo", "visibility", isVisible ? "visible" : "none");
+  for (const layer of GSI_AERIAL_TILE_LAYERS) {
+    if (map.getLayer(layer.id)) {
+      map.setLayoutProperty(
+        layer.id,
+        "visibility",
+        isVisible ? "visible" : "none",
+      );
+    }
+  }
 }
 
 function firstSymbolLayerId(map: maplibregl.Map) {

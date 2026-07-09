@@ -98,12 +98,15 @@ Post-MVP-002では、無料・APIキーなしで利用できるOpen-Meteo Weathe
 
 ## Post-MVP-002.5 で扱う地図タイルと出典表示
 
-Post-MVP-002.5では、航空写真表示の候補として国土地理院の地理院タイル `seamlessphoto` を利用します。
+Post-MVP-002.5では、航空写真表示の候補として国土地理院の地理院タイル `modis`、`lndst`、`seamlessphoto` を利用します。
 
-- タイルURL: `https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg`
-- MapLibre GL JSの `raster` source / `raster` layerとして表示します。
+- 低倍率タイルURL: `https://cyberjapandata.gsi.go.jp/xyz/modis/{z}/{x}/{y}.png`（世界衛星モザイク画像、ズーム2〜8）
+- 中倍率タイルURL: `https://cyberjapandata.gsi.go.jp/xyz/lndst/{z}/{x}/{y}.png`（全国ランドサットモザイク画像、ズーム8〜14）
+- 高倍率タイルURL: `https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg`（全国最新写真、ズーム14〜18）
+- MapLibre GL JSの `raster` source / `raster` layerとして表示し、航空写真モード時のみ表示します。
 - Google Maps / Google航空写真は、この段階では利用しません。
 - 航空写真表示中は、地図付近またはマップ内に `出典: 国土地理院ウェブサイト / 地理院タイル` を表示します。
-- ズームレベルや地域によって航空写真タイルが表示されにくい場合があるため、UI上でズーム14〜18付近が主な表示範囲である旨を注記します。
+- UI上では `低倍率では衛星モザイク画像、中〜高倍率ではランドサット/全国最新写真を表示します。` と注記します。
+- 世界衛星モザイク画像と全国ランドサットモザイク画像は、国土地理院の出典表示に加えて元データの追加出所明示が必要になる可能性があるため、公開前に最新の提供条件、出典記載方法、利用上の制約を確認します。
 
 釣り場マスターの座標は、MVP検証用の代表点として扱います。公開範囲を広げる場合は、釣り場保護、混雑防止、安全配慮のため、詳細座標の丸め、非公開化、危険な小場所の除外を検討します。
