@@ -202,9 +202,9 @@ export function FishingDashboard() {
     <section className="dashboard" id="map">
       <div className="panel filters">
         <div>
-          <p className="eyebrow">MVP v0.1 / mock only</p>
-          <h2>糸島西岸〜平戸方面のモック釣果マップ</h2>
-          <p className="muted">魚種・エリア・キーワードで絞り込み、地図マーカーと一覧でSCOREの根拠を確認できます。</p>
+          <p className="eyebrow">Post-MVP / mock + manual memo</p>
+          <h2>糸島西岸〜平戸方面の釣果予報マップ</h2>
+          <p className="muted">モック釣果と手動登録した外部釣果メモを、魚種・エリア・キーワードで絞り込み、地図マーカーと一覧で確認できます。</p>
           <p className="resultSummary" aria-live="polite">
             魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 釣り場マスター{fishingSpots.length}地点 / 全{mockFishingReports.length + externalMemos.length}件中 {reports.length + filteredExternalMemos.length}件を表示中
           </p>
@@ -376,7 +376,7 @@ export function FishingDashboard() {
               <div className="emptyState" role="status">
                 <p className="eyebrow">No reports</p>
                 <h3>該当する釣果情報がありません</h3>
-                <p>魚種・エリア・キーワード検索の条件を変更するか、「条件をリセット」で初期表示に戻してください。MVPではモックデータのみを表示しています。</p>
+                <p>魚種・エリア・キーワード検索の条件を変更するか、「条件をリセット」で初期表示に戻してください。モック釣果と手動登録した外部釣果メモを表示対象にしています。外部メモはSCORE未計算・SCORE未反映です。</p>
               </div>
             ) : <> {reports.map((report) => (
               <article className="card" key={report.id}>
