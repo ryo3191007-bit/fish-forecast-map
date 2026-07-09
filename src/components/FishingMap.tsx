@@ -129,7 +129,7 @@ function createPopupContent(report: FishingReport) {
 
   const score = document.createElement("span");
   score.className = "mapPopupScore";
-  score.textContent = `${report.forecast.score}点`;
+  score.textContent = `SCORE ${report.forecast.score}点`;
 
   const species = document.createElement("span");
   species.textContent = report.species;
