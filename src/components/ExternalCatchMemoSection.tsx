@@ -4,9 +4,9 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { externalSources } from "@/data/externalSources";
 import { fishingSpots } from "@/data/fishingSpots";
 import { fishSpeciesNames, type FishSpeciesName, type FishingMethod } from "@/domain/fishing";
-import type { ExternalCatchConfidence, ExternalCatchRecord } from "@/domain/externalCatch";
+import type { ExternalCatchConfidence } from "@/domain/externalCatch";
+import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 
-const STORAGE_KEY = "fish-forecast-map.external-catch-memos";
 const confidenceOptions: { value: ExternalCatchConfidence; label: string }[] = [
   { value: "high", label: "高" },
   { value: "medium", label: "中" },
@@ -14,7 +14,6 @@ const confidenceOptions: { value: ExternalCatchConfidence; label: string }[] = [
 ];
 const methodOptions: FishingMethod[] = ["ジギング", "キャスティング", "コマセ", "泳がせ", "サビキ", "エギング", "その他"];
 
-type ExternalCatchMemo = ExternalCatchRecord & { userMemo?: string };
 type FormState = {
   sourceUrl: string;
   sourceId: string;
@@ -46,39 +45,6 @@ const initialFormState: FormState = {
   spotId: "",
   userMemo: "",
 };
-
-function isBrowser() {
-  return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
-}
-
-function isMemo(value: unknown): value is ExternalCatchMemo {
-  if (!value || typeof value !== "object") return false;
-  const memo = value as Partial<ExternalCatchMemo>;
-  return Boolean(
-    typeof memo.id === "string" &&
-      typeof memo.sourceUrl === "string" &&
-      typeof memo.sourceId === "string" &&
-      typeof memo.sourceName === "string" &&
-      typeof memo.species === "string" &&
-      typeof memo.caughtDate === "string" &&
-      typeof memo.areaName === "string" &&
-      memo.acquisitionMethod === "manual" &&
-      typeof memo.createdAt === "string" &&
-      typeof memo.updatedAt === "string",
-  );
-}
-
-function loadMemos(): ExternalCatchMemo[] {
-  if (!isBrowser()) return [];
-  try {
-    const rawValue = window.localStorage.getItem(STORAGE_KEY);
-    if (!rawValue) return [];
-    const parsedValue: unknown = JSON.parse(rawValue);
-    return Array.isArray(parsedValue) ? parsedValue.filter(isMemo) : [];
-  } catch {
-    return [];
-  }
-}
 
 function validateForm(form: FormState): FormErrors {
   const errors: FormErrors = {};
@@ -124,16 +90,18 @@ function createMemo(form: FormState, editingMemo?: ExternalCatchMemo): ExternalC
   };
 }
 
-export function ExternalCatchMemoSection() {
-  const [memos, setMemos] = useState<ExternalCatchMemo[]>([]);
+type ExternalCatchMemoSectionProps = {
+  memos: ExternalCatchMemo[];
+  onMemosChange: (memos: ExternalCatchMemo[]) => boolean;
+  storageError: string | null;
+};
+
+export function ExternalCatchMemoSection({ memos, onMemosChange, storageError }: ExternalCatchMemoSectionProps) {
   const [form, setForm] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [storageError, setStorageError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const editingMemo = useMemo(() => memos.find((memo) => memo.id === editingId), [editingId, memos]);
-
-  useEffect(() => setMemos(loadMemos()), []);
 
   useEffect(() => {
     if (!isModalOpen) return;
@@ -143,17 +111,6 @@ export function ExternalCatchMemoSection() {
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isModalOpen]);
-
-  const saveMemos = (nextMemos: ExternalCatchMemo[]) => {
-    try {
-      if (!isBrowser()) return;
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextMemos));
-      setMemos(nextMemos);
-      setStorageError(null);
-    } catch {
-      setStorageError("外部釣果メモを保存できませんでした。ブラウザの保存容量や設定を確認してください。");
-    }
-  };
 
   const updateForm = (key: keyof FormState, value: string) => setForm((current) => ({ ...current, [key]: value }));
   const resetForm = () => { setForm(initialFormState); setErrors({}); setEditingId(null); };
@@ -165,8 +122,7 @@ export function ExternalCatchMemoSection() {
     if (Object.keys(nextErrors).length > 0) return;
     const nextMemo = createMemo(form, editingMemo);
     const nextMemos = editingId ? memos.map((memo) => (memo.id === editingId ? nextMemo : memo)) : [nextMemo, ...memos];
-    saveMemos(nextMemos);
-    resetForm();
+    if (onMemosChange(nextMemos)) resetForm();
   };
 
   const startEdit = (memo: ExternalCatchMemo) => {
@@ -188,7 +144,7 @@ export function ExternalCatchMemoSection() {
   };
 
   const deleteMemo = (memoId: string) => {
-    saveMemos(memos.filter((memo) => memo.id !== memoId));
+    onMemosChange(memos.filter((memo) => memo.id !== memoId));
     if (editingId === memoId) resetForm();
   };
 
