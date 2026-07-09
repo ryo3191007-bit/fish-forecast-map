@@ -1,18 +1,32 @@
 import type { ExternalSource } from "@/domain/externalSource";
 
+const REVIEWED_AT = "2026-07-09";
+
 export const externalSources: ExternalSource[] = [
   {
     sourceId: "marukin",
     sourceName: "釣り具のまるきん",
     sourceType: "shop",
     targetAreaNames: ["糸島", "唐津", "伊万里湾", "平戸"],
-    baseUrl: "https://www.marukin-net.co.jp/",
-    crawlPolicy: "unknown",
-    robotsStatus: "unchecked",
-    termsStatus: "unchecked",
+    baseUrl: "https://marukin-net.co.jp/",
+    crawlPolicy: "referenceOnly",
+    robotsStatus: "partial",
+    termsStatus: "unknown",
+    reviewedAt: REVIEWED_AT,
+    reviewUrls: [
+      "https://marukin-net.co.jp/robots.txt",
+      "https://marukin-net.co.jp/fishing-report/",
+      "https://marukin-net.co.jp/fishing-report/?feed=rss2",
+      "https://marukin-net.co.jp/fishing-report/?store_filter=imari",
+      "https://marukin-net.co.jp/fishing-report/?store_filter=hirado",
+      "https://marukin-net.co.jp/fishing-report/?store_filter=itoshima",
+    ],
+    reviewSummary:
+      "釣果ページとRSS候補は確認できたが、サイト利用規約を確認できず、robots.txtのContent-SignalもAI学習不可・参照利用止まりのため自動収集対象にはしない。",
     notes: [
-      "店舗発信の釣果情報候補。対象エリアに関係する店舗・記事のみを確認対象にする。",
-      "自動収集前に利用規約、robots.txt、取得対象ページ、アクセス頻度を確認する。",
+      "釣果情報は /fishing-report/ 配下にあり、店舗フィルタとして imari / hirado / itoshima を確認した。RSS候補も存在する。",
+      "robots.txtは User-agent: * に Allow: / を示す一方、Content-Signalで ai-train=no / use=reference を示し、複数AI系botを個別にDisallowしている。",
+      "利用規約ページは確認できなかったため、許諾が明確になるまでは自動収集せず、出典確認やUI検討の参照に留める。",
     ],
   },
   {
@@ -21,12 +35,23 @@ export const externalSources: ExternalSource[] = [
     sourceType: "shop",
     targetAreaNames: ["糸島", "唐津", "伊万里湾", "平戸"],
     baseUrl: "https://www.point-i.jp/",
-    crawlPolicy: "unknown",
-    robotsStatus: "unchecked",
-    termsStatus: "unchecked",
+    crawlPolicy: "manualOnly",
+    robotsStatus: "allowed",
+    termsStatus: "restricted",
+    reviewedAt: REVIEWED_AT,
+    reviewUrls: [
+      "https://www.point-i.jp/robots.txt",
+      "https://www.point-i.jp/termsofservice",
+      "https://www.point-i.jp/catches",
+      "https://www.point-i.jp/fishing_infos",
+      "https://www.point-i.jp/fishing_spot_guides",
+    ],
+    reviewSummary:
+      "robots.txtに一般的なDisallowは見当たらないが、利用規約が私的利用に限定し、情報収集目的や過度負荷を禁じるため自動収集対象にはしない。",
     notes: [
-      "店舗釣果・スタッフ釣果の候補。対象エリア店舗の公開情報を優先して調査する。",
-      "本文や画像はコピーせず、構造化した事実情報と出典URLのみ保存する。",
+      "釣果候補は /catches（みんなの釣果）、/fishing_infos、/fishing_spot_guides。ユーザー投稿や店舗・スタッフ由来の情報が混在する可能性がある。",
+      "利用規約はWEBサービスの利用を私的目的に限定し、当社または他ユーザーの情報収集目的の利用や過度な負荷を禁止している。",
+      "本文・画像・コメントは保存せず、ユーザーが出典URLを手動登録した場合の構造化メモに限定する。",
     ],
   },
   {
@@ -36,11 +61,23 @@ export const externalSources: ExternalSource[] = [
     targetAreaNames: ["糸島", "唐津", "伊万里湾", "平戸"],
     baseUrl: "https://tide.chowari.jp/",
     crawlPolicy: "referenceOnly",
-    robotsStatus: "unchecked",
-    termsStatus: "unchecked",
+    robotsStatus: "unknown",
+    termsStatus: "restricted",
+    reviewedAt: REVIEWED_AT,
+    reviewUrls: [
+      "https://tide.chowari.jp/robots.txt",
+      "https://tide.chowari.jp/",
+      "https://www.chowari.jp/sitepolicy/agreement.php",
+      "https://www.chowari.jp/catch/",
+      "https://www.chowari.jp/catcharea/",
+      "https://www.chowari.jp/catchfish/",
+    ],
+    reviewSummary:
+      "tideサブドメインのrobots.txtは404で未確認、Chowari側の規約は情報収集目的や過度負荷を禁止しているため、潮見表UI等の参照のみに留める。",
     notes: [
-      "潮汐・釣果系サイトとしてUIや確認観点の参考候補に留める。",
-      "現時点ではスクレイピング、コピー、転載、取得元としての利用を行わない。",
+      "潮見表ページから Chowari の最新釣果、地域別釣果、魚種別釣果への導線を確認した。",
+      "tide.chowari.jp/robots.txt は404で、サブドメイン単位のrobots確認は未完了。",
+      "利用規約は他会員の情報収集目的の利用、過度な負担、知的財産権侵害のおそれがある行為を禁じているため、釣果データ取得元にはしない。",
     ],
   },
   {
@@ -50,11 +87,23 @@ export const externalSources: ExternalSource[] = [
     targetAreaNames: ["糸島", "唐津", "伊万里湾", "平戸"],
     baseUrl: "https://anglers.jp/",
     crawlPolicy: "manualOnly",
-    robotsStatus: "unchecked",
-    termsStatus: "unchecked",
+    robotsStatus: "partial",
+    termsStatus: "restricted",
+    reviewedAt: REVIEWED_AT,
+    reviewUrls: [
+      "https://anglers.jp/robots.txt",
+      "https://anglers.jp/terms",
+      "https://anglers.jp/terms/free",
+      "https://anglers.jp/terms/post_guideline",
+      "https://anglers.jp/catches",
+      "https://anglers.jp/sitemap",
+    ],
+    reviewSummary:
+      "ユーザー投稿型サービスで、robots.txtはAI系クローラ制限とCrawl-delayを含む。投稿者権利確認が必要なため自動収集対象にはしない。",
     notes: [
-      "ユーザー投稿型サービスのため、当面はURL手動登録または参照のみ扱いを想定する。",
-      "自動収集を検討する場合は利用規約、robots.txt、投稿者権利、公開範囲を個別に確認する。",
+      "釣果候補は /catches、サイトマップは /sitemap を確認した。サービス性質上、投稿者由来の本文・画像・位置情報を含み得る。",
+      "robots.txtは User-agent: * に Allow: / を示す一方、AI系クローラの多くをDisallowし、一部botにはCrawl-delayを設定している。",
+      "利用規約・投稿ガイドラインの確認が必要なユーザー投稿型/SNS的サービスのため、URL手動登録または参照に限定する。",
     ],
   },
 ];
