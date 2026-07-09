@@ -2,8 +2,14 @@
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FishingReport } from "@/domain/fishing";
+import {
+  GSI_AERIAL_TILE_ATTRIBUTION,
+  GSI_AERIAL_TILE_NOTE,
+  type MapLayerMode,
+} from "@/domain/mapLayer";
+import { MapLayerToggle } from "./MapLayerToggle";
 
 type FishingMapProps = { reports: FishingReport[] };
 
@@ -11,6 +17,7 @@ export function FishingMap({ reports }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
+  const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -21,6 +28,7 @@ export function FishingMap({ reports }: FishingMapProps) {
       center: [129.95, 33.48],
       zoom: 8.2,
     });
+    mapRef.current.on("load", () => addAerialPhotoLayer(mapRef.current));
     mapRef.current.addControl(
       new maplibregl.NavigationControl({ showCompass: false }),
     );
@@ -56,6 +64,20 @@ export function FishingMap({ reports }: FishingMapProps) {
     const map = mapRef.current;
     if (!map) return;
 
+    const applyLayerMode = () =>
+      setAerialLayerVisibility(map, mapLayerMode === "aerial");
+    if (map.loaded()) applyLayerMode();
+    else map.once("load", applyLayerMode);
+
+    return () => {
+      map.off("load", applyLayerMode);
+    };
+  }, [mapLayerMode]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
     const markers = reports.map((report) => {
       const marker = new maplibregl.Marker({
         color: scoreColor(report.forecast.score),
@@ -76,6 +98,13 @@ export function FishingMap({ reports }: FishingMapProps) {
   return (
     <div className="mapShell">
       <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
+      <MapLayerToggle value={mapLayerMode} onChange={setMapLayerMode} />
+      {mapLayerMode === "aerial" ? (
+        <div className="mapAttribution" aria-label="航空写真の出典">
+          {GSI_AERIAL_TILE_ATTRIBUTION}
+          <span>{GSI_AERIAL_TILE_NOTE}</span>
+        </div>
+      ) : null}
       {reports.length === 0 ? (
         <div className="mapEmpty" aria-hidden="true">
           <strong>表示できるマーカーはありません</strong>
@@ -165,4 +194,82 @@ function fitMapToReports(
     duration: hasAdjustedBounds ? 700 : 0,
     essential: true,
   });
+}
+
+const GSI_AERIAL_TILE_LAYERS = [
+  {
+    id: "gsi-modis",
+    tiles: ["https://cyberjapandata.gsi.go.jp/xyz/modis/{z}/{x}/{y}.png"],
+    minzoom: 2,
+    maxzoom: 8,
+    opacity: 0.95,
+  },
+  {
+    id: "gsi-lndst",
+    tiles: ["https://cyberjapandata.gsi.go.jp/xyz/lndst/{z}/{x}/{y}.png"],
+    minzoom: 8,
+    maxzoom: 14,
+    opacity: 0.92,
+  },
+  {
+    id: "gsi-seamless-photo",
+    tiles: [
+      "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
+    ],
+    minzoom: 14,
+    maxzoom: 18,
+    opacity: 0.92,
+  },
+] as const;
+
+function addAerialPhotoLayer(map: maplibregl.Map | null) {
+  if (!map) return;
+
+  for (const layer of GSI_AERIAL_TILE_LAYERS) {
+    if (!map.getSource(layer.id)) {
+      map.addSource(layer.id, {
+        type: "raster",
+        tiles: [...layer.tiles],
+        tileSize: 256,
+        minzoom: layer.minzoom,
+        maxzoom: layer.maxzoom,
+        attribution: GSI_AERIAL_TILE_ATTRIBUTION,
+      });
+    }
+
+    if (!map.getLayer(layer.id)) {
+      map.addLayer(
+        {
+          id: layer.id,
+          type: "raster",
+          source: layer.id,
+          minzoom: layer.minzoom,
+          maxzoom: layer.maxzoom,
+          layout: { visibility: "none" },
+          paint: { "raster-opacity": layer.opacity },
+        },
+        firstSymbolLayerId(map),
+      );
+    }
+  }
+}
+
+function setAerialLayerVisibility(map: maplibregl.Map, isVisible: boolean) {
+  if (GSI_AERIAL_TILE_LAYERS.some((layer) => !map.getLayer(layer.id))) {
+    addAerialPhotoLayer(map);
+  }
+
+  for (const layer of GSI_AERIAL_TILE_LAYERS) {
+    if (map.getLayer(layer.id)) {
+      map.setLayoutProperty(
+        layer.id,
+        "visibility",
+        isVisible ? "visible" : "none",
+      );
+    }
+  }
+}
+
+function firstSymbolLayerId(map: maplibregl.Map) {
+  return map.getStyle().layers?.find((layer) => layer.type === "symbol")?.id;
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { fishingSpots } from "@/data/fishingSpots";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import { fishSpeciesNames, type FishSpeciesName } from "@/domain/fishing";
 import type { FishingEnvironment } from "@/domain/environment";
@@ -135,7 +136,7 @@ export function FishingDashboard() {
           <h2>糸島西岸〜平戸方面のモック釣果マップ</h2>
           <p className="muted">魚種・エリア・キーワードで絞り込み、地図マーカーと一覧で釣れそう度の根拠を確認できます。</p>
           <p className="resultSummary" aria-live="polite">
-            魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 全{mockFishingReports.length}件中 {reports.length}件を表示中
+            魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 釣り場マスター{fishingSpots.length}地点 / 全{mockFishingReports.length}件中 {reports.length}件を表示中
           </p>
         </div>
         <div className="filterControls" aria-label="釣果フィルタ">
@@ -298,6 +299,7 @@ export function FishingDashboard() {
               <span>魚種: {report.species}</span>
               <span>釣り方: {report.method}</span>
               <span>場所: {report.areaName}</span>
+              <span>地点ID: {report.spotId}</span>
               <span>日付: {report.reportDate}</span>
               <span>{report.catchCount}匹 / {report.sizeCm}cm</span>
             </div>
