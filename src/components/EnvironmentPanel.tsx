@@ -1,15 +1,26 @@
 import type { FishingEnvironment } from "@/domain/environment";
-import type { FishingReport } from "@/domain/fishing";
+import type { FishingSpot } from "@/domain/fishingSpot";
 
 type EnvironmentPanelProps = {
-  report: FishingReport | undefined;
+  selectedSpot: FishingSpot | undefined;
+  spots: FishingSpot[];
+  selectedSpotId: string;
+  onSelectedSpotIdChange: (spotId: string) => void;
   environment: FishingEnvironment | null;
   isLoading: boolean;
   error: string | null;
 };
 
-export function EnvironmentPanel({ report, environment, isLoading, error }: EnvironmentPanelProps) {
-  const targetName = report?.spotName ?? "対象地点なし";
+export function EnvironmentPanel({
+  selectedSpot,
+  spots,
+  selectedSpotId,
+  onSelectedSpotIdChange,
+  environment,
+  isLoading,
+  error,
+}: EnvironmentPanelProps) {
+  const targetName = selectedSpot?.name ?? "対象地点なし";
   const partialStateMessage = getPartialStateMessage(environment);
 
   return (
@@ -22,10 +33,31 @@ export function EnvironmentPanel({ report, environment, isLoading, error }: Envi
         <span className="environmentBadge">Open-Meteo</span>
       </div>
 
-      {!report ? (
+      <div className="environmentSpotFilter">
+        <label className="sortSelectLabel" htmlFor="environment-spot">地点フィルタ</label>
+        <select
+          id="environment-spot"
+          className="sortSelect"
+          value={selectedSpotId}
+          onChange={(event) => onSelectedSpotIdChange(event.target.value)}
+        >
+          {spots.map((spot) => (
+            <option value={spot.id} key={spot.id}>
+              {spot.name} / {spot.areaName}
+            </option>
+          ))}
+        </select>
+        {selectedSpot ? (
+          <p className="environmentSpotMeta">
+            {selectedSpot.name}（緯度 {selectedSpot.latitude.toFixed(3)} / 経度 {selectedSpot.longitude.toFixed(3)}）の環境データを表示します。一覧・地図フィルタとは独立しています。
+          </p>
+        ) : null}
+      </div>
+
+      {!selectedSpot ? (
         <p className="environmentState">表示中の釣果地点がないため、環境データの取得対象がありません。</p>
       ) : isLoading ? (
-        <p className="environmentState">代表地点の天気・海況データを取得中です…</p>
+        <p className="environmentState">選択地点の天気・海況データを取得中です…</p>
       ) : error ? (
         <p className="environmentState error">環境データを取得できませんでした。釣果一覧と地図はそのまま利用できます。</p>
       ) : !environment || (!environment.weather && !environment.marine) ? (
