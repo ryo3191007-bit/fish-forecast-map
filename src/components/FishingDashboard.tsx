@@ -8,6 +8,7 @@ import type { FishingEnvironment } from "@/domain/environment";
 import { fetchFishingEnvironment } from "@/services/openMeteo";
 import { EnvironmentPanel } from "./EnvironmentPanel";
 import { FishingMap } from "./FishingMap";
+import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 
 const disclaimer = "SCOREは、取得可能な釣果情報と簡易ルールに基づく参考情報です。実際の釣果を保証するものではありません。";
 
@@ -282,6 +283,8 @@ export function FishingDashboard() {
           </div>
         </div>
 
+
+      <ExternalCatchMemoSection />
 
       <div className="cards" id="reports">
         {reports.length === 0 ? (
