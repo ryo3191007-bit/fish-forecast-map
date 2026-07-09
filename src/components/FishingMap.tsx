@@ -2,8 +2,10 @@
 
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FishingReport } from "@/domain/fishing";
+import { GSI_SEAMLESS_PHOTO_ATTRIBUTION, type MapLayerMode } from "@/domain/mapLayer";
+import { MapLayerToggle } from "./MapLayerToggle";
 
 type FishingMapProps = { reports: FishingReport[] };
 
@@ -11,6 +13,7 @@ export function FishingMap({ reports }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
+  const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -21,6 +24,7 @@ export function FishingMap({ reports }: FishingMapProps) {
       center: [129.95, 33.48],
       zoom: 8.2,
     });
+    mapRef.current.on("load", () => addAerialPhotoLayer(mapRef.current));
     mapRef.current.addControl(
       new maplibregl.NavigationControl({ showCompass: false }),
     );
@@ -56,6 +60,19 @@ export function FishingMap({ reports }: FishingMapProps) {
     const map = mapRef.current;
     if (!map) return;
 
+    const applyLayerMode = () => setAerialLayerVisibility(map, mapLayerMode === "aerial");
+    if (map.loaded()) applyLayerMode();
+    else map.once("load", applyLayerMode);
+
+    return () => {
+      map.off("load", applyLayerMode);
+    };
+  }, [mapLayerMode]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
     const markers = reports.map((report) => {
       const marker = new maplibregl.Marker({
         color: scoreColor(report.forecast.score),
@@ -76,6 +93,13 @@ export function FishingMap({ reports }: FishingMapProps) {
   return (
     <div className="mapShell">
       <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
+      <MapLayerToggle value={mapLayerMode} onChange={setMapLayerMode} />
+      {mapLayerMode === "aerial" ? (
+        <div className="mapAttribution" aria-label="航空写真の出典">
+          {GSI_SEAMLESS_PHOTO_ATTRIBUTION}
+          <span>航空写真はズーム14〜18付近を中心に表示されます。</span>
+        </div>
+      ) : null}
       {reports.length === 0 ? (
         <div className="mapEmpty" aria-hidden="true">
           <strong>表示できるマーカーはありません</strong>
@@ -165,4 +189,44 @@ function fitMapToReports(
     duration: hasAdjustedBounds ? 700 : 0,
     essential: true,
   });
+}
+
+
+function addAerialPhotoLayer(map: maplibregl.Map | null) {
+  if (!map || map.getSource("gsi-seamless-photo")) return;
+
+  map.addSource("gsi-seamless-photo", {
+    type: "raster",
+    tiles: ["https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg"],
+    tileSize: 256,
+    minzoom: 14,
+    maxzoom: 18,
+    attribution: GSI_SEAMLESS_PHOTO_ATTRIBUTION,
+  });
+
+  map.addLayer(
+    {
+      id: "gsi-seamless-photo",
+      type: "raster",
+      source: "gsi-seamless-photo",
+      minzoom: 0,
+      maxzoom: 20,
+      layout: { visibility: "none" },
+      paint: { "raster-opacity": 0.92 },
+    },
+    firstSymbolLayerId(map),
+  );
+}
+
+function setAerialLayerVisibility(map: maplibregl.Map, isVisible: boolean) {
+  if (!map.getLayer("gsi-seamless-photo")) {
+    addAerialPhotoLayer(map);
+  }
+  if (!map.getLayer("gsi-seamless-photo")) return;
+
+  map.setLayoutProperty("gsi-seamless-photo", "visibility", isVisible ? "visible" : "none");
+}
+
+function firstSymbolLayerId(map: maplibregl.Map) {
+  return map.getStyle().layers?.find((layer) => layer.type === "symbol")?.id;
 }

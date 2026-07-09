@@ -35,15 +35,6 @@ export type FishingMethod =
   | "エギング"
   | "その他";
 
-export type FishingSpot = {
-  id: string;
-  name: string;
-  areaName: string;
-  latitude: number;
-  longitude: number;
-  spotType: "堤防" | "漁港" | "磯場" | "湾岸";
-};
-
 export type ForecastScore = {
   score: number;
   reasons: string[];
@@ -53,6 +44,7 @@ export type FishingReport = {
   id: string;
   reportDate: string;
   species: FishSpeciesName;
+  spotId: string;
   spotName: string;
   areaName: string;
   latitude: number;
