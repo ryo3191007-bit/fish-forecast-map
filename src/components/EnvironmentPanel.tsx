@@ -1,15 +1,18 @@
 import type { FishingEnvironment } from "@/domain/environment";
-import type { FishingReport } from "@/domain/fishing";
+import type { FishingSpot } from "@/domain/fishing";
 
 type EnvironmentPanelProps = {
-  report: FishingReport | undefined;
+  spots: FishingSpot[];
+  selectedSpotId: string;
+  onSelectedSpotChange: (spotId: string) => void;
   environment: FishingEnvironment | null;
   isLoading: boolean;
   error: string | null;
 };
 
-export function EnvironmentPanel({ report, environment, isLoading, error }: EnvironmentPanelProps) {
-  const targetName = report?.spotName ?? "対象地点なし";
+export function EnvironmentPanel({ spots, selectedSpotId, onSelectedSpotChange, environment, isLoading, error }: EnvironmentPanelProps) {
+  const selectedSpot = spots.find((spot) => spot.id === selectedSpotId);
+  const targetName = selectedSpot?.name ?? "対象地点なし";
   const partialStateMessage = getPartialStateMessage(environment);
 
   return (
@@ -22,8 +25,29 @@ export function EnvironmentPanel({ report, environment, isLoading, error }: Envi
         <span className="environmentBadge">Open-Meteo</span>
       </div>
 
-      {!report ? (
-        <p className="environmentState">表示中の釣果地点がないため、環境データの取得対象がありません。</p>
+      <div className="environmentSpotControl">
+        <label className="sortSelectLabel" htmlFor="environment-spot">地点フィルタ</label>
+        <select
+          id="environment-spot"
+          className="sortSelect"
+          value={selectedSpotId}
+          onChange={(event) => onSelectedSpotChange(event.target.value)}
+        >
+          {spots.map((spot) => (
+            <option value={spot.id} key={spot.id}>
+              {spot.name} / {spot.areaName}
+            </option>
+          ))}
+        </select>
+        {selectedSpot ? (
+          <p className="environmentSpotMeta">
+            緯度 {selectedSpot.latitude} / 経度 {selectedSpot.longitude}
+          </p>
+        ) : null}
+      </div>
+
+      {!selectedSpot ? (
+        <p className="environmentState">環境データの取得対象地点がありません。</p>
       ) : isLoading ? (
         <p className="environmentState">代表地点の天気・海況データを取得中です…</p>
       ) : error ? (

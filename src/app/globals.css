@@ -133,3 +133,6 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
 .environmentNote { margin: 14px 0 0; color: #a9cfe0; font-size: .82rem; line-height: 1.7; }
 @media (max-width: 760px) { .environmentHeader, .environmentContent { grid-template-columns: 1fr; display: grid; } .environmentBadge { justify-self: start; } }
 @media (max-width: 520px) { .environmentMetrics { grid-template-columns: 1fr; } }
+.filterControls { width: 100%; max-width: none; margin: 0 0 20px; padding: clamp(16px, 2.4vw, 22px); border: 1px solid rgba(125, 211, 252, .25); border-radius: 24px; background: linear-gradient(145deg, rgba(8, 47, 73, .62), rgba(15, 23, 42, .72)); box-shadow: 0 18px 56px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255,255,255,.06); }
+.environmentSpotControl { display: grid; gap: 8px; margin: 0 0 14px; padding: 12px; border-radius: 18px; background: rgba(15, 23, 42, .4); border: 1px solid rgba(125, 211, 252, .18); }
+.environmentSpotMeta { margin: 0; color: #a9cfe0; font-size: .82rem; font-weight: 800; }

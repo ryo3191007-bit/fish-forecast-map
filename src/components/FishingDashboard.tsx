@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { fishingSpots } from "@/data/fishingSpots";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import { fishSpeciesNames, type FishSpeciesName } from "@/domain/fishing";
 import type { FishingEnvironment } from "@/domain/environment";
@@ -8,12 +9,12 @@ import { fetchFishingEnvironment } from "@/services/openMeteo";
 import { EnvironmentPanel } from "./EnvironmentPanel";
 import { FishingMap } from "./FishingMap";
 
-const disclaimer = "釣れそう度は、取得可能な釣果情報と簡易ルールに基づく参考情報です。実際の釣果を保証するものではありません。";
+const disclaimer = "SCOREは、取得可能な釣果情報と簡易ルールに基づく参考情報です。実際の釣果を保証するものではありません。";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 
 const sortOptions: { value: SortOption; label: string }[] = [
-  { value: "scoreDesc", label: "釣れそう度が高い順" },
+  { value: "scoreDesc", label: "SCOREが高い順" },
   { value: "dateDesc", label: "日付が新しい順" },
   { value: "dateAsc", label: "日付が古い順" },
 ];
@@ -23,6 +24,7 @@ export function FishingDashboard() {
   const [selectedArea, setSelectedArea] = useState<string | "all">("all");
   const [selectedSort, setSelectedSort] = useState<SortOption>("scoreDesc");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [environmentSpotId, setEnvironmentSpotId] = useState(fishingSpots[0]?.id ?? "");
   const [environment, setEnvironment] = useState<FishingEnvironment | null>(null);
   const [environmentError, setEnvironmentError] = useState<string | null>(null);
   const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(false);
@@ -68,17 +70,17 @@ export function FishingDashboard() {
     });
   }, [normalizedKeyword, selectedArea, selectedSort, selectedSpecies]);
 
-  const representativeReport = reports[0];
+  const selectedEnvironmentSpot = fishingSpots.find((spot) => spot.id === environmentSpotId) ?? fishingSpots[0];
 
   useEffect(() => {
-    if (!representativeReport) {
+    if (!selectedEnvironmentSpot) {
       setEnvironment(null);
       setEnvironmentError(null);
       setIsEnvironmentLoading(false);
       return;
     }
 
-    const cacheKey = `${representativeReport.latitude},${representativeReport.longitude}`;
+    const cacheKey = `${selectedEnvironmentSpot.latitude},${selectedEnvironmentSpot.longitude}`;
     const cachedEnvironment = environmentCacheRef.current.get(cacheKey);
     if (cachedEnvironment) {
       setEnvironment(cachedEnvironment);
@@ -93,9 +95,9 @@ export function FishingDashboard() {
 
     fetchFishingEnvironment(
       {
-        spotName: representativeReport.spotName,
-        latitude: representativeReport.latitude,
-        longitude: representativeReport.longitude,
+        spotName: selectedEnvironmentSpot.name,
+        latitude: selectedEnvironmentSpot.latitude,
+        longitude: selectedEnvironmentSpot.longitude,
       },
       abortController.signal,
     )
@@ -113,11 +115,11 @@ export function FishingDashboard() {
       });
 
     return () => abortController.abort();
-  }, [representativeReport]);
+  }, [selectedEnvironmentSpot]);
 
   const speciesLabel = selectedSpecies === "all" ? "すべての魚種" : selectedSpecies;
   const areaLabel = selectedArea === "all" ? "すべてのエリア" : selectedArea;
-  const sortLabel = sortOptions.find((option) => option.value === selectedSort)?.label ?? "釣れそう度が高い順";
+  const sortLabel = sortOptions.find((option) => option.value === selectedSort)?.label ?? "SCOREが高い順";
   const searchLabel = normalizedKeyword === "" ? "指定なし" : `「${searchKeyword.trim()}」`;
   const isInitialState = selectedSpecies === "all" && selectedArea === "all" && selectedSort === "scoreDesc" && searchKeyword.length === 0;
   const resetFilters = () => {
@@ -133,11 +135,37 @@ export function FishingDashboard() {
         <div>
           <p className="eyebrow">MVP v0.1 / mock only</p>
           <h2>糸島西岸〜平戸方面のモック釣果マップ</h2>
-          <p className="muted">魚種・エリア・キーワードで絞り込み、地図マーカーと一覧で釣れそう度の根拠を確認できます。</p>
+          <p className="muted">魚種・エリア・キーワードで絞り込み、地図マーカーと一覧でSCOREの根拠を確認できます。</p>
           <p className="resultSummary" aria-live="polite">
             魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 全{mockFishingReports.length}件中 {reports.length}件を表示中
           </p>
         </div>
+      </div>
+
+      <div className="mapEnvironmentGrid">
+        <div className="mapSection">
+          <FishingMap reports={reports} />
+        </div>
+        <EnvironmentPanel
+          spots={fishingSpots}
+          selectedSpotId={selectedEnvironmentSpot?.id ?? ""}
+          onSelectedSpotChange={setEnvironmentSpotId}
+          environment={environment}
+          isLoading={isEnvironmentLoading}
+          error={environmentError}
+        />
+      </div>
+
+      <p className="notice">{disclaimer}</p>
+
+      <div className="sectionHeading">
+        <div>
+          <p className="eyebrow">Catch reports</p>
+          <h2>釣果情報一覧</h2>
+        </div>
+        <p className="muted">{sortLabel}で表示中です。スコア、魚種、釣り方、根拠をカードごとに確認できます。</p>
+      </div>
+
         <div className="filterControls" aria-label="釣果フィルタ">
           <div className="filterHeader">
             <span>魚種フィルタ</span>
@@ -250,29 +278,7 @@ export function FishingDashboard() {
             </button>
           </div>
         </div>
-      </div>
 
-      <div className="mapEnvironmentGrid">
-        <div className="mapSection">
-          <FishingMap reports={reports} />
-        </div>
-        <EnvironmentPanel
-          report={representativeReport}
-          environment={environment}
-          isLoading={isEnvironmentLoading}
-          error={environmentError}
-        />
-      </div>
-
-      <p className="notice">{disclaimer}</p>
-
-      <div className="sectionHeading">
-        <div>
-          <p className="eyebrow">Catch reports</p>
-          <h2>釣果情報一覧</h2>
-        </div>
-        <p className="muted">{sortLabel}で表示中です。スコア、魚種、釣り方、根拠をカードごとに確認できます。</p>
-      </div>
 
       <div className="cards" id="reports">
         {reports.length === 0 ? (
@@ -288,8 +294,8 @@ export function FishingDashboard() {
                 <p className="eyebrow">{report.areaName}</p>
                 <h3>{report.spotName}</h3>
               </div>
-              <div className="scoreBox" aria-label={`釣れそう度 ${report.forecast.score}点`}>
-                <span>釣れそう度</span>
+              <div className="scoreBox" aria-label={`SCORE ${report.forecast.score}点`}>
+                <span>SCORE</span>
                 <strong className="score">{report.forecast.score}<span>点</span></strong>
               </div>
             </div>
