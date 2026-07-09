@@ -13,6 +13,7 @@ import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
 import type { ExternalCatchConfidence } from "@/domain/externalCatch";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
+import { applyExternalMemoScoreAdjustments } from "@/domain/externalMemoScore";
 
 const disclaimer = "SCOREは、取得可能な釣果情報と簡易ルールに基づく参考情報です。実際の釣果を保証するものではありません。";
 
@@ -66,8 +67,12 @@ export function FishingDashboard() {
 
   const normalizedKeyword = searchKeyword.trim().toLowerCase();
 
+  const adjustedMockFishingReports = useMemo(() => {
+    return applyExternalMemoScoreAdjustments(mockFishingReports, externalMemos);
+  }, [externalMemos]);
+
   const reports = useMemo(() => {
-    const filteredReports = mockFishingReports.filter((report) => {
+    const filteredReports = adjustedMockFishingReports.filter((report) => {
       const matchesSpecies = selectedSpecies === "all" || report.species === selectedSpecies;
       const matchesArea = selectedArea === "all" || report.areaName === selectedArea;
       const matchesDataType = selectedDataType !== "external";
@@ -80,7 +85,7 @@ export function FishingDashboard() {
       if (selectedSort === "dateDesc") return Date.parse(b.reportDate) - Date.parse(a.reportDate);
       return Date.parse(a.reportDate) - Date.parse(b.reportDate);
     });
-  }, [endDate, normalizedKeyword, selectedArea, selectedDataType, selectedSort, selectedSpecies, startDate]);
+  }, [adjustedMockFishingReports, endDate, normalizedKeyword, selectedArea, selectedDataType, selectedSort, selectedSpecies, startDate]);
 
   const filteredExternalMemos = useMemo(() => {
     const filteredMemos = externalMemos.filter((memo) => {
@@ -376,7 +381,7 @@ export function FishingDashboard() {
               <div className="emptyState" role="status">
                 <p className="eyebrow">No reports</p>
                 <h3>該当する釣果情報がありません</h3>
-                <p>魚種・エリア・キーワード検索の条件を変更するか、「条件をリセット」で初期表示に戻してください。モック釣果と手動登録した外部釣果メモを表示対象にしています。外部メモはSCORE未計算・SCORE未反映です。</p>
+                <p>魚種・エリア・キーワード検索の条件を変更するか、「条件をリセット」で初期表示に戻してください。モック釣果と手動登録した外部釣果メモを表示対象にしています。外部メモ単体のSCOREは未計算です。条件に合うメモは既存地点SCOREへ参考反映されます。</p>
               </div>
             ) : <> {reports.map((report) => (
               <article className="card" key={report.id}>
@@ -397,9 +402,9 @@ export function FishingDashboard() {
           ) : areaEvaluations.map((evaluation) => (
             <article className="card" key={`${evaluation.placeName}-${evaluation.areaName}`}>
               <div className="cardHeader"><div><p className="eyebrow">{evaluation.areaName}</p><h3>{evaluation.placeName}</h3></div><div className="scoreBox" aria-label={`平均SCORE ${evaluation.averageScore}点`}><span>平均SCORE</span><strong className="score">{evaluation.averageScore}<span>点</span></strong></div></div>
-              <div className="cardSummary"><span>代表魚種: {evaluation.representativeSpecies.join(" / ")}</span><span>直近釣果日: {evaluation.latestReportDate}</span><span>釣果件数: {evaluation.reportCount}</span><span>外部メモ件数: {evaluation.externalMemoCount}（参考 / SCORE未反映）</span></div>
+              <div className="cardSummary"><span>代表魚種: {evaluation.representativeSpecies.join(" / ")}</span><span>直近釣果日: {evaluation.latestReportDate}</span><span>釣果件数: {evaluation.reportCount}</span><span>外部メモ件数: {evaluation.externalMemoCount}（参考 / SCORE反映候補）</span></div>
               <dl className="facts"><div><dt>地点/エリア</dt><dd>{evaluation.placeName}</dd></div><div><dt>評価値</dt><dd>平均SCORE {evaluation.averageScore}点</dd></div><div><dt>代表魚種</dt><dd>{evaluation.representativeSpecies.join("、")}</dd></div><div><dt>直近釣果日</dt><dd>{evaluation.latestReportDate}</dd></div></dl>
-              <div className="reasonBlock"><p>簡易メモ</p><p className="muted">{evaluation.memo}</p><p className="muted">外部メモは参考メモとして件数のみ表示し、平均SCOREには未反映です。</p></div>
+              <div className="reasonBlock"><p>簡易メモ</p><p className="muted">{evaluation.memo}</p><p className="muted">条件に合う外部メモは、平均SCOREに使う既存地点SCOREへ参考反映しています。</p></div>
             </article>
           ))}
         </div>
@@ -413,7 +418,7 @@ function ExternalMemoCard({ memo }: { memo: ExternalCatchMemo }) {
   const linkedSpot = memo.spotId ? fishingSpots.find((spot) => spot.id === memo.spotId) : undefined;
   return (
     <article className="card externalMemoCard">
-      <div className="cardHeader"><div><p className="eyebrow">外部メモ / 手動メモ</p><h3>{memo.species} / {memo.areaName}</h3><p className="muted">SCORE未計算・SCOREには未反映です。</p></div><div className="scoreBox externalScoreBox"><span>SCORE</span><strong>未計算</strong></div></div>
+      <div className="cardHeader"><div><p className="eyebrow">外部メモ / 手動メモ</p><h3>{memo.species} / {memo.areaName}</h3><p className="muted">外部メモ単体のSCOREは未計算です。条件に合うメモは既存地点SCOREへ参考反映されます。</p></div><div className="scoreBox externalScoreBox"><span>SCORE</span><strong>未計算</strong></div></div>
       <div className="cardSummary"><span>外部メモ</span><span>釣果日: {memo.caughtDate}</span><span>推定地点: {memo.estimatedSpotName ?? "未入力"}</span><span>{linkedSpot ? `地図表示あり: ${linkedSpot.name}` : "未紐づけ / 地図未表示"}</span></div>
       <dl className="facts"><div><dt>魚種</dt><dd>{memo.species}</dd></div><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>情報元名</dt><dd>{memo.sourceName}</dd></div><div><dt>信頼度</dt><dd>{memo.confidence}</dd></div><div><dt>釣り場マスター</dt><dd>{linkedSpot ? `${linkedSpot.name}に紐づけ` : "未紐づけ / 地図未表示"}</dd></div><div className="sourceFact"><dt>出典URL</dt><dd><a href={memo.sourceUrl} target="_blank" rel="noreferrer">別タブで開く</a></dd></div></dl>
     </article>

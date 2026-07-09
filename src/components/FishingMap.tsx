@@ -187,7 +187,7 @@ function createExternalMemoPopupContent(memo: MappableExternalMemo) {
   meta.className = "mapPopupMeta";
   meta.textContent = `${memo.caughtDate} / ${memo.sourceName} / 信頼度: ${memo.confidence}`;
   const note = document.createElement("p");
-  note.textContent = `${memo.spotName}に参考表示しています。SCOREには未反映です。`;
+  note.textContent = `${memo.spotName}に参考表示しています。条件に合うメモは既存地点SCOREへ参考反映されます。`;
   const link = document.createElement("a");
   link.href = memo.sourceUrl;
   link.target = "_blank";
