@@ -8,7 +8,8 @@
     "check:master-seed": "node scripts/check-master-data-seed.mjs",
     "check:master-read": "node scripts/check-master-data-read.mjs",
     "check:external-memo-db": "node scripts/check-external-memo-db-design.mjs",
-    "check:auth-safety": "node scripts/check-auth-safety.mjs"
+    "check:auth-safety": "node scripts/check-auth-safety.mjs",
+    "check:external-memo-owner-policy": "node scripts/check-external-memo-owner-policy.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
