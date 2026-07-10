@@ -110,7 +110,7 @@ DB化しても、外部サイトの自動収集、スクレイピング、定期
 - localStorageとDBを長期的に二重の正本にしません。ログイン後の正本はDB、未ログイン時の一時保存はlocalStorage、という役割分担を目指します。
 - 移行失敗時はlocalStorageを残し、再試行できるようにします。
 - 重複防止は、`source_url`、`caught_date`、`species`、`area_name`、`spot_id`、`created_at`などを組み合わせた候補で判定します。ただし、完全一致だけで自動削除せず、重複候補として扱う設計が安全です。
-- 手動エクスポート/インポートは、Supabase移行より先にバックアップ機能として分割Issue化できます。
+- 手動エクスポート/インポートは、Supabase移行より先にバックアップ機能として分割Issue化できます。具体的なバックアップ/復元導線は `docs/LOCAL_STORAGE_BACKUP_PLAN.md` に整理します。
 
 ## 認証導入前後の方針
 
@@ -148,7 +148,7 @@ DB化しても、外部サイトの自動収集、スクレイピング、定期
 ## 段階的ロードマップ
 
 1. データ永続化設計を確定する。
-2. 手動エクスポート/インポートなど、localStorageバックアップ導線を検討する。
+2. 手動エクスポート/インポートなど、localStorageバックアップ導線を検討する（設計: `docs/LOCAL_STORAGE_BACKUP_PLAN.md`）。
 3. Supabaseプロジェクト作成と環境変数設計を別Issueで行う。
 4. `fish_species`、`fishing_spots`、`source_registry` など読み取り専用マスターのDB化を検討する。
 5. `external_catch_memos` のDB保存を実装する。
