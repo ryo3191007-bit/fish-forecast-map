@@ -23,7 +23,7 @@
 
 - ユーザー自身の実釣果登録、釣果日記、個人釣行ログ。
 - 外部釣果サイトの自動取り込み、スクレイピング、定期実行ジョブ、AI解析。
-- Supabase/DBを唯一の正本にすること、DB書き込み、ログイン/認証。マスターデータの読み取りは任意で、未設定時は静的fallbackで動作します。
+- Supabase/DBを唯一の正本にすること、外部釣果メモのDB書き込み、ログイン/認証。マスターデータの読み取りは任意で、未設定時は静的fallbackで動作します。外部釣果メモDB保存は設計・SQL案・repository土台までで、UI保存先はまだlocalStorageです。
 - 公式潮汐表、安全判断、航行判断としての利用。
 - 3D海底地形表示。
 - 外部釣果メモ単体への個別SCORE付与、実績ベースの高度な予測、複雑な機械学習。
@@ -84,6 +84,16 @@ Supabaseを実際に使う場合の確認順序は次の通りです。
 5. アプリ画面で取得元表示を確認する。
 
 DBを唯一の正本にはまだ切り替えていません。既存静的データとfallbackは保持します。
+
+## 外部釣果メモDB保存の準備
+
+Post-MVP-023では、現在localStorageに保存している外部釣果メモを将来Supabaseへ保存するための設計、SQL案、mapper/repository土台、安全確認コマンドを追加しています。まだSupabase SQL Editorでの実行、実DBテーブル作成、UI保存先のDB完全切替、自動移行、anon write開放は行いません。
+
+- 設計: `docs/SUPABASE_EXTERNAL_MEMO_DESIGN.md`
+- SQL案: `supabase/sql/004_external_catch_memos.sql`
+- 安全確認: `npm run check:external-memo-db`
+
+外部メモはユーザー入力データのため、認証なしで `anon` に広い `insert` / `update` / `delete` を許可しません。次の候補は、SQL手動実行チェックポイント、認証導入、管理用保存方式、または安全なDB read接続の選定です。
 
 ## 今後の候補
 
