@@ -3,7 +3,8 @@
     "dev": "next dev",
     "build": "next build",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit --project tsconfig.typecheck.json"
+    "typecheck": "tsc --noEmit --project tsconfig.typecheck.json",
+    "check:supabase": "node --env-file=.env.local scripts/check-supabase-connection.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
