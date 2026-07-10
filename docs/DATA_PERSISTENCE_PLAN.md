@@ -149,7 +149,7 @@ DB化しても、外部サイトの自動収集、スクレイピング、定期
 
 1. データ永続化設計を確定する。
 2. 手動エクスポート/インポートなど、localStorageバックアップ導線を検討する（設計: `docs/LOCAL_STORAGE_BACKUP_PLAN.md`）。
-3. Supabaseプロジェクト作成と環境変数設計を別Issueで行う。
+3. Supabaseプロジェクト作成と環境変数設計を別Issueで行う（設計: `docs/SUPABASE_SETUP_PLAN.md`）。
 4. `fish_species`、`fishing_spots`、`source_registry` など読み取り専用マスターのDB化を検討する。
 5. `external_catch_memos` のDB保存を実装する。
 6. `fish-forecast-map.external-catch-memos` からDBへのインポート導線を実装する。
