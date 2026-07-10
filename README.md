@@ -4,11 +4,12 @@
 
 - 公開URL: https://fish-forecast-map.vercel.app/#map
 - 利用目的: 個人利用向けのMVP検証
-- データ: MVP v0.1のモックデータを中心に、手動登録した外部釣果メモも表示対象
+- データ: MVP v0.1のモックデータを中心に、手動登録した外部釣果メモも表示対象。マスターデータはSupabase read層を経由し、未設定時は静的fallbackで表示します
 
 ## 現在できること
 
 - MapLibre GL JSの地図でモック釣果地点マーカーと、釣り場に紐づけた手動外部メモのマーカーを確認できます。
+- 画面上部の小さな表示で、マスターデータの取得元（`データ: Supabase` / `データ: 静的fallback` / `データ読込中...`）を確認できます。
 - 釣果一覧カードで日付、エリア、場所、魚種、釣果数、サイズ、釣り方、出典を確認できます。釣果一覧カードでは、個別釣果の `SCORE` やスコア根拠は表示しません。
 - 釣果一覧は、魚種フィルタ、エリアフィルタ、キーワード検索、開始日/終了日の期間フィルタで絞り込みできます。
 - 釣果一覧は、日付が新しい順、日付が古い順で並び替えできます。
@@ -22,7 +23,7 @@
 
 - ユーザー自身の実釣果登録、釣果日記、個人釣行ログ。
 - 外部釣果サイトの自動取り込み、スクレイピング、定期実行ジョブ、AI解析。
-- Supabase/DB連携、ログイン/認証（読み取り専用の疎通確認手順のみ `docs/SUPABASE_READONLY_CONNECTION_CHECK.md` に分離）。
+- Supabase/DBを唯一の正本にすること、DB書き込み、ログイン/認証。マスターデータの読み取りは任意で、未設定時は静的fallbackで動作します。
 - 公式潮汐表、安全判断、航行判断としての利用。
 - 3D海底地形表示。
 - 外部釣果メモ単体への個別SCORE付与、実績ベースの高度な予測、複雑な機械学習。
@@ -34,7 +35,7 @@
 - フロントエンド: Next.js + TypeScript
 - UI: CSS（`src/app/globals.css`）
 - 地図: MapLibre GL JS
-- データ: ローカルのモック釣果データ + ブラウザに手動保存する外部釣果メモ
+- データ: Supabase master read層 + 静的fallbackの釣り場/魚種/外部情報源マスター、ローカルのモック釣果データ、ブラウザに手動保存する外部釣果メモ
 - 品質確認: ESLint、TypeScript、Next.js build
 
 ## ローカル起動方法
@@ -72,7 +73,17 @@ MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006
 - 手動実行手順: `docs/SUPABASE_MASTER_DATA_SETUP.md`
 - seed差分確認: `npm run check:master-seed`
 
-現時点では、アプリ画面はSupabaseからマスターデータを読み取っておらず、既存の静的データを引き続き利用します。次の候補は、手動実行後のDB readと静的データfallback実装です。
+画面側は `fetchMasterData()` 経由でマスターデータを初期化します。Supabaseから読み取れる場合はSupabaseの `fish_species` / `fishing_spots` / `source_registry` を使い、未設定・SQL未実行・通信失敗・0件時は既存の静的データへfallbackします。UIには `データ: Supabase`、`データ: 静的fallback`、`データ読込中...` の控えめな取得元表示を出します。
+
+Supabaseを実際に使う場合の確認順序は次の通りです。
+
+1. `supabase/sql/002_master_data_tables.sql` をユーザーがSupabase SQL Editorで手動実行する。
+2. `supabase/sql/003_master_data_seed.sql` をユーザーがSupabase SQL Editorで手動実行する。
+3. `.env.example` を参考に `.env.local` へ `NEXT_PUBLIC_SUPABASE_URL` と `NEXT_PUBLIC_SUPABASE_ANON_KEY` を設定する。
+4. `npm run check:master-read` で取得元と件数を確認する。
+5. アプリ画面で取得元表示を確認する。
+
+DBを唯一の正本にはまだ切り替えていません。既存静的データとfallbackは保持します。
 
 ## 今後の候補
 
@@ -81,7 +92,6 @@ MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006
 - 釣れそう度スコアの高度化と理由表示の改善。
 - 公式API、RSS、許可済み情報源を前提にした釣果情報取り込み。
 - Supabase/PostgreSQLによるデータ永続化。ローカル環境変数は `.env.example` をコピーした `.env.local` に設定し、詳細は `docs/SUPABASE_SETUP_PLAN.md` を参照します。読み取り専用の最小疎通確認は `docs/SUPABASE_READONLY_CONNECTION_CHECK.md` を参照します。
-- 次の候補は `fish_species` / `fishing_spots` / `source_registry` の手動実行後DB readと静的データfallback実装です。
 - 公開範囲を広げる場合の地点座標丸め、詳細地点非公開化、利用規約整備。
 
 ## 関連ドキュメント

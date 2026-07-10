@@ -1,6 +1,6 @@
 # Supabase master data read + static fallback
 
-Post-MVP-021では、`fish_species` / `fishing_spots` / `source_registry` をSupabaseから読み取れる場合だけ読み取り、失敗時は既存の静的データで動き続ける安全なread経路を追加しました。
+Post-MVP-021では、`fish_species` / `fishing_spots` / `source_registry` をSupabaseから読み取れる場合だけ読み取り、失敗時は既存の静的データで動き続ける安全なread経路を追加しました。Post-MVP-022では、このread経路を `FishingDashboard` の初期化に接続しました。
 
 ## 仕組み
 
@@ -51,19 +51,20 @@ source_registry count: 4
 2. ローカルの `.env.local` に `NEXT_PUBLIC_SUPABASE_URL` と `NEXT_PUBLIC_SUPABASE_ANON_KEY` を設定します。
 3. `npm run check:master-read` を実行します。
 4. `Source: supabase` と3テーブルの件数が表示されることを確認します。
-5. エラーや0件が出る場合でも、`Source: static-fallback` と表示されればアプリは既存静的データで継続できます。
+5. アプリ画面を開き、上部の取得元表示が `データ: Supabase` になることを確認します。
+6. エラーや0件が出る場合でも、`Source: static-fallback` と画面の `データ: 静的fallback` が表示されればアプリは既存静的データで継続できます。
 
-## 現時点の接続範囲
+## 画面側の接続範囲
 
-今回の主目的は、DBを正本に切り替えることではなく、安全なread層、mapper、fallback、確認コマンドを用意することです。既存画面は引き続き静的データを直接利用しており、UIデザインやスコア計算は変更していません。
+`FishingDashboard` は初期表示時に `fetchMasterData()` を呼び、取得結果の `fishingSpots`、`fishSpecies`、`externalSources` を画面stateへ保持します。Supabase未設定、SQL未実行、通信失敗、0件などでfallbackした場合も、既存静的データを使って地図マーカー、地点一覧、地点詳細、魚種フィルタ、外部メモの情報元/釣り場選択を表示します。
 
-既存画面への接続候補は次の通りです。
+画面には小さな取得元表示を追加しています。
 
-- 地図マーカーと地点詳細で使う `fishingSpots`。
-- 魚種フィルタで使う `fishSpeciesNames` / `fishSpecies`。
-- 外部メモ入力補助や出典表示で使う `externalSources`。
+- `データ読込中...`: `fetchMasterData()` の実行中。初期値には静的データを入れているため、読み込み中でも画面は大きく崩れません。
+- `データ: Supabase`: 3つのマスターをSupabaseから取得できた状態。
+- `データ: 静的fallback`: Supabase未設定、read error、0件などにより静的データを使っている状態。fallback理由は簡潔な日本語だけを表示し、実キーやURLは表示しません。
 
-ただし、現在の `FishingDashboard` はクライアントコンポーネントで複数の同期的な静的importを前提にしているため、非同期readを画面へ接続する場合はloading/error表示や初期選択地点の扱いを小さく設計してから行います。
+この接続はDBを唯一の正本へ切り替えるものではありません。既存静的データ、static fallback、モック釣果、スコア計算ロジックは保持しています。
 
 ## 今回やらないこと
 
@@ -76,5 +77,4 @@ source_registry count: 4
 
 ## 次の候補
 
-- UI上でDB取得状態を軽く確認できる表示を追加する。
 - 外部メモDB保存の設計または実装を検討する。

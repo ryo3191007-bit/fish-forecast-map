@@ -3,7 +3,7 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { fishingSpots } from "@/data/fishingSpots";
+import type { FishingSpot } from "@/domain/fishingSpot";
 import type { FishingReport } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import {
@@ -13,11 +13,11 @@ import {
 } from "@/domain/mapLayer";
 import { MapLayerToggle } from "./MapLayerToggle";
 
-type FishingMapProps = { reports: FishingReport[]; externalMemos: ExternalCatchMemo[] };
+type FishingMapProps = { reports: FishingReport[]; externalMemos: ExternalCatchMemo[]; spots: FishingSpot[] };
 
 type MappableExternalMemo = ExternalCatchMemo & { latitude: number; longitude: number; spotName: string };
 
-export function FishingMap({ reports, externalMemos }: FishingMapProps) {
+export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
@@ -44,9 +44,9 @@ export function FishingMap({ reports, externalMemos }: FishingMapProps) {
   }, []);
 
   const mappableExternalMemos = useMemo(() => externalMemos.flatMap((memo): MappableExternalMemo[] => {
-    const spot = memo.spotId ? fishingSpots.find((item) => item.id === memo.spotId) : undefined;
+    const spot = memo.spotId ? spots.find((item) => item.id === memo.spotId) : undefined;
     return spot ? [{ ...memo, latitude: spot.latitude, longitude: spot.longitude, spotName: spot.name }] : [];
-  }), [externalMemos]);
+  }), [externalMemos, spots]);
 
   useEffect(() => {
     const map = mapRef.current;

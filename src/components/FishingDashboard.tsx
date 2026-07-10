@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { fishingSpots } from "@/data/fishingSpots";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import { fishSpeciesNames, type FishSpeciesName, type FishingReport } from "@/domain/fishing";
+import type { FishingSpot } from "@/domain/fishingSpot";
 import type { FishingEnvironment } from "@/domain/environment";
 import { fetchFishingEnvironment } from "@/services/openMeteo";
 import { EnvironmentPanel } from "./EnvironmentPanel";
@@ -12,11 +12,13 @@ import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { applyExternalMemoScoreAdjustments } from "@/domain/externalMemoScore";
+import { fetchMasterData, getStaticMasterData, type MasterDataFallbackReason, type MasterDataMeta, type MasterDataSet } from "@/lib/masterDataRepository";
 
 const disclaimer = "SCOREは、取得可能な釣果情報と簡易ルールに基づく参考情報です。実際の釣果を保証するものではありません。";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type ReportView = "reports" | "areas";
+type MasterDataStatus = MasterDataMeta & { isLoading: boolean };
 
 const reportSortOptions: { value: SortOption; label: string }[] = [
   { value: "dateDesc", label: "日付が新しい順" },
@@ -29,6 +31,17 @@ const areaSortOptions: { value: SortOption; label: string }[] = [
   { value: "dateAsc", label: "日付が古い順" },
 ];
 
+const fallbackReasonLabels: Record<MasterDataFallbackReason, string> = {
+  "supabase-not-configured": "Supabase未設定のため静的データを使用",
+  "supabase-error": "Supabaseから取得できないため静的データを使用",
+  "empty-supabase-result": "Supabaseの有効データが0件のため静的データを使用",
+};
+
+function getFishSpeciesFilterNames(masterData: MasterDataSet): FishSpeciesName[] {
+  const names = masterData.fishSpecies.map((species) => species.nameJa).filter((name): name is FishSpeciesName => fishSpeciesNames.includes(name));
+  return names.length > 0 ? names : [...fishSpeciesNames];
+}
+
 export function FishingDashboard() {
   const [selectedSpecies, setSelectedSpecies] = useState<FishSpeciesName | "all">("all");
   const [selectedArea, setSelectedArea] = useState<string | "all">("all");
@@ -38,17 +51,53 @@ export function FishingDashboard() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const { memos: externalMemos, persistMemos, storageError } = useExternalCatchMemos();
-  const [environmentSpotId, setEnvironmentSpotId] = useState(fishingSpots[0]?.id ?? "");
+  const [masterData, setMasterData] = useState<MasterDataSet>(() => getStaticMasterData());
+  const [masterDataStatus, setMasterDataStatus] = useState<MasterDataStatus>({ source: "static-fallback", isLoading: true });
+  const fishingSpots = masterData.fishingSpots;
+  const externalSources = masterData.externalSources;
+  const fishSpeciesFilterNames = useMemo(() => getFishSpeciesFilterNames(masterData), [masterData]);
+  const [environmentSpotId, setEnvironmentSpotId] = useState(() => getStaticMasterData().fishingSpots[0]?.id ?? "");
   const [environment, setEnvironment] = useState<FishingEnvironment | null>(null);
   const [environmentError, setEnvironmentError] = useState<string | null>(null);
   const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(false);
   const environmentCacheRef = useRef(new Map<string, FishingEnvironment>());
+  useEffect(() => {
+    let isActive = true;
+    setMasterDataStatus((current) => ({ ...current, isLoading: true }));
+
+    fetchMasterData()
+      .then((result) => {
+        if (!isActive) return;
+        setMasterData(result.data);
+        setMasterDataStatus({ ...result.meta, isLoading: false });
+      })
+      .catch(() => {
+        if (!isActive) return;
+        setMasterData(getStaticMasterData());
+        setMasterDataStatus({ source: "static-fallback", fallbackReason: "supabase-error", isLoading: false });
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (fishingSpots.length === 0) {
+      setEnvironmentSpotId("");
+      return;
+    }
+    if (!fishingSpots.some((spot) => spot.id === environmentSpotId)) {
+      setEnvironmentSpotId(fishingSpots[0].id);
+    }
+  }, [environmentSpotId, fishingSpots]);
+
   const speciesCounts = useMemo(() => {
-    return fishSpeciesNames.map((species) => ({
+    return fishSpeciesFilterNames.map((species) => ({
       species,
       count: mockFishingReports.filter((report) => report.species === species).length + externalMemos.filter((memo) => memo.species === species).length,
     }));
-  }, [externalMemos]);
+  }, [externalMemos, fishSpeciesFilterNames]);
   const areaCounts = useMemo(() => {
     const counts = new Map<string, number>();
     mockFishingReports.forEach((report) => {
@@ -128,7 +177,7 @@ export function FishingDashboard() {
 
   const environmentSpot = useMemo(() => {
     return fishingSpots.find((spot) => spot.id === environmentSpotId) ?? fishingSpots[0];
-  }, [environmentSpotId]);
+  }, [environmentSpotId, fishingSpots]);
 
   useEffect(() => {
     if (!environmentSpot) {
@@ -206,12 +255,13 @@ export function FishingDashboard() {
           <p className="resultSummary" aria-live="polite">
             魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 釣り場マスター{fishingSpots.length}地点 / 全{mockFishingReports.length + externalMemos.length}件中 {reports.length + filteredExternalMemos.length}件を表示中
           </p>
+          <MasterDataStatusChip status={masterDataStatus} />
         </div>
       </div>
 
       <div className="mapEnvironmentGrid">
         <div className="mapSection">
-          <FishingMap reports={reports} externalMemos={filteredExternalMemos} />
+          <FishingMap reports={reports} externalMemos={filteredExternalMemos} spots={fishingSpots} />
         </div>
         <EnvironmentPanel
           selectedSpot={environmentSpot}
@@ -368,7 +418,7 @@ export function FishingDashboard() {
 
       {reportView === "reports" ? (
         <>
-          <ExternalCatchMemoSection memos={externalMemos} onMemosChange={persistMemos} storageError={storageError} />
+          <ExternalCatchMemoSection memos={externalMemos} onMemosChange={persistMemos} storageError={storageError} sources={externalSources} spots={fishingSpots} />
           <div className="cards" id="reports">
             {reports.length === 0 && filteredExternalMemos.length === 0 ? (
               <div className="emptyState" role="status">
@@ -383,7 +433,7 @@ export function FishingDashboard() {
                 <dl className="facts"><div><dt>日付</dt><dd>{report.reportDate}</dd></div><div><dt>場所</dt><dd>{report.areaName}</dd></div><div><dt>魚種</dt><dd>{report.species}</dd></div><div><dt>釣果数</dt><dd>{report.catchCount}</dd></div><div><dt>サイズ</dt><dd>{report.sizeCm}cm</dd></div><div><dt>釣り方</dt><dd>{report.method}</dd></div><div className="sourceFact"><dt>出典</dt><dd><a href={report.sourceUrl}>{report.sourceName}</a></dd></div></dl>
               </article>
             ))}
-            {filteredExternalMemos.map((memo) => <ExternalMemoCard key={memo.id} memo={memo} />)}
+            {filteredExternalMemos.map((memo) => <ExternalMemoCard key={memo.id} memo={memo} spots={fishingSpots} />)}
           </>}
           </div>
         </>
@@ -406,8 +456,21 @@ export function FishingDashboard() {
 }
 
 
-function ExternalMemoCard({ memo }: { memo: ExternalCatchMemo }) {
-  const linkedSpot = memo.spotId ? fishingSpots.find((spot) => spot.id === memo.spotId) : undefined;
+
+function MasterDataStatusChip({ status }: { status: MasterDataStatus }) {
+  const label = status.isLoading ? "データ読込中..." : status.source === "supabase" ? "データ: Supabase" : "データ: 静的fallback";
+  const reason = !status.isLoading && status.fallbackReason ? fallbackReasonLabels[status.fallbackReason] : null;
+
+  return (
+    <p className="dataSourceStatus" aria-live="polite">
+      <span>{label}</span>
+      {reason ? <small>{reason}</small> : null}
+    </p>
+  );
+}
+
+function ExternalMemoCard({ memo, spots }: { memo: ExternalCatchMemo; spots: FishingSpot[] }) {
+  const linkedSpot = memo.spotId ? spots.find((spot) => spot.id === memo.spotId) : undefined;
   return (
     <article className="card externalMemoCard">
       <div className="cardHeader"><div><p className="eyebrow">外部メモ / 手動メモ</p><h3>{memo.species} / {memo.areaName}</h3><p className="muted">手動で控えた外部釣果メモです。</p></div></div>
