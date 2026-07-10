@@ -4,7 +4,7 @@
 
 Post-MVP-018では、既存の静的データとして持っている魚種、釣り場、外部情報元レジストリを、将来Supabase/PostgreSQLへ移すための設計を整理します。
 
-このドキュメントは設計のみを扱います。SQLファイル、DBマイグレーション、実テーブル、RLS SQL、seedデータ、Supabaseクライアント変更、API Route、UI変更、localStorage key変更、外部メモDB保存、認証導入、型生成、実Project URLや実キーの追加は行いません。
+Post-MVP-018時点では、このドキュメントは設計のみを扱い、SQLファイル、DBマイグレーション、実テーブル、RLS SQL、seedデータ、Supabaseクライアント変更、API Route、UI変更、localStorage key変更、外部メモDB保存、認証導入、型生成、実Project URLや実キーの追加は行いませんでした。Post-MVP-019では、設計に沿ったSQL定義ファイルの追加状況を最小追記しています。
 
 ## 対象テーブル
 
@@ -239,10 +239,18 @@ DB化しても、外部サイトアクセス、スクレイピング、定期実
 9. rollbackは、参照切替コードを静的データ優先へ戻すだけで画面表示を復旧できる単位に分割します。
 10. localStorageの `fish-forecast-map.external-catch-memos` は今回変更しません。外部メモDB保存やlocalStorage移行は、認証・ユーザー分離設計後の別Issueで扱います。
 
+## Post-MVP-019 SQL定義ファイル
+
+- マスターデータ3テーブルの初期SQL定義は `supabase/sql/002_master_data_tables.sql` に追加しました。
+- このSQLは `fish_species` / `fishing_spots` / `source_registry` の `create table if not exists`、必要最小限の制約・index、RLS有効化、anon/authenticated roleへのselect権限のみを定義します。
+- 現時点ではSupabase SQL Editorで未実行であり、実DBテーブルは未作成です。
+- seedデータは未作成で、既存静的データの移行も未実施です。
+- アプリ画面連携、Supabaseクライアント変更、API Route追加、型生成は未実装です。
+- 次の候補は、SQL手動実行手順の整備または既存静的データに対応するseedデータ作成です。
+
 ## 後続Issue候補
 
-- `fish_species` / `fishing_spots` / `source_registry` のSQL作成。
-- 3テーブル向けRLS SQL作成。anon roleはselectのみ、insert/update/delete不可を明示する。
+- `supabase/sql/002_master_data_tables.sql` のSQL手動実行手順を整備する。
 - 既存静的データからseed dataを作成する。
 - seedと既存静的データの差分確認スクリプトを検討する。
 - Supabaseから読み取り、失敗時に既存静的データへfallbackする実装を行う。
@@ -254,11 +262,11 @@ DB化しても、外部サイトアクセス、スクレイピング、定期実
 
 ## 今回の対象外
 
-- SQLファイル追加。
-- DBマイグレーション作成。
+Post-MVP-019時点でも、以下は未実施です。
+
+- DBマイグレーション実行。
 - Supabase SQL Editorでの実行。
 - 実テーブル作成。
-- RLS SQL実装。
 - seedデータ作成。
 - Supabaseクライアント変更。
 - アプリ画面からSupabaseを呼び出すこと。
