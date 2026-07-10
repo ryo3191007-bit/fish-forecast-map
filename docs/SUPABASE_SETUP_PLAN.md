@@ -4,12 +4,12 @@
 
 このドキュメントは、Fish Forecast MapでSupabase/PostgreSQLを導入する前に、Supabaseプロジェクト作成の手動手順、環境変数、秘密情報、Vercel/GitHub Actionsでの扱いを整理するための設計メモです。
 
-このドキュメントでは、Supabaseプロジェクト作成、Supabaseクライアント導入、npmパッケージ追加、DB作成、DBマイグレーション、SQL実装、API Route追加、UI変更、localStorage key変更、SCORE計算変更は行いません。Post-MVP-015では、後続実装に備えて `.env.example` の追加と `.env.local` 作成手順の明文化のみを扱います。
+このドキュメントでは、Supabaseプロジェクト作成、DB作成、DBマイグレーション、SQL実装、API Route追加、UI変更、localStorage key変更、SCORE計算変更は行いません。Post-MVP-016で `@supabase/supabase-js` とクライアント初期化層を最小導入済みですが、DBテーブル、RLS、画面連携はまだ未実装です。
 
 ## 前提
 
 - 個人利用向けのPost-MVP検証として、無料枠または低コスト運用を優先します。
-- MVP v0.1ではモックデータとlocalStorageの手動外部釣果メモを利用しており、Supabase/DB連携と認証は未導入です。
+- MVP v0.1ではモックデータとlocalStorageの手動外部釣果メモを利用しており、Supabaseクライアント初期化層のみ導入済みです。DB連携と認証は未導入です。
 - 外部釣果サイトの自動取り込み、スクレイピング、定期実行ジョブ、AI解析はこの設計の対象外です。
 - Supabase導入後も、釣果を保証する表現は避け、出典とスコア根拠を明示する方針を維持します。
 
@@ -92,6 +92,17 @@ SUPABASE_SERVICE_ROLE_KEY="example-service-role-key-do-not-use"
 SUPABASE_DB_URL="postgresql://example-user:example-password@example-host:5432/example-db"
 ```
 
+
+## Supabaseクライアント初期化層
+
+Post-MVP-016で `@supabase/supabase-js` と `src/lib/supabaseClient.ts` を追加済みです。
+
+- 使用する環境変数は `NEXT_PUBLIC_SUPABASE_URL` と `NEXT_PUBLIC_SUPABASE_ANON_KEY` のみです。
+- `SUPABASE_SERVICE_ROLE_KEY` と `SUPABASE_DB_URL` はクライアントコードでは使いません。
+- 環境変数が未設定でも、モジュールimport時点でthrowせず、`npm run build` が成功する方針です。
+- DBテーブル、SQL、RLS、API Route、UI連携、既存画面からのSupabase呼び出しはまだ未実装です。
+- 次の候補は、読み取り専用接続の最小確認です。
+
 ## Vercel Environment Variablesの設定方針
 
 - Vercelには、GitHubへコミットしない実値をProject SettingsのEnvironment Variablesから設定します。
@@ -147,7 +158,7 @@ SUPABASE_DB_URL="postgresql://example-user:example-password@example-host:5432/ex
 
 1. ユーザーがSupabaseプロジェクトを手動作成し、Project URLとanon keyの保管場所を確認する。
 2. `.env.example` とローカル `.env.local` 作成手順を整備する。
-3. Supabaseクライアントを導入する。
+3. Supabaseクライアントを導入する（Post-MVP-016で最小導入済み）。
 4. 読み取り専用接続の最小確認を行う。
 5. `fish_species` / `fishing_spots` / `source_registry` のDB化設計を作る。
 6. RLS設計を作り、anon keyで読める範囲と書けない範囲を確認する。
@@ -159,8 +170,8 @@ SUPABASE_DB_URL="postgresql://example-user:example-password@example-host:5432/ex
 ## 今回の対象外
 
 - Supabaseプロジェクト作成そのもの。
-- Supabaseクライアント導入。
-- npmパッケージ追加。
+- DBテーブル、SQL、RLS、画面連携。
+- 読み取り専用接続の最小確認。
 - 実キー、実URL、実パスワードの追加。
 - `.env.local` の追加。
 - DBマイグレーション作成。
