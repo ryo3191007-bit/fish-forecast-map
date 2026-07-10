@@ -100,3 +100,13 @@ MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006
 - `docs/SUPABASE_MASTER_DATA_SETUP.md`
 - `docs/CODEX_WORKFLOW.md`
 - `docs/MVP_COMPLETION.md`
+
+## Supabase master data read check
+
+Post-MVP-021では、Supabaseから `fish_species` / `fishing_spots` / `source_registry` を読める場合だけ読み、未設定・SQL未実行・テーブル未作成・read error時は既存静的データへfallbackするread層を追加しています。
+
+```bash
+npm run check:master-read
+```
+
+この確認コマンドは `.env.local` がない環境でも失敗扱いにせず、`Source: static-fallback` と静的データ件数を表示します。実キー、service role key、DB URL、DB passwordは使いません。詳細は `docs/SUPABASE_MASTER_DATA_READ.md` を参照してください。

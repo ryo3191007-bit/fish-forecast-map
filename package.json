@@ -5,7 +5,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit --project tsconfig.typecheck.json",
     "check:supabase": "node --env-file=.env.local scripts/check-supabase-connection.mjs",
-    "check:master-seed": "node scripts/check-master-data-seed.mjs"
+    "check:master-seed": "node scripts/check-master-data-seed.mjs",
+    "check:master-read": "node scripts/check-master-data-read.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
