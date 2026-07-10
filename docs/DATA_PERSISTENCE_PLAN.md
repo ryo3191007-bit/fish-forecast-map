@@ -4,7 +4,7 @@
 
 このドキュメントは、Supabase/PostgreSQLを導入する前に、Fish Forecast Mapで永続化するデータ、localStorageに残すデータ、都度取得・算出でよいデータを整理するための設計メモです。
 
-このIssueでは設計のみを扱い、Supabaseプロジェクト作成、DBマイグレーション、SQL実装、API Route追加、UI変更、localStorage移行実装は行いません。Post-MVP-016でSupabaseクライアント初期化層のみ最小導入済みです。
+このIssueでは設計のみを扱い、Supabaseプロジェクト作成、DBマイグレーション、SQL実装、API Route追加、UI変更、localStorage移行実装は行いません。Post-MVP-016でSupabaseクライアント初期化層のみ最小導入済みです。読み取り専用の最小疎通確認は `docs/SUPABASE_READONLY_CONNECTION_CHECK.md` を参照し、次の候補は `fish_species` / `fishing_spots` / `source_registry` のDB化設計です。
 
 ## 現在のデータ保存状態
 

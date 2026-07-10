@@ -22,7 +22,7 @@
 
 - ユーザー自身の実釣果登録、釣果日記、個人釣行ログ。
 - 外部釣果サイトの自動取り込み、スクレイピング、定期実行ジョブ、AI解析。
-- Supabase/DB連携、ログイン/認証。
+- Supabase/DB連携、ログイン/認証（読み取り専用の疎通確認手順のみ `docs/SUPABASE_READONLY_CONNECTION_CHECK.md` に分離）。
 - 公式潮汐表、安全判断、航行判断としての利用。
 - 3D海底地形表示。
 - 外部釣果メモ単体への個別SCORE付与、実績ベースの高度な予測、複雑な機械学習。
@@ -68,7 +68,8 @@ MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006
 - 3D海底地形や水深レイヤーの検討。
 - 釣れそう度スコアの高度化と理由表示の改善。
 - 公式API、RSS、許可済み情報源を前提にした釣果情報取り込み。
-- Supabase/PostgreSQLによるデータ永続化。ローカル環境変数は `.env.example` をコピーした `.env.local` に設定し、詳細は `docs/SUPABASE_SETUP_PLAN.md` を参照します。
+- Supabase/PostgreSQLによるデータ永続化。ローカル環境変数は `.env.example` をコピーした `.env.local` に設定し、詳細は `docs/SUPABASE_SETUP_PLAN.md` を参照します。読み取り専用の最小疎通確認は `docs/SUPABASE_READONLY_CONNECTION_CHECK.md` を参照します。
+- 次の候補は `fish_species` / `fishing_spots` / `source_registry` のDB化設計です。
 - 公開範囲を広げる場合の地点座標丸め、詳細地点非公開化、利用規約整備。
 
 ## 関連ドキュメント
@@ -82,5 +83,6 @@ MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006
 - `docs/LOCAL_STORAGE_BACKUP_PLAN.md`
 - `.env.example`（Supabase環境変数のダミーテンプレート）
 - `docs/SUPABASE_SETUP_PLAN.md`
+- `docs/SUPABASE_READONLY_CONNECTION_CHECK.md`
 - `docs/CODEX_WORKFLOW.md`
 - `docs/MVP_COMPLETION.md`
