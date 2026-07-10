@@ -62,6 +62,18 @@ MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006
 
 将来的に外部情報の自動取り込みを検討する場合は、利用規約、robots.txt、著作権、アクセス負荷を確認し、公式API、RSS、許可を得た情報源、ユーザー提供情報を優先します。アプリ上の釣れそう度は参考情報であり、実際の釣果を保証するものではありません。
 
+
+## Supabaseマスターデータ準備
+
+`fish_species` / `fishing_spots` / `source_registry` のDB化準備として、テーブル定義SQLとseed SQLをリポジトリに配置しています。実DBへの適用はまだ行わず、ユーザーが必要なタイミングでSupabase SQL Editorから手動実行します。
+
+- テーブル定義: `supabase/sql/002_master_data_tables.sql`
+- seed SQL: `supabase/sql/003_master_data_seed.sql`
+- 手動実行手順: `docs/SUPABASE_MASTER_DATA_SETUP.md`
+- seed差分確認: `npm run check:master-seed`
+
+現時点では、アプリ画面はSupabaseからマスターデータを読み取っておらず、既存の静的データを引き続き利用します。次の候補は、手動実行後のDB readと静的データfallback実装です。
+
 ## 今後の候補
 
 - Open-Meteo以外の環境データ連携や、公式潮汐表への参照・リンクの検討。ただし、安全判断・航行判断の代替にはしない。
@@ -69,7 +81,7 @@ MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006
 - 釣れそう度スコアの高度化と理由表示の改善。
 - 公式API、RSS、許可済み情報源を前提にした釣果情報取り込み。
 - Supabase/PostgreSQLによるデータ永続化。ローカル環境変数は `.env.example` をコピーした `.env.local` に設定し、詳細は `docs/SUPABASE_SETUP_PLAN.md` を参照します。読み取り専用の最小疎通確認は `docs/SUPABASE_READONLY_CONNECTION_CHECK.md` を参照します。
-- 次の候補は `fish_species` / `fishing_spots` / `source_registry` のDB化設計です。
+- 次の候補は `fish_species` / `fishing_spots` / `source_registry` の手動実行後DB readと静的データfallback実装です。
 - 公開範囲を広げる場合の地点座標丸め、詳細地点非公開化、利用規約整備。
 
 ## 関連ドキュメント
@@ -84,5 +96,7 @@ MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006
 - `.env.example`（Supabase環境変数のダミーテンプレート）
 - `docs/SUPABASE_SETUP_PLAN.md`
 - `docs/SUPABASE_READONLY_CONNECTION_CHECK.md`
+- `docs/SUPABASE_MASTER_DATA_DESIGN.md`
+- `docs/SUPABASE_MASTER_DATA_SETUP.md`
 - `docs/CODEX_WORKFLOW.md`
 - `docs/MVP_COMPLETION.md`

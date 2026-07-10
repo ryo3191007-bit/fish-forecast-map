@@ -4,7 +4,7 @@
 
 Post-MVP-018では、既存の静的データとして持っている魚種、釣り場、外部情報元レジストリを、将来Supabase/PostgreSQLへ移すための設計を整理します。
 
-Post-MVP-018時点では、このドキュメントは設計のみを扱い、SQLファイル、DBマイグレーション、実テーブル、RLS SQL、seedデータ、Supabaseクライアント変更、API Route、UI変更、localStorage key変更、外部メモDB保存、認証導入、型生成、実Project URLや実キーの追加は行いませんでした。Post-MVP-019では、設計に沿ったSQL定義ファイルの追加状況を最小追記しています。
+Post-MVP-018時点では、このドキュメントは設計のみを扱い、SQLファイル、DBマイグレーション、実テーブル、RLS SQL、seedデータ、Supabaseクライアント変更、API Route、UI変更、localStorage key変更、外部メモDB保存、認証導入、型生成、実Project URLや実キーの追加は行いませんでした。Post-MVP-019では、設計に沿ったSQL定義ファイルを追加し、Post-MVP-020では既存静的データに対応するseed SQL、手動実行手順、ローカル差分確認スクリプトを追加しています。
 
 ## 対象テーブル
 
@@ -285,3 +285,12 @@ Post-MVP-019時点でも、以下は未実施です。
 - AI解析。
 - 新API追加。
 - 有料API追加。
+
+## Post-MVP-020 seed SQLと差分確認
+
+- テーブル定義SQL: `supabase/sql/002_master_data_tables.sql`。
+- seed SQL: `supabase/sql/003_master_data_seed.sql`。
+- 手動実行手順: `docs/SUPABASE_MASTER_DATA_SETUP.md`。
+- ローカル差分確認: `npm run check:master-seed`。
+
+`003_master_data_seed.sql` は `insert ... on conflict ... do update` で再実行しやすい形にし、既存静的データのID/件数とズレがないかをDB接続なしで確認できます。この段階ではSupabase SQL Editorでの実行、実DBへのseed投入、アプリ画面からのSupabase参照はまだ行いません。
