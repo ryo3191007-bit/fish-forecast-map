@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { externalSources } from "@/data/externalSources";
-import { fishingSpots } from "@/data/fishingSpots";
+import type { ExternalSource } from "@/domain/externalSource";
+import type { FishingSpot } from "@/domain/fishingSpot";
 import { fishSpeciesNames, type FishSpeciesName, type FishingMethod } from "@/domain/fishing";
 import type { ExternalCatchConfidence } from "@/domain/externalCatch";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
@@ -65,8 +65,8 @@ function toOptionalNumber(value: string) {
   return value === "" ? undefined : Number(value);
 }
 
-function createMemo(form: FormState, editingMemo?: ExternalCatchMemo): ExternalCatchMemo {
-  const source = externalSources.find((item) => item.sourceId === form.sourceId);
+function createMemo(form: FormState, sources: ExternalSource[], editingMemo?: ExternalCatchMemo): ExternalCatchMemo {
+  const source = sources.find((item) => item.sourceId === form.sourceId);
   const now = new Date().toISOString();
   return {
     id: editingMemo?.id ?? `external-memo-${Date.now()}`,
@@ -94,9 +94,11 @@ type ExternalCatchMemoSectionProps = {
   memos: ExternalCatchMemo[];
   onMemosChange: (memos: ExternalCatchMemo[]) => boolean;
   storageError: string | null;
+  sources: ExternalSource[];
+  spots: FishingSpot[];
 };
 
-export function ExternalCatchMemoSection({ memos, onMemosChange, storageError }: ExternalCatchMemoSectionProps) {
+export function ExternalCatchMemoSection({ memos, onMemosChange, storageError, sources, spots }: ExternalCatchMemoSectionProps) {
   const [form, setForm] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -120,7 +122,7 @@ export function ExternalCatchMemoSection({ memos, onMemosChange, storageError }:
     const nextErrors = validateForm(form);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
-    const nextMemo = createMemo(form, editingMemo);
+    const nextMemo = createMemo(form, sources, editingMemo);
     const nextMemos = editingId ? memos.map((memo) => (memo.id === editingId ? nextMemo : memo)) : [nextMemo, ...memos];
     if (onMemosChange(nextMemos)) resetForm();
   };
@@ -182,7 +184,7 @@ export function ExternalCatchMemoSection({ memos, onMemosChange, storageError }:
             <form className="externalMemoForm" onSubmit={submitMemo} noValidate>
               <label>情報元URL*<input value={form.sourceUrl} onChange={(e) => updateForm("sourceUrl", e.target.value)} placeholder="https://example.com/report" /></label>
               {errors.sourceUrl ? <p className="fieldError">{errors.sourceUrl}</p> : null}
-              <label>情報元*<select value={form.sourceId} onChange={(e) => updateForm("sourceId", e.target.value)}><option value="">選択してください</option>{externalSources.map((source) => <option key={source.sourceId} value={source.sourceId}>{source.sourceName}</option>)}</select></label>
+              <label>情報元*<select value={form.sourceId} onChange={(e) => updateForm("sourceId", e.target.value)}><option value="">選択してください</option>{sources.map((source) => <option key={source.sourceId} value={source.sourceId}>{source.sourceName}</option>)}</select></label>
               {errors.sourceId ? <p className="fieldError">{errors.sourceId}</p> : null}
               <div className="externalMemoGrid">
                 <label>魚種*<select value={form.species} onChange={(e) => updateForm("species", e.target.value)}><option value="">選択してください</option>{fishSpeciesNames.map((species) => <option key={species} value={species}>{species}</option>)}</select></label>
@@ -193,7 +195,7 @@ export function ExternalCatchMemoSection({ memos, onMemosChange, storageError }:
                 <label>信頼度<select value={form.confidence} onChange={(e) => updateForm("confidence", e.target.value)}>{confidenceOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
                 <label>匹数<input type="number" min="0" value={form.catchCount} onChange={(e) => updateForm("catchCount", e.target.value)} /></label>
                 <label>サイズcm<input type="number" min="0" value={form.sizeCm} onChange={(e) => updateForm("sizeCm", e.target.value)} /></label>
-                <label className="externalMemoWide">釣り場マスター紐づけ<select value={form.spotId} onChange={(e) => updateForm("spotId", e.target.value)}><option value="">紐づけなし</option>{fishingSpots.map((spot) => <option key={spot.id} value={spot.id}>{spot.name} / {spot.areaName}</option>)}</select></label>
+                <label className="externalMemoWide">釣り場マスター紐づけ<select value={form.spotId} onChange={(e) => updateForm("spotId", e.target.value)}><option value="">紐づけなし</option>{spots.map((spot) => <option key={spot.id} value={spot.id}>{spot.name} / {spot.areaName}</option>)}</select></label>
                 <label className="externalMemoWide">ユーザーメモ<textarea value={form.userMemo} onChange={(e) => updateForm("userMemo", e.target.value)} maxLength={240} placeholder="本文やコメント全文ではなく、自分用の短いメモだけを保存" /></label>
               </div>
               {errors.species || errors.caughtDate || errors.areaName || errors.catchCount || errors.sizeCm ? <p className="fieldError">{errors.species ?? errors.caughtDate ?? errors.areaName ?? errors.catchCount ?? errors.sizeCm}</p> : null}
@@ -201,7 +203,7 @@ export function ExternalCatchMemoSection({ memos, onMemosChange, storageError }:
             </form>
             <div className="externalMemoList" aria-live="polite">
               {memos.length === 0 ? <p className="emptyState">登録済みの外部釣果メモはありません。</p> : memos.map((memo) => {
-                const linkedSpot = memo.spotId ? fishingSpots.find((spot) => spot.id === memo.spotId) : undefined;
+                const linkedSpot = memo.spotId ? spots.find((spot) => spot.id === memo.spotId) : undefined;
                 return <article className="card" key={memo.id}><div className="cardHeader"><div><p className="eyebrow">{memo.sourceName}</p><h3>{memo.species} / {memo.areaName}</h3></div></div><div className="cardSummary"><span>釣果日: {memo.caughtDate}</span><span>推定地点: {memo.estimatedSpotName ?? "未入力"}</span><span>信頼度: {memo.confidence}</span><span>釣り場: {linkedSpot ? linkedSpot.name : "未紐づけ"}</span></div><dl className="facts"><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>更新日時</dt><dd>{new Date(memo.updatedAt).toLocaleString("ja-JP")}</dd></div><div className="sourceFact"><dt>出典URL</dt><dd><a href={memo.sourceUrl} target="_blank" rel="noreferrer">別タブで開く</a></dd></div></dl>{memo.userMemo ? <p className="externalMemoNote">{memo.userMemo}</p> : null}<div className="externalMemoActions"><button type="button" className="clearSearchButton" onClick={() => startEdit(memo)}>編集</button><button type="button" className="clearSearchButton" onClick={() => deleteMemo(memo.id)}>削除</button></div></article>;
               })}
             </div>
