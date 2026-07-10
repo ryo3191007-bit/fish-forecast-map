@@ -16,9 +16,9 @@
 ## 今回やらないこと
 
 - DB writeの有効化。
-- `external_catch_memos` のRLS policy追加。
+- `external_catch_memos` のRLS policy実DB反映。Post-MVP-025ではSQL案のみ追加し、SQL Editor実行はしない。
 - `anon` へのinsert/update/delete許可。
-- `authenticated` write policy追加。
+- アプリから呼び出す `authenticated` write有効化。
 - 外部メモUI保存先のDB切替。
 - localStorage key変更、削除、自動移行。
 - service role key、DB URL、DB passwordの利用やコミット。
@@ -27,7 +27,7 @@
 
 ## `owner_id = auth.uid()` 方針
 
-次フェーズでDB保存を有効化する場合は、`external_catch_memos.owner_id` とSupabase Authの `auth.uid()` を一致させ、自分のメモだけselect/insert/update/deleteできるRLS policyを検討する。匿名writeを広く開ける構成にはしない。
+Post-MVP-025では、`external_catch_memos.owner_id` とSupabase Authの `auth.uid()` を一致させ、自分のメモだけselect/insert/updateできるRLS policy SQL案を `supabase/sql/005_external_catch_memos_owner_policies.sql` に追加する。匿名writeを広く開ける構成にはせず、物理delete policyも追加しない。削除は `is_deleted = true` へ更新する論理削除を優先する。
 
 ## Supabase Dashboardで確認する項目
 
@@ -54,7 +54,8 @@ service role key、DB接続文字列、DB passwordはアプリ・docs・PRに載
 
 ## 次の候補
 
-1. `authenticated` ユーザー向けのowner policy SQL案を追加する。
-2. 外部メモrepositoryをAuth user前提のDB read/writeへ接続する。
+1. `supabase/sql/005_external_catch_memos_owner_policies.sql` の手動SQL実行チェックポイントを設ける。
+2. SQL実行後にRLS挙動を確認する。
+3. 外部メモrepositoryをAuth user前提のDB read/writeへ接続する。
 
-どちらの場合も、SQL Editor実行や本番DB反映は別作業として扱う。
+いずれも、UI保存先のDB切替や本番DB反映は別作業として扱う。

@@ -87,13 +87,15 @@ DBを唯一の正本にはまだ切り替えていません。既存静的デー
 
 ## 外部釣果メモDB保存の準備
 
-Post-MVP-023では、現在localStorageに保存している外部釣果メモを将来Supabaseへ保存するための設計、SQL案、mapper/repository土台、安全確認コマンドを追加しています。まだSupabase SQL Editorでの実行、実DBテーブル作成、UI保存先のDB完全切替、自動移行、anon write開放は行いません。
+Post-MVP-023では、現在localStorageに保存している外部釣果メモを将来Supabaseへ保存するための設計、SQL案、mapper/repository土台、安全確認コマンドを追加しています。Post-MVP-025では、DB writeをUIへ接続する前の安全確認として、authenticatedユーザーが `owner_id = auth.uid()` の自分のメモだけを扱えるowner scoped RLS policy SQL案を追加しています。まだSupabase SQL Editorでの実行、実DB反映、UI保存先のDB完全切替、自動移行、repositoryのDB write有効化、anon write開放は行いません。
 
 - 設計: `docs/SUPABASE_EXTERNAL_MEMO_DESIGN.md`
-- SQL案: `supabase/sql/004_external_catch_memos.sql`
-- 安全確認: `npm run check:external-memo-db`
+- テーブルSQL案: `supabase/sql/004_external_catch_memos.sql`
+- owner scoped RLS policy SQL案: `supabase/sql/005_external_catch_memos_owner_policies.sql`
+- テーブル設計安全確認: `npm run check:external-memo-db`
+- owner policy安全確認: `npm run check:external-memo-owner-policy`
 
-外部メモはユーザー入力データのため、認証なしで `anon` に広い `insert` / `update` / `delete` を許可しません。次の候補は、SQL手動実行チェックポイント、認証導入、管理用保存方式、または安全なDB read接続の選定です。
+外部メモはユーザー入力データのため、認証なしで `anon` に広い `insert` / `update` / `delete` を許可しません。owner policy案でも `grant all` は使わず、物理delete policyは追加せず、`is_deleted = true` による論理削除を優先します。次の候補は、owner policy SQLの手動実行チェックポイントと、SQL実行後に外部メモrepositoryをAuth user前提のDB read/writeへ接続する作業です。
 
 ## 今後の候補
 
