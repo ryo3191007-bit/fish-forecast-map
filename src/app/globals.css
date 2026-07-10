@@ -184,3 +184,17 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
 .mapPopupSummary .mapPopupExternal { background: #f3e8ff; color: #6b21a8; }
 @media (max-width: 900px) { .advancedFilterGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 620px) { .advancedFilterGrid { grid-template-columns: 1fr; } }
+.authStatusPanel { display: grid; gap: 14px; margin: 0 0 26px; padding: clamp(16px, 3vw, 22px); border: 1px solid rgba(125, 211, 252, .22); border-radius: 24px; background: linear-gradient(145deg, rgba(8, 47, 73, .54), rgba(15, 23, 42, .68)); box-shadow: 0 18px 52px rgba(0, 0, 0, .22), inset 0 1px 0 rgba(255,255,255,.07); color: #e6fbff; }
+.authStatusPanel h3 { margin-bottom: 6px; color: #fff; }
+.authStatusNote { margin: 0; padding: 12px 14px; border: 1px dashed rgba(125, 211, 252, .35); border-radius: 16px; background: rgba(2, 8, 23, .32); color: #b6d8e6; font-weight: 800; line-height: 1.65; }
+.authForm { display: grid; gap: 8px; }
+.authForm label { color: #93c5fd; font-size: .82rem; font-weight: 900; }
+.authFormRow, .authSignedIn { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.authFormRow input { flex: 1 1 260px; min-height: 44px; border: 1px solid rgba(125, 211, 252, .42); border-radius: 14px; padding: 10px 12px; background: linear-gradient(135deg, rgba(8, 47, 73, .94), rgba(14, 116, 144, .74)); color: #e0faff; font: inherit; font-weight: 800; }
+.authFormRow input::placeholder { color: #8bb9ca; }
+.authSignedIn span { padding: 9px 12px; border: 1px solid rgba(125, 211, 252, .24); border-radius: 999px; background: rgba(15, 23, 42, .44); color: #dffbff; font-weight: 900; }
+.authMessage { margin: 0; padding: 10px 12px; border-radius: 14px; font-weight: 800; line-height: 1.6; }
+.authMessage.success { border: 1px solid rgba(74, 222, 128, .45); background: rgba(20, 83, 45, .26); color: #bbf7d0; }
+.authMessage.error { border: 1px solid rgba(251, 146, 60, .52); background: rgba(124, 45, 18, .28); color: #fed7aa; }
+.authMessage.info { border: 1px solid rgba(125, 211, 252, .32); background: rgba(8, 47, 73, .42); color: #dffbff; }
+@media (max-width: 620px) { .authFormRow, .authSignedIn { display: grid; } .authFormRow input, .authFormRow button, .authSignedIn button { width: 100%; } }

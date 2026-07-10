@@ -9,6 +9,7 @@ import { fetchFishingEnvironment } from "@/services/openMeteo";
 import { EnvironmentPanel } from "./EnvironmentPanel";
 import { FishingMap } from "./FishingMap";
 import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
+import { AuthStatusPanel } from "./AuthStatusPanel";
 import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { applyExternalMemoScoreAdjustments } from "@/domain/externalMemoScore";
@@ -275,6 +276,8 @@ export function FishingDashboard() {
       </div>
 
       <p className="notice">{disclaimer}</p>
+
+      <AuthStatusPanel />
 
       <div className="sectionHeading">
         <div>
