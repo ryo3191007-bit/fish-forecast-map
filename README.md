@@ -68,7 +68,7 @@ MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006
 - 3D海底地形や水深レイヤーの検討。
 - 釣れそう度スコアの高度化と理由表示の改善。
 - 公式API、RSS、許可済み情報源を前提にした釣果情報取り込み。
-- Supabase/PostgreSQLによるデータ永続化。
+- Supabase/PostgreSQLによるデータ永続化。ローカル環境変数は `.env.example` をコピーした `.env.local` に設定し、詳細は `docs/SUPABASE_SETUP_PLAN.md` を参照します。
 - 公開範囲を広げる場合の地点座標丸め、詳細地点非公開化、利用規約整備。
 
 ## 関連ドキュメント
@@ -80,6 +80,7 @@ MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006
 - `docs/DATA_POLICY.md`
 - `docs/DATA_PERSISTENCE_PLAN.md`
 - `docs/LOCAL_STORAGE_BACKUP_PLAN.md`
+- `.env.example`（Supabase環境変数のダミーテンプレート）
 - `docs/SUPABASE_SETUP_PLAN.md`
 - `docs/CODEX_WORKFLOW.md`
 - `docs/MVP_COMPLETION.md`

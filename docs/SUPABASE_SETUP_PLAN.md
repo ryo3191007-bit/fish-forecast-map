@@ -4,7 +4,7 @@
 
 このドキュメントは、Fish Forecast MapでSupabase/PostgreSQLを導入する前に、Supabaseプロジェクト作成の手動手順、環境変数、秘密情報、Vercel/GitHub Actionsでの扱いを整理するための設計メモです。
 
-このIssueではドキュメント設計のみを扱い、Supabaseプロジェクト作成、Supabaseクライアント導入、npmパッケージ追加、DB作成、DBマイグレーション、SQL実装、API Route追加、UI変更、localStorage key変更、SCORE計算変更は行いません。
+このドキュメントでは、Supabaseプロジェクト作成、Supabaseクライアント導入、npmパッケージ追加、DB作成、DBマイグレーション、SQL実装、API Route追加、UI変更、localStorage key変更、SCORE計算変更は行いません。Post-MVP-015では、後続実装に備えて `.env.example` の追加と `.env.local` 作成手順の明文化のみを扱います。
 
 ## 前提
 
@@ -65,16 +65,25 @@
 ### `.env.local`
 
 - ローカル開発者の端末だけで使うファイルです。
-- Git管理対象外にします。
-- 実URL、実anon key、service role key、DB URL、DB passwordなどの実値は `.env.local` にのみ置きます。
-- `.env.local` の内容をチャット、Issue、PR、スクリーンショット、ログに貼り付けません。
+- `.gitignore` でGit管理対象外になっているため、コミットしません。
+- `.env.example` をコピーして `.env.local` を作成します。
+
+```bash
+cp .env.example .env.local
+```
+
+- 実Project URLと実anon keyは `.env.local` にだけ設定します。
+- `SUPABASE_SERVICE_ROLE_KEY` と `SUPABASE_DB_URL` は、サーバー側機能やマイグレーションなどの後続Issueで必要になるまで空欄または未設定にします。
+- `.env.local` の内容をチャット、Issue、PR、README、スクリーンショット、ログに貼り付けません。
+- 値を設定した後も、Post-MVP-015ではSupabase接続実装、DB/SQL/API/UI変更、npmパッケージ追加は行いません。
 
 ### `.env.example`
 
+- Post-MVP-015で、リポジトリルートに `.env.example` を追加済みです。
 - リポジトリへコミットしてよいのは、ダミー値または空値のテンプレートだけです。
 - 実URL、実キー、実パスワード、実DB接続文字列は絶対に書きません。
-- このIssueでは実装を伴わないため `.env.example` は追加せず、後続IssueでSupabaseクライアント導入または環境変数読み込みが必要になった時点で追加します。
-- 追加する場合のサンプルは以下のように、必ずダミー値にします。
+- `NEXT_PUBLIC_SUPABASE_URL` と `NEXT_PUBLIC_SUPABASE_ANON_KEY` はブラウザ公開前提の変数として、秘密情報を含めないダミー値だけを記載します。
+- `SUPABASE_SERVICE_ROLE_KEY` と `SUPABASE_DB_URL` はサーバー側・秘密情報として扱う候補です。テンプレートでは後続Issueで必要になる変数名を確認しやすくするため、明らかなダミー値を記載します。
 
 ```dotenv
 NEXT_PUBLIC_SUPABASE_URL="https://example-project-ref.supabase.co"
@@ -138,10 +147,10 @@ SUPABASE_DB_URL="postgresql://example-user:example-password@example-host:5432/ex
 
 1. ユーザーがSupabaseプロジェクトを手動作成し、Project URLとanon keyの保管場所を確認する。
 2. `.env.example` とローカル `.env.local` 作成手順を整備する。
-3. Supabaseクライアントを導入し、読み取り専用接続の最小確認を行う。
-4. 読み取り専用マスター用のSQL設計を作る。
-5. `fish_species` / `fishing_spots` / `source_registry` をDB化する。
-6. RLS方針をSQLへ落とし、anon keyで読める範囲と書けない範囲を確認する。
+3. Supabaseクライアントを導入する。
+4. 読み取り専用接続の最小確認を行う。
+5. `fish_species` / `fishing_spots` / `source_registry` のDB化設計を作る。
+6. RLS設計を作り、anon keyで読める範囲と書けない範囲を確認する。
 7. `external_catch_memos` のDB保存を設計・実装する。
 8. localStorageバックアップJSONまたは既存 `fish-forecast-map.external-catch-memos` からDBへの移行導線を実装する。
 9. 認証導入とユーザー所有データの分離を設計する。
