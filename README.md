@@ -78,5 +78,6 @@ MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006
 - `docs/MVP_SCOPE.md`
 - `docs/ARCHITECTURE.md`
 - `docs/DATA_POLICY.md`
+- `docs/DATA_PERSISTENCE_PLAN.md`
 - `docs/CODEX_WORKFLOW.md`
 - `docs/MVP_COMPLETION.md`
