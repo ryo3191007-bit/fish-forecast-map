@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import { fishSpeciesNames, type FishSpeciesName, type FishingReport } from "@/domain/fishing";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import type { FishingEnvironment } from "@/domain/environment";
-import { fetchFishingEnvironment } from "@/services/openMeteo";
+import { fetchFishingEnvironment, readCachedFishingEnvironment } from "@/services/openMeteo";
 import { EnvironmentPanel } from "./EnvironmentPanel";
 import { FishingMap } from "./FishingMap";
 import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
@@ -63,7 +63,6 @@ export function FishingDashboard() {
   const [environment, setEnvironment] = useState<FishingEnvironment | null>(null);
   const [environmentError, setEnvironmentError] = useState<string | null>(null);
   const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(false);
-  const environmentCacheRef = useRef(new Map<string, FishingEnvironment>());
   useEffect(() => {
     let isActive = true;
     setMasterDataStatus((current) => ({ ...current, isLoading: true }));
@@ -190,39 +189,32 @@ export function FishingDashboard() {
       return;
     }
 
-    const cacheKey = `${environmentSpot.latitude},${environmentSpot.longitude}`;
-    const cachedEnvironment = environmentCacheRef.current.get(cacheKey);
+    const point = { spotId: environmentSpot.id, spotName: environmentSpot.name, latitude: environmentSpot.latitude, longitude: environmentSpot.longitude };
+    const cachedEnvironment = readCachedFishingEnvironment(point);
     if (cachedEnvironment) {
       setEnvironment(cachedEnvironment);
       setEnvironmentError(null);
-      setIsEnvironmentLoading(false);
-      return;
+      setIsEnvironmentLoading(cachedEnvironment.cacheStatus !== "cache-fresh");
+    } else {
+      setEnvironment(null);
+      setEnvironmentError(null);
+      setIsEnvironmentLoading(true);
     }
 
     let isActive = true;
     const abortController = new AbortController();
-    setIsEnvironmentLoading(true);
-    setEnvironmentError(null);
 
-    fetchFishingEnvironment(
-      {
-        spotId: environmentSpot.id,
-        spotName: environmentSpot.name,
-        latitude: environmentSpot.latitude,
-        longitude: environmentSpot.longitude,
-      },
-      abortController.signal,
-    )
+    fetchFishingEnvironment(point, abortController.signal)
       .then((nextEnvironment) => {
         if (!isActive) return;
-        environmentCacheRef.current.set(cacheKey, nextEnvironment);
         setEnvironment(nextEnvironment);
+        setEnvironmentError(null);
       })
       .catch((error: unknown) => {
         if (!isActive) return;
         if (error instanceof DOMException && error.name === "AbortError") return;
-        setEnvironment(null);
-        setEnvironmentError("Open-Meteoから環境データを取得できませんでした。");
+        setEnvironment(cachedEnvironment);
+        setEnvironmentError(cachedEnvironment ? null : "Open-Meteoから環境データを取得できませんでした。");
       })
       .finally(() => {
         if (!isActive) return;
