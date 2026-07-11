@@ -145,3 +145,12 @@ MVP v0.1では以下を扱います。
 - シークレット情報をリポジトリに保存すること。
 - Issueなしの大規模な設計変更。
 - ユーザー承認なしのCodex起動。
+
+## DB migration運用ルール
+
+- 今後のDB変更は `supabase/migrations/<timestamp>_<description>.sql` を正本とし、Remote SQL EditorやTable Editorで直接スキーマ変更しないでください。
+- 既存の `supabase/sql/*.sql` は参照資料または手動適用済みSQLの記録として扱い、無条件に本番へ再実行しないでください。
+- 1 migrationは目的を絞り、forward-onlyを基本にします。PRにはrollback方法または復旧方針、アプリ変更との適用順序を記載してください。
+- 後方互換性が必要なDB変更は expand → migrate → contract の段階適用を検討してください。
+- `DROP TABLE`、`DROP COLUMN`、大量更新、不可逆な型変更、RLS無効化、anon write拡大などの破壊的または高リスクな変更は、ユーザー承認前にマージしないでください。
+- production deploy workflowは初回remote履歴同期完了まで `supabase db push` を実行しない安全ゲートを維持してください。

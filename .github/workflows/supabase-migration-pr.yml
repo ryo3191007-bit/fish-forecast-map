@@ -1,0 +1,38 @@
+name: Supabase Migration PR Check
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'supabase/config.toml'
+      - 'scripts/check-migration-safety.mjs'
+      - 'scripts/check-migration-safety.test.mjs'
+      - '.github/workflows/supabase-migration-pr.yml'
+      - '.github/workflows/supabase-production-deploy.yml'
+      - '.github/workflows/supabase-remote-history-check.yml'
+      - 'docs/SUPABASE_MIGRATION_BOOTSTRAP.md'
+      - 'package-lock.json'
+      - 'package.json'
+
+permissions:
+  contents: read
+
+jobs:
+  local-migrations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Test migration safety checker
+        run: npm run test:migration-safety
+      - name: Check repository migrations
+        run: npm run check:migration-safety
+      - name: Start local Supabase database
+        run: npx supabase@2.31.8 start -x studio,auth,storage-api,imgproxy,realtime,edge-runtime,logflare,vector
+      - name: Apply migrations to empty local database
+        run: npx supabase@2.31.8 db reset --local --no-seed
