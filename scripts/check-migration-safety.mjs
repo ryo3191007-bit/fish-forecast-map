@@ -7,7 +7,7 @@ const defaultMigrationDir = 'supabase/migrations';
 const statementChecks = [
   ['DROP TABLE', /\bdrop\s+table\b/i],
   ['DROP COLUMN', /\bdrop\s+column\b/i],
-  ['TRUNCATE', /\btruncate\b/i],
+  ['TRUNCATE', /^\s*truncate\b/i],
   ['type-changing ALTER COLUMN', /\balter\s+table\b[\s\S]*\balter\s+column\b[\s\S]*\b(?:set\s+data\s+type|type)\b/i],
   ['RLS disabled', /\balter\s+table\b[\s\S]*\bdisable\s+row\s+level\s+security\b/i],
   ['anon write grant', /\bgrant\s+[\s\S]*\b(?:insert|update|delete|all(?:\s+privileges)?)\b[\s\S]*\bon\b[\s\S]*\bto\s+anon\b/i],
@@ -199,7 +199,7 @@ function findStatementIssues(statement, { inspectSecurityDefiner = true } = {}) 
     inspectSecurityDefiner
     && /\bcreate\s+(?:or\s+replace\s+)?(?:function|procedure)\b/i.test(withoutBodies)
     && /\bsecurity\s+definer\b/i.test(withoutBodies)
-    && !/\bset\s+search_path\s*(?:=|to)\s*(?:''|pg_catalog\b)/i.test(withoutBodies)
+    && !/\bset\s+search_path\s*(?:=|to)\s*(?:''|'pg_catalog'|pg_catalog\b)/i.test(withoutBodies)
   ) {
     issues.push('SECURITY DEFINER without safe SET search_path');
   }

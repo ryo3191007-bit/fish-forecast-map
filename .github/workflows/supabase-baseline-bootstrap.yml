@@ -1,0 +1,137 @@
+name: Supabase Baseline Bootstrap
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: supabase-baseline-bootstrap
+  cancel-in-progress: false
+
+env:
+  BASELINE_VERSION: '20260711122931'
+  BASELINE_FILE: supabase/migrations/20260711122931_remote_schema.sql
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify repository bootstrap prerequisites
+        run: |
+          set -euo pipefail
+          test -f "$BASELINE_FILE"
+          if [ -f supabase/migrations/.remote-history-synced ]; then
+            echo "::error::Remote history is already marked as synchronized."
+            exit 1
+          fi
+          npm run test:migration-safety
+          npm run check:migration-safety
+      - name: Verify required secrets are configured
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          for secret_name in SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD SUPABASE_PROJECT_ID; do
+            if [ -z "${!secret_name:-}" ]; then
+              echo "::error::${secret_name} is not configured in the production environment."
+              exit 1
+            fi
+          done
+      - name: Link Supabase project
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: npx supabase@2.31.8 link --project-ref "$SUPABASE_PROJECT_ID" --password "$SUPABASE_DB_PASSWORD" --yes
+      - name: Inspect and repair baseline migration history
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          history_before="$(npx supabase@2.31.8 migration list --linked --password "$SUPABASE_DB_PASSWORD" --yes)"
+          printf '%s\n' "$history_before" | tee artifacts/migration-list-before.txt
+
+          other_versions="$(printf '%s\n' "$history_before" | grep -Eo '[0-9]{14}' | grep -v "^${BASELINE_VERSION}$" || true)"
+          if [ -n "$other_versions" ]; then
+            echo "::error::Unexpected migration versions exist. Refusing automatic repair."
+            exit 1
+          fi
+
+          baseline_count="$(printf '%s\n' "$history_before" | grep -o "$BASELINE_VERSION" | wc -l | tr -d ' ')"
+          if [ "$baseline_count" = '1' ]; then
+            npx supabase@2.31.8 migration repair "$BASELINE_VERSION" --status applied --linked --password "$SUPABASE_DB_PASSWORD" --yes
+          elif [ "$baseline_count" = '2' ]; then
+            echo "Baseline is already present in both local and remote history; continuing idempotently."
+          else
+            echo "::error::Expected the baseline version once locally or twice when already repaired; found ${baseline_count}."
+            exit 1
+          fi
+
+          history_after="$(npx supabase@2.31.8 migration list --linked --password "$SUPABASE_DB_PASSWORD" --yes)"
+          printf '%s\n' "$history_after" | tee artifacts/migration-list-after.txt
+          repaired_count="$(printf '%s\n' "$history_after" | grep -o "$BASELINE_VERSION" | wc -l | tr -d ' ')"
+          if [ "$repaired_count" != '2' ]; then
+            echo "::error::Baseline history is not synchronized after repair."
+            exit 1
+          fi
+      - name: Verify public schema has no drift after history repair
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          set -euo pipefail
+          npx supabase@2.31.8 db diff --linked --schema public --yes > artifacts/post-repair-schema-diff.sql
+          if grep -q '[^[:space:]]' artifacts/post-repair-schema-diff.sql; then
+            echo "::error::Schema drift remains after baseline repair. Refusing to enable production db push."
+            cat artifacts/post-repair-schema-diff.sql
+            exit 1
+          fi
+          echo '-- No schema drift found.' > artifacts/post-repair-schema-diff.sql
+      - name: Create synchronization marker pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          branch="automation/supabase-history-synced-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          cat > supabase/migrations/.remote-history-synced <<EOF
+          baseline_version=${BASELINE_VERSION}
+          verification_run=${GITHUB_RUN_ID}
+          verified_commit=${GITHUB_SHA}
+          EOF
+          git add supabase/migrations/.remote-history-synced
+          git commit -m "Mark Supabase remote migration history synchronized"
+          git push origin "$branch"
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "Enable synchronized Supabase migration deployment" \
+            --body "Issue #92 final bootstrap. Baseline migration ${BASELINE_VERSION} was marked applied in the linked production project, local and remote migration history matched, and a read-only public-schema diff returned no drift. Merging this marker enables the guarded production migration workflow."
+      - name: Upload bootstrap verification results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: supabase-baseline-bootstrap
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 7

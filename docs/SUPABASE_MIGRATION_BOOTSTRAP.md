@@ -30,9 +30,30 @@ artifactには次の2ファイルだけを保存します。
 
 workflowはremote migrationの適用、repair、reset、seed投入を行いません。`migration repair` やbaseline作成が必要な場合は、実スキーマと既存 `supabase/sql/*.sql` を照合した別PRで扱います。
 
+## 初回baselineと履歴同期
+
+読み取り専用確認でlocal/remote migration履歴が空、かつ本番public schemaだけが存在することを確認した場合は、取得したschema diffを初回baseline migrationとしてレビューします。
+
+baseline PRでは次を満たす必要があります。
+
+- baseline SQLが空のローカルSupabaseへ正常に適用できる
+- RLS、policy、function、grant、外部キー、制約を含む現在のpublic schemaを再現する
+- 本番へ同じDDLを再実行しない
+- migration safety checkerの誤検出を回避するために安全条件を緩めない
+
+baseline PRのマージ後、`Supabase Baseline Bootstrap` workflowを1回だけ実行します。このworkflowは次を順番に行います。
+
+1. baseline以外のmigration履歴が存在しないことを確認する
+2. baseline versionをremote migration historyへ `applied` として登録する
+3. local/remote historyが一致したことを再確認する
+4. public schema diffが空であることを確認する
+5. `.remote-history-synced` を追加するPRを自動作成する
+
+この処理は既存テーブルへbaseline DDLを再実行しません。履歴またはschemaに想定外の差分がある場合は停止します。
+
 ## 本番自動適用を有効にする条件
 
-次の条件をすべて満たした後にだけ、別PRで `supabase/migrations/.remote-history-synced` を追加します。
+次の条件をすべて満たした後にだけ、`supabase/migrations/.remote-history-synced` を追加します。
 
 - remote履歴を確認済み
 - 手動適用済みSQLを再実行しない方針が確定済み

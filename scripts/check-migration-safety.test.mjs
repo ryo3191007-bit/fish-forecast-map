@@ -81,6 +81,7 @@ create table if not exists public.catches (id text primary key, score integer);
 alter table public.catches enable row level security;
 grant select on table public.catches to anon;
 grant insert on table public.catches to authenticated;
+grant truncate on table public.catches to service_role;
 update public.catches set score = 1 where id = 'sample';
 delete from public.catches where id = 'sample';
 `,
@@ -94,6 +95,17 @@ language sql
 security definer
 set search_path = ''
 as $$ select 1; $$;
+`,
+  ],
+  [
+    'safe SECURITY DEFINER with quoted pg_catalog search_path',
+    `
+create or replace function public.safe_event_fn()
+returns event_trigger
+language plpgsql
+security definer
+set search_path to 'pg_catalog'
+as $$ begin return; end; $$;
 `,
   ],
   [
