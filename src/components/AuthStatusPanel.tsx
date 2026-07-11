@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
+import type { SupabaseAuthStatus } from "@/hooks/useSupabaseAuth";
+import type { User } from "@supabase/supabase-js";
 
 function maskEmail(email?: string) {
   if (!email) return "メール未設定";
@@ -11,8 +12,17 @@ function maskEmail(email?: string) {
   return `${visibleLocal}@${domain}`;
 }
 
-export function AuthStatusPanel() {
-  const { status, user, signInWithEmail, signOut } = useSupabaseAuth();
+type AuthStatusPanelProps = {
+  auth: {
+    status: SupabaseAuthStatus;
+    user: User | null;
+    signInWithEmail: (email: string) => Promise<{ ok: true } | { ok: false; message: string }>;
+    signOut: () => Promise<{ ok: true } | { ok: false; message: string }>;
+  };
+};
+
+export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
+  const { status, user, signInWithEmail, signOut } = auth;
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<"success" | "error" | "info">("info");
@@ -51,7 +61,7 @@ export function AuthStatusPanel() {
       <div>
         <p className="eyebrow">Supabase Auth</p>
         <h3 id="auth-status-heading">外部メモDB保存の認証準備</h3>
-        <p className="muted">ログイン状態だけを確認します。外部メモの保存先はまだブラウザ内localStorageです。</p>
+        <p className="muted">ログイン状態だけを確認します。ログイン中は外部メモをSupabaseへ保存し、未ログイン・未設定・DBエラー時はlocalStorageへfallbackします。</p>
       </div>
 
       {status === "unavailable" ? (

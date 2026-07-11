@@ -1,9 +1,10 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 import { mapExternalCatchMemoRow, mapExternalCatchMemoToUpsertPayload, type ExternalCatchMemoRow } from "@/lib/externalCatchMemoMapper";
 
 export type ExternalCatchMemoDbSource = "supabase" | "local-storage-fallback";
-export type ExternalCatchMemoDbFallbackReason = "supabase-not-configured" | "supabase-error" | "write-disabled";
+export type ExternalCatchMemoDbFallbackReason = "not-authenticated" | "supabase-not-configured" | "supabase-error" | "local-data-not-migrated";
 export type ExternalCatchMemoDbResult<T> = {
   data: T;
   meta: { source: ExternalCatchMemoDbSource; fallbackReason?: ExternalCatchMemoDbFallbackReason; message?: string };
@@ -15,15 +16,23 @@ function fallback<T>(data: T, fallbackReason: ExternalCatchMemoDbFallbackReason,
   return { data, meta: { source: "local-storage-fallback", fallbackReason, message } };
 }
 
-export async function fetchExternalCatchMemosFromSupabase(): Promise<ExternalCatchMemoDbResult<ExternalCatchMemo[]>> {
+function getClientForUser<T>(userId: string | null, fallbackData: T): { ok: true; userId: string; client: SupabaseClient } | { ok: false; result: ExternalCatchMemoDbResult<T> } {
+  if (!userId) return { ok: false, result: fallback(fallbackData, "not-authenticated") };
   const status = getSupabaseClient();
   if (!status.isConfigured) {
-    return fallback([], "supabase-not-configured", `Missing env vars: ${status.missingEnvVars.join(", ")}`);
+    return { ok: false, result: fallback(fallbackData, "supabase-not-configured", `Missing env vars: ${status.missingEnvVars.join(", ")}`) };
   }
+  return { ok: true, userId, client: status.client };
+}
 
-  const { data, error } = await status.client
+export async function fetchExternalCatchMemosFromSupabase(userId: string | null): Promise<ExternalCatchMemoDbResult<ExternalCatchMemo[]>> {
+  const clientStatus = getClientForUser(userId, []);
+  if (!clientStatus.ok) return clientStatus.result;
+
+  const { data, error } = await clientStatus.client
     .from("external_catch_memos")
     .select(externalCatchMemoColumns)
+    .eq("owner_id", clientStatus.userId)
     .eq("is_deleted", false)
     .order("updated_at", { ascending: false });
 
@@ -36,12 +45,38 @@ export async function fetchExternalCatchMemosFromSupabase(): Promise<ExternalCat
   return { data: memos, meta: { source: "supabase" } };
 }
 
-export async function saveExternalCatchMemoToSupabase(memo: ExternalCatchMemo): Promise<ExternalCatchMemoDbResult<ExternalCatchMemo | null>> {
-  void mapExternalCatchMemoToUpsertPayload(memo);
-  return fallback(null, "write-disabled", "External catch memo DB writes are intentionally disabled until auth/RLS policy is approved.");
+export async function saveExternalCatchMemoToSupabase(userId: string | null, memo: ExternalCatchMemo): Promise<ExternalCatchMemoDbResult<ExternalCatchMemo | null>> {
+  const clientStatus = getClientForUser(userId, null);
+  if (!clientStatus.ok) return clientStatus.result;
+
+  const payload = {
+    ...mapExternalCatchMemoToUpsertPayload(memo),
+    owner_id: clientStatus.userId,
+    created_by: "authenticated_user" as const,
+    is_deleted: false,
+  };
+
+  const { data, error } = await clientStatus.client
+    .from("external_catch_memos")
+    .upsert(payload, { onConflict: "id" })
+    .select(externalCatchMemoColumns)
+    .single();
+
+  if (error) return fallback(null, "supabase-error", error.message);
+  const savedMemo = mapExternalCatchMemoRow(data as ExternalCatchMemoRow);
+  return { data: savedMemo, meta: { source: "supabase" } };
 }
 
-export async function deleteExternalCatchMemoFromSupabase(memoId: string): Promise<ExternalCatchMemoDbResult<null>> {
-  void memoId;
-  return fallback(null, "write-disabled", "External catch memo DB deletes are intentionally disabled until auth/RLS policy is approved.");
+export async function deleteExternalCatchMemoFromSupabase(userId: string | null, memoId: string): Promise<ExternalCatchMemoDbResult<null>> {
+  const clientStatus = getClientForUser(userId, null);
+  if (!clientStatus.ok) return clientStatus.result;
+
+  const { error } = await clientStatus.client
+    .from("external_catch_memos")
+    .update({ is_deleted: true, updated_at: new Date().toISOString() })
+    .eq("id", memoId)
+    .eq("owner_id", clientStatus.userId);
+
+  if (error) return fallback(null, "supabase-error", error.message);
+  return { data: null, meta: { source: "supabase" } };
 }

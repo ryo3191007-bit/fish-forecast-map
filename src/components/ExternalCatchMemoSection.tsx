@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import type { ExternalCatchMemoStorageStatus } from "@/hooks/useExternalCatchMemos";
 import type { ExternalSource } from "@/domain/externalSource";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import { fishSpeciesNames, type FishSpeciesName, type FishingMethod } from "@/domain/fishing";
@@ -92,13 +93,15 @@ function createMemo(form: FormState, sources: ExternalSource[], editingMemo?: Ex
 
 type ExternalCatchMemoSectionProps = {
   memos: ExternalCatchMemo[];
-  onMemosChange: (memos: ExternalCatchMemo[]) => boolean;
+  onMemoSave: (memo: ExternalCatchMemo) => Promise<boolean>;
+  onMemoDelete: (memoId: string) => Promise<boolean>;
   storageError: string | null;
+  storageStatus: ExternalCatchMemoStorageStatus;
   sources: ExternalSource[];
   spots: FishingSpot[];
 };
 
-export function ExternalCatchMemoSection({ memos, onMemosChange, storageError, sources, spots }: ExternalCatchMemoSectionProps) {
+export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, storageError, storageStatus, sources, spots }: ExternalCatchMemoSectionProps) {
   const [form, setForm] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -117,14 +120,14 @@ export function ExternalCatchMemoSection({ memos, onMemosChange, storageError, s
   const updateForm = (key: keyof FormState, value: string) => setForm((current) => ({ ...current, [key]: value }));
   const resetForm = () => { setForm(initialFormState); setErrors({}); setEditingId(null); };
 
-  const submitMemo = (event: FormEvent<HTMLFormElement>) => {
+  const submitMemo = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (storageStatus.isMutating) return;
     const nextErrors = validateForm(form);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
     const nextMemo = createMemo(form, sources, editingMemo);
-    const nextMemos = editingId ? memos.map((memo) => (memo.id === editingId ? nextMemo : memo)) : [nextMemo, ...memos];
-    if (onMemosChange(nextMemos)) resetForm();
+    if (await onMemoSave(nextMemo)) resetForm();
   };
 
   const startEdit = (memo: ExternalCatchMemo) => {
@@ -145,9 +148,9 @@ export function ExternalCatchMemoSection({ memos, onMemosChange, storageError, s
     });
   };
 
-  const deleteMemo = (memoId: string) => {
-    onMemosChange(memos.filter((memo) => memo.id !== memoId));
-    if (editingId === memoId) resetForm();
+  const deleteMemo = async (memoId: string) => {
+    if (storageStatus.isMutating) return;
+    if (await onMemoDelete(memoId) && editingId === memoId) resetForm();
   };
 
   return (
@@ -156,7 +159,8 @@ export function ExternalCatchMemoSection({ memos, onMemosChange, storageError, s
         <div>
           <p className="eyebrow">Manual external sources</p>
           <h3 id="external-memos-launch-heading">外部釣果メモ登録</h3>
-          <p className="muted">URL先を自動取得せず、確認した事実情報と出典だけをブラウザに保存します。</p>
+          <p className="muted">URL先を自動取得せず、確認した事実情報と出典だけを保存します。</p>
+          <MemoStorageStatusChip status={storageStatus} />
         </div>
         <button type="button" className="button" onClick={() => setIsModalOpen(true)}>
           外部釣果メモ登録
@@ -180,6 +184,7 @@ export function ExternalCatchMemoSection({ memos, onMemosChange, storageError, s
               </div>
               <button type="button" className="externalMemoClose" onClick={() => setIsModalOpen(false)} aria-label="外部釣果メモ登録を閉じる">×</button>
             </div>
+            <MemoStorageStatusChip status={storageStatus} />
             {storageError ? <p className="externalMemoError" role="alert">{storageError}</p> : null}
             <form className="externalMemoForm" onSubmit={submitMemo} noValidate>
               <label>情報元URL*<input value={form.sourceUrl} onChange={(e) => updateForm("sourceUrl", e.target.value)} placeholder="https://example.com/report" /></label>
@@ -199,12 +204,12 @@ export function ExternalCatchMemoSection({ memos, onMemosChange, storageError, s
                 <label className="externalMemoWide">ユーザーメモ<textarea value={form.userMemo} onChange={(e) => updateForm("userMemo", e.target.value)} maxLength={240} placeholder="本文やコメント全文ではなく、自分用の短いメモだけを保存" /></label>
               </div>
               {errors.species || errors.caughtDate || errors.areaName || errors.catchCount || errors.sizeCm ? <p className="fieldError">{errors.species ?? errors.caughtDate ?? errors.areaName ?? errors.catchCount ?? errors.sizeCm}</p> : null}
-              <div className="externalMemoActions"><button className="button" type="submit">{editingId ? "更新する" : "登録する"}</button>{editingId ? <button type="button" className="clearSearchButton" onClick={resetForm}>編集をキャンセル</button> : null}</div>
+              <div className="externalMemoActions"><button className="button" type="submit" disabled={storageStatus.isMutating}>{storageStatus.isMutating ? "保存中..." : editingId ? "更新する" : "登録する"}</button>{editingId ? <button type="button" className="clearSearchButton" onClick={resetForm}>編集をキャンセル</button> : null}</div>
             </form>
             <div className="externalMemoList" aria-live="polite">
               {memos.length === 0 ? <p className="emptyState">登録済みの外部釣果メモはありません。</p> : memos.map((memo) => {
                 const linkedSpot = memo.spotId ? spots.find((spot) => spot.id === memo.spotId) : undefined;
-                return <article className="card" key={memo.id}><div className="cardHeader"><div><p className="eyebrow">{memo.sourceName}</p><h3>{memo.species} / {memo.areaName}</h3></div></div><div className="cardSummary"><span>釣果日: {memo.caughtDate}</span><span>推定地点: {memo.estimatedSpotName ?? "未入力"}</span><span>信頼度: {memo.confidence}</span><span>釣り場: {linkedSpot ? linkedSpot.name : "未紐づけ"}</span></div><dl className="facts"><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>更新日時</dt><dd>{new Date(memo.updatedAt).toLocaleString("ja-JP")}</dd></div><div className="sourceFact"><dt>出典URL</dt><dd><a href={memo.sourceUrl} target="_blank" rel="noreferrer">別タブで開く</a></dd></div></dl>{memo.userMemo ? <p className="externalMemoNote">{memo.userMemo}</p> : null}<div className="externalMemoActions"><button type="button" className="clearSearchButton" onClick={() => startEdit(memo)}>編集</button><button type="button" className="clearSearchButton" onClick={() => deleteMemo(memo.id)}>削除</button></div></article>;
+                return <article className="card" key={memo.id}><div className="cardHeader"><div><p className="eyebrow">{memo.sourceName}</p><h3>{memo.species} / {memo.areaName}</h3></div></div><div className="cardSummary"><span>釣果日: {memo.caughtDate}</span><span>推定地点: {memo.estimatedSpotName ?? "未入力"}</span><span>信頼度: {memo.confidence}</span><span>釣り場: {linkedSpot ? linkedSpot.name : "未紐づけ"}</span></div><dl className="facts"><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>更新日時</dt><dd>{new Date(memo.updatedAt).toLocaleString("ja-JP")}</dd></div><div className="sourceFact"><dt>出典URL</dt><dd><a href={memo.sourceUrl} target="_blank" rel="noreferrer">別タブで開く</a></dd></div></dl>{memo.userMemo ? <p className="externalMemoNote">{memo.userMemo}</p> : null}<div className="externalMemoActions"><button type="button" className="clearSearchButton" onClick={() => startEdit(memo)}>編集</button><button type="button" className="clearSearchButton" onClick={() => deleteMemo(memo.id)} disabled={storageStatus.isMutating}>削除</button></div></article>;
               })}
             </div>
           </section>
@@ -212,4 +217,18 @@ export function ExternalCatchMemoSection({ memos, onMemosChange, storageError, s
       ) : null}
     </>
   );
+}
+
+
+const memoStorageFallbackLabels: Record<NonNullable<ExternalCatchMemoStorageStatus["fallbackReason"]>, string> = {
+  "not-authenticated": "未ログインのためブラウザ保存",
+  "supabase-not-configured": "Supabase未設定のためブラウザ保存",
+  "supabase-error": "DBエラーのためブラウザ保存",
+  "local-data-not-migrated": "ローカルデータは未移行",
+};
+
+function MemoStorageStatusChip({ status }: { status: ExternalCatchMemoStorageStatus }) {
+  const label = status.isLoading ? "外部メモ読込中..." : status.source === "supabase" ? "外部メモ: Supabase" : status.fallbackReason === "supabase-error" ? "外部メモ: localStorage fallback" : "外部メモ: localStorage";
+  const reason = !status.isLoading && status.fallbackReason ? memoStorageFallbackLabels[status.fallbackReason] : null;
+  return <p className="dataSourceStatus" aria-live="polite"><span>{label}</span>{reason ? <small>{reason}</small> : null}</p>;
 }
