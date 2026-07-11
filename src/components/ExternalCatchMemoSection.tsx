@@ -224,11 +224,19 @@ const memoStorageFallbackLabels: Record<NonNullable<ExternalCatchMemoStorageStat
   "not-authenticated": "未ログインのためブラウザ保存",
   "supabase-not-configured": "Supabase未設定のためブラウザ保存",
   "supabase-error": "DBエラーのためブラウザ保存",
-  "local-data-not-migrated": "ローカルデータは未移行",
+  "local-data-not-migrated": "DB利用可。未移行ローカルデータはブラウザ側に残し、新規登録はSupabaseへ保存",
 };
 
 function MemoStorageStatusChip({ status }: { status: ExternalCatchMemoStorageStatus }) {
-  const label = status.isLoading ? "外部メモ読込中..." : status.source === "supabase" ? "外部メモ: Supabase" : status.fallbackReason === "supabase-error" ? "外部メモ: localStorage fallback" : "外部メモ: localStorage";
+  const label = status.isLoading
+    ? "外部メモ読込中..."
+    : status.source === "supabase"
+      ? "外部メモ: Supabase"
+      : status.isDbAvailable && status.fallbackReason === "local-data-not-migrated"
+        ? "外部メモ: Supabase + localStorage"
+        : status.fallbackReason === "supabase-error"
+          ? "外部メモ: localStorage fallback"
+          : "外部メモ: localStorage";
   const reason = !status.isLoading && status.fallbackReason ? memoStorageFallbackLabels[status.fallbackReason] : null;
   return <p className="dataSourceStatus" aria-live="polite"><span>{label}</span>{reason ? <small>{reason}</small> : null}</p>;
 }
