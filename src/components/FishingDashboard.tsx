@@ -53,7 +53,7 @@ export function FishingDashboard() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const auth = useSupabaseAuth();
-  const { memos: externalMemos, persistMemo, deleteMemo, storageError, memoStorageStatus } = useExternalCatchMemos(auth.status, auth.user);
+  const { memos: externalMemos, persistMemo, deleteMemo, migrateLocalMemosToSupabase, localMemoIds, storageError, memoStorageStatus } = useExternalCatchMemos(auth.status, auth.user);
   const [masterData, setMasterData] = useState<MasterDataSet>(() => getStaticMasterData());
   const [masterDataStatus, setMasterDataStatus] = useState<MasterDataStatus>({ source: "static-fallback", isLoading: true });
   const fishingSpots = masterData.fishingSpots;
@@ -423,7 +423,7 @@ export function FishingDashboard() {
 
       {reportView === "reports" ? (
         <>
-          <ExternalCatchMemoSection memos={externalMemos} onMemoSave={persistMemo} onMemoDelete={deleteMemo} storageError={storageError} storageStatus={memoStorageStatus} sources={externalSources} spots={fishingSpots} />
+          <ExternalCatchMemoSection memos={externalMemos} onMemoSave={persistMemo} onMemoDelete={deleteMemo} onLocalMemoMigrate={migrateLocalMemosToSupabase} localMemoIds={localMemoIds} storageError={storageError} storageStatus={memoStorageStatus} sources={externalSources} spots={fishingSpots} />
           <div className="cards" id="reports">
             {reports.length === 0 && filteredExternalMemos.length === 0 ? (
               <div className="emptyState" role="status">

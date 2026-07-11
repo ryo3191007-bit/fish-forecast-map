@@ -240,3 +240,11 @@
 - 定期実行ジョブ。
 - AI解析。
 - 新API追加。
+
+## Supabaseへの明示的移行時のlocalStorage保持方針
+
+Supabase利用可能後も、既存localStorage外部メモは自動移行しません。移行はログイン済みユーザーが候補を確認し、選択したlocalStorage由来メモだけを明示的に実行する操作です。
+
+移行時も、DB保存前に `fish-forecast-map.external-catch-memos` の対象メモを削除しません。DB保存後にSupabaseから再取得し、対象メモを確認できた場合だけ、その対象メモをlocalStorage配列から外します。DB保存失敗、再取得確認失敗、同一ID重複、DB利用不可、未ログイン、一部失敗などのケースでは、ユーザーデータを失わないため未移行メモをlocalStorageに残します。
+
+移行後の確認手順は、対象メモがSupabase保存として表示されること、ページ再読込後も重複・復活がないこと、未選択または失敗したlocalStorageメモが引き続き残ることを確認します。localStorage keyの変更、key削除、全件一括削除、配列全件upsertは行いません。

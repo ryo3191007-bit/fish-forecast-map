@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import type { ExternalCatchMemoStorageStatus } from "@/hooks/useExternalCatchMemos";
+import type { ExternalCatchMemoMigrationResult, ExternalCatchMemoStorageStatus } from "@/hooks/useExternalCatchMemos";
 import type { ExternalSource } from "@/domain/externalSource";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import { fishSpeciesNames, type FishSpeciesName, type FishingMethod } from "@/domain/fishing";
@@ -95,18 +95,23 @@ type ExternalCatchMemoSectionProps = {
   memos: ExternalCatchMemo[];
   onMemoSave: (memo: ExternalCatchMemo) => Promise<boolean>;
   onMemoDelete: (memoId: string) => Promise<boolean>;
+  onLocalMemoMigrate: (memoIds: string[]) => Promise<ExternalCatchMemoMigrationResult>;
+  localMemoIds: Set<string>;
   storageError: string | null;
   storageStatus: ExternalCatchMemoStorageStatus;
   sources: ExternalSource[];
   spots: FishingSpot[];
 };
 
-export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, storageError, storageStatus, sources, spots }: ExternalCatchMemoSectionProps) {
+export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, onLocalMemoMigrate, localMemoIds, storageError, storageStatus, sources, spots }: ExternalCatchMemoSectionProps) {
   const [form, setForm] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const editingMemo = useMemo(() => memos.find((memo) => memo.id === editingId), [editingId, memos]);
+  const migrationCandidates = useMemo(() => memos.filter((memo) => localMemoIds.has(memo.id) && memo.acquisitionMethod === "manual"), [localMemoIds, memos]);
+  const [selectedMigrationIds, setSelectedMigrationIds] = useState<Set<string>>(() => new Set());
+  const [migrationResult, setMigrationResult] = useState<ExternalCatchMemoMigrationResult | null>(null);
 
   useEffect(() => {
     if (!isModalOpen) return;
@@ -116,6 +121,10 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, stor
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isModalOpen]);
+
+  useEffect(() => {
+    setSelectedMigrationIds((current) => new Set([...current].filter((id) => migrationCandidates.some((memo) => memo.id === id))));
+  }, [migrationCandidates]);
 
   const updateForm = (key: keyof FormState, value: string) => setForm((current) => ({ ...current, [key]: value }));
   const resetForm = () => { setForm(initialFormState); setErrors({}); setEditingId(null); };
@@ -153,6 +162,22 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, stor
     if (await onMemoDelete(memoId) && editingId === memoId) resetForm();
   };
 
+  const toggleMigrationCandidate = (memoId: string) => {
+    setSelectedMigrationIds((current) => {
+      const nextIds = new Set(current);
+      if (nextIds.has(memoId)) nextIds.delete(memoId);
+      else nextIds.add(memoId);
+      return nextIds;
+    });
+  };
+
+  const migrateSelectedMemos = async () => {
+    if (storageStatus.isMutating || selectedMigrationIds.size === 0) return;
+    const result = await onLocalMemoMigrate([...selectedMigrationIds]);
+    setMigrationResult(result);
+    setSelectedMigrationIds(new Set());
+  };
+
   return (
     <>
       <div className="externalMemoLaunch" aria-labelledby="external-memos-launch-heading">
@@ -185,6 +210,7 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, stor
               <button type="button" className="externalMemoClose" onClick={() => setIsModalOpen(false)} aria-label="外部釣果メモ登録を閉じる">×</button>
             </div>
             <MemoStorageStatusChip status={storageStatus} />
+            <LocalMemoMigrationPanel candidates={migrationCandidates} selectedIds={selectedMigrationIds} status={storageStatus} result={migrationResult} onToggle={toggleMigrationCandidate} onMigrate={migrateSelectedMemos} />
             {storageError ? <p className="externalMemoError" role="alert">{storageError}</p> : null}
             <form className="externalMemoForm" onSubmit={submitMemo} noValidate>
               <label>情報元URL*<input value={form.sourceUrl} onChange={(e) => updateForm("sourceUrl", e.target.value)} placeholder="https://example.com/report" /></label>
@@ -219,6 +245,40 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, stor
   );
 }
 
+
+function LocalMemoMigrationPanel({ candidates, selectedIds, status, result, onToggle, onMigrate }: {
+  candidates: ExternalCatchMemo[];
+  selectedIds: Set<string>;
+  status: ExternalCatchMemoStorageStatus;
+  result: ExternalCatchMemoMigrationResult | null;
+  onToggle: (memoId: string) => void;
+  onMigrate: () => void;
+}) {
+  if (!status.isDbAvailable || status.fallbackReason !== "local-data-not-migrated" || candidates.length === 0) return null;
+  return (
+    <section className="externalMemoMigration" aria-labelledby="external-memo-migration-heading">
+      <div>
+        <p className="eyebrow">Explicit localStorage migration</p>
+        <h3 id="external-memo-migration-heading">未移行ローカルメモ {candidates.length}件</h3>
+        <p className="muted">自動移行は行いません。選択したlocalStorage由来メモだけを、現在ログイン中ユーザーのSupabaseへ1件ずつ保存します。DB保存後も再取得確認が成功するまでlocalStorageから削除しません。</p>
+      </div>
+      <div className="externalMemoMigrationList">
+        {candidates.map((memo) => (
+          <label className="externalMemoMigrationItem" key={memo.id}>
+            <input type="checkbox" checked={selectedIds.has(memo.id)} onChange={() => onToggle(memo.id)} disabled={status.isMutating} />
+            <span>{memo.species} / {memo.areaName} / {memo.caughtDate}</span>
+          </label>
+        ))}
+      </div>
+      <div className="externalMemoActions">
+        <button type="button" className="button" onClick={onMigrate} disabled={status.isMutating || selectedIds.size === 0}>
+          {status.isMutating ? "移行確認中..." : `選択した${selectedIds.size}件を移行`}
+        </button>
+      </div>
+      {result ? <p className="muted" role="status">移行結果: 成功 {result.succeeded.length}件 / スキップ {result.skipped.length}件 / 失敗 {result.failed.length}件。未移行・失敗分はlocalStorageに残ります。</p> : null}
+    </section>
+  );
+}
 
 const memoStorageFallbackLabels: Record<NonNullable<ExternalCatchMemoStorageStatus["fallbackReason"]>, string> = {
   "not-authenticated": "未ログインのためブラウザ保存",
