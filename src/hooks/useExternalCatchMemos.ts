@@ -136,6 +136,20 @@ function saveLocalOriginMemos(visibleMemos: ExternalCatchMemo[], localMemoIds: S
   saveLocalMemos([...currentMemos, ...otherUserMemos.filter((memo) => !localMemoIds.has(memo.id))]);
 }
 
+function removeSucceededLocalOriginMemos(succeededIds: Set<string>, currentUserId: string | null) {
+  if (succeededIds.size === 0) return;
+  const storage = browserStorage();
+  const meta = loadLocalMemoMeta(storage);
+  const ownerIdByMemoId = meta.ownerIdByMemoId ?? {};
+  const nextMemos = loadExternalCatchMemos(storage).filter((memo) => !succeededIds.has(memo.id));
+  saveExternalCatchMemos(storage, nextMemos);
+  if (!currentUserId) return;
+  const nextOwnerIdByMemoId = Object.fromEntries(
+    Object.entries(ownerIdByMemoId).filter(([memoId, ownerId]) => !succeededIds.has(memoId) || ownerId !== currentUserId),
+  );
+  saveLocalMemoMeta(storage, { ...meta, ownerIdByMemoId: nextOwnerIdByMemoId });
+}
+
 function isMigrationAllowed(authStatus: SupabaseAuthStatus, userId: string | null, dbAvailable: boolean) {
   return canUseDb(authStatus, userId, dbAvailable);
 }
@@ -360,51 +374,78 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
     const memoById = new Map(memos.map((memo) => [memo.id, memo]));
     const succeededIds = new Set<string>();
 
-    for (const memoId of uniqueIds) {
-      const memo = memoById.get(memoId);
-      if (!memo) { result.skipped.push({ id: memoId, reason: "not-found" }); continue; }
-      if (!localIdsAtStart.has(memoId)) { result.skipped.push({ id: memoId, reason: "not-local-origin" }); continue; }
-      if (memo.acquisitionMethod !== "manual") { result.skipped.push({ id: memoId, reason: "not-manual" }); continue; }
-      if (dbIdsAtStart.has(memoId)) { result.skipped.push({ id: memoId, reason: "duplicate-id" }); continue; }
+    try {
+      for (const memoId of uniqueIds) {
+        const memo = memoById.get(memoId);
+        if (!memo) { result.skipped.push({ id: memoId, reason: "not-found" }); continue; }
+        if (!localIdsAtStart.has(memoId)) { result.skipped.push({ id: memoId, reason: "not-local-origin" }); continue; }
+        if (memo.acquisitionMethod !== "manual") { result.skipped.push({ id: memoId, reason: "not-manual" }); continue; }
+        if (dbIdsAtStart.has(memoId)) { result.skipped.push({ id: memoId, reason: "duplicate-id" }); continue; }
 
-      const saveResult = await saveExternalCatchMemoToSupabase(mutationUserId, memo, { mode: "insert" });
-      if (!isCurrentAuth()) return result;
-      if (saveResult.meta.source !== "supabase" || !saveResult.data) {
-        result.failed.push({ id: memoId, reason: "save-failed" });
-        continue;
+        let saveResult: Awaited<ReturnType<typeof saveExternalCatchMemoToSupabase>>;
+        try {
+          saveResult = await saveExternalCatchMemoToSupabase(mutationUserId, memo, { mode: "insert" });
+        } catch {
+          result.failed.push({ id: memoId, reason: "save-failed" });
+          continue;
+        }
+        if (!isCurrentAuth()) return result;
+        if (saveResult.meta.source !== "supabase" || !saveResult.data) {
+          result.failed.push({ id: memoId, reason: "save-failed" });
+          continue;
+        }
+
+        let verifyResult: Awaited<ReturnType<typeof fetchExternalCatchMemosFromSupabase>>;
+        try {
+          verifyResult = await fetchExternalCatchMemosFromSupabase(mutationUserId);
+        } catch {
+          result.failed.push({ id: memoId, reason: "verification-failed" });
+          continue;
+        }
+        if (!isCurrentAuth()) return result;
+        if (verifyResult.meta.source !== "supabase" || !verifyResult.data.some((item) => item.id === memoId)) {
+          result.failed.push({ id: memoId, reason: "verification-failed" });
+          continue;
+        }
+
+        result.succeeded.push(memoId);
+        succeededIds.add(memoId);
+        dbIdsAtStart.add(memoId);
+        latestDbMemosRef.current = verifyResult.data;
       }
 
-      const verifyResult = await fetchExternalCatchMemosFromSupabase(mutationUserId);
       if (!isCurrentAuth()) return result;
-      if (verifyResult.meta.source !== "supabase" || !verifyResult.data.some((item) => item.id === memoId)) {
-        result.failed.push({ id: memoId, reason: "verification-failed" });
-        continue;
+      let didCleanupFail = false;
+      try {
+        removeSucceededLocalOriginMemos(succeededIds, mutationUserId);
+      } catch {
+        didCleanupFail = true;
+        for (const memoId of result.succeeded) result.failed.push({ id: memoId, reason: "verification-failed" });
+        result.succeeded = [];
+        succeededIds.clear();
       }
 
-      result.succeeded.push(memoId);
-      succeededIds.add(memoId);
-      dbIdsAtStart.add(memoId);
-      latestDbMemosRef.current = verifyResult.data;
+      if (!isCurrentAuth()) return result;
+      const nextLocalMemoIds = new Set([...localMemoIdsRef.current].filter((id) => !succeededIds.has(id)));
+      localMemoIdsRef.current = nextLocalMemoIds;
+      dbMemoIdsRef.current = new Set([...dbMemoIdsRef.current, ...result.succeeded]);
+      const localIds = nextLocalMemoIds;
+      const nextMemos = memos.filter((memo) => !succeededIds.has(memo.id));
+      for (const dbMemo of latestDbMemosRef.current) {
+        if (!localIds.has(dbMemo.id) && !nextMemos.some((memo) => memo.id === dbMemo.id) && !getDeletedDbMemoIds(mutationUserId).has(dbMemo.id)) nextMemos.push(dbMemo);
+      }
+      setMemos(nextMemos);
+      setStorageError(didCleanupFail ? "移行後のブラウザ保存整理に失敗したため、外部釣果メモをブラウザ保存に残しました。" : result.failed.length > 0 ? "一部の外部釣果メモは移行できなかったため、ブラウザ保存に残しました。" : null);
+      setStatus(nextLocalMemoIds.size > 0 || getDeletedDbMemoIds(mutationUserId).size > 0
+        ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: true, isLoading: false, isMutating: false }
+        : { source: "supabase", isDbAvailable: true, isLoading: false, isMutating: false });
+      return result;
+    } catch {
+      if (isCurrentAuth()) setStorageError("一部の外部釣果メモは移行できなかったため、ブラウザ保存に残しました。");
+      return result;
+    } finally {
+      if (isCurrentAuth()) setStatus((current) => ({ ...current, isMutating: false }));
     }
-
-    if (!isCurrentAuth()) return result;
-    const nextLocalMemoIds = new Set([...localMemoIdsRef.current].filter((id) => !succeededIds.has(id)));
-    if (succeededIds.size > 0) {
-      saveLocalOriginMemos(memos, nextLocalMemoIds, mutationUserId);
-    }
-    localMemoIdsRef.current = nextLocalMemoIds;
-    dbMemoIdsRef.current = new Set([...dbMemoIdsRef.current, ...result.succeeded]);
-    const localIds = nextLocalMemoIds;
-    const nextMemos = memos.filter((memo) => !succeededIds.has(memo.id));
-    for (const dbMemo of latestDbMemosRef.current) {
-      if (!localIds.has(dbMemo.id) && !nextMemos.some((memo) => memo.id === dbMemo.id) && !getDeletedDbMemoIds(mutationUserId).has(dbMemo.id)) nextMemos.push(dbMemo);
-    }
-    setMemos(nextMemos);
-    setStorageError(result.failed.length > 0 ? "一部の外部釣果メモは移行できなかったため、ブラウザ保存に残しました。" : null);
-    setStatus(nextLocalMemoIds.size > 0 || getDeletedDbMemoIds(mutationUserId).size > 0
-      ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: true, isLoading: false, isMutating: false }
-      : { source: "supabase", isDbAvailable: true, isLoading: false, isMutating: false });
-    return result;
   }, [authStatus, memos, userId]);
 
   return { memos, persistMemo, deleteMemo, migrateLocalMemosToSupabase, localMemoIds: localMemoIdsRef.current, storageError, memoStorageStatus: status };
