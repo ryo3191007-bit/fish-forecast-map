@@ -225,7 +225,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
           localMemoIdsRef.current = new Set(localMemos.map((memo) => memo.id));
           dbMemoIdsRef.current = new Set(visibleDbMemos.map((memo) => memo.id));
           latestDbMemosRef.current = visibleDbMemos;
-          if (localMemos.length > 0 || deletedDbMemoIds.size > 0) {
+          if (localMemos.length > 0) {
             setMemos(mergeExternalCatchMemos(result.data, localMemos, deletedDbMemoIds));
             setStatus({ source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: true, isLoading: false, isMutating: false });
             return;
@@ -293,7 +293,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
         latestDbMemosRef.current = [...latestDbMemosRef.current.filter((item) => item.id !== result.data?.id), result.data];
         setMemos(savedMemos);
         setStorageError(null);
-        setStatus(localMemoIdsRef.current.size > 0 || getDeletedDbMemoIds(mutationUserId).size > 0
+        setStatus(localMemoIdsRef.current.size > 0
           ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: true, isLoading: false, isMutating: false }
           : { source: "supabase", isDbAvailable: true, isLoading: false, isMutating: false });
         return true;
@@ -358,9 +358,11 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       latestDbMemosRef.current = latestDbMemosRef.current.filter((memo) => memo.id !== memoId);
       setMemos(nextMemos);
       setStorageError(result.meta.source === "supabase" ? null : "DB削除に失敗したため、ブラウザ保存側で非表示にしました。");
-      setStatus(result.meta.source === "supabase" && (nextLocalMemoIds.size > 0 || getDeletedDbMemoIds(mutationUserId).size > 0)
-        ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: true, isLoading: false, isMutating: false }
-        : { ...result.meta, isDbAvailable: result.meta.source === "supabase", isLoading: false, isMutating: false });
+      setStatus(result.meta.source === "supabase"
+        ? nextLocalMemoIds.size > 0
+          ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: true, isLoading: false, isMutating: false }
+          : { source: "supabase", isDbAvailable: true, isLoading: false, isMutating: false }
+        : { ...result.meta, isDbAvailable: false, isLoading: false, isMutating: false });
       return true;
     } catch {
       if (!isCurrentAuth()) return false;
@@ -470,7 +472,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       const nextMemos = mergeExternalCatchMemos(visibleDbMemos, latestLocalMemos, deletedDbMemoIds);
       setMemos(nextMemos);
       setStorageError(didCleanupFail ? "移行後のブラウザ保存整理に失敗したため、外部釣果メモをブラウザ保存に残しました。" : result.failed.length > 0 ? "一部の外部釣果メモは移行できなかったため、ブラウザ保存に残しました。" : null);
-      setStatus(nextLocalMemoIds.size > 0 || deletedDbMemoIds.size > 0
+      setStatus(nextLocalMemoIds.size > 0
         ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: true, isLoading: false, isMutating: false }
         : { source: "supabase", isDbAvailable: true, isLoading: false, isMutating: false });
       return result;

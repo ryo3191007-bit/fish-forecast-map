@@ -254,7 +254,8 @@ function LocalMemoMigrationPanel({ candidates, selectedIds, status, result, onTo
   onToggle: (memoId: string) => void;
   onMigrate: () => void;
 }) {
-  if (!status.isDbAvailable || status.fallbackReason !== "local-data-not-migrated" || candidates.length === 0) return null;
+  const canShowCandidates = status.isDbAvailable && status.fallbackReason === "local-data-not-migrated" && candidates.length > 0;
+  if (!canShowCandidates && !result) return null;
   return (
     <section className="externalMemoMigration" aria-labelledby="external-memo-migration-heading">
       <div>
@@ -262,19 +263,23 @@ function LocalMemoMigrationPanel({ candidates, selectedIds, status, result, onTo
         <h3 id="external-memo-migration-heading">未移行ローカルメモ {candidates.length}件</h3>
         <p className="muted">自動移行は行いません。選択したlocalStorage由来メモだけを、現在ログイン中ユーザーのSupabaseへ1件ずつ保存します。DB保存後も再取得確認が成功するまでlocalStorageから削除しません。</p>
       </div>
-      <div className="externalMemoMigrationList">
-        {candidates.map((memo) => (
-          <label className="externalMemoMigrationItem" key={memo.id}>
-            <input type="checkbox" checked={selectedIds.has(memo.id)} onChange={() => onToggle(memo.id)} disabled={status.isMutating} />
-            <span>{memo.species} / {memo.areaName} / {memo.caughtDate}</span>
-          </label>
-        ))}
-      </div>
-      <div className="externalMemoActions">
-        <button type="button" className="button" onClick={onMigrate} disabled={status.isMutating || selectedIds.size === 0}>
-          {status.isMutating ? "移行確認中..." : `選択した${selectedIds.size}件を移行`}
-        </button>
-      </div>
+      {canShowCandidates ? (
+        <>
+          <div className="externalMemoMigrationList">
+            {candidates.map((memo) => (
+              <label className="externalMemoMigrationItem" key={memo.id}>
+                <input type="checkbox" checked={selectedIds.has(memo.id)} onChange={() => onToggle(memo.id)} disabled={status.isMutating} />
+                <span>{memo.species} / {memo.areaName} / {memo.caughtDate}</span>
+              </label>
+            ))}
+          </div>
+          <div className="externalMemoActions">
+            <button type="button" className="button" onClick={onMigrate} disabled={status.isMutating || selectedIds.size === 0}>
+              {status.isMutating ? "移行確認中..." : `選択した${selectedIds.size}件を移行`}
+            </button>
+          </div>
+        </>
+      ) : null}
       {result ? <p className="muted" role="status">移行結果: 成功 {result.succeeded.length}件 / スキップ {result.skipped.length}件 / 失敗 {result.failed.length}件。未移行・失敗分はlocalStorageに残ります。</p> : null}
     </section>
   );

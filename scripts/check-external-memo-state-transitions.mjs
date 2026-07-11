@@ -2,6 +2,8 @@ import { readFileSync } from "node:fs";
 
 const hookSource = readFileSync("src/hooks/useExternalCatchMemos.ts", "utf8");
 const repositorySource = readFileSync("src/lib/externalCatchMemoRepository.ts", "utf8");
+
+const sectionSource = readFileSync("src/components/ExternalCatchMemoSection.tsx", "utf8");
 const hardenedRpcSql = readFileSync("supabase/sql/007_harden_soft_delete_external_catch_memo_rpc.sql", "utf8");
 
 const memo = (id, label, updatedAt = "2026-01-01T00:00:00.000Z") => ({ id, label, updatedAt });
@@ -20,7 +22,7 @@ function modelState({ dbMemos = [], localMemos = [], deletedDbMemoIds = [], loca
     dbIds: new Set(visibleDbMemos.map((item) => item.id)),
     deletedIds,
     dbAvailable: dbReadOk,
-    status: dbReadOk && scopedLocalMemos.length === 0 && deletedIds.size === 0
+    status: dbReadOk && scopedLocalMemos.length === 0
       ? { source: "supabase", isDbAvailable: true }
       : { source: "local-storage-fallback", fallbackReason: dbReadOk ? "local-data-not-migrated" : "supabase-error", isDbAvailable: dbReadOk },
   };
@@ -57,7 +59,7 @@ function saveMemo(state, nextMemo, { dbWriteFails = false, userId = "user-1" } =
     visibleMemos,
     dbUpdated: isExistingDbMemo,
     dbInserted: !isExistingDbMemo,
-    status: state.localIds.size > 0 || state.deletedIds.size > 0
+    status: state.localIds.size > 0
       ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: state.dbAvailable }
       : { source: "supabase", isDbAvailable: state.dbAvailable },
   };
@@ -138,7 +140,7 @@ function deleteMemo(state, memoId, { rpcError = false, rpcReturnsTrue = true, ta
     dbIds: shouldUseDb && !rpcError && rpcCanDelete ? new Set([...state.dbIds].filter((id) => id !== memoId)) : state.dbIds,
     deletedIds: nextDeletedIds,
     dbDeleted: shouldUseDb && !rpcError && rpcCanDelete,
-    status: nextLocalIds.size > 0 || nextDeletedIds.size > 0
+    status: nextLocalIds.size > 0
       ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: state.dbAvailable }
       : { source: "supabase", isDbAvailable: state.dbAvailable },
   };
@@ -150,6 +152,24 @@ function assert(condition, label) {
 }
 
 
+
+
+// Tombstone-only metadata hides the DB row but does not present user-facing unmigrated localStorage data.
+{
+  const clean = modelState({ dbMemos: [memo("a", "db A")], localMemos: [] });
+  assert(clean.status.source === "supabase", "local memo 0件 / tombstone 0件 / DB read成功 -> Supabase status");
+  const tombstoneOnly = modelState({ dbMemos: [memo("a", "db A"), memo("b", "db B")], localMemos: [], deletedDbMemoIds: ["a"] });
+  assert(tombstoneOnly.status.source === "supabase" && tombstoneOnly.status.fallbackReason === undefined, "local memo 0件 / tombstoneあり / DB read成功 -> not local-data-not-migrated");
+  assert(tombstoneOnly.visibleMemos.map((item) => item.id).join(",") === "b", "tombstone-only state keeps the targeted DB memo hidden");
+}
+
+// Last successful local memo migration leaves a result object available even after candidates become empty.
+{
+  const initial = modelState({ dbMemos: [], localMemos: [memo("b", "local B")] });
+  const afterMigration = migrateLocalMemos(initial, ["b"]);
+  assert(afterMigration.localMemos.length === 0 && afterMigration.status.source === "supabase", "last successful migration removes all candidates and returns Supabase-only status");
+  assert(afterMigration.migrationResult.succeeded.length === 1 && afterMigration.migrationResult.skipped.length === 0 && afterMigration.migrationResult.failed.length === 0, "last successful migration keeps success/skip/failure counts available for UI result display");
+}
 
 // Explicit migration: DB available + selected local memo -> save, verify, then remove only that local memo.
 {
@@ -366,6 +386,8 @@ assert(/const nextMemos = mergeExternalCatchMemos\(visibleDbMemos, latestLocalMe
 assert(/const verifiedDbMemoIds = new Set<string>\(\)/.test(hookSource), "migration tracks DB IDs verified by Supabase refetch separately from cleanup success");
 assert(/dbMemoIdsRef\.current = new Set\(\[\.\.\.dbMemoIdsRef\.current, \.\.\.verifiedDbMemoIds\]\)/.test(hookSource), "migration records verified DB IDs even when cleanup leaves local duplicates");
 assert(/latestDbMemosRef\.current = visibleDbMemos/.test(hookSource), "migration keeps latest DB memo ref aligned with DB IDs after cleanup and tombstone filtering");
+assert(!/localMemos\.length > 0 \|\| deletedDbMemoIds\.size > 0/.test(hookSource), "hook does not classify tombstone-only metadata as unmigrated local data on initial load");
+assert(!/nextLocalMemoIds\.size > 0 \|\| deletedDbMemoIds\.size > 0/.test(hookSource), "migration status depends on remaining local memo candidates, not tombstone metadata");
 assert(/finally \{[\s\S]*setStatus\(\(current\) => \(\{ \.\.\.current, isMutating: false \}\)\)/.test(hookSource), "migration clears mutating state in finally");
 assert(/dbAvailableRef = useRef\(false\)/.test(hookSource), "hook tracks successful Supabase read availability separately from display status");
 assert(/isDbAvailable: true/.test(hookSource), "hook exposes DB availability separately from local fallback display status");
@@ -373,6 +395,8 @@ assert(/canUseDb\(authStatus, userId, dbAvailableRef\.current\)/.test(hookSource
 assert(/const shouldPersistToDb = useDb && Boolean\(mutationUserId\) && !localMemoIdsRef\.current\.has\(memo\.id\)/.test(hookSource), "hook routes new and DB-origin memos to DB when DB is available, while local-origin memo edits stay local");
 assert(/pruneDeletedDbMemoIds/.test(hookSource), "hook prunes tombstones that no longer match successful DB read rows");
 assert(/deletedDbMemoIdsByUserId/.test(hookSource), "hook stores DB delete tombstones by user");
+assert(/if \(!canShowCandidates && !result\) return null/.test(sectionSource), "migration panel remains visible for the latest result even after candidates become empty");
+assert(/成功 \{result\.succeeded\.length\}件 \/ スキップ \{result\.skipped\.length\}件 \/ 失敗 \{result\.failed\.length\}件/.test(sectionSource), "migration result shows success, skipped, and failed counts");
 assert(/ownerIdByMemoId/.test(hookSource), "hook stores local fallback ownership by memo ID");
 assert(/saveLocalOriginMemos/.test(hookSource), "hook saves only local-origin/fallback memos to localStorage");
 assert(/if \(!data\) return fallback\(null, "supabase-error", "No matching external catch memo row was updated\."\)/.test(repositorySource), "repository treats zero-row DB update as fallback");
