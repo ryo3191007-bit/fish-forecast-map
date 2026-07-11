@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 const repository = readFileSync("src/lib/externalCatchMemoRepository.ts", "utf8");
 const hook = readFileSync("src/hooks/useExternalCatchMemos.ts", "utf8");
 const mapper = readFileSync("src/lib/externalCatchMemoMapper.ts", "utf8");
-const rpcSql = readFileSync("supabase/sql/006_soft_delete_external_catch_memo_rpc.sql", "utf8");
+const rpcSql = readFileSync("supabase/sql/007_harden_soft_delete_external_catch_memo_rpc.sql", "utf8");
 const combined = `${repository}\n${hook}\n${mapper}\n${rpcSql}`;
 const normalized = combined.toLowerCase().replace(/\s+/g, " ");
 
@@ -15,10 +15,15 @@ const checks = [
   ["save sets is_deleted false", /is_deleted: false/.test(repository)],
   ["delete calls owner-scoped soft delete RPC", /\.rpc\("soft_delete_external_catch_memo", \{ p_memo_id: memoId \}\)/.test(repository)],
   ["delete success depends on RPC data true", /if \(data !== true\)/.test(repository)],
-  ["RPC SQL is logical update", /update public\.external_catch_memos[\s\S]*is_deleted = true/.test(rpcSql)],
-  ["RPC SQL scopes by id owner and active row", /id = p_memo_id[\s\S]*owner_id = auth\.uid\(\)[\s\S]*is_deleted = false/.test(rpcSql)],
+  ["RPC SQL is security definer", /security definer/i.test(rpcSql)],
+  ["RPC SQL uses empty search_path", /set search_path = ''/i.test(rpcSql)],
+  ["RPC SQL returns false when auth uid is null", /caller_id uuid := auth\.uid\(\);[\s\S]*if caller_id is null then[\s\S]*return false;/i.test(rpcSql)],
+  ["RPC SQL is logical update", /update public\.external_catch_memos[\s\S]*is_deleted = true[\s\S]*updated_at = pg_catalog\.now\(\)/.test(rpcSql)],
+  ["RPC SQL scopes by id owner and active row", /id = p_memo_id[\s\S]*owner_id = caller_id[\s\S]*is_deleted = false/.test(rpcSql)],
+  ["RPC SQL uses fully qualified update target", /update public\.external_catch_memos/.test(rpcSql) && /pg_catalog\.now\(\)/.test(rpcSql)],
   ["RPC SQL returns true only for one updated row", /get diagnostics updated_count = row_count;[\s\S]*return updated_count = 1;/.test(rpcSql)],
   ["RPC SQL grants authenticated only", /revoke all[\s\S]*from public;[\s\S]*revoke all[\s\S]*from anon;[\s\S]*grant execute[\s\S]*to authenticated;/.test(rpcSql)],
+  ["existing RLS policy SQL is not loosened", !/create policy[\s\S]*is_deleted\s*=\s*true/i.test(rpcSql) && !/alter table public\.external_catch_memos disable row level security/i.test(combined)],
   ["diagnostic logging is not disabled in production", /console\.warn/.test(repository) && !/NODE_ENV\s*={2,3}\s*["']production/.test(repository)],
   ["diagnostics are sanitized before fallback/logging", /sanitizeDiagnosticMessage/.test(repository) && /warnDeleteDiagnostic\(diagnostic\)/.test(repository)],
   ["delete does not select updated deleted row", !/update\(\{ is_deleted: true[\s\S]*?\.select\("id"\)/.test(repository)],

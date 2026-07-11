@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 
 const hookSource = readFileSync("src/hooks/useExternalCatchMemos.ts", "utf8");
 const repositorySource = readFileSync("src/lib/externalCatchMemoRepository.ts", "utf8");
+const hardenedRpcSql = readFileSync("supabase/sql/007_harden_soft_delete_external_catch_memo_rpc.sql", "utf8");
 
 const memo = (id, label) => ({ id, label });
 
@@ -215,6 +216,11 @@ assert(/\.rpc\("soft_delete_external_catch_memo", \{ p_memo_id: memoId \}\)/.tes
 assert(/if \(data !== true\)/.test(repositorySource), "repository treats non-true RPC delete result as fallback");
 assert(!/NODE_ENV\s*={2,3}\s*["']production/.test(repositorySource), "repository does not disable safe diagnostics in production");
 assert(/console\.warn/.test(repositorySource) && /sanitizeDiagnosticMessage/.test(repositorySource), "repository logs only sanitized short diagnostics");
+assert(/security definer/i.test(hardenedRpcSql), "hardened RPC function is security definer");
+assert(/set search_path = ''/i.test(hardenedRpcSql), "hardened RPC function uses empty search_path");
+assert(/caller_id uuid := auth\.uid\(\);[\s\S]*if caller_id is null then[\s\S]*return false;/i.test(hardenedRpcSql), "hardened RPC returns false when auth.uid is null");
+assert(/update public\.external_catch_memos[\s\S]*updated_at = pg_catalog\.now\(\)[\s\S]*id = p_memo_id[\s\S]*owner_id = caller_id[\s\S]*is_deleted = false/.test(hardenedRpcSql), "hardened RPC updates only the fully qualified owner-scoped active row");
+assert(/revoke all[\s\S]*from public;[\s\S]*revoke all[\s\S]*from anon;[\s\S]*grant execute[\s\S]*to authenticated;/.test(hardenedRpcSql), "hardened RPC keeps execute permission authenticated-only");
 assert(!/update\(\{ is_deleted: true[\s\S]*?\.select\("id"\)/.test(repositorySource), "repository does not rely on RETURNING SELECT for deleted row success");
 
 console.log("External memo state transition scenarios passed without DB/network access.");
