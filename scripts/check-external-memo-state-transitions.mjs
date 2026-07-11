@@ -19,13 +19,15 @@ function modelState({ dbMemos = [], localMemos = [], deletedDbMemoIds = [], loca
     dbIds: new Set(visibleDbMemos.map((item) => item.id)),
     deletedIds,
     dbAvailable: dbReadOk,
-    status: dbReadOk && scopedLocalMemos.length === 0 && deletedIds.size === 0 ? { source: "supabase" } : { source: "local-storage-fallback", fallbackReason: dbReadOk ? "local-data-not-migrated" : "supabase-error" },
+    status: dbReadOk && scopedLocalMemos.length === 0 && deletedIds.size === 0
+      ? { source: "supabase", isDbAvailable: true }
+      : { source: "local-storage-fallback", fallbackReason: dbReadOk ? "local-data-not-migrated" : "supabase-error", isDbAvailable: dbReadOk },
   };
 }
 
 function saveMemo(state, nextMemo, { dbWriteFails = false, userId = "user-1" } = {}) {
   const isExistingDbMemo = state.dbIds.has(nextMemo.id) && !state.localIds.has(nextMemo.id);
-  const shouldUseDb = state.dbAvailable && (isExistingDbMemo || state.status.source === "supabase");
+  const shouldUseDb = state.dbAvailable && !state.localIds.has(nextMemo.id);
   const visibleMemos = state.visibleMemos.some((item) => item.id === nextMemo.id)
     ? state.visibleMemos.map((item) => (item.id === nextMemo.id ? nextMemo : item))
     : [nextMemo, ...state.visibleMemos];
@@ -116,6 +118,37 @@ function assert(condition, label) {
   assert(afterReload.visibleMemos.map((item) => item.id).join(",") === "b", "DB-origin delete remains absent after reload when DB row is logically deleted");
 }
 
+// DB available + localStorage memo/tombstone coexistence -> new memo still goes to DB insert.
+{
+  const withLocal = modelState({ dbMemos: [memo("a", "db A")], localMemos: [memo("b", "local B")] });
+  const afterAdd = saveMemo(withLocal, memo("c", "new C"));
+  assert(afterAdd.dbInserted === true, "DB available with localStorage memo -> new memo calls DB insert");
+  assert(afterAdd.localMemos.map((item) => item.id).join(",") === "b", "DB-inserted new memo is not auto-migrated into localStorage");
+
+  const withTombstone = modelState({ dbMemos: [memo("a", "db A")], deletedDbMemoIds: ["a"] });
+  const afterTombstoneAdd = saveMemo(withTombstone, memo("c", "new C"));
+  assert(afterTombstoneAdd.dbInserted === true, "DB available with tombstone -> new memo calls DB insert");
+}
+
+// localStorage-origin CRUD stays local even when DB is available.
+{
+  const initial = modelState({ dbMemos: [memo("a", "db A")], localMemos: [memo("b", "local B")] });
+  const afterEditLocal = saveMemo(initial, memo("b", "local B edited"));
+  assert(afterEditLocal.dbUpdated === false && afterEditLocal.dbInserted === false, "localStorage-origin edit updates localStorage only");
+  assert(afterEditLocal.localMemos.map((item) => item.id).join(",") === "b", "localStorage-origin edit keeps only local memo in localStorage");
+  const afterDeleteLocal = deleteMemo(initial, "b");
+  assert(afterDeleteLocal.dbDeleted === false && afterDeleteLocal.localMemos.length === 0, "localStorage-origin delete deletes localStorage only");
+}
+
+// DB insert failure -> new memo falls back to user-scoped localStorage.
+{
+  const initial = modelState({ dbMemos: [memo("a", "db A")], localMemos: [memo("b", "local B")] });
+  const afterFailedInsert = saveMemo(initial, memo("c", "new C local fallback"), { dbWriteFails: true, userId: "user-1" });
+  assert(afterFailedInsert.dbInserted === false && afterFailedInsert.localMemos.some((item) => item.id === "c"), "DB insert failure stores new memo as local fallback");
+  const user2State = modelState({ dbMemos: [], localMemos: afterFailedInsert.localMemos, localOwnerById: afterFailedInsert.localOwnerById, userId: "user-2" });
+  assert(user2State.visibleMemos.map((item) => item.id).join(",") === "b", "user-scoped new fallback memo is not mixed into another user view");
+}
+
 // DB operation failure -> only target A becomes user-scoped local shadow/tombstone; local B and other users remain separated.
 {
   const initial = modelState({ dbMemos: [memo("a", "db A")], localMemos: [memo("b", "local B")] });
@@ -155,8 +188,9 @@ function assert(condition, label) {
 }
 
 assert(/dbAvailableRef = useRef\(false\)/.test(hookSource), "hook tracks successful Supabase read availability separately from display status");
-assert(/canUseDb\(authStatus, userId, dbAvailableRef\.current\)/.test(hookSource), "hook does not require status.source === supabase for DB-origin CRUD");
-assert(/isExistingDbMemo \|\| status\.source === "supabase"/.test(hookSource), "hook routes existing DB-origin memos to DB while keeping coexistence new memos local");
+assert(/isDbAvailable: true/.test(hookSource), "hook exposes DB availability separately from local fallback display status");
+assert(/canUseDb\(authStatus, userId, dbAvailableRef\.current\)/.test(hookSource), "hook does not require status.source === supabase for DB CRUD availability");
+assert(/const shouldPersistToDb = useDb && Boolean\(mutationUserId\) && !localMemoIdsRef\.current\.has\(memo\.id\)/.test(hookSource), "hook routes new and DB-origin memos to DB when DB is available, while local-origin memo edits stay local");
 assert(/pruneDeletedDbMemoIds/.test(hookSource), "hook prunes tombstones that no longer match successful DB read rows");
 assert(/deletedDbMemoIdsByUserId/.test(hookSource), "hook stores DB delete tombstones by user");
 assert(/ownerIdByMemoId/.test(hookSource), "hook stores local fallback ownership by memo ID");
