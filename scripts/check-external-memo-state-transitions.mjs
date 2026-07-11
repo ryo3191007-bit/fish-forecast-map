@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 
 const hookSource = readFileSync("src/hooks/useExternalCatchMemos.ts", "utf8");
 const repositorySource = readFileSync("src/lib/externalCatchMemoRepository.ts", "utf8");
+const hardenedRpcSql = readFileSync("supabase/sql/007_harden_soft_delete_external_catch_memo_rpc.sql", "utf8");
 
 const memo = (id, label) => ({ id, label });
 
@@ -216,5 +217,12 @@ assert(/if \(data !== true\)/.test(repositorySource), "repository treats non-tru
 assert(!/NODE_ENV\s*={2,3}\s*["']production/.test(repositorySource), "repository does not disable safe diagnostics in production");
 assert(/console\.warn/.test(repositorySource) && /sanitizeDiagnosticMessage/.test(repositorySource), "repository logs only sanitized short diagnostics");
 assert(!/update\(\{ is_deleted: true[\s\S]*?\.select\("id"\)/.test(repositorySource), "repository does not rely on RETURNING SELECT for deleted row success");
+assert(/security definer/i.test(hardenedRpcSql), "hardened RPC uses security definer");
+assert(/set search_path = ''/i.test(hardenedRpcSql), "hardened RPC uses empty search_path");
+assert(/caller_id uuid := auth\.uid\(\);[\s\S]*if caller_id is null then[\s\S]*return false;/i.test(hardenedRpcSql), "hardened RPC returns false when auth uid is null");
+assert(/update public\.external_catch_memos[\s\S]*id = p_memo_id[\s\S]*owner_id = caller_id[\s\S]*created_by = 'authenticated_user'[\s\S]*is_deleted = false/.test(hardenedRpcSql), "hardened RPC updates only owner-scoped authenticated_user active rows");
+assert(/updated_at = pg_catalog\.now\(\)/.test(hardenedRpcSql), "hardened RPC fully qualifies timestamp function");
+assert(/return updated_count = 1;/.test(hardenedRpcSql), "hardened RPC only returns true for one updated row");
+assert(/revoke all[\s\S]*from public;[\s\S]*revoke all[\s\S]*from anon;[\s\S]*grant execute[\s\S]*to authenticated;/i.test(hardenedRpcSql), "hardened RPC grants execute to authenticated only");
 
 console.log("External memo state transition scenarios passed without DB/network access.");

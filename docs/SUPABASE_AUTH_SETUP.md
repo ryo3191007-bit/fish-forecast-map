@@ -21,11 +21,11 @@
 - localStorage全件の暗黙一括upsert。
 - service role key、DB URL、DB passwordの利用やコミット。
 
-ログイン中は `owner_id = user.id` の自分の未削除メモだけをSupabaseから読み、登録・編集では `created_by = authenticated_user` と `is_deleted = false` を設定する。削除は物理deleteではなく、手動SQL `supabase/sql/006_soft_delete_external_catch_memo_rpc.sql` の `soft_delete_external_catch_memo` RPCで `owner_id = auth.uid()` かつ未削除の行だけを `is_deleted = true` にする。未ログイン、Supabase未設定、DBエラー時は既存localStorageへfallbackする。削除RPC失敗時の開発者向け診断は本番でも無効化せず、URL、JWT、キー、`owner_id`、ユーザーUUIDを伏せた短いメッセージだけをログへ出す。
+ログイン中は `owner_id = user.id` の自分の未削除メモだけをSupabaseから読み、登録・編集では `created_by = authenticated_user` と `is_deleted = false` を設定する。削除は物理deleteではなく、手動SQL `supabase/sql/006_soft_delete_external_catch_memo_rpc.sql` と追加hardening SQL `supabase/sql/007_harden_soft_delete_external_catch_memo_rpc.sql` の `soft_delete_external_catch_memo` RPCで、`auth.uid()` がNULLではなく、`owner_id = auth.uid()`、`created_by = authenticated_user`、未削除のすべてを満たす所有行だけを `is_deleted = true` にする。`admin_import` / `manual_local_storage_migration` 由来の行は削除RPCの対象外にする。未ログイン、Supabase未設定、DBエラー時は既存localStorageへfallbackする。削除RPC失敗時の開発者向け診断は本番でも無効化せず、URL、JWT、キー、`owner_id`、ユーザーUUIDを伏せた短いメッセージだけをログへ出す。
 
 ## `owner_id = auth.uid()` 方針
 
-`external_catch_memos.owner_id` とSupabase Authの `auth.uid()` を一致させ、自分のメモだけselect/insert/updateできるRLS policy SQLを `supabase/sql/005_external_catch_memos_owner_policies.sql` に配置している。Post-MVP-026では、このSQLが手動実行済みであることを前提にアプリ側のDB read/writeを接続した。匿名writeを広く開ける構成にはせず、物理delete policyも追加しない。削除は `is_deleted = true` へ更新する論理削除を使う。
+`external_catch_memos.owner_id` とSupabase Authの `auth.uid()` を一致させ、自分のメモだけselect/insert/updateできるRLS policy SQLを `supabase/sql/005_external_catch_memos_owner_policies.sql` に配置している。Post-MVP-026では、このSQLが手動実行済みであることを前提にアプリ側のDB read/writeを接続した。匿名writeを広く開ける構成にはせず、物理delete policyも追加しない。削除は `is_deleted = true` へ更新する論理削除を使う。削除RPCは `security definer`、`set search_path = ''`、完全修飾した更新、`authenticated` のみの実行権限を維持し、既存RLS policyは緩めない。
 
 ## Supabase Dashboardで確認する項目
 
