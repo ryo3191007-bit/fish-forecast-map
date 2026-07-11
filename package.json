@@ -11,7 +11,8 @@
     "check:auth-safety": "node scripts/check-auth-safety.mjs",
     "check:external-memo-owner-policy": "node scripts/check-external-memo-owner-policy.mjs",
     "check:external-memo-auth-repository": "node scripts/check-external-memo-auth-repository.mjs",
-    "check:external-memo-state-transitions": "node scripts/check-external-memo-state-transitions.mjs"
+    "check:external-memo-state-transitions": "node scripts/check-external-memo-state-transitions.mjs",
+    "check:migration-safety": "node scripts/check-migration-safety.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
@@ -26,6 +27,7 @@
     "@types/react-dom": "^19.0.4",
     "eslint": "^9.23.0",
     "eslint-config-next": "^15.3.5",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "supabase": "2.31.8"
   }
 }
