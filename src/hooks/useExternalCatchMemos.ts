@@ -27,7 +27,7 @@ export type ExternalCatchMemoStorageStatus = {
 export type ExternalCatchMemoMigrationResult = {
   attempted: number;
   succeeded: string[];
-  skipped: { id: string; reason: "duplicate-id" | "not-local-origin" | "not-manual" | "not-found" }[];
+  skipped: { id: string; reason: "duplicate-id" | "not-local-origin" | "not-manual" | "not-found" | "updated-during-migration" }[];
   failed: { id: string; reason: "save-failed" | "verification-failed" }[];
 };
 
@@ -136,22 +136,39 @@ function saveLocalOriginMemos(visibleMemos: ExternalCatchMemo[], localMemoIds: S
   saveLocalMemos([...currentMemos, ...otherUserMemos.filter((memo) => !localMemoIds.has(memo.id))]);
 }
 
-function removeSucceededLocalOriginMemos(succeededIds: Set<string>, currentUserId: string | null) {
-  if (succeededIds.size === 0) return;
+function serializeMemoForMigrationComparison(memo: ExternalCatchMemo) {
+  return JSON.stringify(memo);
+}
+
+function removeUnchangedSucceededLocalOriginMemos(
+  succeededIds: Set<string>,
+  startSnapshotsByMemoId: Map<string, string>,
+  currentUserId: string | null,
+) {
+  const removedIds = new Set<string>();
+  const conflictedIds = new Set<string>();
+  if (succeededIds.size === 0) return { removedIds, conflictedIds };
   const storage = browserStorage();
   const meta = loadLocalMemoMeta(storage);
   const ownerIdByMemoId = meta.ownerIdByMemoId ?? {};
-  const shouldRemoveMemo = (memoId: string) => {
-    if (!succeededIds.has(memoId)) return false;
-    const ownerId = ownerIdByMemoId[memoId];
-    return currentUserId ? !ownerId || ownerId === currentUserId : !ownerId;
-  };
-  const nextMemos = loadExternalCatchMemos(storage).filter((memo) => !shouldRemoveMemo(memo.id));
+  const nextMemos = loadExternalCatchMemos(storage).filter((memo) => {
+    if (!succeededIds.has(memo.id)) return true;
+    const ownerId = ownerIdByMemoId[memo.id];
+    const isCurrentUserMemo = currentUserId ? !ownerId || ownerId === currentUserId : !ownerId;
+    if (!isCurrentUserMemo) return true;
+    if (serializeMemoForMigrationComparison(memo) !== startSnapshotsByMemoId.get(memo.id)) {
+      conflictedIds.add(memo.id);
+      return true;
+    }
+    removedIds.add(memo.id);
+    return false;
+  });
   saveExternalCatchMemos(storage, nextMemos);
   const nextOwnerIdByMemoId = Object.fromEntries(
-    Object.entries(ownerIdByMemoId).filter(([memoId, ownerId]) => !succeededIds.has(memoId) || ownerId !== currentUserId),
+    Object.entries(ownerIdByMemoId).filter(([memoId, ownerId]) => !removedIds.has(memoId) || ownerId !== currentUserId),
   );
   saveLocalMemoMeta(storage, { ...meta, ownerIdByMemoId: nextOwnerIdByMemoId });
+  return { removedIds, conflictedIds };
 }
 
 function isMigrationAllowed(authStatus: SupabaseAuthStatus, userId: string | null, dbAvailable: boolean) {
@@ -376,6 +393,12 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
     const localIdsAtStart = new Set(localMemoIdsRef.current);
     const dbIdsAtStart = new Set(dbMemoIdsRef.current);
     const memoById = new Map(memos.map((memo) => [memo.id, memo]));
+    const startSnapshotsByMemoId = new Map(
+      uniqueIds.flatMap((memoId) => {
+        const memo = memoById.get(memoId);
+        return memo ? [[memoId, serializeMemoForMigrationComparison(memo)] as const] : [];
+      }),
+    );
     const succeededIds = new Set<string>();
 
     try {
@@ -421,7 +444,12 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       if (!isCurrentAuth()) return result;
       let didCleanupFail = false;
       try {
-        removeSucceededLocalOriginMemos(succeededIds, mutationUserId);
+        const cleanupResult = removeUnchangedSucceededLocalOriginMemos(succeededIds, startSnapshotsByMemoId, mutationUserId);
+        for (const memoId of cleanupResult.conflictedIds) {
+          result.skipped.push({ id: memoId, reason: "updated-during-migration" });
+          succeededIds.delete(memoId);
+        }
+        result.succeeded = result.succeeded.filter((memoId) => !cleanupResult.conflictedIds.has(memoId));
       } catch {
         didCleanupFail = true;
         for (const memoId of result.succeeded) result.failed.push({ id: memoId, reason: "verification-failed" });
