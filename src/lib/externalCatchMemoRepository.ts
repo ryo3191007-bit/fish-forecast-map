@@ -82,15 +82,25 @@ export async function deleteExternalCatchMemoFromSupabase(userId: string | null,
   const clientStatus = getClientForUser(userId, null);
   if (!clientStatus.ok) return clientStatus.result;
 
-  const { data, error } = await clientStatus.client
+  const { data: existingRow, error: findError } = await clientStatus.client
     .from("external_catch_memos")
-    .update({ is_deleted: true, updated_at: new Date().toISOString() })
+    .select("id")
     .eq("id", memoId)
     .eq("owner_id", clientStatus.userId)
-    .select("id")
+    .eq("is_deleted", false)
     .maybeSingle();
 
+  if (findError) return fallback(null, "supabase-error", findError.message);
+  if (!existingRow) return fallback(null, "supabase-error", "No matching external catch memo row was deleted.");
+
+  const { count, error } = await clientStatus.client
+    .from("external_catch_memos")
+    .update({ is_deleted: true, updated_at: new Date().toISOString() }, { count: "exact" })
+    .eq("id", memoId)
+    .eq("owner_id", clientStatus.userId)
+    .eq("is_deleted", false);
+
   if (error) return fallback(null, "supabase-error", error.message);
-  if (!data) return fallback(null, "supabase-error", "No matching external catch memo row was deleted.");
+  if (count !== 1) return fallback(null, "supabase-error", "No matching external catch memo row was deleted.");
   return { data: null, meta: { source: "supabase" } };
 }
