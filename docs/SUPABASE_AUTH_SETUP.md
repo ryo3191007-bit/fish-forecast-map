@@ -2,9 +2,9 @@
 
 ## 目的
 
-外部釣果メモはユーザー入力データのため、匿名ユーザーにDB writeを開放せず、将来 `owner_id = auth.uid()` で自分のメモだけを扱えるようにする。今回の範囲は、アプリ側でSupabase Authのログイン状態を扱える最小土台を入れることに限定する。
+外部釣果メモはユーザー入力データのため、匿名ユーザーにDB writeを開放せず、将来 `owner_id = auth.uid()` で自分のメモだけを扱えるようにする。Post-MVP-024では、アプリ側でSupabase Authのログイン状態を扱える最小土台を入れることに限定した。Post-MVP-026では、owner scoped RLS SQLの手動実行成功を前提に、ログイン中ユーザーの外部メモDB read/writeへ接続した。
 
-## 今回追加する範囲
+## Auth土台で追加した範囲
 
 - Supabaseの公開クライアント設定がある場合だけAuthを利用する。
 - session/user取得とAuth state購読を行う。
@@ -13,21 +13,19 @@
 - ログアウトできる。
 - Supabase未設定時はアプリを壊さず、認証利用不可として控えめに表示する。
 
-## 今回やらないこと
+## 外部メモDB接続後もやらないこと
 
-- DB writeの有効化。
-- `external_catch_memos` のRLS policy実DB反映。Post-MVP-025ではSQL案のみ追加し、SQL Editor実行はしない。
 - `anon` へのinsert/update/delete許可。
-- アプリから呼び出す `authenticated` write有効化。
-- 外部メモUI保存先のDB切替。
-- localStorage key変更、削除、自動移行。
+- DBを唯一の正本へ完全切替すること。
+- 既存localStorage key変更、削除、自動移行。
+- localStorage全件の暗黙一括upsert。
 - service role key、DB URL、DB passwordの利用やコミット。
 
-ログインしても外部釣果メモは引き続きlocalStorage保存のままにする。
+ログイン中は `owner_id = user.id` の自分の未削除メモだけをSupabaseから読み、登録・編集では `created_by = authenticated_user` と `is_deleted = false` を設定する。削除は物理deleteではなく `is_deleted = true` の論理削除にする。未ログイン、Supabase未設定、DBエラー時は既存localStorageへfallbackする。
 
 ## `owner_id = auth.uid()` 方針
 
-Post-MVP-025では、`external_catch_memos.owner_id` とSupabase Authの `auth.uid()` を一致させ、自分のメモだけselect/insert/updateできるRLS policy SQL案を `supabase/sql/005_external_catch_memos_owner_policies.sql` に追加する。匿名writeを広く開ける構成にはせず、物理delete policyも追加しない。削除は `is_deleted = true` へ更新する論理削除を優先する。
+`external_catch_memos.owner_id` とSupabase Authの `auth.uid()` を一致させ、自分のメモだけselect/insert/updateできるRLS policy SQLを `supabase/sql/005_external_catch_memos_owner_policies.sql` に配置している。Post-MVP-026では、このSQLが手動実行済みであることを前提にアプリ側のDB read/writeを接続した。匿名writeを広く開ける構成にはせず、物理delete policyも追加しない。削除は `is_deleted = true` へ更新する論理削除を使う。
 
 ## Supabase Dashboardで確認する項目
 
@@ -54,8 +52,6 @@ service role key、DB接続文字列、DB passwordはアプリ・docs・PRに載
 
 ## 次の候補
 
-1. `supabase/sql/005_external_catch_memos_owner_policies.sql` の手動SQL実行チェックポイントを設ける。
-2. SQL実行後にRLS挙動を確認する。
-3. 外部メモrepositoryをAuth user前提のDB read/writeへ接続する。
-
-いずれも、UI保存先のDB切替や本番DB反映は別作業として扱う。
+1. 本番環境で、ユーザーA/Bのメモが相互に見えないことを確認する。
+2. DB 0件かつlocalStorage既存メモありの表示方針をユーザーに説明し、必要なら明示的な移行UIを設計する。
+3. localStorageからDBへの移行はユーザー操作を伴う別Issueとして扱う。

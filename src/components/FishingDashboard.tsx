@@ -11,6 +11,7 @@ import { FishingMap } from "./FishingMap";
 import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 import { AuthStatusPanel } from "./AuthStatusPanel";
 import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
+import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { applyExternalMemoScoreAdjustments } from "@/domain/externalMemoScore";
 import { fetchMasterData, getStaticMasterData, type MasterDataFallbackReason, type MasterDataMeta, type MasterDataSet } from "@/lib/masterDataRepository";
@@ -51,7 +52,8 @@ export function FishingDashboard() {
   const [reportView, setReportView] = useState<ReportView>("reports");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const { memos: externalMemos, persistMemos, storageError } = useExternalCatchMemos();
+  const auth = useSupabaseAuth();
+  const { memos: externalMemos, persistMemo, deleteMemo, storageError, memoStorageStatus } = useExternalCatchMemos(auth.status, auth.user);
   const [masterData, setMasterData] = useState<MasterDataSet>(() => getStaticMasterData());
   const [masterDataStatus, setMasterDataStatus] = useState<MasterDataStatus>({ source: "static-fallback", isLoading: true });
   const fishingSpots = masterData.fishingSpots;
@@ -277,7 +279,7 @@ export function FishingDashboard() {
 
       <p className="notice">{disclaimer}</p>
 
-      <AuthStatusPanel />
+      <AuthStatusPanel auth={auth} />
 
       <div className="sectionHeading">
         <div>
@@ -421,7 +423,7 @@ export function FishingDashboard() {
 
       {reportView === "reports" ? (
         <>
-          <ExternalCatchMemoSection memos={externalMemos} onMemosChange={persistMemos} storageError={storageError} sources={externalSources} spots={fishingSpots} />
+          <ExternalCatchMemoSection memos={externalMemos} onMemoSave={persistMemo} onMemoDelete={deleteMemo} storageError={storageError} storageStatus={memoStorageStatus} sources={externalSources} spots={fishingSpots} />
           <div className="cards" id="reports">
             {reports.length === 0 && filteredExternalMemos.length === 0 ? (
               <div className="emptyState" role="status">

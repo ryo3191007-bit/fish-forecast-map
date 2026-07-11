@@ -23,7 +23,7 @@
 
 - ユーザー自身の実釣果登録、釣果日記、個人釣行ログ。
 - 外部釣果サイトの自動取り込み、スクレイピング、定期実行ジョブ、AI解析。
-- Supabase/DBを唯一の正本にすること、外部釣果メモのDB書き込み、ログイン/認証。マスターデータの読み取りは任意で、未設定時は静的fallbackで動作します。外部釣果メモDB保存は設計・SQL案・repository土台までで、UI保存先はまだlocalStorageです。
+- Supabase/DBを唯一の正本にすること、既存localStorageメモの自動DB移行。マスターデータの読み取りは任意で、未設定時は静的fallbackで動作します。外部釣果メモはログイン中のみ自分のDB行へread/writeし、未ログイン・未設定・DBエラー時は既存localStorageへfallbackします。
 - 公式潮汐表、安全判断、航行判断としての利用。
 - 3D海底地形表示。
 - 外部釣果メモ単体への個別SCORE付与、実績ベースの高度な予測、複雑な機械学習。
@@ -35,7 +35,7 @@
 - フロントエンド: Next.js + TypeScript
 - UI: CSS（`src/app/globals.css`）
 - 地図: MapLibre GL JS
-- データ: Supabase master read層 + 静的fallbackの釣り場/魚種/外部情報源マスター、ローカルのモック釣果データ、ブラウザに手動保存する外部釣果メモ
+- データ: Supabase master read層 + 静的fallbackの釣り場/魚種/外部情報源マスター、ローカルのモック釣果データ、ログイン中のSupabase Authユーザー所有DB行またはブラウザlocalStorageへ手動保存する外部釣果メモ
 - 品質確認: ESLint、TypeScript、Next.js build
 
 ## ローカル起動方法
@@ -87,15 +87,16 @@ DBを唯一の正本にはまだ切り替えていません。既存静的デー
 
 ## 外部釣果メモDB保存の準備
 
-Post-MVP-023では、現在localStorageに保存している外部釣果メモを将来Supabaseへ保存するための設計、SQL案、mapper/repository土台、安全確認コマンドを追加しています。Post-MVP-025では、DB writeをUIへ接続する前の安全確認として、authenticatedユーザーが `owner_id = auth.uid()` の自分のメモだけを扱えるowner scoped RLS policy SQL案を追加しています。まだSupabase SQL Editorでの実行、実DB反映、UI保存先のDB完全切替、自動移行、repositoryのDB write有効化、anon write開放は行いません。
+Post-MVP-023では、現在localStorageに保存している外部釣果メモを将来Supabaseへ保存するための設計、SQL案、mapper/repository土台、安全確認コマンドを追加しました。Post-MVP-025では、authenticatedユーザーが `owner_id = auth.uid()` の自分のメモだけを扱えるowner scoped RLS policy SQL案を追加し、Post-MVP-026では `005_external_catch_memos_owner_policies.sql` の手動実行成功を前提に、ログイン中ユーザー向けのDB read/writeをUIへ接続しました。
 
 - 設計: `docs/SUPABASE_EXTERNAL_MEMO_DESIGN.md`
 - テーブルSQL案: `supabase/sql/004_external_catch_memos.sql`
 - owner scoped RLS policy SQL案: `supabase/sql/005_external_catch_memos_owner_policies.sql`
 - テーブル設計安全確認: `npm run check:external-memo-db`
 - owner policy安全確認: `npm run check:external-memo-owner-policy`
+- Auth user DB接続安全確認: `npm run check:external-memo-auth-repository`
 
-外部メモはユーザー入力データのため、認証なしで `anon` に広い `insert` / `update` / `delete` を許可しません。owner policy案でも `grant all` は使わず、物理delete policyは追加せず、`is_deleted = true` による論理削除を優先します。次の候補は、owner policy SQLの手動実行チェックポイントと、SQL実行後に外部メモrepositoryをAuth user前提のDB read/writeへ接続する作業です。
+外部メモはユーザー入力データのため、認証なしで `anon` に広い `insert` / `update` / `delete` を許可しません。owner policyでも `grant all` は使わず、物理delete policyは追加せず、`is_deleted = true` による論理削除を使います。登録・編集payloadには `owner_id = user.id`、`created_by = authenticated_user`、`is_deleted = false` を設定します。未ログイン、Supabase未設定、DBエラー時は既存localStorageへfallbackし、既存localStorage keyの変更、削除、自動DB移行、一括upsertは行いません。次の候補は、本番でのログインユーザー別確認と、ユーザー明示の移行フロー設計です。
 
 ## 今後の候補
 
