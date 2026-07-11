@@ -13,7 +13,9 @@
     "check:external-memo-auth-repository": "node scripts/check-external-memo-auth-repository.mjs",
     "check:external-memo-state-transitions": "node scripts/check-external-memo-state-transitions.mjs",
     "check:migration-safety": "node scripts/check-migration-safety.mjs",
-    "test:migration-safety": "node scripts/check-migration-safety.test.mjs"
+    "test:migration-safety": "node scripts/check-migration-safety.test.mjs",
+    "check:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.mjs",
+    "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",

@@ -1,0 +1,4 @@
+bootstrap_versions=20260711122931,20260711125501
+verification_run=29153907762
+verified_commit=f57b2990aa6cf6a9ec44fc936631733b8cba2323
+schema_verification=history-synced; reviewed-function-line-ending-diff-only
