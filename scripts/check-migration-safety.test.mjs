@@ -98,6 +98,17 @@ as $$ select 1; $$;
 `,
   ],
   [
+    'safe SECURITY DEFINER with quoted pg_catalog search_path',
+    `
+create or replace function public.safe_event_fn()
+returns event_trigger
+language plpgsql
+security definer
+set search_path to 'pg_catalog'
+as $$ begin return; end; $$;
+`,
+  ],
+  [
     'statement boundaries prevent cross-statement grant false positives',
     `
 grant select on table public.catches to anon;
