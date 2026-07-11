@@ -32,7 +32,7 @@ const checks = [
   ["fallback handles Supabase errors", /supabase-error/.test(combined)],
   ["DB write failure saves local memo", /DB保存に失敗したため/.test(hook) && /saveLocalOriginMemos\(optimisticMemos, nextLocalMemoIds, mutationUserId\)/.test(hook)],
   ["localStorage key is unchanged", /fish-forecast-map\.external-catch-memos/.test(readFileSync("src/lib/externalCatchMemoStorage.ts", "utf8"))],
-  ["does not auto migrate localStorage to DB", !/manual_local_storage_migration|migrateLocal|autoMigrate/i.test(repository + hook)],
+  ["does not auto migrate localStorage to DB", !/manual_local_storage_migration|autoMigrate/i.test(repository + hook)],
   ["does not grant all", !/grant\s+all\b/i.test(normalized)],
   ["does not mention service role key", !/service[_ -]?role[_ -]?key/i.test(combined)],
   ["does not contain postgres connection URL", !/postgres(?:ql)?:\/\//i.test(combined)],

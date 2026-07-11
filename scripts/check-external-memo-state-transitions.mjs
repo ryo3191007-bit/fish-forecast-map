@@ -63,6 +63,37 @@ function saveMemo(state, nextMemo, { dbWriteFails = false, userId = "user-1" } =
   };
 }
 
+
+function migrateLocalMemos(state, selectedIds, { dbSaveFailures = [], verificationFailures = [], userId = "user-1", authOk = true } = {}) {
+  const result = { succeeded: [], skipped: [], failed: [] };
+  if (!authOk || !state.dbAvailable) {
+    selectedIds.forEach((id) => result.skipped.push({ id, reason: "not-local-origin" }));
+    return { ...state, migrationResult: result };
+  }
+  const dbIds = new Set(state.dbIds);
+  const succeededIds = new Set();
+  for (const id of selectedIds) {
+    if (!state.localIds.has(id)) { result.skipped.push({ id, reason: "not-local-origin" }); continue; }
+    if (dbIds.has(id)) { result.skipped.push({ id, reason: "duplicate-id" }); continue; }
+    if (dbSaveFailures.includes(id)) { result.failed.push({ id, reason: "save-failed" }); continue; }
+    if (verificationFailures.includes(id)) { result.failed.push({ id, reason: "verification-failed" }); dbIds.add(id); continue; }
+    result.succeeded.push(id);
+    succeededIds.add(id);
+    dbIds.add(id);
+  }
+  const nextLocalIds = new Set([...state.localIds].filter((id) => !succeededIds.has(id)));
+  return {
+    ...state,
+    localIds: nextLocalIds,
+    dbIds,
+    localMemos: state.localMemos.filter((item) => nextLocalIds.has(item.id)),
+    visibleMemos: state.visibleMemos.filter((item) => !succeededIds.has(item.id)),
+    migrationResult: result,
+    localOwnerById: Object.fromEntries(Object.entries(state.localOwnerById ?? {}).filter(([id, owner]) => !succeededIds.has(id) || owner !== userId)),
+    status: nextLocalIds.size > 0 ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: true } : { source: "supabase", isDbAvailable: true },
+  };
+}
+
 function deleteMemo(state, memoId, { rpcError = false, rpcReturnsTrue = true, targetExists = true, ownerMatches = true, alreadyDeleted = false } = {}) {
   const rpcCanDelete = state.dbIds.has(memoId) && targetExists && ownerMatches && !alreadyDeleted && rpcReturnsTrue;
   const shouldUseDb = state.dbAvailable && !state.localIds.has(memoId);
@@ -89,6 +120,43 @@ function assert(condition, label) {
   console.log(`ok: ${label}`);
 }
 
+
+
+// Explicit migration: DB available + selected local memo -> save, verify, then remove only that local memo.
+{
+  const initial = modelState({ dbMemos: [memo("a", "db A")], localMemos: [memo("b", "local B"), memo("c", "local C")] });
+  const afterMigration = migrateLocalMemos(initial, ["b"]);
+  assert(afterMigration.migrationResult.succeeded.join(",") === "b", "migration succeeds for selected localStorage-origin memo after DB verification");
+  assert(afterMigration.localMemos.map((item) => item.id).join(",") === "c", "migration removes only verified successful local target and leaves unselected local memo");
+  const afterReload = modelState({ dbMemos: [memo("a", "db A"), memo("b", "db B")], localMemos: afterMigration.localMemos });
+  assert(afterReload.visibleMemos.map((item) => item.id).join(",") === "c,a,b", "migrated memo reloads from DB without local duplicate while unmigrated memo remains local");
+}
+
+// Failed save or failed verification never deletes localStorage-origin data.
+{
+  const initial = modelState({ dbMemos: [], localMemos: [memo("b", "local B"), memo("c", "local C")] });
+  const afterFailure = migrateLocalMemos(initial, ["b", "c"], { dbSaveFailures: ["b"], verificationFailures: ["c"] });
+  assert(afterFailure.migrationResult.failed.length === 2, "migration reports DB save and verification failures");
+  assert(afterFailure.localMemos.map((item) => item.id).join(",") === "b,c", "failed or unverified migration keeps localStorage data");
+}
+
+// Duplicate DB ID and unavailable auth/DB states are skipped, not overwritten or deleted.
+{
+  const duplicate = modelState({ dbMemos: [memo("a", "db A")], localMemos: [memo("a", "local A"), memo("b", "local B")] });
+  const afterDuplicate = migrateLocalMemos(duplicate, ["a", "b"], { dbSaveFailures: ["b"] });
+  assert(afterDuplicate.migrationResult.skipped.some((item) => item.id === "a" && item.reason === "duplicate-id"), "migration skips same-ID DB row instead of unconditional overwrite");
+  assert(afterDuplicate.localMemos.some((item) => item.id === "a") && afterDuplicate.localMemos.some((item) => item.id === "b"), "duplicate and failed items remain in localStorage");
+  const unavailable = migrateLocalMemos(modelState({ dbMemos: [], localMemos: [memo("b", "local B")], dbReadOk: false }), ["b"]);
+  assert(unavailable.migrationResult.succeeded.length === 0 && unavailable.localMemos.map((item) => item.id).join(",") === "b", "DB unavailable migration is not performed and local memo remains");
+}
+
+// User-scoped fallback memo for another user is not a migration candidate in this user's state.
+{
+  const initial = modelState({ dbMemos: [], localMemos: [memo("mine", "mine"), memo("other", "other")], localOwnerById: { other: "user-2" }, userId: "user-1" });
+  const afterMigration = migrateLocalMemos(initial, ["mine", "other"]);
+  assert(afterMigration.migrationResult.skipped.some((item) => item.id === "other"), "another user's fallback is not mixed into migration targets");
+  assert(afterMigration.localMemos.map((item) => item.id).join(",") === "", "current user's verified migration can complete without touching other user's fallback storage");
+}
 
 // Repository delete success is based on the owner-scoped RPC returning data === true, not RETURNING the deleted row.
 {
@@ -203,6 +271,11 @@ function assert(condition, label) {
   assert(afterReload.visibleMemos.length === 0, "deleting local duplicate tombstones DB duplicate so it does not reappear");
 }
 
+
+assert(/migrateLocalMemosToSupabase/.test(hookSource), "hook exposes explicit localStorage migration action");
+assert(/saveExternalCatchMemoToSupabase\(mutationUserId, memo, \{ mode: "insert" \}\)/.test(hookSource), "migration inserts selected local memos one by one without update/upsert overwrite");
+assert(/fetchExternalCatchMemosFromSupabase\(mutationUserId\)/.test(hookSource), "migration verifies DB refetch before local removal");
+assert(/saveLocalOriginMemos\(memos, nextLocalMemoIds, mutationUserId\)/.test(hookSource), "migration writes back only remaining local-origin memos after success");
 assert(/dbAvailableRef = useRef\(false\)/.test(hookSource), "hook tracks successful Supabase read availability separately from display status");
 assert(/isDbAvailable: true/.test(hookSource), "hook exposes DB availability separately from local fallback display status");
 assert(/canUseDb\(authStatus, userId, dbAvailableRef\.current\)/.test(hookSource), "hook does not require status.source === supabase for DB CRUD availability");
