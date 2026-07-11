@@ -36,15 +36,18 @@ function saveMemo(state, nextMemo, { dbWriteFails = false, userId = "user-1" } =
     const nextLocalIds = new Set(state.localIds);
     nextLocalIds.add(nextMemo.id);
     return {
+      ...state,
       visibleMemos,
       localMemos: visibleMemos.filter((item) => nextLocalIds.has(item.id)),
       localIds: nextLocalIds,
-      dbIds: state.dbIds,
       dbUpdated: false,
       dbInserted: false,
-      localOwnerById: { [nextMemo.id]: userId },
-      deletedIds: state.deletedIds,
-      status: { source: "local-storage-fallback", fallbackReason: dbWriteFails ? "supabase-error" : state.status.fallbackReason },
+      localOwnerById: { ...state.localOwnerById, [nextMemo.id]: userId },
+      status: {
+        source: "local-storage-fallback",
+        fallbackReason: dbWriteFails ? "supabase-error" : state.status.fallbackReason,
+        isDbAvailable: state.dbAvailable,
+      },
     };
   }
 
@@ -53,7 +56,9 @@ function saveMemo(state, nextMemo, { dbWriteFails = false, userId = "user-1" } =
     visibleMemos,
     dbUpdated: isExistingDbMemo,
     dbInserted: !isExistingDbMemo,
-    status: state.localIds.size > 0 || state.deletedIds.size > 0 ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated" } : { source: "supabase" },
+    status: state.localIds.size > 0 || state.deletedIds.size > 0
+      ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: state.dbAvailable }
+      : { source: "supabase", isDbAvailable: state.dbAvailable },
   };
 }
 
@@ -65,13 +70,16 @@ function deleteMemo(state, memoId, { dbDeleteFails = false, targetExists = true,
   nextLocalIds.delete(memoId);
   if (state.dbIds.has(memoId) && (!shouldUseDb || dbDeleteFails)) nextDeletedIds.add(memoId);
   return {
+    ...state,
     visibleMemos: state.visibleMemos.filter((item) => item.id !== memoId),
     localMemos: state.visibleMemos.filter((item) => nextLocalIds.has(item.id) && item.id !== memoId),
     localIds: nextLocalIds,
     dbIds: shouldUseDb && !dbDeleteFails ? new Set([...state.dbIds].filter((id) => id !== memoId)) : state.dbIds,
     deletedIds: nextDeletedIds,
     dbDeleted: shouldUseDb && !dbDeleteFails,
-    status: nextLocalIds.size > 0 || nextDeletedIds.size > 0 ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated" } : { source: "supabase" },
+    status: nextLocalIds.size > 0 || nextDeletedIds.size > 0
+      ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: state.dbAvailable }
+      : { source: "supabase", isDbAvailable: state.dbAvailable },
   };
 }
 
@@ -168,12 +176,15 @@ function assert(condition, label) {
   assert(afterEdit.dbUpdated === true, "DB-origin CRUD continues after stale tombstone cleanup");
 }
 
-// DB=[A], localStorage=[B] -> edit B/add C -> localStorage never receives DB-origin A.
+// DB=[A], localStorage=[B] -> edit B/add C -> edit B stays local, new C inserts into DB, and localStorage never receives DB-origin A.
 {
   const initial = modelState({ dbMemos: [memo("a", "db A")], localMemos: [memo("b", "local B")] });
   const afterEdit = saveMemo(initial, memo("b", "local B edited"));
-  const afterAdd = saveMemo(afterEdit, memo("c", "local C"));
-  assert(afterAdd.localMemos.map((item) => item.id).join(",") === "c,b", "local CRUD stores only local-origin/fallback memos and does not copy DB-origin rows");
+  const afterAdd = saveMemo(afterEdit, memo("c", "new C"));
+  assert(afterEdit.status.isDbAvailable === true, "localStorage-origin edit preserves DB availability in status");
+  assert(afterAdd.dbInserted === true, "after localStorage-origin edit, new memo still calls DB insert");
+  assert(afterAdd.localMemos.map((item) => item.id).join(",") === "b", "local CRUD stores only local-origin/fallback memos and does not copy DB-origin rows");
+  assert(afterAdd.localMemos[0].label === "local B edited", "localStorage-origin edit remains saved locally after later DB insert");
 }
 
 // DB/localStorage duplicate A -> delete local A -> reload DB=[A], tombstone=[A] -> DB A does not unexpectedly reappear.
