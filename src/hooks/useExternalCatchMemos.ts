@@ -31,12 +31,17 @@ function saveLocalMemos(nextMemos: ExternalCatchMemo[]) {
   saveExternalCatchMemos(browserStorage(), nextMemos);
 }
 
-function isLocalDataNotMigrated(status: ExternalCatchMemoStorageStatus) {
-  return status.source === "local-storage-fallback" && status.fallbackReason === "local-data-not-migrated";
+function shouldUseDb(authStatus: SupabaseAuthStatus, userId: string | null, status: ExternalCatchMemoStorageStatus) {
+  return authStatus === "signed-in" && Boolean(userId) && status.source === "supabase";
 }
 
-function shouldUseDb(authStatus: SupabaseAuthStatus, userId: string | null, status: ExternalCatchMemoStorageStatus) {
-  return authStatus === "signed-in" && Boolean(userId) && !isLocalDataNotMigrated(status);
+function mergeExternalCatchMemos(dbMemos: ExternalCatchMemo[], localMemos: ExternalCatchMemo[]) {
+  const merged = [...localMemos];
+  const localIds = new Set(localMemos.map((memo) => memo.id));
+  for (const dbMemo of dbMemos) {
+    if (!localIds.has(dbMemo.id)) merged.push(dbMemo);
+  }
+  return merged;
 }
 
 export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User | null) {
@@ -72,13 +77,13 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       .then((result) => {
         if (!isActive || latestAuthRef.current.generation !== generation || latestAuthRef.current.userId !== userId) return;
         const localMemos = loadExternalCatchMemos(browserStorage());
-        if (result.meta.source === "supabase" && result.data.length === 0 && localMemos.length > 0) {
-          setMemos(localMemos);
+        if (result.meta.source === "supabase" && localMemos.length > 0) {
+          setMemos(mergeExternalCatchMemos(result.data, localMemos));
           setStatus({ source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isLoading: false, isMutating: false });
           return;
         }
         setMemos(result.meta.source === "supabase" ? result.data : localMemos);
-        setStatus({ ...result.meta, isLoading: false, isMutating: false });
+        setStatus(result.meta.source === "supabase" ? { source: "supabase", isLoading: false, isMutating: false } : { ...result.meta, isLoading: false, isMutating: false });
       })
       .catch(() => {
         if (!isActive || latestAuthRef.current.generation !== generation || latestAuthRef.current.userId !== userId) return;
@@ -107,7 +112,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
         if (!isCurrentAuth()) return false;
         setMemos(optimisticMemos);
         setStorageError(null);
-        setStatus({ source: "local-storage-fallback", fallbackReason: isLocalDataNotMigrated(status) ? "local-data-not-migrated" : mutationUserId ? "supabase-not-configured" : "not-authenticated", isLoading: false, isMutating: false });
+        setStatus({ source: "local-storage-fallback", fallbackReason: status.source === "local-storage-fallback" ? status.fallbackReason : mutationUserId ? "supabase-not-configured" : "not-authenticated", isLoading: false, isMutating: false });
         return true;
       }
 
@@ -157,7 +162,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
         if (!isCurrentAuth()) return false;
         setMemos(nextMemos);
         setStorageError(null);
-        setStatus({ source: "local-storage-fallback", fallbackReason: isLocalDataNotMigrated(status) ? "local-data-not-migrated" : mutationUserId ? "supabase-not-configured" : "not-authenticated", isLoading: false, isMutating: false });
+        setStatus({ source: "local-storage-fallback", fallbackReason: status.source === "local-storage-fallback" ? status.fallbackReason : mutationUserId ? "supabase-not-configured" : "not-authenticated", isLoading: false, isMutating: false });
         return true;
       }
       const result = await deleteExternalCatchMemoFromSupabase(mutationUserId, memoId);
