@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 const repository = readFileSync("src/lib/externalCatchMemoRepository.ts", "utf8");
 const hook = readFileSync("src/hooks/useExternalCatchMemos.ts", "utf8");
 const mapper = readFileSync("src/lib/externalCatchMemoMapper.ts", "utf8");
-const combined = `${repository}\n${hook}\n${mapper}`;
+const rpcSql = readFileSync("supabase/sql/006_soft_delete_external_catch_memo_rpc.sql", "utf8");
+const combined = `${repository}\n${hook}\n${mapper}\n${rpcSql}`;
 const normalized = combined.toLowerCase().replace(/\s+/g, " ");
 
 const checks = [
@@ -12,10 +13,14 @@ const checks = [
   ["save sets owner_id from auth user", /owner_id: clientStatus\.userId/.test(repository)],
   ["save sets created_by authenticated_user", /created_by: "authenticated_user"/.test(repository)],
   ["save sets is_deleted false", /is_deleted: false/.test(repository)],
-  ["delete is logical update", /\.update\(\{ is_deleted: true, updated_at: new Date\(\)\.toISOString\(\) \}, \{ count: "exact" \}\)/.test(repository)],
-  ["delete scopes existence check by id owner and active row", /\.select\("id"\)[\s\S]*\.eq\("id", memoId\)[\s\S]*\.eq\("owner_id", clientStatus\.userId\)[\s\S]*\.eq\("is_deleted", false\)[\s\S]*\.maybeSingle\(\)/.test(repository)],
-  ["delete update scopes by id owner and active row", /\.update\(\{ is_deleted: true, updated_at: new Date\(\)\.toISOString\(\) \}, \{ count: "exact" \}\)[\s\S]*\.eq\("id", memoId\)[\s\S]*\.eq\("owner_id", clientStatus\.userId\)[\s\S]*\.eq\("is_deleted", false\)/.test(repository)],
-  ["delete success depends on exact update count", /if \(count !== 1\) return fallback\(null, "supabase-error", "No matching external catch memo row was deleted\."\)/.test(repository)],
+  ["delete calls owner-scoped soft delete RPC", /\.rpc\("soft_delete_external_catch_memo", \{ p_memo_id: memoId \}\)/.test(repository)],
+  ["delete success depends on RPC data true", /if \(data !== true\)/.test(repository)],
+  ["RPC SQL is logical update", /update public\.external_catch_memos[\s\S]*is_deleted = true/.test(rpcSql)],
+  ["RPC SQL scopes by id owner and active row", /id = p_memo_id[\s\S]*owner_id = auth\.uid\(\)[\s\S]*is_deleted = false/.test(rpcSql)],
+  ["RPC SQL returns true only for one updated row", /get diagnostics updated_count = row_count;[\s\S]*return updated_count = 1;/.test(rpcSql)],
+  ["RPC SQL grants authenticated only", /revoke all[\s\S]*from public;[\s\S]*revoke all[\s\S]*from anon;[\s\S]*grant execute[\s\S]*to authenticated;/.test(rpcSql)],
+  ["diagnostic logging is not disabled in production", /console\.warn/.test(repository) && !/NODE_ENV\s*={2,3}\s*["']production/.test(repository)],
+  ["diagnostics are sanitized before fallback/logging", /sanitizeDiagnosticMessage/.test(repository) && /warnDeleteDiagnostic\(diagnostic\)/.test(repository)],
   ["delete does not select updated deleted row", !/update\(\{ is_deleted: true[\s\S]*?\.select\("id"\)/.test(repository)],
   ["does not call Supabase physical delete", !/\.delete\s*\(/.test(repository)],
   ["fallback handles unauthenticated", /not-authenticated/.test(combined)],
