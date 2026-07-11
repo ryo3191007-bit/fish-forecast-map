@@ -6,6 +6,7 @@ import {
   getTideReferenceForSpot,
   parseForecastTime,
   type EnvironmentForecastRow,
+  type TidePhaseName,
 } from "../src/domain/environment";
 
 const tideRows: EnvironmentForecastRow[] = [
@@ -18,8 +19,19 @@ const tideRows: EnvironmentForecastRow[] = [
   tideRow("2026-07-12T02:00", 1.2),
 ];
 
-assert.equal(getTidePhaseName("2026-07-11"), "長潮", "潮回りを月齢から算出できる");
-assert.equal(getTidePhaseName("2000-01-06"), "大潮", "既知の新月付近は大潮として扱う");
+const tidePhaseExamples: Array<[string, TidePhaseName]> = [
+  ["2000-01-06", "大潮"],
+  ["2000-01-10", "中潮"],
+  ["2000-01-15", "小潮"],
+  ["2000-01-18", "長潮"],
+  ["2000-01-19", "若潮"],
+  ["2026-07-11", "長潮"],
+];
+
+for (const [dateText, expected] of tidePhaseExamples) {
+  assert.equal(getTidePhaseName(dateText), expected, `${dateText} の潮回り参考を算出できる`);
+}
+
 assert.deepEqual(
   getTideEventsForDate(tideRows, "2026-07-11").map((event) => [event.type, event.approximateTime]),
   [["high", "02:00"], ["low", "04:00"]],
@@ -35,6 +47,7 @@ assert.equal(
 );
 assert.equal(parseForecastTime("2026-07-11T03:00").getUTCHours(), 18, "Asia/Tokyoの時刻文字列としてパースする");
 assert.equal(parseForecastTime("2026-07-11T03:00:00+09:00").getUTCHours(), 18, "タイムゾーン付きISO文字列はそのままパースする");
+assert.ok(Number.isNaN(parseForecastTime("not-a-date").getTime()), "不正な時刻文字列はInvalid Dateとして扱い、勝手に補正しない");
 
 function tideRow(forecastTime: string, heightMeters: number): EnvironmentForecastRow {
   return {
