@@ -21,7 +21,7 @@
 - localStorage全件の暗黙一括upsert。
 - service role key、DB URL、DB passwordの利用やコミット。
 
-ログイン中は `owner_id = user.id` の自分の未削除メモだけをSupabaseから読み、登録・編集では `created_by = authenticated_user` と `is_deleted = false` を設定する。削除は物理deleteではなく `is_deleted = true` の論理削除にする。未ログイン、Supabase未設定、DBエラー時は既存localStorageへfallbackする。
+ログイン中は `owner_id = user.id` の自分の未削除メモだけをSupabaseから読み、登録・編集では `created_by = authenticated_user` と `is_deleted = false` を設定する。削除は物理deleteではなく、手動SQL `supabase/sql/006_soft_delete_external_catch_memo_rpc.sql` の `soft_delete_external_catch_memo` RPCで `owner_id = auth.uid()` かつ未削除の行だけを `is_deleted = true` にする。未ログイン、Supabase未設定、DBエラー時は既存localStorageへfallbackする。削除RPC失敗時の開発者向け診断は本番でも無効化せず、URL、JWT、キー、`owner_id`、ユーザーUUIDを伏せた短いメッセージだけをログへ出す。
 
 ## `owner_id = auth.uid()` 方針
 
