@@ -45,7 +45,7 @@ export async function fetchExternalCatchMemosFromSupabase(userId: string | null)
   return { data: memos, meta: { source: "supabase" } };
 }
 
-export async function saveExternalCatchMemoToSupabase(userId: string | null, memo: ExternalCatchMemo): Promise<ExternalCatchMemoDbResult<ExternalCatchMemo | null>> {
+export async function saveExternalCatchMemoToSupabase(userId: string | null, memo: ExternalCatchMemo, options: { mode?: "insert" | "update" } = {}): Promise<ExternalCatchMemoDbResult<ExternalCatchMemo | null>> {
   const clientStatus = getClientForUser(userId, null);
   if (!clientStatus.ok) return clientStatus.result;
 
@@ -56,13 +56,24 @@ export async function saveExternalCatchMemoToSupabase(userId: string | null, mem
     is_deleted: false,
   };
 
-  const { data, error } = await clientStatus.client
-    .from("external_catch_memos")
-    .upsert(payload, { onConflict: "id" })
-    .select(externalCatchMemoColumns)
-    .single();
+  const mutation = options.mode === "update"
+    ? clientStatus.client
+        .from("external_catch_memos")
+        .update(payload)
+        .eq("id", memo.id)
+        .eq("owner_id", clientStatus.userId)
+        .select(externalCatchMemoColumns)
+        .maybeSingle()
+    : clientStatus.client
+        .from("external_catch_memos")
+        .insert(payload)
+        .select(externalCatchMemoColumns)
+        .single();
+
+  const { data, error } = await mutation;
 
   if (error) return fallback(null, "supabase-error", error.message);
+  if (!data) return fallback(null, "supabase-error", "No matching external catch memo row was updated.");
   const savedMemo = mapExternalCatchMemoRow(data as ExternalCatchMemoRow);
   return { data: savedMemo, meta: { source: "supabase" } };
 }
@@ -71,12 +82,15 @@ export async function deleteExternalCatchMemoFromSupabase(userId: string | null,
   const clientStatus = getClientForUser(userId, null);
   if (!clientStatus.ok) return clientStatus.result;
 
-  const { error } = await clientStatus.client
+  const { data, error } = await clientStatus.client
     .from("external_catch_memos")
     .update({ is_deleted: true, updated_at: new Date().toISOString() })
     .eq("id", memoId)
-    .eq("owner_id", clientStatus.userId);
+    .eq("owner_id", clientStatus.userId)
+    .select("id")
+    .maybeSingle();
 
   if (error) return fallback(null, "supabase-error", error.message);
+  if (!data) return fallback(null, "supabase-error", "No matching external catch memo row was deleted.");
   return { data: null, meta: { source: "supabase" } };
 }

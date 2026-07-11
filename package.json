@@ -10,7 +10,8 @@
     "check:external-memo-db": "node scripts/check-external-memo-db-design.mjs",
     "check:auth-safety": "node scripts/check-auth-safety.mjs",
     "check:external-memo-owner-policy": "node scripts/check-external-memo-owner-policy.mjs",
-    "check:external-memo-auth-repository": "node scripts/check-external-memo-auth-repository.mjs"
+    "check:external-memo-auth-repository": "node scripts/check-external-memo-auth-repository.mjs",
+    "check:external-memo-state-transitions": "node scripts/check-external-memo-state-transitions.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
