@@ -41,15 +41,22 @@ baseline PRでは次を満たす必要があります。
 - 本番へ同じDDLを再実行しない
 - migration safety checkerの誤検出を回避するために安全条件を緩めない
 
-baseline PRのマージ後、`Supabase Baseline Bootstrap` workflowを1回だけ実行します。このworkflowは次を順番に行います。
+Supabaseのローカル環境では、テーブル作成時のdefault privilegesにより、本番schemaとのACL差分が後から検出される場合があります。その場合は、既にremoteへ適用済みとして登録したbaselineを書き換えず、差分を後続のbootstrap alignment migrationへ記録します。alignment migrationも本番の現在状態を再現するための履歴であり、本番へDDLを再実行せず `applied` として登録します。
 
-1. baseline以外のmigration履歴が存在しないことを確認する
-2. baseline versionをremote migration historyへ `applied` として登録する
+現在のbootstrap対象は次の2本です。
+
+- `20260711122931_remote_schema.sql`: 本番public schemaの初回baseline
+- `20260711125501_align_remote_acl_and_function.sql`: local Supabaseのdefault privilegesなどに由来するACL/function差分の整合
+
+baseline PRのマージ後、`Supabase Baseline Bootstrap` workflowを実行します。このworkflowは再実行可能で、次を順番に行います。
+
+1. bootstrap対象以外のmigration履歴が存在しないことを確認する
+2. 未登録のbootstrap versionだけをremote migration historyへ `applied` として登録する
 3. local/remote historyが一致したことを再確認する
 4. public schema diffが空であることを確認する
 5. `.remote-history-synced` を追加するPRを自動作成する
 
-この処理は既存テーブルへbaseline DDLを再実行しません。履歴またはschemaに想定外の差分がある場合は停止します。
+この処理は既存テーブルへbootstrap DDLを再実行しません。履歴またはschemaに想定外の差分がある場合は停止します。
 
 ## 本番自動適用を有効にする条件
 
