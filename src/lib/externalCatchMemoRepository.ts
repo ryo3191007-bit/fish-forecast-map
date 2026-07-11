@@ -12,8 +12,17 @@ export type ExternalCatchMemoDbResult<T> = {
 
 const externalCatchMemoColumns = "id,species,caught_date,area_name,estimated_spot_name,spot_id,latitude,longitude,coordinate_precision,method,catch_count,size_cm,source_id,source_name,source_url,acquisition_method,confidence,environment_match_notes,user_memo,owner_id,created_by,is_deleted,created_at,updated_at";
 
+function sanitizeDiagnosticMessage(message: string) {
+  return message
+    .replace(/https?:\/\/\S+/gi, "[redacted-url]")
+    .replace(/eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g, "[redacted-jwt]")
+    .replace(/\b[A-Za-z0-9_-]{32,}\b/g, "[redacted-token]")
+    .replace(/\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi, "[redacted-id]")
+    .replace(/owner_id\s*=\s*[^\s,)]+/gi, "owner_id=[redacted]");
+}
+
 function fallback<T>(data: T, fallbackReason: ExternalCatchMemoDbFallbackReason, message?: string): ExternalCatchMemoDbResult<T> {
-  return { data, meta: { source: "local-storage-fallback", fallbackReason, message } };
+  return { data, meta: { source: "local-storage-fallback", fallbackReason, message: message ? sanitizeDiagnosticMessage(message) : undefined } };
 }
 
 function getClientForUser<T>(userId: string | null, fallbackData: T): { ok: true; userId: string; client: SupabaseClient } | { ok: false; result: ExternalCatchMemoDbResult<T> } {
@@ -82,25 +91,9 @@ export async function deleteExternalCatchMemoFromSupabase(userId: string | null,
   const clientStatus = getClientForUser(userId, null);
   if (!clientStatus.ok) return clientStatus.result;
 
-  const { data: existingRow, error: findError } = await clientStatus.client
-    .from("external_catch_memos")
-    .select("id")
-    .eq("id", memoId)
-    .eq("owner_id", clientStatus.userId)
-    .eq("is_deleted", false)
-    .maybeSingle();
-
-  if (findError) return fallback(null, "supabase-error", findError.message);
-  if (!existingRow) return fallback(null, "supabase-error", "No matching external catch memo row was deleted.");
-
-  const { count, error } = await clientStatus.client
-    .from("external_catch_memos")
-    .update({ is_deleted: true, updated_at: new Date().toISOString() }, { count: "exact" })
-    .eq("id", memoId)
-    .eq("owner_id", clientStatus.userId)
-    .eq("is_deleted", false);
+  const { data, error } = await clientStatus.client.rpc("soft_delete_external_catch_memo", { p_memo_id: memoId });
 
   if (error) return fallback(null, "supabase-error", error.message);
-  if (count !== 1) return fallback(null, "supabase-error", "No matching external catch memo row was deleted.");
+  if (data !== true) return fallback(null, "supabase-error", "No matching external catch memo row was deleted.");
   return { data: null, meta: { source: "supabase" } };
 }

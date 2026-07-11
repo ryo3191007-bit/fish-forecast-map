@@ -62,21 +62,22 @@ function saveMemo(state, nextMemo, { dbWriteFails = false, userId = "user-1" } =
   };
 }
 
-function deleteMemo(state, memoId, { dbDeleteFails = false, targetExists = true, ownerMatches = true } = {}) {
-  const canFindOwnedActiveRow = state.dbIds.has(memoId) && targetExists && ownerMatches;
-  const shouldUseDb = state.dbAvailable && canFindOwnedActiveRow && !state.localIds.has(memoId);
+function deleteMemo(state, memoId, { rpcError = false, rpcReturnsTrue = true, targetExists = true, ownerMatches = true, alreadyDeleted = false } = {}) {
+  const rpcSucceeds = rpcReturnsTrue && targetExists && ownerMatches && !alreadyDeleted;
+  const shouldUseDb = state.dbAvailable && state.dbIds.has(memoId) && !state.localIds.has(memoId);
   const nextLocalIds = new Set(state.localIds);
   const nextDeletedIds = new Set(state.deletedIds);
   nextLocalIds.delete(memoId);
-  if (state.dbIds.has(memoId) && (!shouldUseDb || dbDeleteFails)) nextDeletedIds.add(memoId);
+  if (state.dbIds.has(memoId) && (!shouldUseDb || rpcError || !rpcSucceeds)) nextDeletedIds.add(memoId);
   return {
     ...state,
     visibleMemos: state.visibleMemos.filter((item) => item.id !== memoId),
     localMemos: state.visibleMemos.filter((item) => nextLocalIds.has(item.id) && item.id !== memoId),
     localIds: nextLocalIds,
-    dbIds: shouldUseDb && !dbDeleteFails ? new Set([...state.dbIds].filter((id) => id !== memoId)) : state.dbIds,
+    dbIds: shouldUseDb && !rpcError && rpcSucceeds ? new Set([...state.dbIds].filter((id) => id !== memoId)) : state.dbIds,
     deletedIds: nextDeletedIds,
-    dbDeleted: shouldUseDb && !dbDeleteFails,
+    dbDeleted: shouldUseDb && !rpcError && rpcSucceeds,
+    rpcCalled: shouldUseDb,
     status: nextLocalIds.size > 0 || nextDeletedIds.size > 0
       ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: state.dbAvailable }
       : { source: "supabase", isDbAvailable: state.dbAvailable },
@@ -105,8 +106,10 @@ function assert(condition, label) {
   assert(missingTarget.dbDeleted === false && missingTarget.deletedIds.has("a"), "target row 0件 -> not treated as DB success and uses local tombstone fallback");
   const otherOwner = deleteMemo(initial, "a", { ownerMatches: false });
   assert(otherOwner.dbDeleted === false && otherOwner.deletedIds.has("a"), "another user's row -> not treated as DB success and uses local tombstone fallback");
-  const dbError = deleteMemo(initial, "a", { dbDeleteFails: true });
-  assert(dbError.dbDeleted === false && dbError.deletedIds.has("a"), "DB error -> local tombstone fallback");
+  const alreadyDeleted = deleteMemo(initial, "a", { alreadyDeleted: true });
+  assert(alreadyDeleted.dbDeleted === false && alreadyDeleted.deletedIds.has("a"), "already deleted row -> not treated as DB success and uses local tombstone fallback");
+  const dbError = deleteMemo(initial, "a", { rpcError: true });
+  assert(dbError.dbDeleted === false && dbError.deletedIds.has("a"), "RPC error -> local tombstone fallback");
 }
 
 // DB=[A], localStorage=[B] -> edit DB-origin A -> DB update, local B remains local only.
@@ -164,7 +167,7 @@ function assert(condition, label) {
   assert(new Set(afterFailedEdit.localMemos.map((item) => item.id)).size === 2 && afterFailedEdit.localMemos.some((item) => item.id === "a") && afterFailedEdit.localMemos.some((item) => item.id === "b"), "failed DB edit falls back with only target DB memo shadow plus existing local memo");
   const user2State = modelState({ dbMemos: [], localMemos: afterFailedEdit.localMemos, localOwnerById: afterFailedEdit.localOwnerById, userId: "user-2" });
   assert(user2State.visibleMemos.map((item) => item.id).join(",") === "b", "user-scoped failed DB shadow is not mixed into another user view");
-  const afterFailedDelete = deleteMemo(initial, "a", { dbDeleteFails: true });
+  const afterFailedDelete = deleteMemo(initial, "a", { rpcError: true });
   assert(afterFailedDelete.deletedIds.has("a") && afterFailedDelete.localMemos.map((item) => item.id).join(",") === "b", "failed DB delete records a tombstone for A without mixing local B");
 }
 
@@ -207,9 +210,10 @@ assert(/deletedDbMemoIdsByUserId/.test(hookSource), "hook stores DB delete tombs
 assert(/ownerIdByMemoId/.test(hookSource), "hook stores local fallback ownership by memo ID");
 assert(/saveLocalOriginMemos/.test(hookSource), "hook saves only local-origin/fallback memos to localStorage");
 assert(/if \(!data\) return fallback\(null, "supabase-error", "No matching external catch memo row was updated\."\)/.test(repositorySource), "repository treats zero-row DB update as fallback");
-assert(/select\("id"\)[\s\S]*eq\("is_deleted", false\)[\s\S]*maybeSingle\(\)/.test(repositorySource), "repository verifies owner-scoped active row before logical delete");
-assert(/update\(\{ is_deleted: true, updated_at: new Date\(\)\.toISOString\(\) \}, \{ count: "exact" \}\)/.test(repositorySource), "repository requests exact update count without selecting deleted row");
-assert(/if \(count !== 1\) return fallback\(null, "supabase-error", "No matching external catch memo row was deleted\."\)/.test(repositorySource), "repository treats zero-row DB delete update as fallback");
+assert(/\.rpc\("soft_delete_external_catch_memo", \{ p_memo_id: memoId \}\)/.test(repositorySource), "repository calls RLS-compatible soft delete RPC");
+assert(/if \(data !== true\) return fallback\(null, "supabase-error", "No matching external catch memo row was deleted\."\)/.test(repositorySource), "repository treats RPC false/zero-row delete as fallback");
 assert(!/update\(\{ is_deleted: true[\s\S]*?\.select\("id"\)/.test(repositorySource), "repository does not rely on RETURNING SELECT for deleted row success");
+assert(!/\.update\(\{ is_deleted: true/.test(repositorySource), "repository does not issue direct soft delete update from the client");
+assert(/sanitizeDiagnosticMessage/.test(repositorySource), "repository sanitizes diagnostic messages before returning meta.message");
 
 console.log("External memo state transition scenarios passed without DB/network access.");

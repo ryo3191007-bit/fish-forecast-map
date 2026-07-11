@@ -61,6 +61,11 @@ function saveLocalMemos(nextMemos: ExternalCatchMemo[]) {
   saveExternalCatchMemos(browserStorage(), nextMemos);
 }
 
+function logExternalMemoDiagnostic(operation: string, message: string | undefined) {
+  if (!message || process.env.NODE_ENV === "production") return;
+  console.warn(`[external-catch-memo:${operation}] ${message}`);
+}
+
 function canUseDb(authStatus: SupabaseAuthStatus, userId: string | null, dbAvailable: boolean) {
   return authStatus === "signed-in" && Boolean(userId) && dbAvailable;
 }
@@ -298,6 +303,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       const result = await deleteExternalCatchMemoFromSupabase(mutationUserId, memoId);
       if (!isCurrentAuth()) return false;
       if (result.meta.source !== "supabase") {
+        logExternalMemoDiagnostic("delete", result.meta.message);
         addDeletedDbMemoId(memoId, mutationUserId);
         saveLocalOriginMemos(nextMemos, nextLocalMemoIds, mutationUserId);
       }
