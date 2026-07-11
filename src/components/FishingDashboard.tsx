@@ -199,12 +199,14 @@ export function FishingDashboard() {
       return;
     }
 
+    let isActive = true;
     const abortController = new AbortController();
     setIsEnvironmentLoading(true);
     setEnvironmentError(null);
 
     fetchFishingEnvironment(
       {
+        spotId: environmentSpot.id,
         spotName: environmentSpot.name,
         latitude: environmentSpot.latitude,
         longitude: environmentSpot.longitude,
@@ -212,19 +214,25 @@ export function FishingDashboard() {
       abortController.signal,
     )
       .then((nextEnvironment) => {
+        if (!isActive) return;
         environmentCacheRef.current.set(cacheKey, nextEnvironment);
         setEnvironment(nextEnvironment);
       })
       .catch((error: unknown) => {
+        if (!isActive) return;
         if (error instanceof DOMException && error.name === "AbortError") return;
         setEnvironment(null);
         setEnvironmentError("Open-Meteoから環境データを取得できませんでした。");
       })
       .finally(() => {
+        if (!isActive) return;
         if (!abortController.signal.aborted) setIsEnvironmentLoading(false);
       });
 
-    return () => abortController.abort();
+    return () => {
+      isActive = false;
+      abortController.abort();
+    };
   }, [environmentSpot]);
 
   const speciesLabel = selectedSpecies === "all" ? "すべての魚種" : selectedSpecies;

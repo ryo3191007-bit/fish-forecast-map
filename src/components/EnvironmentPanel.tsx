@@ -71,6 +71,7 @@ export function EnvironmentPanel({
               ["気温", formatValue(environment.weather?.temperatureCelsius, "℃")],
               ["天気", environment.weather?.weatherLabel ?? "--"],
               ["降水量", formatValue(environment.weather?.precipitationMm, "mm")],
+              ["降水確率", formatValue(environment.weather?.precipitationProbabilityPercent, "%")],
               ["風速", formatValue(environment.weather?.windSpeedKmh, "km/h")],
               ["風向", formatDirection(environment.weather?.windDirectionLabel, environment.weather?.windDirectionDegrees)],
               ["突風", formatValue(environment.weather?.windGustKmh, "km/h")],
@@ -82,6 +83,8 @@ export function EnvironmentPanel({
               ["海面水温", formatValue(environment.marine?.seaSurfaceTemperatureCelsius, "℃")],
               ["潮位参考値", formatValue(environment.marine?.seaLevelHeightMslMeters, "m")],
               ["波高", formatValue(environment.marine?.waveHeightMeters, "m")],
+              ["波向", formatDirection(environment.marine?.waveDirectionLabel, environment.marine?.waveDirectionDegrees)],
+              ["波周期", formatValue(environment.marine?.wavePeriodSeconds, "秒")],
               ["海流速度", formatValue(environment.marine?.oceanCurrentVelocityKmh, "km/h")],
               ["海流方向", formatDirection(environment.marine?.oceanCurrentDirectionLabel, environment.marine?.oceanCurrentDirectionDegrees)],
             ]}

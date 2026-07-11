@@ -15,7 +15,8 @@
     "check:migration-safety": "node scripts/check-migration-safety.mjs",
     "test:migration-safety": "node scripts/check-migration-safety.test.mjs",
     "check:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.mjs",
-    "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs"
+    "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs",
+    "test": "node scripts/environment.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
