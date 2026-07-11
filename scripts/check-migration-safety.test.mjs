@@ -81,6 +81,7 @@ create table if not exists public.catches (id text primary key, score integer);
 alter table public.catches enable row level security;
 grant select on table public.catches to anon;
 grant insert on table public.catches to authenticated;
+grant truncate on table public.catches to service_role;
 update public.catches set score = 1 where id = 'sample';
 delete from public.catches where id = 'sample';
 `,
