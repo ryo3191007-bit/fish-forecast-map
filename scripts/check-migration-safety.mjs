@@ -199,7 +199,7 @@ function findStatementIssues(statement, { inspectSecurityDefiner = true } = {}) 
     inspectSecurityDefiner
     && /\bcreate\s+(?:or\s+replace\s+)?(?:function|procedure)\b/i.test(withoutBodies)
     && /\bsecurity\s+definer\b/i.test(withoutBodies)
-    && !/\bset\s+search_path\s*(?:=|to)\s*(?:''|pg_catalog\b)/i.test(withoutBodies)
+    && !/\bset\s+search_path\s*(?:=|to)\s*(?:''|'pg_catalog'|pg_catalog\b)/i.test(withoutBodies)
   ) {
     issues.push('SECURITY DEFINER without safe SET search_path');
   }
