@@ -4,7 +4,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'supabase/migrations/**'
+      - 'supabase/migrations/*.sql'
+      - 'supabase/migrations/**/*.sql'
+      - 'supabase/migrations/.remote-history-synced'
   workflow_dispatch:
 
 permissions:
@@ -17,24 +19,10 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     environment: production
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci
-      - run: npm run check:migration-safety
-      - name: Verify required secrets are configured
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-        run: |
-          test -n "$SUPABASE_ACCESS_TOKEN"
-          test -n "$SUPABASE_DB_PASSWORD"
-          test -n "$SUPABASE_PROJECT_ID"
       - name: Safety gate for initial remote history bootstrap
         run: |
           if [ ! -f supabase/migrations/.remote-history-synced ]; then
@@ -42,18 +30,46 @@ jobs:
             echo "Complete docs/SUPABASE_SETUP_PLAN.md bootstrap steps first."
             exit 1
           fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Test migration safety checker
+        run: npm run test:migration-safety
+      - name: Check repository migrations
+        run: npm run check:migration-safety
+      - name: Verify required secrets are configured
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          for secret_name in SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD SUPABASE_PROJECT_ID; do
+            if [ -z "${!secret_name:-}" ]; then
+              echo "::error::${secret_name} is not configured in the production environment."
+              exit 1
+            fi
+          done
       - name: Link Supabase project
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-        run: npx supabase@2.31.8 link --project-ref "$SUPABASE_PROJECT_ID" --password "$SUPABASE_DB_PASSWORD"
+        run: npx supabase@2.31.8 link --project-ref "$SUPABASE_PROJECT_ID" --password "$SUPABASE_DB_PASSWORD" --yes
       - name: Show migration history before push
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        run: npx supabase@2.31.8 migration list
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: npx supabase@2.31.8 migration list --linked --password "$SUPABASE_DB_PASSWORD" --yes
+      - name: Dry-run pending migrations
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: npx supabase@2.31.8 db push --linked --dry-run --password "$SUPABASE_DB_PASSWORD" --yes
       - name: Push pending migrations only
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-        run: npx supabase@2.31.8 db push --password "$SUPABASE_DB_PASSWORD"
+        run: npx supabase@2.31.8 db push --linked --password "$SUPABASE_DB_PASSWORD" --yes
