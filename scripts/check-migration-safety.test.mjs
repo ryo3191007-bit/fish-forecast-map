@@ -3,35 +3,34 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { findMigrationSafetyIssues } from './check-migration-safety.mjs';
 
-const cases = [
-  {
-    name: 'rejects ALTER COLUMN TYPE migrations',
-    sql: 'alter table catches alter column score type integer;',
-    expected: 'type-changing ALTER COLUMN',
-  },
-  {
-    name: 'rejects ALTER COLUMN SET DATA TYPE migrations',
-    sql: 'alter table catches alter column score set data type integer;',
-    expected: 'type-changing ALTER COLUMN',
-  },
-  {
-    name: 'rejects WHERE-less DELETE with RETURNING',
-    sql: 'delete from public.catches returning *;',
-    expected: 'unconditional DELETE',
-  },
-  {
-    name: 'rejects WHERE-less DELETE with USING',
-    sql: 'delete from public.catches using public.old_catches;',
-    expected: 'unconditional DELETE',
-  },
-  {
-    name: 'rejects anon writes inside mixed privilege lists',
-    sql: 'grant select, insert on table public.catches to anon;',
-    expected: 'anon write grant',
-  },
-  {
-    name: 'rejects unsafe SECURITY DEFINER even when a later function is safe',
-    sql: `
+function inspectSql(sql) {
+  const dir = mkdtempSync(join(tmpdir(), 'migration-safety-'));
+  try {
+    mkdirSync(join(dir, 'nested'), { recursive: true });
+    writeFileSync(join(dir, 'nested', '001_case.sql'), sql);
+    return findMigrationSafetyIssues(dir);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+const unsafeCases = [
+  ['DROP TABLE', 'drop table public.catches;', 'DROP TABLE'],
+  ['DROP COLUMN', 'alter table public.catches drop column score;', 'DROP COLUMN'],
+  ['TRUNCATE', 'truncate table public.catches;', 'TRUNCATE'],
+  ['ALTER COLUMN TYPE', 'alter table public.catches alter column score type integer;', 'type-changing ALTER COLUMN'],
+  ['ALTER COLUMN SET DATA TYPE', 'alter table public.catches alter column score set data type integer;', 'type-changing ALTER COLUMN'],
+  ['WHERE-less DELETE with RETURNING', 'delete from public.catches returning *;', 'unconditional DELETE'],
+  ['WHERE-less DELETE with USING', 'delete from public.catches using public.old_catches;', 'unconditional DELETE'],
+  ['WHERE-less UPDATE', 'update public.catches set score = 0;', 'unconditional UPDATE'],
+  ['RLS disabled', 'alter table public.catches disable row level security;', 'RLS disabled'],
+  ['anon INSERT grant', 'grant select, insert on table public.catches to anon;', 'anon write grant'],
+  ['anon UPDATE grant', 'grant update on table public.catches to anon;', 'anon write grant'],
+  ['anon DELETE grant', 'grant delete on table public.catches to anon;', 'anon write grant'],
+  ['GRANT ALL', 'grant all privileges on table public.catches to authenticated;', 'GRANT ALL'],
+  [
+    'unsafe SECURITY DEFINER beside a safe function',
+    `
 create function public.unsafe_fn()
 returns void
 language sql
@@ -42,27 +41,77 @@ create function public.safe_fn()
 returns void
 language sql
 security definer
-set search_path = public
+set search_path = ''
 as $$ select 1; $$;
 `,
-    expected: 'SECURITY DEFINER without SET search_path',
-  },
+    'SECURITY DEFINER without safe SET search_path',
+  ],
+  [
+    'unsafe mutation inside a function body',
+    `
+create function public.unsafe_update()
+returns void
+language plpgsql
+security invoker
+as $$
+begin
+  update public.catches set score = 0;
+end;
+$$;
+`,
+    'unconditional UPDATE',
+  ],
 ];
 
-for (const testCase of cases) {
-  const dir = mkdtempSync(join(tmpdir(), 'migration-safety-'));
-  try {
-    mkdirSync(join(dir, 'nested'), { recursive: true });
-    writeFileSync(join(dir, 'nested', '001_case.sql'), testCase.sql);
-    const issues = findMigrationSafetyIssues(dir);
-    if (!issues.some((issue) => issue.includes(testCase.expected))) {
-      console.error(`${testCase.name}: expected ${testCase.expected}`);
-      console.error(issues);
-      process.exit(1);
-    }
-  } finally {
-    rmSync(dir, { recursive: true, force: true });
+for (const [name, sql, expected] of unsafeCases) {
+  const issues = inspectSql(sql);
+  if (!issues.some((issue) => issue.includes(expected))) {
+    console.error(`${name}: expected ${expected}`);
+    console.error(issues);
+    process.exit(1);
   }
 }
 
-console.log(`Migration safety fixture tests passed (${cases.length} cases).`);
+const safeCases = [
+  [
+    'safe DDL, RLS, grants, and scoped mutations',
+    `
+-- DROP TABLE in a comment must not trigger the gate.
+create table if not exists public.catches (id text primary key, score integer);
+alter table public.catches enable row level security;
+grant select on table public.catches to anon;
+grant insert on table public.catches to authenticated;
+update public.catches set score = 1 where id = 'sample';
+delete from public.catches where id = 'sample';
+`,
+  ],
+  [
+    'safe SECURITY DEFINER with an empty search_path',
+    `
+create or replace function public.safe_fn()
+returns void
+language sql
+security definer
+set search_path = ''
+as $$ select 1; $$;
+`,
+  ],
+  [
+    'statement boundaries prevent cross-statement grant false positives',
+    `
+grant select on table public.catches to anon;
+grant insert on table public.catches to authenticated;
+`,
+  ],
+];
+
+for (const [name, sql] of safeCases) {
+  const issues = inspectSql(sql);
+  if (issues.length > 0) {
+    console.error(`${name}: expected no issues`);
+    console.error(issues);
+    process.exit(1);
+  }
+}
+
+console.log(`Migration safety fixture tests passed (${unsafeCases.length} unsafe, ${safeCases.length} safe).`);
