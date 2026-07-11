@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import type { SupabaseAuthStatus } from "@/hooks/useSupabaseAuth";
 import {
@@ -60,8 +60,8 @@ function saveLocalMemos(nextMemos: ExternalCatchMemo[]) {
   saveExternalCatchMemos(browserStorage(), nextMemos);
 }
 
-function shouldUseDb(authStatus: SupabaseAuthStatus, userId: string | null, status: ExternalCatchMemoStorageStatus) {
-  return authStatus === "signed-in" && Boolean(userId) && status.source === "supabase";
+function canUseDb(authStatus: SupabaseAuthStatus, userId: string | null, dbAvailable: boolean) {
+  return authStatus === "signed-in" && Boolean(userId) && dbAvailable;
 }
 
 function getScopedLocalMemos(userId: string | null) {
@@ -75,6 +75,21 @@ function getScopedLocalMemos(userId: string | null) {
 function getDeletedDbMemoIds(userId: string | null) {
   if (!userId) return new Set<string>();
   return new Set(loadLocalMemoMeta(browserStorage()).deletedDbMemoIdsByUserId?.[userId] ?? []);
+}
+
+function pruneDeletedDbMemoIds(userId: string | null, existingDbMemoIds: Set<string>) {
+  if (!userId) return new Set<string>();
+  const storage = browserStorage();
+  const meta = loadLocalMemoMeta(storage);
+  const currentIds = meta.deletedDbMemoIdsByUserId?.[userId] ?? [];
+  const nextIds = currentIds.filter((memoId) => existingDbMemoIds.has(memoId));
+  if (nextIds.length !== currentIds.length) {
+    saveLocalMemoMeta(storage, {
+      ...meta,
+      deletedDbMemoIdsByUserId: { ...(meta.deletedDbMemoIdsByUserId ?? {}), [userId]: nextIds },
+    });
+  }
+  return new Set(nextIds);
 }
 
 function mergeExternalCatchMemos(dbMemos: ExternalCatchMemo[], localMemos: ExternalCatchMemo[], deletedDbMemoIds: Set<string>) {
@@ -122,6 +137,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
   const latestAuthRef = useRef({ authStatus, userId, generation: authGenerationRef.current });
   const localMemoIdsRef = useRef(new Set<string>());
   const dbMemoIdsRef = useRef(new Set<string>());
+  const dbAvailableRef = useRef(false);
 
   useEffect(() => {
     authGenerationRef.current += 1;
@@ -140,6 +156,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       const localMemos = getScopedLocalMemos(null);
       localMemoIdsRef.current = new Set(localMemos.map((memo) => memo.id));
       dbMemoIdsRef.current = new Set();
+      dbAvailableRef.current = false;
       setMemos(localMemos);
       setStatus({ source: "local-storage-fallback", fallbackReason: authStatus === "unavailable" ? "supabase-not-configured" : "not-authenticated", isLoading: false, isMutating: false });
       return () => { isActive = false; };
@@ -151,8 +168,10 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       .then((result) => {
         if (!isActive || latestAuthRef.current.generation !== generation || latestAuthRef.current.userId !== userId) return;
         const localMemos = getScopedLocalMemos(userId);
-        const deletedDbMemoIds = getDeletedDbMemoIds(userId);
         if (result.meta.source === "supabase") {
+          dbAvailableRef.current = true;
+          const existingDbMemoIds = new Set(result.data.map((memo) => memo.id));
+          const deletedDbMemoIds = pruneDeletedDbMemoIds(userId, existingDbMemoIds);
           const visibleDbMemos = result.data.filter((memo) => !deletedDbMemoIds.has(memo.id));
           localMemoIdsRef.current = new Set(localMemos.map((memo) => memo.id));
           dbMemoIdsRef.current = new Set(visibleDbMemos.map((memo) => memo.id));
@@ -167,6 +186,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
         }
         localMemoIdsRef.current = new Set(localMemos.map((memo) => memo.id));
         dbMemoIdsRef.current = new Set();
+        dbAvailableRef.current = false;
         setMemos(localMemos);
         setStatus({ ...result.meta, isLoading: false, isMutating: false });
       })
@@ -175,6 +195,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
         const localMemos = getScopedLocalMemos(userId);
         localMemoIdsRef.current = new Set(localMemos.map((memo) => memo.id));
         dbMemoIdsRef.current = new Set();
+        dbAvailableRef.current = false;
         setMemos(localMemos);
         setStatus({ source: "local-storage-fallback", fallbackReason: "supabase-error", isLoading: false, isMutating: false });
       });
@@ -182,13 +203,14 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
     return () => { isActive = false; };
   }, [authStatus, userId]);
 
-  const useDb = useMemo(() => shouldUseDb(authStatus, userId, status), [authStatus, userId, status]);
+  const useDb = canUseDb(authStatus, userId, dbAvailableRef.current);
 
   const persistMemo = useCallback(async (memo: ExternalCatchMemo) => {
     const mutationUserId = userId;
     const mutationGeneration = latestAuthRef.current.generation;
     const nextLocalMemoIds = new Set(localMemoIdsRef.current);
-    const shouldPersistToDb = useDb && Boolean(mutationUserId) && !localMemoIdsRef.current.has(memo.id);
+    const isExistingDbMemo = dbMemoIdsRef.current.has(memo.id) && !localMemoIdsRef.current.has(memo.id);
+    const shouldPersistToDb = useDb && Boolean(mutationUserId) && (isExistingDbMemo || status.source === "supabase");
     if (!shouldPersistToDb) nextLocalMemoIds.add(memo.id);
     setStatus((current) => ({ ...current, isMutating: true }));
     const optimisticMemos = memos.some((item) => item.id === memo.id)
@@ -219,7 +241,9 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
         dbMemoIdsRef.current = new Set([...dbMemoIdsRef.current, result.data.id]);
         setMemos(savedMemos);
         setStorageError(null);
-        setStatus({ source: "supabase", isLoading: false, isMutating: false });
+        setStatus(localMemoIdsRef.current.size > 0 || getDeletedDbMemoIds(mutationUserId).size > 0
+          ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isLoading: false, isMutating: false }
+          : { source: "supabase", isLoading: false, isMutating: false });
         return true;
       }
 
@@ -281,7 +305,9 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       dbMemoIdsRef.current = new Set([...dbMemoIdsRef.current].filter((id) => id !== memoId));
       setMemos(nextMemos);
       setStorageError(result.meta.source === "supabase" ? null : "DB削除に失敗したため、ブラウザ保存側で非表示にしました。");
-      setStatus({ ...result.meta, isLoading: false, isMutating: false });
+      setStatus(result.meta.source === "supabase" && (nextLocalMemoIds.size > 0 || getDeletedDbMemoIds(mutationUserId).size > 0)
+        ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isLoading: false, isMutating: false }
+        : { ...result.meta, isLoading: false, isMutating: false });
       return true;
     } catch {
       if (!isCurrentAuth()) return false;
