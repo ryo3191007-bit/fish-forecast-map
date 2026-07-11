@@ -12,8 +12,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  BASELINE_VERSION: '20260711122931'
-  BASELINE_FILE: supabase/migrations/20260711122931_remote_schema.sql
+  BOOTSTRAP_VERSIONS: '20260711122931 20260711125501'
 
 jobs:
   bootstrap:
@@ -33,7 +32,8 @@ jobs:
       - name: Verify repository bootstrap prerequisites
         run: |
           set -euo pipefail
-          test -f "$BASELINE_FILE"
+          test -f supabase/migrations/20260711122931_remote_schema.sql
+          test -f supabase/migrations/20260711125501_align_remote_acl_and_function.sql
           if [ -f supabase/migrations/.remote-history-synced ]; then
             echo "::error::Remote history is already marked as synchronized."
             exit 1
@@ -59,7 +59,7 @@ jobs:
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
         run: npx supabase@2.31.8 link --project-ref "$SUPABASE_PROJECT_ID" --password "$SUPABASE_DB_PASSWORD" --yes
-      - name: Inspect and repair baseline migration history
+      - name: Inspect and repair bootstrap migration history
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
@@ -69,29 +69,38 @@ jobs:
           history_before="$(npx supabase@2.31.8 migration list --linked --password "$SUPABASE_DB_PASSWORD" --yes)"
           printf '%s\n' "$history_before" | tee artifacts/migration-list-before.txt
 
-          other_versions="$(printf '%s\n' "$history_before" | grep -Eo '[0-9]{14}' | grep -v "^${BASELINE_VERSION}$" || true)"
-          if [ -n "$other_versions" ]; then
-            echo "::error::Unexpected migration versions exist. Refusing automatic repair."
-            exit 1
-          fi
+          versions_in_history="$(printf '%s\n' "$history_before" | grep -Eo '[0-9]{14}' | sort -u || true)"
+          for version in $versions_in_history; do
+            case " $BOOTSTRAP_VERSIONS " in
+              *" $version "*) ;;
+              *)
+                echo "::error::Unexpected migration version ${version} exists. Refusing automatic repair."
+                exit 1
+                ;;
+            esac
+          done
 
-          baseline_count="$(printf '%s\n' "$history_before" | grep -o "$BASELINE_VERSION" | wc -l | tr -d ' ')"
-          if [ "$baseline_count" = '1' ]; then
-            npx supabase@2.31.8 migration repair "$BASELINE_VERSION" --status applied --linked --password "$SUPABASE_DB_PASSWORD" --yes
-          elif [ "$baseline_count" = '2' ]; then
-            echo "Baseline is already present in both local and remote history; continuing idempotently."
-          else
-            echo "::error::Expected the baseline version once locally or twice when already repaired; found ${baseline_count}."
-            exit 1
-          fi
+          for version in $BOOTSTRAP_VERSIONS; do
+            version_count="$(printf '%s\n' "$history_before" | grep -o "$version" | wc -l | tr -d ' ')"
+            if [ "$version_count" = '1' ]; then
+              npx supabase@2.31.8 migration repair "$version" --status applied --linked --password "$SUPABASE_DB_PASSWORD" --yes
+            elif [ "$version_count" = '2' ]; then
+              echo "Migration ${version} is already present in both local and remote history; continuing idempotently."
+            else
+              echo "::error::Expected migration ${version} once locally or twice when already repaired; found ${version_count}."
+              exit 1
+            fi
+          done
 
           history_after="$(npx supabase@2.31.8 migration list --linked --password "$SUPABASE_DB_PASSWORD" --yes)"
           printf '%s\n' "$history_after" | tee artifacts/migration-list-after.txt
-          repaired_count="$(printf '%s\n' "$history_after" | grep -o "$BASELINE_VERSION" | wc -l | tr -d ' ')"
-          if [ "$repaired_count" != '2' ]; then
-            echo "::error::Baseline history is not synchronized after repair."
-            exit 1
-          fi
+          for version in $BOOTSTRAP_VERSIONS; do
+            repaired_count="$(printf '%s\n' "$history_after" | grep -o "$version" | wc -l | tr -d ' ')"
+            if [ "$repaired_count" != '2' ]; then
+              echo "::error::Migration ${version} is not synchronized after repair."
+              exit 1
+            fi
+          done
       - name: Verify public schema has no drift after history repair
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -100,7 +109,7 @@ jobs:
           set -euo pipefail
           npx supabase@2.31.8 db diff --linked --schema public --yes > artifacts/post-repair-schema-diff.sql
           if grep -q '[^[:space:]]' artifacts/post-repair-schema-diff.sql; then
-            echo "::error::Schema drift remains after baseline repair. Refusing to enable production db push."
+            echo "::error::Schema drift remains after bootstrap repair. Refusing to enable production db push."
             cat artifacts/post-repair-schema-diff.sql
             exit 1
           fi
@@ -111,11 +120,12 @@ jobs:
         run: |
           set -euo pipefail
           branch="automation/supabase-history-synced-${GITHUB_RUN_ID}"
+          versions_csv="${BOOTSTRAP_VERSIONS// /,}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$branch"
           cat > supabase/migrations/.remote-history-synced <<EOF
-          baseline_version=${BASELINE_VERSION}
+          bootstrap_versions=${versions_csv}
           verification_run=${GITHUB_RUN_ID}
           verified_commit=${GITHUB_SHA}
           EOF
@@ -126,7 +136,7 @@ jobs:
             --base main \
             --head "$branch" \
             --title "Enable synchronized Supabase migration deployment" \
-            --body "Issue #92 final bootstrap. Baseline migration ${BASELINE_VERSION} was marked applied in the linked production project, local and remote migration history matched, and a read-only public-schema diff returned no drift. Merging this marker enables the guarded production migration workflow."
+            --body "Issue #92 final bootstrap. Bootstrap migrations ${versions_csv} were marked applied in the linked production project, local and remote migration history matched, and a read-only public-schema diff returned no drift. Merging this marker enables the guarded production migration workflow."
       - name: Upload bootstrap verification results
         if: always()
         uses: actions/upload-artifact@v4
