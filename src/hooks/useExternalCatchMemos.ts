@@ -400,6 +400,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       }),
     );
     const succeededIds = new Set<string>();
+    const verifiedDbMemoIds = new Set<string>();
 
     try {
       for (const memoId of uniqueIds) {
@@ -437,6 +438,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
 
         result.succeeded.push(memoId);
         succeededIds.add(memoId);
+        verifiedDbMemoIds.add(memoId);
         dbIdsAtStart.add(memoId);
         latestDbMemosRef.current = verifyResult.data;
       }
@@ -461,9 +463,10 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       const latestLocalMemos = getScopedLocalMemos(mutationUserId);
       const nextLocalMemoIds = new Set(latestLocalMemos.map((memo) => memo.id));
       localMemoIdsRef.current = nextLocalMemoIds;
-      dbMemoIdsRef.current = new Set([...dbMemoIdsRef.current, ...result.succeeded]);
+      dbMemoIdsRef.current = new Set([...dbMemoIdsRef.current, ...verifiedDbMemoIds]);
       const deletedDbMemoIds = getDeletedDbMemoIds(mutationUserId);
       const visibleDbMemos = latestDbMemosRef.current.filter((memo) => !deletedDbMemoIds.has(memo.id));
+      latestDbMemosRef.current = visibleDbMemos;
       const nextMemos = mergeExternalCatchMemos(visibleDbMemos, latestLocalMemos, deletedDbMemoIds);
       setMemos(nextMemos);
       setStorageError(didCleanupFail ? "移行後のブラウザ保存整理に失敗したため、外部釣果メモをブラウザ保存に残しました。" : result.failed.length > 0 ? "一部の外部釣果メモは移行できなかったため、ブラウザ保存に残しました。" : null);

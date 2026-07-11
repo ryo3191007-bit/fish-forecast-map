@@ -211,6 +211,10 @@ function assert(condition, label) {
   assert(afterMigration.localMemos.length === 1 && afterMigration.localMemos[0].label === "local B edited in another tab", "same-ID local update during migration remains in localStorage without DB snapshot overwrite");
   assert(afterMigration.localIds.has("b") && afterMigration.visibleMemos[0].label === "local B edited in another tab", "same-ID updated local memo remains in local IDs and visible memos");
   assert(afterMigration.status.source === "local-storage-fallback" && afterMigration.status.fallbackReason === "local-data-not-migrated", "same-ID update conflict keeps localStorage coexistence status");
+  assert(afterMigration.dbIds.has("b"), "same-ID update conflict still tracks the verified DB row for duplicate delete handling");
+  const afterDeleteBeforeReload = deleteMemo(afterMigration, "b");
+  const afterConflictDeleteReload = modelState({ dbMemos: [memo("b", "db old snapshot", "2026-01-01T00:00:00.000Z")], localMemos: afterDeleteBeforeReload.localMemos, deletedDbMemoIds: [...afterDeleteBeforeReload.deletedIds] });
+  assert(afterConflictDeleteReload.visibleMemos.length === 0, "deleting a conflicted local duplicate before reload tombstones the verified DB row so it does not reappear");
   const afterReload = modelState({ dbMemos: [memo("b", "db old snapshot", "2026-01-01T00:00:00.000Z")], localMemos: afterMigration.localMemos });
   assert(afterReload.visibleMemos[0].label === afterMigration.visibleMemos[0].label, "same-ID update conflict displays the latest local memo consistently before and after reload");
 }
@@ -230,6 +234,10 @@ function assert(condition, label) {
   const afterFailure = migrateLocalMemos(initial, ["b"], { localStorageWriteFails: true });
   assert(afterFailure.migrationResult.succeeded.length === 0 && afterFailure.migrationResult.failed.some((item) => item.id === "b"), "localStorage cleanup write failure converts verified success to safe failure result");
   assert(afterFailure.localMemos.map((item) => item.id).join(",") === "b,c", "localStorage cleanup write failure keeps existing local memos");
+  assert(afterFailure.dbIds.has("b"), "localStorage cleanup write failure still tracks the verified DB row for duplicate delete handling");
+  const afterDeleteBeforeReload = deleteMemo(afterFailure, "b");
+  const afterCleanupFailureReload = modelState({ dbMemos: [memo("b", "db B")], localMemos: afterDeleteBeforeReload.localMemos, deletedDbMemoIds: [...afterDeleteBeforeReload.deletedIds] });
+  assert(afterCleanupFailureReload.visibleMemos.map((item) => item.id).join(",") === "c", "deleting local data after cleanup failure tombstones the verified DB row so it does not reappear");
   assert(afterFailure.isMutating === false, "localStorage cleanup write failure clears processing state");
 }
 
@@ -355,6 +363,9 @@ assert(/updated-during-migration/.test(hookSource), "migration reports same-ID l
 assert(/serializeMemoForMigrationComparison/.test(hookSource), "migration compares latest localStorage memo content with the start snapshot before cleanup removal");
 assert(/const latestLocalMemos = getScopedLocalMemos\(mutationUserId\)/.test(hookSource), "migration rebuilds post-cleanup React state from latest scoped localStorage memos");
 assert(/const nextMemos = mergeExternalCatchMemos\(visibleDbMemos, latestLocalMemos, deletedDbMemoIds\)/.test(hookSource), "migration merges latest localStorage memos with latest DB memos after cleanup");
+assert(/const verifiedDbMemoIds = new Set<string>\(\)/.test(hookSource), "migration tracks DB IDs verified by Supabase refetch separately from cleanup success");
+assert(/dbMemoIdsRef\.current = new Set\(\[\.\.\.dbMemoIdsRef\.current, \.\.\.verifiedDbMemoIds\]\)/.test(hookSource), "migration records verified DB IDs even when cleanup leaves local duplicates");
+assert(/latestDbMemosRef\.current = visibleDbMemos/.test(hookSource), "migration keeps latest DB memo ref aligned with DB IDs after cleanup and tombstone filtering");
 assert(/finally \{[\s\S]*setStatus\(\(current\) => \(\{ \.\.\.current, isMutating: false \}\)\)/.test(hookSource), "migration clears mutating state in finally");
 assert(/dbAvailableRef = useRef\(false\)/.test(hookSource), "hook tracks successful Supabase read availability separately from display status");
 assert(/isDbAvailable: true/.test(hookSource), "hook exposes DB availability separately from local fallback display status");
