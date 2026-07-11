@@ -141,9 +141,13 @@ function removeSucceededLocalOriginMemos(succeededIds: Set<string>, currentUserI
   const storage = browserStorage();
   const meta = loadLocalMemoMeta(storage);
   const ownerIdByMemoId = meta.ownerIdByMemoId ?? {};
-  const nextMemos = loadExternalCatchMemos(storage).filter((memo) => !succeededIds.has(memo.id));
+  const shouldRemoveMemo = (memoId: string) => {
+    if (!succeededIds.has(memoId)) return false;
+    const ownerId = ownerIdByMemoId[memoId];
+    return currentUserId ? !ownerId || ownerId === currentUserId : !ownerId;
+  };
+  const nextMemos = loadExternalCatchMemos(storage).filter((memo) => !shouldRemoveMemo(memo.id));
   saveExternalCatchMemos(storage, nextMemos);
-  if (!currentUserId) return;
   const nextOwnerIdByMemoId = Object.fromEntries(
     Object.entries(ownerIdByMemoId).filter(([memoId, ownerId]) => !succeededIds.has(memoId) || ownerId !== currentUserId),
   );
@@ -426,17 +430,16 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       }
 
       if (!isCurrentAuth()) return result;
-      const nextLocalMemoIds = new Set([...localMemoIdsRef.current].filter((id) => !succeededIds.has(id)));
+      const latestLocalMemos = getScopedLocalMemos(mutationUserId);
+      const nextLocalMemoIds = new Set(latestLocalMemos.map((memo) => memo.id));
       localMemoIdsRef.current = nextLocalMemoIds;
       dbMemoIdsRef.current = new Set([...dbMemoIdsRef.current, ...result.succeeded]);
-      const localIds = nextLocalMemoIds;
-      const nextMemos = memos.filter((memo) => !succeededIds.has(memo.id));
-      for (const dbMemo of latestDbMemosRef.current) {
-        if (!localIds.has(dbMemo.id) && !nextMemos.some((memo) => memo.id === dbMemo.id) && !getDeletedDbMemoIds(mutationUserId).has(dbMemo.id)) nextMemos.push(dbMemo);
-      }
+      const deletedDbMemoIds = getDeletedDbMemoIds(mutationUserId);
+      const visibleDbMemos = latestDbMemosRef.current.filter((memo) => !deletedDbMemoIds.has(memo.id));
+      const nextMemos = mergeExternalCatchMemos(visibleDbMemos, latestLocalMemos, deletedDbMemoIds);
       setMemos(nextMemos);
       setStorageError(didCleanupFail ? "移行後のブラウザ保存整理に失敗したため、外部釣果メモをブラウザ保存に残しました。" : result.failed.length > 0 ? "一部の外部釣果メモは移行できなかったため、ブラウザ保存に残しました。" : null);
-      setStatus(nextLocalMemoIds.size > 0 || getDeletedDbMemoIds(mutationUserId).size > 0
+      setStatus(nextLocalMemoIds.size > 0 || deletedDbMemoIds.size > 0
         ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: true, isLoading: false, isMutating: false }
         : { source: "supabase", isDbAvailable: true, isLoading: false, isMutating: false });
       return result;

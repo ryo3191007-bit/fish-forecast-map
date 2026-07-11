@@ -96,12 +96,15 @@ function migrateLocalMemos(state, selectedIds, { dbSaveFailures = [], verificati
   }
   const nextLocalIds = new Set([...state.localIds, ...concurrentLocalMemos.map((item) => item.id)].filter((id) => !succeededIds.has(id)));
   const nextLocalMemos = latestLocalMemos.filter((item) => !succeededIds.has(item.id));
+  const latestDbMemos = [...state.visibleMemos.filter((item) => state.dbIds.has(item.id) || succeededIds.has(item.id)), ...result.succeeded.map((id) => memo(id, `db ${id}`))]
+    .filter((item, index, items) => items.findIndex((candidate) => candidate.id === item.id) === index);
+  const visibleMemos = [...nextLocalMemos, ...latestDbMemos.filter((item) => !nextLocalIds.has(item.id))];
   return {
     ...state,
     localIds: nextLocalIds,
     dbIds,
     localMemos: nextLocalMemos,
-    visibleMemos: [...state.visibleMemos.filter((item) => !succeededIds.has(item.id)), ...concurrentLocalMemos.filter((item) => !state.visibleMemos.some((visible) => visible.id === item.id))],
+    visibleMemos,
     migrationResult: result,
     isMutating: false,
     localOwnerById: Object.fromEntries(Object.entries(state.localOwnerById ?? {}).filter(([id, owner]) => !succeededIds.has(id) || owner !== userId)),
@@ -180,6 +183,11 @@ function assert(condition, label) {
   const afterMigration = migrateLocalMemos(initial, ["b"], { concurrentLocalMemos: [memo("d", "added in another tab")] });
   assert(afterMigration.migrationResult.succeeded.join(",") === "b", "migration succeeds for selected memo while another tab adds local data");
   assert(afterMigration.localMemos.map((item) => item.id).join(",") === "c,d", "migration cleanup keeps unselected and concurrently added localStorage memos");
+  assert(afterMigration.localIds.has("d"), "migration rebuilds localMemoIds from the latest localStorage after concurrent local additions");
+  assert(afterMigration.visibleMemos.some((item) => item.id === "d"), "migration displays concurrently added localStorage memo immediately after cleanup");
+  assert(afterMigration.status.source === "local-storage-fallback" && afterMigration.status.fallbackReason === "local-data-not-migrated", "migration keeps local-data-not-migrated status when latest localStorage still has local memos");
+  const afterReload = modelState({ dbMemos: [memo("b", "db B")], localMemos: afterMigration.localMemos });
+  assert(afterReload.visibleMemos.map((item) => item.id).join(",") === afterMigration.visibleMemos.map((item) => item.id).join(","), "migration display stays consistent before and after reload when concurrent local memo remains");
 }
 
 // localStorage cleanup write failure keeps local data and clears mutating state without throwing.
@@ -309,6 +317,8 @@ assert(/migrateLocalMemosToSupabase/.test(hookSource), "hook exposes explicit lo
 assert(/saveExternalCatchMemoToSupabase\(mutationUserId, memo, \{ mode: "insert" \}\)/.test(hookSource), "migration inserts selected local memos one by one without update/upsert overwrite");
 assert(/fetchExternalCatchMemosFromSupabase\(mutationUserId\)/.test(hookSource), "migration verifies DB refetch before local removal");
 assert(/removeSucceededLocalOriginMemos\(succeededIds, mutationUserId\)/.test(hookSource), "migration re-reads localStorage cleanup and removes only verified succeeded IDs");
+assert(/const latestLocalMemos = getScopedLocalMemos\(mutationUserId\)/.test(hookSource), "migration rebuilds post-cleanup React state from latest scoped localStorage memos");
+assert(/const nextMemos = mergeExternalCatchMemos\(visibleDbMemos, latestLocalMemos, deletedDbMemoIds\)/.test(hookSource), "migration merges latest localStorage memos with latest DB memos after cleanup");
 assert(/finally \{[\s\S]*setStatus\(\(current\) => \(\{ \.\.\.current, isMutating: false \}\)\)/.test(hookSource), "migration clears mutating state in finally");
 assert(/dbAvailableRef = useRef\(false\)/.test(hookSource), "hook tracks successful Supabase read availability separately from display status");
 assert(/isDbAvailable: true/.test(hookSource), "hook exposes DB availability separately from local fallback display status");
