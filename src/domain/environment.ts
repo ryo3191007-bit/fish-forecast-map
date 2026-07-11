@@ -183,5 +183,7 @@ export function getCompassDirection(degrees: number | null) {
 }
 
 export function parseForecastTime(value: string) {
-  return new Date(value.includes("T") ? `${value}:00+09:00` : value);
+  if (!value.includes("T")) return new Date(value);
+  if (/([zZ]|[+-]\d{2}:?\d{2})$/.test(value)) return new Date(value);
+  return new Date(value.length === 16 ? `${value}:00+09:00` : `${value}+09:00`);
 }

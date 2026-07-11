@@ -15,7 +15,8 @@
     "check:migration-safety": "node scripts/check-migration-safety.mjs",
     "test:migration-safety": "node scripts/check-migration-safety.test.mjs",
     "check:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.mjs",
-    "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs"
+    "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs",
+    "test:environment": "rm -rf .tmp-environment-test && tsc --module commonjs --target ES2022 --moduleResolution node --esModuleInterop --skipLibCheck --outDir .tmp-environment-test scripts/check-environment-domain.ts src/domain/environment.ts && node .tmp-environment-test/scripts/check-environment-domain.js; status=$?; rm -rf .tmp-environment-test; exit $status"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
