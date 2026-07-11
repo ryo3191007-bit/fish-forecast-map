@@ -15,7 +15,7 @@ type StorageLike = Pick<Storage, "getItem" | "setItem">;
 type CachePayload = { version: typeof CACHE_VERSION; savedAt: string; environment: FishingEnvironment };
 
 export function getEnvironmentCacheKey(point: EnvironmentPoint) {
-  return [CACHE_VERSION, point.spotName, point.latitude.toFixed(4), point.longitude.toFixed(4), "7d", weatherHourlyFields.join("."), marineHourlyFields.join(".")].join(":");
+  return [CACHE_VERSION, point.spotId, point.latitude.toFixed(4), point.longitude.toFixed(4), "7d", weatherHourlyFields.join("."), marineHourlyFields.join(".")].join(":");
 }
 
 export function readCachedFishingEnvironment(point: EnvironmentPoint, storage: StorageLike | null = getLocalStorage()): FishingEnvironment | null {
@@ -78,7 +78,7 @@ export async function fetchLatestFishingEnvironment(point: EnvironmentPoint, sig
     cacheStatus: "fresh",
     fetchStatus: weatherAvailable && marineAvailable ? "success" : "partial",
     warning: weatherAvailable && marineAvailable ? null : "Open-Meteoの一部APIのみ取得できました。取得済みの項目だけ表示します。",
-    tideReference: getTideReferenceForSpot(point.spotName),
+    tideReference: getTideReferenceForSpot(point.spotId),
   };
 }
 
@@ -148,5 +148,13 @@ function getNumberAt(value: unknown, index: number) { if (!Array.isArray(value))
 function getLocalStorage() { try { return typeof window === "undefined" ? null : window.localStorage; } catch { return null; } }
 function isAbortError(error: unknown) { return error instanceof DOMException && error.name === "AbortError"; }
 function isFishingEnvironmentLike(value: unknown): value is FishingEnvironment {
-  return typeof value === "object" && value !== null && Array.isArray((value as { hourly?: unknown }).hourly) && typeof (value as { fetchedAt?: unknown }).fetchedAt === "string";
+  if (typeof value !== "object" || value === null) return false;
+  const environment = value as Partial<FishingEnvironment>;
+  return (
+    Array.isArray(environment.hourly) &&
+    typeof environment.fetchedAt === "string" &&
+    typeof environment.point?.spotId === "string" &&
+    typeof environment.point.spotName === "string" &&
+    typeof environment.tideReference?.url === "string"
+  );
 }

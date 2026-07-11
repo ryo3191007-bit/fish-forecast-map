@@ -189,7 +189,7 @@ export function FishingDashboard() {
       return;
     }
 
-    const point = { spotName: environmentSpot.id, latitude: environmentSpot.latitude, longitude: environmentSpot.longitude };
+    const point = { spotId: environmentSpot.id, spotName: environmentSpot.name, latitude: environmentSpot.latitude, longitude: environmentSpot.longitude };
     const cachedEnvironment = readCachedFishingEnvironment(point);
     if (cachedEnvironment) {
       setEnvironment(cachedEnvironment);
@@ -205,12 +205,12 @@ export function FishingDashboard() {
 
     fetchFishingEnvironment(point, abortController.signal)
       .then((nextEnvironment) => {
-        setEnvironment({ ...nextEnvironment, point: { ...nextEnvironment.point, spotName: environmentSpot.name } });
+        setEnvironment(nextEnvironment);
         setEnvironmentError(null);
       })
       .catch((error: unknown) => {
         if (error instanceof DOMException && error.name === "AbortError") return;
-        setEnvironment(cachedEnvironment ? { ...cachedEnvironment, point: { ...cachedEnvironment.point, spotName: environmentSpot.name } } : null);
+        setEnvironment(cachedEnvironment);
         setEnvironmentError(cachedEnvironment ? null : "Open-Meteoから環境データを取得できませんでした。");
       })
       .finally(() => {
