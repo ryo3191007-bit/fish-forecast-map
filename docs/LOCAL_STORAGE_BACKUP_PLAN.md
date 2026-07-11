@@ -248,3 +248,9 @@ Supabase利用可能後も、既存localStorage外部メモは自動移行しま
 移行時も、DB保存前に `fish-forecast-map.external-catch-memos` の対象メモを削除しません。DB保存後にSupabaseから再取得し、対象メモを確認できた場合だけ、その対象メモをlocalStorage配列から外します。DB保存失敗、再取得確認失敗、同一ID重複、DB利用不可、未ログイン、一部失敗などのケースでは、ユーザーデータを失わないため未移行メモをlocalStorageに残します。
 
 移行後の確認手順は、対象メモがSupabase保存として表示されること、ページ再読込後も重複・復活がないこと、未選択または失敗したlocalStorageメモが引き続き残ることを確認します。localStorage keyの変更、key削除、全件一括削除、配列全件upsertは行いません。
+
+### 本番仕上げ確認: tombstoneと未移行localメモの表示分離
+
+削除失敗時などにユーザー別local tombstone metadataが残っている場合でも、`fish-forecast-map.external-catch-memos` 内の現在ユーザー向けlocalメモが0件なら、ユーザー向け保存先表示は `外部メモ: Supabase` として扱います。tombstoneはDB行の再表示を防ぐ内部メタ情報であり、未移行localStorageメモとは別概念です。tombstone対象のDB行は引き続き画面上で非表示にし、tombstoneを無条件削除して復活させません。
+
+最後の未移行localメモを明示移行した場合は、候補が0件になっても直近の移行結果（成功・スキップ・失敗件数）を表示し、ユーザーが成功を確認できる状態を保ちます。
