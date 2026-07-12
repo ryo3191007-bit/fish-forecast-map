@@ -27,6 +27,7 @@ export const BATHYMETRY_METADATA_URL = `${BATHYMETRY_TILE_BASE_PATH}/metadata.js
 export const BATHYMETRY_FALLBACK_TILE_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/terrain/{z}/{x}/{y}.png`;
 export const BATHYMETRY_FALLBACK_COLOR_TILE_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/color/{z}/{x}/{y}.png`;
 export const BATHYMETRY_FALLBACK_CONTOUR_GEOJSON_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/contours.geojson`;
+export const BATHYMETRY_FALLBACK_METADATA_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/metadata.json`;
 export const GSI_STANDARD_TILE_URL = "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png";
 export const GSI_STANDARD_OVERLAY_OPACITY = 0.4;
 
@@ -36,13 +37,22 @@ export const BATHYMETRY_FALLBACK_RESOLUTION = "60 arc-second";
 export const BATHYMETRY_MIN_ZOOM = 7;
 export const BATHYMETRY_MAX_ZOOM = 9;
 
-export const BATHYMETRY_ATTRIBUTION = "水深・地形: GEBCO_2026 Grid / GEBCO Compilation Group (2026)";
-export const BATHYMETRY_LICENSE_NOTE = `${BATHYMETRY_SOURCE_RESOLUTION} / GEBCO Terms of Use`;
-export const BATHYMETRY_SAFETY_NOTE = "参考水深。航海・安全判断には使用不可。15秒メッシュでも港内・岩礁・根・瀬の正確な位置を保証しません";
+export const BATHYMETRY_ATTRIBUTION =
+  "水深・地形: GEBCO_2026 Grid / GEBCO Compilation Group (2026)";
+export const BATHYMETRY_FALLBACK_ATTRIBUTION =
+  "水深・地形fallback: NOAA NCEI ETOPO 2022 60秒 Bedrock";
+export const BATHYMETRY_LICENSE_NOTE =
+  `${BATHYMETRY_SOURCE_RESOLUTION} / GEBCO Terms of Use`;
+export const BATHYMETRY_FALLBACK_LICENSE_NOTE =
+  `${BATHYMETRY_FALLBACK_RESOLUTION} / NOAA NCEI ETOPO 2022 / CC0-1.0`;
+export const BATHYMETRY_SAFETY_NOTE =
+  "参考水深。航海・安全判断には使用不可。15秒メッシュでも港内・岩礁・根・瀬の正確な位置を保証しません";
 export const BATHYMETRY_CITATION =
   "Contains information from the GEBCO_2026 Grid, GEBCO Compilation Group (2026).";
-export const GSI_STANDARD_ATTRIBUTION = "海岸線overlay: 国土地理院 標準地図（ZL5〜8: GEBCO由来等深線・海上保安庁許可関連クレジットを含む）";
-export const GSI_STANDARD_NOTE = "国土地理院タイルを低opacityでリアルタイム表示。タイルは保存しません。";
+export const GSI_STANDARD_ATTRIBUTION =
+  '海岸線overlay: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院 標準地図</a>。ZL5〜8の海域部はGEBCO Digital Atlas由来の等深線、海上保安庁許可第292502号（水路業務法第25条）、VMAP0 shorelineを含みます。';
+export const GSI_STANDARD_NOTE =
+  "国土地理院タイルをopacity 0.40でリアルタイム表示し、タイル自体は保存しません。";
 
 export const BATHYMETRY_DEPTH_STOPS = [
   { depthMeters: 0, label: "0m", color: "#bff4ff" },
@@ -60,36 +70,137 @@ export const TID_CLASSIFICATION = {
   nodata: [127],
 } as const;
 
-export type TidCategory = "direct" | "predictedInterpolated" | "mixedUnknownLand" | "nodata";
-export type TidSummary = { direct: number; predictedInterpolated: number; mixedUnknownLand: number; nodata: number; sampleCells: number; radiusCells: number };
+export type TidCategory =
+  | "direct"
+  | "predictedInterpolated"
+  | "mixedUnknownLand"
+  | "nodata";
+export type TidSummary = {
+  direct: number;
+  predictedInterpolated: number;
+  mixedUnknownLand: number;
+  nodata: number;
+  sampleCells: number;
+  radiusCells: number;
+};
 
 export function classifyTidCode(code: number): TidCategory {
-  if ((TID_CLASSIFICATION.direct as readonly number[]).includes(code)) return "direct";
-  if ((TID_CLASSIFICATION.predictedInterpolated as readonly number[]).includes(code)) return "predictedInterpolated";
-  if ((TID_CLASSIFICATION.nodata as readonly number[]).includes(code)) return "nodata";
+  if ((TID_CLASSIFICATION.direct as readonly number[]).includes(code)) {
+    return "direct";
+  }
+  if (
+    (TID_CLASSIFICATION.predictedInterpolated as readonly number[]).includes(code)
+  ) {
+    return "predictedInterpolated";
+  }
+  if ((TID_CLASSIFICATION.nodata as readonly number[]).includes(code)) {
+    return "nodata";
+  }
   return "mixedUnknownLand";
 }
 
-export function lonLatToTidCell(lon: number, lat: number, width: number, height: number, bounds = BATHYMETRY_BOUNDS) {
+export function lonLatToTidCell(
+  lon: number,
+  lat: number,
+  width: number,
+  height: number,
+  bounds = BATHYMETRY_BOUNDS,
+) {
   const [west, south, east, north] = bounds;
   if (lon < west || lon > east || lat < south || lat > north) return null;
-  return { col: Math.max(0, Math.min(width - 1, Math.floor(((lon - west) / (east - west)) * width))), row: Math.max(0, Math.min(height - 1, Math.floor(((north - lat) / (north - south)) * height))) };
+  const longitudeCellSize = (east - west) / width;
+  const latitudeCellSize = (north - south) / height;
+  return {
+    col: Math.max(
+      0,
+      Math.min(width - 1, Math.floor((lon - west) / longitudeCellSize)),
+    ),
+    row: Math.max(
+      0,
+      Math.min(height - 1, Math.floor((north - lat) / latitudeCellSize)),
+    ),
+  };
 }
 
-export function summarizeTidAround(values: number[], width: number, height: number, col: number, row: number, radiusCells = 8): TidSummary {
-  const counts = { direct: 0, predictedInterpolated: 0, mixedUnknownLand: 0, nodata: 0 };
-  for (let y = Math.max(0, row - radiusCells); y <= Math.min(height - 1, row + radiusCells); y++) {
-    for (let x = Math.max(0, col - radiusCells); x <= Math.min(width - 1, col + radiusCells); x++) counts[classifyTidCode(values[y * width + x])]++;
+export function summarizeTidAround(
+  values: number[],
+  width: number,
+  height: number,
+  col: number,
+  row: number,
+  radiusCells = 8,
+): TidSummary {
+  const counts = {
+    direct: 0,
+    predictedInterpolated: 0,
+    mixedUnknownLand: 0,
+    nodata: 0,
+  };
+  for (
+    let y = Math.max(0, row - radiusCells);
+    y <= Math.min(height - 1, row + radiusCells);
+    y++
+  ) {
+    for (
+      let x = Math.max(0, col - radiusCells);
+      x <= Math.min(width - 1, col + radiusCells);
+      x++
+    ) {
+      counts[classifyTidCode(values[y * width + x])]++;
+    }
   }
-  const total = counts.direct + counts.predictedInterpolated + counts.mixedUnknownLand;
-  if (!total) return { direct: 0, predictedInterpolated: 0, mixedUnknownLand: 0, nodata: counts.nodata, sampleCells: 0, radiusCells };
+  const total =
+    counts.direct + counts.predictedInterpolated + counts.mixedUnknownLand;
+  if (!total) {
+    return {
+      direct: 0,
+      predictedInterpolated: 0,
+      mixedUnknownLand: 0,
+      nodata: counts.nodata,
+      sampleCells: 0,
+      radiusCells,
+    };
+  }
   const direct = Math.round((counts.direct / total) * 100);
-  const predictedInterpolated = Math.round((counts.predictedInterpolated / total) * 100);
-  return { direct, predictedInterpolated, mixedUnknownLand: Math.max(0, 100 - direct - predictedInterpolated), nodata: counts.nodata, sampleCells: total, radiusCells };
+  const predictedInterpolated = Math.round(
+    (counts.predictedInterpolated / total) * 100,
+  );
+  return {
+    direct,
+    predictedInterpolated,
+    mixedUnknownLand: Math.max(0, 100 - direct - predictedInterpolated),
+    nodata: counts.nodata,
+    sampleCells: total,
+    radiusCells,
+  };
 }
 
-export type DeviceCapabilityInput = { width: number; prefersReducedMotion: boolean; deviceMemory?: number; webglAvailable: boolean };
-export function shouldEnableInitialTerrain(input: DeviceCapabilityInput) { return input.webglAvailable && input.width >= 720 && !input.prefersReducedMotion && (input.deviceMemory ?? 4) >= 4; }
-export function shouldEnableInitialGsiOverlay(width: number) { return width >= 640; }
-export function formatDepthLabel(elevationMeters: number) { return `${Math.abs(Math.round(elevationMeters))}m`; }
-export function bathymetryVisibility(mode: "standard" | "aerial" | "bathymetry", terrainEnabled: boolean) { return { showBathymetry: mode === "bathymetry", terrain: mode === "bathymetry" && terrainEnabled }; }
+export type DeviceCapabilityInput = {
+  width: number;
+  prefersReducedMotion: boolean;
+  deviceMemory?: number;
+  webglAvailable: boolean;
+};
+export function shouldEnableInitialTerrain(input: DeviceCapabilityInput) {
+  return (
+    input.webglAvailable &&
+    input.width >= 720 &&
+    !input.prefersReducedMotion &&
+    (input.deviceMemory ?? 4) >= 4
+  );
+}
+export function shouldEnableInitialGsiOverlay(width: number) {
+  return width >= 640;
+}
+export function formatDepthLabel(elevationMeters: number) {
+  return `${Math.abs(Math.round(elevationMeters))}m`;
+}
+export function bathymetryVisibility(
+  mode: "standard" | "aerial" | "bathymetry",
+  terrainEnabled: boolean,
+) {
+  return {
+    showBathymetry: mode === "bathymetry",
+    terrain: mode === "bathymetry" && terrainEnabled,
+  };
+}

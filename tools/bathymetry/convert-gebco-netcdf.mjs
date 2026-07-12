@@ -1,14 +1,40 @@
 #!/usr/bin/env node
-import crypto from "node:crypto";
-import fs from "node:fs";
+import { spawnSync } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const [,, bathymetryPath, tidPath] = process.argv;
-if (!bathymetryPath || !tidPath) {
-  console.error("Usage: node tools/bathymetry/convert-gebco-netcdf.mjs <gebco-bathymetry.nc> <gebco-tid.nc>");
-  process.exit(1);
+const script = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "convert_gebco_netcdf.py",
+);
+
+const candidates =
+  process.platform === "win32"
+    ? [
+        { command: "py", prefix: ["-3"] },
+        { command: "python", prefix: [] },
+        { command: "python3", prefix: [] },
+      ]
+    : [
+        { command: "python3", prefix: [] },
+        { command: "python", prefix: [] },
+      ];
+
+let lastError = null;
+for (const candidate of candidates) {
+  const result = spawnSync(
+    candidate.command,
+    [...candidate.prefix, script, ...process.argv.slice(2)],
+    { stdio: "inherit" },
+  );
+  if (!result.error || result.error.code !== "ENOENT") {
+    process.exit(result.status ?? 1);
+  }
+  lastError = result.error;
 }
-for (const file of [bathymetryPath, tidPath]) {
-  if (!fs.existsSync(file)) throw new Error(`Input not found: ${file}`);
-  console.log(`${file}: ${crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex")}`);
-}
-console.log("This lightweight verifier records official NetCDF SHA-256 values. Convert NetCDF to the committed JSON canon with a local NetCDF toolchain, preserving the 552 x 360 pixel-centre cells without interpolation.");
+
+console.error(
+  "Python 3 was not found. Install Python 3, then run this command again.",
+  lastError ?? "",
+);
+process.exit(1);
