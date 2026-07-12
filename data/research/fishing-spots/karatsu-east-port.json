@@ -1,0 +1,243 @@
+{
+  "schemaVersion": "1.0.0",
+  "spotId": "karatsu-east-port",
+  "identity": {
+    "spotName": "唐津東港",
+    "aliases": [
+      "唐津港東港地区",
+      "東港地区"
+    ],
+    "prefecture": "佐賀県",
+    "municipality": "唐津市",
+    "coordinates": {
+      "latitude": 33.459,
+      "longitude": 129.993,
+      "status": "inferred",
+      "confidence": "high",
+      "sourceIds": [
+        "src-saga-karatsu-decarbonization-plan",
+        "src-gsi-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "東港地区を比較するための代表点。一般利用可能な釣り位置や岸壁上の正確な立ち位置を示す座標ではない。"
+    }
+  },
+  "attributes": {
+    "spotType": {
+      "value": [
+        "port",
+        "breakwater",
+        "revetment"
+      ],
+      "status": "confirmed",
+      "confidence": "high",
+      "sourceIds": [
+        "src-saga-port-facilities",
+        "src-saga-karatsu-decarbonization-plan"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "佐賀県の港湾施設資料で東港地区の岸壁、防波堤、護岸を確認。地区全体の構成であり、各施設への一般立入可否は別途確認が必要。"
+    },
+    "seabed": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "底質を直接示す公的な海底地質・浚渫資料を今回の調査範囲では確認できなかった。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "公式資料には東港地区の泊地・岸壁としておおむね0mから-9mまで複数の水深が記載されるが、一般に釣り可能な位置との対応が不明で代表分類を付けない。"
+    },
+    "riverInfluence": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "代表点と河川流入の影響を定量・定性的に裏付ける公式資料を確認できなかった。地図上の近接だけで強弱を断定しない。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "東港地区周辺の潮流・流況を直接評価できる公的資料を確認できなかった。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "港湾資料には地区内の照明施設や航路標識灯が記載されるが、釣り場を照らす常夜灯の存在・点灯条件を示すものではないため判定しない。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "防波堤・護岸の存在は確認できるが、釣り位置周辺の消波ブロック、岩、海藻等を直接確認できない。"
+    },
+    "openSeaExposure": {
+      "value": "bay",
+      "status": "inferred",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-saga-karatsu-decarbonization-plan",
+        "src-saga-port-plan",
+        "src-gsi-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "唐津港の東港地区として唐津湾側の港湾区域内に位置することから湾内と推定。風波や安全性の評価ではない。"
+    },
+    "fishingRange": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "一般に立入可能な釣り位置と構造物端部が確認できないため、足元・近距離・遠投の区分を付けない。"
+    }
+  },
+  "fishSpecies": [],
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "公式港湾施設資料に壱岐フェリー駐車場は記載されるが、釣り目的の利用可否を確認できないため利用可能とは判定しない。"
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "一般利用可能なトイレの公式案内を確認できなかった。"
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "東港地区全体または各岸壁の現行の釣り可否を示す公式案内を確認できなかった。現地表示と管理者情報の再確認が必要。"
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "フェリー・物流ターミナル等を含む地区だが、一般立入可能範囲を示す最新の公式案内を確認できなかった。"
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "工事・閉鎖情報が見つからないことを『なし』とは扱わない。利用前に最新の管理者情報と現地表示を確認する。"
+    },
+    "officialContact": {
+      "name": "佐賀県（唐津港港湾管理者）",
+      "url": "https://www.pref.saga.lg.jp/list00674.html",
+      "checkedAt": "2026-07-12",
+      "note": "具体的な立入・釣り可否は、最新の県案内、現地管理者および現地表示で確認する。"
+    }
+  },
+  "sources": [
+    {
+      "id": "src-saga-port-facilities",
+      "url": "https://www.pref.saga.lg.jp/kiji00329386/3_29386_321357_up_ibeqpe4w.pdf",
+      "title": "県が管理する港湾施設の概要",
+      "publisher": "佐賀県",
+      "sourceType": "port_manager",
+      "checkedAt": "2026-07-12",
+      "publishedAt": "2024-06-05",
+      "supports": [
+        "attributes.spotType",
+        "attributes.waterDepth",
+        "facilities.parking"
+      ],
+      "note": "東港地区の岸壁、防波堤、護岸、泊地・航路の公示値、壱岐フェリー駐車場の存在を確認。駐車場の釣り目的利用可否は裏付けない。"
+    },
+    {
+      "id": "src-saga-karatsu-decarbonization-plan",
+      "url": "https://www.pref.saga.lg.jp/kiji003110833/index.html",
+      "title": "唐津港・伊万里港港湾脱炭素化推進計画",
+      "publisher": "佐賀県",
+      "sourceType": "port_manager",
+      "checkedAt": "2026-07-12",
+      "publishedAt": "2026-03-18",
+      "supports": [
+        "identity.coordinates",
+        "attributes.spotType",
+        "attributes.openSeaExposure"
+      ],
+      "note": "リンク先の唐津港計画本文で東港地区、東港フェリー岸壁、東港岸壁、港湾管理者等を確認。"
+    },
+    {
+      "id": "src-saga-port-plan",
+      "url": "https://www.pref.saga.lg.jp/kiji00313547/index.html",
+      "title": "港湾計画図（唐津港、伊万里港）",
+      "publisher": "佐賀県",
+      "sourceType": "port_manager",
+      "checkedAt": "2026-07-12",
+      "publishedAt": "2024-03-14",
+      "supports": [
+        "identity.coordinates",
+        "attributes.openSeaExposure"
+      ],
+      "note": "唐津港港湾計画図の公式公開ページ。地区位置関係の独立確認に使用。"
+    },
+    {
+      "id": "src-gsi-karatsu-east-port",
+      "url": "https://maps.gsi.go.jp/#16/33.459000/129.993000/&base=std&ls=std&disp=1",
+      "title": "地理院地図 唐津東港代表点周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-12",
+      "publishedAt": null,
+      "supports": [
+        "identity.coordinates",
+        "attributes.openSeaExposure"
+      ],
+      "note": "東港地区の代表点と唐津湾内の位置関係を確認するために使用。"
+    },
+    {
+      "id": "src-saga-port-information",
+      "url": "https://www.pref.saga.lg.jp/list00674.html",
+      "title": "港湾",
+      "publisher": "佐賀県",
+      "sourceType": "government",
+      "checkedAt": "2026-07-12",
+      "publishedAt": null,
+      "supports": [
+        "restrictions.officialContact"
+      ],
+      "note": "佐賀県の港湾情報入口。最新の管理情報を確認する公式窓口として記録。"
+    }
+  ],
+  "researchNotes": "唐津東港という広い港湾地区のパイロット調査。公式資料で港湾施設の構成は確認できたが、一般に釣り可能な具体地点、立入範囲、釣り禁止、常夜灯、底質、潮流、魚種は確認できずunknownまたは空配列とした。このJSONをそのまま本番地点マスターや安全判断に使用しない。",
+  "researchedAt": "2026-07-12T22:56:42+09:00",
+  "reviewStatus": "draft"
+}
