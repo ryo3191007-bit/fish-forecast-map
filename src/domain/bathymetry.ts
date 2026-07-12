@@ -28,7 +28,7 @@ export const BATHYMETRY_FALLBACK_TILE_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PAT
 export const BATHYMETRY_FALLBACK_COLOR_TILE_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/color/{z}/{x}/{y}.png`;
 export const BATHYMETRY_FALLBACK_CONTOUR_GEOJSON_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/contours.geojson`;
 export const BATHYMETRY_FALLBACK_METADATA_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/metadata.json`;
-export const GSI_STANDARD_TILE_URL = "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png";
+export const GSI_STANDARD_TILE_URL = "https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png";
 export const GSI_STANDARD_OVERLAY_OPACITY = 0.4;
 
 export const BATHYMETRY_BOUNDS = [128.5, 32.5, 130.8, 34.0] as const;
@@ -50,9 +50,9 @@ export const BATHYMETRY_SAFETY_NOTE =
 export const BATHYMETRY_CITATION =
   "Contains information from the GEBCO_2026 Grid, GEBCO Compilation Group (2026).";
 export const GSI_STANDARD_ATTRIBUTION =
-  '海岸線overlay: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院 標準地図</a>。ZL5〜8の海域部はGEBCO Digital Atlas由来の等深線、海上保安庁許可第292502号（水路業務法第25条）、VMAP0 shorelineを含みます。';
+  '海岸線overlay: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院 白地図</a>。';
 export const GSI_STANDARD_NOTE =
-  "国土地理院タイルをopacity 0.40でリアルタイム表示し、タイル自体は保存しません。";
+  "陸地のオレンジ塗りを含まない白地図をopacity 0.40でリアルタイム表示し、タイル自体は保存しません。";
 
 export const BATHYMETRY_DEPTH_STOPS = [
   { depthMeters: 0, label: "0m", color: "#bff4ff" },
