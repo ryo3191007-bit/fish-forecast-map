@@ -1,0 +1,328 @@
+{
+  "schemaVersion": "1.0.0",
+  "spotId": "karatsu-east-port",
+  "identity": {
+    "spotName": "唐津東港",
+    "aliases": ["唐津港東港地区", "東港地区"],
+    "prefecture": "佐賀県",
+    "municipality": "唐津市",
+    "coordinates": {
+      "latitude": 33.459,
+      "longitude": 129.993,
+      "status": "inferred",
+      "confidence": "low",
+      "sourceIds": ["src-saga-port-plan", "src-navitime-list", "src-yelp-ferry-terminal", "src-umitenki-tide"],
+      "checkedAt": "2026-07-13",
+      "note": "唐津市東大島町・二タ子（唐津港東港地区、壱岐フェリー乗り場周辺）に位置することは佐賀県港湾計画図および複数の独立した民間集約サイトの住所表記で一致しているが、比較用代表座標（33.459, 129.993）自体を国土地理院地図等で直接ピンポイント照合するには至っていない。別の民間地図ピン（東港フェリーターミナル想定地点、北緯約33.4685・東経約129.9625）とは数km規模のずれがあり、確定値とはせず地区レベルの推定にとどめた。"
+    }
+  },
+  "attributes": {
+    "spotType": {
+      "value": ["port"],
+      "status": "confirmed",
+      "confidence": "high",
+      "sourceIds": ["src-saga-port-overview", "src-saga-port-plan", "src-kkeikaku-ferry", "src-saga-s-news"],
+      "checkedAt": "2026-07-13",
+      "note": "佐賀県が管理する重要港湾『唐津港』の一地区（東港地区）であり、壱岐（印通寺港）行きフェリー岸壁・フェリーターミナル、クルーズ船接岸岸壁を有する港湾施設であることが港湾管理者資料および地域紙記事で一貫して確認できる。漁港としての指定は確認できていない。"
+    },
+    "seabed": {
+      "value": ["unknown"],
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-13",
+      "note": "海底底質を直接裏付ける公式資料（浚渫記録・海図等）や研究機関資料を確認できなかったため、雰囲気での断定を避けunknownとした。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-13",
+      "note": "地点別の代表水深を示す公式数値資料に本調査ではアクセスできなかった。"
+    },
+    "riverInfluence": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-13",
+      "note": "東港地区と主要河川との位置関係を独立した地図資料で確認できておらず、判定を保留した。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-13",
+      "note": "潮流・潮通しに関する公的資料を確認できず、民間記事にも客観的根拠となる記載がなかった。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": ["src-uosoku"],
+      "checkedAt": "2026-07-13",
+      "note": "管理者による常夜灯設置の公式案内は確認できなかった。民間サイトは夜間ルアー釣りに言及するが、港湾照明・作業灯との区別ができないためunknownとした。"
+    },
+    "obstacles": {
+      "value": ["unknown"],
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-13",
+      "note": "テトラポッド・消波ブロック等の設置状況を裏付ける公式資料や複数独立sourceの一致を確認できなかった。"
+    },
+    "openSeaExposure": {
+      "value": "bay",
+      "status": "inferred",
+      "confidence": "medium",
+      "sourceIds": ["src-wikipedia-karatsu-port", "src-kkeikaku-cruise"],
+      "checkedAt": "2026-07-13",
+      "note": "唐津港は唐津湾内に位置し、東港岸壁からは唐津城・虹ノ松原・鏡山を望む景観であることが複数の独立した記事で説明されており、湾内（bay）に位置すると推定した。国土地理院地図上での岬・湾口との直接的な位置計測は本調査では行っていない。"
+    },
+    "fishingRange": {
+      "value": ["unknown"],
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-13",
+      "note": "堤防形状・水深等から釣行可能距離区分を独立して推定できる公式・複数source情報がなかった。"
+    }
+  },
+  "fishSpecies": [
+    {
+      "name": "マアジ（アジ）",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "medium",
+      "sourceIds": ["src-uosoku", "src-kyusyu-ins"],
+      "checkedAt": "2026-07-13",
+      "note": "独立した2件の一般source（釣り場情報サイト、個人釣行ブログ）が同一地点でアジへの言及で一致。"
+    },
+    {
+      "name": "コノシロ",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "medium",
+      "sourceIds": ["src-uosoku", "src-kyusyu-ins"],
+      "checkedAt": "2026-07-13",
+      "note": "独立した2件の一般sourceが同一地点でコノシロへの言及で一致。"
+    },
+    {
+      "name": "クロダイ（チヌ）",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "medium",
+      "sourceIds": ["src-uosoku", "src-kyusyu-ins"],
+      "checkedAt": "2026-07-13",
+      "note": "独立した2件の一般sourceが同一地点でチヌへの言及で一致。個人ブログには過去（具体的日付不明）の約45cm釣獲の記述もある。"
+    },
+    {
+      "name": "スズキ（シーバス）",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "medium",
+      "sourceIds": ["src-uosoku", "src-kyusyu-ins"],
+      "checkedAt": "2026-07-13",
+      "note": "表記は「シーバス」「スズキ」と異なるが同一種として扱い、独立した2件の一致とみなした。"
+    },
+    {
+      "name": "キビレ",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "low",
+      "sourceIds": ["src-uosoku"],
+      "checkedAt": "2026-07-13",
+      "note": "2024年1月12日付・地点明記のSNS投稿を引用した単独source記録のため低確度とした。"
+    },
+    {
+      "name": "イシモチ（シログチ）",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "low",
+      "sourceIds": ["src-uosoku"],
+      "checkedAt": "2026-07-13",
+      "note": "上記と同一の2024年1月12日付釣果投稿に基づく単独source記録。"
+    }
+  ],
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": ["src-uosoku"],
+      "checkedAt": "2026-07-13",
+      "note": "施設管理者による駐車場案内は確認できず、民間サイトも『不明』としている。"
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": ["src-uosoku"],
+      "checkedAt": "2026-07-13",
+      "note": "施設管理者によるトイレ案内は確認できず、民間サイトも『不明』としている。"
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "partial",
+      "status": "confirmed",
+      "confidence": "low",
+      "sourceIds": ["src-uosoku"],
+      "checkedAt": "2026-07-13",
+      "note": "非公式の民間集約サイトが『釣り禁止の部分あり』と明記しているが、佐賀県・唐津市等による公式な釣り禁止区域案内は確認できていない。低確度の警告として保持し、現地表示・管理者への確認を推奨する。"
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-13",
+      "note": "フェリー岸壁・ふ頭としての一般立入制限の有無を明記した公式資料を確認できなかった。港湾施設の存在自体を立入可否の根拠にはしていない。"
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": ["src-saga-s-news"],
+      "checkedAt": "2026-07-13",
+      "note": "2024年度以降、大型クルーズ船受入拡大に向けた安全対策調査の着手が地域紙で報じられているが、これは航路・岸壁能力に関する調査であり釣り場としての工事・閉鎖情報を直接示すものではないため、unknownとした。"
+    },
+    "officialContact": {
+      "name": "佐賀県 港湾課",
+      "url": "https://www.pref.saga.lg.jp/list00674.html",
+      "checkedAt": "2026-07-13",
+      "note": "地点専用の問い合わせ窓口ではなく、佐賀県港湾行政の総合案内ページ。現地の最新規制は管理者へ直接確認することを推奨する。"
+    }
+  },
+  "sources": [
+    {
+      "id": "src-saga-port-overview",
+      "url": "https://www.pref.saga.lg.jp/kiji00329386/index.html",
+      "title": "港湾施設の概要の公示",
+      "publisher": "佐賀県",
+      "sourceType": "port_manager",
+      "checkedAt": "2026-07-13",
+      "publishedAt": "2024-06-05",
+      "supports": ["attributes.spotType"],
+      "note": "港湾法に基づき佐賀県が管理港湾施設の概要を公示するページ。詳細はPDF本体（本調査では未参照）。"
+    },
+    {
+      "id": "src-saga-port-list",
+      "url": "https://www.pref.saga.lg.jp/list00674.html",
+      "title": "港湾",
+      "publisher": "佐賀県",
+      "sourceType": "port_manager",
+      "checkedAt": "2026-07-13",
+      "supports": ["restrictions.officialContact"],
+      "note": "佐賀県港湾行政の総合案内ページ。個別スポットの規制情報の掲載はない。"
+    },
+    {
+      "id": "src-saga-port-plan",
+      "url": "https://www.pref.saga.lg.jp/kiji00313547/index.html",
+      "title": "港湾計画図（唐津港、伊万里港）",
+      "publisher": "佐賀県",
+      "sourceType": "port_manager",
+      "checkedAt": "2026-07-13",
+      "publishedAt": "2023-07-13",
+      "supports": ["attributes.spotType", "identity.coordinates"],
+      "note": "唐津港の港湾計画図ページ。地区区分の裏付けに使用したが、図面自体の詳細読み取りは本調査では行っていない。"
+    },
+    {
+      "id": "src-wikipedia-karatsu-port",
+      "url": "https://ja.wikipedia.org/wiki/%E5%94%90%E6%B4%A5%E6%B8%AF",
+      "title": "唐津港",
+      "publisher": "Wikipedia",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-13",
+      "supports": ["identity.aliases", "attributes.openSeaExposure"],
+      "note": "唐津港の地区構成や唐津湾内の位置づけを説明する百科事典記事。一次資料ではなく補助的に使用した。"
+    },
+    {
+      "id": "src-saga-s-news",
+      "url": "https://www.saga-s.co.jp/subcategory/%E5%94%90%E6%B4%A5%E6%9D%B1%E6%B8%AF",
+      "title": "唐津東港",
+      "publisher": "佐賀新聞",
+      "sourceType": "news_media",
+      "checkedAt": "2026-07-13",
+      "supports": ["identity.spotName", "attributes.spotType", "restrictions.constructionOrClosure"],
+      "note": "唐津東港に関する地域紙の記事一覧。フェリー埠頭整備やクルーズ船大型化調査着手等の報道を含むが、釣りに関する規制情報は含まれない。"
+    },
+    {
+      "id": "src-kkeikaku-cruise",
+      "url": "https://k-keikaku.or.jp/%E5%94%90%E6%B4%A5%E6%B8%AF%E6%9D%B1%E6%B8%AF%E5%9C%B0%E5%8C%BA%E3%81%AB%E3%81%8A%E3%81%91%E3%82%8B%E3%82%AF%E3%83%AB%E3%83%BC%E3%82%BA%E8%88%B9%E8%AA%98%E8%87%B4/",
+      "title": "唐津港（東港地区）におけるクルーズ船誘致について",
+      "publisher": "九州技報",
+      "sourceType": "news_media",
+      "checkedAt": "2026-07-13",
+      "supports": ["identity.spotName", "attributes.openSeaExposure"],
+      "note": "唐津港東港地区でのクルーズ船誘致に関する業界誌記事。景観・地区機能の記述はあるが釣りに関する記載はない。"
+    },
+    {
+      "id": "src-kkeikaku-ferry",
+      "url": "https://k-keikaku.or.jp/%E5%94%90%E6%B4%A5%E6%B8%AF%E3%83%95%E3%82%A7%E3%83%AA%E3%83%BC%E3%81%B5%E9%A0%AD/",
+      "title": "唐津港フェリーふ頭 平成19年3月完成（佐賀県唐津市東大島）",
+      "publisher": "九州技報",
+      "sourceType": "news_media",
+      "checkedAt": "2026-07-13",
+      "supports": ["attributes.spotType"],
+      "note": "東港地区にフェリー岸壁・ふ頭施設（佐賀県）とフェリーターミナル（唐津市）が整備されたことを示す記事。"
+    },
+    {
+      "id": "src-navitime-list",
+      "url": "https://www.navitime.co.jp/category/0802003/41202/",
+      "title": "佐賀県唐津市の港一覧",
+      "publisher": "NAVITIME",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-13",
+      "supports": ["identity.municipality", "identity.coordinates"],
+      "note": "唐津東港の所在地・最寄駅からの徒歩分数を掲載する民間地図サービスの一覧ページ。地点座標そのものの掲載はない。"
+    },
+    {
+      "id": "src-yelp-ferry-terminal",
+      "url": "https://www.yelp.com/biz/%E5%94%90%E6%B4%A5%E6%9D%B1%E6%B8%AF-%E3%83%95%E3%82%A7%E3%83%AA%E3%83%BC%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB-%E5%94%90%E6%B4%A5%E5%B8%82",
+      "title": "唐津東港 フェリーターミナル",
+      "publisher": "Yelp",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-13",
+      "supports": ["identity.municipality", "identity.coordinates"],
+      "note": "郵便番号・住所（東大島町）を掲載する民間ビジネスディレクトリ。"
+    },
+    {
+      "id": "src-umitenki-tide",
+      "url": "https://www.umitenki.jp/tenki/4506/tide",
+      "title": "唐津東港のピンポイント天気予報",
+      "publisher": "海天気.jp",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-13",
+      "supports": ["identity.municipality", "identity.coordinates"],
+      "note": "郵便番号・住所（東大島町）と潮汐等を提供する民間気象サービス。地点固有の座標値の記載は確認できなかった。"
+    },
+    {
+      "id": "src-uosoku",
+      "url": "https://uosoku.com/home/kyuu/saga/kara/",
+      "title": "唐津東港の釣り場情報",
+      "publisher": "魚速報",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-13",
+      "publishedAt": "2015-08-19",
+      "supports": ["fishSpecies.observed", "facilities.parking", "facilities.toilet", "restrictions.fishingProhibited"],
+      "note": "誰でも編集可能な集合知型の釣り場情報サイト。掲載魚種一覧を丸ごと採用せず、独立source間で一致する魚種、または日付付き釣果記録のある魚種のみを採用した。駐車場・トイレは『不明』、規制は『釣り禁止の部分あり』と明記。"
+    },
+    {
+      "id": "src-kyusyu-ins",
+      "url": "https://kyusyu-ins.com/2021/01/15/2021-01-15karatu/",
+      "title": "唐津東港・・・いったいここは・・・。",
+      "publisher": "釣好大全九州",
+      "sourceType": "personal_blog",
+      "checkedAt": "2026-07-13",
+      "publishedAt": "2021-01-15",
+      "supports": ["fishSpecies.observed"],
+      "note": "個人釣行記録。アジ・コノシロ・スズキ・チヌへの言及があり、魚速報の記載と重複する魚種のみ独立確認として採用した。"
+    }
+  ],
+  "researchNotes": "唐津東港（佐賀県唐津市、唐津港東港地区）について、優先順位に従い佐賀県公式ページ（港湾施設の概要、港湾、港湾計画図）、Wikipedia、地域紙（佐賀新聞）、業界誌（九州技報）記事、民間地図・生活情報サイト（NAVITIME、Yelp、海天気.jp）を確認したうえで、二次情報として魚速報および釣好大全九州の2件の民間情報源を独立確認の補助として用いた。フェリーターミナル・クルーズ船岸壁を有する唐津港の一港湾地区であることは複数の独立した情報源で一致するため、spotTypeはconfirmed/highとした。一方、海底・水深・潮通し・常夜灯・障害物・釣れる範囲など釣り場固有の物理属性については、公式・公的な一次資料（港湾工事記録・海図・研究機関資料等）を本調査の範囲では確認できず、民間記事も客観的根拠を示していないため、雰囲気での断定を避けすべてunknownとした。比較用代表座標（33.459, 129.993）は、住所レベル（唐津市東大島町・二タ子）では複数の独立した民間情報源と整合するが、国土地理院地図でのピンポイント照合は本調査では実施できておらず、別の民間地図ピンとは数km規模の差異が見られたためinferred/lowとした。魚種は独立した2件以上の一般情報源が一致するアジ・コノシロ・クロダイ（チヌ）・スズキ（シーバス）のみをconfidence=mediumのobservedとして採用し、単一の日付付き釣果記録（2024年1月）に基づくキビレ・イシモチ（シログチ）はconfidence=lowとした。特定サイトの魚種一覧・説明文の丸ごと転記は行っていない。釣り禁止に関する記載は非公式source1件のみのため低確度の警告としてfishingProhibited=partial/lowとし、立入禁止・工事閉鎖については公式情報を確認できずunknownとした。人間によるレビュー（reviewStatus引き上げ）を推奨する。",
+  "researchedAt": "2026-07-13T15:00:00+09:00",
+  "reviewStatus": "draft"
+}
