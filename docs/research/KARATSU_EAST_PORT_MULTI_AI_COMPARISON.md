@@ -44,7 +44,7 @@ docs/research/KARATSU_EAST_PORT_MULTI_AI_PROMPT.md
 
 | 指標 | ChatGPT | Gemini | Claude |
 |---|---:|---:|---:|
-| Schema適合 | 適合予定・CI確認待ち | 未実施 | 未実施 |
+| Schema適合 | 適合・GitHub Actions成功 | 未実施 | 未実施 |
 | source数 | 5 | 未実施 | 未実施 |
 | 公式・公的source数 | 5 | 未実施 | 未実施 |
 | 民間釣りサイト依存 | 0 | 未実施 | 未実施 |
