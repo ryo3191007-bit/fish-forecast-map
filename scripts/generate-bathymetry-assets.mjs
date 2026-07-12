@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { PNG } from "pngjs";
 import {
   encodeTerrainRgb,
@@ -8,7 +9,21 @@ import {
   samplePixelCentreGrid,
 } from "./bathymetry-grid.mjs";
 
-const sourceName = process.env.BATHYMETRY_SOURCE ?? "gebco-2026";
+const requestedSource = process.env.BATHYMETRY_SOURCE;
+if (!requestedSource) {
+  for (const source of ["gebco-2026", "etopo-2022"]) {
+    const result = spawnSync(process.execPath, [process.argv[1]], {
+      env: { ...process.env, BATHYMETRY_SOURCE: source },
+      stdio: "inherit",
+    });
+    if (result.status !== 0) {
+      process.exit(result.status ?? 1);
+    }
+  }
+  process.exit(0);
+}
+
+const sourceName = requestedSource;
 const DEM_PATH = `data/bathymetry/${sourceName}-crop.json`;
 const TID_PATH = `data/bathymetry/${sourceName}-tid-crop.json`;
 const OUT = `public/bathymetry/${sourceName}`;
