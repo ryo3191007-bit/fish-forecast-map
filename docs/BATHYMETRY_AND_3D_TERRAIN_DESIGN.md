@@ -39,7 +39,7 @@ Git管理する実DEMは `data/bathymetry/etopo-2022-crop.json` のテキストJ
 node scripts/generate-bathymetry-assets.mjs
 ```
 
-現在の生成範囲は west 128.5 / south 32.5 / east 130.8 / north 34.0、zoomはz7-z8、256px XYZタイルです。色別水深は0m、20m、50m、100m、200m、500m以上の区分に合わせ、等深線は同じDEMの負標高から生成します。水深表示は参考用途のみで、航海・安全判断には使用できません。
+現在の生成範囲は west 128.5 / south 32.5 / east 130.8 / north 34.0、zoomはz7-z8、256px XYZタイルです。色別水深は0m、20m、50m、100m、200m、500m以上の区分に合わせ、等深線は同じDEMの負標高からmarching squaresで生成し、隣接セグメントを連結したLineStringとして出力します。水深表示は参考用途のみで、航海・安全判断には使用できません。
 
 ## 依存関係
 

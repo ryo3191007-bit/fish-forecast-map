@@ -87,10 +87,50 @@ function edgePoint(a, av, c, cv, level) {
   const t = av === cv ? 0.5 : (level - av) / (cv - av);
   return [a[0] + (c[0] - a[0]) * t, a[1] + (c[1] - a[1]) * t];
 }
+function coordKey(coord) {
+  return `${coord[0].toFixed(6)},${coord[1].toFixed(6)}`;
+}
+function stitchSegments(segments) {
+  const lines = [];
+  for (const segment of segments) {
+    const [start, end] = segment;
+    const startKey = coordKey(start);
+    const endKey = coordKey(end);
+    let prepended = null;
+    let appended = null;
+    for (const line of lines) {
+      if (coordKey(line[0]) === endKey || coordKey(line.at(-1)) === endKey) prepended = line;
+      if (coordKey(line[0]) === startKey || coordKey(line.at(-1)) === startKey) appended = line;
+    }
+    if (!prepended && !appended) {
+      lines.push([start, end]);
+      continue;
+    }
+    if (prepended && !appended) {
+      if (coordKey(prepended[0]) === endKey) prepended.unshift(start);
+      else prepended.push(start);
+      continue;
+    }
+    if (!prepended && appended) {
+      if (coordKey(appended[0]) === startKey) appended.unshift(end);
+      else appended.push(end);
+      continue;
+    }
+    if (prepended === appended) continue;
+    const first = prepended;
+    const second = appended;
+    if (coordKey(first.at(-1)) !== endKey) first.reverse();
+    if (coordKey(second[0]) !== startKey) second.reverse();
+    first.push(...second.slice(1));
+    lines.splice(lines.indexOf(second), 1);
+  }
+  return lines.filter((line) => line.length >= 2);
+}
 function generateContours() {
   const features = [];
   for (const depth of DEPTHS) {
     const level = -depth;
+    const segments = [];
     for (let row = 0; row < dem.height - 1; row++) for (let col = 0; col < dem.width - 1; col++) {
       const p = [point(col, row), point(col + 1, row), point(col + 1, row + 1), point(col, row + 1)];
       const v = [dem.values[row * dem.width + col], dem.values[row * dem.width + col + 1], dem.values[(row + 1) * dem.width + col + 1], dem.values[(row + 1) * dem.width + col]];
@@ -101,10 +141,11 @@ function generateContours() {
       }
       for (let i = 0; i + 1 < crossings.length; i += 2) {
         const coords = [crossings[i], crossings[i + 1]];
-        if (coords[0][0] !== coords[1][0] || coords[0][1] !== coords[1][1]) {
-          features.push({ type: "Feature", properties: { depth, major: depth >= 100, source: "ETOPO 2022 DEM marching squares" }, geometry: { type: "LineString", coordinates: coords } });
-        }
+        if (coords[0][0] !== coords[1][0] || coords[0][1] !== coords[1][1]) segments.push(coords);
       }
+    }
+    for (const coordinates of stitchSegments(segments)) {
+      features.push({ type: "Feature", properties: { depth, major: depth >= 100, source: "ETOPO 2022 DEM marching squares" }, geometry: { type: "LineString", coordinates } });
     }
   }
   return { type: "FeatureCollection", features };
@@ -128,7 +169,7 @@ const meta = {
   sourceResolution: "60 arc-second", cropBounds: b, width: dem.width, height: dem.height, cellSizeDegrees: dem.cellSizeDegrees, nodata: dem.nodata,
   sourceSha256: dem.sourceSha256, cropSha256: dem.cropSha256, generatedZoomRange: { min: MIN_ZOOM, max: MAX_ZOOM }, tileSize: TILE_SIZE,
   tileCount: tiles.length, tiles, depthStopsMeters: [0, ...DEPTHS], generationCommand: "node scripts/generate-bathymetry-assets.mjs", checksums,
-  navigationWarning: "Reference only; not for navigation or safety decisions.", contourAlgorithm: "marching squares"
+  navigationWarning: "Reference only; not for navigation or safety decisions.", contourAlgorithm: "marching squares with segment stitching"
 };
 fs.writeFileSync(path.join(OUT, "metadata.json"), JSON.stringify(meta, null, 2));
 console.log(`Generated ${tiles.length} bathymetry XYZ tiles from ${DEM_PATH}`);

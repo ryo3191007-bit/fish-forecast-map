@@ -73,9 +73,11 @@ assert.deepEqual(metadata.depthStopsMeters, [0, 20, 50, 100, 200, 500]);
 assert.ok(contours.features.length > 5);
 assert.ok(new Set(contours.features.map((f) => f.properties.depth)).size > 2);
 assert.ok(contours.features.every((f) => typeof f.properties.depth === "number" && typeof f.properties.major === "boolean"));
+assert.ok(contours.features.some((f) => f.geometry.coordinates.length > 10));
 assert.ok(contours.features.some((f) => {
-  const [[lon1, lat1], [lon2, lat2]] = f.geometry.coordinates;
-  return f.properties.depth === 50 && Math.abs(lon1 - lon2) > 0.0001 && Math.abs(lat1 - lat2) > 0.0001;
+  const lons = f.geometry.coordinates.map(([lon]) => lon);
+  const lats = f.geometry.coordinates.map(([, lat]) => lat);
+  return f.properties.depth === 50 && Math.max(...lons) - Math.min(...lons) > 0.01 && Math.max(...lats) - Math.min(...lats) > 0.01;
 }));
 for (const f of contours.features) for (const [lon, lat] of f.geometry.coordinates) {
   assert.ok(lon >= metadata.cropBounds.west && lon <= metadata.cropBounds.east);
