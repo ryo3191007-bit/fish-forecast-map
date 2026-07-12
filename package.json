@@ -17,11 +17,12 @@
     "check:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.mjs",
     "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs",
     "test:environment": "node scripts/environment.test.mjs",
-    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:migration-safety && npm run test:bootstrap-schema-diff && npm run test:bathymetry-ui && npm run test:fishing-spot-research",
+    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:migration-safety && npm run test:bootstrap-schema-diff && npm run test:bathymetry-ui && npm run test:fishing-spot-research && npm run test:karatsu-east-port-research",
     "test:manual-catch-memos": "node scripts/manual-catch-memos.test.mjs",
     "test:ui-requirements": "node scripts/ui-requirements.test.mjs",
     "test:bathymetry-ui": "node scripts/bathymetry-ui.test.mjs",
     "test:fishing-spot-research": "node scripts/fishing-spot-research-schema.test.mjs",
+    "test:karatsu-east-port-research": "node scripts/karatsu-east-port-research.test.mjs",
     "predev": "node scripts/generate-bathymetry-assets.mjs",
     "pretest": "node scripts/generate-bathymetry-assets.mjs",
     "prebuild": "node scripts/generate-bathymetry-assets.mjs"
