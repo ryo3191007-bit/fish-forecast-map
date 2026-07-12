@@ -54,57 +54,34 @@ npm run dev
 ```bash
 npm run lint
 npm run typecheck
+npm test
 npm run build
 ```
 
 ## データ方針
 
-MVP v0.1の基本データはモック釣果データです。Post-MVP-005 / 006以降は、外部サイトを自動収集せず、ユーザーが手動でURLと必要最小限の事実情報を登録する外部釣果メモも表示対象にしています。外部メモ単体には個別 `SCORE` を付けませんが、`acquisitionMethod: manual` など条件に合うメモだけを既存地点の `SCORE` へ小さく参考反映します。釣果情報には出典名と出典URLのフィールドを持たせますが、第三者サイト本文の転載、画像保存、コメント全文保存、プロフィール詳細保存、自動収集は行いません。
+MVP v0.1の基本データはモック釣果データです。モック釣果は地図・地点評価・既存SCORE用の参考データとして維持し、釣果一覧は `acquisitionMethod === "manual"` のユーザー手入力釣果のみを表示します。外部メモ単体には個別 `SCORE` を付けませんが、条件に合う手入力メモだけを既存地点の `SCORE` へ小さく参考反映します。釣果情報には出典名と出典URLのフィールドを持たせますが、第三者サイト本文の転載、画像保存、コメント全文保存、プロフィール詳細保存、自動収集は行いません。将来的に外部情報の取り込みを検討する場合は、利用規約、robots.txt、著作権、アクセス負荷を確認し、公式API、RSS、許可を得た情報源、ユーザー提供情報を優先します。アプリ上の釣れそう度は参考情報であり、実際の釣果を保証するものではありません。
 
-将来的に外部情報の自動取り込みを検討する場合は、利用規約、robots.txt、著作権、アクセス負荷を確認し、公式API、RSS、許可を得た情報源、ユーザー提供情報を優先します。アプリ上の釣れそう度は参考情報であり、実際の釣果を保証するものではありません。
+## Supabase / DBの現在状態
 
+Supabase連携は、master read、Supabase Auth、ログインユーザー単位のowner-scoped DB read/write、論理削除RPC、既存localStorageメモのユーザー明示移行、migration安全チェックと本番反映自動化まで完了しています。新しいDB変更の正本は `supabase/migrations/` です。現時点でSQL Editorから手動実行すべきSQLはありません。
 
-## Supabaseマスターデータ準備
+画面側は `fetchMasterData()` 経由でマスターデータを初期化します。Supabaseから読み取れる場合はSupabaseの `fish_species` / `fishing_spots` / `source_registry` を使い、未設定・通信失敗・0件時は既存の静的データへfallbackします。UIには `データ: Supabase`、`データ: 静的fallback`、`データ読込中...` の控えめな取得元表示を出します。
 
-`fish_species` / `fishing_spots` / `source_registry` のDB化準備として、テーブル定義SQLとseed SQLをリポジトリに配置しています。実DBへの適用はまだ行わず、ユーザーが必要なタイミングでSupabase SQL Editorから手動実行します。
+外部釣果メモはログイン中ユーザーの手入力データとしてSupabaseへ保存します。未ログイン、Supabase未設定、DBエラー時は既存localStorageへfallbackし、既存localStorage keyの変更、削除、自動DB移行、一括upsertは行いません。
 
-- テーブル定義: `supabase/sql/002_master_data_tables.sql`
-- seed SQL: `supabase/sql/003_master_data_seed.sql`
-- 手動実行手順: `docs/SUPABASE_MASTER_DATA_SETUP.md`
-- seed差分確認: `npm run check:master-seed`
+## 外部釣果メモ / 手入力釣果の扱い
 
-画面側は `fetchMasterData()` 経由でマスターデータを初期化します。Supabaseから読み取れる場合はSupabaseの `fish_species` / `fishing_spots` / `source_registry` を使い、未設定・SQL未実行・通信失敗・0件時は既存の静的データへfallbackします。UIには `データ: Supabase`、`データ: 静的fallback`、`データ読込中...` の控えめな取得元表示を出します。
+MVP v0.1の基本データはモック釣果データです。モック釣果は地図・地点評価・既存SCORE用の参考データとして維持します。一方、釣果一覧と手入力釣果登録モーダル内の登録済み一覧は、`acquisitionMethod === "manual"` のユーザー手入力釣果のみを対象にします。`ai_assisted` / `auto` の外部メモがDBやlocalStorageに存在しても、手入力釣果一覧の件数・フィルタ・カード表示には含めません。
 
-Supabaseを実際に使う場合の確認順序は次の通りです。
-
-1. `supabase/sql/002_master_data_tables.sql` をユーザーがSupabase SQL Editorで手動実行する。
-2. `supabase/sql/003_master_data_seed.sql` をユーザーがSupabase SQL Editorで手動実行する。
-3. `.env.example` を参考に `.env.local` へ `NEXT_PUBLIC_SUPABASE_URL` と `NEXT_PUBLIC_SUPABASE_ANON_KEY` を設定する。
-4. `npm run check:master-read` で取得元と件数を確認する。
-5. アプリ画面で取得元表示を確認する。
-
-DBを唯一の正本にはまだ切り替えていません。既存静的データとfallbackは保持します。
-
-## 外部釣果メモDB保存の準備
-
-Post-MVP-023では、現在localStorageに保存している外部釣果メモを将来Supabaseへ保存するための設計、SQL案、mapper/repository土台、安全確認コマンドを追加しました。Post-MVP-025では、authenticatedユーザーが `owner_id = auth.uid()` の自分のメモだけを扱えるowner scoped RLS policy SQL案を追加し、Post-MVP-026では `005_external_catch_memos_owner_policies.sql` の手動実行成功を前提に、ログイン中ユーザー向けのDB read/writeをUIへ接続しました。
-
-- 設計: `docs/SUPABASE_EXTERNAL_MEMO_DESIGN.md`
-- テーブルSQL案: `supabase/sql/004_external_catch_memos.sql`
-- owner scoped RLS policy SQL案: `supabase/sql/005_external_catch_memos_owner_policies.sql`
-- テーブル設計安全確認: `npm run check:external-memo-db`
-- owner policy安全確認: `npm run check:external-memo-owner-policy`
-- Auth user DB接続安全確認: `npm run check:external-memo-auth-repository`
-
-外部メモはユーザー入力データのため、認証なしで `anon` に広い `insert` / `update` / `delete` を許可しません。owner policyでも `grant all` は使わず、物理delete policyは追加せず、`is_deleted = true` による論理削除を使います。登録・編集payloadには `owner_id = user.id`、`created_by = authenticated_user`、`is_deleted = false` を設定します。未ログイン、Supabase未設定、DBエラー時は既存localStorageへfallbackし、既存localStorage keyの変更、削除、自動DB移行、一括upsertは行いません。次の候補は、本番でのログインユーザー別確認と、ユーザー明示の移行フロー設計です。
+外部サイト本文、画像、コメント、プロフィール情報の取得・保存や、スクレイピング、自動取得、定期アクセス、AI解析は行いません。画面下部の外部サイトリンクは参考閲覧用であり、本アプリが情報を自動取得しているわけではありません。
 
 ## 今後の候補
 
 - Open-Meteo以外の環境データ連携や、公式潮汐表への参照・リンクの検討。ただし、安全判断・航行判断の代替にはしない。
 - 3D海底地形や水深レイヤーの検討。
 - 釣れそう度スコアの高度化と理由表示の改善。
-- 公式API、RSS、許可済み情報源を前提にした釣果情報取り込み。
-- Supabase/PostgreSQLによるデータ永続化。ローカル環境変数は `.env.example` をコピーした `.env.local` に設定し、詳細は `docs/SUPABASE_SETUP_PLAN.md` を参照します。読み取り専用の最小疎通確認は `docs/SUPABASE_READONLY_CONNECTION_CHECK.md` を参照します。
+- 公式API、RSS、許可済み情報源、ユーザー提供情報を前提にした将来の釣果情報取り込み設計。
 - 公開範囲を広げる場合の地点座標丸め、詳細地点非公開化、利用規約整備。
 
 ## 関連ドキュメント
