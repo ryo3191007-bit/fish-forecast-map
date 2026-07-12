@@ -7,6 +7,7 @@ const mapLayer = fs.readFileSync("src/domain/mapLayer.ts", "utf8");
 const bathy = fs.readFileSync("src/domain/bathymetry.ts", "utf8");
 const map = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
 const css = fs.readFileSync("src/app/globals.css", "utf8");
+const generator = fs.readFileSync("scripts/generate-bathymetry-assets.mjs", "utf8");
 const dem = JSON.parse(fs.readFileSync("data/bathymetry/gebco-2026-crop.json", "utf8"));
 const metadata = JSON.parse(fs.readFileSync("public/bathymetry/gebco-2026/metadata.json", "utf8"));
 const contours = JSON.parse(fs.readFileSync("public/bathymetry/gebco-2026/contours.geojson", "utf8"));
@@ -17,6 +18,7 @@ for (const token of ["bathymetry-color-relief", "bathymetry-hillshade", "bathyme
 for (const token of ["GEBCO_2026", "航海・安全判断には使用不可", "国土地理院", "高解像度水深を読み込めなかったため"]) assert.match(map + bathy, new RegExp(token));
 assert.match(bathy, /xyz\/blank\/\{z\}\/\{x\}\/\{y\}\.png/);
 assert.doesNotMatch(bathy, /xyz\/std\//);
+assert.match(generator, /elevationMeters >= 0\) return \[0, 0, 0, 0\]/);
 assert.match(metadata.license, /GEBCO/);
 assert.match(metadata.dataset, /GEBCO_2026/);
 assert.equal(metadata.tileSize, 256);
@@ -54,6 +56,8 @@ function decodeTerrain(png) {
   return vals;
 }
 
+let transparentColorPixels = 0;
+let visibleColorPixels = 0;
 for (const { z, x, y } of metadata.tiles) {
   const terrainPath = `public/bathymetry/gebco-2026/terrain/${z}/${x}/${y}.png`;
   const colorPath = `public/bathymetry/gebco-2026/color/${z}/${x}/${y}.png`;
@@ -64,9 +68,16 @@ for (const { z, x, y } of metadata.tiles) {
     assert.equal(png.height, 256);
     assert.equal(crypto.createHash("sha256").update(buf).digest("hex"), metadata.checksums[file]);
   }
+  const colorPng = PNG.sync.read(fs.readFileSync(colorPath));
+  for (let index = 3; index < colorPng.data.length; index += 4) {
+    if (colorPng.data[index] === 0) transparentColorPixels++;
+    else visibleColorPixels++;
+  }
   assert.notEqual(fs.readFileSync(terrainPath, "hex"), fs.readFileSync(colorPath, "hex"));
   assert.ok(decodeTerrain(PNG.sync.read(fs.readFileSync(terrainPath))).size > 3);
 }
+assert.ok(transparentColorPixels > 0, "land pixels must be fully transparent");
+assert.ok(visibleColorPixels > 0, "sea depth pixels must remain visible");
 const computedTiles = expectedTiles(metadata.cropBounds, metadata.generatedZoomRange.min, metadata.generatedZoomRange.max);
 assert.deepEqual(metadata.tiles, computedTiles);
 assert.ok(metadata.tiles.length > 1);
