@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import { fishSpeciesNames, type FishSpeciesName, type FishingReport } from "@/domain/fishing";
-import type { FishingSpot } from "@/domain/fishingSpot";
 import type { FishingEnvironment } from "@/domain/environment";
 import { fetchFishingEnvironment, readCachedFishingEnvironment } from "@/services/openMeteo";
 import { EnvironmentPanel } from "./EnvironmentPanel";
@@ -11,7 +10,6 @@ import { FishingMap } from "./FishingMap";
 import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
 import type { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
-import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { applyExternalMemoScoreAdjustments } from "@/domain/externalMemoScore";
 import { getManualCatchMemos } from "@/domain/manualCatchMemos";
 import { fetchMasterData, getStaticMasterData, type MasterDataFallbackReason, type MasterDataMeta, type MasterDataSet } from "@/lib/masterDataRepository";
@@ -59,7 +57,6 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [masterDataStatus, setMasterDataStatus] = useState<MasterDataStatus>({ source: "static-fallback", isLoading: true });
   const manualCatchMemos = useMemo(() => getManualCatchMemos(externalMemos), [externalMemos]);
   const fishingSpots = masterData.fishingSpots;
-  const externalSources = masterData.externalSources;
   const fishSpeciesFilterNames = useMemo(() => getFishSpeciesFilterNames(masterData), [masterData]);
   const [environmentSpotId, setEnvironmentSpotId] = useState(() => getStaticMasterData().fishingSpots[0]?.id ?? "");
   const [environment, setEnvironment] = useState<FishingEnvironment | null>(null);
@@ -261,11 +258,11 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     <section className="dashboard" id="map">
       <div className="panel filters">
         <div>
-          <p className="eyebrow">Post-MVP / mock + manual memo</p>
+          <p className="eyebrow">Post-MVP / 自分の釣果記録</p>
           <h2>糸島西岸〜平戸方面の釣果予報マップ</h2>
-          <p className="muted">モック釣果は地図・地点評価・SCOREの参考に維持し、釣果一覧は手入力釣果だけを魚種・エリア・キーワードで確認できます。</p>
+          <p className="muted">モック釣果は地図・地点評価・SCOREの参考に維持し、釣果一覧は自分の釣果記録だけを魚種・エリア・キーワードで確認できます。</p>
           <p className="resultSummary" aria-live="polite">
-            魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 釣り場マスター{fishingSpots.length}地点 / 地図・地点評価用モック{mockFishingReports.length}件 / 手入力釣果 全{manualCatchMemos.length}件中 {filteredManualCatchMemos.length}件を一覧表示中
+            魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 釣り場マスター{fishingSpots.length}地点 / 地図・地点評価用モック{mockFishingReports.length}件 / 自分の釣果 全{manualCatchMemos.length}件中 {filteredManualCatchMemos.length}件を一覧表示中
           </p>
           <MasterDataStatusChip status={masterDataStatus} />
         </div>
@@ -294,7 +291,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           <p className="eyebrow">Catch reports</p>
           <h2>釣果情報一覧</h2>
         </div>
-        <p className="muted">{sortLabel}で表示中です。魚種、釣り方、日付、出典をカードごとに確認できます。</p>
+        <p className="muted">{sortLabel}で表示中です。魚種、釣り方、日付、メモをカードごとに確認できます。</p>
       </div>
 
         <div className="filterControls reportFilters" aria-label="釣果フィルタ">
@@ -383,7 +380,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           {reportView === "reports" ? (
             <>
               <div className="filterHeader keywordFilterHeader">
-                <span>手入力釣果期間フィルタ</span>
+                <span>自分の釣果期間フィルタ</span>
                 <span className="filterHint">開始日と終了日で絞り込み</span>
               </div>
               <div className="advancedFilterGrid">
@@ -431,18 +428,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
 
       {reportView === "reports" ? (
         <>
-          <ExternalCatchMemoSection memos={manualCatchMemos} onMemoSave={persistMemo} onMemoDelete={deleteMemo} onLocalMemoMigrate={migrateLocalMemosToSupabase} localMemoIds={localMemoIds} storageError={storageError} storageStatus={memoStorageStatus} sources={externalSources} spots={fishingSpots} />
-          <div className="cards" id="reports">
-            {filteredManualCatchMemos.length === 0 ? (
-              <div className="emptyState" role="status">
-                <p className="eyebrow">No reports</p>
-                <h3>該当する手入力釣果がありません</h3>
-                <p>魚種・エリア・キーワード検索・釣果期間の条件を変更するか、「条件をリセット」で初期表示に戻してください。手入力釣果だけを一覧表示対象にしています。</p>
-              </div>
-            ) : <>
-            {filteredManualCatchMemos.map((memo) => <ExternalMemoCard key={memo.id} memo={memo} spots={fishingSpots} />)}
-          </>}
-          </div>
+          <ExternalCatchMemoSection memos={manualCatchMemos} displayMemos={filteredManualCatchMemos} onMemoSave={persistMemo} onMemoDelete={deleteMemo} onLocalMemoMigrate={migrateLocalMemosToSupabase} localMemoIds={localMemoIds} storageError={storageError} storageStatus={memoStorageStatus} spots={fishingSpots} />
         </>
       ) : (
         <div className="cards" id="reports">
@@ -451,9 +437,9 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           ) : areaEvaluations.map((evaluation) => (
             <article className="card" key={`${evaluation.placeName}-${evaluation.areaName}`}>
               <div className="cardHeader"><div><p className="eyebrow">{evaluation.areaName}</p><h3>{evaluation.placeName}</h3></div><div className="scoreBox" aria-label={`平均SCORE ${evaluation.averageScore}点`}><span>平均SCORE</span><strong className="score">{evaluation.averageScore}<span>点</span></strong></div></div>
-              <div className="cardSummary"><span>代表魚種: {evaluation.representativeSpecies.join(" / ")}</span><span>直近釣果日: {evaluation.latestReportDate}</span><span>釣果件数: {evaluation.reportCount}</span><span>手入力釣果件数: {evaluation.externalMemoCount}（参考 / SCORE反映候補）</span></div>
+              <div className="cardSummary"><span>代表魚種: {evaluation.representativeSpecies.join(" / ")}</span><span>直近釣果日: {evaluation.latestReportDate}</span><span>釣果件数: {evaluation.reportCount}</span><span>本人の釣果件数: {evaluation.externalMemoCount}（参考 / SCORE反映候補）</span></div>
               <dl className="facts"><div><dt>地点/エリア</dt><dd>{evaluation.placeName}</dd></div><div><dt>評価値</dt><dd>平均SCORE {evaluation.averageScore}点</dd></div><div><dt>代表魚種</dt><dd>{evaluation.representativeSpecies.join("、")}</dd></div><div><dt>直近釣果日</dt><dd>{evaluation.latestReportDate}</dd></div></dl>
-              <div className="reasonBlock"><p>簡易メモ</p><p className="muted">{evaluation.memo}</p><p className="muted">条件に合う外部メモは、平均SCOREに使う既存地点SCOREへ参考反映しています。</p></div>
+              <div className="reasonBlock"><p>簡易メモ</p><p className="muted">{evaluation.memo}</p><p className="muted">条件に合う本人の釣果は、平均SCOREに使う既存地点SCOREへ参考反映しています。</p></div>
             </article>
           ))}
         </div>
@@ -473,16 +459,5 @@ function MasterDataStatusChip({ status }: { status: MasterDataStatus }) {
       <span>{label}</span>
       {reason ? <small>{reason}</small> : null}
     </p>
-  );
-}
-
-function ExternalMemoCard({ memo, spots }: { memo: ExternalCatchMemo; spots: FishingSpot[] }) {
-  const linkedSpot = memo.spotId ? spots.find((spot) => spot.id === memo.spotId) : undefined;
-  return (
-    <article className="card externalMemoCard">
-      <div className="cardHeader"><div><p className="eyebrow">手入力釣果</p><h3>{memo.species} / {memo.areaName}</h3><p className="muted">手入力で登録した釣果です。</p></div></div>
-      <div className="cardSummary"><span>手入力釣果</span><span>釣果日: {memo.caughtDate}</span><span>推定地点: {memo.estimatedSpotName ?? "未入力"}</span><span>{linkedSpot ? `地図表示あり: ${linkedSpot.name}` : "未紐づけ / 地図未表示"}</span></div>
-      <dl className="facts"><div><dt>魚種</dt><dd>{memo.species}</dd></div><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>情報元名</dt><dd>{memo.sourceName}</dd></div><div><dt>信頼度</dt><dd>{memo.confidence}</dd></div><div><dt>釣り場マスター</dt><dd>{linkedSpot ? `${linkedSpot.name}に紐づけ` : "未紐づけ / 地図未表示"}</dd></div><div className="sourceFact"><dt>出典URL</dt><dd><a href={memo.sourceUrl} target="_blank" rel="noreferrer">別タブで開く</a></dd></div></dl>
-    </article>
   );
 }
