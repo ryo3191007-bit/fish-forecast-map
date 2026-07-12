@@ -41,9 +41,9 @@ function supportPathsForEvidence(currentPath) {
   const attribute = normalized.match(/^attributes\.(\w+)$/);
   if (attribute) return [`attributes.${attribute[1]}.value`];
   const facility = normalized.match(/^facilities\.(\w+)$/);
-  if (facility) return [`facilities.${facility[1]}.value`, `facilities.${facility[1]}.validFrom`, `facilities.${facility[1]}.validUntil`, `facilities.${facility[1]}.officiallyConfirmed`];
+  if (facility) return [`facilities.${facility[1]}.value`];
   const restriction = normalized.match(/^restrictions\.(\w+)$/);
-  if (restriction) return [`restrictions.${restriction[1]}.value`, `restrictions.${restriction[1]}.validFrom`, `restrictions.${restriction[1]}.validUntil`, `restrictions.${restriction[1]}.officiallyConfirmed`];
+  if (restriction) return [`restrictions.${restriction[1]}.value`];
   if (normalized === "restrictions.officialContact") return ["restrictions.officialContact.name", "restrictions.officialContact.url", "restrictions.officialContact.validFrom", "restrictions.officialContact.validUntil", "restrictions.officialContact.officiallyConfirmed"];
   return [];
 }
@@ -88,7 +88,15 @@ function validateCustom(record) {
       if (["confirmed", "inferred"].includes(value.status) && (value.evidenceSources.supportingSourceIds ?? []).length === 0) errors.push(`${currentPath}.evidenceSources.supportingSourceIds: required for ${value.status}`);
       if (value.status === "unknown" && (value.evidenceSources.supportingSourceIds ?? []).length !== 0) errors.push(`${currentPath}.evidenceSources.supportingSourceIds: must be empty for unknown`);
       const expectedSupports = supportPathsForEvidence(currentPath);
-      if (record.schemaVersion === "1.1.0") for (const id of value.evidenceSources.supportingSourceIds ?? []) if (sources.has(id) && expectedSupports.length > 0 && !hasAnySupport(sources.get(id), expectedSupports)) errors.push(`${currentPath}.evidenceSources.supportingSourceIds: ${id} must support one of ${expectedSupports.join(", ")}`);
+      if (record.schemaVersion === "1.1.0" && expectedSupports.length > 0) {
+        const supportingSources = (value.evidenceSources.supportingSourceIds ?? []).map((id) => sources.get(id)).filter(Boolean);
+        if (currentPath === "$.identity.coordinates") {
+          const covered = new Set(supportingSources.flatMap((source) => source.supports ?? []).filter((support) => expectedSupports.includes(support)));
+          for (const requiredPath of expectedSupports) if (!covered.has(requiredPath)) errors.push(`${currentPath}.evidenceSources.supportingSourceIds: supporting sources must collectively support ${requiredPath}`);
+        } else {
+          for (const id of value.evidenceSources.supportingSourceIds ?? []) if (sources.has(id) && !hasAnySupport(sources.get(id), expectedSupports)) errors.push(`${currentPath}.evidenceSources.supportingSourceIds: ${id} must support one of ${expectedSupports.join(", ")}`);
+        }
+      }
     }
     if (record.schemaVersion === "1.1.0" && value.basis === "observed" && value.observedAt === null && (!value.observedPeriod || (value.observedPeriod.from === null && value.observedPeriod.to === null))) errors.push(`${currentPath}: observed fish species requires observedAt or observedPeriod.from/to`);
     if (value.observedPeriod) compareNullableDates(value.observedPeriod.from, value.observedPeriod.to, `${currentPath}.observedPeriod`, errors);
@@ -145,6 +153,14 @@ const invalidEnum = structuredClone(example); invalidEnum.attributes.tidalFlow.v
   assert.ok(validateCustom(mismatchedSupport).some((error) => error.includes("must support one of attributes.seabed.value")), "supporting sources must support the target evidence path");
   const checkedOnlyNoSupport = structuredClone(example); checkedOnlyNoSupport.attributes.seabed.evidenceSources.checkedSourceIds = ["src-port-manager"];
   assert.deepEqual(validateRecord(checkedOnlyNoSupport), [], "checked-only sources do not need direct support for the target path");
+  const facilityOnlyValidFrom = structuredClone(example); facilityOnlyValidFrom.sources[0].supports = facilityOnlyValidFrom.sources[0].supports.filter((support) => support !== "facilities.toilet.value"); facilityOnlyValidFrom.sources[0].supports.push("facilities.toilet.validFrom");
+  assert.ok(validateCustom(facilityOnlyValidFrom).some((error) => error.includes("must support one of facilities.toilet.value")), "facility supporting evidence must directly support the value path");
+  const restrictionOnlyValidFrom = structuredClone(example); restrictionOnlyValidFrom.sources[0].supports = restrictionOnlyValidFrom.sources[0].supports.filter((support) => support !== "restrictions.entryProhibited.value"); restrictionOnlyValidFrom.sources[0].supports.push("restrictions.entryProhibited.validFrom");
+  assert.ok(validateCustom(restrictionOnlyValidFrom).some((error) => error.includes("must support one of restrictions.entryProhibited.value")), "restriction supporting evidence must directly support the value path");
+  const latitudeOnlyCoordinates = structuredClone(example); latitudeOnlyCoordinates.sources[1].supports = latitudeOnlyCoordinates.sources[1].supports.filter((support) => support !== "identity.coordinates.longitude");
+  assert.ok(validateCustom(latitudeOnlyCoordinates).some((error) => error.includes("supporting sources must collectively support identity.coordinates.longitude")), "coordinate evidence must cover both latitude and longitude");
+  const splitCoordinateSources = structuredClone(example); splitCoordinateSources.identity.coordinates.evidenceSources.supportingSourceIds = ["src-port-manager", "src-public-map"]; splitCoordinateSources.sources[0].supports.push("identity.coordinates.latitude"); splitCoordinateSources.sources[1].supports = splitCoordinateSources.sources[1].supports.filter((support) => support !== "identity.coordinates.latitude");
+  assert.deepEqual(validateRecord(splitCoordinateSources), [], "coordinate latitude and longitude may be supported by separate sources");
   const selfSource = structuredClone(example); selfSource.sources[0].originalSourceId = selfSource.sources[0].id;
   assert.ok(validateCustom(selfSource).some((error) => error.includes("self reference")), "source originalSourceId must reject self references");
   const missingRelated = structuredClone(example); missingRelated.sources[0].independenceStatus = "related"; missingRelated.sources[0].sourceGroup = null;
