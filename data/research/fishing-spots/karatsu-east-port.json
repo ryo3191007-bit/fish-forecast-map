@@ -1,0 +1,364 @@
+{
+  "schemaVersion": "1.0.0",
+  "spotId": "karatsu-east-port",
+  "identity": {
+    "spotName": "唐津東港",
+    "aliases": [
+      "唐津港東港地区",
+      "東港地区"
+    ],
+    "prefecture": "佐賀県",
+    "municipality": "唐津市",
+    "coordinates": {
+      "latitude": 33.459,
+      "longitude": 129.993,
+      "status": "inferred",
+      "confidence": "high",
+      "sourceIds": [
+        "src-saga-karatsu-decarbonization-plan",
+        "src-gsi-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "東港地区を比較するための代表点。一般利用可能な釣り位置や岸壁上の正確な立ち位置を示す座標ではない。"
+    }
+  },
+  "attributes": {
+    "spotType": {
+      "value": [
+        "port",
+        "breakwater",
+        "revetment"
+      ],
+      "status": "confirmed",
+      "confidence": "high",
+      "sourceIds": [
+        "src-saga-port-facilities",
+        "src-saga-karatsu-decarbonization-plan"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "佐賀県の港湾施設資料で東港地区の岸壁、防波堤、護岸を確認。地区全体の構成であり、各施設への一般立入可否は別途確認が必要。"
+    },
+    "seabed": {
+      "value": [
+        "sand",
+        "mud"
+      ],
+      "status": "inferred",
+      "confidence": "low",
+      "sourceIds": [
+        "src-uosoku-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "民間釣り情報1件が砂地・砂泥地中心とする。公的な底質資料では未確認のため低確度の推定。"
+    },
+    "waterDepth": {
+      "value": "moderate",
+      "status": "inferred",
+      "confidence": "low",
+      "sourceIds": [
+        "src-saga-port-facilities",
+        "src-saga-karatsu-decarbonization-plan",
+        "src-uosoku-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "公式施設値はおおむね0mから-9mまで幅があり、民間情報は港内の足元から比較的水深があるとする。一般に釣り可能な位置との対応は未確認のため、5m超〜15mのmoderateを暫定推定とする。"
+    },
+    "riverInfluence": {
+      "value": "weak",
+      "status": "inferred",
+      "confidence": "low",
+      "sourceIds": [
+        "src-saga-port-plan",
+        "src-gsi-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "公的地図上、主要河川の直接流入部ではないが唐津湾内で河口水の影響を受けうる位置関係から弱いと暫定推定。塩分・流況の観測値による確認ではない。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "民間情報に潮の動く時間帯への言及はあるが、地点の潮通しを弱・普通・強へ分類できる流況根拠は確認できなかった。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "夜間釣行への言及はあるが、港湾照明、航路標識灯、街路灯と釣り場を照らす常夜灯を区別できないため判定しない。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "防波堤・護岸の存在とコンクリート波止での釣行例は確認できるが、釣り位置周辺の消波ブロック、岩、海藻等を地点全体として分類できない。"
+    },
+    "openSeaExposure": {
+      "value": "bay",
+      "status": "inferred",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-saga-karatsu-decarbonization-plan",
+        "src-saga-port-plan",
+        "src-gsi-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "唐津港の東港地区として唐津湾側の港湾区域内に位置することから湾内と推定。風波や安全性の評価ではない。"
+    },
+    "fishingRange": {
+      "value": [
+        "foot",
+        "near"
+      ],
+      "status": "inferred",
+      "confidence": "low",
+      "sourceIds": [
+        "src-uosoku-karatsu-east-port",
+        "src-kyusyu-ins-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "民間情報の足元・ちょい投げへの言及と、コンクリート波止からの実釣記録から暫定推定。一般立入可能範囲や遠投可能範囲を保証しない。"
+    }
+  },
+  "fishSpecies": [
+    {
+      "name": "アジ",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-uosoku-karatsu-east-port",
+        "src-kyusyu-ins-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "独立した民間情報2件で地点の出現・釣果対象として一致。時期・個体数は保証しない。"
+    },
+    {
+      "name": "コノシロ",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-uosoku-karatsu-east-port",
+        "src-kyusyu-ins-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "独立した民間情報2件で地点の出現・釣果対象として一致。時期・個体数は保証しない。"
+    },
+    {
+      "name": "スズキ",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-uosoku-karatsu-east-port",
+        "src-kyusyu-ins-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "独立した民間情報2件で地点の出現・釣果対象として一致。時期・個体数は保証しない。"
+    },
+    {
+      "name": "クロダイ",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-uosoku-karatsu-east-port",
+        "src-kyusyu-ins-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "独立した民間情報2件がチヌとして言及し、個人釣行記には過去の実釣経験がある。現在の魚影や季節性は別途評価する。"
+    },
+    {
+      "name": "キビレ",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "low",
+      "sourceIds": [
+        "src-uosoku-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "民間集約ページに2024-01-12の地点指定釣果記録が1件あるため低確度で登録。元投稿の継続確認はできていない。"
+    },
+    {
+      "name": "シログチ",
+      "basis": "observed",
+      "status": "confirmed",
+      "confidence": "low",
+      "sourceIds": [
+        "src-uosoku-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "民間集約ページに2024-01-12の地点指定釣果記録が1件あるため低確度で登録。イシモチ表記を標準名シログチとして整理した。"
+    }
+  ],
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "公式港湾施設資料に壱岐フェリー駐車場は記載されるが、釣り目的の利用可否を確認できない。民間釣り情報でも駐車場は不明とされる。"
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "一般利用可能なトイレの公式案内を確認できず、民間釣り情報でも不明とされる。"
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "partial",
+      "status": "confirmed",
+      "confidence": "low",
+      "sourceIds": [
+        "src-uosoku-karatsu-east-port"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "民間釣り情報が『釣り禁止の部分あり』と明記する。ただし禁止範囲・根拠・現行性を公式確認できていないため、現地表示と管理者情報を必ず優先する。"
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "釣り禁止の一部情報はあるが、立入禁止と同義ではない。フェリー・物流ターミナル等を含む地区の一般立入可能範囲は未確認。"
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "工事・閉鎖情報が見つからないことを『なし』とは扱わない。利用前に最新の管理者情報と現地表示を確認する。"
+    },
+    "officialContact": {
+      "name": "佐賀県（唐津港港湾管理者）",
+      "url": "https://www.pref.saga.lg.jp/list00674.html",
+      "checkedAt": "2026-07-12",
+      "note": "具体的な立入・釣り可否は、最新の県案内、現地管理者および現地表示で確認する。"
+    }
+  },
+  "sources": [
+    {
+      "id": "src-saga-port-facilities",
+      "url": "https://www.pref.saga.lg.jp/kiji00329386/3_29386_321357_up_ibeqpe4w.pdf",
+      "title": "県が管理する港湾施設の概要",
+      "publisher": "佐賀県",
+      "sourceType": "port_manager",
+      "checkedAt": "2026-07-12",
+      "publishedAt": "2024-06-05",
+      "supports": [
+        "attributes.spotType",
+        "attributes.waterDepth",
+        "facilities.parking"
+      ],
+      "note": "東港地区の岸壁、防波堤、護岸、泊地・航路の公示値、壱岐フェリー駐車場の存在を確認。駐車場の釣り目的利用可否は裏付けない。"
+    },
+    {
+      "id": "src-saga-karatsu-decarbonization-plan",
+      "url": "https://www.pref.saga.lg.jp/kiji003110833/index.html",
+      "title": "唐津港・伊万里港港湾脱炭素化推進計画",
+      "publisher": "佐賀県",
+      "sourceType": "port_manager",
+      "checkedAt": "2026-07-12",
+      "publishedAt": "2026-03-18",
+      "supports": [
+        "identity.coordinates",
+        "attributes.spotType",
+        "attributes.waterDepth",
+        "attributes.openSeaExposure"
+      ],
+      "note": "リンク先の唐津港計画本文で東港地区、東港フェリー岸壁、東港岸壁、施設水深、港湾管理者等を確認。"
+    },
+    {
+      "id": "src-saga-port-plan",
+      "url": "https://www.pref.saga.lg.jp/kiji00313547/index.html",
+      "title": "港湾計画図（唐津港、伊万里港）",
+      "publisher": "佐賀県",
+      "sourceType": "port_manager",
+      "checkedAt": "2026-07-12",
+      "publishedAt": "2024-03-14",
+      "supports": [
+        "identity.coordinates",
+        "attributes.riverInfluence",
+        "attributes.openSeaExposure"
+      ],
+      "note": "唐津港港湾計画図の公式公開ページ。地区位置関係の独立確認に使用。"
+    },
+    {
+      "id": "src-gsi-karatsu-east-port",
+      "url": "https://maps.gsi.go.jp/#16/33.459000/129.993000/&base=std&ls=std&disp=1",
+      "title": "地理院地図 唐津東港代表点周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-12",
+      "publishedAt": null,
+      "supports": [
+        "identity.coordinates",
+        "attributes.riverInfluence",
+        "attributes.openSeaExposure"
+      ],
+      "note": "東港地区の代表点、唐津湾内の位置、主要河川河口との位置関係を確認するために使用。"
+    },
+    {
+      "id": "src-saga-port-information",
+      "url": "https://www.pref.saga.lg.jp/list00674.html",
+      "title": "港湾",
+      "publisher": "佐賀県",
+      "sourceType": "government",
+      "checkedAt": "2026-07-12",
+      "publishedAt": null,
+      "supports": [
+        "restrictions.officialContact"
+      ],
+      "note": "佐賀県の港湾情報入口。最新の管理情報を確認する公式窓口として記録。"
+    },
+    {
+      "id": "src-uosoku-karatsu-east-port",
+      "url": "https://uosoku.com/home/kyuu/saga/kara/",
+      "title": "唐津東港の釣り場情報",
+      "publisher": "魚速報",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-12",
+      "publishedAt": "2015-08-19",
+      "supports": [
+        "attributes.seabed",
+        "attributes.waterDepth",
+        "attributes.fishingRange",
+        "fishSpecies.observed",
+        "restrictions.fishingProhibited"
+      ],
+      "note": "民間の編集参加型釣り情報（ページ更新表示は2025-12-23）。底質・水深・釣り範囲は低確度の推定材料、魚種は独立照合できたものまたは日付付き釣果だけに限定し、一覧を丸ごと転記しない。"
+    },
+    {
+      "id": "src-kyusyu-ins-karatsu-east-port",
+      "url": "https://kyusyu-ins.com/2021/01/15/2021-01-15karatu/",
+      "title": "唐津東港・・・いったいここは・・・。",
+      "publisher": "釣好大全九州",
+      "sourceType": "personal_blog",
+      "checkedAt": "2026-07-12",
+      "publishedAt": "2021-01-15",
+      "supports": [
+        "attributes.fishingRange",
+        "fishSpecies.observed"
+      ],
+      "note": "個人の釣行記録。波止からの実釣と魚種言及を、別の民間情報と一致する範囲だけ低〜中確度で使用。本文・写真・コメント・プロフィールは保存しない。"
+    }
+  ],
+  "researchNotes": "唐津東港という広い港湾地区のパイロット調査。一次調査では公式・公的情報を優先し、二次調査では民間釣り情報と個人釣行記録を補助的に参照した。海底、水深、河川影響、釣れる範囲、魚種、一部釣り禁止情報を低〜中確度で追加した一方、潮通し、常夜灯、障害物、釣り目的の駐車場・トイレ、立入禁止、工事・閉鎖は断定できずunknownを維持する。このJSONを安全判断や規制確認の代替にしない。",
+  "researchedAt": "2026-07-12T22:56:42+09:00",
+  "reviewStatus": "draft"
+}
