@@ -17,9 +17,13 @@
     "check:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.mjs",
     "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs",
     "test:environment": "node scripts/environment.test.mjs",
-    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:migration-safety && npm run test:bootstrap-schema-diff",
+    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:migration-safety && npm run test:bootstrap-schema-diff && npm run test:bathymetry-ui",
     "test:manual-catch-memos": "node scripts/manual-catch-memos.test.mjs",
-    "test:ui-requirements": "node scripts/ui-requirements.test.mjs"
+    "test:ui-requirements": "node scripts/ui-requirements.test.mjs",
+    "test:bathymetry-ui": "node scripts/bathymetry-ui.test.mjs",
+    "predev": "node scripts/generate-bathymetry-assets.mjs",
+    "pretest": "node scripts/generate-bathymetry-assets.mjs",
+    "prebuild": "node scripts/generate-bathymetry-assets.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
@@ -34,7 +38,8 @@
     "@types/react-dom": "^19.0.4",
     "eslint": "^9.23.0",
     "eslint-config-next": "^15.3.5",
-    "typescript": "^5.8.2",
-    "supabase": "2.31.8"
+    "pngjs": "^7.0.0",
+    "supabase": "2.31.8",
+    "typescript": "^5.8.2"
   }
 }

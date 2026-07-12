@@ -33,3 +33,8 @@ Thumbs.db
 
 # TypeScript
 *.tsbuildinfo
+# 復元生成される水深タイルPNG
+public/bathymetry/**/*.png
+
+# build前にテキストDEMから生成する水深アセット
+public/bathymetry/etopo-2022/
