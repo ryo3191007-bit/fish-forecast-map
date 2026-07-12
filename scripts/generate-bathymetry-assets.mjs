@@ -42,9 +42,16 @@ const expectedTiles = () => {
   return tiles;
 };
 
+const cellSize = typeof dem.cellSizeDegrees === "number"
+  ? { longitude: dem.cellSizeDegrees, latitude: dem.cellSizeDegrees }
+  : dem.cellSizeDegrees;
+if (!cellSize?.longitude || !cellSize?.latitude) {
+  throw new Error("DEM must include positive cell size metadata");
+}
+
 function sample(lon, lat) {
-  const gx = ((lon - b.west) / (b.east - b.west)) * (dem.width - 1);
-  const gy = ((b.north - lat) / (b.north - b.south)) * (dem.height - 1);
+  const gx = (lon - b.west) / cellSize.longitude - 0.5;
+  const gy = (b.north - lat) / cellSize.latitude - 0.5;
   const x = Math.max(0, Math.min(dem.width - 1, gx));
   const y = Math.max(0, Math.min(dem.height - 1, gy));
   const x0 = Math.floor(x), y0 = Math.floor(y), x1 = Math.min(dem.width - 1, x0 + 1), y1 = Math.min(dem.height - 1, y0 + 1);
@@ -72,7 +79,7 @@ function writeTile(kind, z, x, y, checksums) {
   for (let py = 0; py < TILE_SIZE; py++) for (let px = 0; px < TILE_SIZE; px++) {
     const lon = tb.west + ((px + 0.5) / TILE_SIZE) * (tb.east - tb.west);
     const lat = tb.north - ((py + 0.5) / TILE_SIZE) * (tb.north - tb.south);
-    const sampled = sample(lon, lat) + Math.sin(lon * 37 + lat * 19) * 12;
+    const sampled = sample(lon, lat);
     const rgba = kind === "terrain" ? terrainRgb(sampled) : color(sampled);
     const i = (py * TILE_SIZE + px) * 4;
     png.data[i] = rgba[0]; png.data[i + 1] = rgba[1]; png.data[i + 2] = rgba[2]; png.data[i + 3] = rgba[3];
@@ -84,7 +91,7 @@ function writeTile(kind, z, x, y, checksums) {
   checksums[file] = crypto.createHash("sha256").update(buf).digest("hex");
 }
 function point(col, row) {
-  return [b.west + (col / (dem.width - 1)) * (b.east - b.west), b.north - (row / (dem.height - 1)) * (b.north - b.south)];
+  return [b.west + (col + 0.5) * cellSize.longitude, b.north - (row + 0.5) * cellSize.latitude];
 }
 function edgePoint(a, av, c, cv, level) {
   const t = av === cv ? 0.5 : (level - av) / (cv - av);
