@@ -1,0 +1,92 @@
+@media (max-width: 620px) {
+  .mapShell .bathymetryPanel,
+  .mapShell .bathymetryAttribution,
+  .mapShell .mapNotice {
+    position: static;
+    inset: auto;
+    width: 100%;
+    max-width: none;
+    margin-top: 8px;
+  }
+
+  .mapShell .bathymetryPanel {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    padding: 8px;
+    border-radius: 14px;
+  }
+
+  .mapShell .terrainToggle {
+    min-height: 32px;
+    justify-content: center;
+    border: 1px solid rgba(125, 211, 252, 0.36);
+    border-radius: 999px;
+    padding: 6px 8px;
+    background: rgba(8, 47, 73, 0.76);
+    font-size: 0.72rem;
+  }
+
+  .mapShell .terrainToggleButton {
+    width: 100%;
+    min-width: 0;
+    padding: 6px 4px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+
+  .mapShell .terrainStatus {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 0.68rem;
+  }
+
+  .mapShell .tidSummary {
+    grid-column: 1 / -1;
+  }
+
+  .mapShell .bathymetryLegend {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 2px 2px;
+    scrollbar-width: thin;
+  }
+
+  .mapShell .bathymetryLegend span {
+    flex: 0 0 auto;
+    font-size: 0.68rem;
+  }
+
+  .mapShell .bathymetryLegend i {
+    width: 14px;
+    height: 9px;
+  }
+
+  .mapShell .bathymetryAttribution {
+    gap: 4px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 0.66rem;
+    line-height: 1.45;
+  }
+
+  .mapShell .mapNotice {
+    padding: 8px 10px;
+  }
+
+  .mapShell .mapEmpty {
+    top: 88px;
+    right: 18px;
+    bottom: auto;
+    left: 18px;
+    min-height: 190px;
+  }
+}
+
+@media (max-width: 420px) {
+  .mapShell .map {
+    height: 400px;
+  }
+}
