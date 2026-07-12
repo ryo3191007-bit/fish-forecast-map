@@ -15,6 +15,8 @@ assert.match(mapLayer, /"bathymetry"/);
 for (const label of ["通常地図", "航空写真", "水深・3D地形"]) assert.match(mapLayer, new RegExp(label));
 for (const token of ["bathymetry-color-relief", "bathymetry-hillshade", "bathymetry-contours", "setTerrain", "shouldEnableInitialTerrain"]) assert.match(map + bathy, new RegExp(token));
 for (const token of ["GEBCO_2026", "航海・安全判断には使用不可", "国土地理院", "高解像度水深を読み込めなかったため"]) assert.match(map + bathy, new RegExp(token));
+assert.match(bathy, /xyz\/blank\/\{z\}\/\{x\}\/\{y\}\.png/);
+assert.doesNotMatch(bathy, /xyz\/std\//);
 assert.match(metadata.license, /GEBCO/);
 assert.match(metadata.dataset, /GEBCO_2026/);
 assert.equal(metadata.tileSize, 256);
