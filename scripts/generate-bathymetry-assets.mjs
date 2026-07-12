@@ -204,10 +204,9 @@ function stitchSegments(segments) {
   return lines.filter((line) => line.length >= 2);
 }
 
-function generateContours() {
+function generateContourLines(levels) {
   const features = [];
-  for (const depth of DEPTHS) {
-    const level = -depth;
+  for (const { depth, level } of levels) {
     const segments = [];
     for (let row = 0; row < dem.height - 1; row++) {
       for (let column = 0; column < dem.width - 1; column++) {
@@ -271,7 +270,60 @@ function generateContours() {
       });
     }
   }
-  return { type: "FeatureCollection", features };
+  return features;
+}
+
+function generateContours() {
+  return {
+    type: "FeatureCollection",
+    features: generateContourLines(DEPTHS.map((depth) => ({ depth, level: -depth }))),
+  };
+}
+
+function cellCorner(demGrid, column, row) {
+  const { west, north } = demGrid.bounds;
+  return [
+    west + column * demGrid.cellSizeDegrees.longitude,
+    north - row * demGrid.cellSizeDegrees.latitude,
+  ];
+}
+
+function generateLandMaskFeatures() {
+  const features = [];
+  for (let row = 0; row < dem.height; row++) {
+    let startColumn = null;
+    for (let column = 0; column <= dem.width; column++) {
+      const isLand = column < dem.width && dem.values[row * dem.width + column] >= 0;
+      if (isLand && startColumn === null) startColumn = column;
+      if ((!isLand || column === dem.width) && startColumn !== null) {
+        const [west, north] = cellCorner(dem, startColumn, row);
+        const [east, south] = cellCorner(dem, column, row + 1);
+        features.push({
+          type: "Feature",
+          properties: { kind: "land-mask", source: `${dem.dataset} non-negative elevation cells` },
+          geometry: {
+            type: "Polygon",
+            coordinates: [[[west, north], [east, north], [east, south], [west, south], [west, north]]],
+          },
+        });
+        startColumn = null;
+      }
+    }
+  }
+  return features;
+}
+
+function generateCoastlineOverlay() {
+  return {
+    type: "FeatureCollection",
+    features: [
+      ...generateLandMaskFeatures(),
+      ...generateContourLines([{ depth: 0, level: 0 }]).map((feature) => ({
+        ...feature,
+        properties: { ...feature.properties, kind: "coastline" },
+      })),
+    ],
+  };
 }
 
 fs.rmSync(path.join(OUT, "terrain"), { recursive: true, force: true });
@@ -290,6 +342,14 @@ fs.writeFileSync(contoursPath, JSON.stringify(contours, null, 2));
 checksums[contoursPath] = crypto
   .createHash("sha256")
   .update(fs.readFileSync(contoursPath))
+  .digest("hex");
+
+const coastline = generateCoastlineOverlay();
+const coastlinePath = path.join(OUT, "coastline.geojson");
+fs.writeFileSync(coastlinePath, JSON.stringify(coastline, null, 2));
+checksums[coastlinePath] = crypto
+  .createHash("sha256")
+  .update(fs.readFileSync(coastlinePath))
   .digest("hex");
 
 const metadata = {
@@ -321,6 +381,11 @@ const metadata = {
   navigationWarning: "Reference only; not for navigation or safety decisions.",
   contourAlgorithm:
     "marching squares with segment stitching on pixel-centre registered cells",
+  coastlineOverlay: {
+    file: "coastline.geojson",
+    landMask: "horizontal runs of non-negative DEM cells",
+    shoreline: "0m marching-squares LineString features",
+  },
 };
 
 if (fs.existsSync(TID_PATH)) {

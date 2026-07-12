@@ -43,14 +43,15 @@ import {
   BATHYMETRY_SAFETY_NOTE,
   BATHYMETRY_SOURCE_ID,
   BATHYMETRY_TILE_URL,
-  GSI_STANDARD_ATTRIBUTION,
-  GSI_STANDARD_NOTE,
-  GSI_STANDARD_OVERLAY_LAYER_ID,
-  GSI_STANDARD_OVERLAY_OPACITY,
-  GSI_STANDARD_OVERLAY_SOURCE_ID,
-  GSI_STANDARD_TILE_URL,
+  BATHYMETRY_COASTLINE_ATTRIBUTION,
+  BATHYMETRY_COASTLINE_GEOJSON_URL,
+  BATHYMETRY_COASTLINE_LAYER_ID,
+  BATHYMETRY_COASTLINE_NOTE,
+  BATHYMETRY_COASTLINE_SOURCE_ID,
+  BATHYMETRY_LAND_MASK_LAYER_ID,
+  BATHYMETRY_LAND_MASK_OPACITY,
   lonLatToTidCell,
-  shouldEnableInitialGsiOverlay,
+  shouldEnableInitialCoastlineOverlay,
   shouldEnableInitialTerrain,
   summarizeTidAround,
   type TidSummary,
@@ -110,7 +111,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const [bathymetryRuntime, setBathymetryRuntime] = useState(
     initialBathymetryFallbackState,
   );
-  const [isGsiOverlayEnabled, setIsGsiOverlayEnabled] = useState(false);
+  const [isCoastlineOverlayEnabled, setIsCoastlineOverlayEnabled] = useState(false);
   const [tidExpanded, setTidExpanded] = useState(false);
   const [tidGrid, setTidGrid] = useState<TidGrid | null>(null);
   const [tidSummary, setTidSummary] = useState<TidSummary | null>(null);
@@ -288,7 +289,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     });
     setIsTerrainEnabled(enabled);
     setTerrainStatus(enabled ? "3d" : supportsWebGl ? "2d" : "unsupported");
-    setIsGsiOverlayEnabled(shouldEnableInitialGsiOverlay(window.innerWidth));
+    setIsCoastlineOverlayEnabled(shouldEnableInitialCoastlineOverlay(window.innerWidth));
   }, []);
 
   useEffect(() => {
@@ -348,7 +349,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         mode: mapLayerMode,
         display: bathymetryRuntime.display,
         terrainEnabled: isTerrainEnabled,
-        gsiOverlayEnabled: isGsiOverlayEnabled,
+        coastlineOverlayEnabled: isCoastlineOverlayEnabled,
         setTerrainStatus,
         onSourceError: (source, key) =>
           setBathymetryRuntime((current) =>
@@ -368,7 +369,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     };
   }, [
     bathymetryRuntime.display,
-    isGsiOverlayEnabled,
+    isCoastlineOverlayEnabled,
     isTerrainEnabled,
     mapLayerMode,
   ]);
@@ -436,9 +437,9 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             <button
               className="terrainToggleButton"
               type="button"
-              aria-pressed={isGsiOverlayEnabled}
-              title="国土地理院標準地図overlayを切り替え"
-              onClick={() => setIsGsiOverlayEnabled((value) => !value)}
+              aria-pressed={isCoastlineOverlayEnabled}
+              title="海岸線ラインと半透明の緑の陸地マスクを切り替え"
+              onClick={() => setIsCoastlineOverlayEnabled((value) => !value)}
             >
               海岸線表示
             </button>
@@ -496,12 +497,12 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                 : BATHYMETRY_LICENSE_NOTE}
             </span>
             <span>{BATHYMETRY_SAFETY_NOTE}</span>
-            {isGsiOverlayEnabled ? (
+            {isCoastlineOverlayEnabled ? (
               <span>
                 <span
-                  dangerouslySetInnerHTML={{ __html: GSI_STANDARD_ATTRIBUTION }}
+                  dangerouslySetInnerHTML={{ __html: BATHYMETRY_COASTLINE_ATTRIBUTION }}
                 />
-                {` / ${GSI_STANDARD_NOTE}`}
+                {` / ${BATHYMETRY_COASTLINE_NOTE}`}
               </span>
             ) : null}
           </div>
@@ -590,7 +591,7 @@ type ApplyBathymetryModeInput = {
   mode: MapLayerMode;
   display: BathymetryDisplaySource;
   terrainEnabled: boolean;
-  gsiOverlayEnabled: boolean;
+  coastlineOverlayEnabled: boolean;
   setTerrainStatus: (status: TerrainStatus) => void;
   onSourceError: (source: BathymetryFailureSource, key: string) => void;
 };
@@ -600,7 +601,7 @@ function applyBathymetryMode({
   mode,
   display,
   terrainEnabled,
-  gsiOverlayEnabled,
+  coastlineOverlayEnabled,
   setTerrainStatus,
   onSourceError,
 }: ApplyBathymetryModeInput) {
@@ -612,7 +613,7 @@ function applyBathymetryMode({
 
   if (display === "gebco") addPrimaryBathymetryLayers(map);
   else addFallbackBathymetryLayers(map);
-  if (gsiOverlayEnabled) ensureGsiOverlay(map);
+  if (coastlineOverlayEnabled) ensureCoastlineOverlay(map);
 
   for (const layerId of PRIMARY_LAYER_IDS) {
     setLayerVisibility(map, layerId, display === "gebco");
@@ -622,8 +623,13 @@ function applyBathymetryMode({
   }
   setLayerVisibility(
     map,
-    GSI_STANDARD_OVERLAY_LAYER_ID,
-    gsiOverlayEnabled,
+    BATHYMETRY_LAND_MASK_LAYER_ID,
+    coastlineOverlayEnabled,
+  );
+  setLayerVisibility(
+    map,
+    BATHYMETRY_COASTLINE_LAYER_ID,
+    coastlineOverlayEnabled,
   );
 
   try {
@@ -825,27 +831,46 @@ function addBathymetryLayersForSources(
   }
 }
 
-function ensureGsiOverlay(map: maplibregl.Map) {
-  if (!map.getSource(GSI_STANDARD_OVERLAY_SOURCE_ID)) {
-    map.addSource(GSI_STANDARD_OVERLAY_SOURCE_ID, {
-      type: "raster",
-      tiles: [GSI_STANDARD_TILE_URL],
-      tileSize: 256,
-      minzoom: 5,
-      maxzoom: 18,
-      attribution: GSI_STANDARD_ATTRIBUTION,
+function ensureCoastlineOverlay(map: maplibregl.Map) {
+  if (!map.getSource(BATHYMETRY_COASTLINE_SOURCE_ID)) {
+    map.addSource(BATHYMETRY_COASTLINE_SOURCE_ID, {
+      type: "geojson",
+      data: BATHYMETRY_COASTLINE_GEOJSON_URL,
+      attribution: BATHYMETRY_COASTLINE_ATTRIBUTION,
     });
   }
-  if (!map.getLayer(GSI_STANDARD_OVERLAY_LAYER_ID)) {
+  const beforeId = firstSymbolLayerId(map);
+  if (!map.getLayer(BATHYMETRY_LAND_MASK_LAYER_ID)) {
     map.addLayer(
       {
-        id: GSI_STANDARD_OVERLAY_LAYER_ID,
-        type: "raster",
-        source: GSI_STANDARD_OVERLAY_SOURCE_ID,
+        id: BATHYMETRY_LAND_MASK_LAYER_ID,
+        type: "fill",
+        source: BATHYMETRY_COASTLINE_SOURCE_ID,
+        filter: ["==", ["geometry-type"], "Polygon"],
         layout: { visibility: "none" },
-        paint: { "raster-opacity": GSI_STANDARD_OVERLAY_OPACITY },
+        paint: {
+          "fill-color": "#22c55e",
+          "fill-opacity": BATHYMETRY_LAND_MASK_OPACITY,
+        },
       },
-      firstSymbolLayerId(map),
+      beforeId,
+    );
+  }
+  if (!map.getLayer(BATHYMETRY_COASTLINE_LAYER_ID)) {
+    map.addLayer(
+      {
+        id: BATHYMETRY_COASTLINE_LAYER_ID,
+        type: "line",
+        source: BATHYMETRY_COASTLINE_SOURCE_ID,
+        filter: ["==", ["geometry-type"], "LineString"],
+        layout: { visibility: "none", "line-join": "round", "line-cap": "round" },
+        paint: {
+          "line-color": "#064e3b",
+          "line-opacity": 0.92,
+          "line-width": ["interpolate", ["linear"], ["zoom"], 7, 1.2, 10, 2.2, 13, 3],
+        },
+      },
+      beforeId,
     );
   }
 }
@@ -863,7 +888,8 @@ function setLayerVisibility(
 function removeBathymetryRuntimeLayers(map: maplibregl.Map) {
   map.setTerrain(null);
   const layers = [
-    GSI_STANDARD_OVERLAY_LAYER_ID,
+    BATHYMETRY_COASTLINE_LAYER_ID,
+    BATHYMETRY_LAND_MASK_LAYER_ID,
     ...PRIMARY_LAYER_IDS.slice().reverse(),
     ...FALLBACK_LAYER_IDS.slice().reverse(),
   ];
@@ -871,7 +897,7 @@ function removeBathymetryRuntimeLayers(map: maplibregl.Map) {
     if (map.getLayer(layerId)) map.removeLayer(layerId);
   }
   const sources = [
-    GSI_STANDARD_OVERLAY_SOURCE_ID,
+    BATHYMETRY_COASTLINE_SOURCE_ID,
     BATHYMETRY_CONTOUR_SOURCE_ID,
     BATHYMETRY_COLOR_SOURCE_ID,
     BATHYMETRY_SOURCE_ID,

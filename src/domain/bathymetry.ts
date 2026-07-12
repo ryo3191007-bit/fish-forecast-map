@@ -15,8 +15,9 @@ export const BATHYMETRY_FALLBACK_COLOR_LAYER_ID = "bathymetry-fallback-color-rel
 export const BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID = "bathymetry-fallback-hillshade";
 export const BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID = "bathymetry-fallback-contours";
 export const BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID = "bathymetry-fallback-contour-labels";
-export const GSI_STANDARD_OVERLAY_SOURCE_ID = "gsi-standard-bathymetry-overlay";
-export const GSI_STANDARD_OVERLAY_LAYER_ID = "gsi-standard-bathymetry-overlay";
+export const BATHYMETRY_COASTLINE_SOURCE_ID = "bathymetry-coastline";
+export const BATHYMETRY_LAND_MASK_LAYER_ID = "bathymetry-land-mask";
+export const BATHYMETRY_COASTLINE_LAYER_ID = "bathymetry-coastline";
 
 export const BATHYMETRY_TILE_BASE_PATH = "/bathymetry/gebco-2026";
 export const BATHYMETRY_FALLBACK_TILE_BASE_PATH = "/bathymetry/etopo-2022";
@@ -28,8 +29,8 @@ export const BATHYMETRY_FALLBACK_TILE_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PAT
 export const BATHYMETRY_FALLBACK_COLOR_TILE_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/color/{z}/{x}/{y}.png`;
 export const BATHYMETRY_FALLBACK_CONTOUR_GEOJSON_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/contours.geojson`;
 export const BATHYMETRY_FALLBACK_METADATA_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/metadata.json`;
-export const GSI_STANDARD_TILE_URL = "https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png";
-export const GSI_STANDARD_OVERLAY_OPACITY = 0.4;
+export const BATHYMETRY_COASTLINE_GEOJSON_URL = `${BATHYMETRY_TILE_BASE_PATH}/coastline.geojson`;
+export const BATHYMETRY_LAND_MASK_OPACITY = 0.24;
 
 export const BATHYMETRY_BOUNDS = [128.5, 32.5, 130.8, 34.0] as const;
 export const BATHYMETRY_SOURCE_RESOLUTION = "15 arc-second";
@@ -49,10 +50,10 @@ export const BATHYMETRY_SAFETY_NOTE =
   "参考水深。航海・安全判断には使用不可。15秒メッシュでも港内・岩礁・根・瀬の正確な位置を保証しません";
 export const BATHYMETRY_CITATION =
   "Contains information from the GEBCO_2026 Grid, GEBCO Compilation Group (2026).";
-export const GSI_STANDARD_ATTRIBUTION =
-  '海岸線overlay: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院 白地図</a>。';
-export const GSI_STANDARD_NOTE =
-  "陸地のオレンジ塗りを含まない白地図をopacity 0.40でリアルタイム表示し、タイル自体は保存しません。";
+export const BATHYMETRY_COASTLINE_ATTRIBUTION =
+  "海岸線表示: GEBCO_2026 15秒DEMの0m境界から生成した海岸線ライン・陸地マスク。";
+export const BATHYMETRY_COASTLINE_NOTE =
+  "水深タイルとは独立した半透明の緑の陸地マスクと海岸線ラインで、外部地図タイルやベージュ/オレンジ系塗りは使いません。";
 
 export const BATHYMETRY_DEPTH_STOPS = [
   { depthMeters: 0, label: "0m", color: "#bff4ff" },
@@ -189,7 +190,7 @@ export function shouldEnableInitialTerrain(input: DeviceCapabilityInput) {
     (input.deviceMemory ?? 4) >= 4
   );
 }
-export function shouldEnableInitialGsiOverlay(width: number) {
+export function shouldEnableInitialCoastlineOverlay(width: number) {
   return width >= 640;
 }
 export function formatDepthLabel(elevationMeters: number) {

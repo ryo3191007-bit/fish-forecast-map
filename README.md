@@ -20,7 +20,7 @@
 - `通常地図 / 航空写真 / 水深・3D地形` の3モードを切り替えられます。
 - 水深モードではGEBCO_2026 15秒を第一source、ETOPO 2022 60秒をfallbackとして、2D水深色分け、等深線、hillshade、対応端末でのMapLibre terrainを表示します。
 - GEBCO TID Gridを用いて、現在の地図中心周辺17×17セルのデータ由来を表示します。
-- 国土地理院標準地図overlayをopacity `0.40`で任意ON/OFFできます。
+- GEBCO 0m境界の海岸線ラインと半透明緑の陸地マスクを任意ON/OFFできます。
 - ダーク／ネオン／ガラス風のUIをPC・スマホで利用できます。
 
 ## 現在やらないこと
@@ -78,11 +78,11 @@ Supabaseから `fish_species` / `fishing_spots` / `source_registry` を読み取
 - 第一source: `GEBCO_2026 Grid 15 arc-second`
 - データ由来: `GEBCO_2026 TID Grid`
 - fallback: `NOAA NCEI ETOPO 2022 60 Arc-Second Bedrock`
-- 海岸線補助: 国土地理院標準地図overlay
+- 海岸線補助: GEBCO 0m境界から生成した海岸線ライン + 半透明緑の陸地マスク
 
 GEBCO正本の対象範囲は west `128.5` / south `32.5` / east `130.8` / north `34.0`、shapeは `552 x 360`、DEM nodataは `-32767`、min/maxは `-277 / 1346`、TID nodataは `127`、出現コードは `0/11/17/40/43/44` です。
 
-GEBCO metadata、tile decode、terrain初期化等が失敗した場合はETOPOへ切り替えます。ETOPOも失敗した場合は水深layer、terrain、GSI overlay、各水深出典を解除し、通常地図へ戻します。
+GEBCO metadata、tile decode、terrain初期化等が失敗した場合はETOPOへ切り替えます。ETOPOも失敗した場合は水深layer、terrain、海岸線overlay、各水深出典を解除し、通常地図へ戻します。
 
 水深は参考表示であり、航海・安全判断には使用できません。15秒メッシュでも港内、岩礁、根、瀬、航路の正確な位置・水深を保証しません。
 

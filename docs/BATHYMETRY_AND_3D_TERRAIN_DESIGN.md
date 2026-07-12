@@ -2,7 +2,7 @@
 
 ## 採用データ
 
-Post-MVP-037 / Issue #111 の調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とします。Post-MVP-038では、第一sourceを `GEBCO_2026 Grid 15 arc-second`、同一boundsのデータ由来説明を `GEBCO_2026 TID Grid`、fallbackを `ETOPO 2022 60 Arc-Second Bedrock` とします。陸海境界の補助は国土地理院標準地図タイルをopacity `0.40`で任意表示します。JODC J-EGG500は再配布・Web配信許可が確認できるまで本番採用しません。
+Post-MVP-037 / Issue #111 の調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とします。Post-MVP-038では、第一sourceを `GEBCO_2026 Grid 15 arc-second`、同一boundsのデータ由来説明を `GEBCO_2026 TID Grid`、fallbackを `ETOPO 2022 60 Arc-Second Bedrock` とします。陸海境界の補助はGEBCO 0m境界から生成した海岸線ラインと半透明緑の陸地マスクを任意表示します。JODC J-EGG500は再配布・Web配信許可が確認できるまで本番採用しません。
 
 ### GEBCO_2026 canonical
 
@@ -42,12 +42,12 @@ Post-MVP-037 / Issue #111 の調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEA
 - 水深source/layerは水深モード選択時に遅延追加します。
 - GEBCO成功時はGEBCOのcolor、hillshade、contour、label、terrainを表示します。
 - GEBCO失敗時はETOPOの対応layerとterrainへ切り替えます。
-- ETOPOも失敗した場合は水深layer、terrain、GSI overlay、各水深出典を解除し、通常地図へ戻します。
+- ETOPOも失敗した場合は水深layer、terrain、海岸線overlay、各水深出典を解除し、通常地図へ戻します。
 - 同じsource errorはdedupeし、遅れて届いた非表示sourceのerrorで状態を飛ばしません。
 - metadataはsource追加前後に検証し、GEBCOではbounds、`552 x 360`、nodata、source SHAを固定値と照合します。
 - 3D初期値はデスクトップ相当でON、スマホ幅、reduced motion、低deviceMemory、WebGL不可では2D表示です。
 - TIDは現在のmap center周辺17×17セルを集計し、nodata `127`を割合の分母から除外します。
-- GSI overlayは任意ON/OFFです。OFF時はoverlay source自体を追加せず、追加出典も表示しません。
+- 海岸線overlayは任意ON/OFFです。OFF時はoverlay source自体を追加せず、追加出典も表示しません。データ由来ON/OFFとは独立して動作します。
 
 ## データ生成
 
@@ -57,7 +57,7 @@ Git管理する正本は次です。
 - `data/bathymetry/gebco-2026-tid-crop.json`
 - `data/bathymetry/etopo-2022-crop.json`
 
-NetCDF、GeoTIFF、ZIP、PNG等のバイナリはGitへコミットしません。`npm run generate:bathymetry` がbuild前に正本JSONからTerrain-RGB PNG、色別水深PNG、等深線GeoJSON、TID軽量JSON、metadata/checksumを生成します。通常のdev/test/build/runtimeではNOAA、GEBCO、GSIへデータ取得リクエストを行いません。GSI標準地図だけはユーザーがoverlayをONにした場合に公式タイルをリアルタイム表示します。
+NetCDF、GeoTIFF、ZIP、PNG等のバイナリはGitへコミットしません。`npm run generate:bathymetry` がbuild前に正本JSONからTerrain-RGB PNG、色別水深PNG、等深線GeoJSON、TID軽量JSON、metadata/checksumを生成します。通常のdev/test/build/runtimeではNOAA、GEBCO、GSIへデータ取得リクエストを行いません。海岸線表示は生成済みGeoJSONを使うため、ONにしても外部地図タイルをリアルタイム取得しません。
 
 ```bash
 npm run generate:bathymetry
@@ -72,13 +72,14 @@ node tools/bathymetry/convert-gebco-netcdf.mjs /local/gebco.nc /local/gebco_tid.
 
 詳細は `tools/bathymetry/README.md` を参照してください。
 
-## GSI標準地図overlay
+## 海岸線ライン・陸地マスクoverlay
 
-- 使用URL: `https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png`
-- opacity: `0.40`
-- 公式タイル一覧: https://maps.gsi.go.jp/development/ichiran.html
-- ZL5〜8の海域部に関する追加表示: GEBCO Digital Atlas由来等深線、海上保安庁許可第292502号（水路業務法第25条）、VMAP0 shoreline
-- GEBCO正本の出典とGSI標準地図内素材の出典を分けて表示します。
+- 使用データ: `public/bathymetry/gebco-2026/coastline.geojson`
+- 陸地マスク: GEBCO 15秒DEMの非負標高セルを横方向runにまとめたPolygon
+- 海岸線ライン: GEBCO 15秒DEMの0m境界をmarching squaresで抽出したLineString
+- 表示色: 陸地は半透明の緑、海岸線は濃い緑のライン
+- ベージュ / オレンジ系の塗りつぶしや外部地図タイルoverlayは使いません。
+- GEBCO正本の出典と海岸線ライン・陸地マスクの生成元を分けて表示します。
 
 ## テスト
 

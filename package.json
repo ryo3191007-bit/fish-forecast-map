@@ -2,6 +2,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "generate:bathymetry": "node scripts/generate-bathymetry-assets.mjs",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit --project tsconfig.typecheck.json",
     "check:supabase": "node --env-file=.env.local scripts/check-supabase-connection.mjs",
