@@ -1,6 +1,12 @@
 # 釣り場属性調査
 
-釣り場属性の調査では、`docs/FISHING_SPOT_RESEARCH_SPEC.md` と `docs/schemas/fishing-spot-research.schema.json` を正本として使用します。
+釣り場属性の調査では、次を正本として使用します。
+
+- 共通仕様: `docs/FISHING_SPOT_RESEARCH_SPEC.md`
+- 手動二次調査ポリシー: `docs/FISHING_SPOT_SECONDARY_SOURCE_POLICY.md`
+- JSON Schema: `docs/schemas/fishing-spot-research.schema.json`
+
+公式・公的情報で不足する項目について民間情報を補助利用する場合も、スクレイピング、自動巡回、定期実行は行いません。文章、写真、地図画像、コメント、プロフィール、掲載魚種一覧は保存しません。
 
 ## パイロット調査
 
