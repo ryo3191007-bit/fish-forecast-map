@@ -2,233 +2,107 @@
 
 最終更新: 2026-07-12  
 対象範囲: 糸島西岸〜唐津湾〜伊万里湾〜平戸周辺（調査bounds: west 128.5 / south 32.5 / east 130.8 / north 34.0）  
-結論: 本PRでは本番データを差し替えず、次Issueで `ETOPO 2022 15 arc-second Bedrock` を広域〜沿岸水深の第一候補、`GEBCO_2026 Grid 15 arc-second` を比較・代替候補、国土地理院標準地図リアルタイムタイルを陸海境界明瞭化の第一候補として実装検証する。
+結論: 受け入れ条件を満たす実データ比較は、現行 `ETOPO 2022 60 arc-second Bedrock` については完了したが、`ETOPO 2022 15 arc-second Bedrock` と `GEBCO_2026 Grid 15 arc-second` は2026-07-12時点の公式手順で対象boundsのローカルsubset取得を完了できなかった。そのため、本PRでは採用データを固定せず、現行60秒を維持し、Post-MVP-038で公式subset取得手順の復旧確認後に同条件比較を再実行する。
 
 ## 調査ルールと禁止事項
 
 - 根拠は公式資料のみとし、第三者サイトの画面解析、海しる・海図・ENC・民間サービス画面からの抽出は行わない。
-- GeoTIFF、PNG、ZIPなどのバイナリをGitに追加しない。
+- GeoTIFF、NetCDF、PNG、ZIPなどのバイナリをGitに追加しない。今回取得したNetCDFは `/tmp/bathy-pr112/` のローカル一時ファイルに限定した。
 - 再配布条件が不明または禁止のデータは、変換後データもGit/Vercelへ置かない。
 - 通常実行、Next.js/Vercel runtime、Vercel buildから外部水深データを取得しない。
 - 水深表示は参考情報であり、航海・安全判断には使用しない。
 
-## 比較地点と比較条件
+## 比較地点と固定カメラ条件
 
-既存 `FishingSpot` から、岬・磯、湾口・湾内、島・瀬戸、複雑な海岸線、急深部を含む代表点を選んだ。
+| 区分 | 地点ID | 地点名 | center | zoom | pitch | bearing | exaggeration | 比較意図 |
+| --- | --- | --- | --- | ---: | ---: | ---: | ---: | --- |
+| 糸島西岸の岬・磯 | `keya-gate` | 芥屋大門周辺 | `[130.109, 33.596]` | 11 | 60 | 0 | 1.0 | 岬、磯、浅場20m線の粗さ確認 |
+| 唐津湾の湾口と湾内 | `karatsu-east-port` | 唐津東港 | `[129.993, 33.459]` | 11 | 60 | 0 | 1.0 | 湾内の緩い水深勾配と港湾近傍の限界確認 |
+| 呼子周辺の島・瀬戸 | `yobuko-area` | 呼子周辺 | `[129.892, 33.543]` | 11 | 60 | 0 | 1.0 | 島・瀬戸周辺の地形変化、50m線確認 |
+| 伊万里湾の複雑な海岸線 | `takashima-area` | 鷹島周辺 | `[129.844, 33.448]` | 11 | 60 | 0 | 1.0 | 小島・湾・陸海境界の位置ずれ確認 |
+| 平戸周辺の瀬戸・急深部 | `hirado-seto` | 平戸瀬戸周辺 | `[129.579, 33.354]` | 11 | 60 | 0 | 1.0 | 急深部、瀬戸、100m/200m線確認 |
 
-| 区分 | 地点ID | 地点名 | 緯度 | 経度 | 比較意図 |
-| --- | --- | --- | ---: | ---: | --- |
-| 糸島西岸の岬・磯 | `keya-gate` | 芥屋大門周辺 | 33.596 | 130.109 | 岬、磯、浅場20m線の粗さ確認 |
-| 唐津湾の湾口と湾内 | `karatsu-east-port` | 唐津東港 | 33.459 | 129.993 | 湾内の緩い水深勾配と港湾近傍の限界確認 |
-| 呼子周辺の島・瀬戸 | `yobuko-area` | 呼子周辺 | 33.543 | 129.892 | 島・瀬戸周辺の地形変化、50m線確認 |
-| 伊万里湾の複雑な海岸線 | `takashima-area` | 鷹島周辺 | 33.448 | 129.844 | 小島・湾・陸海境界の位置ずれ確認 |
-| 平戸周辺の瀬戸・急深部 | `hirado-seto` | 平戸瀬戸周辺 | 33.354 | 129.579 | 急深部、瀬戸、100m/200m線確認 |
+比較対象レイヤーは 2D水深色分け、20m/50m/100m/200m等深線、hillshade、3D terrain、国土地理院標準地図の陸海境界重ね合わせとした。画像バイナリはGitへ追加していない。
 
-比較画像はGitへ保存しない。次Issueで実データを公式手順で取得する場合は、同じbounds、同じカメラ条件（center、zoom、pitch、bearing、exaggeration 1.0）で、次を一時生成してPR本文に添付する。
+## 実データ取得結果
 
-- 2D水深色分け: 0 / 20 / 50 / 100 / 200 / 500m以上の既存配色。
-- 等深線: 20m / 50m / 100m / 200m。
-- hillshade: MapLibre `hillshade` 相当。
-- 3D terrain: MapLibre `raster-dem`、exaggeration 1.0。
-- 海岸線レイヤー: 国土地理院標準地図リアルタイムタイル、または承認条件を満たす基盤地図情報由来ベクトル。
-
-## 候補比較サマリー
-
-| 候補 | 解像度 | 対象範囲 | 主な利点 | 主な制約 | 判断 |
+| 候補 | 取得結果 | 取得URL/手順 | 取得日 | checksum / 実測 | 判断 |
 | --- | --- | --- | --- | --- | --- |
-| 現行 ETOPO 2022 60 arc-second Bedrock | 約1.85km格子 | 全球 | 既存実装済み、容量・生成負荷が小さい | 沿岸、岬、瀬戸、20m/50m線が粗い | 現行維持のみ。高解像度化候補としては不採用 |
-| ETOPO 2022 15 arc-second Bedrock | 約463m格子 | 全球 | CC0-1.0、公式DOI、現行生成系に最も近く4倍細かい | 個別岩礁・港内・航路水深は保証不可 | 第一候補 |
-| GEBCO_2026 Grid 15 arc-second | 約463m格子 | 全球 | 最新15秒全球グリッド、TID Gridで由来確認可能 | GEBCO利用条件・免責・attributionをUI/文書へ反映要 | 比較・代替候補 |
-| GEBCO multi-resolution product | 場所により15秒超 | テスト領域のみ | 高解像度データがある領域では有利 | 公式ページ上、複数解像度は豪州沖、ニュージーランド周辺、ハワイ周辺のテスト領域のみで対象海域外 | 対象海域では不採用 |
-| JODC J-EGG500 | 500mメッシュ | 日本周辺A/B/C、対象海域はB | 日本周辺に特化、由来種別を持つ | 無断複製・第三者提供不可。許可確認までWeb配信不可 | 許可確認待ち。本番採用不可 |
-| 国土地理院標準地図タイル | ZL5〜18 | 日本全国と周辺 | リアルタイム読み込みは出典明示で申請不要と案内あり、陸海境界が見やすい | 外部タイルを通常地図表示時に読む。水深DEMではない | 海岸線明瞭化の第一候補 |
-| 国土地理院基盤地図情報（基本項目） | 地物ベクトル | 日本全国 | 海岸線等の独立レイヤー化候補 | ユーザー登録、基本測量成果として複製・使用申請が必要な場合 | 次点。承認要否確認後 |
-| 国土地理院沿岸海域土地条件図 `ccm1` / `ccm2` | 1:25,000主題図ラスター | 整備図郭のみ | 底質・地形分類・水深など参考背景に有用 | 古い図郭あり、ラスターでDEM用途不可、対象範囲が連続しない可能性 | 参考背景候補。水深正本には不採用 |
+| ETOPO 2022 60 arc-second Bedrock | 成功。現行Git正本 `data/bathymetry/etopo-2022-crop.json` と、公式NetCDF全球ファイルを照合。 | `https://www.ngdc.noaa.gov/thredds/fileServer/global/ETOPO2022/60s/60s_bed_elev_netcdf/ETOPO_2022_v1_60s_N90W180_bed.nc` | 2026-07-12 | NetCDF 491,284,376 bytes / SHA-256 `d92483407c6a8f87be6fc8a47e4809332357e2d40c90a49de2e91c39cce08c54`。変数 `z(lat,lon)` 10800×21600、nodata `-99999`。対象cropは現行正本 139×91、最小 -145m、最大 788m。 | 現行維持。沿岸高解像度化には不足。 |
+| ETOPO 2022 15 arc-second Bedrock | 失敗。公式THREDDS catalogの15秒NetCDFタイルから `S60E120` を取得したが、緯度範囲が -74.997916〜-60.002083 で対象bounds外だった。catalog上で対象bounds（北緯32.5〜34.0、東経128.5〜130.8）に該当する15秒タイル名を確認できず、推測値で比較しない。 | `https://www.ngdc.noaa.gov/thredds/catalog/global/ETOPO2022/15s/15s_bed_elev_netcdf/catalog.xml` と `https://www.ngdc.noaa.gov/thredds/fileServer/global/ETOPO2022/15s/15s_bed_elev_netcdf/ETOPO_2022_v1_15s_S60E120_bed.nc` | 2026-07-12 | 取得NetCDF 21,206,803 bytes / SHA-256 `d9b91ca8519d967f0afdeb3d60d6c6509cd9c6e99034c16ef022236680018bad`。変数 `z(lat,lon)` 3600×3600、nodata `-99999`。対象boundsとの交差は0行。 | 実比較未完了。第一候補に固定しない。 |
+| GEBCO_2026 Grid 15 arc-second | 失敗。公式subsetting appの公開APIメタデータ（`/api/grids`, `/api/formats`）は確認できたが、旧式の直接download URLは404で、queue APIはブラウザbasket送信前提だった。メール任意のqueue生成を自動化してGitに記録することは避け、推測値で完了扱いしない。 | `https://download.gebco.net/api/grids`, `https://download.gebco.net/api/formats`, 失敗URL `https://download.gebco.net/api/download?format=netcdf&grid=gebco_2026&west=128.5&east=130.8&south=32.5&north=34.0` | 2026-07-12 | `/api/grids` で `gebco_2026_global`、data source `gebco_2026` / `gebco_2026_tid`、最大面積14400平方度、EPSG:4326を確認。直接download URLは HTTP 404。対象crop NetCDF checksum、行列数、最小/最大値は未取得。 | 実比較未完了。採用判断保留。 |
 
-## 1. 現行 ETOPO 2022 60 arc-second Bedrock
+## 同条件比較の実測結果
 
-- 公式URL: https://www.ncei.noaa.gov/products/etopo-global-relief-model / https://doi.org/10.25921/fd45-gt74
-- データ名・バージョン・公開日: ETOPO 2022 60 Arc-Second Bedrock Global Relief Model。ETOPO 2022の派生解像度として利用。
-- 解像度: 60 arc-second（緯度方向約1.85km）。
-- 対象範囲: 全球。
-- データ形式: NetCDF / GeoTIFF等から対象範囲をcropし、現行実装ではテキストJSONをGit正本、PNG/GeoJSONをbuild前生成物とする。
-- 水平・鉛直基準: 地理座標（WGS84系緯度経度として扱う）。標高/水深はm、海面基準の全球DEMとして扱う。
-- 元データ由来: NOAA NCEIの全球地形・海底地形統合モデル。航空/衛星/船舶測深等の複数データを統合。
-- ライセンス: CC0-1.0。
-- 加工可否: 可能。
-- Web配信・再配布可否: CC0として可能。ただし出典・DOI・取得日・checksumを残す。
-- attribution: NOAA National Centers for Environmental Information, ETOPO 2022, DOI: 10.25921/fd45-gt74。
-- 注意事項: 広域DEMであり、港内・小瀬・岩礁・航路水深を確認できない。航海・安全判断不可。
-- 容量/生成時間/Vercel影響: 現行z7-z8では軽量。スマホでも2D表示を維持可能。
-- 判断: 既存fallbackとして維持。沿岸改善の本命ではない。
+| 地点 | ETOPO 60秒の実画面評価 | ETOPO 15秒 | GEBCO 2026 15秒 | 国土地理院標準地図重ね合わせ評価 |
+| --- | --- | --- | --- | --- |
+| 芥屋大門周辺 | 2D色分けは岬周辺の浅場が広い帯で表現され、20m線は岸際の凹凸を追えない。hillshade/3Dは海底斜面の向きは分かるが磯・根の判断には粗い。 | 対象bounds取得失敗のため未比較。 | 対象bounds取得失敗のため未比較。 | zoom 11、opacity 0.35〜0.45で海岸線は水深色を隠しすぎず改善。ZL5〜8表示時は追加クレジット要。 |
+| 唐津東港 | 港湾・湾奥は60秒格子では陸海境界と水深変化がずれ、20m/50m線が港内判断に使えない。 | 未比較。 | 未比較。 | 標準地図を薄く重ねると埋立地・港形状の読解は改善。ただし全面ラスターopacity 0.6以上は水深色分けを阻害。 |
+| 呼子周辺 | 島・瀬戸の50m線が単純化され、狭い水道の3D起伏は過度に滑らか。 | 未比較。 | 未比較。 | 陸島境界は改善。水深DEM正本ではないため等深線改善には寄与しない。 |
+| 鷹島周辺 | 小島・湾入部はセルサイズに対して複雑すぎ、2D/hillshade/terrainとも陸海境界の読み違いリスクが高い。 | 未比較。 | 未比較。 | opacity 0.4前後なら島影と道路/海岸線を補助できる。 |
+| 平戸瀬戸周辺 | 急深部の100m/200m線は広域傾向のみ。瀬戸内の狭い谷筋や斜面は粗い。 | 未比較。 | 未比較。 | 海峡形状の読解は改善するが、水深の安全判断には不可。 |
 
-## 2. ETOPO 2022 15 arc-second Bedrock
+## 実測した容量・生成時間・描画負荷
 
-- 公式URL: https://www.ncei.noaa.gov/products/etopo-global-relief-model / https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ngdc.mgg.dem%3Aetopo_2022 / https://doi.org/10.25921/fd45-gt74
-- データ名・バージョン・公開日: ETOPO 2022 15 Arc-Second Global Relief Model。NOAA NCEIのETOPO 2022。
-- 解像度: 15 arc-second（緯度方向約463m）。60秒比で縦横4倍、対象cropの格子数は約16倍。
-- 対象範囲: 全球。
-- データ形式: 公式配布はNetCDF/GeoTIFF等。アプリでは対象範囲のみを手動取得・cropし、テキストJSON正本から静的タイルを生成する想定。
-- 水平・鉛直基準: 地理座標。標高/水深はm。Bedrock版を使用し、氷床表面ではなく地形・海底地形側の値として扱う。
-- 元データ由来: NOAA NCEIの説明では、航空LiDAR、衛星由来地形、船舶測深など多数の米国・全球データを統合し、ICESat-2等で検証。
-- ライセンス: CC0-1.0。
-- 加工可否: 可能。
-- Web配信・再配布可否: 可能。ただしcitation、DOI、取得日、checksum、航海利用不可を明記する。
-- attribution: NOAA National Centers for Environmental Information. 2022: ETOPO 2022 15 Arc-Second Global Relief Model. DOI: 10.25921/fd45-gt74。
-- 注意事項: 15秒でも約463m格子であり、岩礁、根、港内水深、航路、岸壁近傍の浅場は保証しない。補間・統合DEMであることをUIに残す。
-- 容量: 現行boundsでは概算553列×361行、約199,633点。60秒の約35kB正本に対し、値配列JSONは単純計算で数百kB〜1.5MB程度へ増える見込み。
-- 生成時間: z7-z8のみなら秒〜十数秒規模を想定。z9以上や等深線詳細化を追加するとCI/build時間が増えるため次Issueで上限測定。
-- Vercel build時間への影響: 60秒比でDEM処理は約16倍。ただし対象bounds限定なら許容見込み。生成物をGitへ入れずprebuild生成を維持する。
-- PC/スマホ描画負荷: タイル枚数が同じならMapLibre描画負荷は主にPNGサイズ・等深線頂点数依存。スマホは3D初期OFF/2D fallbackを継続。
-- 比較結果（公式資料ベース）: 60秒より20m/50m等深線と湾口・瀬戸の形状は改善する見込み。ただし元データ密度が低い沿岸では見た目だけ精密に見せない。
-- 判断: 次Issueの第一候補。
+測定環境: GitHub Codespaces相当のLinuxコンテナ、Node.js/npmは本リポジトリ既存環境、Python 3.12.13、追加確認用に `netCDF4` と `numpy` をユーザー領域へ一時install。日時は2026-07-12 UTC。
 
-## 3. GEBCO_2026 Grid 15 arc-second
+| 項目 | ETOPO 60秒 | ETOPO 15秒 | GEBCO 2026 15秒 |
+| --- | ---: | ---: | ---: |
+| crop元データサイズ | 491,284,376 bytes（公式全球NetCDF） | 21,206,803 bytes（取得できた南緯タイル。対象bounds外） | 未取得（直接URL 404） |
+| テキスト正本サイズ | 44,225 bytes（`data/bathymetry/etopo-2022-crop.json`） | 未生成 | 未生成 |
+| 行列数 / nodata / min-max | 139×91 / null（正本） / -145〜788m | 対象bounds 0行 | 未取得 |
+| Terrain-RGB + color + contour生成時間 | `node scripts/generate-bathymetry-assets.mjs`: 約0.9〜1.1秒 | 未測定 | 未測定 |
+| 生成タイル数・合計容量 | z7〜8、Terrain-RGB 8枚 + color 8枚 + contours/metadata、合計約132KB（生成物はGit無視） | 未生成 | 未生成 |
+| contours GeoJSON | 34 features、約1,920 vertices、約61KB | 未生成 | 未生成 |
+| `npm run build`時間への増分 | prebuild生成を含む現行buildで約8〜10秒台。生成単体は約1秒なので増分は小さい。 | 未測定 | 未測定 |
+| MapLibre初回表示/簡易FPS | 実ブラウザ自動計測は未導入。現行60秒は既存UIでPC/スマホ2D fallbackを維持。 | 未測定 | 未測定 |
+| PC vs スマホ相当 | PCは3D terrain可、スマホ相当は2D fallback方針維持。 | 未測定 | 未測定 |
 
-- 公式URL: https://www.gebco.net/data-products/gridded-bathymetry-data / https://www.gebco.net/data-products-gridded-bathymetry-data/gebco2026-grid
-- データ名・バージョン・公開日: GEBCO_2026 Grid。2026年版全球地形・海底地形モデル。
-- 解像度: 15 arc-second、43200行×86400列、3,732,480,000点。pixel-centre registered。
-- 対象範囲: 全球の海陸連続terrain model。
-- データ形式: global fileまたはuser-defined areaを、NetCDF等の形式で取得可能。TID Gridも提供される。
-- 水平・鉛直基準: 地理座標グリッド。標高/水深はm。
-- 元データ由来: 全球グリッド。対象地域ではSRTM15+系の測深・推定海底地形をベースに、GEBCO編集データを統合。TID Gridで測深・補間等の由来確認が可能。
-- ライセンス: GEBCO Terms of Useに従う。公式ページではデータ利用条件、attribution、免責を確認する必要がある。
-- 加工可否: Terms of Useに従い可能な範囲で加工する。
-- Web配信・再配布可否: Terms of Use、attribution、disclaimerに従う。PR時点では、対象cropの静的配信は利用条件を精査してから実施する。
-- attribution: GEBCO Compilation Group / GEBCO_2026 Grid（公式推奨表記に従う）。
-- 注意事項: TID Gridで元データ由来を併記し、補間主体の浅場を過信しない。更新版追従時はバージョン固定とchecksum記録が必要。
-- 容量: 15秒の対象boundsはETOPO 15秒と同じ格子規模。TID Gridも保持する場合は正本が増える。
-- 生成時間/Vercel影響: ETOPO 15秒と同程度。ただしTID由来表示や比較レポート生成を入れると追加処理が必要。
-- PC/スマホ描画負荷: タイル化後はETOPO 15秒と同程度。
-- 比較結果（公式資料ベース）: 最新GEBCOの15秒gridとして有力。TID Gridを使える点は品質説明でETOPOより優れる可能性がある。
-- 判断: 次IssueでETOPO 15秒と同条件比較する代替候補。
+未測定セルは失敗理由を上に記録し、概算で埋めない。
 
-## 4. GEBCO multi-resolution product
+## GEBCO利用条件の結論
 
-- 公式URL: https://www.gebco.net/data-products/gridded-bathymetry-data/multi-res
-- データ名・バージョン・公開日: GEBCO multi-resolution grid product（test product）。
-- 解像度: 場所により15秒より高解像度。
-- 対象範囲: 公式ページ上、複数解像度データは豪州沖、ニュージーランド周辺、ハワイ諸島周辺などのテスト領域に限定。
-- データ形式: GEBCO download application経由。
-- 水平・鉛直基準: GEBCO gridに準じる。
-- 元データ由来: 対象テスト領域ごとの高解像度測深データを含む。
-- ライセンス/加工/再配布/attribution: GEBCO Terms of Useに従う。
-- 注意事項: 糸島〜平戸周辺は公式掲載の複数解像度テスト領域ではないため、本アプリ対象海域の改善手段としては使えない。
-- 容量/生成時間/描画負荷: 対象外のため未評価。
-- 判断: 対象海域では不採用。将来GEBCOが日本周辺multi-resolutionを公開した場合だけ再調査。
+GEBCO公式Terms of Useでは、GEBCO Gridはpublic domainとして、コピー、公開、配布、改変、商用利用を認める一方、出典表示、GEBCO/IHO/IOC等の公式成果と誤認させないこと、航海利用不可などの免責表示が必要である。したがって、対象boundsのGEBCO_2026 cropおよび派生したTerrain-RGB/color/contourタイルは、Terms of Useに従う限りWeb配信可能と判断する。
 
-## 5. JODC J-EGG500
+必要な表示案:
 
-- 公式URL: https://www.jodc.go.jp/jodcweb/JDOSS/infoJEGG_j.html / https://www.jodc.go.jp/jodcweb/JDOSS/index_j.html / https://www.jodc.go.jp/jodcweb/JDOSS/caution_j.html
-- データ名・バージョン・公開日: J-EGG500（日本近海500mメッシュ海底地形データ）。J-DOSS掲載。
-- 解像度: 500mメッシュ。
-- 対象範囲: A/B/Cの日本周辺海域。対象範囲はB（30〜38°N、128〜144°E。ただしA重複除外）に含まれる。
-- データ形式: 緯度、経度、水深等のテキストデータ。
-- 水平・鉛直基準: 緯度経度、水深mとして扱う。詳細基準は公式資料確認が必要。
-- 元データ由来: MGD77、J-BIRD、海上保安庁等のマルチビーム測深、100m間隔等深線デジタルデータ等を統合編集した500mメッシュ。
-- ライセンス: J-DOSS利用上の注意に従う。
-- 加工可否: 個人調査・成果利用は出典明記等の条件あり。Webアプリ用の加工・配信は別途許可確認が必要。
-- Web配信・再配布可否: J-DOSSの注意事項に「無断で、データ等を複製して第三者に提供しない」旨があるため、書面等で許可確認できるまでGit/Vercel/公開Web配信不可。
-- attribution: 日本海洋データセンター（JODC）資料を使用した旨の記載が必要。
-- 注意事項: JODC自身が沿岸や海山周辺では実測との差が大きい場合、小さい起伏を表現できない場合があると注意している。データを無断ダウンロード・タイル化・再配布しない。
-- 容量: 一度のダウンロード範囲制限等があり、公式条件に従う必要がある。再配布不可のため本PRでは取得・保存しない。
-- 生成時間/Vercel影響: 本番採用不可のため未測定。
-- PC/スマホ描画負荷: 500m格子でETOPO/GEBCO 15秒と近いが、ライセンス上未評価。
-- 比較結果（公式資料ベース）: 日本周辺特化の品質比較対象として有用だが、許諾面で本番不可。
-- 判断: 許可確認待ち。本番採用不可。
+- Attribution: `Contains information from the GEBCO_2026 Grid, GEBCO Compilation Group (2026).`
+- Disclaimer: `GEBCO data and derived tiles are for reference only, are not an official nautical chart, and must not be used for navigation or safety decisions.`
+- UI上ではNOAA/GEBCO/GSIを同時に表示し、派生タイルであることを明記する。
 
-## 6. 国土地理院の標準地図・基盤地図情報等による海岸線明瞭化
+ただし、今回GEBCO対象cropの取得が完了していないため、採用判断は保留する。
 
-### 標準地図タイル
+## 国土地理院タイルの追加クレジットと表示方式
 
-- 公式URL: https://maps.gsi.go.jp/development/ichiran.html / https://www.gsi.go.jp/LAW/2930-meizi.html / https://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html
-- データ名・バージョン・公開日: 地理院タイル 標準地図（ズームレベル5〜18の日本全国と周辺）。
-- 解像度/対象範囲: タイルZL5〜18、日本全国と周辺。
-- データ形式: ラスター/タイル。
-- 水平・鉛直基準: Web Mercatorタイルとして利用。
-- 元データ由来: 国土地理院の測量成果・地図編集成果。
-- ライセンス: 国土地理院コンテンツ利用規約。特段の記載がない限り公共データ利用規約（PDL1.0）。
-- 加工可否: 規約に従い可能。ただし編集・加工時はその旨を明記し、国土地理院作成と誤認させない。
-- Web配信・再配布可否: 地理院タイルをリアルタイムに読み込む利用は、地理院タイル一覧の案内上、出典明示のみで申請不要。タイルを複製・同梱する場合は別途確認。
-- attribution: 「国土地理院」または「地理院タイル」とリンクを表示。
-- 注意事項: 水深DEMではない。水深色分けに薄く重ねる場合、視認性と出典表示を維持する。
-- 容量/生成時間/Vercel影響: runtimeで地理院タイルへアクセスするためVercel build負荷はない。通常地図/海岸線表示時の外部タイルアクセスは発生する。
-- PC/スマホ描画負荷: ラスター1レイヤー追加相当。透過表示を調整すれば許容見込み。
-- 判断: 陸海境界明瞭化の第一候補。
-
-### 基盤地図情報（基本項目）
-
-- 公式URL: https://www.gsi.go.jp/kiban/ / https://service.gsi.go.jp/kiban/
-- データ名・バージョン・公開日: 基盤地図情報（基本項目）。
-- 解像度/対象範囲: 日本全国の基本地物。海岸線等を含む可能性がある。
-- データ形式: ダウンロードデータ（GML等）。
-- ライセンス: 国土地理院コンテンツ利用規約。基盤地図情報は基本測量成果であり、測量法に基づく複製または使用申請が必要な場合がある。
-- 加工可否/Web配信可否: 申請要否を確認し、必要な承認を得た場合のみ独立ベクトル化・同梱を検討。
-- attribution: 国土地理院、基盤地図情報、編集・加工した旨。
-- 注意事項: ユーザー登録・ログインが必要。承認要否が残るため、次Issueではまず標準地図リアルタイムタイルを優先。
-- 判断: 次点。海岸線だけの独立レイヤーが必要になった時点で申請要否を確認。
-
-## 7. 国土地理院 沿岸海域土地条件図
-
-- 公式URL: https://www.gsi.go.jp/bousaichiri/engan14.html / https://service.gsi.go.jp/geolib/app/item/?id=35 / https://maps.gsi.go.jp/development/ichiran.html
-- データ名・バージョン・公開日: 沿岸海域土地条件図。地理院タイルでは `ccm1`（平成元年以降）と `ccm2`（昭和63年以前）。
-- 解像度/対象範囲: 1:25,000主題図。整備図郭のみで、対象海域全域を連続カバーするとは限らない。
-- データ形式: ラスタータイル/図郭資料。
-- 水平・鉛直基準: 主題図としての地図座標。DEMではない。
-- 元データ由来: 沿岸部の陸部・海部の土地条件を示す主題図。陸部地形分類、海部地形分類、底質、水深、各種施設等から構成。
-- ライセンス: 国土地理院コンテンツ利用規約およびタイルごとの注意に従う。
-- 加工可否/Web配信可否: 地理院タイルとしてリアルタイム表示する場合は出典明示。ダウンロード・加工・再配布は個別確認。
-- attribution: 国土地理院/地理院タイル、必要に応じて沿岸海域土地条件図名。
-- 注意事項: 作成年が古い図郭があり、昭和63年以前と平成元年以降で表現が異なる。水深値抽出や3D terrain用DEMには使わず、参考背景に限定。
-- 容量/生成時間/Vercel影響: リアルタイムタイル表示ならbuild影響なし。アプリに同梱しない。
-- PC/スマホ描画負荷: 主題図ラスター1レイヤー追加相当。常時ONではなく参考レイヤーとして扱う。
-- 判断: 参考背景候補。水深正本・3D terrainには不採用。
-
-## 比較画像の扱い
-
-本PRでは、再配布・ダウンロード条件が明確でない候補の実データ取得やバイナリ保存を避け、公式資料ベースの比較・採用判断までに止めた。次IssueでETOPO 15秒とGEBCO 2026 15秒を公式ダウンロード手順で対象boundsに限定取得する場合のみ、ローカル一時ファイルとして比較画像を生成し、Gitには入れずPR説明へ添付する。
-
-## 容量・生成時間・描画負荷の概算
-
-| 構成 | DEM格子概算 | Git正本 | 生成物 | build影響 | スマホ負荷 |
-| --- | ---: | --- | --- | --- | --- |
-| 現行 ETOPO 60秒 z7-z8 | 約139×91、約12.6k点 | 約35kB | 小 | 小 | 2D/3D fallback済み |
-| ETOPO 15秒 z7-z8 | 約199k点 | 数百kB〜1.5MB | タイル枚数は同じ、等深線頂点増 | 中。60秒比でDEM処理約16倍 | 2D初期、3D条件付き維持 |
-| GEBCO 2026 15秒 z7-z8 | 約199k点 | 数百kB〜1.5MB、TID追加時増 | ETOPO 15秒相当 | 中 | ETOPO 15秒相当 |
-| J-EGG500 | 約15秒相当の格子間隔 | 配信不可 | 配信不可 | 未採用 | 未評価 |
-| GSI標準地図重ね合わせ | DEMなし | なし | 外部タイル | build影響なし | ラスター1レイヤー追加 |
+- 本アプリの水深モードで想定する表示zoomは広域確認 z7〜z8、地点確認 z9〜z13。地理院標準地図はリアルタイム読込、ラスターoverlay、opacity 0.35〜0.45を初期候補にする。
+- ZL5〜8を表示し得る場合、標準地図の出典「国土地理院」に加え、地理院タイル一覧で案内されるGEBCO由来等深線、海上保安庁許可関連の追加出所表記を併記する。
+- 水深色分けを隠す全面背景にはせず、通常は水深color/hillshade/contourの上に低opacityで重ねる。opacity 0.6以上は唐津東港・鷹島周辺で水深色の読解を阻害するため初期値にしない。
+- 地理院タイルを複製・同梱せず、リアルタイム表示と出典表示を前提にする。
 
 ## 採用判断
 
-### 次Issueで採用する具体構成案
+1. 現時点では `ETOPO 2022 15秒` を第一候補に固定しない。
+2. `GEBCO_2026 Grid 15秒` はTerms of Use上は対象crop・派生タイルをWeb配信可能と判断できるが、対象bounds取得とTID Grid確認が未完了のため採用保留。
+3. 現行 `ETOPO 2022 60秒` は安定しているが、5地点すべてで沿岸・港湾・島嶼・瀬戸表現が粗く、Issue #111の改善目的には不足。
+4. Post-MVP-038では、公式subset取得の再現性を最初の受け入れ条件にし、ETOPO 15秒とGEBCO 2026 15秒の実データ・TID Grid・レンダリング負荷が揃った時点で採用データを決める。
+5. JODC J-EGG500は、無断複製・第三者提供不可の条件により、書面等で再配布・Web配信許可が確認できるまで本番採用しない。
 
-1. 広域〜沿岸水深の第一候補は `ETOPO 2022 15 arc-second Bedrock` とする。
-2. 同じbounds・同じカメラ条件で `GEBCO_2026 Grid 15 arc-second` を比較し、見た目、TID由来、ライセンス表示、容量、生成時間でETOPOを明確に上回る場合のみGEBCO採用へ切り替える。
-3. 陸海境界は、まず国土地理院標準地図タイルのリアルタイム重ね合わせを採用候補とし、attributionをMapLibre attributionまたは固定表示で明示する。
-4. 基盤地図情報由来の独立海岸線ベクトルは、測量法上の複製・使用申請要否を確認してから別Issueで扱う。
-5. J-EGG500は許可確認待ちとし、書面等で再配布・Web配信許可が確認できるまで本番採用しない。
-6. 沿岸海域土地条件図は参考背景レイヤー候補に限定し、水深値正本、等深線生成元、3D terrain用DEMには使わない。
+## 再現コマンド
 
-### 不採用・保留理由
+```bash
+mkdir -p /tmp/bathy-pr112
+curl -L --fail -o /tmp/bathy-pr112/etopo60.nc \
+  'https://www.ngdc.noaa.gov/thredds/fileServer/global/ETOPO2022/60s/60s_bed_elev_netcdf/ETOPO_2022_v1_60s_N90W180_bed.nc'
+curl -L --fail -o /tmp/bathy-pr112/etopo15_S60E120.nc \
+  'https://www.ngdc.noaa.gov/thredds/fileServer/global/ETOPO2022/15s/15s_bed_elev_netcdf/ETOPO_2022_v1_15s_S60E120_bed.nc'
+curl -s 'https://download.gebco.net/api/grids'
+curl -s 'https://download.gebco.net/api/formats'
+node scripts/generate-bathymetry-assets.mjs
+```
 
-- ETOPO 60秒: 安定しているが、Issue #111の目的である沿岸高解像度化には不足。
-- GEBCO multi-resolution: 対象海域が公式テスト領域外。
-- J-EGG500: 品質比較候補だが、無断複製・第三者提供不可の条件により公開Web配信不可。
-- 基盤地図情報ベクトル: 有望だが、申請要否確認が残るため即時同梱しない。
-- 沿岸海域土地条件図: ラスター主題図であり、DEMや3D terrainの入力として不適。
+## 次Issueへの引き継ぎ
 
-## 次の実装Issue案
-
-タイトル案: `Post-MVP-038: ETOPO 2022 15秒とGEBCO 2026 15秒を同条件比較し水深・海岸線レイヤーを更新する`
-
-受け入れ条件案:
-
-- 公式手順でETOPO 2022 15秒BedrockとGEBCO_2026 15秒を対象boundsだけ取得し、取得日、URL、checksum、crop boundsを記録する。
-- GeoTIFF/NetCDF/PNG/ZIP等のバイナリをGitに追加しない。
-- `data/bathymetry/*-crop.json` のようなテキスト正本のみ、ライセンス上可能なデータに限定して追加する。
-- 既存生成スクリプトを15秒DEMに対応させ、2D水深色分け、20/50/100/200m等深線、hillshade、Terrain-RGBを生成する。
-- 同じbounds・同じカメラ条件でETOPO 60秒、ETOPO 15秒、GEBCO 2026 15秒を比較し、画像はGitに入れずPR本文へ添付する。
-- 国土地理院標準地図タイルの海岸線重ね合わせを水深モードで切替可能にし、出典表示を実装する。
-- スマホ、reduced motion、低deviceMemory、WebGL不可時の2D fallbackを維持する。
-- 水深は参考表示・航海利用不可である注意をUIとREADMEに残す。
-- `npm ci`、`npm run lint`、`npm run typecheck`、`npm test`、`npm run build` を実行し結果をPR本文に記録する。
+- GEBCO download appのbasket/queue APIを、公式利用方法に沿って手動またはスクリプトで再現し、メールなしでローカル一時ファイルを取得できるか確認する。
+- NOAA ETOPO 15秒はGrid Extractまたは正しい対象タイルの取得手順を公式ページで確認し、対象boundsの行列数、checksum、min/max、nodataを記録する。
+- 両15秒候補のTID/sourceID相当を同時に取得し、対象海域が実測主体か補間主体かを地点別に記録する。
+- 実データが揃うまで `docs/ROADMAP.md` のPost-MVP-037は「実施済み」ではなく「追加検証中」として扱う。
