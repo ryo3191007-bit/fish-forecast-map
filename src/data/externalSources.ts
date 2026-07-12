@@ -4,6 +4,22 @@ const REVIEWED_AT = "2026-07-09";
 
 export const externalSources: ExternalSource[] = [
   {
+    sourceId: "user-self-report",
+    sourceName: "本人の釣果",
+    sourceType: "other",
+    targetAreaNames: ["糸島", "唐津", "伊万里湾", "平戸"],
+    baseUrl: "https://fish-forecast-map.vercel.app",
+    crawlPolicy: "manualOnly",
+    robotsStatus: "unchecked",
+    termsStatus: "unchecked",
+    reviewedAt: REVIEWED_AT,
+    reviewSummary: "ユーザー本人が自分の釣果を記録するための内部固定source。外部サイト取得やスクレイピングには使わない。",
+    notes: [
+      "既存ExternalCatchMemo/source_registry互換のための内部source。",
+      "画面では情報元として入力させず、新規本人登録時に自動設定する。",
+    ],
+  },
+  {
     sourceId: "marukin",
     sourceName: "釣り具のまるきん",
     sourceType: "shop",

@@ -2,22 +2,16 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import type { ExternalCatchMemoMigrationResult, ExternalCatchMemoStorageStatus } from "@/hooks/useExternalCatchMemos";
-import type { ExternalSource } from "@/domain/externalSource";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import { fishSpeciesNames, type FishSpeciesName, type FishingMethod } from "@/domain/fishing";
-import type { ExternalCatchConfidence } from "@/domain/externalCatch";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 
-const confidenceOptions: { value: ExternalCatchConfidence; label: string }[] = [
-  { value: "high", label: "高" },
-  { value: "medium", label: "中" },
-  { value: "low", label: "低" },
-];
 const methodOptions: FishingMethod[] = ["ジギング", "キャスティング", "コマセ", "泳がせ", "サビキ", "エギング", "その他"];
+const USER_SELF_REPORT_SOURCE_ID = "user-self-report";
+const USER_SELF_REPORT_SOURCE_NAME = "本人の釣果";
+const PUBLIC_APP_URL = "https://fish-forecast-map.vercel.app";
 
 type FormState = {
-  sourceUrl: string;
-  sourceId: string;
   species: FishSpeciesName | "";
   caughtDate: string;
   areaName: string;
@@ -25,7 +19,6 @@ type FormState = {
   method: FishingMethod | "";
   catchCount: string;
   sizeCm: string;
-  confidence: ExternalCatchConfidence;
   spotId: string;
   userMemo: string;
 };
@@ -33,8 +26,6 @@ type FormState = {
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
 const initialFormState: FormState = {
-  sourceUrl: "",
-  sourceId: "",
   species: "",
   caughtDate: "",
   areaName: "",
@@ -42,18 +33,12 @@ const initialFormState: FormState = {
   method: "",
   catchCount: "",
   sizeCm: "",
-  confidence: "medium",
   spotId: "",
   userMemo: "",
 };
 
 function validateForm(form: FormState): FormErrors {
   const errors: FormErrors = {};
-  if (!form.sourceUrl.trim()) errors.sourceUrl = "情報元URLは必須です。";
-  else {
-    try { new URL(form.sourceUrl.trim()); } catch { errors.sourceUrl = "URL形式で入力してください。"; }
-  }
-  if (!form.sourceId) errors.sourceId = "情報元を選択してください。";
   if (!form.species) errors.species = "魚種を選択してください。";
   if (!form.caughtDate) errors.caughtDate = "釣果日を入力してください。";
   if (!form.areaName.trim()) errors.areaName = "エリアを入力してください。";
@@ -66,8 +51,12 @@ function toOptionalNumber(value: string) {
   return value === "" ? undefined : Number(value);
 }
 
-function createMemo(form: FormState, sources: ExternalSource[], editingMemo?: ExternalCatchMemo): ExternalCatchMemo {
-  const source = sources.find((item) => item.sourceId === form.sourceId);
+function getSelfReportSourceUrl() {
+  if (typeof window !== "undefined" && window.location.origin) return window.location.origin;
+  return PUBLIC_APP_URL;
+}
+
+function createMemo(form: FormState, editingMemo?: ExternalCatchMemo): ExternalCatchMemo {
   const now = new Date().toISOString();
   return {
     id: editingMemo?.id ?? `external-memo-${Date.now()}`,
@@ -76,34 +65,48 @@ function createMemo(form: FormState, sources: ExternalSource[], editingMemo?: Ex
     areaName: form.areaName.trim(),
     estimatedSpotName: form.estimatedSpotName.trim() || undefined,
     spotId: form.spotId || undefined,
-    coordinatePrecision: "unknown",
+    coordinatePrecision: editingMemo?.coordinatePrecision ?? "unknown",
     method: form.method || undefined,
     catchCount: toOptionalNumber(form.catchCount),
     sizeCm: toOptionalNumber(form.sizeCm),
-    sourceId: source?.sourceId ?? form.sourceId,
-    sourceName: source?.sourceName ?? "未設定",
-    sourceUrl: form.sourceUrl.trim(),
+    sourceId: editingMemo?.sourceId ?? USER_SELF_REPORT_SOURCE_ID,
+    sourceName: editingMemo?.sourceName ?? USER_SELF_REPORT_SOURCE_NAME,
+    sourceUrl: editingMemo?.sourceUrl ?? getSelfReportSourceUrl(),
     acquisitionMethod: "manual",
-    confidence: form.confidence,
+    confidence: editingMemo?.confidence ?? "high",
     userMemo: form.userMemo.trim() || undefined,
     createdAt: editingMemo?.createdAt ?? now,
     updatedAt: now,
   };
 }
 
+function formFromMemo(memo: ExternalCatchMemo): FormState {
+  return {
+    species: fishSpeciesNames.includes(memo.species as FishSpeciesName) ? memo.species as FishSpeciesName : "",
+    caughtDate: memo.caughtDate,
+    areaName: memo.areaName,
+    estimatedSpotName: memo.estimatedSpotName ?? "",
+    method: (memo.method as FishingMethod) ?? "",
+    catchCount: memo.catchCount?.toString() ?? "",
+    sizeCm: memo.sizeCm?.toString() ?? "",
+    spotId: memo.spotId ?? "",
+    userMemo: memo.userMemo ?? "",
+  };
+}
+
 type ExternalCatchMemoSectionProps = {
   memos: ExternalCatchMemo[];
+  displayMemos: ExternalCatchMemo[];
   onMemoSave: (memo: ExternalCatchMemo) => Promise<boolean>;
   onMemoDelete: (memoId: string) => Promise<boolean>;
   onLocalMemoMigrate: (memoIds: string[]) => Promise<ExternalCatchMemoMigrationResult>;
   localMemoIds: Set<string>;
   storageError: string | null;
   storageStatus: ExternalCatchMemoStorageStatus;
-  sources: ExternalSource[];
   spots: FishingSpot[];
 };
 
-export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, onLocalMemoMigrate, localMemoIds, storageError, storageStatus, sources, spots }: ExternalCatchMemoSectionProps) {
+export function ExternalCatchMemoSection({ memos, displayMemos, onMemoSave, onMemoDelete, onLocalMemoMigrate, localMemoIds, storageError, storageStatus, spots }: ExternalCatchMemoSectionProps) {
   const [form, setForm] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -113,10 +116,12 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, onLo
   const [selectedMigrationIds, setSelectedMigrationIds] = useState<Set<string>>(() => new Set());
   const [migrationResult, setMigrationResult] = useState<ExternalCatchMemoMigrationResult | null>(null);
 
+  const closeModal = () => { setIsModalOpen(false); setErrors({}); };
+
   useEffect(() => {
     if (!isModalOpen) return;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsModalOpen(false);
+      if (event.key === "Escape") closeModal();
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
@@ -127,7 +132,8 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, onLo
   }, [migrationCandidates]);
 
   const updateForm = (key: keyof FormState, value: string) => setForm((current) => ({ ...current, [key]: value }));
-  const resetForm = () => { setForm(initialFormState); setErrors({}); setEditingId(null); };
+  const openNew = () => { setEditingId(null); setForm(initialFormState); setErrors({}); setIsModalOpen(true); };
+  const openEdit = (memo: ExternalCatchMemo) => { setEditingId(memo.id); setForm(formFromMemo(memo)); setErrors({}); setIsModalOpen(true); };
 
   const submitMemo = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -135,31 +141,14 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, onLo
     const nextErrors = validateForm(form);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
-    const nextMemo = createMemo(form, sources, editingMemo);
-    if (await onMemoSave(nextMemo)) resetForm();
+    const nextMemo = createMemo(form, editingMemo);
+    if (await onMemoSave(nextMemo)) closeModal();
   };
 
-  const startEdit = (memo: ExternalCatchMemo) => {
-    setEditingId(memo.id);
-    setForm({
-      sourceUrl: memo.sourceUrl,
-      sourceId: memo.sourceId,
-      species: fishSpeciesNames.includes(memo.species as FishSpeciesName) ? memo.species as FishSpeciesName : "",
-      caughtDate: memo.caughtDate,
-      areaName: memo.areaName,
-      estimatedSpotName: memo.estimatedSpotName ?? "",
-      method: (memo.method as FishingMethod) ?? "",
-      catchCount: memo.catchCount?.toString() ?? "",
-      sizeCm: memo.sizeCm?.toString() ?? "",
-      confidence: memo.confidence,
-      spotId: memo.spotId ?? "",
-      userMemo: memo.userMemo ?? "",
-    });
-  };
-
-  const deleteMemo = async (memoId: string) => {
-    if (storageStatus.isMutating) return;
-    if (await onMemoDelete(memoId) && editingId === memoId) resetForm();
+  const deleteEditingMemo = async () => {
+    if (!editingMemo || storageStatus.isMutating) return;
+    if (!window.confirm("この釣果を削除します。よろしいですか？")) return;
+    if (await onMemoDelete(editingMemo.id)) closeModal();
   };
 
   const toggleMigrationCandidate = (memoId: string) => {
@@ -178,66 +167,62 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, onLo
     setSelectedMigrationIds(new Set());
   };
 
+  const title = editingMemo ? "釣果を編集" : "釣果を登録";
+
   return (
     <>
       <div className="externalMemoLaunch" aria-labelledby="external-memos-launch-heading">
         <div>
-          <p className="eyebrow">Manual catch entry</p>
-          <h3 id="external-memos-launch-heading">手入力釣果登録</h3>
-          <p className="muted">URL先を自動取得せず、手入力した釣果の事実情報と出典だけを保存します。</p>
+          <p className="eyebrow">My catch log</p>
+          <h3 id="external-memos-launch-heading">自分の釣果を記録</h3>
+          <p className="muted">実際に釣った魚を、魚種・日付・エリア・釣り方のメモとして保存します。外部サイトの自動取り込みは行いません。</p>
           <MemoStorageStatusChip status={storageStatus} />
         </div>
-        <button type="button" className="button" onClick={() => setIsModalOpen(true)}>
-          手入力釣果登録
-        </button>
+        <button type="button" className="button" onClick={openNew}>釣果を登録</button>
+      </div>
+
+      <LocalMemoMigrationPanel candidates={migrationCandidates} selectedIds={selectedMigrationIds} status={storageStatus} result={migrationResult} onToggle={toggleMigrationCandidate} onMigrate={migrateSelectedMemos} />
+
+      <div className="cards" id="reports">
+        {displayMemos.length === 0 ? (
+          <div className="emptyState" role="status">
+            <p className="eyebrow">No reports</p>
+            <h3>該当する釣果記録がありません</h3>
+            <p>魚種・エリア・キーワード検索・釣果期間の条件を変更するか、「条件をリセット」で初期表示に戻してください。自分で記録した釣果だけを一覧表示対象にしています。</p>
+          </div>
+        ) : displayMemos.map((memo) => <ExternalMemoCard key={memo.id} memo={memo} spots={spots} onEdit={openEdit} />)}
       </div>
 
       {isModalOpen ? (
-        <div className="externalMemoOverlay" role="presentation" onMouseDown={() => setIsModalOpen(false)}>
-          <section
-            className="externalMemoModal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="external-memos-heading"
-            onMouseDown={(event) => event.stopPropagation()}
-          >
+        <div className="externalMemoOverlay" role="presentation" onMouseDown={closeModal}>
+          <section className="externalMemoModal" role="dialog" aria-modal="true" aria-labelledby="external-memos-heading" onMouseDown={(event) => event.stopPropagation()}>
             <div className="externalMemoModalHeader">
               <div>
-                <p className="eyebrow">Manual catch entry</p>
-                <h2 id="external-memos-heading">手入力釣果登録</h2>
-                <p className="muted">フォーム、登録済みの釣果一覧、編集、削除、出典URLを開く操作をこの画面で行います。</p>
+                <p className="eyebrow">My catch log</p>
+                <h2 id="external-memos-heading">{title}</h2>
+                <p className="muted">自分の釣果記録として必要な項目だけを入力します。</p>
               </div>
-              <button type="button" className="externalMemoClose" onClick={() => setIsModalOpen(false)} aria-label="手入力釣果登録を閉じる">×</button>
+              <button type="button" className="externalMemoClose" onClick={closeModal} aria-label={`${title}を閉じる`}>×</button>
             </div>
-            <MemoStorageStatusChip status={storageStatus} />
-            <LocalMemoMigrationPanel candidates={migrationCandidates} selectedIds={selectedMigrationIds} status={storageStatus} result={migrationResult} onToggle={toggleMigrationCandidate} onMigrate={migrateSelectedMemos} />
             {storageError ? <p className="externalMemoError" role="alert">{storageError}</p> : null}
             <form className="externalMemoForm" onSubmit={submitMemo} noValidate>
-              <label>情報元URL*<input value={form.sourceUrl} onChange={(e) => updateForm("sourceUrl", e.target.value)} placeholder="https://example.com/report" /></label>
-              {errors.sourceUrl ? <p className="fieldError">{errors.sourceUrl}</p> : null}
-              <label>情報元*<select value={form.sourceId} onChange={(e) => updateForm("sourceId", e.target.value)}><option value="">選択してください</option>{sources.map((source) => <option key={source.sourceId} value={source.sourceId}>{source.sourceName}</option>)}</select></label>
-              {errors.sourceId ? <p className="fieldError">{errors.sourceId}</p> : null}
               <div className="externalMemoGrid">
-                <label>魚種*<select value={form.species} onChange={(e) => updateForm("species", e.target.value)}><option value="">選択してください</option>{fishSpeciesNames.map((species) => <option key={species} value={species}>{species}</option>)}</select></label>
-                <label>釣果日*<input type="date" value={form.caughtDate} onChange={(e) => updateForm("caughtDate", e.target.value)} /></label>
-                <label>エリア*<input value={form.areaName} onChange={(e) => updateForm("areaName", e.target.value)} placeholder="例: 唐津湾" /></label>
-                <label>推定地点名<input value={form.estimatedSpotName} onChange={(e) => updateForm("estimatedSpotName", e.target.value)} placeholder="例: 呼子周辺" /></label>
-                <label>釣り方<select value={form.method} onChange={(e) => updateForm("method", e.target.value)}><option value="">未選択</option>{methodOptions.map((method) => <option key={method} value={method}>{method}</option>)}</select></label>
-                <label>信頼度<select value={form.confidence} onChange={(e) => updateForm("confidence", e.target.value)}>{confidenceOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
-                <label>匹数<input type="number" min="0" value={form.catchCount} onChange={(e) => updateForm("catchCount", e.target.value)} /></label>
-                <label>サイズcm<input type="number" min="0" value={form.sizeCm} onChange={(e) => updateForm("sizeCm", e.target.value)} /></label>
-                <label className="externalMemoWide">釣り場マスター紐づけ<select value={form.spotId} onChange={(e) => updateForm("spotId", e.target.value)}><option value="">紐づけなし</option>{spots.map((spot) => <option key={spot.id} value={spot.id}>{spot.name} / {spot.areaName}</option>)}</select></label>
-                <label className="externalMemoWide">ユーザーメモ<textarea value={form.userMemo} onChange={(e) => updateForm("userMemo", e.target.value)} maxLength={240} placeholder="本文やコメント全文ではなく、自分用の短いメモだけを保存" /></label>
+                <label>魚種 <span className="requiredBadge">必須</span><select value={form.species} onChange={(e) => updateForm("species", e.target.value)}><option value="">選択してください</option>{fishSpeciesNames.map((species) => <option key={species} value={species}>{species}</option>)}</select></label>
+                <label>釣果日 <span className="requiredBadge">必須</span><input type="date" value={form.caughtDate} onChange={(e) => updateForm("caughtDate", e.target.value)} /></label>
+                <label>エリア <span className="requiredBadge">必須</span><input value={form.areaName} onChange={(e) => updateForm("areaName", e.target.value)} placeholder="例: 唐津湾" /></label>
+                <label>場所・ポイント名 <span className="optionalBadge">任意</span><input value={form.estimatedSpotName} onChange={(e) => updateForm("estimatedSpotName", e.target.value)} placeholder="例: 呼子周辺" /></label>
+                <label>釣り方 <span className="optionalBadge">任意</span><select value={form.method} onChange={(e) => updateForm("method", e.target.value)}><option value="">未選択</option>{methodOptions.map((method) => <option key={method} value={method}>{method}</option>)}</select></label>
+                <label>匹数 <span className="optionalBadge">任意</span><input type="number" min="0" value={form.catchCount} onChange={(e) => updateForm("catchCount", e.target.value)} /></label>
+                <label>サイズcm <span className="optionalBadge">任意</span><input type="number" min="0" value={form.sizeCm} onChange={(e) => updateForm("sizeCm", e.target.value)} /></label>
+                <label className="externalMemoWide">地図上の釣り場 <span className="optionalBadge">任意</span><select value={form.spotId} onChange={(e) => updateForm("spotId", e.target.value)}><option value="">紐づけなし</option>{spots.map((spot) => <option key={spot.id} value={spot.id}>{spot.name} / {spot.areaName}</option>)}</select></label>
+                <label className="externalMemoWide">メモ <span className="optionalBadge">任意</span><textarea value={form.userMemo} onChange={(e) => updateForm("userMemo", e.target.value)} maxLength={240} placeholder="釣れた状況や次回のための短いメモ" /></label>
               </div>
-              {errors.species || errors.caughtDate || errors.areaName || errors.catchCount || errors.sizeCm ? <p className="fieldError">{errors.species ?? errors.caughtDate ?? errors.areaName ?? errors.catchCount ?? errors.sizeCm}</p> : null}
-              <div className="externalMemoActions"><button className="button" type="submit" disabled={storageStatus.isMutating}>{storageStatus.isMutating ? "保存中..." : editingId ? "更新する" : "登録する"}</button>{editingId ? <button type="button" className="clearSearchButton" onClick={resetForm}>編集をキャンセル</button> : null}</div>
+              {Object.keys(errors).length > 0 ? <p className="fieldError" role="alert">{errors.species ?? errors.caughtDate ?? errors.areaName ?? errors.catchCount ?? errors.sizeCm}</p> : null}
+              <div className="externalMemoActions">
+                <button className="button" type="submit" disabled={storageStatus.isMutating}>{storageStatus.isMutating ? "保存中..." : editingMemo ? "更新する" : "登録する"}</button>
+                {editingMemo ? <button type="button" className="dangerButton" onClick={deleteEditingMemo} disabled={storageStatus.isMutating}>{storageStatus.isMutating ? "削除中..." : "この釣果を削除"}</button> : null}
+              </div>
             </form>
-            <div className="externalMemoList" aria-live="polite">
-              {memos.length === 0 ? <p className="emptyState">登録済みの釣果はありません。</p> : memos.map((memo) => {
-                const linkedSpot = memo.spotId ? spots.find((spot) => spot.id === memo.spotId) : undefined;
-                return <article className="card" key={memo.id}><div className="cardHeader"><div><p className="eyebrow">{memo.sourceName}</p><h3>{memo.species} / {memo.areaName}</h3></div></div><div className="cardSummary"><span>釣果日: {memo.caughtDate}</span><span>推定地点: {memo.estimatedSpotName ?? "未入力"}</span><span>信頼度: {memo.confidence}</span><span>釣り場: {linkedSpot ? linkedSpot.name : "未紐づけ"}</span></div><dl className="facts"><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>更新日時</dt><dd>{new Date(memo.updatedAt).toLocaleString("ja-JP")}</dd></div><div className="sourceFact"><dt>出典URL</dt><dd><a href={memo.sourceUrl} target="_blank" rel="noreferrer">別タブで開く</a></dd></div></dl>{memo.userMemo ? <p className="externalMemoNote">{memo.userMemo}</p> : null}<div className="externalMemoActions"><button type="button" className="clearSearchButton" onClick={() => startEdit(memo)}>編集</button><button type="button" className="clearSearchButton" onClick={() => deleteMemo(memo.id)} disabled={storageStatus.isMutating}>削除</button></div></article>;
-              })}
-            </div>
           </section>
         </div>
       ) : null}
@@ -245,6 +230,17 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, onLo
   );
 }
 
+function ExternalMemoCard({ memo, spots, onEdit }: { memo: ExternalCatchMemo; spots: FishingSpot[]; onEdit: (memo: ExternalCatchMemo) => void }) {
+  const linkedSpot = memo.spotId ? spots.find((spot) => spot.id === memo.spotId) : undefined;
+  return (
+    <article className="card externalMemoCard">
+      <div className="cardHeader"><div><p className="eyebrow">自分の釣果</p><h3>{memo.species} / {memo.areaName}</h3><p className="muted">自分で記録した釣果です。</p></div><button type="button" className="clearSearchButton" onClick={() => onEdit(memo)} aria-label={`${memo.caughtDate} ${memo.species} ${memo.areaName}の釣果を編集`}>編集</button></div>
+      <div className="cardSummary"><span>釣果日: {memo.caughtDate}</span><span>場所・ポイント名: {memo.estimatedSpotName ?? "未入力"}</span><span>{linkedSpot ? `地図上の釣り場: ${linkedSpot.name}` : "地図上の釣り場: 未紐づけ"}</span></div>
+      <dl className="facts"><div><dt>魚種</dt><dd>{memo.species}</dd></div><div><dt>エリア</dt><dd>{memo.areaName}</dd></div><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>地図上の釣り場</dt><dd>{linkedSpot ? `${linkedSpot.name}に紐づけ` : "未紐づけ / 地図未表示"}</dd></div></dl>
+      {memo.userMemo ? <p className="externalMemoNote">{memo.userMemo}</p> : null}
+    </article>
+  );
+}
 
 function LocalMemoMigrationPanel({ candidates, selectedIds, status, result, onToggle, onMigrate }: {
   candidates: ExternalCatchMemo[];
@@ -257,12 +253,9 @@ function LocalMemoMigrationPanel({ candidates, selectedIds, status, result, onTo
   const canShowCandidates = status.isDbAvailable && status.fallbackReason === "local-data-not-migrated" && candidates.length > 0;
   if (!canShowCandidates && !result) return null;
   return (
-    <section className="externalMemoMigration" aria-labelledby="external-memo-migration-heading">
-      <div>
-        <p className="eyebrow">Explicit localStorage migration</p>
-        <h3 id="external-memo-migration-heading">未移行ローカル釣果 {candidates.length}件</h3>
-        <p className="muted">自動移行は行いません。選択したlocalStorage由来の釣果だけを、現在ログイン中ユーザーのSupabaseへ1件ずつ保存します。DB保存後も再取得確認が成功するまでlocalStorageから削除しません。</p>
-      </div>
+    <details className="externalMemoMigration">
+      <summary>未移行のブラウザ保存釣果をSupabaseへ移行する</summary>
+      <p className="muted">自動移行は行いません。選択したlocalStorage由来の釣果だけを、現在ログイン中ユーザーのSupabaseへ1件ずつ保存します。DB保存後も再取得確認が成功するまでlocalStorageから削除しません。</p>
       {canShowCandidates ? (
         <>
           <div className="externalMemoMigrationList">
@@ -273,15 +266,11 @@ function LocalMemoMigrationPanel({ candidates, selectedIds, status, result, onTo
               </label>
             ))}
           </div>
-          <div className="externalMemoActions">
-            <button type="button" className="button" onClick={onMigrate} disabled={status.isMutating || selectedIds.size === 0}>
-              {status.isMutating ? "移行確認中..." : `選択した${selectedIds.size}件を移行`}
-            </button>
-          </div>
+          <div className="externalMemoActions"><button type="button" className="button" onClick={onMigrate} disabled={status.isMutating || selectedIds.size === 0}>{status.isMutating ? "移行確認中..." : `選択した${selectedIds.size}件を移行`}</button></div>
         </>
       ) : null}
       {result ? <p className="muted" role="status">移行結果: 成功 {result.succeeded.length}件 / スキップ {result.skipped.length}件 / 失敗 {result.failed.length}件。未移行・失敗分はlocalStorageに残ります。</p> : null}
-    </section>
+    </details>
   );
 }
 
@@ -294,14 +283,14 @@ const memoStorageFallbackLabels: Record<NonNullable<ExternalCatchMemoStorageStat
 
 function MemoStorageStatusChip({ status }: { status: ExternalCatchMemoStorageStatus }) {
   const label = status.isLoading
-    ? "手入力釣果読込中..."
+    ? "釣果記録読込中..."
     : status.source === "supabase"
-      ? "手入力釣果: Supabase"
+      ? "釣果記録: Supabase"
       : status.isDbAvailable && status.fallbackReason === "local-data-not-migrated"
-        ? "手入力釣果: Supabase + localStorage"
+        ? "釣果記録: Supabase + localStorage"
         : status.fallbackReason === "supabase-error"
-          ? "手入力釣果: localStorage fallback"
-          : "手入力釣果: localStorage";
+          ? "釣果記録: localStorage fallback"
+          : "釣果記録: localStorage";
   const reason = !status.isLoading && status.fallbackReason ? memoStorageFallbackLabels[status.fallbackReason] : null;
   return <p className="dataSourceStatus" aria-live="polite"><span>{label}</span>{reason ? <small>{reason}</small> : null}</p>;
 }

@@ -299,3 +299,10 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
 .externalLinksFooter a {
   color: #bae6fd;
 }
+
+.requiredBadge, .optionalBadge { display: inline-flex; width: fit-content; margin-left: 6px; padding: 2px 7px; border-radius: 999px; font-size: .68rem; font-weight: 900; }
+.requiredBadge { background: rgba(251, 146, 60, .18); color: #fed7aa; border: 1px solid rgba(251, 146, 60, .35); }
+.optionalBadge { background: rgba(125, 211, 252, .14); color: #bae6fd; border: 1px solid rgba(125, 211, 252, .28); }
+.dangerButton { border: 1px solid rgba(248, 113, 113, .5); border-radius: 999px; padding: 12px 18px; background: rgba(127, 29, 29, .38); color: #fecaca; font: inherit; font-weight: 900; cursor: pointer; }
+.dangerButton:disabled { opacity: .55; cursor: not-allowed; }
+.externalMemoMigration summary { cursor: pointer; color: #e0faff; font-weight: 900; }

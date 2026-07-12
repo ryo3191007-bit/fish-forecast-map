@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import { fishSpeciesNames, type FishSpeciesName, type FishingReport } from "@/domain/fishing";
-import type { FishingSpot } from "@/domain/fishingSpot";
 import type { FishingEnvironment } from "@/domain/environment";
 import { fetchFishingEnvironment, readCachedFishingEnvironment } from "@/services/openMeteo";
 import { EnvironmentPanel } from "./EnvironmentPanel";
@@ -11,7 +10,6 @@ import { FishingMap } from "./FishingMap";
 import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
 import type { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
-import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { applyExternalMemoScoreAdjustments } from "@/domain/externalMemoScore";
 import { getManualCatchMemos } from "@/domain/manualCatchMemos";
 import { fetchMasterData, getStaticMasterData, type MasterDataFallbackReason, type MasterDataMeta, type MasterDataSet } from "@/lib/masterDataRepository";
@@ -59,7 +57,6 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [masterDataStatus, setMasterDataStatus] = useState<MasterDataStatus>({ source: "static-fallback", isLoading: true });
   const manualCatchMemos = useMemo(() => getManualCatchMemos(externalMemos), [externalMemos]);
   const fishingSpots = masterData.fishingSpots;
-  const externalSources = masterData.externalSources;
   const fishSpeciesFilterNames = useMemo(() => getFishSpeciesFilterNames(masterData), [masterData]);
   const [environmentSpotId, setEnvironmentSpotId] = useState(() => getStaticMasterData().fishingSpots[0]?.id ?? "");
   const [environment, setEnvironment] = useState<FishingEnvironment | null>(null);
@@ -431,18 +428,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
 
       {reportView === "reports" ? (
         <>
-          <ExternalCatchMemoSection memos={manualCatchMemos} onMemoSave={persistMemo} onMemoDelete={deleteMemo} onLocalMemoMigrate={migrateLocalMemosToSupabase} localMemoIds={localMemoIds} storageError={storageError} storageStatus={memoStorageStatus} sources={externalSources} spots={fishingSpots} />
-          <div className="cards" id="reports">
-            {filteredManualCatchMemos.length === 0 ? (
-              <div className="emptyState" role="status">
-                <p className="eyebrow">No reports</p>
-                <h3>該当する手入力釣果がありません</h3>
-                <p>魚種・エリア・キーワード検索・釣果期間の条件を変更するか、「条件をリセット」で初期表示に戻してください。手入力釣果だけを一覧表示対象にしています。</p>
-              </div>
-            ) : <>
-            {filteredManualCatchMemos.map((memo) => <ExternalMemoCard key={memo.id} memo={memo} spots={fishingSpots} />)}
-          </>}
-          </div>
+          <ExternalCatchMemoSection memos={manualCatchMemos} displayMemos={filteredManualCatchMemos} onMemoSave={persistMemo} onMemoDelete={deleteMemo} onLocalMemoMigrate={migrateLocalMemosToSupabase} localMemoIds={localMemoIds} storageError={storageError} storageStatus={memoStorageStatus} spots={fishingSpots} />
         </>
       ) : (
         <div className="cards" id="reports">
@@ -473,16 +459,5 @@ function MasterDataStatusChip({ status }: { status: MasterDataStatus }) {
       <span>{label}</span>
       {reason ? <small>{reason}</small> : null}
     </p>
-  );
-}
-
-function ExternalMemoCard({ memo, spots }: { memo: ExternalCatchMemo; spots: FishingSpot[] }) {
-  const linkedSpot = memo.spotId ? spots.find((spot) => spot.id === memo.spotId) : undefined;
-  return (
-    <article className="card externalMemoCard">
-      <div className="cardHeader"><div><p className="eyebrow">手入力釣果</p><h3>{memo.species} / {memo.areaName}</h3><p className="muted">手入力で登録した釣果です。</p></div></div>
-      <div className="cardSummary"><span>手入力釣果</span><span>釣果日: {memo.caughtDate}</span><span>推定地点: {memo.estimatedSpotName ?? "未入力"}</span><span>{linkedSpot ? `地図表示あり: ${linkedSpot.name}` : "未紐づけ / 地図未表示"}</span></div>
-      <dl className="facts"><div><dt>魚種</dt><dd>{memo.species}</dd></div><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>情報元名</dt><dd>{memo.sourceName}</dd></div><div><dt>信頼度</dt><dd>{memo.confidence}</dd></div><div><dt>釣り場マスター</dt><dd>{linkedSpot ? `${linkedSpot.name}に紐づけ` : "未紐づけ / 地図未表示"}</dd></div><div className="sourceFact"><dt>出典URL</dt><dd><a href={memo.sourceUrl} target="_blank" rel="noreferrer">別タブで開く</a></dd></div></dl>
-    </article>
   );
 }

@@ -33,7 +33,7 @@ export function AppShell() {
           <div>
             <p className="eyebrow">福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面まで</p>
             <h1>Fish Forecast Map</h1>
-            <p>MapLibre GL JSの地図上にモック釣果地点を表示し、地点評価・SCOREの参考に使います。釣果一覧はユーザーが手入力した釣果のみを表示し、外部サイトの自動取り込みは行いません。</p>
+            <p>MapLibre GL JSの地図上にモック釣果地点を表示し、地点評価・SCOREの参考に使います。釣果一覧はユーザー自身の釣果記録のみを表示し、登録モーダルは入力フォームだけに絞ります。外部サイトの自動取り込みは行いません。</p>
             <a className="button" href="#map">マップを見る</a>
           </div>
         </div>

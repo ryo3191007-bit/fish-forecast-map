@@ -37,12 +37,23 @@ for (const href of expectedLinks) {
 assert.equal(countMatches(appShell, /target="_blank" rel="noopener noreferrer"/g), 4, 'exactly four external reference links are rendered');
 
 assert.match(dashboard, /const filteredManualCatchMemos = useMemo\(\(\) => \{[\s\S]*?manualCatchMemos\.filter/, 'catch list filters manual memos only');
-assert.match(dashboard, /\{filteredManualCatchMemos\.map\(\(memo\) => <ExternalMemoCard/, 'catch list cards render manual memo array');
+assert.match(dashboard, /displayMemos=\{filteredManualCatchMemos\}/, 'catch list passes filtered manual memos to the catch record section');
 assert.doesNotMatch(dashboard, /mockFishingReports\.map\(\(report\) => <ExternalMemoCard/, 'mock reports must not be rendered as catch list cards');
 assert.doesNotMatch(dashboard, /reports\.map\(\(report\) => <ExternalMemoCard/, 'filtered mock reports must not be rendered as catch list cards');
 
 assert.match(dashboard, /const filteredExternalMemosForMap = useMemo\(\(\) => \{[\s\S]*?externalMemos\.filter/, 'map filters from all external memos');
 assert.match(dashboard, /<FishingMap reports=\{reports\} externalMemos=\{filteredExternalMemosForMap\}/, 'map receives the all-acquisition-method memo candidates');
 assert.doesNotMatch(dashboard, /<FishingMap reports=\{reports\} externalMemos=\{filteredManualCatchMemos\}/, 'map must not receive manual-only list candidates');
+
+const memoSection = readFileSync('src/components/ExternalCatchMemoSection.tsx', 'utf8');
+assert.match(memoSection, /<h2 id="external-memos-heading">\{title\}<\/h2>/, 'registration/edit modal uses dynamic create/edit heading');
+assert.doesNotMatch(memoSection, /情報元URL\*|情報元\*|信頼度<select|出典URL/, 'catch record form and cards do not expose external source fields');
+assert.match(memoSection, /USER_SELF_REPORT_SOURCE_ID = "user-self-report"/, 'new catch records use internal self-report source id');
+assert.match(memoSection, /confidence: editingMemo\?\.confidence \?\? "high"/, 'new catch records default to high confidence while edits keep existing confidence');
+assert.match(memoSection, /sourceId: editingMemo\?\.sourceId \?\? USER_SELF_REPORT_SOURCE_ID/, 'edits keep existing hidden source id');
+assert.match(memoSection, /createdAt: editingMemo\?\.createdAt \?\? now/, 'edits preserve createdAt');
+assert.match(memoSection, /if \(!window\.confirm/, 'delete requires confirmation');
+assert.match(memoSection, /<details className="externalMemoMigration">/, 'localStorage migration UI is outside the modal in compact details');
+assert.match(memoSection, /aria-label=\{`\$\{memo\.caughtDate\} \$\{memo\.species\} \$\{memo\.areaName\}の釣果を編集`\}/, 'each catch card has an accessible edit button');
 
 console.log('UI requirement static checks passed');
