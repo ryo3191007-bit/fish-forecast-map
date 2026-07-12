@@ -588,3 +588,41 @@ AIへSchemaファイルとこの仕様書を添付できない場合は、Schema
 - 駐車可否を保証しない
 - 釣果や魚種出現を保証しない
 - 将来公開する場合は座標丸め・非公開化を検討する
+
+---
+
+## Schema v1.1.0 追補（Issue #125）
+
+Schema v1.1.0の正本は `docs/schemas/fishing-spot-research.schema.json` です。旧v1.0.0は `docs/schemas/fishing-spot-research.v1.0.0.schema.json` として保存し、両Schemaの `$id` は一意にします。validatorは `schemaVersion` に応じて v1.0.0 / v1.1.0 を選択します。既存のChatGPTパイロットJSONとClaude原文JSONはv1.0.0で検証し、Gemini原文JSONは比較記録として従来どおり不適合を維持します。`data/research/fishing-spots/karatsu-east-port.json` は v1.0.0 のまま保持し、このIssueでは本番地点マスター、DB、画面、SCOREへ反映しません。
+
+### scopeType
+
+`scopeType` は調査対象範囲を示すルート項目です。`district` は港湾地区・海岸一帯、`facility` は岸壁・防波堤・フェリー埠頭・護岸等、`access_point` は実際に釣りを行う具体地点または入口です。`spotType` は地形・施設種別であり、`scopeType` とは別概念です。
+
+### evidenceSources
+
+v1.1.0では属性内の旧 `sourceIds` を廃止し、`evidenceSources.supportingSourceIds / checkedSourceIds / contradictingSourceIds` へ置き換えます。`confirmed` / `inferred` は標準JSON Schemaとcustom validatorの両方で `supportingSourceIds` 1件以上を必須にします。`unknown` は `supportingSourceIds` 0件、`confidence: "low"`、unknown値にします。3配列間の同一ID重複は禁止し、全IDは `sources[].id` に登録済みである必要があります。
+
+### coordinates
+
+`identity.coordinates` は `coordinateMethod`（`official_coordinate / map_measurement / address_geocode / supplied_reference`）と `coordinateScope`（`district / facility / access_point`）を必須にします。座標を支えるsourceは `evidenceSources.supportingSourceIds` に入れ、source側の `supports` も `identity.coordinates.latitude` / `identity.coordinates.longitude` と対応させます。
+
+### source独立性
+
+sourceには任意の `sourceGroup`、`originalSourceId` と、必須の `independenceStatus: independent / related / unknown` を持たせます。転載、同一運営元、同一原典の派生は独立sourceとして数えず、confidenceを上げる根拠にしません。
+
+### 時間情報
+
+魚種は `observedAt` または `observedPeriod` を記録できます。施設・規制・officialContactは `validFrom / validUntil / officiallyConfirmed` を持ちます。sourceは `publishedAt`（公開日）、`lastUpdatedAt`（source上の最終更新日）、`checkedAt`（このリポジトリで確認した日）を区別します。日付不明または非該当の場合はnullを許容しますが、項目自体はSchema skeletonとexampleに残します。
+
+### researchStages
+
+`researchStages.officialResearch` は `completed / incomplete`、`secondaryResearch` は `completed / skipped / incomplete`、`schemaValidation` は `passed / failed / not_run` です。これはAI自己申告欄であり、最終的なSchema検証は `scripts/fishing-spot-research-schema.test.mjs` のリポジトリ側テストで行います。
+
+### source.supports
+
+`source.supports` はSchema上に実在する値パスだけを許可します。配列要素は0始まりの `fishSpecies[0].name` のように表し、属性値は `attributes.spotType.value` のように `.value` まで書きます。座標は `identity.coordinates.latitude` / `identity.coordinates.longitude` です。`fishSpecies[0].value`、`fishSpecies[].name`、`fishSpecies.expected`、`attributes.foo.value`、`attributes.spotType`、`facilities.foo.value`、`restrictions.foo.value`、`sources[0].url` は拒否します。
+
+### 共通プロンプト
+
+汎用共通プロンプトは `docs/research/FISHING_SPOT_RESEARCH_COMMON_PROMPT.md` に置き、完全なJSON skeleton、unknownルール、source直接性・独立性、一次/二次調査完了条件、JSON以外を出力しない指示、出力前のSchema自己検証チェックを含めます。唐津東港用の既存3AIプロンプトは比較資料として保持します。
