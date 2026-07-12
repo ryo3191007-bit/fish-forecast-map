@@ -101,7 +101,7 @@ const expectedTiles = () => {
 };
 
 function color(elevationMeters) {
-  if (elevationMeters >= 0) return [180, 166, 130, 55];
+  if (elevationMeters >= 0) return [0, 0, 0, 0];
   const depth = -elevationMeters;
   if (depth < 20) return [191, 244, 255, 180];
   if (depth < 50) return [109, 215, 243, 195];
