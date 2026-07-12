@@ -181,3 +181,6 @@ karatsu-east-port.claude.json
 - 規制なし、障害物なし、常夜灯あり等を弱い根拠で断定していないか
 
 Schemaに通すためだけに人間が値を補完しないでください。
+
+
+> Schema v1.1.0以降の汎用調査では `docs/research/FISHING_SPOT_RESEARCH_COMMON_PROMPT.md` を使用します。このファイルは唐津東港3AI比較の履歴資料として保持します。

@@ -24,7 +24,7 @@
 3. 元ページの文章、写真、地図画像、コメント、プロフィール情報は保存しません。
 4. 客観的な事実と、地図・生態等からの推定を分離します。
 5. 確認できない項目は無理に埋めず `unknown` とします。
-6. すべての確定・推定値に、根拠となる `sourceIds` と確認日を付けます。
+6. すべての確定・推定値に、根拠となる `evidenceSources.supportingSourceIds` と確認日を付けます。確認したが結論に使わないsourceは `checkedSourceIds`、矛盾するsourceは `contradictingSourceIds` に分けます。
 7. AIの調査値はユーザー編集値で上書き消去せず、別レイヤーで扱います。
 8. 調査結果は釣果、安全、立入可否を保証しません。
 9. 外部サイトへのスクレイピング、自動巡回、定期実行は行いません。
@@ -37,7 +37,7 @@
 - 架空サンプル: `docs/examples/fishing-spot-research.example.json`
 - 検証スクリプト: `scripts/fishing-spot-research-schema.test.mjs`
 
-JSONの正本バージョンは `schemaVersion: "1.0.0"` です。
+JSONの正本バージョンは `schemaVersion: "1.1.0"` です。旧記録の実検証用に `docs/schemas/fishing-spot-research.v1.0.0.schema.json` を保持し、`schemaVersion: "1.0.0"` の唐津東港パイロットJSONとClaude原文JSONは旧Schemaで検証します。Gemini原文JSONは比較記録として従来どおり不適合を維持します。
 
 ## 4. 調査対象
 
@@ -103,9 +103,11 @@ JSONの正本バージョンは `schemaVersion: "1.0.0"` です。
 - `checkedAt`
 - `publishedAt`
 - `supports`
+- `independenceStatus`
+- `sourceGroup` / `originalSourceId` / `lastUpdatedAt`（必要に応じて）
 - `note`
 
-`supports` は、そのsourceが裏付ける項目パスです。単にURLを列挙するだけにしません。
+`supports` は、そのsourceが直接裏付ける項目パスです。単にURLを列挙するだけにしません。配列要素は0始まりの角括弧で `fishSpecies[0].name` のように表します。属性オブジェクト全体ではなく値そのものを支える場合は `.value` まで書き、`attributes.spotType.value`、`facilities.toilet.value`、`restrictions.fishingProhibited.value` のように統一します。座標は `identity.coordinates.latitude` / `identity.coordinates.longitude` を使います。
 
 例:
 
@@ -113,8 +115,8 @@ JSONの正本バージョンは `schemaVersion: "1.0.0"` です。
 {
   "id": "src-port-manager",
   "supports": [
-    "attributes.spotType",
-    "restrictions.entryProhibited"
+    "attributes.spotType.value",
+    "restrictions.entryProhibited.value"
   ]
 }
 ```
@@ -167,8 +169,8 @@ JSONの正本バージョンは `schemaVersion: "1.0.0"` です。
 - 古い個人ブログ1件で常夜灯を確認: `status=confirmed`, `confidence=low`
 - 水深資料を見つけられない: `status=unknown`, `confidence=low`
 
-`confirmed` と `inferred` は最低1件の `sourceIds` を必要とします。  
-`unknown` は `confidence=low` とし、属性値も `unknown` にします。
+`confirmed` と `inferred` は最低1件の `evidenceSources.supportingSourceIds` を必要とします。  
+`unknown` は `confidence=low` とし、属性値も `unknown` にします。`unknown` の `supportingSourceIds` は空配列にし、確認済みだが結論を支えないsourceは `checkedSourceIds` へ入れます。supporting / checked / contradicting の3配列間で同じsource IDを重複させてはいけません。全IDは必ず `sources[].id` に登録します。
 
 ## 8. 共通の属性構造
 
@@ -179,7 +181,11 @@ JSONの正本バージョンは `schemaVersion: "1.0.0"` です。
   "value": "unknown",
   "status": "unknown",
   "confidence": "low",
-  "sourceIds": [],
+  "evidenceSources": {
+    "supportingSourceIds": [],
+    "checkedSourceIds": [],
+    "contradictingSourceIds": []
+  },
   "checkedAt": "2026-07-12",
   "note": "確認できなかった理由"
 }
@@ -188,7 +194,7 @@ JSONの正本バージョンは `schemaVersion: "1.0.0"` です。
 - `value`: アプリ用に正規化した値
 - `status`: 確定・推定・不明
 - `confidence`: 根拠の強さ
-- `sourceIds`: 根拠source
+- `evidenceSources`: supporting / checked / contradicting に役割分けしたsource ID
 - `checkedAt`: sourceを確認した日
 - `note`: 元の数値、判定理由、注意事項
 
@@ -212,6 +218,19 @@ JSONの正本バージョンは `schemaVersion: "1.0.0"` です。
 - 公式地点座標や施設位置: `confirmed`
 - 港や海岸の代表点を地図から設定: `inferred`
 - 地点を特定できない: 緯度経度 `null`、`unknown`
+
+
+### 9.1.1 調査対象範囲 `scopeType`
+
+`scopeType` は、レコード全体が何を表すかを示します。`spotType` は地形・施設種別、`scopeType` は調査対象の粒度であり別概念です。
+
+| 値 | 意味 |
+|---|---|
+| `district` | 港湾地区・海岸一帯など広い範囲 |
+| `facility` | 岸壁・防波堤・フェリー埠頭・護岸等の施設 |
+| `access_point` | 実際に釣りを行う具体地点または入口 |
+
+座標には `coordinateMethod`（`official_coordinate` / `map_measurement` / `address_geocode` / `supplied_reference`）と `coordinateScope`（`district` / `facility` / `access_point`）を必須で記録します。
 
 ### 9.2 釣り場タイプ
 
@@ -588,3 +607,11 @@ AIへSchemaファイルとこの仕様書を添付できない場合は、Schema
 - 駐車可否を保証しない
 - 釣果や魚種出現を保証しない
 - 将来公開する場合は座標丸め・非公開化を検討する
+
+## 16. Schema v1.1.0の互換性と移行方針
+
+- `1.1.0` は新規調査の正本Schemaです。`scopeType`、`researchStages`、座標の `coordinateMethod` / `coordinateScope`、source独立性項目、`evidenceSources` を追加します。
+- 旧 `1.0.0` 記録は即時移行しません。`docs/schemas/fishing-spot-research.v1.0.0.schema.json` を使い、唐津東港パイロットJSONとClaude原文JSONが旧Schemaへ適合することを自動テストします。
+- Gemini原文JSONは、3AI比較で確認した不適合例として保持し、自動テストでも不適合であることを確認します。
+- 旧 `sourceIds` から新 `evidenceSources.supportingSourceIds` への移行は、値を直接支える根拠か、確認のみか、矛盾かを人間が確認してから行います。
+- `source.supports` は `attributes.spotType.value` のように `.value` まで、配列要素は `fishSpecies[0].name` のように角括弧で書きます。

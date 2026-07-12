@@ -8,7 +8,6 @@
   "required": [
     "schemaVersion",
     "spotId",
-    "scopeType",
     "identity",
     "attributes",
     "fishSpecies",
@@ -17,12 +16,11 @@
     "sources",
     "researchNotes",
     "researchedAt",
-    "researchStages",
     "reviewStatus"
   ],
   "properties": {
     "schemaVersion": {
-      "const": "1.1.0"
+      "const": "1.0.0"
     },
     "spotId": {
       "type": "string",
@@ -184,48 +182,6 @@
     },
     "review": {
       "$ref": "#/$defs/review"
-    },
-    "scopeType": {
-      "type": "string",
-      "enum": [
-        "district",
-        "facility",
-        "access_point"
-      ]
-    },
-    "researchStages": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "officialResearch",
-        "secondaryResearch",
-        "schemaValidation"
-      ],
-      "properties": {
-        "officialResearch": {
-          "type": "string",
-          "enum": [
-            "completed",
-            "incomplete"
-          ]
-        },
-        "secondaryResearch": {
-          "type": "string",
-          "enum": [
-            "completed",
-            "skipped",
-            "incomplete"
-          ]
-        },
-        "schemaValidation": {
-          "type": "string",
-          "enum": [
-            "passed",
-            "failed",
-            "not_run"
-          ]
-        }
-      }
     }
   },
   "$defs": {
@@ -260,7 +216,7 @@
         "value",
         "status",
         "confidence",
-        "evidenceSources",
+        "sourceIds",
         "checkedAt"
       ],
       "properties": {
@@ -271,6 +227,9 @@
         "confidence": {
           "$ref": "#/$defs/confidence"
         },
+        "sourceIds": {
+          "$ref": "#/$defs/sourceIds"
+        },
         "checkedAt": {
           "type": "string",
           "format": "date"
@@ -278,9 +237,6 @@
         "note": {
           "type": "string",
           "maxLength": 1000
-        },
-        "evidenceSources": {
-          "$ref": "#/$defs/evidenceSources"
         }
       },
       "allOf": [
@@ -335,10 +291,8 @@
         "longitude",
         "status",
         "confidence",
-        "evidenceSources",
-        "checkedAt",
-        "coordinateMethod",
-        "coordinateScope"
+        "sourceIds",
+        "checkedAt"
       ],
       "properties": {
         "latitude": {
@@ -363,6 +317,9 @@
         "confidence": {
           "$ref": "#/$defs/confidence"
         },
+        "sourceIds": {
+          "$ref": "#/$defs/sourceIds"
+        },
         "checkedAt": {
           "type": "string",
           "format": "date"
@@ -370,26 +327,6 @@
         "note": {
           "type": "string",
           "maxLength": 1000
-        },
-        "evidenceSources": {
-          "$ref": "#/$defs/evidenceSources"
-        },
-        "coordinateMethod": {
-          "type": "string",
-          "enum": [
-            "official_coordinate",
-            "map_measurement",
-            "address_geocode",
-            "supplied_reference"
-          ]
-        },
-        "coordinateScope": {
-          "type": "string",
-          "enum": [
-            "district",
-            "facility",
-            "access_point"
-          ]
         }
       },
       "allOf": [
@@ -1035,7 +972,7 @@
         "basis",
         "status",
         "confidence",
-        "evidenceSources",
+        "sourceIds",
         "checkedAt"
       ],
       "properties": {
@@ -1057,6 +994,9 @@
         "confidence": {
           "$ref": "#/$defs/confidence"
         },
+        "sourceIds": {
+          "$ref": "#/$defs/sourceIds"
+        },
         "checkedAt": {
           "type": "string",
           "format": "date"
@@ -1064,9 +1004,6 @@
         "note": {
           "type": "string",
           "maxLength": 1000
-        },
-        "evidenceSources": {
-          "$ref": "#/$defs/evidenceSources"
         }
       },
       "allOf": [
@@ -1211,41 +1148,13 @@
           "type": "array",
           "items": {
             "type": "string",
-            "pattern": "^(identity\\.(spotName|aliases|prefecture|municipality|coordinates\\.(latitude|longitude))|attributes\\.[A-Za-z0-9_-]+\\.value|fishSpecies\\[\\d+\\]\\.(name|basis|value)|facilities\\.[A-Za-z0-9_-]+\\.value|restrictions\\.[A-Za-z0-9_-]+\\.value|restrictions\\.officialContact\\.(name|url))$"
+            "pattern": "^(identity|attributes|fishSpecies|facilities|restrictions)(\\.[A-Za-z0-9_-]+)+$"
           },
-          "uniqueItems": true,
-          "description": "Use dot paths. Array elements use zero-based brackets, e.g. fishSpecies[0].name. Evidence objects should point to .value when the value itself is supported."
+          "uniqueItems": true
         },
         "note": {
           "type": "string",
           "maxLength": 1000
-        },
-        "sourceGroup": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 120
-        },
-        "originalSourceId": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "pattern": "^src-[a-z0-9]+(?:-[a-z0-9]+)*$"
-        },
-        "independenceStatus": {
-          "type": "string",
-          "enum": [
-            "independent",
-            "related",
-            "unknown"
-          ]
-        },
-        "lastUpdatedAt": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date"
         }
       }
     },
@@ -1274,41 +1183,6 @@
             "minLength": 1,
             "maxLength": 1000
           }
-        }
-      }
-    },
-    "evidenceSources": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "supportingSourceIds",
-        "checkedSourceIds",
-        "contradictingSourceIds"
-      ],
-      "properties": {
-        "supportingSourceIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
-        },
-        "checkedSourceIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
-        },
-        "contradictingSourceIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
         }
       }
     }

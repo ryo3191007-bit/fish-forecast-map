@@ -5,22 +5,30 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const schemaPath = path.join(ROOT, "docs/schemas/fishing-spot-research.schema.json");
+const schemaV1Path = path.join(ROOT, "docs/schemas/fishing-spot-research.v1.0.0.schema.json");
 const examplePath = path.join(ROOT, "docs/examples/fishing-spot-research.example.json");
+const karatsuPath = path.join(ROOT, "data/research/fishing-spots/karatsu-east-port.json");
+const claudeRawPath = path.join(ROOT, "data/research/fishing-spots/ai-outputs/karatsu-east-port.claude.raw.json");
+const geminiRawPath = path.join(ROOT, "data/research/fishing-spots/ai-outputs/karatsu-east-port.gemini.raw.json");
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
 const schema = readJson(schemaPath);
+const schemaV1 = readJson(schemaV1Path);
 const example = readJson(examplePath);
+const karatsu = readJson(karatsuPath);
+const claudeRaw = readJson(claudeRawPath);
+const geminiRaw = readJson(geminiRawPath);
 
-function resolveRef(ref) {
+function resolveRef(ref, rootSchema = schema) {
   assert.match(ref, /^#\//, `Only local JSON Schema refs are supported: ${ref}`);
   return ref
     .slice(2)
     .split("/")
     .map((part) => part.replaceAll("~1", "/").replaceAll("~0", "~"))
-    .reduce((current, part) => current?.[part], schema);
+    .reduce((current, part) => current?.[part], rootSchema);
 }
 
 function matchesType(value, type) {
@@ -36,14 +44,14 @@ function sameJson(left, right) {
   return JSON.stringify(left) === JSON.stringify(right);
 }
 
-function validateNode(value, node, currentPath = "$") {
+function validateNode(value, node, currentPath = "$", rootSchema = schema) {
   const errors = [];
   if (!node || typeof node !== "object") return errors;
 
   if (node.$ref) {
-    const resolved = resolveRef(node.$ref);
+    const resolved = resolveRef(node.$ref, rootSchema);
     if (!resolved) return [`${currentPath}: unresolved ref ${node.$ref}`];
-    return validateNode(value, resolved, currentPath);
+    return validateNode(value, resolved, currentPath, rootSchema);
   }
 
   if (Object.hasOwn(node, "const") && !sameJson(value, node.const)) {
@@ -112,10 +120,10 @@ function validateNode(value, node, currentPath = "$") {
     }
     if (node.items) {
       value.forEach((item, index) => {
-        errors.push(...validateNode(item, node.items, `${currentPath}[${index}]`));
+        errors.push(...validateNode(item, node.items, `${currentPath}[${index}]`, rootSchema));
       });
     }
-    if (node.contains && !value.some((item, index) => validateNode(item, node.contains, `${currentPath}[${index}]`).length === 0)) {
+    if (node.contains && !value.some((item, index) => validateNode(item, node.contains, `${currentPath}[${index}]`, rootSchema).length === 0)) {
       errors.push(`${currentPath}: no item satisfies contains`);
     }
   }
@@ -128,7 +136,7 @@ function validateNode(value, node, currentPath = "$") {
     }
     for (const [key, child] of Object.entries(node.properties ?? {})) {
       if (Object.hasOwn(value, key)) {
-        errors.push(...validateNode(value[key], child, `${currentPath}.${key}`));
+        errors.push(...validateNode(value[key], child, `${currentPath}.${key}`, rootSchema));
       }
     }
     if (node.additionalProperties === false) {
@@ -142,11 +150,11 @@ function validateNode(value, node, currentPath = "$") {
   }
 
   for (const child of node.allOf ?? []) {
-    errors.push(...validateNode(value, child, currentPath));
+    errors.push(...validateNode(value, child, currentPath, rootSchema));
   }
 
-  if (node.if && validateNode(value, node.if, currentPath).length === 0 && node.then) {
-    errors.push(...validateNode(value, node.then, currentPath));
+  if (node.if && validateNode(value, node.if, currentPath, rootSchema).length === 0 && node.then) {
+    errors.push(...validateNode(value, node.then, currentPath, rootSchema));
   }
 
   return errors;
@@ -154,11 +162,17 @@ function validateNode(value, node, currentPath = "$") {
 
 function validateSourceReferences(record) {
   const errors = [];
-  const sourceIds = record.sources.map((source) => source.id);
+  const sourceIds = (record.sources ?? []).map((source) => source.id);
   const known = new Set(sourceIds);
 
   if (known.size !== sourceIds.length) {
     errors.push("$.sources: source id must be unique");
+  }
+
+  function checkIds(ids, currentPath) {
+    for (const sourceId of ids ?? []) {
+      if (!known.has(sourceId)) errors.push(`${currentPath}: unknown source id ${sourceId}`);
+    }
   }
 
   function visit(value, currentPath) {
@@ -168,11 +182,22 @@ function validateSourceReferences(record) {
     }
     if (!value || typeof value !== "object") return;
 
-    if (Array.isArray(value.sourceIds)) {
-      for (const sourceId of value.sourceIds) {
-        if (!known.has(sourceId)) {
-          errors.push(`${currentPath}.sourceIds: unknown source id ${sourceId}`);
+    if (Array.isArray(value.sourceIds)) checkIds(value.sourceIds, `${currentPath}.sourceIds`);
+    if (value.evidenceSources) {
+      const roles = ["supportingSourceIds", "checkedSourceIds", "contradictingSourceIds"];
+      const seen = new Map();
+      for (const role of roles) {
+        checkIds(value.evidenceSources[role], `${currentPath}.evidenceSources.${role}`);
+        for (const id of value.evidenceSources[role] ?? []) {
+          if (seen.has(id)) errors.push(`${currentPath}.evidenceSources: duplicate source id ${id} in ${seen.get(id)} and ${role}`);
+          seen.set(id, role);
         }
+      }
+      if (value.status === "unknown" && value.evidenceSources.supportingSourceIds.length !== 0) {
+        errors.push(`${currentPath}.evidenceSources.supportingSourceIds: unknown status must not have supporting sources`);
+      }
+      if (["confirmed", "inferred"].includes(value.status) && value.evidenceSources.supportingSourceIds.length === 0) {
+        errors.push(`${currentPath}.evidenceSources.supportingSourceIds: ${value.status} status requires supporting sources`);
       }
     }
 
@@ -185,13 +210,46 @@ function validateSourceReferences(record) {
   return errors;
 }
 
+function schemaForRecord(record) {
+  if (record.schemaVersion === "1.0.0") return schemaV1;
+  if (record.schemaVersion === "1.1.0") return schema;
+  return schema;
+}
+
 function validateRecord(record) {
-  return [...validateNode(record, schema), ...validateSourceReferences(record)];
+  const rootSchema = schemaForRecord(record);
+  return [...validateNode(record, rootSchema, "$", rootSchema), ...validateSourceReferences(record)];
 }
 
 assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
-assert.equal(schema.properties.schemaVersion.const, "1.0.0");
+assert.equal(schema.properties.schemaVersion.const, "1.1.0");
+assert.equal(schemaV1.properties.schemaVersion.const, "1.0.0");
 assert.deepEqual(validateRecord(example), [], "example must satisfy schema and source references");
+
+
+assert.deepEqual(validateRecord(karatsu), [], "Karatsu pilot fixture must continue satisfying Schema v1.0.0");
+assert.deepEqual(validateRecord(claudeRaw), [], "Claude raw fixture must continue satisfying Schema v1.0.0");
+assert.notDeepEqual(validateRecord(geminiRaw), [], "Gemini raw fixture must remain intentionally non-compliant");
+
+if (example.schemaVersion === "1.1.0") {
+for (const validPath of ["attributes.spotType.value", "fishSpecies[0].name", "fishSpecies[0].basis", "facilities.toilet.value", "identity.coordinates.latitude"]) {
+  assert.ok(new RegExp(schema.$defs.source.properties.supports.items.pattern).test(validPath), `${validPath} must be a valid supports path`);
+}
+for (const invalidPath of ["fishSpecies.expected", "fishSpecies[].name", "attributes", "attributes.spotType", "sources[0].url"]) {
+  assert.ok(!new RegExp(schema.$defs.source.properties.supports.items.pattern).test(invalidPath), `${invalidPath} must be an invalid supports path`);
+}
+
+const unknownWithSupporting = structuredClone(example);
+unknownWithSupporting.attributes.waterDepth.status = "unknown";
+unknownWithSupporting.attributes.waterDepth.value = "unknown";
+unknownWithSupporting.attributes.waterDepth.confidence = "low";
+unknownWithSupporting.attributes.waterDepth.evidenceSources.supportingSourceIds = [example.sources[0].id];
+assert.ok(validateRecord(unknownWithSupporting).some((error) => error.includes("unknown status must not have supporting sources")));
+
+const duplicateEvidenceRole = structuredClone(example);
+duplicateEvidenceRole.attributes.seabed.evidenceSources.checkedSourceIds = [duplicateEvidenceRole.attributes.seabed.evidenceSources.supportingSourceIds[0]];
+assert.ok(validateRecord(duplicateEvidenceRole).some((error) => error.includes("duplicate source id")));
+}
 
 const invalidEnum = structuredClone(example);
 invalidEnum.attributes.tidalFlow.value = "very_strong";
@@ -208,7 +266,11 @@ assert.ok(
 );
 
 const unknownSource = structuredClone(example);
-unknownSource.attributes.seabed.sourceIds = ["src-does-not-exist"];
+if (unknownSource.attributes.seabed.evidenceSources) {
+  unknownSource.attributes.seabed.evidenceSources.supportingSourceIds = ["src-does-not-exist"];
+} else {
+  unknownSource.attributes.seabed.sourceIds = ["src-does-not-exist"];
+}
 assert.ok(
   validateRecord(unknownSource).some((error) => error.includes("unknown source id")),
   "unregistered sourceIds must be rejected",
