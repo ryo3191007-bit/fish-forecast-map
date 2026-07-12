@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./bathymetry-mobile.css";
 
 export const metadata: Metadata = {
   title: "Fish Forecast Map",

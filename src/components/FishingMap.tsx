@@ -14,8 +14,6 @@ import {
 import {
   BATHYMETRY_ATTRIBUTION,
   BATHYMETRY_BOUNDS,
-  BATHYMETRY_MAX_ZOOM,
-  BATHYMETRY_MIN_ZOOM,
   BATHYMETRY_COLOR_LAYER_ID,
   BATHYMETRY_COLOR_SOURCE_ID,
   BATHYMETRY_COLOR_TILE_URL,
@@ -24,13 +22,47 @@ import {
   BATHYMETRY_CONTOUR_LAYER_ID,
   BATHYMETRY_CONTOUR_SOURCE_ID,
   BATHYMETRY_DEPTH_STOPS,
+  BATHYMETRY_FALLBACK_ATTRIBUTION,
+  BATHYMETRY_FALLBACK_COLOR_LAYER_ID,
+  BATHYMETRY_FALLBACK_COLOR_SOURCE_ID,
+  BATHYMETRY_FALLBACK_COLOR_TILE_URL,
+  BATHYMETRY_FALLBACK_CONTOUR_GEOJSON_URL,
+  BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+  BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
+  BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID,
+  BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
+  BATHYMETRY_FALLBACK_LICENSE_NOTE,
+  BATHYMETRY_FALLBACK_METADATA_URL,
+  BATHYMETRY_FALLBACK_SOURCE_ID,
+  BATHYMETRY_FALLBACK_TILE_URL,
   BATHYMETRY_HILLSHADE_LAYER_ID,
   BATHYMETRY_LICENSE_NOTE,
+  BATHYMETRY_MAX_ZOOM,
+  BATHYMETRY_METADATA_URL,
+  BATHYMETRY_MIN_ZOOM,
   BATHYMETRY_SAFETY_NOTE,
   BATHYMETRY_SOURCE_ID,
   BATHYMETRY_TILE_URL,
+  GSI_STANDARD_ATTRIBUTION,
+  GSI_STANDARD_NOTE,
+  GSI_STANDARD_OVERLAY_LAYER_ID,
+  GSI_STANDARD_OVERLAY_OPACITY,
+  GSI_STANDARD_OVERLAY_SOURCE_ID,
+  GSI_STANDARD_TILE_URL,
+  lonLatToTidCell,
+  shouldEnableInitialGsiOverlay,
   shouldEnableInitialTerrain,
+  summarizeTidAround,
+  type TidSummary,
 } from "@/domain/bathymetry";
+import {
+  classifyBathymetryError,
+  initialBathymetryFallbackState,
+  reduceBathymetryFallback,
+  validateBathymetryMetadata,
+  type BathymetryFailureSource,
+  type BathymetryDisplaySource,
+} from "@/domain/bathymetryFallback";
 import { MapLayerToggle } from "./MapLayerToggle";
 
 type FishingMapProps = {
@@ -45,36 +77,152 @@ type MappableExternalMemo = ExternalCatchMemo & {
   spotName: string;
 };
 
+type TerrainStatus = "3d" | "2d" | "unsupported" | "error";
+
+type TidGrid = {
+  values: number[];
+  width: number;
+  height: number;
+  nodata: number;
+};
+
+const PRIMARY_LAYER_IDS = [
+  BATHYMETRY_COLOR_LAYER_ID,
+  BATHYMETRY_HILLSHADE_LAYER_ID,
+  BATHYMETRY_CONTOUR_LAYER_ID,
+  BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+] as const;
+
+const FALLBACK_LAYER_IDS = [
+  BATHYMETRY_FALLBACK_COLOR_LAYER_ID,
+  BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
+  BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
+  BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+] as const;
+
 export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
-  const [terrainStatus, setTerrainStatus] = useState<
-    "3d" | "2d" | "unsupported" | "error"
-  >("2d");
-  const [bathymetryLoadError, setBathymetryLoadError] = useState(false);
+  const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>("2d");
+  const [bathymetryRuntime, setBathymetryRuntime] = useState(
+    initialBathymetryFallbackState,
+  );
+  const [isGsiOverlayEnabled, setIsGsiOverlayEnabled] = useState(false);
+  const [tidExpanded, setTidExpanded] = useState(false);
+  const [tidGrid, setTidGrid] = useState<TidGrid | null>(null);
+  const [tidSummary, setTidSummary] = useState<TidSummary | null>(null);
+  const [tidStatus, setTidStatus] = useState("TID正本を読み込み中です");
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    mapRef.current = new maplibregl.Map({
+    const map = new maplibregl.Map({
       container: containerRef.current,
       style: "https://demotiles.maplibre.org/style.json",
       center: [129.95, 33.48],
       zoom: 8.2,
     });
-    mapRef.current.on("load", () => addAerialPhotoLayer(mapRef.current));
-    mapRef.current.addControl(
-      new maplibregl.NavigationControl({ showCompass: false }),
-    );
+    mapRef.current = map;
+
+    const onLoad = () => addAerialPhotoLayer(map);
+    const onError = (event: maplibregl.ErrorEvent) => {
+      const sourceId = (event as maplibregl.ErrorEvent & { sourceId?: string })
+        .sourceId;
+      const message = event.error?.message ?? "unknown-map-error";
+      const source = classifyBathymetryError({ sourceId, message });
+      if (!source) return;
+      const key = `${sourceId ?? "unknown"}:${message.slice(0, 160)}`;
+      setBathymetryRuntime((current) =>
+        reduceBathymetryFallback(current, {
+          type: "source-error",
+          source,
+          key,
+        }),
+      );
+    };
+
+    map.on("load", onLoad);
+    map.on("error", onError);
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
 
     return () => {
-      mapRef.current?.remove();
+      map.off("load", onLoad);
+      map.off("error", onError);
+      map.remove();
       mapRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/bathymetry/gebco-2026/tid-crop.json")
+      .then((response) => {
+        if (!response.ok) throw new Error(`TID fetch failed: ${response.status}`);
+        return response.json();
+      })
+      .then((data: TidGrid) => {
+        if (
+          data.width !== 552 ||
+          data.height !== 360 ||
+          data.nodata !== 127 ||
+          !Array.isArray(data.values) ||
+          data.values.length !== data.width * data.height
+        ) {
+          throw new Error("TID metadata or value shape is invalid");
+        }
+        if (!cancelled) setTidGrid(data);
+      })
+      .catch(() => {
+        if (!cancelled) setTidStatus("データ由来を表示できません");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !tidGrid) return;
+
+    const update = () => {
+      const center = map.getCenter();
+      const cell = lonLatToTidCell(
+        center.lng,
+        center.lat,
+        tidGrid.width,
+        tidGrid.height,
+      );
+      if (!cell) {
+        setTidSummary(null);
+        setTidStatus("対象範囲外のためデータ由来を表示できません");
+        return;
+      }
+      const summary = summarizeTidAround(
+        tidGrid.values,
+        tidGrid.width,
+        tidGrid.height,
+        cell.col,
+        cell.row,
+        8,
+      );
+      if (!summary.sampleCells) {
+        setTidSummary(null);
+        setTidStatus("有効なTIDセルがないためデータ由来を表示できません");
+        return;
+      }
+      setTidSummary(summary);
+      setTidStatus("");
+    };
+
+    update();
+    map.on("moveend", update);
+    return () => {
+      map.off("moveend", update);
+    };
+  }, [tidGrid]);
 
   const mappableExternalMemos = useMemo(
     () =>
@@ -106,12 +254,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
       hasAdjustedBoundsRef.current = true;
     };
 
-    if (map.loaded()) {
-      adjustMapBounds();
-      return;
-    }
-
-    map.once("load", adjustMapBounds);
+    if (map.loaded()) adjustMapBounds();
+    else map.once("load", adjustMapBounds);
 
     return () => {
       map.off("load", adjustMapBounds);
@@ -144,7 +288,54 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     });
     setIsTerrainEnabled(enabled);
     setTerrainStatus(enabled ? "3d" : supportsWebGl ? "2d" : "unsupported");
+    setIsGsiOverlayEnabled(shouldEnableInitialGsiOverlay(window.innerWidth));
   }, []);
+
+  useEffect(() => {
+    if (mapLayerMode !== "bathymetry") return;
+    if (bathymetryRuntime.display === "standard") {
+      setMapLayerMode("standard");
+      return;
+    }
+
+    const source = bathymetryRuntime.display;
+    const metadataUrl =
+      source === "gebco"
+        ? BATHYMETRY_METADATA_URL
+        : BATHYMETRY_FALLBACK_METADATA_URL;
+    const controller = new AbortController();
+
+    fetch(metadataUrl, { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`metadata-http-${response.status}`);
+        }
+        return response.json();
+      })
+      .then((metadata) => {
+        const validationError = validateBathymetryMetadata(metadata, source);
+        if (validationError) throw new Error(validationError);
+        setBathymetryRuntime((current) =>
+          reduceBathymetryFallback(current, {
+            type: "source-success",
+            source,
+          }),
+        );
+      })
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        const message = error instanceof Error ? error.message : "metadata-error";
+        setBathymetryRuntime((current) =>
+          reduceBathymetryFallback(current, {
+            type: "source-error",
+            source,
+            key: message,
+          }),
+        );
+      });
+
+    return () => controller.abort();
+  }, [bathymetryRuntime.display, mapLayerMode]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -152,60 +343,81 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
 
     const applyLayerMode = () => {
       setAerialLayerVisibility(map, mapLayerMode === "aerial");
-      applyBathymetryMode(
+      applyBathymetryMode({
         map,
-        mapLayerMode,
-        isTerrainEnabled,
+        mode: mapLayerMode,
+        display: bathymetryRuntime.display,
+        terrainEnabled: isTerrainEnabled,
+        gsiOverlayEnabled: isGsiOverlayEnabled,
         setTerrainStatus,
-        setMapLayerMode,
-        setBathymetryLoadError,
-      );
+        onSourceError: (source, key) =>
+          setBathymetryRuntime((current) =>
+            reduceBathymetryFallback(current, {
+              type: "source-error",
+              source,
+              key,
+            }),
+          ),
+      });
     };
+
     if (map.loaded()) applyLayerMode();
     else map.once("load", applyLayerMode);
-
     return () => {
       map.off("load", applyLayerMode);
     };
-  }, [isTerrainEnabled, mapLayerMode]);
+  }, [
+    bathymetryRuntime.display,
+    isGsiOverlayEnabled,
+    isTerrainEnabled,
+    mapLayerMode,
+  ]);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    const reportMarkers = reports.map((report) => {
-      const marker = new maplibregl.Marker({
-        color: scoreColor(report.forecast.score),
-      })
+    const reportMarkers = reports.map((report) =>
+      new maplibregl.Marker({ color: scoreColor(report.forecast.score) })
         .setLngLat([report.longitude, report.latitude])
         .setPopup(
           new maplibregl.Popup({ offset: 16 }).setDOMContent(
             createPopupContent(report),
           ),
         )
-        .addTo(map);
-      return marker;
-    });
+        .addTo(map),
+    );
 
-    const memoMarkers = mappableExternalMemos.map((memo) => {
-      return new maplibregl.Marker({ color: "#a855f7" })
+    const memoMarkers = mappableExternalMemos.map((memo) =>
+      new maplibregl.Marker({ color: "#a855f7" })
         .setLngLat([memo.longitude, memo.latitude])
         .setPopup(
           new maplibregl.Popup({ offset: 16 }).setDOMContent(
             createExternalMemoPopupContent(memo),
           ),
         )
-        .addTo(map);
-    });
+        .addTo(map),
+    );
 
     return () =>
       [...reportMarkers, ...memoMarkers].forEach((marker) => marker.remove());
   }, [mappableExternalMemos, reports]);
 
+  const handleLayerModeChange = (nextMode: MapLayerMode) => {
+    if (nextMode === "bathymetry") {
+      setBathymetryRuntime((current) =>
+        reduceBathymetryFallback(current, { type: "enter-bathymetry" }),
+      );
+    }
+    setMapLayerMode(nextMode);
+  };
+
+  const fallbackActive = bathymetryRuntime.display === "etopo";
+
   return (
     <div className="mapShell">
       <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
-      <MapLayerToggle value={mapLayerMode} onChange={setMapLayerMode} />
+      <MapLayerToggle value={mapLayerMode} onChange={handleLayerModeChange} />
       {mapLayerMode === "bathymetry" ? (
         <>
           <div
@@ -221,15 +433,47 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
               />
               3D表示
             </label>
+            <button
+              className="terrainToggleButton"
+              type="button"
+              aria-pressed={isGsiOverlayEnabled}
+              title="国土地理院標準地図overlayを切り替え"
+              onClick={() => setIsGsiOverlayEnabled((value) => !value)}
+            >
+              海岸線表示
+            </button>
+            <button
+              className="terrainToggleButton"
+              type="button"
+              aria-expanded={tidExpanded}
+              title="GEBCO TID Gridのデータ由来を表示"
+              onClick={() => setTidExpanded((value) => !value)}
+            >
+              データ由来
+            </button>
             <span className="terrainStatus">
               {terrainStatus === "3d"
                 ? "3D地形表示"
                 : terrainStatus === "error"
-                  ? "3D初期化失敗: 2D表示"
+                  ? "3D初期化失敗"
                   : terrainStatus === "unsupported"
                     ? "この端末では2D表示"
                     : "2D軽量表示"}
             </span>
+            {tidExpanded ? (
+              <div
+                className="tidSummary"
+                aria-label="GEBCO TID Gridによるデータ由来"
+              >
+                {tidSummary
+                  ? `この周辺の水深データ: 実測 ${tidSummary.direct}% / 補間 ${tidSummary.predictedInterpolated}% / 混在・陸域 ${tidSummary.mixedUnknownLand}%${tidSummary.nodata ? ` / nodata ${tidSummary.nodata}セル` : ""}`
+                  : tidStatus}
+                <small>
+                  GEBCO TID Gridによる中心周辺17×17セル（nodata
+                  127は割合の分母から除外）の目安。沿岸では陸セル混在により比率が変動します。
+                </small>
+              </div>
+            ) : null}
             <div className="bathymetryLegend" aria-label="水深凡例">
               {BATHYMETRY_DEPTH_STOPS.map((stop) => (
                 <span key={stop.label}>
@@ -243,15 +487,34 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             className="mapAttribution bathymetryAttribution"
             aria-label="水深・地形データの出典"
           >
-            {BATHYMETRY_ATTRIBUTION}
-            <span>{BATHYMETRY_LICENSE_NOTE}</span>
+            {fallbackActive
+              ? BATHYMETRY_FALLBACK_ATTRIBUTION
+              : BATHYMETRY_ATTRIBUTION}
+            <span>
+              {fallbackActive
+                ? BATHYMETRY_FALLBACK_LICENSE_NOTE
+                : BATHYMETRY_LICENSE_NOTE}
+            </span>
             <span>{BATHYMETRY_SAFETY_NOTE}</span>
+            {isGsiOverlayEnabled ? (
+              <span>
+                <span
+                  dangerouslySetInnerHTML={{ __html: GSI_STANDARD_ATTRIBUTION }}
+                />
+                {` / ${GSI_STANDARD_NOTE}`}
+              </span>
+            ) : null}
           </div>
         </>
       ) : null}
-      {bathymetryLoadError ? (
+      {fallbackActive && mapLayerMode === "bathymetry" ? (
         <div className="mapNotice" role="status">
-          水深データを読み込めませんでした
+          高解像度水深を読み込めなかったため、広域水深へ切り替えました
+        </div>
+      ) : null}
+      {bathymetryRuntime.notice ? (
+        <div className="mapNotice" role="status">
+          {bathymetryRuntime.notice}
         </div>
       ) : null}
       {mapLayerMode === "aerial" ? (
@@ -272,35 +535,25 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
 
 function createPopupContent(report: FishingReport) {
   const popup = document.createElement("div");
-
+  popup.className = "mapPopup";
   const spotName = document.createElement("strong");
   spotName.className = "mapPopupTitle";
   spotName.textContent = report.spotName;
-
-  popup.className = "mapPopup";
-
   const summary = document.createElement("div");
   summary.className = "mapPopupSummary";
-
   const score = document.createElement("span");
   score.className = "mapPopupScore";
   score.textContent = `SCORE ${report.forecast.score}点`;
-
   const species = document.createElement("span");
   species.textContent = report.species;
-
   const place = document.createElement("span");
   place.textContent = report.areaName;
-
   summary.append(score, species, place);
-
   const method = document.createElement("p");
   method.className = "mapPopupMeta";
   method.textContent = `${report.method} / ${report.reportDate}`;
-
   const reason = document.createElement("p");
   reason.textContent = report.forecast.reasons[0] ?? "";
-
   popup.append(spotName, summary, method, reason);
   return popup;
 }
@@ -332,71 +585,70 @@ function createExternalMemoPopupContent(memo: MappableExternalMemo) {
   return popup;
 }
 
-function applyBathymetryMode(
-  map: maplibregl.Map,
-  mode: MapLayerMode,
-  terrainEnabled: boolean,
-  setTerrainStatus: (status: "3d" | "2d" | "unsupported" | "error") => void,
-  setMapLayerMode: (mode: MapLayerMode) => void,
-  setBathymetryLoadError: (hasError: boolean) => void,
-) {
-  const showBathymetry = mode === "bathymetry";
-  if (showBathymetry) {
-    setBathymetryLoadError(false);
-    addBathymetryLayers(map, () => {
-      map.setTerrain(null);
-      setTerrainStatus("error");
-      setBathymetryLoadError(true);
-      setMapLayerMode("standard");
-    });
+type ApplyBathymetryModeInput = {
+  map: maplibregl.Map;
+  mode: MapLayerMode;
+  display: BathymetryDisplaySource;
+  terrainEnabled: boolean;
+  gsiOverlayEnabled: boolean;
+  setTerrainStatus: (status: TerrainStatus) => void;
+  onSourceError: (source: BathymetryFailureSource, key: string) => void;
+};
+
+function applyBathymetryMode({
+  map,
+  mode,
+  display,
+  terrainEnabled,
+  gsiOverlayEnabled,
+  setTerrainStatus,
+  onSourceError,
+}: ApplyBathymetryModeInput) {
+  if (mode !== "bathymetry" || display === "standard") {
+    removeBathymetryRuntimeLayers(map);
+    setTerrainStatus("2d");
+    return;
   }
-  for (const layerId of [
-    BATHYMETRY_COLOR_LAYER_ID,
-    BATHYMETRY_HILLSHADE_LAYER_ID,
-    BATHYMETRY_CONTOUR_LAYER_ID,
-    BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
-  ]) {
-    if (map.getLayer(layerId))
-      map.setLayoutProperty(
-        layerId,
-        "visibility",
-        showBathymetry ? "visible" : "none",
-      );
+
+  if (display === "gebco") addPrimaryBathymetryLayers(map);
+  else addFallbackBathymetryLayers(map);
+  if (gsiOverlayEnabled) ensureGsiOverlay(map);
+
+  for (const layerId of PRIMARY_LAYER_IDS) {
+    setLayerVisibility(map, layerId, display === "gebco");
   }
+  for (const layerId of FALLBACK_LAYER_IDS) {
+    setLayerVisibility(map, layerId, display === "etopo");
+  }
+  setLayerVisibility(
+    map,
+    GSI_STANDARD_OVERLAY_LAYER_ID,
+    gsiOverlayEnabled,
+  );
+
   try {
-    if (
-      showBathymetry &&
-      terrainEnabled &&
-      map.getSource(BATHYMETRY_SOURCE_ID)
-    ) {
-      map.setTerrain({ source: BATHYMETRY_SOURCE_ID, exaggeration: 1 });
+    if (terrainEnabled) {
+      const source =
+        display === "gebco"
+          ? BATHYMETRY_SOURCE_ID
+          : BATHYMETRY_FALLBACK_SOURCE_ID;
+      map.setTerrain({ source, exaggeration: 1 });
       map.easeTo({ pitch: 52, bearing: -18, duration: 650, essential: false });
       setTerrainStatus("3d");
     } else {
       map.setTerrain(null);
       map.easeTo({ pitch: 0, bearing: 0, duration: 350, essential: false });
-      setTerrainStatus(showBathymetry ? "2d" : "2d");
+      setTerrainStatus("2d");
     }
   } catch (error) {
-    console.warn(
-      "[bathymetry] terrain initialization failed; falling back to 2D",
-      error,
-    );
     map.setTerrain(null);
     setTerrainStatus("error");
+    const message = error instanceof Error ? error.message : "terrain-init";
+    onSourceError(display, `terrain-init:${message}`);
   }
 }
 
-function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void) {
-  const mapWithFlag = map as maplibregl.Map & { __bathymetryErrorHandlerAdded?: boolean };
-  if (!mapWithFlag.__bathymetryErrorHandlerAdded) {
-    map.on("error", (event) => {
-      const sourceId = (event as maplibregl.ErrorEvent & { sourceId?: string }).sourceId;
-      const message = event.error?.message ?? "";
-      if (sourceId?.includes("etopo-2022") || message.includes("bathymetry/etopo-2022")) onBathymetryError();
-    });
-    mapWithFlag.__bathymetryErrorHandlerAdded = true;
-  }
+function addPrimaryBathymetryLayers(map: maplibregl.Map) {
   if (!map.getSource(BATHYMETRY_SOURCE_ID)) {
     map.addSource(BATHYMETRY_SOURCE_ID, {
       type: "raster-dem",
@@ -426,55 +678,132 @@ function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void)
       data: BATHYMETRY_CONTOUR_GEOJSON_URL,
     });
   }
+  addBathymetryLayersForSources(map, {
+    colorLayerId: BATHYMETRY_COLOR_LAYER_ID,
+    colorSourceId: BATHYMETRY_COLOR_SOURCE_ID,
+    hillshadeLayerId: BATHYMETRY_HILLSHADE_LAYER_ID,
+    demSourceId: BATHYMETRY_SOURCE_ID,
+    contourLayerId: BATHYMETRY_CONTOUR_LAYER_ID,
+    contourLabelLayerId: BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+    contourSourceId: BATHYMETRY_CONTOUR_SOURCE_ID,
+    hillshadeExaggeration: 0.28,
+  });
+}
+
+function addFallbackBathymetryLayers(map: maplibregl.Map) {
+  if (!map.getSource(BATHYMETRY_FALLBACK_SOURCE_ID)) {
+    map.addSource(BATHYMETRY_FALLBACK_SOURCE_ID, {
+      type: "raster-dem",
+      tiles: [BATHYMETRY_FALLBACK_TILE_URL],
+      tileSize: 256,
+      minzoom: BATHYMETRY_MIN_ZOOM,
+      maxzoom: BATHYMETRY_MAX_ZOOM,
+      bounds: [...BATHYMETRY_BOUNDS],
+      encoding: "mapbox",
+      attribution: BATHYMETRY_FALLBACK_ATTRIBUTION,
+    });
+  }
+  if (!map.getSource(BATHYMETRY_FALLBACK_COLOR_SOURCE_ID)) {
+    map.addSource(BATHYMETRY_FALLBACK_COLOR_SOURCE_ID, {
+      type: "raster",
+      tiles: [BATHYMETRY_FALLBACK_COLOR_TILE_URL],
+      tileSize: 256,
+      minzoom: BATHYMETRY_MIN_ZOOM,
+      maxzoom: BATHYMETRY_MAX_ZOOM,
+      bounds: [...BATHYMETRY_BOUNDS],
+      attribution: BATHYMETRY_FALLBACK_ATTRIBUTION,
+    });
+  }
+  if (!map.getSource(BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID)) {
+    map.addSource(BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID, {
+      type: "geojson",
+      data: BATHYMETRY_FALLBACK_CONTOUR_GEOJSON_URL,
+    });
+  }
+  addBathymetryLayersForSources(map, {
+    colorLayerId: BATHYMETRY_FALLBACK_COLOR_LAYER_ID,
+    colorSourceId: BATHYMETRY_FALLBACK_COLOR_SOURCE_ID,
+    hillshadeLayerId: BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
+    demSourceId: BATHYMETRY_FALLBACK_SOURCE_ID,
+    contourLayerId: BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
+    contourLabelLayerId: BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+    contourSourceId: BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID,
+    hillshadeExaggeration: 0.24,
+  });
+}
+
+type BathymetryLayerSources = {
+  colorLayerId: string;
+  colorSourceId: string;
+  hillshadeLayerId: string;
+  demSourceId: string;
+  contourLayerId: string;
+  contourLabelLayerId: string;
+  contourSourceId: string;
+  hillshadeExaggeration: number;
+};
+
+function addBathymetryLayersForSources(
+  map: maplibregl.Map,
+  sources: BathymetryLayerSources,
+) {
   const beforeId = firstSymbolLayerId(map);
-  if (!map.getLayer(BATHYMETRY_COLOR_LAYER_ID))
+  if (!map.getLayer(sources.colorLayerId)) {
     map.addLayer(
       {
-        id: BATHYMETRY_COLOR_LAYER_ID,
+        id: sources.colorLayerId,
         type: "raster",
-        source: BATHYMETRY_COLOR_SOURCE_ID,
+        source: sources.colorSourceId,
         layout: { visibility: "none" },
         paint: { "raster-opacity": 0.62 },
       },
       beforeId,
     );
-  if (!map.getLayer(BATHYMETRY_HILLSHADE_LAYER_ID))
+  }
+  if (!map.getLayer(sources.hillshadeLayerId)) {
     map.addLayer(
       {
-        id: BATHYMETRY_HILLSHADE_LAYER_ID,
+        id: sources.hillshadeLayerId,
         type: "hillshade",
-        source: BATHYMETRY_SOURCE_ID,
+        source: sources.demSourceId,
         layout: { visibility: "none" },
         paint: {
           "hillshade-shadow-color": "#082f49",
           "hillshade-highlight-color": "#dffbff",
           "hillshade-accent-color": "#0ea5e9",
-          "hillshade-exaggeration": 0.28,
+          "hillshade-exaggeration": sources.hillshadeExaggeration,
         },
       },
       beforeId,
     );
-  if (!map.getLayer(BATHYMETRY_CONTOUR_LAYER_ID))
+  }
+  if (!map.getLayer(sources.contourLayerId)) {
     map.addLayer(
       {
-        id: BATHYMETRY_CONTOUR_LAYER_ID,
+        id: sources.contourLayerId,
         type: "line",
-        source: BATHYMETRY_CONTOUR_SOURCE_ID,
+        source: sources.contourSourceId,
         layout: { visibility: "none" },
         paint: {
           "line-color": "#dffbff",
           "line-opacity": 0.72,
-          "line-width": ["case", ["==", ["get", "major"], true], 1.4, 0.7],
+          "line-width": [
+            "case",
+            ["==", ["get", "major"], true],
+            1.4,
+            0.7,
+          ],
         },
       },
       beforeId,
     );
-  if (!map.getLayer(BATHYMETRY_CONTOUR_LABEL_LAYER_ID))
+  }
+  if (!map.getLayer(sources.contourLabelLayerId)) {
     map.addLayer({
-      id: BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+      id: sources.contourLabelLayerId,
       type: "symbol",
       minzoom: 8,
-      source: BATHYMETRY_CONTOUR_SOURCE_ID,
+      source: sources.contourSourceId,
       layout: {
         visibility: "none",
         "symbol-placement": "line",
@@ -493,6 +822,66 @@ function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void)
         "text-halo-width": 1.2,
       },
     });
+  }
+}
+
+function ensureGsiOverlay(map: maplibregl.Map) {
+  if (!map.getSource(GSI_STANDARD_OVERLAY_SOURCE_ID)) {
+    map.addSource(GSI_STANDARD_OVERLAY_SOURCE_ID, {
+      type: "raster",
+      tiles: [GSI_STANDARD_TILE_URL],
+      tileSize: 256,
+      minzoom: 5,
+      maxzoom: 18,
+      attribution: GSI_STANDARD_ATTRIBUTION,
+    });
+  }
+  if (!map.getLayer(GSI_STANDARD_OVERLAY_LAYER_ID)) {
+    map.addLayer(
+      {
+        id: GSI_STANDARD_OVERLAY_LAYER_ID,
+        type: "raster",
+        source: GSI_STANDARD_OVERLAY_SOURCE_ID,
+        layout: { visibility: "none" },
+        paint: { "raster-opacity": GSI_STANDARD_OVERLAY_OPACITY },
+      },
+      firstSymbolLayerId(map),
+    );
+  }
+}
+
+function setLayerVisibility(
+  map: maplibregl.Map,
+  layerId: string,
+  visible: boolean,
+) {
+  if (map.getLayer(layerId)) {
+    map.setLayoutProperty(layerId, "visibility", visible ? "visible" : "none");
+  }
+}
+
+function removeBathymetryRuntimeLayers(map: maplibregl.Map) {
+  map.setTerrain(null);
+  const layers = [
+    GSI_STANDARD_OVERLAY_LAYER_ID,
+    ...PRIMARY_LAYER_IDS.slice().reverse(),
+    ...FALLBACK_LAYER_IDS.slice().reverse(),
+  ];
+  for (const layerId of layers) {
+    if (map.getLayer(layerId)) map.removeLayer(layerId);
+  }
+  const sources = [
+    GSI_STANDARD_OVERLAY_SOURCE_ID,
+    BATHYMETRY_CONTOUR_SOURCE_ID,
+    BATHYMETRY_COLOR_SOURCE_ID,
+    BATHYMETRY_SOURCE_ID,
+    BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID,
+    BATHYMETRY_FALLBACK_COLOR_SOURCE_ID,
+    BATHYMETRY_FALLBACK_SOURCE_ID,
+  ];
+  for (const sourceId of sources) {
+    if (map.getSource(sourceId)) map.removeSource(sourceId);
+  }
 }
 
 function scoreColor(score: number) {
@@ -518,21 +907,18 @@ function fitMapToPoints(
   }
 
   const bounds = reports.reduce(
-    (nextBounds, report) => {
-      return nextBounds.extend([report.longitude, report.latitude]);
-    },
+    (nextBounds, report) =>
+      nextBounds.extend([report.longitude, report.latitude]),
     new maplibregl.LngLatBounds(
       [reports[0].longitude, reports[0].latitude],
       [reports[0].longitude, reports[0].latitude],
     ),
   );
-
   const containerWidth = map.getContainer().clientWidth;
   const padding =
     containerWidth < 640
       ? { top: 56, bottom: 56, left: 32, right: 32 }
       : { top: 72, bottom: 72, left: 88, right: 88 };
-
   map.fitBounds(bounds, {
     padding,
     maxZoom: hasAdjustedBounds ? 12 : 10.5,
@@ -569,7 +955,6 @@ const GSI_AERIAL_TILE_LAYERS = [
 
 function addAerialPhotoLayer(map: maplibregl.Map | null) {
   if (!map) return;
-
   for (const layer of GSI_AERIAL_TILE_LAYERS) {
     if (!map.getSource(layer.id)) {
       map.addSource(layer.id, {
@@ -581,7 +966,6 @@ function addAerialPhotoLayer(map: maplibregl.Map | null) {
         attribution: GSI_AERIAL_TILE_ATTRIBUTION,
       });
     }
-
     if (!map.getLayer(layer.id)) {
       map.addLayer(
         {
@@ -603,7 +987,6 @@ function setAerialLayerVisibility(map: maplibregl.Map, isVisible: boolean) {
   if (GSI_AERIAL_TILE_LAYERS.some((layer) => !map.getLayer(layer.id))) {
     addAerialPhotoLayer(map);
   }
-
   for (const layer of GSI_AERIAL_TILE_LAYERS) {
     if (map.getLayer(layer.id)) {
       map.setLayoutProperty(

@@ -7,20 +7,24 @@ const mapLayer = fs.readFileSync("src/domain/mapLayer.ts", "utf8");
 const bathy = fs.readFileSync("src/domain/bathymetry.ts", "utf8");
 const map = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
 const css = fs.readFileSync("src/app/globals.css", "utf8");
-const dem = JSON.parse(fs.readFileSync("data/bathymetry/etopo-2022-crop.json", "utf8"));
-const metadata = JSON.parse(fs.readFileSync("public/bathymetry/etopo-2022/metadata.json", "utf8"));
-const contours = JSON.parse(fs.readFileSync("public/bathymetry/etopo-2022/contours.geojson", "utf8"));
+const generator = fs.readFileSync("scripts/generate-bathymetry-assets.mjs", "utf8");
+const dem = JSON.parse(fs.readFileSync("data/bathymetry/gebco-2026-crop.json", "utf8"));
+const metadata = JSON.parse(fs.readFileSync("public/bathymetry/gebco-2026/metadata.json", "utf8"));
+const contours = JSON.parse(fs.readFileSync("public/bathymetry/gebco-2026/contours.geojson", "utf8"));
 
 assert.match(mapLayer, /"bathymetry"/);
 for (const label of ["通常地図", "航空写真", "水深・3D地形"]) assert.match(mapLayer, new RegExp(label));
 for (const token of ["bathymetry-color-relief", "bathymetry-hillshade", "bathymetry-contours", "setTerrain", "shouldEnableInitialTerrain"]) assert.match(map + bathy, new RegExp(token));
-for (const token of ["NOAA NCEI ETOPO 2022", "航海・安全判断には使用不可", "CC0-1.0", "水深データを読み込めませんでした"]) assert.match(map + bathy, new RegExp(token));
-assert.equal(metadata.license, "CC0-1.0");
-assert.match(metadata.doi, /10\.25921\/fd45-gt74/);
+for (const token of ["GEBCO_2026", "航海・安全判断には使用不可", "国土地理院", "高解像度水深を読み込めなかったため"]) assert.match(map + bathy, new RegExp(token));
+assert.match(bathy, /xyz\/blank\/\{z\}\/\{x\}\/\{y\}\.png/);
+assert.doesNotMatch(bathy, /xyz\/std\//);
+assert.match(generator, /elevationMeters >= 0\) return \[0, 0, 0, 0\]/);
+assert.match(metadata.license, /GEBCO/);
+assert.match(metadata.dataset, /GEBCO_2026/);
 assert.equal(metadata.tileSize, 256);
-assert.equal(metadata.sourceResolution, "60 arc-second");
-assert.equal(dem.cellSizeDegrees, 1 / 60);
-assert.match(bathy, /BATHYMETRY_SOURCE_RESOLUTION = "60 arc-second"/);
+assert.equal(metadata.sourceResolution, "15 arc-second");
+assert.ok(dem.cellSizeDegrees.longitude > 0 && dem.cellSizeDegrees.latitude > 0);
+assert.match(bathy, /BATHYMETRY_SOURCE_RESOLUTION = "15 arc-second"/);
 assert.match(bathy, /BATHYMETRY_BOUNDS = \[128\.5, 32\.5, 130\.8, 34\.0\]/);
 assert.deepEqual(metadata.cropBounds, dem.bounds);
 assert.match(map, /bounds: \[\.\.\.BATHYMETRY_BOUNDS\]/);
@@ -29,8 +33,7 @@ assert.equal(dem.values.length, dem.width * dem.height);
 assert.ok(new Set(dem.values.map((v) => Math.round(v))).size > 10);
 assert.ok(dem.values.some((v) => v < 0));
 assert.ok(dem.values.some((v) => v >= 0));
-assert.equal(crypto.createHash("sha256").update(JSON.stringify(dem.values)).digest("hex"), dem.cropSha256);
-
+assert.ok(dem.textSha256);
 
 function expectedTiles(bounds, minZoom, maxZoom) {
   const lon2x = (lon, z) => Math.floor(((lon + 180) / 360) * 2 ** z);
@@ -52,9 +55,12 @@ function decodeTerrain(png) {
   }
   return vals;
 }
+
+let transparentColorPixels = 0;
+let visibleColorPixels = 0;
 for (const { z, x, y } of metadata.tiles) {
-  const terrainPath = `public/bathymetry/etopo-2022/terrain/${z}/${x}/${y}.png`;
-  const colorPath = `public/bathymetry/etopo-2022/color/${z}/${x}/${y}.png`;
+  const terrainPath = `public/bathymetry/gebco-2026/terrain/${z}/${x}/${y}.png`;
+  const colorPath = `public/bathymetry/gebco-2026/color/${z}/${x}/${y}.png`;
   for (const file of [terrainPath, colorPath]) {
     const buf = fs.readFileSync(file);
     const png = PNG.sync.read(buf);
@@ -62,9 +68,16 @@ for (const { z, x, y } of metadata.tiles) {
     assert.equal(png.height, 256);
     assert.equal(crypto.createHash("sha256").update(buf).digest("hex"), metadata.checksums[file]);
   }
+  const colorPng = PNG.sync.read(fs.readFileSync(colorPath));
+  for (let index = 3; index < colorPng.data.length; index += 4) {
+    if (colorPng.data[index] === 0) transparentColorPixels++;
+    else visibleColorPixels++;
+  }
   assert.notEqual(fs.readFileSync(terrainPath, "hex"), fs.readFileSync(colorPath, "hex"));
   assert.ok(decodeTerrain(PNG.sync.read(fs.readFileSync(terrainPath))).size > 3);
 }
+assert.ok(transparentColorPixels > 0, "land pixels must be fully transparent");
+assert.ok(visibleColorPixels > 0, "sea depth pixels must remain visible");
 const computedTiles = expectedTiles(metadata.cropBounds, metadata.generatedZoomRange.min, metadata.generatedZoomRange.max);
 assert.deepEqual(metadata.tiles, computedTiles);
 assert.ok(metadata.tiles.length > 1);
@@ -87,4 +100,10 @@ assert.doesNotMatch(map, /外部メモ \/ 手動メモ|信頼度:|出典URLを�
 assert.match(css, /bathymetryLegend/);
 assert.match(css, /@media \(max-width: 620px\).*mapLayerToggle/s);
 assert.doesNotMatch(fs.readFileSync("README.md", "utf8"), /現在やらないこと[\s\S]*3D海底地形表示/);
+
+await import("./bathymetry-data.test.mjs");
+await import("./bathymetry-fallback.test.mjs");
+await import("./bathymetry-tid.test.mjs");
+await import("./gebco-converter.test.mjs");
+
 console.log("bathymetry UI requirements passed");

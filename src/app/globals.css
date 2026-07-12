@@ -327,3 +327,8 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
   padding: 8px 12px;
   font-size: 12px;
 }
+.terrainToggleButton { min-height: 32px; border: 1px solid rgba(125, 211, 252, .36); border-radius: 999px; padding: 6px 10px; background: rgba(8, 47, 73, .76); color: #dffbff; font: inherit; font-size: .78rem; font-weight: 900; cursor: pointer; }
+.terrainToggleButton[aria-pressed="true"], .terrainToggleButton[aria-expanded="true"] { background: linear-gradient(135deg, #e0faff, #7dd3fc); color: #083344; }
+.tidSummary { grid-column: 1 / -1; display: grid; gap: 3px; padding: 8px 10px; border: 1px solid rgba(125, 211, 252, .24); border-radius: 12px; background: rgba(2, 8, 23, .54); color: #e0faff; font-size: .74rem; font-weight: 800; line-height: 1.45; }
+.tidSummary small { color: #bae6fd; font-size: .68rem; font-weight: 700; }
+@media (max-width: 520px) { .bathymetryPanel { left: 12px; right: 12px; max-width: calc(100% - 24px); } .terrainToggleButton { font-size: .72rem; padding: 6px 8px; } .tidSummary { font-size: .7rem; } }
