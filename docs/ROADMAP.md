@@ -72,3 +72,7 @@
 ## Phase 5 / Post-MVP-037: 沿岸水深高解像度化候補と海岸線データ調査
 
 実測比較完了。本番データ差し替えは行わず、公式Grid Extract / GEBCO download appから一時取得した対象boundsの実データに基づき ETOPO 2022 60 arc-second Bedrock、ETOPO 2022 15 arc-second Bedrock、GEBCO_2026 Grid 15 arc-second、GEBCO multi-resolution、JODC J-EGG500、国土地理院標準地図/基盤地図情報、沿岸海域土地条件図を比較しました。Post-MVP-038ではGEBCO_2026 Grid 15秒 + TID Gridを第一候補、ETOPO 15秒を第二候補、現行60秒をfallbackとして、TID由来・出典・航海利用不可表示を含めた実装移行を扱います。J-EGG500は再配布・Web配信許可が確認できるまで本番採用しません。
+
+## Post-MVP-039: 釣り場属性調査の共通仕様
+
+地点評価を拡充する前段として、複数AI・複数担当で共通利用する調査項目、判定基準、情報源ルール、JSON Schema、架空サンプル、検証スクリプトを `docs/FISHING_SPOT_RESEARCH_SPEC.md` 以下に定義します。民間釣りサイトは地点候補を知る入口に限定し、実地点の一括収集、DB変更、編集UI、魚種生態マスター、SCORE変更は後続Issueで扱います。
