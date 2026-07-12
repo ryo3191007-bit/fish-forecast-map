@@ -1,0 +1,165 @@
+{
+"spotName": {
+"value": "唐津東港",
+"status": "confirmed",
+"confidence": "high",
+"sourceIds": ["source_saga_summary"],
+"checkedAt": "2026-07-12"
+},
+"alternativeNames": {
+"value": [
+"唐津港東港地区",
+"東港地区"
+],
+"status": "confirmed",
+"confidence": "high",
+"sourceIds": ["source_saga_summary", "source_saga_decarbon"],
+"checkedAt": "2026-07-12"
+},
+"prefecture": {
+"value": "佐賀県",
+"status": "confirmed",
+"confidence": "high",
+"sourceIds": ["source_saga_summary"],
+"checkedAt": "2026-07-12"
+},
+"city": {
+"value": "唐津市",
+"status": "confirmed",
+"confidence": "high",
+"sourceIds": ["source_saga_summary"],
+"checkedAt": "2026-07-12"
+},
+"latitude": {
+"value": 33.459,
+"status": "inferred",
+"confidence": "low",
+"sourceIds": [],
+"checkedAt": "2026-07-12"
+},
+"longitude": {
+"value": 129.993,
+"status": "inferred",
+"confidence": "low",
+"sourceIds": [],
+"checkedAt": "2026-07-12"
+},
+"spotType": {
+"value": "port",
+"status": "confirmed",
+"confidence": "high",
+"sourceIds": ["source_saga_summary"],
+"checkedAt": "2026-07-12"
+},
+"seabed": {
+"value": "unknown",
+"status": "unknown",
+"confidence": "low",
+"sourceIds": [],
+"checkedAt": "2026-07-12"
+},
+"waterDepth": {
+"value": "unknown",
+"status": "unknown",
+"confidence": "low",
+"sourceIds": [],
+"checkedAt": "2026-07-12"
+},
+"riverInfluence": {
+"value": "unknown",
+"status": "unknown",
+"confidence": "low",
+"sourceIds": [],
+"checkedAt": "2026-07-12"
+},
+"tidalFlow": {
+"value": "unknown",
+"status": "unknown",
+"confidence": "low",
+"sourceIds": [],
+"checkedAt": "2026-07-12"
+},
+"streetLights": {
+"value": "unknown",
+"status": "unknown",
+"confidence": "low",
+"sourceIds": [],
+"checkedAt": "2026-07-12"
+},
+"obstacles": {
+"value": "unknown",
+"status": "unknown",
+"confidence": "low",
+"sourceIds": [],
+"checkedAt": "2026-07-12"
+},
+"openSeaExposure": {
+"value": "bay",
+"status": "inferred",
+"confidence": "medium",
+"sourceIds": ["source_gsi_maps"],
+"checkedAt": "2026-07-12"
+},
+"fishingRange": {
+"value": "unknown",
+"status": "unknown",
+"confidence": "low",
+"sourceIds": [],
+"checkedAt": "2026-07-12"
+},
+"availability": {
+"value": "unknown",
+"status": "unknown",
+"confidence": "low",
+"sourceIds": [],
+"checkedAt": "2026-07-12"
+},
+"restriction": {
+"value": "unknown",
+"status": "unknown",
+"confidence": "low",
+"sourceIds": [],
+"checkedAt": "2026-07-12"
+},
+"fishSpecies": [],
+"sources": [
+{
+"id": "source_saga_summary",
+"title": "佐賀県 港湾施設の概要",
+"url": "https://www.pref.saga.lg.jp/kiji00329386/index.html",
+"priority": 1,
+"supports": [
+"spotName",
+"alternativeNames",
+"prefecture",
+"city",
+"spotType"
+]
+},
+{
+"id": "source_saga_decarbon",
+"title": "佐賀県 唐津港・伊万里港港湾脱炭素化推進計画",
+"url": "https://www.pref.saga.lg.jp/kiji003110833/index.html",
+"priority": 1,
+"supports": [
+"alternativeNames"
+]
+},
+{
+"id": "source_saga_plan_map",
+"title": "佐賀県 港湾計画図",
+"url": "https://www.pref.saga.lg.jp/kiji00313547/index.html",
+"priority": 1,
+"supports": []
+},
+{
+"id": "source_gsi_maps",
+"title": "国土地理院 地理院地図",
+"url": "https://maps.gsi.go.jp/",
+"priority": 2,
+"supports": [
+"openSeaExposure"
+]
+}
+]
+}
