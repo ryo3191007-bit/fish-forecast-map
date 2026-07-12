@@ -163,6 +163,34 @@ export function getTideEventsForDate(rows: EnvironmentForecastRow[], dateText: s
   return Array.from(new Map(events.map((event) => [`${event.type}:${event.approximateTime}`, event])).values()).slice(0, 6);
 }
 
+export type TideEventBadge = { type: TideEvent["type"]; label: "満潮" | "干潮" };
+
+function getForecastDateHour(value: string) {
+  const dateMatch = /^(\d{4}-\d{2}-\d{2})T(\d{2}):/.exec(value);
+  if (dateMatch) return { dateKey: dateMatch[1], hour: dateMatch[2] };
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(parseForecastTime(value));
+  const part = (type: string) => parts.find((item) => item.type === type)?.value ?? "";
+  return { dateKey: `${part("year")}-${part("month")}-${part("day")}`, hour: part("hour") };
+}
+
+export function getTideEventBadgeForForecastTime(events: TideEvent[], forecastTime: string, eventDateKey: string): TideEventBadge | null {
+  const forecast = getForecastDateHour(forecastTime);
+  if (forecast.dateKey !== eventDateKey) return null;
+  const event = events.find((candidate) => {
+    const eventHour = /^(\d{2}):/.exec(candidate.approximateTime)?.[1];
+    return eventHour === forecast.hour;
+  });
+  if (!event) return null;
+  return { type: event.type, label: event.type === "high" ? "満潮" : "干潮" };
+}
+
 export function getWeatherCodeLabel(code: number | null) {
   if (code === null) return "データなし";
   if (code === 0) return "快晴";
