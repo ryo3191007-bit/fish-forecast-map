@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   getFishingEnvironmentAvailability,
   getNearestForecastTime,
+  getTideEventBadgeForForecastTime,
   getTideEventsForDate,
   getTidePhaseName,
   parseForecastTime,
@@ -50,6 +51,7 @@ export function EnvironmentPanel({
   const dataStatus = getDataStatusLabel(environment);
   const tidePhase = selectedDate ? getTidePhaseName(selectedDate) : null;
   const tideEvents = useMemo(() => getTideEventsForDate(rows, selectedDate), [rows, selectedDate]);
+  const selectedTideBadge = selectedRow ? getTideEventBadgeForForecastTime(selectedRow.forecastTime, tideEvents, selectedDate) : null;
 
   return (
     <aside className="environmentPanel" aria-live="polite">
@@ -116,6 +118,7 @@ export function EnvironmentPanel({
           <div className="environmentContent">
             <MetricGroup
               title="天気"
+              badge={selectedTideBadge}
               items={[
                 ["気温", formatValue(selectedRow.weather?.temperatureCelsius, "℃")],
                 ["天気", selectedRow.weather?.weatherLabel ?? "--"],
@@ -141,7 +144,7 @@ export function EnvironmentPanel({
           </div>
 
           <TideReferenceBlock environment={environment} tidePhase={tidePhase} tideEvents={tideEvents} />
-          <HourlyList rows={dayRows} selectedTime={selectedRow.forecastTime} onSelect={setSelectedTime} />
+          <HourlyList rows={dayRows} selectedTime={selectedRow.forecastTime} onSelect={setSelectedTime} tideEvents={tideEvents} selectedDate={selectedDate} />
         </div>
       ) : !isLoading && !error ? (
         <p className="environmentState">この地点で表示できる環境データがありません。</p>
@@ -158,7 +161,7 @@ function TideReferenceBlock({ environment, tidePhase, tideEvents }: { environmen
   return (
     <div className="tideReference">
       <strong>潮汐参考情報</strong>
-      <span>選択日の潮回り参考: {tidePhase ?? "--"}（月齢からの簡易算出）</span>
+      <span>選択日の潮回り参考: <strong className="tidePhaseName">{tidePhase ?? "--"}</strong>（月齢からの簡易算出）</span>
       <span>満潮・干潮参考: {formatTideEvents(tideEvents)}</span>
       <span>{environment.tideReference.referenceName ? `気象庁参照候補: ${environment.tideReference.referenceName}` : "気象庁参照地点: 未設定"}</span>
       <a href={environment.tideReference.url} target="_blank" rel="noopener noreferrer">気象庁の公式潮位表を新しいタブで開く</a>
@@ -167,10 +170,12 @@ function TideReferenceBlock({ environment, tidePhase, tideEvents }: { environmen
   );
 }
 
-function HourlyList({ rows, selectedTime, onSelect }: { rows: EnvironmentForecastRow[]; selectedTime: string; onSelect: (time: string) => void }) {
+function HourlyList({ rows, selectedTime, onSelect, tideEvents, selectedDate }: { rows: EnvironmentForecastRow[]; selectedTime: string; onSelect: (time: string) => void; tideEvents: TideEvent[]; selectedDate: string }) {
   return (
     <div className="hourlyScroller" aria-label="選択日の時間別一覧">
-      {rows.map((row) => (
+      {rows.map((row) => {
+        const badge = getTideEventBadgeForForecastTime(row.forecastTime, tideEvents, selectedDate);
+        return (
         <button type="button" key={row.forecastTime} className={row.forecastTime === selectedTime ? "hourlyCard active" : "hourlyCard"} onClick={() => onSelect(row.forecastTime)}>
           <strong>{row.forecastTime.slice(11, 16)}</strong>
           <span>{row.weather?.weatherLabel ?? "天気--"}</span>
@@ -178,16 +183,18 @@ function HourlyList({ rows, selectedTime, onSelect }: { rows: EnvironmentForecas
           <span>風 {formatValue(row.weather?.windSpeedKmh, "km/h")}</span>
           <span>波 {formatValue(row.marine?.waveHeightMeters, "m")}</span>
           <span>水温 {formatValue(row.marine?.seaSurfaceTemperatureCelsius, "℃")}</span>
+          {badge ? <span className={`tideEventBadge ${badge.type}`}>{badge.label}</span> : null}
         </button>
-      ))}
+        );
+      })}
     </div>
   );
 }
 
-function MetricGroup({ title, items }: { title: string; items: [string, string][] }) {
+function MetricGroup({ title, items, badge }: { title: string; items: [string, string][]; badge?: { type: TideEvent["type"]; label: string } | null }) {
   return (
     <div className="environmentGroup">
-      <h3>{title}</h3>
+      <h3>{title}{badge ? <span className={`tideEventBadge metric ${badge.type}`}>{badge.label}</span> : null}</h3>
       <dl className="environmentMetrics">
         {items.map(([label, value]) => (
           <div key={label}><dt>{label}</dt><dd>{value}</dd></div>

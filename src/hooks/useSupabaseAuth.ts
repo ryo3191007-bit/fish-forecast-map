@@ -6,7 +6,7 @@ import { getSupabaseClient } from "@/lib/supabaseClient";
 
 export type SupabaseAuthStatus = "loading" | "signed-in" | "signed-out" | "unavailable";
 
-type UseSupabaseAuthResult = {
+export type SupabaseAuthState = {
   status: SupabaseAuthStatus;
   session: Session | null;
   user: User | null;
@@ -21,7 +21,7 @@ function getAuthErrorMessage(error: unknown) {
   return "Supabase Authの処理に失敗しました。";
 }
 
-export function useSupabaseAuth(): UseSupabaseAuthResult {
+export function useSupabaseAuth(): SupabaseAuthState {
   const supabaseStatus = useMemo(() => getSupabaseClient(), []);
   const [session, setSession] = useState<Session | null>(null);
   const [status, setStatus] = useState<SupabaseAuthStatus>(supabaseStatus.isConfigured ? "loading" : "unavailable");
@@ -58,7 +58,7 @@ export function useSupabaseAuth(): UseSupabaseAuthResult {
     };
   }, [supabaseStatus]);
 
-  const signInWithEmail = useCallback<UseSupabaseAuthResult["signInWithEmail"]>(async (email) => {
+  const signInWithEmail = useCallback<SupabaseAuthState["signInWithEmail"]>(async (email) => {
     if (!supabaseStatus.isConfigured) return { ok: false, message: "Supabaseが未設定のため認証を利用できません。" };
     const redirectTo = typeof window === "undefined" ? undefined : window.location.origin;
     try {
@@ -73,7 +73,7 @@ export function useSupabaseAuth(): UseSupabaseAuthResult {
     }
   }, [supabaseStatus]);
 
-  const signOut = useCallback<UseSupabaseAuthResult["signOut"]>(async () => {
+  const signOut = useCallback<SupabaseAuthState["signOut"]>(async () => {
     if (!supabaseStatus.isConfigured) return { ok: false, message: "Supabaseが未設定のため認証を利用できません。" };
     try {
       const { error } = await supabaseStatus.client.auth.signOut();

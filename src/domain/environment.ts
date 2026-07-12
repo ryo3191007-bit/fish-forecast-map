@@ -163,6 +163,19 @@ export function getTideEventsForDate(rows: EnvironmentForecastRow[], dateText: s
   return Array.from(new Map(events.map((event) => [`${event.type}:${event.approximateTime}`, event])).values()).slice(0, 6);
 }
 
+export type TideEventBadge = {
+  type: TideEvent["type"];
+  label: "満潮" | "干潮";
+};
+
+export function getTideEventBadgeForForecastTime(forecastTime: string, events: TideEvent[], dateText: string): TideEventBadge | null {
+  if (getTokyoDateKey(forecastTime) !== dateText) return null;
+  const forecastHour = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Tokyo", hour: "2-digit", hour12: false }).format(parseForecastTime(forecastTime));
+  const event = events.find((candidate) => candidate.approximateTime.slice(0, 2) === forecastHour);
+  if (!event) return null;
+  return { type: event.type, label: event.type === "high" ? "満潮" : "干潮" };
+}
+
 export function getWeatherCodeLabel(code: number | null) {
   if (code === null) return "データなし";
   if (code === 0) return "快晴";

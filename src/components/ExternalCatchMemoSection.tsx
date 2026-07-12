@@ -182,13 +182,13 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, onLo
     <>
       <div className="externalMemoLaunch" aria-labelledby="external-memos-launch-heading">
         <div>
-          <p className="eyebrow">Manual external sources</p>
-          <h3 id="external-memos-launch-heading">外部釣果メモ登録</h3>
+          <p className="eyebrow">Manual catch entry</p>
+          <h3 id="external-memos-launch-heading">手入力釣果登録</h3>
           <p className="muted">URL先を自動取得せず、確認した事実情報と出典だけを保存します。</p>
           <MemoStorageStatusChip status={storageStatus} />
         </div>
         <button type="button" className="button" onClick={() => setIsModalOpen(true)}>
-          外部釣果メモ登録
+          手入力釣果登録
         </button>
       </div>
 
@@ -203,11 +203,11 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, onLo
           >
             <div className="externalMemoModalHeader">
               <div>
-                <p className="eyebrow">Manual external sources</p>
-                <h2 id="external-memos-heading">外部釣果メモ登録</h2>
+                <p className="eyebrow">Manual catch entry</p>
+                <h2 id="external-memos-heading">手入力釣果登録</h2>
                 <p className="muted">フォーム、登録済みメモの一覧、編集、削除、出典URLを開く操作をこの画面で行います。</p>
               </div>
-              <button type="button" className="externalMemoClose" onClick={() => setIsModalOpen(false)} aria-label="外部釣果メモ登録を閉じる">×</button>
+              <button type="button" className="externalMemoClose" onClick={() => setIsModalOpen(false)} aria-label="手入力釣果登録を閉じる">×</button>
             </div>
             <MemoStorageStatusChip status={storageStatus} />
             <LocalMemoMigrationPanel candidates={migrationCandidates} selectedIds={selectedMigrationIds} status={storageStatus} result={migrationResult} onToggle={toggleMigrationCandidate} onMigrate={migrateSelectedMemos} />
@@ -233,7 +233,7 @@ export function ExternalCatchMemoSection({ memos, onMemoSave, onMemoDelete, onLo
               <div className="externalMemoActions"><button className="button" type="submit" disabled={storageStatus.isMutating}>{storageStatus.isMutating ? "保存中..." : editingId ? "更新する" : "登録する"}</button>{editingId ? <button type="button" className="clearSearchButton" onClick={resetForm}>編集をキャンセル</button> : null}</div>
             </form>
             <div className="externalMemoList" aria-live="polite">
-              {memos.length === 0 ? <p className="emptyState">登録済みの外部釣果メモはありません。</p> : memos.map((memo) => {
+              {memos.length === 0 ? <p className="emptyState">登録済みの釣果はありません。</p> : memos.map((memo) => {
                 const linkedSpot = memo.spotId ? spots.find((spot) => spot.id === memo.spotId) : undefined;
                 return <article className="card" key={memo.id}><div className="cardHeader"><div><p className="eyebrow">{memo.sourceName}</p><h3>{memo.species} / {memo.areaName}</h3></div></div><div className="cardSummary"><span>釣果日: {memo.caughtDate}</span><span>推定地点: {memo.estimatedSpotName ?? "未入力"}</span><span>信頼度: {memo.confidence}</span><span>釣り場: {linkedSpot ? linkedSpot.name : "未紐づけ"}</span></div><dl className="facts"><div><dt>釣り方</dt><dd>{memo.method ?? "未入力"}</dd></div><div><dt>匹数</dt><dd>{memo.catchCount ?? "未入力"}</dd></div><div><dt>サイズ</dt><dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd></div><div><dt>更新日時</dt><dd>{new Date(memo.updatedAt).toLocaleString("ja-JP")}</dd></div><div className="sourceFact"><dt>出典URL</dt><dd><a href={memo.sourceUrl} target="_blank" rel="noreferrer">別タブで開く</a></dd></div></dl>{memo.userMemo ? <p className="externalMemoNote">{memo.userMemo}</p> : null}<div className="externalMemoActions"><button type="button" className="clearSearchButton" onClick={() => startEdit(memo)}>編集</button><button type="button" className="clearSearchButton" onClick={() => deleteMemo(memo.id)} disabled={storageStatus.isMutating}>削除</button></div></article>;
               })}
@@ -294,14 +294,14 @@ const memoStorageFallbackLabels: Record<NonNullable<ExternalCatchMemoStorageStat
 
 function MemoStorageStatusChip({ status }: { status: ExternalCatchMemoStorageStatus }) {
   const label = status.isLoading
-    ? "外部メモ読込中..."
+    ? "手入力釣果読込中..."
     : status.source === "supabase"
-      ? "外部メモ: Supabase"
+      ? "手入力釣果: Supabase"
       : status.isDbAvailable && status.fallbackReason === "local-data-not-migrated"
-        ? "外部メモ: Supabase + localStorage"
+        ? "手入力釣果: Supabase + localStorage"
         : status.fallbackReason === "supabase-error"
-          ? "外部メモ: localStorage fallback"
-          : "外部メモ: localStorage";
+          ? "手入力釣果: localStorage fallback"
+          : "手入力釣果: localStorage";
   const reason = !status.isLoading && status.fallbackReason ? memoStorageFallbackLabels[status.fallbackReason] : null;
   return <p className="dataSourceStatus" aria-live="polite"><span>{label}</span>{reason ? <small>{reason}</small> : null}</p>;
 }
