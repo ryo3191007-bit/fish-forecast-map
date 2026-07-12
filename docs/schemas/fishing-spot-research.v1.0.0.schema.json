@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://fish-forecast-map.example/schemas/fishing-spot-research.v1.1.0.schema.json",
+  "$id": "https://fish-forecast-map.example/schemas/fishing-spot-research.v1.0.0.schema.json",
   "title": "Fishing spot research record",
   "description": "複数の公開情報源から独立調査した釣り場属性を、根拠・確認状態・確度とともに保持する。",
   "type": "object",
@@ -8,21 +8,19 @@
   "required": [
     "schemaVersion",
     "spotId",
-    "scopeType",
     "identity",
     "attributes",
     "fishSpecies",
     "facilities",
     "restrictions",
     "sources",
-    "researchStages",
     "researchNotes",
     "researchedAt",
     "reviewStatus"
   ],
   "properties": {
     "schemaVersion": {
-      "const": "1.1.0"
+      "const": "1.0.0"
     },
     "spotId": {
       "type": "string",
@@ -184,48 +182,6 @@
     },
     "review": {
       "$ref": "#/$defs/review"
-    },
-    "scopeType": {
-      "type": "string",
-      "enum": [
-        "district",
-        "facility",
-        "access_point"
-      ]
-    },
-    "researchStages": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "officialResearch",
-        "secondaryResearch",
-        "schemaValidation"
-      ],
-      "properties": {
-        "officialResearch": {
-          "type": "string",
-          "enum": [
-            "completed",
-            "incomplete"
-          ]
-        },
-        "secondaryResearch": {
-          "type": "string",
-          "enum": [
-            "completed",
-            "skipped",
-            "incomplete"
-          ]
-        },
-        "schemaValidation": {
-          "type": "string",
-          "enum": [
-            "passed",
-            "failed",
-            "not_run"
-          ]
-        }
-      }
     }
   },
   "$defs": {
@@ -245,6 +201,14 @@
         "low"
       ]
     },
+    "sourceIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
     "evidenceBase": {
       "type": "object",
       "additionalProperties": false,
@@ -252,7 +216,7 @@
         "value",
         "status",
         "confidence",
-        "evidenceSources",
+        "sourceIds",
         "checkedAt"
       ],
       "properties": {
@@ -263,40 +227,8 @@
         "confidence": {
           "$ref": "#/$defs/confidence"
         },
-        "evidenceSources": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "supportingSourceIds",
-            "checkedSourceIds",
-            "contradictingSourceIds"
-          ],
-          "properties": {
-            "supportingSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            },
-            "checkedSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            },
-            "contradictingSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            }
-          }
+        "sourceIds": {
+          "$ref": "#/$defs/sourceIds"
         },
         "checkedAt": {
           "type": "string",
@@ -324,12 +256,8 @@
           },
           "then": {
             "properties": {
-              "evidenceSources": {
-                "properties": {
-                  "supportingSourceIds": {
-                    "minItems": 1
-                  }
-                }
+              "sourceIds": {
+                "minItems": 1
               }
             }
           }
@@ -349,13 +277,6 @@
             "properties": {
               "confidence": {
                 "const": "low"
-              },
-              "evidenceSources": {
-                "properties": {
-                  "supportingSourceIds": {
-                    "maxItems": 0
-                  }
-                }
               }
             }
           }
@@ -368,11 +289,9 @@
       "required": [
         "latitude",
         "longitude",
-        "coordinateMethod",
-        "coordinateScope",
         "status",
         "confidence",
-        "evidenceSources",
+        "sourceIds",
         "checkedAt"
       ],
       "properties": {
@@ -392,63 +311,14 @@
           "minimum": -180,
           "maximum": 180
         },
-        "coordinateMethod": {
-          "type": "string",
-          "enum": [
-            "official_coordinate",
-            "map_measurement",
-            "address_geocode",
-            "supplied_reference"
-          ]
-        },
-        "coordinateScope": {
-          "type": "string",
-          "enum": [
-            "district",
-            "facility",
-            "access_point"
-          ]
-        },
         "status": {
           "$ref": "#/$defs/researchStatus"
         },
         "confidence": {
           "$ref": "#/$defs/confidence"
         },
-        "evidenceSources": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "supportingSourceIds",
-            "checkedSourceIds",
-            "contradictingSourceIds"
-          ],
-          "properties": {
-            "supportingSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            },
-            "checkedSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            },
-            "contradictingSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            }
-          }
+        "sourceIds": {
+          "$ref": "#/$defs/sourceIds"
         },
         "checkedAt": {
           "type": "string",
@@ -481,13 +351,6 @@
               },
               "confidence": {
                 "const": "low"
-              },
-              "evidenceSources": {
-                "properties": {
-                  "supportingSourceIds": {
-                    "maxItems": 0
-                  }
-                }
               }
             }
           }
@@ -514,12 +377,8 @@
               "longitude": {
                 "type": "number"
               },
-              "evidenceSources": {
-                "properties": {
-                  "supportingSourceIds": {
-                    "minItems": 1
-                  }
-                }
+              "sourceIds": {
+                "minItems": 1
               }
             }
           }
@@ -1042,7 +901,7 @@
     "availabilityEvidence": {
       "allOf": [
         {
-          "$ref": "#/$defs/timedEvidenceBase"
+          "$ref": "#/$defs/evidenceBase"
         },
         {
           "properties": {
@@ -1075,7 +934,7 @@
     "restrictionEvidence": {
       "allOf": [
         {
-          "$ref": "#/$defs/timedEvidenceBase"
+          "$ref": "#/$defs/evidenceBase"
         },
         {
           "properties": {
@@ -1113,10 +972,8 @@
         "basis",
         "status",
         "confidence",
-        "evidenceSources",
-        "checkedAt",
-        "observedAt",
-        "observedPeriod"
+        "sourceIds",
+        "checkedAt"
       ],
       "properties": {
         "name": {
@@ -1137,78 +994,12 @@
         "confidence": {
           "$ref": "#/$defs/confidence"
         },
-        "evidenceSources": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "supportingSourceIds",
-            "checkedSourceIds",
-            "contradictingSourceIds"
-          ],
-          "properties": {
-            "supportingSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            },
-            "checkedSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            },
-            "contradictingSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            }
-          }
+        "sourceIds": {
+          "$ref": "#/$defs/sourceIds"
         },
         "checkedAt": {
           "type": "string",
           "format": "date"
-        },
-        "observedAt": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date"
-        },
-        "observedPeriod": {
-          "type": [
-            "object",
-            "null"
-          ],
-          "additionalProperties": false,
-          "required": [
-            "from",
-            "to"
-          ],
-          "properties": {
-            "from": {
-              "type": [
-                "string",
-                "null"
-              ],
-              "format": "date"
-            },
-            "to": {
-              "type": [
-                "string",
-                "null"
-              ],
-              "format": "date"
-            }
-          }
         },
         "note": {
           "type": "string",
@@ -1232,65 +1023,10 @@
               "status": {
                 "const": "confirmed"
               },
-              "evidenceSources": {
-                "properties": {
-                  "supportingSourceIds": {
-                    "minItems": 1
-                  }
-                }
+              "sourceIds": {
+                "minItems": 1
               }
-            },
-            "anyOf": [
-              {
-                "required": [
-                  "observedAt"
-                ],
-                "properties": {
-                  "observedAt": {
-                    "type": "string",
-                    "format": "date"
-                  }
-                }
-              },
-              {
-                "required": [
-                  "observedPeriod"
-                ],
-                "properties": {
-                  "observedPeriod": {
-                    "type": "object",
-                    "properties": {
-                      "from": {
-                        "type": "string",
-                        "format": "date"
-                      }
-                    },
-                    "required": [
-                      "from"
-                    ]
-                  }
-                }
-              },
-              {
-                "required": [
-                  "observedPeriod"
-                ],
-                "properties": {
-                  "observedPeriod": {
-                    "type": "object",
-                    "properties": {
-                      "to": {
-                        "type": "string",
-                        "format": "date"
-                      }
-                    },
-                    "required": [
-                      "to"
-                    ]
-                  }
-                }
-              }
-            ]
+            }
           }
         },
         {
@@ -1309,12 +1045,8 @@
               "status": {
                 "const": "inferred"
               },
-              "evidenceSources": {
-                "properties": {
-                  "supportingSourceIds": {
-                    "minItems": 1
-                  }
-                }
+              "sourceIds": {
+                "minItems": 1
               }
             }
           }
@@ -1327,10 +1059,7 @@
       "required": [
         "name",
         "url",
-        "checkedAt",
-        "validFrom",
-        "validUntil",
-        "officiallyConfirmed"
+        "checkedAt"
       ],
       "properties": {
         "name": {
@@ -1351,26 +1080,6 @@
           "type": "string",
           "format": "date"
         },
-        "validFrom": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date"
-        },
-        "validUntil": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date"
-        },
-        "officiallyConfirmed": {
-          "type": [
-            "boolean",
-            "null"
-          ]
-        },
         "note": {
           "type": "string",
           "maxLength": 1000
@@ -1387,10 +1096,7 @@
         "publisher",
         "sourceType",
         "checkedAt",
-        "publishedAt",
-        "lastUpdatedAt",
-        "supports",
-        "independenceStatus"
+        "supports"
       ],
       "properties": {
         "id": {
@@ -1442,42 +1148,13 @@
           "type": "array",
           "items": {
             "type": "string",
-            "pattern": "^(?:identity\\.(?:spotName|aliases|prefecture|municipality)|identity\\.coordinates\\.(?:latitude|longitude)|attributes\\.(?:spotType|seabed|waterDepth|riverInfluence|tidalFlow|streetLights|obstacles|openSeaExposure|fishingRange)\\.value|fishSpecies\\[[0-9]+\\]\\.(?:name|basis|observedAt|observedPeriod)|facilities\\.(?:parking|toilet)\\.(?:value|validFrom|validUntil|officiallyConfirmed)|restrictions\\.(?:fishingProhibited|entryProhibited|constructionOrClosure)\\.(?:value|validFrom|validUntil|officiallyConfirmed)|restrictions\\.officialContact\\.(?:name|url|validFrom|validUntil|officiallyConfirmed))$"
+            "pattern": "^(identity|attributes|fishSpecies|facilities|restrictions)(\\.[A-Za-z0-9_-]+)+$"
           },
           "uniqueItems": true
         },
         "note": {
           "type": "string",
           "maxLength": 1000
-        },
-        "lastUpdatedAt": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date"
-        },
-        "sourceGroup": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "maxLength": 120
-        },
-        "originalSourceId": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "pattern": "^src-[a-z0-9]+(?:-[a-z0-9]+)*$"
-        },
-        "independenceStatus": {
-          "type": "string",
-          "enum": [
-            "independent",
-            "related",
-            "unknown"
-          ]
         }
       }
     },
@@ -1508,181 +1185,6 @@
           }
         }
       }
-    },
-    "evidenceSources": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "supportingSourceIds",
-        "checkedSourceIds",
-        "contradictingSourceIds"
-      ],
-      "properties": {
-        "supportingSourceIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
-        },
-        "checkedSourceIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
-        },
-        "contradictingSourceIds": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
-        }
-      }
-    },
-    "timedEvidenceBase": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "value",
-        "status",
-        "confidence",
-        "evidenceSources",
-        "checkedAt",
-        "validFrom",
-        "validUntil",
-        "officiallyConfirmed"
-      ],
-      "properties": {
-        "value": {},
-        "status": {
-          "$ref": "#/$defs/researchStatus"
-        },
-        "confidence": {
-          "$ref": "#/$defs/confidence"
-        },
-        "evidenceSources": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "supportingSourceIds",
-            "checkedSourceIds",
-            "contradictingSourceIds"
-          ],
-          "properties": {
-            "supportingSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            },
-            "checkedSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            },
-            "contradictingSourceIds": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "minLength": 1
-              },
-              "uniqueItems": true
-            }
-          }
-        },
-        "checkedAt": {
-          "type": "string",
-          "format": "date"
-        },
-        "note": {
-          "type": "string",
-          "maxLength": 1000
-        },
-        "validFrom": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date"
-        },
-        "validUntil": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "format": "date"
-        },
-        "officiallyConfirmed": {
-          "type": [
-            "boolean",
-            "null"
-          ]
-        }
-      },
-      "allOf": [
-        {
-          "if": {
-            "properties": {
-              "status": {
-                "enum": [
-                  "confirmed",
-                  "inferred"
-                ]
-              }
-            },
-            "required": [
-              "status"
-            ]
-          },
-          "then": {
-            "properties": {
-              "evidenceSources": {
-                "properties": {
-                  "supportingSourceIds": {
-                    "minItems": 1
-                  }
-                }
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "status": {
-                "const": "unknown"
-              }
-            },
-            "required": [
-              "status"
-            ]
-          },
-          "then": {
-            "properties": {
-              "confidence": {
-                "const": "low"
-              },
-              "evidenceSources": {
-                "properties": {
-                  "supportingSourceIds": {
-                    "maxItems": 0
-                  }
-                }
-              }
-            }
-          }
-        }
-      ]
     }
   }
 }
