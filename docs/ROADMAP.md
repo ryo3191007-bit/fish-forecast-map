@@ -67,3 +67,8 @@
 ## Phase 5 / Post-MVP-036: 水深・3D海底地形モード
 
 実装済み。マップに `通常地図 / 航空写真 / 水深・3D地形` の3モードを追加し、NOAA NCEI ETOPO 2022の対象地域静的タイルを使った2D水深色分け、等深線、hillshade、MapLibre terrain、凡例、3D ON/OFF、2Dフォールバックを提供します。参考表示であり、航海・安全判断には使用できません。
+
+
+## Phase 5 / Post-MVP-037: 沿岸水深高解像度化候補と海岸線データ調査
+
+実施済み。本番データ差し替えは行わず、公式資料に基づき ETOPO 2022 15 arc-second Bedrock、GEBCO_2026 Grid 15 arc-second、GEBCO multi-resolution、JODC J-EGG500、国土地理院標準地図/基盤地図情報、沿岸海域土地条件図を比較しました。次Issueでは ETOPO 15秒を第一候補、GEBCO 2026 15秒を代替候補、国土地理院標準地図タイルを陸海境界明瞭化候補として、同じbounds・同じカメラ条件で実データ比較します。J-EGG500は再配布・Web配信許可が確認できるまで本番採用しません。
