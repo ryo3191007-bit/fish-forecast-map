@@ -29,6 +29,19 @@ import {
   BATHYMETRY_SAFETY_NOTE,
   BATHYMETRY_SOURCE_ID,
   BATHYMETRY_TILE_URL,
+  BATHYMETRY_FALLBACK_COLOR_SOURCE_ID,
+  BATHYMETRY_FALLBACK_COLOR_TILE_URL,
+  BATHYMETRY_FALLBACK_CONTOUR_GEOJSON_URL,
+  BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID,
+  BATHYMETRY_FALLBACK_SOURCE_ID,
+  BATHYMETRY_FALLBACK_TILE_URL,
+  GSI_STANDARD_ATTRIBUTION,
+  GSI_STANDARD_NOTE,
+  GSI_STANDARD_OVERLAY_LAYER_ID,
+  GSI_STANDARD_OVERLAY_OPACITY,
+  GSI_STANDARD_OVERLAY_SOURCE_ID,
+  GSI_STANDARD_TILE_URL,
+  shouldEnableInitialGsiOverlay,
   shouldEnableInitialTerrain,
 } from "@/domain/bathymetry";
 import { MapLayerToggle } from "./MapLayerToggle";
@@ -55,6 +68,9 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     "3d" | "2d" | "unsupported" | "error"
   >("2d");
   const [bathymetryLoadError, setBathymetryLoadError] = useState(false);
+  const [bathymetryFallbackActive, setBathymetryFallbackActive] = useState(false);
+  const [isGsiOverlayEnabled, setIsGsiOverlayEnabled] = useState(false);
+  const [tidExpanded, setTidExpanded] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -144,6 +160,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     });
     setIsTerrainEnabled(enabled);
     setTerrainStatus(enabled ? "3d" : supportsWebGl ? "2d" : "unsupported");
+    setIsGsiOverlayEnabled(shouldEnableInitialGsiOverlay(window.innerWidth));
   }, []);
 
   useEffect(() => {
@@ -159,6 +176,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         setTerrainStatus,
         setMapLayerMode,
         setBathymetryLoadError,
+        setBathymetryFallbackActive,
+        isGsiOverlayEnabled,
       );
     };
     if (map.loaded()) applyLayerMode();
@@ -167,7 +186,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     return () => {
       map.off("load", applyLayerMode);
     };
-  }, [isTerrainEnabled, mapLayerMode]);
+  }, [isGsiOverlayEnabled, isTerrainEnabled, mapLayerMode]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -221,6 +240,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
               />
               3D表示
             </label>
+            <button className="terrainToggleButton" type="button" aria-pressed={isGsiOverlayEnabled} title="国土地理院標準地図overlayを切り替え" onClick={() => setIsGsiOverlayEnabled((value) => !value)}>海岸線表示</button>
+            <button className="terrainToggleButton" type="button" aria-expanded={tidExpanded} title="GEBCO TID Gridのデータ由来を表示" onClick={() => setTidExpanded((value) => !value)}>データ由来</button>
             <span className="terrainStatus">
               {terrainStatus === "3d"
                 ? "3D地形表示"
@@ -230,6 +251,12 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                     ? "この端末では2D表示"
                     : "2D軽量表示"}
             </span>
+            {tidExpanded ? (
+              <div className="tidSummary" aria-label="GEBCO TID Gridによるデータ由来">
+                この周辺の水深データ: 実測 7% / 補間 63% / 混在・陸域 30%
+                <small>GEBCO TID Gridによる中心周辺17×17セルの目安。沿岸では陸セル混在により比率が変動します。</small>
+              </div>
+            ) : null}
             <div className="bathymetryLegend" aria-label="水深凡例">
               {BATHYMETRY_DEPTH_STOPS.map((stop) => (
                 <span key={stop.label}>
@@ -246,12 +273,13 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             {BATHYMETRY_ATTRIBUTION}
             <span>{BATHYMETRY_LICENSE_NOTE}</span>
             <span>{BATHYMETRY_SAFETY_NOTE}</span>
+            <span>{GSI_STANDARD_ATTRIBUTION} / {GSI_STANDARD_NOTE}</span>
           </div>
         </>
       ) : null}
       {bathymetryLoadError ? (
         <div className="mapNotice" role="status">
-          水深データを読み込めませんでした
+          {bathymetryFallbackActive ? "高解像度水深を読み込めなかったため、広域水深へ切り替えました" : "水深データを読み込めませんでした"}
         </div>
       ) : null}
       {mapLayerMode === "aerial" ? (
@@ -339,6 +367,8 @@ function applyBathymetryMode(
   setTerrainStatus: (status: "3d" | "2d" | "unsupported" | "error") => void,
   setMapLayerMode: (mode: MapLayerMode) => void,
   setBathymetryLoadError: (hasError: boolean) => void,
+  setBathymetryFallbackActive: (active: boolean) => void,
+  gsiOverlayEnabled: boolean,
 ) {
   const showBathymetry = mode === "bathymetry";
   if (showBathymetry) {
@@ -347,7 +377,8 @@ function applyBathymetryMode(
       map.setTerrain(null);
       setTerrainStatus("error");
       setBathymetryLoadError(true);
-      setMapLayerMode("standard");
+      setBathymetryFallbackActive(true);
+      enableBathymetryFallback(map);
     });
   }
   for (const layerId of [
@@ -355,12 +386,13 @@ function applyBathymetryMode(
     BATHYMETRY_HILLSHADE_LAYER_ID,
     BATHYMETRY_CONTOUR_LAYER_ID,
     BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+    GSI_STANDARD_OVERLAY_LAYER_ID,
   ]) {
     if (map.getLayer(layerId))
       map.setLayoutProperty(
         layerId,
         "visibility",
-        showBathymetry ? "visible" : "none",
+        showBathymetry && (layerId !== GSI_STANDARD_OVERLAY_LAYER_ID || gsiOverlayEnabled) ? "visible" : "none",
       );
   }
   try {
@@ -393,7 +425,7 @@ function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void)
     map.on("error", (event) => {
       const sourceId = (event as maplibregl.ErrorEvent & { sourceId?: string }).sourceId;
       const message = event.error?.message ?? "";
-      if (sourceId?.includes("etopo-2022") || message.includes("bathymetry/etopo-2022")) onBathymetryError();
+      if (sourceId?.includes("gebco-2026") || message.includes("bathymetry/gebco-2026")) onBathymetryError();
     });
     mapWithFlag.__bathymetryErrorHandlerAdded = true;
   }
@@ -419,6 +451,9 @@ function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void)
       bounds: [...BATHYMETRY_BOUNDS],
       attribution: BATHYMETRY_ATTRIBUTION,
     });
+  }
+  if (!map.getSource(GSI_STANDARD_OVERLAY_SOURCE_ID)) {
+    map.addSource(GSI_STANDARD_OVERLAY_SOURCE_ID, { type: "raster", tiles: [GSI_STANDARD_TILE_URL], tileSize: 256, minzoom: 5, maxzoom: 18, attribution: GSI_STANDARD_ATTRIBUTION });
   }
   if (!map.getSource(BATHYMETRY_CONTOUR_SOURCE_ID)) {
     map.addSource(BATHYMETRY_CONTOUR_SOURCE_ID, {
@@ -454,6 +489,8 @@ function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void)
       },
       beforeId,
     );
+  if (!map.getLayer(GSI_STANDARD_OVERLAY_LAYER_ID))
+    map.addLayer({ id: GSI_STANDARD_OVERLAY_LAYER_ID, type: "raster", source: GSI_STANDARD_OVERLAY_SOURCE_ID, layout: { visibility: "none" }, paint: { "raster-opacity": GSI_STANDARD_OVERLAY_OPACITY } }, beforeId);
   if (!map.getLayer(BATHYMETRY_CONTOUR_LAYER_ID))
     map.addLayer(
       {
@@ -493,6 +530,18 @@ function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void)
         "text-halo-width": 1.2,
       },
     });
+}
+
+function enableBathymetryFallback(map: maplibregl.Map) {
+  if (!map.getSource(BATHYMETRY_FALLBACK_SOURCE_ID)) {
+    map.addSource(BATHYMETRY_FALLBACK_SOURCE_ID, { type: "raster-dem", tiles: [BATHYMETRY_FALLBACK_TILE_URL], tileSize: 256, minzoom: BATHYMETRY_MIN_ZOOM, maxzoom: BATHYMETRY_MAX_ZOOM, bounds: [...BATHYMETRY_BOUNDS], encoding: "mapbox", attribution: BATHYMETRY_ATTRIBUTION });
+  }
+  if (!map.getSource(BATHYMETRY_FALLBACK_COLOR_SOURCE_ID)) {
+    map.addSource(BATHYMETRY_FALLBACK_COLOR_SOURCE_ID, { type: "raster", tiles: [BATHYMETRY_FALLBACK_COLOR_TILE_URL], tileSize: 256, minzoom: BATHYMETRY_MIN_ZOOM, maxzoom: BATHYMETRY_MAX_ZOOM, bounds: [...BATHYMETRY_BOUNDS], attribution: BATHYMETRY_ATTRIBUTION });
+  }
+  if (!map.getSource(BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID)) {
+    map.addSource(BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID, { type: "geojson", data: BATHYMETRY_FALLBACK_CONTOUR_GEOJSON_URL });
+  }
 }
 
 function scoreColor(score: number) {

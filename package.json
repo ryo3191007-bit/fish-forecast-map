@@ -17,13 +17,15 @@
     "check:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.mjs",
     "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs",
     "test:environment": "node scripts/environment.test.mjs",
-    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:migration-safety && npm run test:bootstrap-schema-diff && npm run test:bathymetry-ui",
+    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:migration-safety && npm run test:bootstrap-schema-diff && npm run test:bathymetry-ui && npm run test:bathymetry-data",
     "test:manual-catch-memos": "node scripts/manual-catch-memos.test.mjs",
     "test:ui-requirements": "node scripts/ui-requirements.test.mjs",
     "test:bathymetry-ui": "node scripts/bathymetry-ui.test.mjs",
-    "predev": "node scripts/generate-bathymetry-assets.mjs",
-    "pretest": "node scripts/generate-bathymetry-assets.mjs",
-    "prebuild": "node scripts/generate-bathymetry-assets.mjs"
+    "predev": "npm run generate:bathymetry",
+    "pretest": "npm run generate:bathymetry",
+    "prebuild": "npm run generate:bathymetry",
+    "test:bathymetry-data": "node scripts/bathymetry-data.test.mjs",
+    "generate:bathymetry": "BATHYMETRY_SOURCE=gebco-2026 node scripts/generate-bathymetry-assets.mjs && BATHYMETRY_SOURCE=etopo-2022 node scripts/generate-bathymetry-assets.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",

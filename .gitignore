@@ -38,3 +38,5 @@ public/bathymetry/**/*.png
 
 # build前にテキストDEMから生成する水深アセット
 public/bathymetry/etopo-2022/
+
+public/bathymetry/gebco-2026/

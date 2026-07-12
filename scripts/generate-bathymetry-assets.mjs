@@ -3,10 +3,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { PNG } from "pngjs";
 
-const DEM_PATH = "data/bathymetry/etopo-2022-crop.json";
-const OUT = "public/bathymetry/etopo-2022";
+const sourceName = process.env.BATHYMETRY_SOURCE ?? "gebco-2026";
+const DEM_PATH = `data/bathymetry/${sourceName}-crop.json`;
+const TID_PATH = `data/bathymetry/${sourceName}-tid-crop.json`;
+const OUT = `public/bathymetry/${sourceName}`;
 const MIN_ZOOM = 7;
-const MAX_ZOOM = 8;
+const MAX_ZOOM = sourceName === "gebco-2026" ? 9 : 8;
 const DEPTHS = [20, 50, 100, 200, 500];
 const TILE_SIZE = 256;
 
@@ -145,7 +147,7 @@ function generateContours() {
       }
     }
     for (const coordinates of stitchSegments(segments)) {
-      features.push({ type: "Feature", properties: { depth, major: depth >= 100, source: "ETOPO 2022 DEM marching squares" }, geometry: { type: "LineString", coordinates } });
+      features.push({ type: "Feature", properties: { depth, major: depth >= 100, source: `${dem.dataset} marching squares` }, geometry: { type: "LineString", coordinates } });
     }
   }
   return { type: "FeatureCollection", features };
@@ -166,10 +168,11 @@ fs.writeFileSync(contoursPath, JSON.stringify(contours, null, 2));
 checksums[contoursPath] = crypto.createHash("sha256").update(fs.readFileSync(contoursPath)).digest("hex");
 const meta = {
   dataset: dem.dataset, doi: dem.doi, sourceUrl: dem.sourceUrl, license: dem.license, citation: dem.citation, accessDate: dem.accessDate,
-  sourceResolution: "60 arc-second", cropBounds: b, width: dem.width, height: dem.height, cellSizeDegrees: dem.cellSizeDegrees, nodata: dem.nodata,
+  sourceResolution: dem.sourceResolution ?? (sourceName === "gebco-2026" ? "15 arc-second" : "60 arc-second"), cropBounds: b, width: dem.width, height: dem.height, cellSizeDegrees: dem.cellSizeDegrees, nodata: dem.nodata,
   sourceSha256: dem.sourceSha256, cropSha256: dem.cropSha256, generatedZoomRange: { min: MIN_ZOOM, max: MAX_ZOOM }, tileSize: TILE_SIZE,
-  tileCount: tiles.length, tiles, depthStopsMeters: [0, ...DEPTHS], generationCommand: "node scripts/generate-bathymetry-assets.mjs", checksums,
+  tileCount: tiles.length, tiles, depthStopsMeters: [0, ...DEPTHS], generationCommand: `BATHYMETRY_SOURCE=${sourceName} node scripts/generate-bathymetry-assets.mjs`, checksums,
   navigationWarning: "Reference only; not for navigation or safety decisions.", contourAlgorithm: "marching squares with segment stitching"
 };
 fs.writeFileSync(path.join(OUT, "metadata.json"), JSON.stringify(meta, null, 2));
+if (fs.existsSync(TID_PATH)) { const tid = JSON.parse(fs.readFileSync(TID_PATH, "utf8")); if (tid.width !== dem.width || tid.height !== dem.height || JSON.stringify(tid.bounds) !== JSON.stringify(dem.bounds)) throw new Error("TID grid must match bathymetry grid shape and bounds"); meta.tid = { dataset: tid.dataset, codes: tid.tidCodes, classification: tid.classification, textSha256: tid.textSha256, counts: Object.fromEntries([...new Set(tid.values)].sort((a,b)=>a-b).map((code)=>[code, tid.values.filter((value)=>value===code).length])) }; fs.writeFileSync(path.join(OUT, "metadata.json"), JSON.stringify(meta, null, 2)); }
 console.log(`Generated ${tiles.length} bathymetry XYZ tiles from ${DEM_PATH}`);

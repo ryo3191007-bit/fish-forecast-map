@@ -121,3 +121,7 @@ node scripts/generate-bathymetry-assets.mjs
 - バイナリや一時ファイルをGitへ追加せず、生成済み軽量タイルのみを配信対象にするか、既存の正本JSON + prebuild生成方式を維持するかを容量とVercel制約で決める。
 - Playwright等でPC viewport / スマホviewportの初回表示、3D ON、2D fallbackの読み込み時間を追加計測する。
 - `docs/ROADMAP.md` のPost-MVP-037は本比較完了により「追加検証中」から「実測比較完了」に更新可能。ただし実装移行はPost-MVP-038で扱う。
+
+## Post-MVP-038 implementation record
+
+Implemented source choice: `GEBCO_2026 Grid` 15秒 as first source, `GEBCO_2026 TID Grid` as same-bounds lineage source, GSI standard map as optional low-opacity overlay, and ETOPO 2022 60秒 as fallback. Crop bounds are west `128.5`, south `32.5`, east `130.8`, north `34.0`; text canon dimensions are `553 x 361`, cell size about `0.0041667°`, nodata `null`, DEM min/max `-114 / 844` in the committed crop, and TID codes `0/11/40/42` in the committed crop.

@@ -72,3 +72,5 @@
 ## Phase 5 / Post-MVP-037: 沿岸水深高解像度化候補と海岸線データ調査
 
 実測比較完了。本番データ差し替えは行わず、公式Grid Extract / GEBCO download appから一時取得した対象boundsの実データに基づき ETOPO 2022 60 arc-second Bedrock、ETOPO 2022 15 arc-second Bedrock、GEBCO_2026 Grid 15 arc-second、GEBCO multi-resolution、JODC J-EGG500、国土地理院標準地図/基盤地図情報、沿岸海域土地条件図を比較しました。Post-MVP-038ではGEBCO_2026 Grid 15秒 + TID Gridを第一候補、ETOPO 15秒を第二候補、現行60秒をfallbackとして、TID由来・出典・航海利用不可表示を含めた実装移行を扱います。J-EGG500は再配布・Web配信許可が確認できるまで本番採用しません。
+
+- Post-MVP-038: 水深・3D地形モードの第一sourceを GEBCO_2026 Grid 15秒へ更新し、同一boundsのTID由来表示、GSI標準地図overlay ON/OFF、ETOPO 2022 60秒fallback、GEBCO/GSI attributionと航海利用不可表示を追加。

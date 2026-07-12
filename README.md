@@ -125,3 +125,7 @@ Post-MVP-035では、画面上の登録UIを外部情報メモではなくユー
 マップのレイヤー切替は `通常地図 / 航空写真 / 水深・3D地形` の3モードです。水深・3D地形モードでは NOAA NCEI ETOPO 2022 の対象地域のみから生成した静的タイルを使い、2D水深色分け、等深線、hillshade、対応端末でのMapLibre terrainを表示します。スマホ、低性能端末、reduced motion、3D初期化失敗時は2D水深表示へフォールバックします。
 
 水深はETOPO 2022 DEMに基づく参考表示であり、航海・安全判断には使用できません。全世界データとPNGバイナリはGit管理対象にせず、開発・テスト・ビルド前に `data/bathymetry/etopo-2022-crop.json` のテキストDEMから静的PNG/GeoJSON/metadataを生成します。Next.js/Vercel実行時の外部取得・スクレイピング・リクエストごとのタイル生成も行いません。生成手順とライセンスは `docs/BATHYMETRY_AND_3D_TERRAIN_DESIGN.md` と `tools/bathymetry/README.md` を参照してください。
+
+### Bathymetry source
+
+Water-depth / 3D terrain mode uses committed GEBCO_2026 15 arc-second text canon as the primary prebuild source, GEBCO TID for data-lineage percentages, optional low-opacity GSI standard map overlay, and ETOPO 2022 60 arc-second as fallback. The display is reference-only and must not be used for navigation or safety decisions.

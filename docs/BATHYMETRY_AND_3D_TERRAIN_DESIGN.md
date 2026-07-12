@@ -55,3 +55,9 @@ node scripts/generate-bathymetry-assets.mjs
 - 比較画像はGitへ入れず、PR説明へ添付します。
 - 国土地理院標準地図タイルを重ねる場合は、リアルタイム読み込みと出典表示を前提にします。基盤地図情報の独立ベクトル化は測量法上の申請要否確認後に別Issueで扱います。
 - 沿岸海域土地条件図は参考背景候補に限定し、DEM、等深線生成元、3D terrain入力には使いません。
+
+## Post-MVP-038 GEBCO_2026 / TID / GSI overlay update
+
+The primary bathymetry source is now the GEBCO_2026 Grid 15 arc-second crop for bounds `128.5,32.5,130.8,34.0`, with matching GEBCO_2026 TID Grid text canon. ETOPO 2022 60 arc-second remains as a non-fatal fallback path. Static Terrain-RGB, color relief, hillshade source, 20/50/100/200/500m contours, metadata, and checksums are generated before build from committed text only.
+
+The bathymetry mode adds a low-opacity (`0.40`) GSI standard map overlay toggle for coastline, islands, and harbor shape context. The overlay reads official GSI tiles at runtime and does not duplicate tiles into Git. Attribution and Japanese warnings state `参考水深`, `航海・安全判断には使用不可`, and that 15秒 mesh does not guarantee harbor, reef, rock, or shoal positions.
