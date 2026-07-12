@@ -31,7 +31,6 @@ assert.ok(dem.values.some((v) => v < 0));
 assert.ok(dem.values.some((v) => v >= 0));
 assert.ok(dem.textSha256);
 
-
 function expectedTiles(bounds, minZoom, maxZoom) {
   const lon2x = (lon, z) => Math.floor(((lon + 180) / 360) * 2 ** z);
   const lat2y = (lat, z) => Math.floor((1 - Math.log(Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180)) / Math.PI) / 2 * 2 ** z);
@@ -52,6 +51,7 @@ function decodeTerrain(png) {
   }
   return vals;
 }
+
 for (const { z, x, y } of metadata.tiles) {
   const terrainPath = `public/bathymetry/gebco-2026/terrain/${z}/${x}/${y}.png`;
   const colorPath = `public/bathymetry/gebco-2026/color/${z}/${x}/${y}.png`;
@@ -87,4 +87,10 @@ assert.doesNotMatch(map, /外部メモ \/ 手動メモ|信頼度:|出典URLを�
 assert.match(css, /bathymetryLegend/);
 assert.match(css, /@media \(max-width: 620px\).*mapLayerToggle/s);
 assert.doesNotMatch(fs.readFileSync("README.md", "utf8"), /現在やらないこと[\s\S]*3D海底地形表示/);
+
+await import("./bathymetry-data.test.mjs");
+await import("./bathymetry-fallback.test.mjs");
+await import("./bathymetry-tid.test.mjs");
+await import("./gebco-converter.test.mjs");
+
 console.log("bathymetry UI requirements passed");
