@@ -11,17 +11,46 @@ import {
   GSI_AERIAL_TILE_NOTE,
   type MapLayerMode,
 } from "@/domain/mapLayer";
+import {
+  BATHYMETRY_ATTRIBUTION,
+  BATHYMETRY_COLOR_LAYER_ID,
+  BATHYMETRY_COLOR_SOURCE_ID,
+  BATHYMETRY_COLOR_TILE_URL,
+  BATHYMETRY_CONTOUR_GEOJSON_URL,
+  BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+  BATHYMETRY_CONTOUR_LAYER_ID,
+  BATHYMETRY_CONTOUR_SOURCE_ID,
+  BATHYMETRY_DEPTH_STOPS,
+  BATHYMETRY_HILLSHADE_LAYER_ID,
+  BATHYMETRY_LICENSE_NOTE,
+  BATHYMETRY_SAFETY_NOTE,
+  BATHYMETRY_SOURCE_ID,
+  BATHYMETRY_TILE_URL,
+  shouldEnableInitialTerrain,
+} from "@/domain/bathymetry";
 import { MapLayerToggle } from "./MapLayerToggle";
 
-type FishingMapProps = { reports: FishingReport[]; externalMemos: ExternalCatchMemo[]; spots: FishingSpot[] };
+type FishingMapProps = {
+  reports: FishingReport[];
+  externalMemos: ExternalCatchMemo[];
+  spots: FishingSpot[];
+};
 
-type MappableExternalMemo = ExternalCatchMemo & { latitude: number; longitude: number; spotName: string };
+type MappableExternalMemo = ExternalCatchMemo & {
+  latitude: number;
+  longitude: number;
+  spotName: string;
+};
 
 export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
+  const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
+  const [terrainStatus, setTerrainStatus] = useState<
+    "3d" | "2d" | "unsupported" | "error"
+  >("2d");
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -43,10 +72,25 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     };
   }, []);
 
-  const mappableExternalMemos = useMemo(() => externalMemos.flatMap((memo): MappableExternalMemo[] => {
-    const spot = memo.spotId ? spots.find((item) => item.id === memo.spotId) : undefined;
-    return spot ? [{ ...memo, latitude: spot.latitude, longitude: spot.longitude, spotName: spot.name }] : [];
-  }), [externalMemos, spots]);
+  const mappableExternalMemos = useMemo(
+    () =>
+      externalMemos.flatMap((memo): MappableExternalMemo[] => {
+        const spot = memo.spotId
+          ? spots.find((item) => item.id === memo.spotId)
+          : undefined;
+        return spot
+          ? [
+              {
+                ...memo,
+                latitude: spot.latitude,
+                longitude: spot.longitude,
+                spotName: spot.name,
+              },
+            ]
+          : [];
+      }),
+    [externalMemos, spots],
+  );
 
   useEffect(() => {
     const map = mapRef.current;
@@ -71,18 +115,53 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   }, [mappableExternalMemos, reports]);
 
   useEffect(() => {
+    const supportsWebGl =
+      Boolean(containerRef.current) &&
+      (() => {
+        const canvas = document.createElement("canvas");
+        return Boolean(
+          canvas.getContext("webgl") || canvas.getContext("experimental-webgl"),
+        );
+      })();
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const deviceMemory =
+      "deviceMemory" in navigator
+        ? Number(
+            (navigator as Navigator & { deviceMemory?: number }).deviceMemory,
+          )
+        : undefined;
+    const enabled = shouldEnableInitialTerrain({
+      width: window.innerWidth,
+      prefersReducedMotion,
+      deviceMemory,
+      webglAvailable: supportsWebGl,
+    });
+    setIsTerrainEnabled(enabled);
+    setTerrainStatus(enabled ? "3d" : supportsWebGl ? "2d" : "unsupported");
+  }, []);
+
+  useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    const applyLayerMode = () =>
+    const applyLayerMode = () => {
       setAerialLayerVisibility(map, mapLayerMode === "aerial");
+      applyBathymetryMode(
+        map,
+        mapLayerMode,
+        isTerrainEnabled,
+        setTerrainStatus,
+      );
+    };
     if (map.loaded()) applyLayerMode();
     else map.once("load", applyLayerMode);
 
     return () => {
       map.off("load", applyLayerMode);
     };
-  }, [mapLayerMode]);
+  }, [isTerrainEnabled, mapLayerMode]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -105,17 +184,65 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     const memoMarkers = mappableExternalMemos.map((memo) => {
       return new maplibregl.Marker({ color: "#a855f7" })
         .setLngLat([memo.longitude, memo.latitude])
-        .setPopup(new maplibregl.Popup({ offset: 16 }).setDOMContent(createExternalMemoPopupContent(memo)))
+        .setPopup(
+          new maplibregl.Popup({ offset: 16 }).setDOMContent(
+            createExternalMemoPopupContent(memo),
+          ),
+        )
         .addTo(map);
     });
 
-    return () => [...reportMarkers, ...memoMarkers].forEach((marker) => marker.remove());
+    return () =>
+      [...reportMarkers, ...memoMarkers].forEach((marker) => marker.remove());
   }, [mappableExternalMemos, reports]);
 
   return (
     <div className="mapShell">
       <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
       <MapLayerToggle value={mapLayerMode} onChange={setMapLayerMode} />
+      {mapLayerMode === "bathymetry" ? (
+        <>
+          <div
+            className="bathymetryPanel"
+            aria-label="水深・3D地形の操作と凡例"
+          >
+            <label className="terrainToggle">
+              <input
+                type="checkbox"
+                checked={isTerrainEnabled}
+                disabled={terrainStatus === "unsupported"}
+                onChange={(event) => setIsTerrainEnabled(event.target.checked)}
+              />
+              3D表示
+            </label>
+            <span className="terrainStatus">
+              {terrainStatus === "3d"
+                ? "3D地形表示"
+                : terrainStatus === "error"
+                  ? "3D初期化失敗: 2D表示"
+                  : terrainStatus === "unsupported"
+                    ? "この端末では2D表示"
+                    : "2D軽量表示"}
+            </span>
+            <div className="bathymetryLegend" aria-label="水深凡例">
+              {BATHYMETRY_DEPTH_STOPS.map((stop) => (
+                <span key={stop.label}>
+                  <i style={{ background: stop.color }} />
+                  {stop.label}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div
+            className="mapAttribution bathymetryAttribution"
+            aria-label="水深・地形データの出典"
+          >
+            {BATHYMETRY_ATTRIBUTION}
+            <span>{BATHYMETRY_LICENSE_NOTE}</span>
+            <span>{BATHYMETRY_SAFETY_NOTE}</span>
+          </div>
+        </>
+      ) : null}
       {mapLayerMode === "aerial" ? (
         <div className="mapAttribution" aria-label="航空写真の出典">
           {GSI_AERIAL_TILE_ATTRIBUTION}
@@ -177,7 +304,7 @@ function createExternalMemoPopupContent(memo: MappableExternalMemo) {
   summary.className = "mapPopupSummary";
   const badge = document.createElement("span");
   badge.className = "mapPopupExternal";
-  badge.textContent = "外部メモ / 手動メモ";
+  badge.textContent = "自分の釣果";
   const species = document.createElement("span");
   species.textContent = String(memo.species);
   const area = document.createElement("span");
@@ -185,16 +312,154 @@ function createExternalMemoPopupContent(memo: MappableExternalMemo) {
   summary.append(badge, species, area);
   const meta = document.createElement("p");
   meta.className = "mapPopupMeta";
-  meta.textContent = `${memo.caughtDate} / ${memo.sourceName} / 信頼度: ${memo.confidence}`;
+  meta.textContent = `${memo.caughtDate} / ${memo.method} / ${memo.catchCount ?? "匹数未入力"}${memo.sizeCm ? ` / ${memo.sizeCm}cm` : ""}`;
   const note = document.createElement("p");
-  note.textContent = `${memo.spotName}に参考表示しています。条件に合うメモは既存地点SCOREへ参考反映されます。`;
-  const link = document.createElement("a");
-  link.href = memo.sourceUrl;
-  link.target = "_blank";
-  link.rel = "noreferrer";
-  link.textContent = "出典URLを開く";
-  popup.append(title, summary, meta, note, link);
+  note.textContent = [memo.estimatedSpotName ?? memo.spotName, memo.userMemo]
+    .filter(Boolean)
+    .join(" / ");
+  popup.append(title, summary, meta, note);
   return popup;
+}
+
+function applyBathymetryMode(
+  map: maplibregl.Map,
+  mode: MapLayerMode,
+  terrainEnabled: boolean,
+  setTerrainStatus: (status: "3d" | "2d" | "unsupported" | "error") => void,
+) {
+  const showBathymetry = mode === "bathymetry";
+  if (showBathymetry) addBathymetryLayers(map);
+  for (const layerId of [
+    BATHYMETRY_COLOR_LAYER_ID,
+    BATHYMETRY_HILLSHADE_LAYER_ID,
+    BATHYMETRY_CONTOUR_LAYER_ID,
+    BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+  ]) {
+    if (map.getLayer(layerId))
+      map.setLayoutProperty(
+        layerId,
+        "visibility",
+        showBathymetry ? "visible" : "none",
+      );
+  }
+  try {
+    if (
+      showBathymetry &&
+      terrainEnabled &&
+      map.getSource(BATHYMETRY_SOURCE_ID)
+    ) {
+      map.setTerrain({ source: BATHYMETRY_SOURCE_ID, exaggeration: 1 });
+      map.easeTo({ pitch: 52, bearing: -18, duration: 650, essential: false });
+      setTerrainStatus("3d");
+    } else {
+      map.setTerrain(null);
+      map.easeTo({ pitch: 0, bearing: 0, duration: 350, essential: false });
+      setTerrainStatus(showBathymetry ? "2d" : "2d");
+    }
+  } catch (error) {
+    console.warn(
+      "[bathymetry] terrain initialization failed; falling back to 2D",
+      error,
+    );
+    map.setTerrain(null);
+    setTerrainStatus("error");
+  }
+}
+
+function addBathymetryLayers(map: maplibregl.Map) {
+  if (!map.getSource(BATHYMETRY_SOURCE_ID)) {
+    map.addSource(BATHYMETRY_SOURCE_ID, {
+      type: "raster-dem",
+      tiles: [BATHYMETRY_TILE_URL],
+      tileSize: 256,
+      minzoom: 7,
+      maxzoom: 10,
+      encoding: "mapbox",
+      attribution: BATHYMETRY_ATTRIBUTION,
+    });
+  }
+  if (!map.getSource(BATHYMETRY_COLOR_SOURCE_ID)) {
+    map.addSource(BATHYMETRY_COLOR_SOURCE_ID, {
+      type: "raster",
+      tiles: [BATHYMETRY_COLOR_TILE_URL],
+      tileSize: 256,
+      minzoom: 7,
+      maxzoom: 10,
+      attribution: BATHYMETRY_ATTRIBUTION,
+    });
+  }
+  if (!map.getSource(BATHYMETRY_CONTOUR_SOURCE_ID)) {
+    map.addSource(BATHYMETRY_CONTOUR_SOURCE_ID, {
+      type: "geojson",
+      data: BATHYMETRY_CONTOUR_GEOJSON_URL,
+    });
+  }
+  const beforeId = firstSymbolLayerId(map);
+  if (!map.getLayer(BATHYMETRY_COLOR_LAYER_ID))
+    map.addLayer(
+      {
+        id: BATHYMETRY_COLOR_LAYER_ID,
+        type: "raster",
+        source: BATHYMETRY_COLOR_SOURCE_ID,
+        layout: { visibility: "none" },
+        paint: { "raster-opacity": 0.62 },
+      },
+      beforeId,
+    );
+  if (!map.getLayer(BATHYMETRY_HILLSHADE_LAYER_ID))
+    map.addLayer(
+      {
+        id: BATHYMETRY_HILLSHADE_LAYER_ID,
+        type: "hillshade",
+        source: BATHYMETRY_SOURCE_ID,
+        layout: { visibility: "none" },
+        paint: {
+          "hillshade-shadow-color": "#082f49",
+          "hillshade-highlight-color": "#dffbff",
+          "hillshade-accent-color": "#0ea5e9",
+          "hillshade-exaggeration": 0.28,
+        },
+      },
+      beforeId,
+    );
+  if (!map.getLayer(BATHYMETRY_CONTOUR_LAYER_ID))
+    map.addLayer(
+      {
+        id: BATHYMETRY_CONTOUR_LAYER_ID,
+        type: "line",
+        source: BATHYMETRY_CONTOUR_SOURCE_ID,
+        layout: { visibility: "none" },
+        paint: {
+          "line-color": "#dffbff",
+          "line-opacity": 0.72,
+          "line-width": ["case", ["==", ["get", "major"], true], 1.4, 0.7],
+        },
+      },
+      beforeId,
+    );
+  if (!map.getLayer(BATHYMETRY_CONTOUR_LABEL_LAYER_ID))
+    map.addLayer({
+      id: BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+      type: "symbol",
+      source: BATHYMETRY_CONTOUR_SOURCE_ID,
+      layout: {
+        visibility: "none",
+        "symbol-placement": "line",
+        "text-field": [
+          "format",
+          ["get", "depth"],
+          { "font-scale": 0.9 },
+          "m",
+          {},
+        ],
+        "text-size": 11,
+      },
+      paint: {
+        "text-color": "#e0faff",
+        "text-halo-color": "#082f49",
+        "text-halo-width": 1.2,
+      },
+    });
 }
 
 function scoreColor(score: number) {

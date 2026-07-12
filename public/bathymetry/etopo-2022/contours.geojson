@@ -1,0 +1,5 @@
+{"type":"FeatureCollection","features":[
+{"type":"Feature","properties":{"depth":20,"major":false},"geometry":{"type":"LineString","coordinates":[[129.5,33.62],[129.8,33.58],[130.2,33.55]]}},
+{"type":"Feature","properties":{"depth":50,"major":true},"geometry":{"type":"LineString","coordinates":[[129.48,33.5],[129.85,33.45],[130.35,33.42]]}},
+{"type":"Feature","properties":{"depth":100,"major":true},"geometry":{"type":"LineString","coordinates":[[129.55,33.32],[129.95,33.28],[130.45,33.25]]}}
+]}

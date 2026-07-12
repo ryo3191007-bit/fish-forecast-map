@@ -1,4 +1,4 @@
-export type MapLayerMode = "standard" | "aerial";
+export type MapLayerMode = "standard" | "aerial" | "bathymetry";
 
 export type MapLayerOption = {
   id: MapLayerMode;
@@ -16,6 +16,11 @@ export const mapLayerOptions: MapLayerOption[] = [
     id: "aerial",
     label: "航空写真",
     description: "国土地理院の衛星モザイク・ランドサット・全国最新写真",
+  },
+  {
+    id: "bathymetry",
+    label: "水深・3D地形",
+    description: "NOAA ETOPO 2022の参考水深色分け・等深線・MapLibre terrain",
   },
 ];
 

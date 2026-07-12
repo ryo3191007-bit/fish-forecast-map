@@ -78,7 +78,6 @@ Supabase連携は、master read、Supabase Auth、ログインユーザー単位
 MVP v0.1の基本データはモック釣果データです。モック釣果は地図・地点評価・既存SCORE用の参考データとして維持します。一方、釣果一覧は、`acquisitionMethod === "manual"` のユーザー自身の釣果記録のみを対象にします。登録モーダル内に登録済み一覧は表示しません。`ai_assisted` / `auto` の外部メモがDBやlocalStorageに存在しても、自分の釣果記録一覧の件数・フィルタ・カード表示には含めません。
 内部実装では後方互換のため `ExternalCatchMemo` 型、`external_catch_memos` テーブル、既存localStorage keyを維持しています。これらは利用者向け名称ではなく、DB schema/RLS/RPC/既存レコードとの互換維持用の内部名称です。
 
-
 外部サイト本文、画像、コメント、プロフィール情報の取得・保存や、スクレイピング、自動取得、定期アクセス、AI解析は行いません。画面下部の外部サイトリンクは参考閲覧用であり、本アプリが情報を自動取得しているわけではありません。
 
 ## 今後の候補
@@ -119,3 +118,9 @@ npm run check:master-read
 ### 自分の釣果記録UI
 
 Post-MVP-035では、画面上の登録UIを外部情報メモではなくユーザー自身の釣果記録として整理しました。新規登録と編集は同じフォームモーダルを使い、編集は釣果一覧カードの明示的な「編集」ボタンから開始します。削除操作は編集モーダル内だけに表示します。既存の型・repository・テーブル名に `ExternalCatchMemo` / `external_catch_memos` が残るのは後方互換のためです。localStorageからSupabaseへの移行は自動化せず、登録モーダル外のコンパクトな明示導線で実行します。
+
+## 水深・3D地形モード
+
+マップのレイヤー切替は `通常地図 / 航空写真 / 水深・3D地形` の3モードです。水深・3D地形モードでは NOAA NCEI ETOPO 2022 の対象地域のみから生成した静的タイルを使い、2D水深色分け、等深線、hillshade、対応端末でのMapLibre terrainを表示します。スマホ、低性能端末、reduced motion、3D初期化失敗時は2D水深表示へフォールバックします。
+
+水深は15 arc-second DEMに基づく参考表示であり、航海・安全判断には使用できません。全世界データとPNGバイナリはGit管理対象にせず、開発・テスト・ビルド前にbase64テキストfixtureから静的PNGを復元します。Next.js/Vercel実行時の外部取得・スクレイピング・リクエストごとのタイル生成も行いません。生成手順とライセンスは `docs/BATHYMETRY_AND_3D_TERRAIN_DESIGN.md` と `tools/bathymetry/README.md` を参照してください。

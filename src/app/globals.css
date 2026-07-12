@@ -306,3 +306,12 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
 .dangerButton { border: 1px solid rgba(248, 113, 113, .5); border-radius: 999px; padding: 12px 18px; background: rgba(127, 29, 29, .38); color: #fecaca; font: inherit; font-weight: 900; cursor: pointer; }
 .dangerButton:disabled { opacity: .55; cursor: not-allowed; }
 .externalMemoMigration summary { cursor: pointer; color: #e0faff; font-weight: 900; }
+.bathymetryPanel { position: absolute; left: 18px; bottom: 18px; z-index: 2; width: min(360px, calc(100% - 36px)); display: grid; gap: 8px; padding: 10px; border: 1px solid rgba(224, 250, 255, .34); border-radius: 16px; background: rgba(2, 8, 23, .78); color: #e0faff; font-size: .72rem; font-weight: 800; box-shadow: 0 12px 28px rgba(0,0,0,.32); backdrop-filter: blur(10px); }
+.terrainToggle { display: inline-flex; align-items: center; gap: 7px; font-size: .82rem; font-weight: 900; }
+.terrainToggle input { accent-color: #22d3ee; }
+.terrainStatus { color: #bae6fd; }
+.bathymetryLegend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+.bathymetryLegend span { display: inline-flex; gap: 5px; align-items: center; white-space: nowrap; }
+.bathymetryLegend i { width: 16px; height: 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.35); }
+.bathymetryAttribution { bottom: auto; top: 68px; }
+@media (max-width: 620px) { .mapLayerToggle { max-width: calc(100% - 24px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-radius: 18px; } .mapLayerButton { border-radius: 14px; padding-inline: 7px; } .bathymetryPanel { left: 12px; bottom: 12px; width: min(300px, calc(100% - 24px)); } .bathymetryLegend { grid-template-columns: repeat(2, minmax(0, 1fr)); } .bathymetryAttribution { top: 82px; right: 12px; max-width: min(300px, calc(100% - 24px)); } }
