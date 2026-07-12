@@ -3,6 +3,9 @@
 対象: ChatGPT / Gemini / Claude  
 目的: 同一地点を同じ条件で調査し、Post-MVP-039の仕様とAI間の判定差を検証する
 
+
+> Post-MVP-043以降、汎用の新Schema向けプロンプトは `docs/research/FISHING_SPOT_RESEARCH_COMMON_PROMPT.md` を正本とします。この唐津東港プロンプトは3AI比較時点の検証資料として保持します。
+
 ## 1. 参照する正本
 
 調査前に次を読んでください。

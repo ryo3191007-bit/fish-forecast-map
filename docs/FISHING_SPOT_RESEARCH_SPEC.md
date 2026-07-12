@@ -588,3 +588,69 @@ AIへSchemaファイルとこの仕様書を添付できない場合は、Schema
 - 駐車可否を保証しない
 - 釣果や魚種出現を保証しない
 - 将来公開する場合は座標丸め・非公開化を検討する
+
+## 15. Post-MVP-043 / Schema 1.1.0 追加仕様
+
+JSONの正本バージョンはPost-MVP-043以降 `schemaVersion: "1.1.0"` です。旧 `1.0.0` の既存AI原文・比較記録・`data/research/fishing-spots/karatsu-east-port.json` は、このIssueでは移行せず比較記録として保持します。validatorとexampleは新規作成データ向けに `1.1.0` を検証します。
+
+### 15.1 調査対象範囲 `scopeType`
+
+`scopeType` は調査レコード全体が何を代表するかを表します。地形・施設種別の `spotType` とは別概念です。
+
+| 値 | 定義 |
+|---|---|
+| `district` | 港湾地区・海岸一帯など広い範囲 |
+| `facility` | 岸壁・防波堤・フェリー埠頭・護岸などの施設 |
+| `access_point` | 実際に釣りを行う具体地点または入口 |
+
+### 15.2 sourceの役割
+
+属性側の旧 `sourceIds` は、値を直接支える根拠と確認済みだが未採用のsourceが混在したため、`evidenceSources` に置き換えます。
+
+```json
+"evidenceSources": {
+  "supportingSourceIds": ["src-example"],
+  "checkedSourceIds": ["src-checked-only"],
+  "contradictingSourceIds": ["src-conflict"]
+}
+```
+
+この構造はsource側に単一の `evidenceRole` を置く案より、1つのsourceが複数属性に対して異なる役割を持つ場合の重複が少なく、validatorで属性ごとの参照整合性を検証しやすいため採用します。`confirmed` / `inferred` は `supportingSourceIds` を1件以上必要とし、`unknown` は値・confidenceともunknownルールに従います。
+
+### 15.3 座標の取得方法と対象範囲
+
+`identity.coordinates` には次を必須で記録します。
+
+- `coordinateMethod`: `official_coordinate` / `map_measurement` / `address_geocode` / `supplied_reference`
+- `coordinateScope`: `district` / `facility` / `access_point`
+
+住所をジオコードしただけの座標、公式資料に明示された座標、地図上で測った代表点、ユーザー等から提供された参考座標をSchema上で区別します。
+
+### 15.4 source独立性
+
+sourceには `sourceGroup`、`originalSourceId`、`independenceStatus` を追加します。同一運営元、転載、引用、同じ原資料に依存するsourceは同じ `sourceGroup` にまとめ、confidence算定では独立sourceとして重複カウントしません。転載・引用関係が明確な場合は `originalSourceId` を使います。
+
+### 15.5 時間情報
+
+魚種は `observedAt` または `observedPeriod` で観測日・観測期間を記録します。施設・規制属性は必要に応じて `validFrom`、`validUntil`、`officiallyConfirmed` を記録します。sourceは `publishedAt`、`lastUpdatedAt`、`checkedAt` を分け、`checkedAt` は調査者が確認した日として扱います。
+
+### 15.6 調査段階と自己検証
+
+`researchStages` で一次調査、二次調査、Schema自己検証の状態を記録します。
+
+```json
+{
+  "officialResearch": "completed",
+  "secondaryResearch": "skipped",
+  "schemaValidation": "passed"
+}
+```
+
+`schemaValidation=passed` はAIの自己申告であり、最終的にはリポジトリのvalidatorで確認します。
+
+### 15.7 互換性と移行方針
+
+- 既存のChatGPT / Gemini / Claude原文JSONは変更しません。
+- 既存 `data/research/fishing-spots/karatsu-east-port.json` はこのIssueでは新Schemaへ移行しません。
+- 新規調査は `1.1.0` と汎用プロンプト `docs/research/FISHING_SPOT_RESEARCH_COMMON_PROMPT.md` を使います。
+- 旧 `1.0.0` 記録を移行する場合は、`sourceIds` を `evidenceSources.supportingSourceIds` へ機械変換した後、checked/contradicting、座標method/scope、source独立性、時間情報、researchStagesを人間が補完・確認します。

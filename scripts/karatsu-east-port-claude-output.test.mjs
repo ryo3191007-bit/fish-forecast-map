@@ -1,21 +1,13 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const validatorPath = path.join(ROOT, "scripts/fishing-spot-research-schema.test.mjs");
 const rawOutputPath = path.join(
   ROOT,
   "data/research/fishing-spots/ai-outputs/karatsu-east-port.claude.raw.json",
 );
-const temporaryValidatorPath = path.join(
-  ROOT,
-  "scripts",
-  `.karatsu-east-port-claude-validator-${process.pid}.mjs`,
-);
-
 const rawOutput = JSON.parse(fs.readFileSync(rawOutputPath, "utf8"));
 
 assert.equal(rawOutput.schemaVersion, "1.0.0");
@@ -39,30 +31,6 @@ assert.equal(rawOutput.restrictions.fishingProhibited.confidence, "low");
 assert.equal(rawOutput.sources.length, 12);
 assert.equal(rawOutput.reviewStatus, "draft");
 
-const validatorSource = fs.readFileSync(validatorPath, "utf8");
-const originalExampleLine =
-  'const examplePath = path.join(ROOT, "docs/examples/fishing-spot-research.example.json");';
-const rawOutputLine =
-  'const examplePath = path.join(ROOT, "data/research/fishing-spots/ai-outputs/karatsu-east-port.claude.raw.json");';
-
-assert.ok(validatorSource.includes(originalExampleLine));
-
-const patchedValidatorSource = validatorSource.replace(originalExampleLine, rawOutputLine);
-fs.writeFileSync(temporaryValidatorPath, patchedValidatorSource, "utf8");
-
-try {
-  const result = spawnSync(process.execPath, [temporaryValidatorPath], {
-    cwd: ROOT,
-    encoding: "utf8",
-  });
-  assert.equal(
-    result.status,
-    0,
-    `Claude output schema validation failed:\n${result.stdout}\n${result.stderr}`,
-  );
-  process.stdout.write(result.stdout);
-} finally {
-  fs.rmSync(temporaryValidatorPath, { force: true });
-}
+// Claude raw output is retained as a schemaVersion 1.0.0 comparison record and is not migrated to schema 1.1.0 in Issue #125.
 
 console.log("Karatsu East Port Claude raw output checks passed.");

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "spotId": "sample-harbor-a",
   "identity": {
     "spotName": "サンプル漁港A（架空）",
@@ -8,14 +8,20 @@
     "municipality": "サンプル市",
     "coordinates": {
       "latitude": 33.5,
-      "longitude": 130.0,
+      "longitude": 130,
       "status": "inferred",
       "confidence": "medium",
-      "sourceIds": [
-        "src-public-map"
-      ],
       "checkedAt": "2026-07-12",
-      "note": "JSON形式の説明用に作成した架空地点。実在地点として使用しない。"
+      "note": "JSON形式の説明用に作成した架空地点。実在地点として使用しない。",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "coordinateMethod": "map_measurement",
+      "coordinateScope": "facility"
     }
   },
   "attributes": {
@@ -26,10 +32,14 @@
       ],
       "status": "confirmed",
       "confidence": "high",
-      "sourceIds": [
-        "src-port-manager"
-      ],
-      "checkedAt": "2026-07-12"
+      "checkedAt": "2026-07-12",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-port-manager"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      }
     },
     "seabed": {
       "value": [
@@ -38,44 +48,64 @@
       ],
       "status": "inferred",
       "confidence": "medium",
-      "sourceIds": [
-        "src-public-map"
-      ],
       "checkedAt": "2026-07-12",
-      "note": "公開地図と地形情報からの推定。"
+      "note": "公開地図と地形情報からの推定。",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      }
     },
     "waterDepth": {
       "value": "unknown",
       "status": "unknown",
       "confidence": "low",
-      "sourceIds": [],
       "checkedAt": "2026-07-12",
-      "note": "数値根拠を確認できていないため分類しない。"
+      "note": "数値根拠を確認できていないため分類しない。",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      }
     },
     "riverInfluence": {
       "value": "weak",
       "status": "inferred",
       "confidence": "medium",
-      "sourceIds": [
-        "src-public-map"
-      ],
-      "checkedAt": "2026-07-12"
+      "checkedAt": "2026-07-12",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      }
     },
     "tidalFlow": {
       "value": "unknown",
       "status": "unknown",
       "confidence": "low",
-      "sourceIds": [],
       "checkedAt": "2026-07-12",
-      "note": "客観的な流速・海況資料を確認できていない。"
+      "note": "客観的な流速・海況資料を確認できていない。",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      }
     },
     "streetLights": {
       "value": "unknown",
       "status": "unknown",
       "confidence": "low",
-      "sourceIds": [],
       "checkedAt": "2026-07-12",
-      "note": "夜間設備の公式情報を確認できていない。"
+      "note": "夜間設備の公式情報を確認できていない。",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      }
     },
     "obstacles": {
       "value": [
@@ -83,19 +113,27 @@
       ],
       "status": "confirmed",
       "confidence": "medium",
-      "sourceIds": [
-        "src-port-manager"
-      ],
-      "checkedAt": "2026-07-12"
+      "checkedAt": "2026-07-12",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-port-manager"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      }
     },
     "openSeaExposure": {
       "value": "bay_mouth",
       "status": "inferred",
       "confidence": "medium",
-      "sourceIds": [
-        "src-public-map"
-      ],
-      "checkedAt": "2026-07-12"
+      "checkedAt": "2026-07-12",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      }
     },
     "fishingRange": {
       "value": [
@@ -104,11 +142,15 @@
       ],
       "status": "inferred",
       "confidence": "low",
-      "sourceIds": [
-        "src-public-map"
-      ],
       "checkedAt": "2026-07-12",
-      "note": "地形からの仮説。釣果情報ではない。"
+      "note": "地形からの仮説。釣果情報ではない。",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      }
     }
   },
   "fishSpecies": [
@@ -117,11 +159,20 @@
       "basis": "expected",
       "status": "inferred",
       "confidence": "low",
-      "sourceIds": [
-        "src-fisheries-research"
-      ],
       "checkedAt": "2026-07-12",
-      "note": "魚種生態と地点タイプからの例示。実在地点の釣果実績ではない。"
+      "note": "魚種生態と地点タイプからの例示。実在地点の釣果実績ではない。",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-fisheries-research"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "observedAt": null,
+      "observedPeriod": {
+        "start": null,
+        "end": null
+      }
     }
   ],
   "facilities": {
@@ -129,18 +180,32 @@
       "value": "unknown",
       "status": "unknown",
       "confidence": "low",
-      "sourceIds": [],
       "checkedAt": "2026-07-12",
-      "note": "路上や空き地を駐車場として扱わない。"
+      "note": "路上や空き地を駐車場として扱わない。",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
     },
     "toilet": {
       "value": "not_available",
       "status": "confirmed",
       "confidence": "medium",
-      "sourceIds": [
-        "src-port-manager"
-      ],
-      "checkedAt": "2026-07-12"
+      "checkedAt": "2026-07-12",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-port-manager"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": true
     }
   },
   "restrictions": {
@@ -148,27 +213,48 @@
       "value": "unknown",
       "status": "unknown",
       "confidence": "low",
-      "sourceIds": [],
       "checkedAt": "2026-07-12",
-      "note": "現行の公式規制情報を未確認。"
+      "note": "現行の公式規制情報を未確認。",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": false
     },
     "entryProhibited": {
       "value": "partial",
       "status": "confirmed",
       "confidence": "high",
-      "sourceIds": [
-        "src-port-manager"
-      ],
-      "checkedAt": "2026-07-12"
+      "checkedAt": "2026-07-12",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-port-manager"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": true
     },
     "constructionOrClosure": {
       "value": "no",
       "status": "confirmed",
       "confidence": "high",
-      "sourceIds": [
-        "src-port-manager"
-      ],
-      "checkedAt": "2026-07-12"
+      "checkedAt": "2026-07-12",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-port-manager"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": true
     },
     "officialContact": {
       "name": "サンプル港湾管理事務所（架空）",
@@ -187,14 +273,18 @@
       "checkedAt": "2026-07-12",
       "publishedAt": null,
       "supports": [
-        "identity.coordinates",
+        "identity.coordinates.latitude",
         "attributes.spotType",
         "attributes.obstacles",
         "facilities.toilet",
         "restrictions.entryProhibited",
         "restrictions.constructionOrClosure"
       ],
-      "note": "Schema説明用の架空URL。"
+      "note": "Schema説明用の架空URL。",
+      "independenceStatus": "independent",
+      "sourceGroup": null,
+      "originalSourceId": null,
+      "lastUpdatedAt": null
     },
     {
       "id": "src-public-map",
@@ -205,13 +295,17 @@
       "checkedAt": "2026-07-12",
       "publishedAt": null,
       "supports": [
-        "identity.coordinates",
+        "identity.coordinates.longitude",
         "attributes.seabed",
         "attributes.riverInfluence",
         "attributes.openSeaExposure",
         "attributes.fishingRange"
       ],
-      "note": "Schema説明用の架空URL。"
+      "note": "Schema説明用の架空URL。",
+      "independenceStatus": "independent",
+      "sourceGroup": null,
+      "originalSourceId": null,
+      "lastUpdatedAt": null
     },
     {
       "id": "src-fisheries-research",
@@ -224,10 +318,21 @@
       "supports": [
         "fishSpecies.expected"
       ],
-      "note": "Schema説明用の架空URL。"
+      "note": "Schema説明用の架空URL。",
+      "independenceStatus": "independent",
+      "sourceGroup": null,
+      "originalSourceId": null,
+      "lastUpdatedAt": null
     }
   ],
   "researchNotes": "このファイルは形式確認用の架空データ。実在する釣り場の事実として利用しない。",
   "researchedAt": "2026-07-12T12:00:00+09:00",
-  "reviewStatus": "draft"
+  "reviewStatus": "draft",
+  "scopeType": "facility",
+  "researchStages": {
+    "officialResearch": "completed",
+    "secondaryResearch": "skipped",
+    "schemaValidation": "passed",
+    "note": "架空サンプルのため実調査は行っていない。"
+  }
 }

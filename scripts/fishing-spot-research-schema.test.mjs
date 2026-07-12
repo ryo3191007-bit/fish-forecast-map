@@ -168,10 +168,13 @@ function validateSourceReferences(record) {
     }
     if (!value || typeof value !== "object") return;
 
-    if (Array.isArray(value.sourceIds)) {
-      for (const sourceId of value.sourceIds) {
-        if (!known.has(sourceId)) {
-          errors.push(`${currentPath}.sourceIds: unknown source id ${sourceId}`);
+    if (value.evidenceSources) {
+      for (const [role, ids] of Object.entries(value.evidenceSources)) {
+        if (!Array.isArray(ids)) continue;
+        for (const sourceId of ids) {
+          if (!known.has(sourceId)) {
+            errors.push(`${currentPath}.evidenceSources.${role}: unknown source id ${sourceId}`);
+          }
         }
       }
     }
@@ -190,7 +193,7 @@ function validateRecord(record) {
 }
 
 assert.equal(schema.$schema, "https://json-schema.org/draft/2020-12/schema");
-assert.equal(schema.properties.schemaVersion.const, "1.0.0");
+assert.equal(schema.properties.schemaVersion.const, "1.1.0");
 assert.deepEqual(validateRecord(example), [], "example must satisfy schema and source references");
 
 const invalidEnum = structuredClone(example);
@@ -208,10 +211,10 @@ assert.ok(
 );
 
 const unknownSource = structuredClone(example);
-unknownSource.attributes.seabed.sourceIds = ["src-does-not-exist"];
+unknownSource.attributes.seabed.evidenceSources.supportingSourceIds = ["src-does-not-exist"];
 assert.ok(
   validateRecord(unknownSource).some((error) => error.includes("unknown source id")),
-  "unregistered sourceIds must be rejected",
+  "unregistered evidence source ids must be rejected",
 );
 
 const inconsistentUnknown = structuredClone(example);
