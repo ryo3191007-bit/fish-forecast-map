@@ -132,7 +132,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     });
   }, [adjustedMockFishingReports, endDate, normalizedKeyword, reportView, selectedArea, selectedSort, selectedSpecies, startDate]);
 
-  const filteredExternalMemos = useMemo(() => {
+  const filteredManualCatchMemos = useMemo(() => {
     const filteredMemos = manualCatchMemos.filter((memo) => {
       const matchesSpecies = selectedSpecies === "all" || memo.species === selectedSpecies;
       const matchesArea = selectedArea === "all" || memo.areaName === selectedArea;
@@ -145,6 +145,16 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
       return Date.parse(b.caughtDate) - Date.parse(a.caughtDate);
     });
   }, [endDate, manualCatchMemos, normalizedKeyword, reportView, selectedArea, selectedSort, selectedSpecies, startDate]);
+
+  const filteredExternalMemosForMap = useMemo(() => {
+    return externalMemos.filter((memo) => {
+      const matchesSpecies = selectedSpecies === "all" || memo.species === selectedSpecies;
+      const matchesArea = selectedArea === "all" || memo.areaName === selectedArea;
+      const matchesDate = reportView !== "reports" || ((!startDate || memo.caughtDate >= startDate) && (!endDate || memo.caughtDate <= endDate));
+      const searchableText = [memo.estimatedSpotName, memo.areaName, memo.species, memo.method, memo.sourceName, memo.userMemo].join(" ").toLowerCase();
+      return matchesSpecies && matchesArea && matchesDate && (normalizedKeyword === "" || searchableText.includes(normalizedKeyword));
+    });
+  }, [endDate, externalMemos, normalizedKeyword, reportView, selectedArea, selectedSpecies, startDate]);
 
   const areaEvaluations = useMemo(() => {
     const groupedReports = new Map<string, FishingReport[]>();
@@ -255,7 +265,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           <h2>糸島西岸〜平戸方面の釣果予報マップ</h2>
           <p className="muted">モック釣果は地図・地点評価・SCOREの参考に維持し、釣果一覧は手入力釣果だけを魚種・エリア・キーワードで確認できます。</p>
           <p className="resultSummary" aria-live="polite">
-            魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 釣り場マスター{fishingSpots.length}地点 / 地図・地点評価用モック{mockFishingReports.length}件 / 手入力釣果 全{manualCatchMemos.length}件中 {filteredExternalMemos.length}件を一覧表示中
+            魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 釣り場マスター{fishingSpots.length}地点 / 地図・地点評価用モック{mockFishingReports.length}件 / 手入力釣果 全{manualCatchMemos.length}件中 {filteredManualCatchMemos.length}件を一覧表示中
           </p>
           <MasterDataStatusChip status={masterDataStatus} />
         </div>
@@ -263,7 +273,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
 
       <div className="mapEnvironmentGrid">
         <div className="mapSection">
-          <FishingMap reports={reports} externalMemos={filteredExternalMemos} spots={fishingSpots} />
+          <FishingMap reports={reports} externalMemos={filteredExternalMemosForMap} spots={fishingSpots} />
         </div>
         <EnvironmentPanel
           selectedSpot={environmentSpot}
@@ -423,14 +433,14 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
         <>
           <ExternalCatchMemoSection memos={manualCatchMemos} onMemoSave={persistMemo} onMemoDelete={deleteMemo} onLocalMemoMigrate={migrateLocalMemosToSupabase} localMemoIds={localMemoIds} storageError={storageError} storageStatus={memoStorageStatus} sources={externalSources} spots={fishingSpots} />
           <div className="cards" id="reports">
-            {filteredExternalMemos.length === 0 ? (
+            {filteredManualCatchMemos.length === 0 ? (
               <div className="emptyState" role="status">
                 <p className="eyebrow">No reports</p>
                 <h3>該当する手入力釣果がありません</h3>
                 <p>魚種・エリア・キーワード検索・釣果期間の条件を変更するか、「条件をリセット」で初期表示に戻してください。手入力釣果だけを一覧表示対象にしています。</p>
               </div>
             ) : <>
-            {filteredExternalMemos.map((memo) => <ExternalMemoCard key={memo.id} memo={memo} spots={fishingSpots} />)}
+            {filteredManualCatchMemos.map((memo) => <ExternalMemoCard key={memo.id} memo={memo} spots={fishingSpots} />)}
           </>}
           </div>
         </>

@@ -17,8 +17,9 @@
     "check:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.mjs",
     "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs",
     "test:environment": "node scripts/environment.test.mjs",
-    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:migration-safety && npm run test:bootstrap-schema-diff",
-    "test:manual-catch-memos": "node scripts/manual-catch-memos.test.mjs"
+    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:migration-safety && npm run test:bootstrap-schema-diff",
+    "test:manual-catch-memos": "node scripts/manual-catch-memos.test.mjs",
+    "test:ui-requirements": "node scripts/ui-requirements.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
