@@ -25,8 +25,10 @@ for (const candidate of candidates) {
   const result = spawnSync(
     candidate.command,
     [...candidate.prefix, script, ...process.argv.slice(2)],
-    { stdio: "inherit" },
+    { encoding: "utf8" },
   );
+  if (result.stdout) process.stdout.write(result.stdout);
+  if (result.stderr) process.stderr.write(result.stderr);
   if (!result.error || result.error.code !== "ENOENT") {
     process.exit(result.status ?? 1);
   }
