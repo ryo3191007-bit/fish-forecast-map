@@ -70,7 +70,7 @@ docs/FISHING_SPOT_SECONDARY_SOURCE_POLICY.md
 
 | 指標 | ChatGPT | Gemini | Claude |
 |---|---:|---:|---:|
-| Schema適合 | CI確認待ち | 未実施 | 未実施 |
+| Schema適合 | 自動検証対象 | 未実施 | 未実施 |
 | source数 | 7 | 未実施 | 未実施 |
 | 公式・公的source数 | 5 | 未実施 | 未実施 |
 | 民間source数 | 2 | 未実施 | 未実施 |
