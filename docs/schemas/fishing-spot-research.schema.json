@@ -1239,7 +1239,58 @@
                   }
                 }
               }
-            }
+            },
+            "anyOf": [
+              {
+                "required": [
+                  "observedAt"
+                ],
+                "properties": {
+                  "observedAt": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              },
+              {
+                "required": [
+                  "observedPeriod"
+                ],
+                "properties": {
+                  "observedPeriod": {
+                    "type": "object",
+                    "properties": {
+                      "from": {
+                        "type": "string",
+                        "format": "date"
+                      }
+                    },
+                    "required": [
+                      "from"
+                    ]
+                  }
+                }
+              },
+              {
+                "required": [
+                  "observedPeriod"
+                ],
+                "properties": {
+                  "observedPeriod": {
+                    "type": "object",
+                    "properties": {
+                      "to": {
+                        "type": "string",
+                        "format": "date"
+                      }
+                    },
+                    "required": [
+                      "to"
+                    ]
+                  }
+                }
+              }
+            ]
           }
         },
         {

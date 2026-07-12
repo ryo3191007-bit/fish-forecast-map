@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import Ajv2020 from "ajv/dist/2020.js";
+import addFormats from "ajv-formats";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const schemaPaths = {
@@ -9,93 +11,106 @@ const schemaPaths = {
   "1.1.0": path.join(ROOT, "docs/schemas/fishing-spot-research.schema.json"),
 };
 const examplePath = path.join(ROOT, "docs/examples/fishing-spot-research.example.json");
+const commonPromptPath = path.join(ROOT, "docs/research/FISHING_SPOT_RESEARCH_COMMON_PROMPT.md");
 const pilotPath = path.join(ROOT, "data/research/fishing-spots/karatsu-east-port.json");
 const claudePath = path.join(ROOT, "data/research/fishing-spots/ai-outputs/karatsu-east-port.claude.raw.json");
 const geminiPath = path.join(ROOT, "data/research/fishing-spots/ai-outputs/karatsu-east-port.gemini.raw.json");
 const schemas = Object.fromEntries(Object.entries(schemaPaths).map(([version, file]) => [version, readJson(file)]));
+const ajv = new Ajv2020({ allErrors: true, strict: false });
+addFormats(ajv);
+const standardValidators = Object.fromEntries(Object.entries(schemas).map(([version, schema]) => [version, ajv.compile(schema)]));
 
 function readJson(filePath) { return JSON.parse(fs.readFileSync(filePath, "utf8")); }
-function sameJson(left, right) { return JSON.stringify(left) === JSON.stringify(right); }
-function matchesType(value, type) {
-  if (type === "null") return value === null;
-  if (type === "array") return Array.isArray(value);
-  if (type === "object") return value !== null && typeof value === "object" && !Array.isArray(value);
-  if (type === "number") return typeof value === "number" && Number.isFinite(value);
-  if (type === "integer") return Number.isInteger(value);
-  return typeof value === type;
-}
-function resolveRef(ref, schema) {
-  assert.match(ref, /^#\//, `Only local JSON Schema refs are supported: ${ref}`);
-  return ref.slice(2).split("/").map((part) => part.replaceAll("~1", "/").replaceAll("~0", "~")).reduce((current, part) => current?.[part], schema);
-}
-function validateNode(value, node, schema, currentPath = "$") {
-  const errors = [];
-  if (!node || typeof node !== "object") return errors;
-  if (node.$ref) return validateNode(value, resolveRef(node.$ref, schema), schema, currentPath);
-  if (Object.hasOwn(node, "const") && !sameJson(value, node.const)) errors.push(`${currentPath}: expected const ${JSON.stringify(node.const)}`);
-  if (node.enum && !node.enum.some((candidate) => sameJson(value, candidate))) errors.push(`${currentPath}: value ${JSON.stringify(value)} is outside enum`);
-  const allowedTypes = Array.isArray(node.type) ? node.type : node.type ? [node.type] : [];
-  if (allowedTypes.length > 0 && !allowedTypes.some((type) => matchesType(value, type))) { errors.push(`${currentPath}: expected type ${allowedTypes.join("|")}`); return errors; }
-  if (typeof value === "string") {
-    if (node.minLength !== undefined && value.length < node.minLength) errors.push(`${currentPath}: shorter than minLength ${node.minLength}`);
-    if (node.maxLength !== undefined && value.length > node.maxLength) errors.push(`${currentPath}: longer than maxLength ${node.maxLength}`);
-    if (node.pattern && !new RegExp(node.pattern).test(value)) errors.push(`${currentPath}: does not match ${node.pattern}`);
-    if (node.format === "date" && !/^\d{4}-\d{2}-\d{2}$/.test(value)) errors.push(`${currentPath}: invalid date`);
-    if (node.format === "date-time" && Number.isNaN(Date.parse(value))) errors.push(`${currentPath}: invalid date-time`);
-    if (node.format === "uri") { try { const url = new URL(value); if (!["http:", "https:"].includes(url.protocol)) errors.push(`${currentPath}: URI must use http or https`); } catch { errors.push(`${currentPath}: invalid URI`); } }
-  }
-  if (typeof value === "number") {
-    if (node.minimum !== undefined && value < node.minimum) errors.push(`${currentPath}: below minimum ${node.minimum}`);
-    if (node.maximum !== undefined && value > node.maximum) errors.push(`${currentPath}: above maximum ${node.maximum}`);
-  }
-  if (Array.isArray(value)) {
-    if (node.minItems !== undefined && value.length < node.minItems) errors.push(`${currentPath}: fewer than minItems ${node.minItems}`);
-    if (node.maxItems !== undefined && value.length > node.maxItems) errors.push(`${currentPath}: more than maxItems ${node.maxItems}`);
-    if (node.uniqueItems && new Set(value.map((item) => JSON.stringify(item))).size !== value.length) errors.push(`${currentPath}: duplicate array items`);
-    if (node.items) value.forEach((item, index) => errors.push(...validateNode(item, node.items, schema, `${currentPath}[${index}]`)));
-    if (node.contains && !value.some((item, index) => validateNode(item, node.contains, schema, `${currentPath}[${index}]`).length === 0)) errors.push(`${currentPath}: no item satisfies contains`);
-  }
-  if (value !== null && typeof value === "object" && !Array.isArray(value)) {
-    for (const requiredKey of node.required ?? []) if (!Object.hasOwn(value, requiredKey)) errors.push(`${currentPath}: missing required property ${requiredKey}`);
-    for (const [key, child] of Object.entries(node.properties ?? {})) if (Object.hasOwn(value, key)) errors.push(...validateNode(value[key], child, schema, `${currentPath}.${key}`));
-    if (node.additionalProperties === false) {
-      const allowedKeys = new Set(Object.keys(node.properties ?? {}));
-      for (const key of Object.keys(value)) if (!allowedKeys.has(key)) errors.push(`${currentPath}: additional property ${key}`);
-    }
-  }
-  for (const child of node.allOf ?? []) errors.push(...validateNode(value, child, schema, currentPath));
-  if (node.if && validateNode(value, node.if, schema, currentPath).length === 0 && node.then) errors.push(...validateNode(value, node.then, schema, currentPath));
+function formatAjvErrors(errors) { return (errors ?? []).map((error) => `${error.instancePath || "$"}: ${error.message}`); }
+function validateStandard(record) {
+  const validator = standardValidators[record.schemaVersion] ?? standardValidators["1.0.0"];
+  const errors = record.schemaVersion && !standardValidators[record.schemaVersion] ? [`$.schemaVersion: unsupported ${record.schemaVersion}`] : [];
+  if (!validator(record)) errors.push(...formatAjvErrors(validator.errors));
   return errors;
 }
-function validateReferences(record) {
+function sourceMap(record) { return new Map((record.sources ?? []).map((source) => [source.id, source])); }
+function hasAnySupport(source, paths) { return paths.some((support) => source?.supports?.includes(support)); }
+function compareNullableDates(from, to, pathLabel, errors) {
+  if (from !== null && to !== null && from > to) errors.push(`${pathLabel}: from must be <= to`);
+}
+function supportPathsForEvidence(currentPath) {
+  const normalized = currentPath.replace(/^\$\./, "");
+  const fish = normalized.match(/^fishSpecies\[(\d+)\]$/);
+  if (fish) return [`fishSpecies[${fish[1]}].name`, `fishSpecies[${fish[1]}].basis`, `fishSpecies[${fish[1]}].observedAt`, `fishSpecies[${fish[1]}].observedPeriod`];
+  if (normalized === "identity.coordinates") return ["identity.coordinates.latitude", "identity.coordinates.longitude"];
+  const attribute = normalized.match(/^attributes\.(\w+)$/);
+  if (attribute) return [`attributes.${attribute[1]}.value`];
+  const facility = normalized.match(/^facilities\.(\w+)$/);
+  if (facility) return [`facilities.${facility[1]}.value`, `facilities.${facility[1]}.validFrom`, `facilities.${facility[1]}.validUntil`, `facilities.${facility[1]}.officiallyConfirmed`];
+  const restriction = normalized.match(/^restrictions\.(\w+)$/);
+  if (restriction) return [`restrictions.${restriction[1]}.value`, `restrictions.${restriction[1]}.validFrom`, `restrictions.${restriction[1]}.validUntil`, `restrictions.${restriction[1]}.officiallyConfirmed`];
+  if (normalized === "restrictions.officialContact") return ["restrictions.officialContact.name", "restrictions.officialContact.url", "restrictions.officialContact.validFrom", "restrictions.officialContact.validUntil", "restrictions.officialContact.officiallyConfirmed"];
+  return [];
+}
+function supportPathExists(record, support) {
+  if (["identity.spotName", "identity.aliases", "identity.prefecture", "identity.municipality", "identity.coordinates.latitude", "identity.coordinates.longitude"].includes(support)) return true;
+  const fish = support.match(/^fishSpecies\[(\d+)\]\.(name|basis|observedAt|observedPeriod)$/);
+  if (fish) return Number(fish[1]) < (record.fishSpecies ?? []).length;
+  const attribute = support.match(/^attributes\.(\w+)\.value$/);
+  if (attribute) return Object.hasOwn(record.attributes ?? {}, attribute[1]);
+  const facility = support.match(/^facilities\.(\w+)\.(value|validFrom|validUntil|officiallyConfirmed)$/);
+  if (facility) return Object.hasOwn(record.facilities ?? {}, facility[1]);
+  const restriction = support.match(/^restrictions\.(\w+)\.(value|validFrom|validUntil|officiallyConfirmed)$/);
+  if (restriction) return Object.hasOwn(record.restrictions ?? {}, restriction[1]) && restriction[1] !== "officialContact";
+  return /^restrictions\.officialContact\.(name|url|validFrom|validUntil|officiallyConfirmed)$/.test(support);
+}
+function validateCustom(record) {
   const errors = [];
-  const sourceIds = (record.sources ?? []).map((source) => source.id);
-  const known = new Set(sourceIds);
-  if (known.size !== sourceIds.length) errors.push("$.sources: source id must be unique");
+  const sources = sourceMap(record);
+  const ids = [...sources.keys()];
+  if (ids.length !== (record.sources ?? []).length) errors.push("$.sources: source id must be unique");
+  for (const source of record.sources ?? []) {
+    if (record.schemaVersion === "1.1.0") for (const support of source.supports ?? []) if (!supportPathExists(record, support)) errors.push(`$.sources.${source.id}.supports: ${support} does not point to an existing record`);
+    if (source.originalSourceId !== null && source.originalSourceId !== undefined) {
+      if (!sources.has(source.originalSourceId)) errors.push(`$.sources.${source.id}.originalSourceId: unknown source id ${source.originalSourceId}`);
+      if (source.originalSourceId === source.id) errors.push(`$.sources.${source.id}.originalSourceId: self reference is not allowed`);
+    }
+    if (source.independenceStatus === "related" && !source.sourceGroup && !source.originalSourceId) errors.push(`$.sources.${source.id}: related source requires sourceGroup or originalSourceId`);
+    if (source.independenceStatus === "independent" && source.originalSourceId) errors.push(`$.sources.${source.id}: independent source cannot have originalSourceId`);
+  }
   function visit(value, currentPath) {
     if (Array.isArray(value)) return value.forEach((item, index) => visit(item, `${currentPath}[${index}]`));
     if (!value || typeof value !== "object") return;
-    if (Array.isArray(value.sourceIds)) for (const id of value.sourceIds) if (!known.has(id)) errors.push(`${currentPath}.sourceIds: unknown source id ${id}`);
+    if (Array.isArray(value.sourceIds)) for (const id of value.sourceIds) if (!sources.has(id)) errors.push(`${currentPath}.sourceIds: unknown source id ${id}`);
     if (value.evidenceSources) {
       const buckets = ["supportingSourceIds", "checkedSourceIds", "contradictingSourceIds"];
       const seen = new Map();
       for (const bucket of buckets) for (const id of value.evidenceSources[bucket] ?? []) {
-        if (!known.has(id)) errors.push(`${currentPath}.evidenceSources.${bucket}: unknown source id ${id}`);
+        if (!sources.has(id)) errors.push(`${currentPath}.evidenceSources.${bucket}: unknown source id ${id}`);
         if (seen.has(id)) errors.push(`${currentPath}.evidenceSources: duplicate source id ${id} across ${seen.get(id)} and ${bucket}`);
         seen.set(id, bucket);
       }
       if (["confirmed", "inferred"].includes(value.status) && (value.evidenceSources.supportingSourceIds ?? []).length === 0) errors.push(`${currentPath}.evidenceSources.supportingSourceIds: required for ${value.status}`);
       if (value.status === "unknown" && (value.evidenceSources.supportingSourceIds ?? []).length !== 0) errors.push(`${currentPath}.evidenceSources.supportingSourceIds: must be empty for unknown`);
+      const expectedSupports = supportPathsForEvidence(currentPath);
+      if (record.schemaVersion === "1.1.0") for (const id of value.evidenceSources.supportingSourceIds ?? []) if (sources.has(id) && expectedSupports.length > 0 && !hasAnySupport(sources.get(id), expectedSupports)) errors.push(`${currentPath}.evidenceSources.supportingSourceIds: ${id} must support one of ${expectedSupports.join(", ")}`);
     }
+    if (record.schemaVersion === "1.1.0" && value.basis === "observed" && value.observedAt === null && (!value.observedPeriod || (value.observedPeriod.from === null && value.observedPeriod.to === null))) errors.push(`${currentPath}: observed fish species requires observedAt or observedPeriod.from/to`);
+    if (value.observedPeriod) compareNullableDates(value.observedPeriod.from, value.observedPeriod.to, `${currentPath}.observedPeriod`, errors);
+    if (Object.hasOwn(value, "validFrom") && Object.hasOwn(value, "validUntil")) compareNullableDates(value.validFrom, value.validUntil, `${currentPath}.validFrom/validUntil`, errors);
     for (const [key, child] of Object.entries(value)) if (key !== "sources") visit(child, `${currentPath}.${key}`);
   }
   visit(record, "$");
   return errors;
 }
-function validateRecord(record) {
-  const schema = schemas[record.schemaVersion] ?? schemas["1.0.0"];
-  const versionErrors = record.schemaVersion && !schemas[record.schemaVersion] ? [`$.schemaVersion: unsupported ${record.schemaVersion}`] : [];
-  return [...versionErrors, ...validateNode(record, schema, schema), ...validateReferences(record)];
+function validateRecord(record) { return [...validateStandard(record), ...validateCustom(record)]; }
+function extractPromptSkeleton() {
+  const markdown = fs.readFileSync(commonPromptPath, "utf8");
+  const marker = "## 完全なJSON skeleton";
+  const start = markdown.indexOf("{", markdown.indexOf(marker));
+  assert.notEqual(start, -1, "common prompt must include a JSON skeleton");
+  let depth = 0;
+  for (let index = start; index < markdown.length; index += 1) {
+    if (markdown[index] === "{") depth += 1;
+    if (markdown[index] === "}") depth -= 1;
+    if (depth === 0) return JSON.parse(markdown.slice(start, index + 1));
+  }
+  throw new Error("common prompt JSON skeleton is not closed");
 }
 
 assert.equal(schemas["1.0.0"].$id, "https://fish-forecast-map.example/schemas/fishing-spot-research.v1.0.0.schema.json");
@@ -104,29 +119,44 @@ assert.notEqual(schemas["1.0.0"].$id, schemas["1.1.0"].$id);
 
 const example = readJson(examplePath);
 assert.deepEqual(validateRecord(example), [], "example must satisfy schema and source references");
+assert.deepEqual(validateRecord(extractPromptSkeleton()), [], "common prompt JSON skeleton must validate as-is");
 assert.deepEqual(validateRecord(readJson(pilotPath)), [], "ChatGPT pilot JSON must remain valid against Schema v1.0.0");
 assert.deepEqual(validateRecord(readJson(claudePath)), [], "Claude raw JSON must remain valid against Schema v1.0.0");
 assert.ok(validateRecord(readJson(geminiPath)).length > 0, "Gemini raw JSON must remain intentionally non-compliant");
 
-// const invalidEnum = structuredClone(example);
 if (example.schemaVersion === "1.1.0") {
 const invalidEnum = structuredClone(example); invalidEnum.attributes.tidalFlow.value = "very_strong";
-  assert.ok(validateRecord(invalidEnum).some((error) => error.includes("outside enum")), "enum values outside the schema must be rejected");
-  const missingRequired = structuredClone(example); delete missingRequired.identity.spotName;
-  assert.ok(validateRecord(missingRequired).some((error) => error.includes("missing required property spotName")), "missing required fields must be rejected");
-  const unknownSource = structuredClone(example); unknownSource.attributes.seabed.evidenceSources.supportingSourceIds = ["src-does-not-exist"];
-  assert.ok(validateRecord(unknownSource).some((error) => error.includes("unknown source id")), "unregistered evidence source IDs must be rejected");
-  const inconsistentUnknown = structuredClone(example); inconsistentUnknown.attributes.waterDepth.status = "unknown"; inconsistentUnknown.attributes.waterDepth.confidence = "high"; inconsistentUnknown.attributes.waterDepth.value = "deep"; inconsistentUnknown.attributes.waterDepth.evidenceSources.supportingSourceIds = ["src-public-map"];
-  assert.ok(validateRecord(inconsistentUnknown).length > 0, "unknown attributes must use low confidence, unknown value, and no supporting sources");
-  const duplicateEvidence = structuredClone(example); duplicateEvidence.attributes.seabed.evidenceSources.checkedSourceIds = ["src-public-map"];
-  assert.ok(validateRecord(duplicateEvidence).some((error) => error.includes("duplicate source id")), "evidence role arrays must not duplicate IDs across roles");
+  assert.ok(validateStandard(invalidEnum).some((error) => error.includes("must be equal to one of the allowed values")), "standard validator must reject invalid enum values");
+  const invalidFormat = structuredClone(example); invalidFormat.researchedAt = "2026-07-12";
+  assert.ok(validateStandard(invalidFormat).some((error) => error.includes("must match format")), "standard validator must enforce date-time formats");
   const noSupport = structuredClone(example); noSupport.attributes.seabed.evidenceSources.supportingSourceIds = [];
-  assert.ok(validateRecord(noSupport).some((error) => error.includes("fewer than minItems") || error.includes("required for inferred")), "confirmed/inferred evidence must have supporting sources");
-  
-  const validSupports = ["fishSpecies[0].name", "attributes.spotType.value", "identity.coordinates.latitude", "identity.coordinates.longitude", "facilities.toilet.value", "restrictions.officialContact.url"];
-  for (const support of validSupports) { const record = structuredClone(example); record.sources[0].supports = [support]; assert.deepEqual(validateRecord(record), [], `${support} must be valid`); }
-  const invalidSupports = ["fishSpecies[0].value", "fishSpecies[].name", "fishSpecies.expected", "attributes.foo.value", "attributes.spotType", "facilities.foo.value", "restrictions.foo.value", "sources[0].url"];
-  for (const support of invalidSupports) { const record = structuredClone(example); record.sources[0].supports = [support]; assert.ok(validateRecord(record).some((error) => error.includes("does not match")), `${support} must be invalid`); }
+  assert.ok(validateStandard(noSupport).some((error) => error.includes("must NOT have fewer than 1 items")), "standard validator must enforce if/then minItems");
+  const observedWithoutTime = structuredClone(example); observedWithoutTime.fishSpecies[0].basis = "observed"; observedWithoutTime.fishSpecies[0].status = "confirmed"; observedWithoutTime.fishSpecies[0].observedAt = null; observedWithoutTime.fishSpecies[0].observedPeriod = { from: null, to: null };
+  assert.ok(validateStandard(observedWithoutTime).length > 0 && validateCustom(observedWithoutTime).some((error) => error.includes("observed fish species requires")), "observed fish species must require observedAt or observedPeriod");
+  const observedWithPeriod = structuredClone(observedWithoutTime); observedWithPeriod.fishSpecies[0].observedPeriod = { from: "2026-07-01", to: null }; observedWithPeriod.sources[2].supports.push("fishSpecies[0].observedPeriod");
+  assert.deepEqual(validateRecord(observedWithPeriod), [], "observed fish species may use a one-sided observedPeriod");
+  const unknownSource = structuredClone(example); unknownSource.attributes.seabed.evidenceSources.supportingSourceIds = ["src-does-not-exist"];
+  assert.ok(validateCustom(unknownSource).some((error) => error.includes("unknown source id")), "unregistered evidence source IDs must be rejected");
+  const duplicateEvidence = structuredClone(example); duplicateEvidence.attributes.seabed.evidenceSources.checkedSourceIds = ["src-public-map"];
+  assert.ok(validateCustom(duplicateEvidence).some((error) => error.includes("duplicate source id")), "evidence role arrays must not duplicate IDs across roles");
+  const invalidSupportIndex = structuredClone(example); invalidSupportIndex.sources[0].supports = ["fishSpecies[99].name"];
+  assert.ok(validateCustom(invalidSupportIndex).some((error) => error.includes("does not point to an existing record")), "support indexes must refer to existing array items");
+  const mismatchedSupport = structuredClone(example); mismatchedSupport.attributes.seabed.evidenceSources.supportingSourceIds = ["src-port-manager"];
+  assert.ok(validateCustom(mismatchedSupport).some((error) => error.includes("must support one of attributes.seabed.value")), "supporting sources must support the target evidence path");
+  const checkedOnlyNoSupport = structuredClone(example); checkedOnlyNoSupport.attributes.seabed.evidenceSources.checkedSourceIds = ["src-port-manager"];
+  assert.deepEqual(validateRecord(checkedOnlyNoSupport), [], "checked-only sources do not need direct support for the target path");
+  const selfSource = structuredClone(example); selfSource.sources[0].originalSourceId = selfSource.sources[0].id;
+  assert.ok(validateCustom(selfSource).some((error) => error.includes("self reference")), "source originalSourceId must reject self references");
+  const missingRelated = structuredClone(example); missingRelated.sources[0].independenceStatus = "related"; missingRelated.sources[0].sourceGroup = null;
+  assert.ok(validateCustom(missingRelated).some((error) => error.includes("related source requires")), "related sources require a group or original source");
+  const independentOriginal = structuredClone(example); independentOriginal.sources[0].originalSourceId = "src-public-map";
+  assert.ok(validateCustom(independentOriginal).some((error) => error.includes("independent source cannot")), "independent sources cannot point to an original source");
+  const reversedObserved = structuredClone(observedWithPeriod); reversedObserved.fishSpecies[0].observedPeriod = { from: "2026-07-02", to: "2026-07-01" };
+  assert.ok(validateCustom(reversedObserved).some((error) => error.includes("from must be <= to")), "observed periods must be chronological");
+  const sameDayValid = structuredClone(observedWithPeriod); sameDayValid.fishSpecies[0].observedPeriod = { from: "2026-07-01", to: "2026-07-01" };
+  assert.deepEqual(validateRecord(sameDayValid), [], "same-day periods are valid");
+  const reversedRestriction = structuredClone(example); reversedRestriction.restrictions.constructionOrClosure.validFrom = "2026-07-02"; reversedRestriction.restrictions.constructionOrClosure.validUntil = "2026-07-01";
+  assert.ok(validateCustom(reversedRestriction).some((error) => error.includes("from must be <= to")), "validFrom must not be after validUntil");
   
 }
 

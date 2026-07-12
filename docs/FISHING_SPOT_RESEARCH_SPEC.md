@@ -609,11 +609,11 @@ v1.1.0では属性内の旧 `sourceIds` を廃止し、`evidenceSources.supporti
 
 ### source独立性
 
-sourceには任意の `sourceGroup`、`originalSourceId` と、必須の `independenceStatus: independent / related / unknown` を持たせます。転載、同一運営元、同一原典の派生は独立sourceとして数えず、confidenceを上げる根拠にしません。
+sourceには任意の `sourceGroup`、`originalSourceId` と、必須の `independenceStatus: independent / related / unknown` を持たせます。転載、同一運営元、同一原典の派生は独立sourceとして数えず、confidenceを上げる根拠にしません。`originalSourceId` は `sources[]` に登録済みの別sourceだけを参照でき、自己参照は禁止します。`independenceStatus: related` は `sourceGroup` または `originalSourceId` の少なくとも一方を必須とし、`independent` は `originalSourceId` を持てません。
 
 ### 時間情報
 
-魚種は `observedAt` または `observedPeriod` を記録できます。施設・規制・officialContactは `validFrom / validUntil / officiallyConfirmed` を持ちます。sourceは `publishedAt`（公開日）、`lastUpdatedAt`（source上の最終更新日）、`checkedAt`（このリポジトリで確認した日）を区別します。日付不明または非該当の場合はnullを許容しますが、項目自体はSchema skeletonとexampleに残します。
+魚種は `observedAt` または `observedPeriod` を記録できます。`basis: observed` の魚種は `observedAt`、または `observedPeriod.from / to` の少なくとも一方を必須にします。`basis: expected` は観測実績ではないため両方nullを許容します。施設・規制・officialContactは `validFrom / validUntil / officiallyConfirmed` を持ちます。sourceは `publishedAt`（公開日）、`lastUpdatedAt`（source上の最終更新日）、`checkedAt`（このリポジトリで確認した日）を区別します。日付不明または非該当の場合はnullを許容しますが、項目自体はSchema skeletonとexampleに残します。期間は `observedPeriod.from <= observedPeriod.to`、`validFrom <= validUntil` をcustom validatorで確認し、同日および片側nullは許容します。
 
 ### researchStages
 
@@ -621,7 +621,7 @@ sourceには任意の `sourceGroup`、`originalSourceId` と、必須の `indepe
 
 ### source.supports
 
-`source.supports` はSchema上に実在する値パスだけを許可します。配列要素は0始まりの `fishSpecies[0].name` のように表し、属性値は `attributes.spotType.value` のように `.value` まで書きます。座標は `identity.coordinates.latitude` / `identity.coordinates.longitude` です。`fishSpecies[0].value`、`fishSpecies[].name`、`fishSpecies.expected`、`attributes.foo.value`、`attributes.spotType`、`facilities.foo.value`、`restrictions.foo.value`、`sources[0].url` は拒否します。
+`source.supports` はSchema上に実在する値パスだけを許可します。配列要素は0始まりの `fishSpecies[0].name` のように表し、属性値は `attributes.spotType.value` のように `.value` まで書きます。座標は `identity.coordinates.latitude` / `identity.coordinates.longitude` です。`fishSpecies[0].value`、`fishSpecies[].name`、`fishSpecies.expected`、`attributes.foo.value`、`attributes.spotType`、`facilities.foo.value`、`restrictions.foo.value`、`sources[0].url` は拒否します。custom validatorでは、supportsの配列indexが実在すること、`evidenceSources.supportingSourceIds` のsourceが対象ノードに対応するsupportパスを少なくとも1件持つことも確認します。checked/contradicting sourceは確認・反証目的のため、対象ノードへの直接supportは必須にしません。
 
 ### 共通プロンプト
 

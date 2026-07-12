@@ -21,18 +21,105 @@
 
 {
   "schemaVersion": "1.1.0",
-  "spotId": "example-spot-id",
-  "scopeType": "district",
+  "spotId": "sample-harbor-a",
+  "scopeType": "facility",
   "identity": {
-    "spotName": "",
+    "spotName": "サンプル漁港A（架空）",
     "aliases": [],
-    "prefecture": "",
-    "municipality": "",
+    "prefecture": "サンプル県",
+    "municipality": "サンプル市",
     "coordinates": {
-      "latitude": null,
-      "longitude": null,
+      "latitude": 33.5,
+      "longitude": 130.0,
       "coordinateMethod": "map_measurement",
-      "coordinateScope": "district",
+      "coordinateScope": "facility",
+      "status": "inferred",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12",
+      "note": "JSON形式の説明用に作成した架空地点。実在地点として使用しない。"
+    }
+  },
+  "attributes": {
+    "spotType": {
+      "value": [
+        "fishing_port",
+        "breakwater"
+      ],
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-port-manager"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12"
+    },
+    "seabed": {
+      "value": [
+        "sand",
+        "rock"
+      ],
+      "status": "inferred",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12"
+    },
+    "riverInfluence": {
+      "value": "weak",
+      "status": "inferred",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12"
+    },
+    "streetLights": {
+      "value": "unknown",
       "status": "unknown",
       "confidence": "low",
       "evidenceSources": {
@@ -40,67 +127,233 @@
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "checkedAt": "YYYY-MM-DD",
-      "note": ""
+      "checkedAt": "2026-07-12"
+    },
+    "obstacles": {
+      "value": [
+        "wave_dissipating_blocks"
+      ],
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-port-manager"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12"
+    },
+    "openSeaExposure": {
+      "value": "bay_mouth",
+      "status": "inferred",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12"
+    },
+    "fishingRange": {
+      "value": [
+        "foot",
+        "near"
+      ],
+      "status": "inferred",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12"
     }
-  },
-  "attributes": {
-    "spotType": { "value": ["unknown"], "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "note": "" },
-    "seabed": { "value": ["unknown"], "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "note": "" },
-    "waterDepth": { "value": "unknown", "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "note": "" },
-    "riverInfluence": { "value": "unknown", "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "note": "" },
-    "tidalFlow": { "value": "unknown", "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "note": "" },
-    "streetLights": { "value": "unknown", "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "note": "" },
-    "obstacles": { "value": ["unknown"], "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "note": "" },
-    "openSeaExposure": { "value": "unknown", "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "note": "" },
-    "fishingRange": { "value": ["unknown"], "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "note": "" }
   },
   "fishSpecies": [
     {
-      "name": "",
-      "basis": "observed",
-      "status": "confirmed",
+      "name": "アジ",
+      "basis": "expected",
+      "status": "inferred",
       "confidence": "low",
-      "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] },
-      "checkedAt": "YYYY-MM-DD",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-fisheries-research"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12",
       "observedAt": null,
-      "observedPeriod": { "from": null, "to": null },
-      "note": ""
+      "observedPeriod": {
+        "from": null,
+        "to": null
+      },
+      "note": "魚種生態と地点タイプからの例示。実在地点の釣果実績ではない。"
     }
   ],
   "facilities": {
-    "parking": { "value": "unknown", "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "validFrom": null, "validUntil": null, "officiallyConfirmed": null, "note": "" },
-    "toilet": { "value": "unknown", "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "validFrom": null, "validUntil": null, "officiallyConfirmed": null, "note": "" }
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "toilet": {
+      "value": "not_available",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-port-manager"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": true
+    }
   },
   "restrictions": {
-    "fishingProhibited": { "value": "unknown", "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "validFrom": null, "validUntil": null, "officiallyConfirmed": null, "note": "" },
-    "entryProhibited": { "value": "unknown", "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "validFrom": null, "validUntil": null, "officiallyConfirmed": null, "note": "" },
-    "constructionOrClosure": { "value": "unknown", "status": "unknown", "confidence": "low", "evidenceSources": { "supportingSourceIds": [], "checkedSourceIds": [], "contradictingSourceIds": [] }, "checkedAt": "YYYY-MM-DD", "validFrom": null, "validUntil": null, "officiallyConfirmed": null, "note": "" },
-    "officialContact": { "name": null, "url": null, "checkedAt": "YYYY-MM-DD", "validFrom": null, "validUntil": null, "officiallyConfirmed": null, "note": "" }
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "entryProhibited": {
+      "value": "partial",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-port-manager"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": true
+    },
+    "constructionOrClosure": {
+      "value": "no",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-port-manager"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-12",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": true
+    },
+    "officialContact": {
+      "name": "サンプル港湾管理事務所（架空）",
+      "url": "https://example.com/sample-port",
+      "checkedAt": "2026-07-12",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": true,
+      "note": "形式説明用の架空情報。"
+    }
   },
   "sources": [
     {
-      "id": "src-example",
-      "url": "https://example.com/",
-      "title": "",
-      "publisher": "",
-      "sourceType": "government",
-      "checkedAt": "YYYY-MM-DD",
+      "id": "src-port-manager",
+      "url": "https://example.com/sample-port",
+      "title": "サンプル漁港施設・利用案内（架空）",
+      "publisher": "サンプル港湾管理事務所",
+      "sourceType": "port_manager",
+      "checkedAt": "2026-07-12",
       "publishedAt": null,
       "lastUpdatedAt": null,
-      "sourceGroup": null,
+      "sourceGroup": "sample-official",
       "originalSourceId": null,
-      "independenceStatus": "unknown",
-      "supports": [],
-      "note": ""
+      "independenceStatus": "independent",
+      "supports": [
+        "attributes.spotType.value",
+        "attributes.obstacles.value",
+        "facilities.toilet.value",
+        "facilities.toilet.officiallyConfirmed",
+        "restrictions.entryProhibited.value",
+        "restrictions.constructionOrClosure.value",
+        "restrictions.officialContact.name",
+        "restrictions.officialContact.url"
+      ]
+    },
+    {
+      "id": "src-public-map",
+      "url": "https://example.com/sample-public-map",
+      "title": "サンプル公的地図（架空）",
+      "publisher": "サンプル地理機関",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-12",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "sample-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude",
+        "attributes.seabed.value",
+        "attributes.riverInfluence.value",
+        "attributes.openSeaExposure.value",
+        "attributes.fishingRange.value"
+      ]
+    },
+    {
+      "id": "src-fisheries-research",
+      "url": "https://example.com/sample-fisheries-research",
+      "title": "アジの生態資料（架空）",
+      "publisher": "サンプル水産研究機関",
+      "sourceType": "research_institute",
+      "checkedAt": "2026-07-12",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "sample-research",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "fishSpecies[0].name",
+        "fishSpecies[0].basis"
+      ]
     }
   ],
   "researchStages": {
-    "officialResearch": "incomplete",
-    "secondaryResearch": "incomplete",
-    "schemaValidation": "not_run"
+    "officialResearch": "completed",
+    "secondaryResearch": "completed",
+    "schemaValidation": "passed"
   },
-  "researchNotes": "",
-  "researchedAt": "YYYY-MM-DDTHH:mm:ss+09:00",
+  "researchNotes": "このファイルは形式確認用の架空データ。実在する釣り場の事実として利用しない。",
+  "researchedAt": "2026-07-12T12:00:00+09:00",
   "reviewStatus": "draft"
 }
