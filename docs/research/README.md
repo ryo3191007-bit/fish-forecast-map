@@ -14,6 +14,10 @@
   - 調査メモ: `KARATSU_EAST_PORT_PILOT_RESEARCH.md`
   - 3AI共通プロンプト: `KARATSU_EAST_PORT_MULTI_AI_PROMPT.md`
   - 3AI比較表: `KARATSU_EAST_PORT_MULTI_AI_COMPARISON.md`
-  - 調査JSON: `../../data/research/fishing-spots/karatsu-east-port.json`
+  - Gemini原文レビュー: `KARATSU_EAST_PORT_GEMINI_REVIEW.md`
+  - ChatGPT調査JSON: `../../data/research/fishing-spots/karatsu-east-port.json`
+  - Gemini原文JSON: `../../data/research/fishing-spots/ai-outputs/karatsu-east-port.gemini.raw.json`
+
+AI原文は修正せず保存し、JSON構文、Schema適合、source品質、`unknown`の扱いを分けて評価します。Schema不適合の原文を、そのまま本番地点マスターへ使用しません。
 
 調査JSONは根拠付きの調査記録であり、そのまま本番地点マスター、SCORE、安全判断へ使用しません。一般立入・釣り可否・施設利用は最新の管理者情報と現地表示を確認してください。
