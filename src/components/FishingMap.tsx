@@ -35,12 +35,19 @@ import {
   BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID,
   BATHYMETRY_FALLBACK_SOURCE_ID,
   BATHYMETRY_FALLBACK_TILE_URL,
+  BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
+  BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+  BATHYMETRY_FALLBACK_COLOR_LAYER_ID,
+  BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
   GSI_STANDARD_ATTRIBUTION,
   GSI_STANDARD_NOTE,
   GSI_STANDARD_OVERLAY_LAYER_ID,
   GSI_STANDARD_OVERLAY_OPACITY,
   GSI_STANDARD_OVERLAY_SOURCE_ID,
   GSI_STANDARD_TILE_URL,
+  lonLatToTidCell,
+  summarizeTidAround,
+  type TidSummary,
   shouldEnableInitialGsiOverlay,
   shouldEnableInitialTerrain,
 } from "@/domain/bathymetry";
@@ -71,6 +78,9 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const [bathymetryFallbackActive, setBathymetryFallbackActive] = useState(false);
   const [isGsiOverlayEnabled, setIsGsiOverlayEnabled] = useState(false);
   const [tidExpanded, setTidExpanded] = useState(false);
+  const [tidGrid, setTidGrid] = useState<{ values: number[]; width: number; height: number } | null>(null);
+  const [tidSummary, setTidSummary] = useState<TidSummary | null>(null);
+  const [tidStatus, setTidStatus] = useState("TID正本を読み込み中です");
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -91,6 +101,51 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
       mapRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/bathymetry/gebco-2026/tid-crop.json")
+      .then((response) => {
+        if (!response.ok) throw new Error(`TID fetch failed: ${response.status}`);
+        return response.json();
+      })
+      .then((data: { values: number[]; width: number; height: number }) => {
+        if (!cancelled) setTidGrid({ values: data.values, width: data.width, height: data.height });
+      })
+      .catch(() => {
+        if (!cancelled) setTidStatus("データ由来を表示できません");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !tidGrid) return;
+    const update = () => {
+      const center = map.getCenter();
+      const cell = lonLatToTidCell(center.lng, center.lat, tidGrid.width, tidGrid.height);
+      if (!cell) {
+        setTidSummary(null);
+        setTidStatus("対象範囲外のためデータ由来を表示できません");
+        return;
+      }
+      const summary = summarizeTidAround(tidGrid.values, tidGrid.width, tidGrid.height, cell.col, cell.row, 8);
+      if (!summary.sampleCells) {
+        setTidSummary(null);
+        setTidStatus("有効なTIDセルがないためデータ由来を表示できません");
+        return;
+      }
+      setTidSummary(summary);
+      setTidStatus("");
+    };
+    update();
+    map.on("moveend", update);
+    return () => {
+      map.off("moveend", update);
+    };
+  }, [tidGrid]);
 
   const mappableExternalMemos = useMemo(
     () =>
@@ -178,6 +233,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         setBathymetryLoadError,
         setBathymetryFallbackActive,
         isGsiOverlayEnabled,
+        bathymetryFallbackActive,
       );
     };
     if (map.loaded()) applyLayerMode();
@@ -186,7 +242,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     return () => {
       map.off("load", applyLayerMode);
     };
-  }, [isGsiOverlayEnabled, isTerrainEnabled, mapLayerMode]);
+  }, [bathymetryFallbackActive, isGsiOverlayEnabled, isTerrainEnabled, mapLayerMode]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -253,8 +309,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             </span>
             {tidExpanded ? (
               <div className="tidSummary" aria-label="GEBCO TID Gridによるデータ由来">
-                この周辺の水深データ: 実測 7% / 補間 63% / 混在・陸域 30%
-                <small>GEBCO TID Gridによる中心周辺17×17セルの目安。沿岸では陸セル混在により比率が変動します。</small>
+                {tidSummary ? `この周辺の水深データ: 実測 ${tidSummary.direct}% / 補間 ${tidSummary.predictedInterpolated}% / 混在・陸域 ${tidSummary.mixedUnknownLand}%${tidSummary.nodata ? ` / nodata ${tidSummary.nodata}セル` : ""}` : tidStatus}
+                <small>GEBCO TID Gridによる中心周辺17×17セル（nodata 127は割合の分母から除外）の目安。沿岸では陸セル混在により比率が変動します。</small>
               </div>
             ) : null}
             <div className="bathymetryLegend" aria-label="水深凡例">
@@ -270,8 +326,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             className="mapAttribution bathymetryAttribution"
             aria-label="水深・地形データの出典"
           >
-            {BATHYMETRY_ATTRIBUTION}
-            <span>{BATHYMETRY_LICENSE_NOTE}</span>
+            {bathymetryFallbackActive ? "水深・地形: NOAA NCEI ETOPO 2022 60秒 Bedrock fallback" : BATHYMETRY_ATTRIBUTION}
+            <span>{bathymetryFallbackActive ? "60 arc-second / NOAA NCEI ETOPO 2022" : BATHYMETRY_LICENSE_NOTE}</span>
             <span>{BATHYMETRY_SAFETY_NOTE}</span>
             <span>{GSI_STANDARD_ATTRIBUTION} / {GSI_STANDARD_NOTE}</span>
           </div>
@@ -369,6 +425,7 @@ function applyBathymetryMode(
   setBathymetryLoadError: (hasError: boolean) => void,
   setBathymetryFallbackActive: (active: boolean) => void,
   gsiOverlayEnabled: boolean,
+  bathymetryFallbackActive: boolean,
 ) {
   const showBathymetry = mode === "bathymetry";
   if (showBathymetry) {
@@ -381,27 +438,18 @@ function applyBathymetryMode(
       enableBathymetryFallback(map);
     });
   }
-  for (const layerId of [
-    BATHYMETRY_COLOR_LAYER_ID,
-    BATHYMETRY_HILLSHADE_LAYER_ID,
-    BATHYMETRY_CONTOUR_LAYER_ID,
-    BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
-    GSI_STANDARD_OVERLAY_LAYER_ID,
-  ]) {
-    if (map.getLayer(layerId))
-      map.setLayoutProperty(
-        layerId,
-        "visibility",
-        showBathymetry && (layerId !== GSI_STANDARD_OVERLAY_LAYER_ID || gsiOverlayEnabled) ? "visible" : "none",
-      );
-  }
+  const primaryLayers = [BATHYMETRY_COLOR_LAYER_ID, BATHYMETRY_HILLSHADE_LAYER_ID, BATHYMETRY_CONTOUR_LAYER_ID, BATHYMETRY_CONTOUR_LABEL_LAYER_ID];
+  const fallbackLayers = [BATHYMETRY_FALLBACK_COLOR_LAYER_ID, BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID, BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID, BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID];
+  for (const layerId of primaryLayers) if (map.getLayer(layerId)) map.setLayoutProperty(layerId, "visibility", showBathymetry && !bathymetryFallbackActive ? "visible" : "none");
+  for (const layerId of fallbackLayers) if (map.getLayer(layerId)) map.setLayoutProperty(layerId, "visibility", showBathymetry && bathymetryFallbackActive ? "visible" : "none");
+  if (map.getLayer(GSI_STANDARD_OVERLAY_LAYER_ID)) map.setLayoutProperty(GSI_STANDARD_OVERLAY_LAYER_ID, "visibility", showBathymetry && gsiOverlayEnabled ? "visible" : "none");
   try {
     if (
       showBathymetry &&
       terrainEnabled &&
-      map.getSource(BATHYMETRY_SOURCE_ID)
+      map.getSource(bathymetryFallbackActive ? BATHYMETRY_FALLBACK_SOURCE_ID : BATHYMETRY_SOURCE_ID)
     ) {
-      map.setTerrain({ source: BATHYMETRY_SOURCE_ID, exaggeration: 1 });
+      map.setTerrain({ source: bathymetryFallbackActive ? BATHYMETRY_FALLBACK_SOURCE_ID : BATHYMETRY_SOURCE_ID, exaggeration: 1 });
       map.easeTo({ pitch: 52, bearing: -18, duration: 650, essential: false });
       setTerrainStatus("3d");
     } else {
@@ -416,6 +464,7 @@ function applyBathymetryMode(
     );
     map.setTerrain(null);
     setTerrainStatus("error");
+    if (showBathymetry) { setBathymetryLoadError(true); setBathymetryFallbackActive(true); enableBathymetryFallback(map); }
   }
 }
 
@@ -534,14 +583,20 @@ function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void)
 
 function enableBathymetryFallback(map: maplibregl.Map) {
   if (!map.getSource(BATHYMETRY_FALLBACK_SOURCE_ID)) {
-    map.addSource(BATHYMETRY_FALLBACK_SOURCE_ID, { type: "raster-dem", tiles: [BATHYMETRY_FALLBACK_TILE_URL], tileSize: 256, minzoom: BATHYMETRY_MIN_ZOOM, maxzoom: BATHYMETRY_MAX_ZOOM, bounds: [...BATHYMETRY_BOUNDS], encoding: "mapbox", attribution: BATHYMETRY_ATTRIBUTION });
+    map.addSource(BATHYMETRY_FALLBACK_SOURCE_ID, { type: "raster-dem", tiles: [BATHYMETRY_FALLBACK_TILE_URL], tileSize: 256, minzoom: BATHYMETRY_MIN_ZOOM, maxzoom: BATHYMETRY_MAX_ZOOM, bounds: [...BATHYMETRY_BOUNDS], encoding: "mapbox", attribution: "水深・地形: NOAA NCEI ETOPO 2022 60秒 Bedrock fallback" });
   }
   if (!map.getSource(BATHYMETRY_FALLBACK_COLOR_SOURCE_ID)) {
-    map.addSource(BATHYMETRY_FALLBACK_COLOR_SOURCE_ID, { type: "raster", tiles: [BATHYMETRY_FALLBACK_COLOR_TILE_URL], tileSize: 256, minzoom: BATHYMETRY_MIN_ZOOM, maxzoom: BATHYMETRY_MAX_ZOOM, bounds: [...BATHYMETRY_BOUNDS], attribution: BATHYMETRY_ATTRIBUTION });
+    map.addSource(BATHYMETRY_FALLBACK_COLOR_SOURCE_ID, { type: "raster", tiles: [BATHYMETRY_FALLBACK_COLOR_TILE_URL], tileSize: 256, minzoom: BATHYMETRY_MIN_ZOOM, maxzoom: BATHYMETRY_MAX_ZOOM, bounds: [...BATHYMETRY_BOUNDS], attribution: "水深・地形: NOAA NCEI ETOPO 2022 60秒 Bedrock fallback" });
   }
   if (!map.getSource(BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID)) {
     map.addSource(BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID, { type: "geojson", data: BATHYMETRY_FALLBACK_CONTOUR_GEOJSON_URL });
   }
+  const beforeId = firstSymbolLayerId(map);
+  if (!map.getLayer(BATHYMETRY_FALLBACK_COLOR_LAYER_ID)) map.addLayer({ id: BATHYMETRY_FALLBACK_COLOR_LAYER_ID, type: "raster", source: BATHYMETRY_FALLBACK_COLOR_SOURCE_ID, layout: { visibility: "visible" }, paint: { "raster-opacity": 0.62 } }, beforeId);
+  if (!map.getLayer(BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID)) map.addLayer({ id: BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID, type: "hillshade", source: BATHYMETRY_FALLBACK_SOURCE_ID, layout: { visibility: "visible" }, paint: { "hillshade-shadow-color": "#082f49", "hillshade-highlight-color": "#dffbff", "hillshade-accent-color": "#0ea5e9", "hillshade-exaggeration": 0.24 } }, beforeId);
+  if (!map.getLayer(BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID)) map.addLayer({ id: BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID, type: "line", source: BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID, layout: { visibility: "visible" }, paint: { "line-color": "#dffbff", "line-opacity": 0.62, "line-width": ["case", ["==", ["get", "major"], true], 1.2, 0.6] } }, beforeId);
+  if (!map.getLayer(BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID)) map.addLayer({ id: BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID, type: "symbol", minzoom: 8, source: BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID, layout: { visibility: "visible", "symbol-placement": "line", "text-field": ["format", ["get", "depth"], { "font-scale": 0.9 }, "m", {}], "text-size": 11 }, paint: { "text-color": "#e0faff", "text-halo-color": "#082f49", "text-halo-width": 1.2 } });
+  map.setTerrain({ source: BATHYMETRY_FALLBACK_SOURCE_ID, exaggeration: 1 });
 }
 
 function scoreColor(score: number) {

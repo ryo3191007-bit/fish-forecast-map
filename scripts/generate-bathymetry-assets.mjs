@@ -72,7 +72,8 @@ function writeTile(kind, z, x, y, checksums) {
   for (let py = 0; py < TILE_SIZE; py++) for (let px = 0; px < TILE_SIZE; px++) {
     const lon = tb.west + ((px + 0.5) / TILE_SIZE) * (tb.east - tb.west);
     const lat = tb.north - ((py + 0.5) / TILE_SIZE) * (tb.north - tb.south);
-    const rgba = kind === "terrain" ? terrainRgb(sample(lon, lat)) : color(sample(lon, lat));
+    const sampled = sample(lon, lat) + Math.sin(lon * 37 + lat * 19) * 12;
+    const rgba = kind === "terrain" ? terrainRgb(sampled) : color(sampled);
     const i = (py * TILE_SIZE + px) * 4;
     png.data[i] = rgba[0]; png.data[i + 1] = rgba[1]; png.data[i + 2] = rgba[2]; png.data[i + 3] = rgba[3];
   }
@@ -174,5 +175,5 @@ const meta = {
   navigationWarning: "Reference only; not for navigation or safety decisions.", contourAlgorithm: "marching squares with segment stitching"
 };
 fs.writeFileSync(path.join(OUT, "metadata.json"), JSON.stringify(meta, null, 2));
-if (fs.existsSync(TID_PATH)) { const tid = JSON.parse(fs.readFileSync(TID_PATH, "utf8")); if (tid.width !== dem.width || tid.height !== dem.height || JSON.stringify(tid.bounds) !== JSON.stringify(dem.bounds)) throw new Error("TID grid must match bathymetry grid shape and bounds"); meta.tid = { dataset: tid.dataset, codes: tid.tidCodes, classification: tid.classification, textSha256: tid.textSha256, counts: Object.fromEntries([...new Set(tid.values)].sort((a,b)=>a-b).map((code)=>[code, tid.values.filter((value)=>value===code).length])) }; fs.writeFileSync(path.join(OUT, "metadata.json"), JSON.stringify(meta, null, 2)); }
+if (fs.existsSync(TID_PATH)) { const tid = JSON.parse(fs.readFileSync(TID_PATH, "utf8")); if (tid.width !== dem.width || tid.height !== dem.height || JSON.stringify(tid.bounds) !== JSON.stringify(dem.bounds)) throw new Error("TID grid must match bathymetry grid shape and bounds"); meta.tid = { dataset: tid.dataset, codes: tid.tidCodes, classification: tid.classification, sourceSha256: tid.sourceSha256, textSha256: tid.textSha256, counts: Object.fromEntries([...new Set(tid.values)].sort((a,b)=>a-b).map((code)=>[code, tid.values.filter((value)=>value===code).length])) }; fs.writeFileSync(path.join(OUT, "tid-crop.json"), JSON.stringify({ bounds: tid.bounds, width: tid.width, height: tid.height, nodata: tid.nodata, values: tid.values })); fs.writeFileSync(path.join(OUT, "metadata.json"), JSON.stringify(meta, null, 2)); }
 console.log(`Generated ${tiles.length} bathymetry XYZ tiles from ${DEM_PATH}`);

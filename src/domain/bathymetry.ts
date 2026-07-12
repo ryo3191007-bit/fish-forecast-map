@@ -11,6 +11,10 @@ export const BATHYMETRY_COLOR_LAYER_ID = "bathymetry-color-relief";
 export const BATHYMETRY_HILLSHADE_LAYER_ID = "bathymetry-hillshade";
 export const BATHYMETRY_CONTOUR_LAYER_ID = "bathymetry-contours";
 export const BATHYMETRY_CONTOUR_LABEL_LAYER_ID = "bathymetry-contour-labels";
+export const BATHYMETRY_FALLBACK_COLOR_LAYER_ID = "bathymetry-fallback-color-relief";
+export const BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID = "bathymetry-fallback-hillshade";
+export const BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID = "bathymetry-fallback-contours";
+export const BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID = "bathymetry-fallback-contour-labels";
 export const GSI_STANDARD_OVERLAY_SOURCE_ID = "gsi-standard-bathymetry-overlay";
 export const GSI_STANDARD_OVERLAY_LAYER_ID = "gsi-standard-bathymetry-overlay";
 
@@ -37,7 +41,7 @@ export const BATHYMETRY_LICENSE_NOTE = `${BATHYMETRY_SOURCE_RESOLUTION} / GEBCO 
 export const BATHYMETRY_SAFETY_NOTE = "参考水深。航海・安全判断には使用不可。15秒メッシュでも港内・岩礁・根・瀬の正確な位置を保証しません";
 export const BATHYMETRY_CITATION =
   "Contains information from the GEBCO_2026 Grid, GEBCO Compilation Group (2026).";
-export const GSI_STANDARD_ATTRIBUTION = "海岸線overlay: 国土地理院 標準地図";
+export const GSI_STANDARD_ATTRIBUTION = "海岸線overlay: 国土地理院 標準地図（ZL5〜8: GEBCO由来等深線・海上保安庁許可関連クレジットを含む）";
 export const GSI_STANDARD_NOTE = "国土地理院タイルを低opacityでリアルタイム表示。タイルは保存しません。";
 
 export const BATHYMETRY_DEPTH_STOPS = [
@@ -50,26 +54,38 @@ export const BATHYMETRY_DEPTH_STOPS = [
 ] as const;
 
 export const TID_CLASSIFICATION = {
-  direct: [10, 11, 12],
-  predictedInterpolated: [40, 41, 42],
-  mixedUnknownLand: [0, 20, 21, 22, 30, 31, 32, 33, 34, 35, 36, 37, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 99],
+  direct: [10, 11, 12, 13, 14, 15, 16, 17],
+  predictedInterpolated: [40, 41, 45],
+  mixedUnknownLand: [0, 43, 44, 70, 71, 72],
+  nodata: [127],
 } as const;
 
-export type TidSummary = { direct: number; predictedInterpolated: number; mixedUnknownLand: number; sampleCells: number; radiusCells: number };
+export type TidCategory = "direct" | "predictedInterpolated" | "mixedUnknownLand" | "nodata";
+export type TidSummary = { direct: number; predictedInterpolated: number; mixedUnknownLand: number; nodata: number; sampleCells: number; radiusCells: number };
 
-export function classifyTidCode(code: number): keyof Omit<TidSummary, "sampleCells" | "radiusCells"> {
+export function classifyTidCode(code: number): TidCategory {
   if ((TID_CLASSIFICATION.direct as readonly number[]).includes(code)) return "direct";
   if ((TID_CLASSIFICATION.predictedInterpolated as readonly number[]).includes(code)) return "predictedInterpolated";
+  if ((TID_CLASSIFICATION.nodata as readonly number[]).includes(code)) return "nodata";
   return "mixedUnknownLand";
 }
 
+export function lonLatToTidCell(lon: number, lat: number, width: number, height: number, bounds = BATHYMETRY_BOUNDS) {
+  const [west, south, east, north] = bounds;
+  if (lon < west || lon > east || lat < south || lat > north) return null;
+  return { col: Math.max(0, Math.min(width - 1, Math.floor(((lon - west) / (east - west)) * width))), row: Math.max(0, Math.min(height - 1, Math.floor(((north - lat) / (north - south)) * height))) };
+}
+
 export function summarizeTidAround(values: number[], width: number, height: number, col: number, row: number, radiusCells = 8): TidSummary {
-  const counts = { direct: 0, predictedInterpolated: 0, mixedUnknownLand: 0 };
+  const counts = { direct: 0, predictedInterpolated: 0, mixedUnknownLand: 0, nodata: 0 };
   for (let y = Math.max(0, row - radiusCells); y <= Math.min(height - 1, row + radiusCells); y++) {
     for (let x = Math.max(0, col - radiusCells); x <= Math.min(width - 1, col + radiusCells); x++) counts[classifyTidCode(values[y * width + x])]++;
   }
-  const total = counts.direct + counts.predictedInterpolated + counts.mixedUnknownLand || 1;
-  return { direct: Math.round((counts.direct / total) * 100), predictedInterpolated: Math.round((counts.predictedInterpolated / total) * 100), mixedUnknownLand: Math.max(0, 100 - Math.round((counts.direct / total) * 100) - Math.round((counts.predictedInterpolated / total) * 100)), sampleCells: total, radiusCells };
+  const total = counts.direct + counts.predictedInterpolated + counts.mixedUnknownLand;
+  if (!total) return { direct: 0, predictedInterpolated: 0, mixedUnknownLand: 0, nodata: counts.nodata, sampleCells: 0, radiusCells };
+  const direct = Math.round((counts.direct / total) * 100);
+  const predictedInterpolated = Math.round((counts.predictedInterpolated / total) * 100);
+  return { direct, predictedInterpolated, mixedUnknownLand: Math.max(0, 100 - direct - predictedInterpolated), nodata: counts.nodata, sampleCells: total, radiusCells };
 }
 
 export type DeviceCapabilityInput = { width: number; prefersReducedMotion: boolean; deviceMemory?: number; webglAvailable: boolean };
