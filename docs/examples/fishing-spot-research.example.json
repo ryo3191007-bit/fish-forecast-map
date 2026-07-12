@@ -1,0 +1,233 @@
+{
+  "schemaVersion": "1.0.0",
+  "spotId": "sample-harbor-a",
+  "identity": {
+    "spotName": "サンプル漁港A（架空）",
+    "aliases": [],
+    "prefecture": "サンプル県",
+    "municipality": "サンプル市",
+    "coordinates": {
+      "latitude": 33.5,
+      "longitude": 130.0,
+      "status": "inferred",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-public-map"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "JSON形式の説明用に作成した架空地点。実在地点として使用しない。"
+    }
+  },
+  "attributes": {
+    "spotType": {
+      "value": [
+        "fishing_port",
+        "breakwater"
+      ],
+      "status": "confirmed",
+      "confidence": "high",
+      "sourceIds": [
+        "src-port-manager"
+      ],
+      "checkedAt": "2026-07-12"
+    },
+    "seabed": {
+      "value": [
+        "sand",
+        "rock"
+      ],
+      "status": "inferred",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-public-map"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "公開地図と地形情報からの推定。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "数値根拠を確認できていないため分類しない。"
+    },
+    "riverInfluence": {
+      "value": "weak",
+      "status": "inferred",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-public-map"
+      ],
+      "checkedAt": "2026-07-12"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "客観的な流速・海況資料を確認できていない。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "夜間設備の公式情報を確認できていない。"
+    },
+    "obstacles": {
+      "value": [
+        "wave_dissipating_blocks"
+      ],
+      "status": "confirmed",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-port-manager"
+      ],
+      "checkedAt": "2026-07-12"
+    },
+    "openSeaExposure": {
+      "value": "bay_mouth",
+      "status": "inferred",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-public-map"
+      ],
+      "checkedAt": "2026-07-12"
+    },
+    "fishingRange": {
+      "value": [
+        "foot",
+        "near"
+      ],
+      "status": "inferred",
+      "confidence": "low",
+      "sourceIds": [
+        "src-public-map"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "地形からの仮説。釣果情報ではない。"
+    }
+  },
+  "fishSpecies": [
+    {
+      "name": "アジ",
+      "basis": "expected",
+      "status": "inferred",
+      "confidence": "low",
+      "sourceIds": [
+        "src-fisheries-research"
+      ],
+      "checkedAt": "2026-07-12",
+      "note": "魚種生態と地点タイプからの例示。実在地点の釣果実績ではない。"
+    }
+  ],
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "路上や空き地を駐車場として扱わない。"
+    },
+    "toilet": {
+      "value": "not_available",
+      "status": "confirmed",
+      "confidence": "medium",
+      "sourceIds": [
+        "src-port-manager"
+      ],
+      "checkedAt": "2026-07-12"
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "sourceIds": [],
+      "checkedAt": "2026-07-12",
+      "note": "現行の公式規制情報を未確認。"
+    },
+    "entryProhibited": {
+      "value": "partial",
+      "status": "confirmed",
+      "confidence": "high",
+      "sourceIds": [
+        "src-port-manager"
+      ],
+      "checkedAt": "2026-07-12"
+    },
+    "constructionOrClosure": {
+      "value": "no",
+      "status": "confirmed",
+      "confidence": "high",
+      "sourceIds": [
+        "src-port-manager"
+      ],
+      "checkedAt": "2026-07-12"
+    },
+    "officialContact": {
+      "name": "サンプル港湾管理事務所（架空）",
+      "url": "https://example.com/sample-port",
+      "checkedAt": "2026-07-12",
+      "note": "形式説明用の架空情報。"
+    }
+  },
+  "sources": [
+    {
+      "id": "src-port-manager",
+      "url": "https://example.com/sample-port",
+      "title": "サンプル漁港施設・利用案内（架空）",
+      "publisher": "サンプル港湾管理事務所",
+      "sourceType": "port_manager",
+      "checkedAt": "2026-07-12",
+      "publishedAt": null,
+      "supports": [
+        "identity.coordinates",
+        "attributes.spotType",
+        "attributes.obstacles",
+        "facilities.toilet",
+        "restrictions.entryProhibited",
+        "restrictions.constructionOrClosure"
+      ],
+      "note": "Schema説明用の架空URL。"
+    },
+    {
+      "id": "src-public-map",
+      "url": "https://example.com/sample-public-map",
+      "title": "サンプル公的地図（架空）",
+      "publisher": "サンプル地理機関",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-12",
+      "publishedAt": null,
+      "supports": [
+        "identity.coordinates",
+        "attributes.seabed",
+        "attributes.riverInfluence",
+        "attributes.openSeaExposure",
+        "attributes.fishingRange"
+      ],
+      "note": "Schema説明用の架空URL。"
+    },
+    {
+      "id": "src-fisheries-research",
+      "url": "https://example.com/sample-fisheries-research",
+      "title": "アジの生態資料（架空）",
+      "publisher": "サンプル水産研究機関",
+      "sourceType": "research_institute",
+      "checkedAt": "2026-07-12",
+      "publishedAt": null,
+      "supports": [
+        "fishSpecies.expected"
+      ],
+      "note": "Schema説明用の架空URL。"
+    }
+  ],
+  "researchNotes": "このファイルは形式確認用の架空データ。実在する釣り場の事実として利用しない。",
+  "researchedAt": "2026-07-12T12:00:00+09:00",
+  "reviewStatus": "draft"
+}
