@@ -21,10 +21,9 @@
     "test:manual-catch-memos": "node scripts/manual-catch-memos.test.mjs",
     "test:ui-requirements": "node scripts/ui-requirements.test.mjs",
     "test:bathymetry-ui": "node scripts/bathymetry-ui.test.mjs",
-    "restore:bathymetry-tiles": "node scripts/restore-bathymetry-tiles.mjs",
-    "predev": "npm run restore:bathymetry-tiles",
-    "pretest": "npm run restore:bathymetry-tiles",
-    "prebuild": "npm run restore:bathymetry-tiles"
+    "predev": "node scripts/generate-bathymetry-assets.mjs",
+    "pretest": "node scripts/generate-bathymetry-assets.mjs",
+    "prebuild": "node scripts/generate-bathymetry-assets.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
@@ -39,7 +38,8 @@
     "@types/react-dom": "^19.0.4",
     "eslint": "^9.23.0",
     "eslint-config-next": "^15.3.5",
-    "typescript": "^5.8.2",
-    "supabase": "2.31.8"
+    "pngjs": "^7.0.0",
+    "supabase": "2.31.8",
+    "typescript": "^5.8.2"
   }
 }

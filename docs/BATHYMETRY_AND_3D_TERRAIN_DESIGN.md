@@ -31,16 +31,15 @@
 
 ## データ生成
 
-生成済み静的ファイルは `public/bathymetry/etopo-2022/` に配置します。ただしPNGバイナリはGit管理対象にせず、CI/実装検証用の最小サンプルは `data/bathymetry/etopo-2022-sample-tiles.json` のbase64テキストから `scripts/restore-bathymetry-tiles.mjs` で復元します。実運用では同じパス構造で対象地域のみのタイルへ差し替えます。
+Git管理する実DEMは `data/bathymetry/etopo-2022-crop.json` のテキストJSONです。NOAA NCEI ETOPO 2022の対象範囲cropから得た実標高・水深値、width/height、bounds、cell size、nodata、出典、取得日、ライセンス、DOI、元GeoTIFF SHA-256、crop値SHA-256を記録します。PNG、GeoTIFF、ZIPなどのバイナリはGitへコミットしません。
+
+`node scripts/generate-bathymetry-assets.mjs` がbuild前にテキストDEMからTerrain-RGB PNG、色別水深PNG、等深線GeoJSON、metadata/checksumを生成します。生成物は `.gitignore` 対象の `public/bathymetry/etopo-2022/` 配下に出力されます。通常のdev/test/build/runtimeではNOAAへアクセスしません。
 
 ```bash
-python tools/bathymetry/generate_tiles.py \
-  --bounds 129.45 33.05 130.55 33.75 \
-  --minzoom 7 --maxzoom 10 \
-  --output public/bathymetry/etopo-2022
+node scripts/generate-bathymetry-assets.mjs
 ```
 
-`metadata.json` には dataset、DOI、source URL、license、citation、access date、source resolution、crop bounds、generated zoom range、generation command、チェックサムを保存します。`npm run predev`、`npm run pretest`、`npm run prebuild` はbase64 fixtureからPNGを事前復元しますが、Next.js実行時・Vercelアクセス時のHTTPリクエストごとにNOAA取得、切り出し、タイル生成は行いません。
+現在の生成範囲は west 128.5 / south 32.5 / east 130.8 / north 34.0、zoomはz7-z8、256px XYZタイルです。色別水深は0m、20m、50m、100m、200m、500m以上の区分に合わせ、等深線は同じDEMの負標高から生成します。水深表示は参考用途のみで、航海・安全判断には使用できません。
 
 ## 依存関係
 

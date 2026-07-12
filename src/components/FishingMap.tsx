@@ -51,6 +51,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const [terrainStatus, setTerrainStatus] = useState<
     "3d" | "2d" | "unsupported" | "error"
   >("2d");
+  const [bathymetryLoadError, setBathymetryLoadError] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -153,6 +154,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         mapLayerMode,
         isTerrainEnabled,
         setTerrainStatus,
+        setMapLayerMode,
+        setBathymetryLoadError,
       );
     };
     if (map.loaded()) applyLayerMode();
@@ -243,6 +246,11 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
           </div>
         </>
       ) : null}
+      {bathymetryLoadError ? (
+        <div className="mapNotice" role="status">
+          水深データを読み込めませんでした
+        </div>
+      ) : null}
       {mapLayerMode === "aerial" ? (
         <div className="mapAttribution" aria-label="航空写真の出典">
           {GSI_AERIAL_TILE_ATTRIBUTION}
@@ -326,9 +334,19 @@ function applyBathymetryMode(
   mode: MapLayerMode,
   terrainEnabled: boolean,
   setTerrainStatus: (status: "3d" | "2d" | "unsupported" | "error") => void,
+  setMapLayerMode: (mode: MapLayerMode) => void,
+  setBathymetryLoadError: (hasError: boolean) => void,
 ) {
   const showBathymetry = mode === "bathymetry";
-  if (showBathymetry) addBathymetryLayers(map);
+  if (showBathymetry) {
+    setBathymetryLoadError(false);
+    addBathymetryLayers(map, () => {
+      map.setTerrain(null);
+      setTerrainStatus("error");
+      setBathymetryLoadError(true);
+      setMapLayerMode("standard");
+    });
+  }
   for (const layerId of [
     BATHYMETRY_COLOR_LAYER_ID,
     BATHYMETRY_HILLSHADE_LAYER_ID,
@@ -366,14 +384,23 @@ function applyBathymetryMode(
   }
 }
 
-function addBathymetryLayers(map: maplibregl.Map) {
+function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void) {
+  const mapWithFlag = map as maplibregl.Map & { __bathymetryErrorHandlerAdded?: boolean };
+  if (!mapWithFlag.__bathymetryErrorHandlerAdded) {
+    map.on("error", (event) => {
+      const sourceId = (event as maplibregl.ErrorEvent & { sourceId?: string }).sourceId;
+      const message = event.error?.message ?? "";
+      if (sourceId?.includes("etopo-2022") || message.includes("bathymetry/etopo-2022")) onBathymetryError();
+    });
+    mapWithFlag.__bathymetryErrorHandlerAdded = true;
+  }
   if (!map.getSource(BATHYMETRY_SOURCE_ID)) {
     map.addSource(BATHYMETRY_SOURCE_ID, {
       type: "raster-dem",
       tiles: [BATHYMETRY_TILE_URL],
       tileSize: 256,
       minzoom: 7,
-      maxzoom: 10,
+      maxzoom: 8,
       encoding: "mapbox",
       attribution: BATHYMETRY_ATTRIBUTION,
     });
@@ -384,7 +411,7 @@ function addBathymetryLayers(map: maplibregl.Map) {
       tiles: [BATHYMETRY_COLOR_TILE_URL],
       tileSize: 256,
       minzoom: 7,
-      maxzoom: 10,
+      maxzoom: 8,
       attribution: BATHYMETRY_ATTRIBUTION,
     });
   }

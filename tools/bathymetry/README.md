@@ -1,23 +1,18 @@
-# ETOPO 2022 bathymetry tile generation
+# Bathymetry asset generation
 
-This app uses pre-generated static tiles only. PNG tiles are restored from base64 text fixtures before dev/test/build and are ignored by Git. Do not download global ETOPO data during Next.js/Vercel runtime.
-
-Reproducible outline:
+The repository stores the cropped ETOPO 2022 DEM as text at `data/bathymetry/etopo-2022-crop.json`. PNG tiles and GeoJSON contours are generated before dev/test/build and are ignored by Git.
 
 ```bash
-python tools/bathymetry/generate_tiles.py \
-  --bounds 129.45 33.05 130.55 33.75 \
-  --minzoom 7 --maxzoom 10 \
-  --output public/bathymetry/etopo-2022
+node scripts/generate-bathymetry-assets.mjs
 ```
 
-Operator steps behind the helper:
+The generator reads only the committed text DEM during normal builds. It does not contact NOAA during `next dev`, tests, Vercel build, or runtime. Temporary GeoTIFF downloads used to refresh the text DEM must not be committed.
 
-1. Download the NOAA NCEI ETOPO 2022 15 arc-second GeoTIFF for the target region only.
-2. Crop to west/south/east/north `129.45 33.05 130.55 33.75` using GDAL.
-3. Encode DEM tiles as Mapbox Terrain-RGB compatible PNG for MapLibre `raster-dem`.
-4. Generate low-zoom color-relief PNG tiles and simplified negative-elevation contours.
-5. Update `metadata.json` with DOI, license, citation, access date, bounds, zooms, command and checksums.
-6. Store small committed fixtures as base64 JSON under `data/bathymetry/` and restore PNGs with `npm run restore:bathymetry-tiles`.
+Generated outputs:
 
-License/citation: NOAA NCEI ETOPO 2022, CC0-1.0, https://doi.org/10.25921/fd45-gt74. Reference display only; not for navigation or safety decisions.
+- `public/bathymetry/etopo-2022/terrain/{z}/{x}/{y}.png`
+- `public/bathymetry/etopo-2022/color/{z}/{x}/{y}.png`
+- `public/bathymetry/etopo-2022/contours.geojson`
+- `public/bathymetry/etopo-2022/metadata.json`
+
+The current crop covers west 129.45, south 33.05, east 130.55, north 33.75 at z7-z8. Metadata records checksums for every generated file and the source/crop SHA-256 values.

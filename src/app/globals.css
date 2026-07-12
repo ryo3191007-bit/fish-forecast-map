@@ -315,3 +315,15 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
 .bathymetryLegend i { width: 16px; height: 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.35); }
 .bathymetryAttribution { bottom: auto; top: 68px; }
 @media (max-width: 620px) { .mapLayerToggle { max-width: calc(100% - 24px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-radius: 18px; } .mapLayerButton { border-radius: 14px; padding-inline: 7px; } .bathymetryPanel { left: 12px; bottom: 12px; width: min(300px, calc(100% - 24px)); } .bathymetryLegend { grid-template-columns: repeat(2, minmax(0, 1fr)); } .bathymetryAttribution { top: 82px; right: 12px; max-width: min(300px, calc(100% - 24px)); } }
+.mapNotice {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 2;
+  border: 1px solid rgba(251, 146, 60, .52);
+  border-radius: 12px;
+  background: rgba(124, 45, 18, .86);
+  color: #fed7aa;
+  padding: 8px 12px;
+  font-size: 12px;
+}
