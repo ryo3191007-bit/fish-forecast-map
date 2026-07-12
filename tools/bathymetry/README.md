@@ -15,4 +15,4 @@ Generated outputs:
 - `public/bathymetry/etopo-2022/contours.geojson`
 - `public/bathymetry/etopo-2022/metadata.json`
 
-The current crop covers west 129.45, south 33.05, east 130.55, north 33.75 at z7-z8. Metadata records checksums for every generated file and the source/crop SHA-256 values.
+The current crop covers west 128.5, south 32.5, east 130.8, north 34.0 at z7-z8. Contours are generated with marching squares from the same DEM and include positive `depth` plus `major` properties. Metadata records checksums for every generated file and the source/crop SHA-256 values.

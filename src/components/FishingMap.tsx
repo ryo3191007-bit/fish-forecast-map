@@ -13,6 +13,9 @@ import {
 } from "@/domain/mapLayer";
 import {
   BATHYMETRY_ATTRIBUTION,
+  BATHYMETRY_BOUNDS,
+  BATHYMETRY_MAX_ZOOM,
+  BATHYMETRY_MIN_ZOOM,
   BATHYMETRY_COLOR_LAYER_ID,
   BATHYMETRY_COLOR_SOURCE_ID,
   BATHYMETRY_COLOR_TILE_URL,
@@ -399,8 +402,9 @@ function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void)
       type: "raster-dem",
       tiles: [BATHYMETRY_TILE_URL],
       tileSize: 256,
-      minzoom: 7,
-      maxzoom: 8,
+      minzoom: BATHYMETRY_MIN_ZOOM,
+      maxzoom: BATHYMETRY_MAX_ZOOM,
+      bounds: [...BATHYMETRY_BOUNDS],
       encoding: "mapbox",
       attribution: BATHYMETRY_ATTRIBUTION,
     });
@@ -410,8 +414,9 @@ function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void)
       type: "raster",
       tiles: [BATHYMETRY_COLOR_TILE_URL],
       tileSize: 256,
-      minzoom: 7,
-      maxzoom: 8,
+      minzoom: BATHYMETRY_MIN_ZOOM,
+      maxzoom: BATHYMETRY_MAX_ZOOM,
+      bounds: [...BATHYMETRY_BOUNDS],
       attribution: BATHYMETRY_ATTRIBUTION,
     });
   }
@@ -468,6 +473,7 @@ function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void)
     map.addLayer({
       id: BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
       type: "symbol",
+      minzoom: 8,
       source: BATHYMETRY_CONTOUR_SOURCE_ID,
       layout: {
         visibility: "none",

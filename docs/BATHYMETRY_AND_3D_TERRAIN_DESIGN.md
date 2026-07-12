@@ -2,13 +2,13 @@
 
 ## 採用データ
 
-初期実装は NOAA NCEI `ETOPO 2022 15 Arc-Second Global Relief Model` を採用します。対象範囲は糸島西岸、唐津湾、伊万里湾、平戸周辺に限定し、全世界データや不要に巨大な生成物はリポジトリに含めません。
+初期実装は NOAA NCEI `ETOPO 2022 60 Arc-Second Bedrock Global Relief Model` を採用します。対象範囲は糸島西岸、唐津湾、伊万里湾、平戸周辺に限定し、全世界データや不要に巨大な生成物はリポジトリに含めません。
 
 - DOI: https://doi.org/10.25921/fd45-gt74
 - Source: https://www.ncei.noaa.gov/products/etopo-global-relief-model
 - License: CC0-1.0
-- Citation: NOAA National Centers for Environmental Information. 2022: ETOPO 2022 15 Arc-Second Global Relief Model. https://doi.org/10.25921/fd45-gt74
-- 制限: 15 arc-second の広域DEMであり、港内、瀬、岩礁、航路水深の精密確認には使えません。参考表示であり、航海・安全判断には使用不可です。
+- Citation: NOAA National Centers for Environmental Information. 2022: ETOPO 2022 60 Arc-Second Bedrock Global Relief Model. https://doi.org/10.25921/fd45-gt74
+- 制限: 60 arc-second の広域DEMであり、港内、瀬、岩礁、航路水深の精密確認には使えません。参考表示であり、航海・安全判断には使用不可です。
 
 ## 描画方式比較
 

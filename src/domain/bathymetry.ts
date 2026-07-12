@@ -12,11 +12,16 @@ export const BATHYMETRY_COLOR_TILE_URL = `${BATHYMETRY_TILE_BASE_PATH}/color/{z}
 export const BATHYMETRY_CONTOUR_GEOJSON_URL = `${BATHYMETRY_TILE_BASE_PATH}/contours.geojson`;
 export const BATHYMETRY_METADATA_URL = `${BATHYMETRY_TILE_BASE_PATH}/metadata.json`;
 
+export const BATHYMETRY_BOUNDS = [128.5, 32.5, 130.8, 34.0] as const;
+export const BATHYMETRY_SOURCE_RESOLUTION = "60 arc-second";
+export const BATHYMETRY_MIN_ZOOM = 7;
+export const BATHYMETRY_MAX_ZOOM = 8;
+
 export const BATHYMETRY_ATTRIBUTION = "水深・地形: NOAA NCEI ETOPO 2022";
-export const BATHYMETRY_LICENSE_NOTE = "15 arc-second / CC0-1.0";
+export const BATHYMETRY_LICENSE_NOTE = `${BATHYMETRY_SOURCE_RESOLUTION} / CC0-1.0`;
 export const BATHYMETRY_SAFETY_NOTE = "参考表示。航海・安全判断には使用不可";
 export const BATHYMETRY_CITATION =
-  "NOAA National Centers for Environmental Information. 2022: ETOPO 2022 15 Arc-Second Global Relief Model. https://doi.org/10.25921/fd45-gt74";
+  "NOAA National Centers for Environmental Information. 2022: ETOPO 2022 60 Arc-Second Bedrock Global Relief Model. https://doi.org/10.25921/fd45-gt74";
 
 export const BATHYMETRY_DEPTH_STOPS = [
   { depthMeters: 0, label: "0m", color: "#bff4ff" },
