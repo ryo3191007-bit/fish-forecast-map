@@ -251,7 +251,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
       ) : null}
       {bathymetryLoadError ? (
         <div className="mapNotice" role="status">
-          水深データを読み込めませんでした
+          水深データを読み込めなかったため通常地図へ戻しました（水深データを読み込めませんでした）
         </div>
       ) : null}
       {mapLayerMode === "aerial" ? (
@@ -393,7 +393,7 @@ function addBathymetryLayers(map: maplibregl.Map, onBathymetryError: () => void)
     map.on("error", (event) => {
       const sourceId = (event as maplibregl.ErrorEvent & { sourceId?: string }).sourceId;
       const message = event.error?.message ?? "";
-      if (sourceId?.includes("etopo-2022") || message.includes("bathymetry/etopo-2022")) onBathymetryError();
+      if (sourceId?.includes("gebco-2026") || sourceId?.includes("etopo-2022") || message.includes("bathymetry/gebco-2026") || message.includes("bathymetry/etopo-2022")) onBathymetryError();
     });
     mapWithFlag.__bathymetryErrorHandlerAdded = true;
   }

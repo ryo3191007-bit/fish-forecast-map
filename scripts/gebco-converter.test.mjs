@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const tool = fs.readFileSync('tools/bathymetry/convert-gebco-netcdf.mjs','utf8');
+assert.match(tool, /NetCDFReader/);
+assert.match(tool, /getDataVariable/);
+assert.doesNotMatch(tool, /Math\.sin|人工/);
+const dem = JSON.parse(fs.readFileSync('data/bathymetry/gebco-2026-crop.json','utf8'));
+const tid = JSON.parse(fs.readFileSync('data/bathymetry/gebco-2026-tid-crop.json','utf8'));
+assert.equal(dem.width, 552); assert.equal(dem.height, 360); assert.equal(dem.nodata, -32767);
+const validDem = dem.values.filter((v) => v !== dem.nodata);
+assert.equal(validDem.reduce((min, v) => Math.min(min, v), Infinity), -277);
+assert.equal(validDem.reduce((max, v) => Math.max(max, v), -Infinity), 1346);
+assert.equal(tid.width, 552); assert.equal(tid.height, 360); assert.equal(tid.nodata, 127);
+assert.deepEqual(tid.observedCodes, [0,11,17,40,43,44]);
+console.log('GEBCO converter and canonical JSON checks passed');

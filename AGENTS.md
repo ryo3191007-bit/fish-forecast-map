@@ -161,7 +161,7 @@ MVP v0.1では以下を扱います。
 
 ## 水深・3D地形データ運用
 
-- 水深・3D地形モードは NOAA NCEI ETOPO 2022 の対象地域のみを使う静的タイルとして管理します。Post-MVP-037の沿岸高解像度化調査は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とし、次IssueではETOPO 2022 15秒、GEBCO_2026 15秒、国土地理院標準地図タイルを候補にします。
+- 水深・3D地形モードは GEBCO_2026 15秒の対象地域cropを第一source、NOAA NCEI ETOPO 2022 60秒をfallbackに使う静的タイルとして管理します。Post-MVP-037の沿岸高解像度化調査は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とし、次IssueではETOPO 2022 15秒、GEBCO_2026 15秒、国土地理院標準地図タイルを候補にします。
 - 全世界データや不要に巨大な生成物はリポジトリへ追加しません。
 - 水深は参考表示であり、航海・安全判断には使用不可です。
 - Next.js/Vercel実行時にNOAA取得、スクレイピング、定期取得、タイル生成を行いません。

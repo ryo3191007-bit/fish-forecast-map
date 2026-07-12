@@ -2,7 +2,7 @@
 
 ## 採用データ
 
-Post-MVP-037 / Issue #111 の調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とします。現行実装は引き続き60秒Bedrockを使いますが、次Issueの第一候補は `ETOPO 2022 15 arc-second Bedrock`、比較・代替候補は `GEBCO_2026 Grid 15 arc-second`、陸海境界明瞭化の第一候補は国土地理院標準地図タイルのリアルタイム重ね合わせです。JODC J-EGG500は再配布・Web配信許可が確認できるまで本番採用しません。
+Post-MVP-037 / Issue #111 の調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とします。現行実装は引き続き60秒Bedrockを使いますが、次Issueの第一候補は `GEBCO_2026 Grid 15 arc-second`、fallbackは `ETOPO 2022 60 arc-second Bedrock`、陸海境界明瞭化の第一候補は国土地理院標準地図タイルのリアルタイム重ね合わせです。JODC J-EGG500は再配布・Web配信許可が確認できるまで本番採用しません。
 
 初期実装は NOAA NCEI `ETOPO 2022 60 Arc-Second Bedrock Global Relief Model` を採用します。対象範囲は糸島西岸、唐津湾、伊万里湾、平戸周辺に限定し、全世界データや不要に巨大な生成物はリポジトリに含めません。
 
@@ -51,7 +51,16 @@ node scripts/generate-bathymetry-assets.mjs
 ## Post-MVP-037 沿岸水深・海岸線調査の反映
 
 - 本番水深データの差し替えは未実施です。
-- 次Issueでは同じbounds（west 128.5 / south 32.5 / east 130.8 / north 34.0）と同じカメラ条件で、ETOPO 60秒、ETOPO 15秒、GEBCO 2026 15秒を比較します。
+- 次Issueでは同じbounds（west 128.5 / south 32.5 / east 130.8 / north 34.0）と同じカメラ条件で、GEBCO_2026 15秒を第一source、ETOPO 2022 60秒をfallbackとして比較します。
 - 比較画像はGitへ入れず、PR説明へ添付します。
 - 国土地理院標準地図タイルを重ねる場合は、リアルタイム読み込みと出典表示を前提にします。基盤地図情報の独立ベクトル化は測量法上の申請要否確認後に別Issueで扱います。
 - 沿岸海域土地条件図は参考背景候補に限定し、DEM、等深線生成元、3D terrain入力には使いません。
+
+
+### GEBCO_2026 15秒正本とfallback（Post-MVP-038.1）
+
+- DEM/TID正本は `552 x 360`、bounds west `128.5` / south `32.5` / east `130.8` / north `34.0`。
+- DEM nodataは `-32767`、min/maxは `-277 / 1346`。
+- TID nodataは `127`、出現コードは `0/11/17/40/43/44`。
+- 第一sourceは `GEBCO_2026 Grid 15 arc-second`、fallbackは `ETOPO 2022 60 arc-second Bedrock`。GEBCO失敗時はETOPOへ切替え、ETOPOも失敗した場合は水深layer/terrain/GSI overlayを解除して通常地図へ戻します。
+- GSI標準地図overlayの出典は国土地理院ウェブサイト/地理院タイルとして表示し、標準地図内素材（GEBCO Digital Atlas由来等深線、海上保安庁許可第292502号、VMAP0 shoreline等）とGEBCO正本の出典を混同しません。

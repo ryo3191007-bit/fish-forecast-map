@@ -82,7 +82,7 @@ MVP v0.1の基本データはモック釣果データです。モック釣果は
 
 ## 今後の候補
 
-- 水深・3D地形モードの次Issueで、ETOPO 2022 15秒を第一候補、GEBCO_2026 15秒を代替候補、国土地理院標準地図タイルを陸海境界明瞭化候補として同条件比較する。ただし、本番水深データ差し替え前にライセンス、再配布可否、容量、生成時間、スマホ負荷を確認する。
+- 水深・3D地形モードの次Issueで、GEBCO_2026 15秒を第一source、ETOPO 2022 60秒をfallback、国土地理院標準地図タイルを陸海境界明瞭化候補として同条件比較する。ただし、本番水深データ差し替え前にライセンス、再配布可否、容量、生成時間、スマホ負荷を確認する。
 - Open-Meteo以外の環境データ連携や、公式潮汐表への参照・リンクの検討。ただし、安全判断・航行判断の代替にはしない。
 - 釣れそう度スコアの高度化と理由表示の改善。
 - 公式API、RSS、許可済み情報源、ユーザー提供情報を前提にした将来の釣果情報取り込み設計。
@@ -124,4 +124,13 @@ Post-MVP-035では、画面上の登録UIを外部情報メモではなくユー
 
 マップのレイヤー切替は `通常地図 / 航空写真 / 水深・3D地形` の3モードです。水深・3D地形モードでは NOAA NCEI ETOPO 2022 の対象地域のみから生成した静的タイルを使い、2D水深色分け、等深線、hillshade、対応端末でのMapLibre terrainを表示します。スマホ、低性能端末、reduced motion、3D初期化失敗時は2D水深表示へフォールバックします。
 
-水深はETOPO 2022 DEMに基づく参考表示であり、航海・安全判断には使用できません。全世界データとPNGバイナリはGit管理対象にせず、開発・テスト・ビルド前に `data/bathymetry/etopo-2022-crop.json` のテキストDEMから静的PNG/GeoJSON/metadataを生成します。Next.js/Vercel実行時の外部取得・スクレイピング・リクエストごとのタイル生成も行いません。生成手順とライセンスは `docs/BATHYMETRY_AND_3D_TERRAIN_DESIGN.md` と `tools/bathymetry/README.md` を参照してください。
+水深はGEBCO_2026 15秒DEMを第一source、ETOPO 2022 60秒DEMをfallbackにする参考表示であり、航海・安全判断には使用できません。全世界データとPNGバイナリはGit管理対象にせず、開発・テスト・ビルド前に `data/bathymetry/etopo-2022-crop.json` のテキストDEMから静的PNG/GeoJSON/metadataを生成します。Next.js/Vercel実行時の外部取得・スクレイピング・リクエストごとのタイル生成も行いません。生成手順とライセンスは `docs/BATHYMETRY_AND_3D_TERRAIN_DESIGN.md` と `tools/bathymetry/README.md` を参照してください。
+
+
+### GEBCO_2026 15秒正本とfallback（Post-MVP-038.1）
+
+- DEM/TID正本は `552 x 360`、bounds west `128.5` / south `32.5` / east `130.8` / north `34.0`。
+- DEM nodataは `-32767`、min/maxは `-277 / 1346`。
+- TID nodataは `127`、出現コードは `0/11/17/40/43/44`。
+- 第一sourceは `GEBCO_2026 Grid 15 arc-second`、fallbackは `ETOPO 2022 60 arc-second Bedrock`。GEBCO失敗時はETOPOへ切替え、ETOPOも失敗した場合は水深layer/terrain/GSI overlayを解除して通常地図へ戻します。
+- GSI標準地図overlayの出典は国土地理院ウェブサイト/地理院タイルとして表示し、標準地図内素材（GEBCO Digital Atlas由来等深線、海上保安庁許可第292502号、VMAP0 shoreline等）とGEBCO正本の出典を混同しません。

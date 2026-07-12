@@ -17,13 +17,16 @@
     "check:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.mjs",
     "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs",
     "test:environment": "node scripts/environment.test.mjs",
-    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:migration-safety && npm run test:bootstrap-schema-diff && npm run test:bathymetry-ui",
+    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:migration-safety && npm run test:bootstrap-schema-diff && npm run test:bathymetry-ui && npm run test:gebco-converter && npm run test:bathymetry-fallback && npm run test:bathymetry-tid",
     "test:manual-catch-memos": "node scripts/manual-catch-memos.test.mjs",
     "test:ui-requirements": "node scripts/ui-requirements.test.mjs",
     "test:bathymetry-ui": "node scripts/bathymetry-ui.test.mjs",
     "predev": "node scripts/generate-bathymetry-assets.mjs",
     "pretest": "node scripts/generate-bathymetry-assets.mjs",
-    "prebuild": "node scripts/generate-bathymetry-assets.mjs"
+    "prebuild": "node scripts/generate-bathymetry-assets.mjs",
+    "test:bathymetry-fallback": "node scripts/bathymetry-fallback.test.mjs",
+    "test:bathymetry-tid": "node scripts/bathymetry-tid.test.mjs",
+    "test:gebco-converter": "node scripts/gebco-converter.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
@@ -38,6 +41,7 @@
     "@types/react-dom": "^19.0.4",
     "eslint": "^9.23.0",
     "eslint-config-next": "^15.3.5",
+    "netcdfjs": "^4.0.0",
     "pngjs": "^7.0.0",
     "supabase": "2.31.8",
     "typescript": "^5.8.2"

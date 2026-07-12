@@ -3,8 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { PNG } from "pngjs";
 
-const DEM_PATH = "data/bathymetry/etopo-2022-crop.json";
-const OUT = "public/bathymetry/etopo-2022";
+const DEM_PATH = process.argv[2] ?? "data/bathymetry/gebco-2026-crop.json";
+const OUT = process.argv[3] ?? (DEM_PATH.includes("gebco-2026") ? "public/bathymetry/gebco-2026" : "public/bathymetry/etopo-2022");
 const MIN_ZOOM = 7;
 const MAX_ZOOM = 8;
 const DEPTHS = [20, 50, 100, 200, 500];
@@ -166,9 +166,9 @@ fs.writeFileSync(contoursPath, JSON.stringify(contours, null, 2));
 checksums[contoursPath] = crypto.createHash("sha256").update(fs.readFileSync(contoursPath)).digest("hex");
 const meta = {
   dataset: dem.dataset, doi: dem.doi, sourceUrl: dem.sourceUrl, license: dem.license, citation: dem.citation, accessDate: dem.accessDate,
-  sourceResolution: "60 arc-second", cropBounds: b, width: dem.width, height: dem.height, cellSizeDegrees: dem.cellSizeDegrees, nodata: dem.nodata,
+  sourceResolution: dem.dataset?.includes("GEBCO") ? "15 arc-second" : "60 arc-second", cropBounds: b, width: dem.width, height: dem.height, cellSizeDegrees: dem.cellSizeDegrees, nodata: dem.nodata,
   sourceSha256: dem.sourceSha256, cropSha256: dem.cropSha256, generatedZoomRange: { min: MIN_ZOOM, max: MAX_ZOOM }, tileSize: TILE_SIZE,
-  tileCount: tiles.length, tiles, depthStopsMeters: [0, ...DEPTHS], generationCommand: "node scripts/generate-bathymetry-assets.mjs", checksums,
+  tileCount: tiles.length, tiles, depthStopsMeters: [0, ...DEPTHS], generationCommand: `node scripts/generate-bathymetry-assets.mjs ${DEM_PATH} ${OUT}`, checksums,
   navigationWarning: "Reference only; not for navigation or safety decisions.", contourAlgorithm: "marching squares with segment stitching"
 };
 fs.writeFileSync(path.join(OUT, "metadata.json"), JSON.stringify(meta, null, 2));
