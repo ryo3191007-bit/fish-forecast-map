@@ -12,7 +12,7 @@ export const externalSources: ExternalSource[] = [
     crawlPolicy: "manualOnly",
     robotsStatus: "unchecked",
     termsStatus: "unchecked",
-    reviewedAt: REVIEWED_AT,
+    reviewedAt: "2026-07-12",
     reviewSummary: "ユーザー本人が自分の釣果を記録するための内部固定source。外部サイト取得やスクレイピングには使わない。",
     notes: [
       "既存ExternalCatchMemo/source_registry互換のための内部source。",

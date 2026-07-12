@@ -258,11 +258,11 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     <section className="dashboard" id="map">
       <div className="panel filters">
         <div>
-          <p className="eyebrow">Post-MVP / mock + manual memo</p>
+          <p className="eyebrow">Post-MVP / 自分の釣果記録</p>
           <h2>糸島西岸〜平戸方面の釣果予報マップ</h2>
-          <p className="muted">モック釣果は地図・地点評価・SCOREの参考に維持し、釣果一覧は手入力釣果だけを魚種・エリア・キーワードで確認できます。</p>
+          <p className="muted">モック釣果は地図・地点評価・SCOREの参考に維持し、釣果一覧は自分の釣果記録だけを魚種・エリア・キーワードで確認できます。</p>
           <p className="resultSummary" aria-live="polite">
-            魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 釣り場マスター{fishingSpots.length}地点 / 地図・地点評価用モック{mockFishingReports.length}件 / 手入力釣果 全{manualCatchMemos.length}件中 {filteredManualCatchMemos.length}件を一覧表示中
+            魚種: {speciesLabel} / エリア: {areaLabel} / キーワード: {searchLabel} / 並び順: {sortLabel} / 釣り場マスター{fishingSpots.length}地点 / 地図・地点評価用モック{mockFishingReports.length}件 / 自分の釣果 全{manualCatchMemos.length}件中 {filteredManualCatchMemos.length}件を一覧表示中
           </p>
           <MasterDataStatusChip status={masterDataStatus} />
         </div>
@@ -291,7 +291,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           <p className="eyebrow">Catch reports</p>
           <h2>釣果情報一覧</h2>
         </div>
-        <p className="muted">{sortLabel}で表示中です。魚種、釣り方、日付、出典をカードごとに確認できます。</p>
+        <p className="muted">{sortLabel}で表示中です。魚種、釣り方、日付、メモをカードごとに確認できます。</p>
       </div>
 
         <div className="filterControls reportFilters" aria-label="釣果フィルタ">
@@ -380,7 +380,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           {reportView === "reports" ? (
             <>
               <div className="filterHeader keywordFilterHeader">
-                <span>手入力釣果期間フィルタ</span>
+                <span>自分の釣果期間フィルタ</span>
                 <span className="filterHint">開始日と終了日で絞り込み</span>
               </div>
               <div className="advancedFilterGrid">
@@ -437,9 +437,9 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           ) : areaEvaluations.map((evaluation) => (
             <article className="card" key={`${evaluation.placeName}-${evaluation.areaName}`}>
               <div className="cardHeader"><div><p className="eyebrow">{evaluation.areaName}</p><h3>{evaluation.placeName}</h3></div><div className="scoreBox" aria-label={`平均SCORE ${evaluation.averageScore}点`}><span>平均SCORE</span><strong className="score">{evaluation.averageScore}<span>点</span></strong></div></div>
-              <div className="cardSummary"><span>代表魚種: {evaluation.representativeSpecies.join(" / ")}</span><span>直近釣果日: {evaluation.latestReportDate}</span><span>釣果件数: {evaluation.reportCount}</span><span>手入力釣果件数: {evaluation.externalMemoCount}（参考 / SCORE反映候補）</span></div>
+              <div className="cardSummary"><span>代表魚種: {evaluation.representativeSpecies.join(" / ")}</span><span>直近釣果日: {evaluation.latestReportDate}</span><span>釣果件数: {evaluation.reportCount}</span><span>本人の釣果件数: {evaluation.externalMemoCount}（参考 / SCORE反映候補）</span></div>
               <dl className="facts"><div><dt>地点/エリア</dt><dd>{evaluation.placeName}</dd></div><div><dt>評価値</dt><dd>平均SCORE {evaluation.averageScore}点</dd></div><div><dt>代表魚種</dt><dd>{evaluation.representativeSpecies.join("、")}</dd></div><div><dt>直近釣果日</dt><dd>{evaluation.latestReportDate}</dd></div></dl>
-              <div className="reasonBlock"><p>簡易メモ</p><p className="muted">{evaluation.memo}</p><p className="muted">条件に合う外部メモは、平均SCOREに使う既存地点SCOREへ参考反映しています。</p></div>
+              <div className="reasonBlock"><p>簡易メモ</p><p className="muted">{evaluation.memo}</p><p className="muted">条件に合う本人の釣果は、平均SCOREに使う既存地点SCOREへ参考反映しています。</p></div>
             </article>
           ))}
         </div>

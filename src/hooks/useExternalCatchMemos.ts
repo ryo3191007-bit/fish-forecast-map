@@ -304,7 +304,7 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       markLocalOwner(memo.id, mutationUserId);
       localMemoIdsRef.current = nextLocalMemoIds;
       setMemos(optimisticMemos);
-      setStorageError("DB保存に失敗したため、入力した外部釣果メモをブラウザ保存へfallbackしました。");
+      setStorageError("DB保存に失敗したため、入力した釣果記録をブラウザ保存へfallbackしました。");
       setStatus({ ...result.meta, isDbAvailable: false, isLoading: false, isMutating: false });
       return true;
     } catch {
@@ -315,11 +315,11 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
         markLocalOwner(memo.id, mutationUserId);
         localMemoIdsRef.current = nextLocalMemoIds;
         setMemos(optimisticMemos);
-        setStorageError("DB保存に失敗したため、入力した外部釣果メモをブラウザ保存へfallbackしました。");
+        setStorageError("DB保存に失敗したため、入力した釣果記録をブラウザ保存へfallbackしました。");
         setStatus({ source: "local-storage-fallback", fallbackReason: "supabase-error", isDbAvailable: false, isLoading: false, isMutating: false });
         return true;
       } catch {
-        setStorageError("外部釣果メモを保存できませんでした。ブラウザの保存容量や設定を確認してください。");
+        setStorageError("釣果記録を保存できませんでした。ブラウザの保存容量や設定を確認してください。");
         setStatus((current) => ({ ...current, isMutating: false }));
         return false;
       }
@@ -471,13 +471,13 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
       latestDbMemosRef.current = visibleDbMemos;
       const nextMemos = mergeExternalCatchMemos(visibleDbMemos, latestLocalMemos, deletedDbMemoIds);
       setMemos(nextMemos);
-      setStorageError(didCleanupFail ? "移行後のブラウザ保存整理に失敗したため、外部釣果メモをブラウザ保存に残しました。" : result.failed.length > 0 ? "一部の外部釣果メモは移行できなかったため、ブラウザ保存に残しました。" : null);
+      setStorageError(didCleanupFail ? "移行後のブラウザ保存整理に失敗したため、釣果記録をブラウザ保存に残しました。" : result.failed.length > 0 ? "一部の釣果記録は移行できなかったため、ブラウザ保存に残しました。" : null);
       setStatus(nextLocalMemoIds.size > 0
         ? { source: "local-storage-fallback", fallbackReason: "local-data-not-migrated", isDbAvailable: true, isLoading: false, isMutating: false }
         : { source: "supabase", isDbAvailable: true, isLoading: false, isMutating: false });
       return result;
     } catch {
-      if (isCurrentAuth()) setStorageError("一部の外部釣果メモは移行できなかったため、ブラウザ保存に残しました。");
+      if (isCurrentAuth()) setStorageError("一部の釣果記録は移行できなかったため、ブラウザ保存に残しました。");
       return result;
     } finally {
       if (isCurrentAuth()) setStatus((current) => ({ ...current, isMutating: false }));

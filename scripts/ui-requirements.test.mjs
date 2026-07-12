@@ -5,6 +5,11 @@ const appShell = readFileSync('src/components/AppShell.tsx', 'utf8');
 const dashboard = readFileSync('src/components/FishingDashboard.tsx', 'utf8');
 const page = readFileSync('src/app/page.tsx', 'utf8');
 
+const hookSource = readFileSync('src/hooks/useExternalCatchMemos.ts', 'utf8');
+const externalSources = readFileSync('src/data/externalSources.ts', 'utf8');
+const masterDataSeed = readFileSync('supabase/sql/003_master_data_seed.sql', 'utf8');
+const userSelfReportMigration = readFileSync('supabase/migrations/20260712000100_add_user_self_report_source.sql', 'utf8');
+
 function countMatches(source, pattern) {
   return [...source.matchAll(pattern)].length;
 }
@@ -40,6 +45,19 @@ assert.match(dashboard, /const filteredManualCatchMemos = useMemo\(\(\) => \{[\s
 assert.match(dashboard, /displayMemos=\{filteredManualCatchMemos\}/, 'catch list passes filtered manual memos to the catch record section');
 assert.doesNotMatch(dashboard, /mockFishingReports\.map\(\(report\) => <ExternalMemoCard/, 'mock reports must not be rendered as catch list cards');
 assert.doesNotMatch(dashboard, /reports\.map\(\(report\) => <ExternalMemoCard/, 'filtered mock reports must not be rendered as catch list cards');
+
+assert.doesNotMatch(dashboard, /manual memo|手入力釣果期間フィルタ/, 'FishingDashboard user-facing labels do not use legacy manual memo wording');
+assert.doesNotMatch(dashboard, /魚種、釣り方、日付、出典をカードごとに確認できます。/, 'catch list description does not mention source display');
+assert.match(dashboard, /自分の釣果期間フィルタ/, 'catch date filter is labelled as self catch records');
+assert.match(dashboard, /条件に合う本人の釣果は/, 'area evaluation score note refers to self catch records');
+assert.doesNotMatch(hookSource, /外部釣果メモ/, 'save and migration errors shown in the catch record UI do not mention external catch memos');
+
+const staticUserSelfReportReviewedAt = externalSources.match(/sourceId: "user-self-report"[\s\S]*?reviewedAt: "(\d{4}-\d{2}-\d{2})"/)?.[1];
+const seedUserSelfReportReviewedAt = masterDataSeed.match(/'user-self-report'[\s\S]*?'(\d{4}-\d{2}-\d{2})'::date/)?.[1];
+const migrationUserSelfReportReviewedAt = userSelfReportMigration.match(/'user-self-report'[\s\S]*?date '(\d{4}-\d{2}-\d{2})'/)?.[1];
+assert.equal(staticUserSelfReportReviewedAt, '2026-07-12', 'static user-self-report reviewedAt is the current reviewed date');
+assert.equal(staticUserSelfReportReviewedAt, seedUserSelfReportReviewedAt, 'static user-self-report reviewedAt matches seed SQL');
+assert.equal(staticUserSelfReportReviewedAt, migrationUserSelfReportReviewedAt, 'static user-self-report reviewedAt matches migration SQL');
 
 assert.match(dashboard, /const filteredExternalMemosForMap = useMemo\(\(\) => \{[\s\S]*?externalMemos\.filter/, 'map filters from all external memos');
 assert.match(dashboard, /<FishingMap reports=\{reports\} externalMemos=\{filteredExternalMemosForMap\}/, 'map receives the all-acquisition-method memo candidates');
