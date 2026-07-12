@@ -17,10 +17,17 @@ export function normalizeCellSize(cellSizeDegrees) {
   return normalized;
 }
 
+function snapNearInteger(value) {
+  const nearest = Math.round(value);
+  return Math.abs(value - nearest) <= 1e-9 ? nearest : value;
+}
+
 export function samplePixelCentreGrid(dem, lon, lat) {
   const cellSize = normalizeCellSize(dem.cellSizeDegrees);
-  const gx = (lon - dem.bounds.west) / cellSize.longitude - 0.5;
-  const gy = (dem.bounds.north - lat) / cellSize.latitude - 0.5;
+  const rawX = (lon - dem.bounds.west) / cellSize.longitude - 0.5;
+  const rawY = (dem.bounds.north - lat) / cellSize.latitude - 0.5;
+  const gx = snapNearInteger(rawX);
+  const gy = snapNearInteger(rawY);
   const x = Math.max(0, Math.min(dem.width - 1, gx));
   const y = Math.max(0, Math.min(dem.height - 1, gy));
   const x0 = Math.floor(x);
