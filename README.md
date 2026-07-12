@@ -20,7 +20,7 @@
 - 画面下部の外部サイト参考リンク4件を別タブで開けます。リンクは参考閲覧用で、自動取得ではありません。
 - 自分の釣果記録単体には個別 `SCORE` を付けず、条件に合う場合だけ既存地点の `SCORE` へ小さく参考反映します。
 - Open-Meteo Weather / Marine APIによる天気・海況の参考データを表示できます。公式潮汐表、安全判断、航行判断の代替にはしません。
-- 水深・3D地形モードで、NOAA NCEI ETOPO 2022 60 arc-second BedrockのテキストDEMからbuild前に生成したTerrain-RGB、色別水深、等深線、hillshadeを参考表示できます。
+- 水深・3D地形モードで、NOAA NCEI ETOPO 2022 60 arc-second BedrockのテキストDEMからbuild前に生成したTerrain-RGB、色別水深、等深線、hillshadeを参考表示できます。Post-MVP-037では沿岸高解像度化候補としてETOPO 2022 15秒、GEBCO_2026 15秒、JODC J-EGG500、国土地理院海岸線/沿岸海域土地条件図を公式資料で比較し、調査結果を `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` に記録しました。
 - ダーク／ネオン／ガラス風のダッシュボードUIでPC・スマホから確認できます。
 
 ## 現在やらないこと
@@ -82,6 +82,7 @@ MVP v0.1の基本データはモック釣果データです。モック釣果は
 
 ## 今後の候補
 
+- 水深・3D地形モードの次Issueで、ETOPO 2022 15秒を第一候補、GEBCO_2026 15秒を代替候補、国土地理院標準地図タイルを陸海境界明瞭化候補として同条件比較する。ただし、本番水深データ差し替え前にライセンス、再配布可否、容量、生成時間、スマホ負荷を確認する。
 - Open-Meteo以外の環境データ連携や、公式潮汐表への参照・リンクの検討。ただし、安全判断・航行判断の代替にはしない。
 - 釣れそう度スコアの高度化と理由表示の改善。
 - 公式API、RSS、許可済み情報源、ユーザー提供情報を前提にした将来の釣果情報取り込み設計。
@@ -103,6 +104,7 @@ MVP v0.1の基本データはモック釣果データです。モック釣果は
 - `docs/SUPABASE_MASTER_DATA_SETUP.md`
 - `docs/CODEX_WORKFLOW.md`
 - `docs/MVP_COMPLETION.md`
+- `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md`
 
 ## Supabase master data read check
 
