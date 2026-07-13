@@ -306,9 +306,9 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
 .dangerButton { border: 1px solid rgba(248, 113, 113, .5); border-radius: 999px; padding: 12px 18px; background: rgba(127, 29, 29, .38); color: #fecaca; font: inherit; font-weight: 900; cursor: pointer; }
 .dangerButton:disabled { opacity: .55; cursor: not-allowed; }
 .externalMemoMigration summary { cursor: pointer; color: #e0faff; font-weight: 900; }
-.bathymetryPanel { position: absolute; left: 18px; bottom: 18px; z-index: 2; width: min(360px, calc(100% - 36px)); display: grid; gap: 8px; padding: 10px; border: 1px solid rgba(224, 250, 255, .34); border-radius: 16px; background: rgba(2, 8, 23, .78); color: #e0faff; font-size: .72rem; font-weight: 800; box-shadow: 0 12px 28px rgba(0,0,0,.32); backdrop-filter: blur(10px); }
+.bathymetryPanel { position: absolute; left: 18px; bottom: 18px; z-index: 2; width: min(390px, calc(100% - 36px)); display: grid; gap: 8px; padding: 10px; border: 1px solid rgba(224, 250, 255, .34); border-radius: 16px; background: rgba(2, 8, 23, .78); color: #e0faff; font-size: .72rem; font-weight: 800; box-shadow: 0 12px 28px rgba(0,0,0,.32); backdrop-filter: blur(10px); }
 .terrainToggle { display: inline-flex; align-items: center; gap: 7px; font-size: .82rem; font-weight: 900; }
-.terrainToggle input { accent-color: #22d3ee; }
+.terrainToggle input { width: 18px; height: 18px; accent-color: #22d3ee; }
 .terrainStatus { color: #bae6fd; }
 .bathymetryLegend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
 .bathymetryLegend span { display: inline-flex; gap: 5px; align-items: center; white-space: nowrap; }
@@ -327,8 +327,17 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
   padding: 8px 12px;
   font-size: 12px;
 }
-.terrainToggleButton { min-height: 32px; border: 1px solid rgba(125, 211, 252, .36); border-radius: 999px; padding: 6px 10px; background: rgba(8, 47, 73, .76); color: #dffbff; font: inherit; font-size: .78rem; font-weight: 900; cursor: pointer; }
+.terrainToggleButton { min-height: 40px; border: 1px solid rgba(125, 211, 252, .36); border-radius: 999px; padding: 6px 10px; background: rgba(8, 47, 73, .76); color: #dffbff; font: inherit; font-size: .78rem; font-weight: 900; cursor: pointer; }
 .terrainToggleButton[aria-pressed="true"], .terrainToggleButton[aria-expanded="true"] { background: linear-gradient(135deg, #e0faff, #7dd3fc); color: #083344; }
+.terrainExaggerationControl { grid-column: 1 / -1; display: grid; gap: 6px; padding: 8px 10px; border: 1px solid rgba(125, 211, 252, .22); border-radius: 14px; background: rgba(2, 8, 23, .46); }
+.terrainControlHeader { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.terrainControlHeader span { color: #f8fdff; font-size: .82rem; }
+.terrainExaggerationControl input[type="range"] { width: 100%; min-height: 32px; accent-color: #22d3ee; }
+.terrainExaggerationControl small { color: #bae6fd; font-size: .68rem; line-height: 1.45; }
+.terrainMiniButton { min-height: 36px; border: 1px solid rgba(125, 211, 252, .36); border-radius: 999px; padding: 6px 10px; background: rgba(8, 47, 73, .76); color: #dffbff; font: inherit; font-size: .7rem; font-weight: 900; cursor: pointer; }
+.terrainPresetControl { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.terrainMiniButton:hover:not(:disabled), .terrainMiniButton:focus-visible, .terrainToggleButton:hover:not(:disabled), .terrainToggleButton:focus-visible { border-color: #67e8f9; background: rgba(14, 116, 144, .72); outline: 2px solid rgba(125, 211, 252, .55); outline-offset: 2px; }
+.terrainMiniButton:disabled, .terrainToggleButton:disabled, .terrainExaggerationControl input:disabled { cursor: not-allowed; opacity: .5; }
 .tidSummary { grid-column: 1 / -1; display: grid; gap: 3px; padding: 8px 10px; border: 1px solid rgba(125, 211, 252, .24); border-radius: 12px; background: rgba(2, 8, 23, .54); color: #e0faff; font-size: .74rem; font-weight: 800; line-height: 1.45; }
 .tidSummary small { color: #bae6fd; font-size: .68rem; font-weight: 700; }
 @media (max-width: 520px) { .bathymetryPanel { left: 12px; right: 12px; max-width: calc(100% - 24px); } .terrainToggleButton { font-size: .72rem; padding: 6px 8px; } .tidSummary { font-size: .7rem; } }

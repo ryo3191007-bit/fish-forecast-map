@@ -55,6 +55,77 @@ export const BATHYMETRY_COASTLINE_ATTRIBUTION =
 export const BATHYMETRY_COASTLINE_NOTE =
   "水深タイルとは独立した完全不透明の落ち着いた緑の陸地マスクと海岸線ラインで、外部地図タイルやベージュ/オレンジ系塗りは使いません。";
 
+
+export const BATHYMETRY_EXAGGERATION_DEFAULT = 1.0;
+export const BATHYMETRY_EXAGGERATION_MIN = 1.0;
+export const BATHYMETRY_EXAGGERATION_MAX = 4.0;
+export const BATHYMETRY_EXAGGERATION_STEP = 0.25;
+export const BATHYMETRY_EXAGGERATION_NOTE =
+  "高さ誇張は起伏を見やすくする表示です。水深データの精度は上がりません。";
+
+export type BathymetryViewPresetId = "top" | "oblique" | "low";
+export type BathymetryViewPreset = {
+  id: BathymetryViewPresetId;
+  label: string;
+  pitch: number;
+  bearing: number;
+};
+
+export const BATHYMETRY_LOW_ANGLE_PITCH = 68;
+export const BATHYMETRY_VIEW_PRESETS = [
+  { id: "top", label: "真上", pitch: 0, bearing: 0 },
+  { id: "oblique", label: "斜め", pitch: 52, bearing: -18 },
+  { id: "low", label: "低角度", pitch: BATHYMETRY_LOW_ANGLE_PITCH, bearing: -18 },
+] as const satisfies readonly BathymetryViewPreset[];
+
+export function clampBathymetryExaggeration(value: number) {
+  if (!Number.isFinite(value)) return BATHYMETRY_EXAGGERATION_DEFAULT;
+  return Math.min(
+    BATHYMETRY_EXAGGERATION_MAX,
+    Math.max(BATHYMETRY_EXAGGERATION_MIN, value),
+  );
+}
+
+export function normalizeBathymetryExaggeration(value: number) {
+  const clamped = clampBathymetryExaggeration(value);
+  const steps = Math.round(
+    (clamped - BATHYMETRY_EXAGGERATION_MIN) / BATHYMETRY_EXAGGERATION_STEP,
+  );
+  return Number(
+    (BATHYMETRY_EXAGGERATION_MIN + steps * BATHYMETRY_EXAGGERATION_STEP).toFixed(2),
+  );
+}
+
+export function resetBathymetryExaggeration() {
+  return BATHYMETRY_EXAGGERATION_DEFAULT;
+}
+
+export function formatBathymetryExaggeration(value: number) {
+  return `${normalizeBathymetryExaggeration(value).toFixed(2).replace(/\.00$/, ".0")}×`;
+}
+
+export function findBathymetryViewPreset(
+  pitch: number,
+  bearing: number,
+  tolerance = 0.5,
+): BathymetryViewPresetId | null {
+  const normalizedBearing = normalizeBearing(bearing);
+  const preset = BATHYMETRY_VIEW_PRESETS.find(
+    (item) =>
+      Math.abs(item.pitch - pitch) <= tolerance &&
+      Math.abs(normalizeBearing(item.bearing) - normalizedBearing) <= tolerance,
+  );
+  return preset?.id ?? null;
+}
+
+function normalizeBearing(value: number) {
+  return ((((value + 180) % 360) + 360) % 360) - 180;
+}
+
+export function bathymetryControlsDisabled(terrainStatus: "3d" | "2d" | "unsupported" | "error") {
+  return terrainStatus === "unsupported";
+}
+
 export const BATHYMETRY_DEPTH_STOPS = [
   { depthMeters: 0, label: "0m", color: "#bff4ff" },
   { depthMeters: 20, label: "20m", color: "#6dd7f3" },
