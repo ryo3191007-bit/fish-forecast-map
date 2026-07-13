@@ -98,4 +98,6 @@
 
 ## Post-MVP-044: 開発引き継ぎ書とROADMAPの最新化
 
-本Issue完了後、次の機能は別Issueで決定します。現在進行中の機能PRはない前提ですが、次作業開始前にGitHubのmain、open Issue、open PR、CI、Vercelの実状態を再確認します。
+完了。開発引き継ぎ書とROADMAPを最新化し、Codex既存PR更新手順を確定した。
+
+次の機能は別Issueで決定する。
