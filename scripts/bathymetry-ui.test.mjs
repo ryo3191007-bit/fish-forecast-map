@@ -19,7 +19,11 @@ for (const token of ["bathymetry-color-relief", "bathymetry-hillshade", "bathyme
 for (const token of ["GEBCO_2026", "航海・安全判断には使用不可", "高解像度水深を読み込めなかったため"]) assert.match(map + bathy, new RegExp(token));
 assert.match(bathy + map, /bathymetry-coastline/);
 assert.match(bathy + map, /bathymetry-land-mask/);
-assert.match(bathy + map, /#22c55e/);
+assert.match(bathy + map, /#5f8f5a/);
+const landMaskOpacityMatch = bathy.match(/BATHYMETRY_LAND_MASK_OPACITY = ([0-9.]+);/);
+assert.ok(landMaskOpacityMatch, "land-mask opacity constant must be defined");
+assert.ok(Number(landMaskOpacityMatch[1]) >= 0.75, "land-mask opacity must be high enough to hide beige/orange base-map land colors");
+assert.ok(Number(landMaskOpacityMatch[1]) <= 0.9, "land-mask opacity must preserve bathymetry-mode overlay readability");
 assert.doesNotMatch(bathy, /xyz\/(?:std|blank)\//);
 assert.match(generator, /elevationMeters >= 0\) return \[0, 0, 0, 0\]/);
 assert.match(metadata.license, /GEBCO/);

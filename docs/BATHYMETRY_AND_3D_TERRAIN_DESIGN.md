@@ -2,7 +2,7 @@
 
 ## 採用データ
 
-Post-MVP-037 / Issue #111 の調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とします。Post-MVP-038では、第一sourceを `GEBCO_2026 Grid 15 arc-second`、同一boundsのデータ由来説明を `GEBCO_2026 TID Grid`、fallbackを `ETOPO 2022 60 Arc-Second Bedrock` とします。陸海境界の補助はGEBCO 0m境界から生成した海岸線ラインと半透明緑の陸地マスクを任意表示します。JODC J-EGG500は再配布・Web配信許可が確認できるまで本番採用しません。
+Post-MVP-037 / Issue #111 の調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とします。Post-MVP-038では、第一sourceを `GEBCO_2026 Grid 15 arc-second`、同一boundsのデータ由来説明を `GEBCO_2026 TID Grid`、fallbackを `ETOPO 2022 60 Arc-Second Bedrock` とします。陸海境界の補助はGEBCO 0m境界から生成した海岸線ラインと不透明度高めの落ち着いた緑の陸地マスクを任意表示します。JODC J-EGG500は再配布・Web配信許可が確認できるまで本番採用しません。
 
 ### GEBCO_2026 canonical
 
@@ -77,7 +77,7 @@ node tools/bathymetry/convert-gebco-netcdf.mjs /local/gebco.nc /local/gebco_tid.
 - 使用データ: `public/bathymetry/gebco-2026/coastline.geojson`
 - 陸地マスク: GEBCO 15秒DEMの非負標高セルを横方向runにまとめたPolygon
 - 海岸線ライン: GEBCO 15秒DEMの0m境界をmarching squaresで抽出したLineString
-- 表示色: 陸地は半透明の緑、海岸線は濃い緑のライン
+- 表示色: 陸地は不透明度高めの落ち着いた緑、海岸線は濃い緑のライン
 - ベージュ / オレンジ系の塗りつぶしや外部地図タイルoverlayは使いません。
 - GEBCO正本の出典と海岸線ライン・陸地マスクの生成元を分けて表示します。
 

@@ -438,7 +438,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
               className="terrainToggleButton"
               type="button"
               aria-pressed={isCoastlineOverlayEnabled}
-              title="海岸線ラインと半透明の緑の陸地マスクを切り替え"
+              title="海岸線ラインと緑の陸地マスクを切り替え"
               onClick={() => setIsCoastlineOverlayEnabled((value) => !value)}
             >
               海岸線表示
@@ -849,7 +849,7 @@ function ensureCoastlineOverlay(map: maplibregl.Map) {
         filter: ["==", ["geometry-type"], "Polygon"],
         layout: { visibility: "none" },
         paint: {
-          "fill-color": "#22c55e",
+          "fill-color": "#5f8f5a",
           "fill-opacity": BATHYMETRY_LAND_MASK_OPACITY,
         },
       },
