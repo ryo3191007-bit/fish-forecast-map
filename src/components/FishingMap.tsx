@@ -57,7 +57,6 @@ import {
   BATHYMETRY_EXAGGERATION_STEP,
   BATHYMETRY_VIEW_PRESETS,
   bathymetryControlsDisabled,
-  findBathymetryViewPreset,
   formatBathymetryExaggeration,
   normalizeBathymetryExaggeration,
   resetBathymetryExaggeration,
@@ -75,6 +74,15 @@ import {
   type BathymetryFailureSource,
   type BathymetryDisplaySource,
 } from "@/domain/bathymetryFallback";
+import {
+  applyBathymetryTerrain,
+  clearBathymetryCameraTransition,
+  createBathymetryCameraTransitionManager,
+  getDefaultBathymetryViewPreset,
+  runBathymetryCameraTransition,
+  shouldApplyBathymetryObliqueView,
+  shouldClearPresetForCameraInteraction,
+} from "@/domain/bathymetryView";
 import { MapLayerToggle } from "./MapLayerToggle";
 
 type FishingMapProps = {
@@ -122,7 +130,11 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
-  const programmaticCameraChangeRef = useRef(false);
+  const cameraTransitionRef = useRef(createBathymetryCameraTransitionManager());
+  const previousModeRef = useRef<MapLayerMode | null>(null);
+  const previousTerrainEnabledRef = useRef<boolean | null>(null);
+  const initialBathymetryViewAppliedRef = useRef(false);
+  const suppressNextAutoObliqueRef = useRef(false);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
   const [terrainExaggeration, setTerrainExaggeration] = useState(
@@ -317,18 +329,23 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
 
   useEffect(() => {
     const map = mapRef.current;
+    const manager = cameraTransitionRef.current;
     if (!map) return;
 
-    const clearManualPreset = () => {
-      if (programmaticCameraChangeRef.current) return;
-      setSelectedViewPreset(findBathymetryViewPreset(map.getPitch(), map.getBearing()));
+    const clearManualPreset = (event: { originalEvent?: unknown }) => {
+      if (!shouldClearPresetForCameraInteraction({ originalEvent: event.originalEvent })) {
+        return;
+      }
+      clearBathymetryCameraTransition(manager, map);
+      setSelectedViewPreset(null);
     };
 
-    map.on("pitchend", clearManualPreset);
-    map.on("rotateend", clearManualPreset);
+    map.on("pitchstart", clearManualPreset);
+    map.on("rotatestart", clearManualPreset);
     return () => {
-      map.off("pitchend", clearManualPreset);
-      map.off("rotateend", clearManualPreset);
+      map.off("pitchstart", clearManualPreset);
+      map.off("rotatestart", clearManualPreset);
+      clearBathymetryCameraTransition(manager, map);
     };
   }, []);
 
@@ -401,6 +418,28 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             }),
           ),
       });
+      if (!isTerrainEnabled) setSelectedViewPreset(null);
+      if (
+        bathymetryRuntime.display !== "standard" &&
+        !suppressNextAutoObliqueRef.current &&
+        shouldApplyBathymetryObliqueView({
+          mode: mapLayerMode,
+          previousMode: previousModeRef.current,
+          terrainEnabled: isTerrainEnabled,
+          previousTerrainEnabled: previousTerrainEnabledRef.current,
+          initialBathymetryViewApplied: initialBathymetryViewAppliedRef.current,
+        })
+      ) {
+        const oblique = getDefaultBathymetryViewPreset();
+        if (oblique) {
+          moveCameraTo(oblique, 320);
+          setSelectedViewPreset(oblique.id);
+          initialBathymetryViewAppliedRef.current = true;
+        }
+      }
+      suppressNextAutoObliqueRef.current = false;
+      previousModeRef.current = mapLayerMode;
+      previousTerrainEnabledRef.current = isTerrainEnabled;
     };
 
     if (map.loaded()) applyLayerMode();
@@ -458,46 +497,46 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const controlsDisabled = bathymetryControlsDisabled(terrainStatus);
   const exaggerationLabel = formatBathymetryExaggeration(terrainExaggeration);
 
-  const moveCameraTo = (pitch: number, bearing: number, duration = 260) => {
+  const moveCameraTo = (
+    preset: (typeof BATHYMETRY_VIEW_PRESETS)[number],
+    duration = 260,
+  ) => {
     const map = mapRef.current;
     if (!map) return;
-    programmaticCameraChangeRef.current = true;
-    map.stop();
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const cameraOptions = {
-      pitch,
-      bearing,
-      duration: prefersReducedMotion ? 0 : duration,
-      essential: false,
-    };
-    if (prefersReducedMotion) map.jumpTo(cameraOptions);
-    else map.easeTo(cameraOptions);
-    window.setTimeout(() => {
-      programmaticCameraChangeRef.current = false;
-    }, prefersReducedMotion ? 0 : duration + 60);
+    runBathymetryCameraTransition({
+      map,
+      manager: cameraTransitionRef.current,
+      preset,
+      reducedMotion: prefersReducedMotion,
+      duration,
+    });
   };
 
   const handleTerrainToggle = (nextEnabled: boolean) => {
     setIsTerrainEnabled(nextEnabled);
     if (nextEnabled) {
-      const oblique = BATHYMETRY_VIEW_PRESETS.find((preset) => preset.id === "oblique");
+      const oblique = getDefaultBathymetryViewPreset();
       if (oblique) {
-        moveCameraTo(oblique.pitch, oblique.bearing, 320);
+        moveCameraTo(oblique, 320);
         setSelectedViewPreset(oblique.id);
       }
     } else {
-      moveCameraTo(0, 0, 220);
-      setSelectedViewPreset("top");
+      clearBathymetryCameraTransition(cameraTransitionRef.current, mapRef.current);
+      setSelectedViewPreset(null);
     }
   };
 
   const applyViewPreset = (preset: (typeof BATHYMETRY_VIEW_PRESETS)[number]) => {
     const map = mapRef.current;
     if (!map || controlsDisabled) return;
-    if (preset.id !== "top" && !isTerrainEnabled) setIsTerrainEnabled(true);
-    moveCameraTo(preset.pitch, preset.bearing);
+    if (!isTerrainEnabled) {
+      suppressNextAutoObliqueRef.current = true;
+      setIsTerrainEnabled(true);
+    }
+    moveCameraTo(preset);
     setSelectedViewPreset(preset.id);
   };
 
@@ -803,16 +842,7 @@ function updateBathymetryTerrain({
   exaggeration,
   terrainEnabled = true,
 }: UpdateBathymetryTerrainInput) {
-  if (!terrainEnabled || display === "standard") {
-    map.setTerrain(null);
-    return;
-  }
-  const source =
-    display === "gebco" ? BATHYMETRY_SOURCE_ID : BATHYMETRY_FALLBACK_SOURCE_ID;
-  map.setTerrain({
-    source,
-    exaggeration: normalizeBathymetryExaggeration(exaggeration),
-  });
+  applyBathymetryTerrain(map, { display, exaggeration, terrainEnabled });
 }
 
 function addPrimaryBathymetryLayers(map: maplibregl.Map) {
