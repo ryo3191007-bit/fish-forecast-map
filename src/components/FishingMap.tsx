@@ -85,14 +85,22 @@ import {
   shouldClearPresetForCameraInteraction,
 } from "@/domain/bathymetryView";
 import {
-  BathymetryTileCache,
+  BathymetryTileImageDataStore,
+  applyBathymetryPointSelectionClear,
   bathymetryElevationToPointResult,
+  beginBathymetryPointPointerGesture,
+  consumeBathymetryPointSuppressedClick,
+  createBathymetryPointGestureState,
+  endBathymetryPointPointerGesture,
+  getBathymetryPointBlockedAncestor,
+  moveBathymetryPointPointerGesture,
+  noteBathymetryPointMapGesture,
   decodeTerrainRgb,
   getBathymetryPointTileConfig,
   lonLatToBathymetryTilePixel,
   shouldAcceptBathymetryPointResult,
+  shouldClearBathymetryPointSelection,
   shouldIgnoreBathymetryPointEvent,
-  shouldLookupBathymetryPoint,
   type BathymetryLookupSource,
   type BathymetryPointResult,
 } from "@/domain/bathymetryPoint";
@@ -157,7 +165,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const initialBathymetryViewAppliedRef = useRef(false);
   const suppressNextAutoObliqueRef = useRef(false);
   const bathymetrySelectionIdRef = useRef(0);
-  const bathymetryTileCacheRef = useRef(new BathymetryTileCache<ImageData>());
+  const bathymetryTileStoreRef = useRef(new BathymetryTileImageDataStore<ImageData>());
+  const bathymetryGestureRef = useRef(createBathymetryPointGestureState());
   const bathymetryMarkerRef = useRef<maplibregl.Marker | null>(null);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
@@ -171,6 +180,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     initialBathymetryFallbackState,
   );
   const [isCoastlineOverlayEnabled, setIsCoastlineOverlayEnabled] = useState(false);
+  const previousBathymetryPointModeRef = useRef(mapLayerMode);
+  const previousBathymetryPointDisplayRef = useRef(bathymetryRuntime.display);
   const [tidExpanded, setTidExpanded] = useState(false);
   const [tidGrid, setTidGrid] = useState<TidGrid | null>(null);
   const [tidSummary, setTidSummary] = useState<TidSummary | null>(null);
@@ -482,9 +493,24 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   ]);
 
   useEffect(() => {
-    if (!shouldLookupBathymetryPoint(mapLayerMode, bathymetryRuntime.display)) {
-      bathymetrySelectionIdRef.current += 1;
-      setBathymetrySelection(null);
+    const previousMode = previousBathymetryPointModeRef.current;
+    const previousDisplay = previousBathymetryPointDisplayRef.current;
+    previousBathymetryPointModeRef.current = mapLayerMode;
+    previousBathymetryPointDisplayRef.current = bathymetryRuntime.display;
+    if (
+      shouldClearBathymetryPointSelection({
+        previousMode,
+        previousDisplay,
+        nextMode: mapLayerMode,
+        nextDisplay: bathymetryRuntime.display,
+      })
+    ) {
+      const cleared = applyBathymetryPointSelectionClear({
+        selectionId: bathymetrySelectionIdRef.current,
+        selection: null as BathymetrySelection | null,
+      });
+      bathymetrySelectionIdRef.current = cleared.selectionId;
+      setBathymetrySelection(cleared.selection);
     }
   }, [bathymetryRuntime.display, mapLayerMode]);
 
@@ -495,11 +521,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
 
     const selectPoint = (event: maplibregl.MapMouseEvent) => {
       const originalEvent = event.originalEvent as MouseEvent | undefined;
-      const target = originalEvent?.target as Element | null | undefined;
-      const targetClasses = target
-        ? Array.from(target.closest(".mapShell")?.querySelectorAll(":hover") ?? [])
-            .flatMap((item) => Array.from(item.classList))
-        : [];
+      const blockedAncestor = getBathymetryPointBlockedAncestor(originalEvent?.target);
+      const gestureSuppressed = consumeBathymetryPointSuppressedClick(bathymetryGestureRef.current);
       if (
         shouldIgnoreBathymetryPointEvent({
           mode: mapLayerMode,
@@ -509,7 +532,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
           rotating: map.isRotating(),
           zooming: map.isZooming(),
           pitching: map.isMoving() && map.getPitch() > 0 && originalEvent?.type !== "click",
-          targetClasses,
+          gestureSuppressed,
+          blockedAncestor,
         })
       ) {
         return;
@@ -526,7 +550,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         setBathymetrySelection({ id, lon, lat, source, result: { status: "out-of-bounds", message: "対象範囲外" } });
         return;
       }
-      loadBathymetryTileImageData(tile.url, bathymetryTileCacheRef.current)
+      bathymetryTileStoreRef.current.load(tile.url, loadBathymetryTileImageData)
         .then((imageData) => {
           if (!mounted || !shouldAcceptBathymetryPointResult(id, bathymetrySelectionIdRef.current)) return;
           const offset = (tile.pixelY * imageData.width + tile.pixelX) * 4;
@@ -549,9 +573,30 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         });
     };
 
+    const canvas = map.getCanvas();
+    const pointerDown = (event: PointerEvent) => beginBathymetryPointPointerGesture(bathymetryGestureRef.current, event.clientX, event.clientY, event.timeStamp);
+    const pointerMove = (event: PointerEvent) => moveBathymetryPointPointerGesture(bathymetryGestureRef.current, event.clientX, event.clientY);
+    const pointerUp = (event: PointerEvent) => endBathymetryPointPointerGesture(bathymetryGestureRef.current, event.clientX, event.clientY, event.timeStamp);
+    const suppressGestureClick = () => noteBathymetryPointMapGesture(bathymetryGestureRef.current);
+    canvas.addEventListener("pointerdown", pointerDown);
+    canvas.addEventListener("pointermove", pointerMove);
+    canvas.addEventListener("pointerup", pointerUp);
+    canvas.addEventListener("pointercancel", suppressGestureClick);
+    map.on("dragstart", suppressGestureClick);
+    map.on("rotatestart", suppressGestureClick);
+    map.on("pitchstart", suppressGestureClick);
+    map.on("zoomstart", suppressGestureClick);
     map.on("click", selectPoint);
     return () => {
       mounted = false;
+      canvas.removeEventListener("pointerdown", pointerDown);
+      canvas.removeEventListener("pointermove", pointerMove);
+      canvas.removeEventListener("pointerup", pointerUp);
+      canvas.removeEventListener("pointercancel", suppressGestureClick);
+      map.off("dragstart", suppressGestureClick);
+      map.off("rotatestart", suppressGestureClick);
+      map.off("pitchstart", suppressGestureClick);
+      map.off("zoomstart", suppressGestureClick);
       map.off("click", selectPoint);
     };
   }, [bathymetryRuntime.display, mapLayerMode]);
@@ -782,8 +827,12 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                   className="bathymetryPointClose"
                   aria-label="タップ地点の参考水深を閉じる"
                   onClick={() => {
-                    bathymetrySelectionIdRef.current += 1;
-                    setBathymetrySelection(null);
+                    const cleared = applyBathymetryPointSelectionClear({
+                      selectionId: bathymetrySelectionIdRef.current,
+                      selection: bathymetrySelection,
+                    });
+                    bathymetrySelectionIdRef.current = cleared.selectionId;
+                    setBathymetrySelection(cleared.selection);
                   }}
                 >
                   ×
@@ -887,10 +936,7 @@ function createPopupContent(report: FishingReport) {
 
 async function loadBathymetryTileImageData(
   url: string,
-  cache: BathymetryTileCache<ImageData>,
 ) {
-  const cached = cache.get(url);
-  if (cached) return cached;
   const response = await fetch(url);
   if (!response.ok) throw new Error(`bathymetry-point-tile-${response.status}`);
   const blob = await response.blob();
@@ -902,9 +948,7 @@ async function loadBathymetryTileImageData(
   if (!context) throw new Error("bathymetry-point-canvas");
   context.drawImage(bitmap, 0, 0);
   bitmap.close();
-  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-  cache.set(url, imageData);
-  return imageData;
+  return context.getImageData(0, 0, canvas.width, canvas.height);
 }
 
 function createExternalMemoPopupContent(memo: MappableExternalMemo) {

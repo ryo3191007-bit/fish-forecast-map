@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import vm from "node:vm";
 import ts from "typescript";
+import { decodeTerrainRgb as gridDecodeTerrainRgb } from "./bathymetry-grid.mjs";
 
 function loadTsModule(file, requireMap = {}) {
   const source = fs.readFileSync(file, "utf8");
@@ -52,6 +53,9 @@ assert.equal(point.lonLatToBathymetryTilePixel(129, 32.49, "gebco"), null);
 assert.ok(point.lonLatToBathymetryTilePixel(128.5, 32.5, "gebco"));
 assert.ok(point.lonLatToBathymetryTilePixel(130.8, 34.0, "gebco"));
 
+for (const [r, g, b] of [[1, 134, 160], [1, 130, 184], [0, 0, 0], [255, 255, 255], [12, 34, 56]]) {
+  assert.equal(point.decodeTerrainRgb(r, g, b), gridDecodeTerrainRgb(r, g, b));
+}
 assert.equal(point.decodeTerrainRgb(1, 134, 160), 0);
 assert.equal(point.decodeTerrainRgb(1, 130, 184), -100);
 assert.equal(JSON.stringify(point.bathymetryElevationToPointResult(-123.4)), JSON.stringify({
@@ -72,8 +76,39 @@ assert.equal(point.shouldAcceptBathymetryPointResult(2, 2), true);
 assert.equal(point.shouldAcceptBathymetryPointResult(1, 2), false);
 assert.equal(point.shouldIgnoreBathymetryPointEvent({ mode: "bathymetry", display: "gebco" }), false);
 assert.equal(point.shouldIgnoreBathymetryPointEvent({ mode: "bathymetry", display: "gebco", dragging: true }), true);
-assert.equal(point.shouldIgnoreBathymetryPointEvent({ mode: "bathymetry", display: "gebco", targetClasses: ["maplibregl-marker"] }), true);
+assert.equal(point.shouldIgnoreBathymetryPointEvent({ mode: "bathymetry", display: "gebco", blockedAncestor: {} }), true);
 assert.equal(point.shouldIgnoreBathymetryPointEvent({ mode: "standard", display: "gebco" }), true);
+assert.equal(point.shouldClearBathymetryPointSelection({ previousMode: "bathymetry", previousDisplay: "gebco", nextMode: "bathymetry", nextDisplay: "etopo" }), true);
+assert.equal(point.shouldClearBathymetryPointSelection({ previousMode: "bathymetry", previousDisplay: "etopo", nextMode: "standard", nextDisplay: "etopo" }), true);
+assert.equal(point.shouldClearBathymetryPointSelection({ previousMode: "bathymetry", previousDisplay: "gebco", nextMode: "standard", nextDisplay: "gebco" }), true);
+assert.equal(point.shouldClearBathymetryPointSelection({ previousMode: "bathymetry", previousDisplay: "gebco", nextMode: "aerial", nextDisplay: "gebco" }), true);
+assert.equal(point.shouldClearBathymetryPointSelection({ previousMode: "bathymetry", previousDisplay: "gebco", nextMode: "bathymetry", nextDisplay: "gebco" }), false);
+let cleared = point.applyBathymetryPointSelectionClear({ selectionId: 7, selection: { result: "loading" } });
+assert.equal(cleared.selectionId, 8);
+assert.equal(cleared.selection, null);
+assert.equal(point.shouldAcceptBathymetryPointResult(7, cleared.selectionId), false);
+assert.equal(point.shouldAcceptBathymetryPointResult(9, 9), true);
+
+class FakeElement {
+  constructor(matches = []) { this.matches = new Set(matches); }
+  closest(selector) { return this.matches.has(selector) ? this : null; }
+}
+globalThis.Element = FakeElement;
+for (const selector of [".maplibregl-marker", ".maplibregl-ctrl", ".bathymetryPanel", ".mapLayerToggle", ".bathymetryPointCard"]) {
+  assert.ok(point.getBathymetryPointBlockedAncestor(new FakeElement([selector])));
+}
+assert.equal(point.getBathymetryPointBlockedAncestor(new FakeElement([".unblocked"])), null);
+assert.equal(point.shouldIgnoreBathymetryPointEvent({ mode: "bathymetry", display: "gebco", blockedAncestor: point.getBathymetryPointBlockedAncestor(new FakeElement([".maplibregl-marker"])) }), true);
+
+const gesture = point.createBathymetryPointGestureState();
+point.beginBathymetryPointPointerGesture(gesture, 10, 10, 0);
+point.moveBathymetryPointPointerGesture(gesture, 40, 10);
+assert.equal(point.endBathymetryPointPointerGesture(gesture, 40, 10, 100), false);
+assert.equal(point.consumeBathymetryPointSuppressedClick(gesture), true);
+assert.equal(point.consumeBathymetryPointSuppressedClick(gesture), false);
+point.noteBathymetryPointMapGesture(gesture);
+assert.equal(point.shouldIgnoreBathymetryPointEvent({ mode: "bathymetry", display: "gebco", gestureSuppressed: point.consumeBathymetryPointSuppressedClick(gesture) }), true);
+assert.equal(point.shouldIgnoreBathymetryPointEvent({ mode: "bathymetry", display: "gebco", gestureSuppressed: point.consumeBathymetryPointSuppressedClick(gesture) }), false);
 
 const cache = new point.BathymetryTileCache(2);
 cache.set("a", 1);
@@ -84,5 +119,34 @@ assert.equal(cache.size, 2);
 assert.equal(cache.get("b"), undefined);
 assert.equal(cache.get("a"), 1);
 assert.equal(cache.get("c"), 3);
+
+
+let loadCount = 0;
+const store = new point.BathymetryTileImageDataStore(2);
+const first = store.load("tile-a", async () => { loadCount += 1; return "image-a"; });
+const second = store.load("tile-a", async () => { loadCount += 1; return "image-a-duplicate"; });
+assert.equal(await first, "image-a");
+assert.equal(await second, "image-a");
+assert.equal(loadCount, 1);
+assert.equal(store.inFlightSize, 0);
+assert.equal(await store.load("tile-a", async () => { loadCount += 1; return "image-a-cached"; }), "image-a");
+assert.equal(loadCount, 1);
+await store.load("tile-b", async () => "image-b");
+await store.load("tile-c", async () => "image-c");
+assert.equal(store.completedSize, 2);
+assert.equal(await store.load("tile-b", async () => "image-b-cached"), "image-b");
+let failures = 0;
+await assert.rejects(() => store.load("tile-fail", async () => { failures += 1; throw new Error("decode failed"); }));
+assert.equal(store.inFlightSize, 0);
+await assert.rejects(() => store.load("tile-fail", async () => { failures += 1; throw new Error("decode failed again"); }));
+assert.equal(failures, 2);
+
+const sourceBefore = point.lonLatToBathymetryTilePixel(129.95, 33.48, "gebco");
+const switched = point.applyBathymetryPointSelectionClear({ selectionId: 10, selection: { source: "gebco" } });
+assert.equal(point.shouldAcceptBathymetryPointResult(10, switched.selectionId), false);
+const sourceAfter = point.lonLatToBathymetryTilePixel(129.95, 33.48, "etopo");
+assert.notEqual(sourceBefore.url, sourceAfter.url);
+assert.match(sourceAfter.url, /etopo-2022/);
+assert.equal(point.getBathymetryPointTileConfig("etopo").label, "ETOPO 2022 fallback");
 
 console.log("bathymetry point tests passed");

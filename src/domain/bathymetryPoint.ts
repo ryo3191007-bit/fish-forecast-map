@@ -123,6 +123,40 @@ export function shouldAcceptBathymetryPointResult(selectionId: number, latestSel
   return selectionId === latestSelectionId;
 }
 
+export const BATHYMETRY_POINT_BLOCKED_TARGET_SELECTORS = [
+  ".maplibregl-marker",
+  ".maplibregl-ctrl",
+  ".bathymetryPanel",
+  ".mapLayerToggle",
+  ".bathymetryPointCard",
+] as const;
+
+export function shouldClearBathymetryPointSelection(params: {
+  previousMode: MapLayerMode;
+  previousDisplay: BathymetryDisplaySource;
+  nextMode: MapLayerMode;
+  nextDisplay: BathymetryDisplaySource;
+}) {
+  return params.previousMode !== params.nextMode || params.previousDisplay !== params.nextDisplay;
+}
+
+export function applyBathymetryPointSelectionClear<T>(params: {
+  selectionId: number;
+  selection: T | null;
+}) {
+  return { selectionId: params.selectionId + 1, selection: null as T | null };
+}
+
+export function getBathymetryPointBlockedAncestor(target: EventTarget | null | undefined) {
+  const maybeElement = target as { closest?: (selector: string) => Element | null } | null | undefined;
+  if (!maybeElement || typeof maybeElement.closest !== "function") return null;
+  for (const selector of BATHYMETRY_POINT_BLOCKED_TARGET_SELECTORS) {
+    const ancestor = maybeElement.closest(selector);
+    if (ancestor) return ancestor;
+  }
+  return null;
+}
+
 export function shouldIgnoreBathymetryPointEvent(params: {
   mode: MapLayerMode;
   display: BathymetryDisplaySource;
@@ -131,12 +165,63 @@ export function shouldIgnoreBathymetryPointEvent(params: {
   rotating?: boolean;
   zooming?: boolean;
   pitching?: boolean;
-  targetClasses?: readonly string[];
+  gestureSuppressed?: boolean;
+  blockedAncestor?: Element | null;
 }) {
   if (!shouldLookupBathymetryPoint(params.mode, params.display)) return true;
-  if (params.defaultPrevented || params.dragging || params.rotating || params.zooming || params.pitching) return true;
-  const blocked = ["maplibregl-marker", "maplibregl-ctrl", "bathymetryPanel", "mapLayerToggle"];
-  return Boolean(params.targetClasses?.some((className) => blocked.some((item) => className.includes(item))));
+  if (params.defaultPrevented || params.dragging || params.rotating || params.zooming || params.pitching || params.gestureSuppressed) return true;
+  return Boolean(params.blockedAncestor);
+}
+
+export type BathymetryPointGestureState = {
+  active: boolean;
+  moved: boolean;
+  suppressNextClick: boolean;
+  startX: number;
+  startY: number;
+  startTime: number;
+};
+
+export const BATHYMETRY_POINT_TAP_MAX_DISTANCE_PX = 10;
+export const BATHYMETRY_POINT_TAP_MAX_MS = 700;
+
+export function createBathymetryPointGestureState(): BathymetryPointGestureState {
+  return { active: false, moved: false, suppressNextClick: false, startX: 0, startY: 0, startTime: 0 };
+}
+
+export function beginBathymetryPointPointerGesture(state: BathymetryPointGestureState, x: number, y: number, time: number) {
+  state.active = true;
+  state.moved = false;
+  state.startX = x;
+  state.startY = y;
+  state.startTime = time;
+}
+
+export function moveBathymetryPointPointerGesture(state: BathymetryPointGestureState, x: number, y: number) {
+  if (!state.active) return;
+  if (Math.hypot(x - state.startX, y - state.startY) > BATHYMETRY_POINT_TAP_MAX_DISTANCE_PX) state.moved = true;
+}
+
+export function endBathymetryPointPointerGesture(state: BathymetryPointGestureState, x: number, y: number, time: number) {
+  if (!state.active) return false;
+  const moved = state.moved || Math.hypot(x - state.startX, y - state.startY) > BATHYMETRY_POINT_TAP_MAX_DISTANCE_PX;
+  const slow = time - state.startTime > BATHYMETRY_POINT_TAP_MAX_MS;
+  state.active = false;
+  state.moved = false;
+  state.suppressNextClick = moved || slow;
+  return !state.suppressNextClick;
+}
+
+export function noteBathymetryPointMapGesture(state: BathymetryPointGestureState) {
+  state.active = false;
+  state.moved = false;
+  state.suppressNextClick = true;
+}
+
+export function consumeBathymetryPointSuppressedClick(state: BathymetryPointGestureState) {
+  const suppressed = state.suppressNextClick;
+  state.suppressNextClick = false;
+  return suppressed;
 }
 
 export class BathymetryTileCache<T> {
@@ -160,4 +245,37 @@ export class BathymetryTileCache<T> {
   }
   clear() { this.entries.clear(); }
   get size() { return this.entries.size; }
+}
+
+
+export type BathymetryTileImageDataLoader<T> = (url: string) => Promise<T>;
+
+export class BathymetryTileImageDataStore<T> {
+  private readonly completed: BathymetryTileCache<T>;
+  private readonly inFlight = new Map<string, Promise<T>>();
+
+  constructor(limit = BATHYMETRY_POINT_CACHE_LIMIT) {
+    this.completed = new BathymetryTileCache<T>(limit);
+  }
+
+  load(url: string, loader: BathymetryTileImageDataLoader<T>) {
+    const cached = this.completed.get(url);
+    if (cached !== undefined) return Promise.resolve(cached);
+    const existing = this.inFlight.get(url);
+    if (existing) return existing;
+    const pending = loader(url)
+      .then((value) => {
+        this.completed.set(url, value);
+        return value;
+      })
+      .finally(() => {
+        this.inFlight.delete(url);
+      });
+    this.inFlight.set(url, pending);
+    return pending;
+  }
+
+  clearCompleted() { this.completed.clear(); }
+  get completedSize() { return this.completed.size; }
+  get inFlightSize() { return this.inFlight.size; }
 }
