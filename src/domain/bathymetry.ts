@@ -30,7 +30,7 @@ export const BATHYMETRY_FALLBACK_COLOR_TILE_URL = `${BATHYMETRY_FALLBACK_TILE_BA
 export const BATHYMETRY_FALLBACK_CONTOUR_GEOJSON_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/contours.geojson`;
 export const BATHYMETRY_FALLBACK_METADATA_URL = `${BATHYMETRY_FALLBACK_TILE_BASE_PATH}/metadata.json`;
 export const BATHYMETRY_COASTLINE_GEOJSON_URL = `${BATHYMETRY_TILE_BASE_PATH}/coastline.geojson`;
-export const BATHYMETRY_LAND_MASK_OPACITY = 0.85;
+export const BATHYMETRY_LAND_MASK_OPACITY = 1.0;
 
 export const BATHYMETRY_BOUNDS = [128.5, 32.5, 130.8, 34.0] as const;
 export const BATHYMETRY_SOURCE_RESOLUTION = "15 arc-second";
@@ -53,7 +53,7 @@ export const BATHYMETRY_CITATION =
 export const BATHYMETRY_COASTLINE_ATTRIBUTION =
   "海岸線表示: GEBCO_2026 15秒DEMの0m境界から生成した海岸線ライン・陸地マスク。";
 export const BATHYMETRY_COASTLINE_NOTE =
-  "水深タイルとは独立した不透明度高めの落ち着いた緑の陸地マスクと海岸線ラインで、外部地図タイルやベージュ/オレンジ系塗りは使いません。";
+  "水深タイルとは独立した完全不透明の落ち着いた緑の陸地マスクと海岸線ラインで、外部地図タイルやベージュ/オレンジ系塗りは使いません。";
 
 export const BATHYMETRY_DEPTH_STOPS = [
   { depthMeters: 0, label: "0m", color: "#bff4ff" },
