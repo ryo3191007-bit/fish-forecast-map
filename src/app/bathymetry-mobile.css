@@ -12,13 +12,13 @@
   .mapShell .bathymetryPanel {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
+    gap: 7px;
     padding: 8px;
     border-radius: 14px;
   }
 
   .mapShell .terrainToggle {
-    min-height: 32px;
+    min-height: 40px;
     justify-content: center;
     border: 1px solid rgba(125, 211, 252, 0.36);
     border-radius: 999px;
@@ -30,7 +30,7 @@
   .mapShell .terrainToggleButton {
     width: 100%;
     min-width: 0;
-    padding: 6px 4px;
+    padding: 8px 4px;
     font-size: 0.7rem;
     white-space: nowrap;
   }
@@ -41,8 +41,15 @@
     font-size: 0.68rem;
   }
 
+  .mapShell .terrainExaggerationControl,
+  .mapShell .terrainPresetControl,
   .mapShell .tidSummary {
     grid-column: 1 / -1;
+  }
+
+  .mapShell .terrainControlHeader {
+    display: grid;
+    grid-template-columns: 1fr auto;
   }
 
   .mapShell .bathymetryLegend {

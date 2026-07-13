@@ -50,6 +50,16 @@ import {
   BATHYMETRY_COASTLINE_SOURCE_ID,
   BATHYMETRY_LAND_MASK_LAYER_ID,
   BATHYMETRY_LAND_MASK_OPACITY,
+  BATHYMETRY_EXAGGERATION_DEFAULT,
+  BATHYMETRY_EXAGGERATION_MAX,
+  BATHYMETRY_EXAGGERATION_MIN,
+  BATHYMETRY_EXAGGERATION_NOTE,
+  BATHYMETRY_EXAGGERATION_STEP,
+  BATHYMETRY_VIEW_PRESETS,
+  bathymetryControlsDisabled,
+  formatBathymetryExaggeration,
+  normalizeBathymetryExaggeration,
+  resetBathymetryExaggeration,
   lonLatToTidCell,
   shouldEnableInitialCoastlineOverlay,
   shouldEnableInitialTerrain,
@@ -64,6 +74,16 @@ import {
   type BathymetryFailureSource,
   type BathymetryDisplaySource,
 } from "@/domain/bathymetryFallback";
+import {
+  applyBathymetryTerrain,
+  clearBathymetryCameraTransition,
+  createBathymetryCameraTransitionManager,
+  getDefaultBathymetryViewPreset,
+  getTerrainToggleCameraPreset,
+  runBathymetryCameraTransition,
+  shouldApplyBathymetryObliqueView,
+  shouldClearPresetForCameraInteraction,
+} from "@/domain/bathymetryView";
 import { MapLayerToggle } from "./MapLayerToggle";
 
 type FishingMapProps = {
@@ -79,6 +99,7 @@ type MappableExternalMemo = ExternalCatchMemo & {
 };
 
 type TerrainStatus = "3d" | "2d" | "unsupported" | "error";
+type BathymetryViewPresetId = (typeof BATHYMETRY_VIEW_PRESETS)[number]["id"];
 
 type TidGrid = {
   values: number[];
@@ -110,8 +131,18 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
+  const cameraTransitionRef = useRef(createBathymetryCameraTransitionManager());
+  const previousModeRef = useRef<MapLayerMode | null>(null);
+  const previousTerrainEnabledRef = useRef<boolean | null>(null);
+  const initialBathymetryViewAppliedRef = useRef(false);
+  const suppressNextAutoObliqueRef = useRef(false);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
+  const [terrainExaggeration, setTerrainExaggeration] = useState(
+    BATHYMETRY_EXAGGERATION_DEFAULT,
+  );
+  const [selectedViewPreset, setSelectedViewPreset] =
+    useState<BathymetryViewPresetId | null>(null);
   const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>("2d");
   const [bathymetryRuntime, setBathymetryRuntime] = useState(
     initialBathymetryFallbackState,
@@ -298,6 +329,28 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   }, []);
 
   useEffect(() => {
+    const map = mapRef.current;
+    const manager = cameraTransitionRef.current;
+    if (!map) return;
+
+    const clearManualPreset = (event: { originalEvent?: unknown }) => {
+      if (!shouldClearPresetForCameraInteraction({ originalEvent: event.originalEvent })) {
+        return;
+      }
+      clearBathymetryCameraTransition(manager, map);
+      setSelectedViewPreset(null);
+    };
+
+    map.on("pitchstart", clearManualPreset);
+    map.on("rotatestart", clearManualPreset);
+    return () => {
+      map.off("pitchstart", clearManualPreset);
+      map.off("rotatestart", clearManualPreset);
+      clearBathymetryCameraTransition(manager, map);
+    };
+  }, []);
+
+  useEffect(() => {
     if (mapLayerMode !== "bathymetry") return;
     if (bathymetryRuntime.display === "standard") {
       setMapLayerMode("standard");
@@ -354,6 +407,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         mode: mapLayerMode,
         display: bathymetryRuntime.display,
         terrainEnabled: isTerrainEnabled,
+        terrainExaggeration,
         coastlineOverlayEnabled: isCoastlineOverlayEnabled,
         setTerrainStatus,
         onSourceError: (source, key) =>
@@ -365,6 +419,28 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             }),
           ),
       });
+      if (!isTerrainEnabled) setSelectedViewPreset(null);
+      if (
+        bathymetryRuntime.display !== "standard" &&
+        !suppressNextAutoObliqueRef.current &&
+        shouldApplyBathymetryObliqueView({
+          mode: mapLayerMode,
+          previousMode: previousModeRef.current,
+          terrainEnabled: isTerrainEnabled,
+          previousTerrainEnabled: previousTerrainEnabledRef.current,
+          initialBathymetryViewApplied: initialBathymetryViewAppliedRef.current,
+        })
+      ) {
+        const oblique = getDefaultBathymetryViewPreset();
+        if (oblique) {
+          moveCameraTo(oblique, 320);
+          setSelectedViewPreset(oblique.id);
+          initialBathymetryViewAppliedRef.current = true;
+        }
+      }
+      suppressNextAutoObliqueRef.current = false;
+      previousModeRef.current = mapLayerMode;
+      previousTerrainEnabledRef.current = isTerrainEnabled;
     };
 
     if (map.loaded()) applyLayerMode();
@@ -377,6 +453,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     isCoastlineOverlayEnabled,
     isTerrainEnabled,
     mapLayerMode,
+    terrainExaggeration,
   ]);
 
   useEffect(() => {
@@ -418,6 +495,49 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     setMapLayerMode(nextMode);
   };
 
+  const controlsDisabled = bathymetryControlsDisabled(terrainStatus);
+  const exaggerationLabel = formatBathymetryExaggeration(terrainExaggeration);
+
+  const moveCameraTo = (
+    preset: (typeof BATHYMETRY_VIEW_PRESETS)[number],
+    duration = 260,
+  ) => {
+    const map = mapRef.current;
+    if (!map) return;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    runBathymetryCameraTransition({
+      map,
+      manager: cameraTransitionRef.current,
+      preset,
+      reducedMotion: prefersReducedMotion,
+      duration,
+    });
+  };
+
+  const handleTerrainToggle = (nextEnabled: boolean) => {
+    setIsTerrainEnabled(nextEnabled);
+    const cameraPreset = getTerrainToggleCameraPreset({ nextEnabled });
+    if (cameraPreset) {
+      moveCameraTo(cameraPreset, 180);
+    }
+    if (!nextEnabled) {
+      setSelectedViewPreset(null);
+    }
+  };
+
+  const applyViewPreset = (preset: (typeof BATHYMETRY_VIEW_PRESETS)[number]) => {
+    const map = mapRef.current;
+    if (!map || controlsDisabled) return;
+    if (!isTerrainEnabled) {
+      suppressNextAutoObliqueRef.current = true;
+      setIsTerrainEnabled(true);
+    }
+    moveCameraTo(preset);
+    setSelectedViewPreset(preset.id);
+  };
+
   const fallbackActive = bathymetryRuntime.display === "etopo";
 
   return (
@@ -435,7 +555,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                 type="checkbox"
                 checked={isTerrainEnabled}
                 disabled={terrainStatus === "unsupported"}
-                onChange={(event) => setIsTerrainEnabled(event.target.checked)}
+                onChange={(event) => handleTerrainToggle(event.target.checked)}
               />
               3D表示
             </label>
@@ -466,6 +586,50 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                     ? "この端末では2D表示"
                     : "2D軽量表示"}
             </span>
+            <div className="terrainExaggerationControl">
+              <div className="terrainControlHeader">
+                <span>高さ {exaggerationLabel}</span>
+                <button
+                  className="terrainMiniButton"
+                  type="button"
+                  disabled={controlsDisabled}
+                  onClick={() =>
+                    setTerrainExaggeration(resetBathymetryExaggeration())
+                  }
+                >
+                  1.0×リセット
+                </button>
+              </div>
+              <input
+                aria-label={`高さ誇張 ${exaggerationLabel}`}
+                type="range"
+                min={BATHYMETRY_EXAGGERATION_MIN}
+                max={BATHYMETRY_EXAGGERATION_MAX}
+                step={BATHYMETRY_EXAGGERATION_STEP}
+                value={terrainExaggeration}
+                disabled={controlsDisabled}
+                onChange={(event) =>
+                  setTerrainExaggeration(
+                    normalizeBathymetryExaggeration(Number(event.target.value)),
+                  )
+                }
+              />
+              <small>{BATHYMETRY_EXAGGERATION_NOTE}</small>
+            </div>
+            <div className="terrainPresetControl" aria-label="3D視点プリセット">
+              {BATHYMETRY_VIEW_PRESETS.map((preset) => (
+                <button
+                  key={preset.id}
+                  className="terrainToggleButton"
+                  type="button"
+                  aria-pressed={selectedViewPreset === preset.id}
+                  disabled={controlsDisabled}
+                  onClick={() => applyViewPreset(preset)}
+                >
+                  {preset.label}
+                </button>
+              ))}
+            </div>
             {tidExpanded ? (
               <div
                 className="tidSummary"
@@ -596,6 +760,7 @@ type ApplyBathymetryModeInput = {
   mode: MapLayerMode;
   display: BathymetryDisplaySource;
   terrainEnabled: boolean;
+  terrainExaggeration: number;
   coastlineOverlayEnabled: boolean;
   setTerrainStatus: (status: TerrainStatus) => void;
   onSourceError: (source: BathymetryFailureSource, key: string) => void;
@@ -606,6 +771,7 @@ function applyBathymetryMode({
   mode,
   display,
   terrainEnabled,
+  terrainExaggeration,
   coastlineOverlayEnabled,
   setTerrainStatus,
   onSourceError,
@@ -642,16 +808,15 @@ function applyBathymetryMode({
 
   try {
     if (terrainEnabled) {
-      const source =
-        display === "gebco"
-          ? BATHYMETRY_SOURCE_ID
-          : BATHYMETRY_FALLBACK_SOURCE_ID;
-      map.setTerrain({ source, exaggeration: 1 });
-      map.easeTo({ pitch: 52, bearing: -18, duration: 650, essential: false });
+      updateBathymetryTerrain({ map, display, exaggeration: terrainExaggeration });
       setTerrainStatus("3d");
     } else {
-      map.setTerrain(null);
-      map.easeTo({ pitch: 0, bearing: 0, duration: 350, essential: false });
+      updateBathymetryTerrain({
+        map,
+        display,
+        exaggeration: terrainExaggeration,
+        terrainEnabled: false,
+      });
       setTerrainStatus("2d");
     }
   } catch (error) {
@@ -660,6 +825,22 @@ function applyBathymetryMode({
     const message = error instanceof Error ? error.message : "terrain-init";
     onSourceError(display, `terrain-init:${message}`);
   }
+}
+
+type UpdateBathymetryTerrainInput = {
+  map: maplibregl.Map;
+  display: BathymetryDisplaySource;
+  exaggeration: number;
+  terrainEnabled?: boolean;
+};
+
+function updateBathymetryTerrain({
+  map,
+  display,
+  exaggeration,
+  terrainEnabled = true,
+}: UpdateBathymetryTerrainInput) {
+  applyBathymetryTerrain(map, { display, exaggeration, terrainEnabled });
 }
 
 function addPrimaryBathymetryLayers(map: maplibregl.Map) {
