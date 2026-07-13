@@ -74,7 +74,7 @@
 
 ## Phase 5 / Post-MVP-038: GEBCO_2026・TID・GSI overlayへの更新
 
-完了。第一sourceを `GEBCO_2026 Grid 15秒`、データ由来を `GEBCO_2026 TID Grid`、fallbackを `ETOPO 2022 60秒 Bedrock` へ更新しました。GEBCO失敗時はETOPOへ、ETOPOも失敗した場合は水深layer・terrain・GSI overlayを解除して通常地図へ戻します。正本は `552 x 360`、DEM nodata `-32767`、min/max `-277 / 1346`、TID nodata `127`、出現コード `0/11/17/40/43/44` です。GSI標準地図overlayはopacity `0.40`で任意表示し、公式追加出典を表示します。
+完了。当時の実装として、第一sourceを `GEBCO_2026 Grid 15秒`、データ由来を `GEBCO_2026 TID Grid`、fallbackを `ETOPO 2022 60秒 Bedrock` へ更新し、GSI標準地図overlayをopacity `0.40`で任意表示しました。GEBCO失敗時はETOPOへ、ETOPOも失敗した場合は水深layer・terrain・GSI overlayを解除して通常地図へ戻す構成でした。正本は `552 x 360`、DEM nodata `-32767`、min/max `-277 / 1346`、TID nodata `127`、出現コード `0/11/17/40/43/44` です。後続のPost-MVP-045でGSI overlayは海岸線ライン＋完全不透明の緑の陸地マスクへ置き換え済みです。
 
 ## Post-MVP-039: 釣り場属性調査の共通仕様
 
@@ -98,6 +98,14 @@
 
 ## Post-MVP-044: 開発引き継ぎ書とROADMAPの最新化
 
-完了。開発引き継ぎ書とROADMAPを最新化し、Codex既存PR更新手順を確定した。
+完了。開発引き継ぎ書とROADMAPを最新化し、Codex既存PR更新手順を確定しました。
+
+## Post-MVP-045: 水深モードの海岸線ライン・陸地マスク化
+
+完了。Issue #129 / PR #132で、GSI標準地図overlayに依存しない構成へ更新し、GEBCO由来の海岸線ラインと完全不透明の落ち着いた緑の陸地マスクで陸海境界を表示するようにしました。外部GSI overlayは使用しません。merge commitは `f6c8453b8d55ee3b12bb862766f07408921ed082` です。
+
+## Phase 5 / Post-MVP-046: 高精細3D海底地形ビュー方針
+
+完了。Issue #133の方針策定として、参考動画に近い3D海底地形ビューへ段階的に進むため、現行GEBCO/ETOPO実装の棚卸し、公式データ候補、ライセンス・再配布判断、技術方式比較、Phase A〜Dのロードマップを `docs/HIGH_RESOLUTION_3D_BATHYMETRY_PLAN.md` に正本化しました。本Issueでは描画コード、高精細データ投入、DB、地点・魚種・釣果収集、SCORE変更は行いません。
 
 次の機能は別Issueで決定する。
