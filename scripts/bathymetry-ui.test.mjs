@@ -11,13 +11,43 @@ const generator = fs.readFileSync("scripts/generate-bathymetry-assets.mjs", "utf
 const dem = JSON.parse(fs.readFileSync("data/bathymetry/gebco-2026-crop.json", "utf8"));
 const metadata = JSON.parse(fs.readFileSync("public/bathymetry/gebco-2026/metadata.json", "utf8"));
 const contours = JSON.parse(fs.readFileSync("public/bathymetry/gebco-2026/contours.geojson", "utf8"));
+const coastline = JSON.parse(fs.readFileSync("public/bathymetry/gebco-2026/coastline.geojson", "utf8"));
 
 assert.match(mapLayer, /"bathymetry"/);
 for (const label of ["通常地図", "航空写真", "水深・3D地形"]) assert.match(mapLayer, new RegExp(label));
 for (const token of ["bathymetry-color-relief", "bathymetry-hillshade", "bathymetry-contours", "setTerrain", "shouldEnableInitialTerrain"]) assert.match(map + bathy, new RegExp(token));
-for (const token of ["GEBCO_2026", "航海・安全判断には使用不可", "国土地理院", "高解像度水深を読み込めなかったため"]) assert.match(map + bathy, new RegExp(token));
-assert.match(bathy, /xyz\/blank\/\{z\}\/\{x\}\/\{y\}\.png/);
-assert.doesNotMatch(bathy, /xyz\/std\//);
+for (const token of ["GEBCO_2026", "航海・安全判断には使用不可", "高解像度水深を読み込めなかったため"]) assert.match(map + bathy, new RegExp(token));
+assert.match(bathy + map, /bathymetry-coastline/);
+assert.match(bathy + map, /bathymetry-land-mask/);
+assert.match(bathy + map, /#5f8f5a/);
+const landMaskOpacityMatch = bathy.match(/BATHYMETRY_LAND_MASK_OPACITY = ([0-9.]+);/);
+assert.ok(landMaskOpacityMatch, "land-mask opacity constant must be defined");
+assert.strictEqual(Number(landMaskOpacityMatch[1]), 1.0, "land-mask opacity must be fully opaque to hide beige/orange base-map land colors");
+assert.match(map, /hideBaseLandLayersForBathymetryCoastline/);
+assert.match(map, /isBaseMapLandColorLayer/);
+assert.match(map, /hasBeigeYellowOrangeColor/);
+assert.match(map, /HIDDEN_BASE_LAND_LAYER_VISIBILITY/);
+assert.match(
+  map,
+  /if \(coastlineOverlayEnabled\) hideBaseLandLayersForBathymetryCoastline\(map\);\s*else restoreBaseLandLayerVisibility\(map\);/s,
+  "bathymetry coastline ON must hide detected beige/yellow/orange base land layers and OFF must restore them",
+);
+assert.match(
+  map,
+  /if \(mode !== "bathymetry" \|\| display === "standard"\) \{\s*restoreBaseLandLayerVisibility\(map\);/s,
+  "standard/aerial mode exits must restore the original base land-layer visibility",
+);
+assert.match(
+  map,
+  /store\.set\(\s*layer\.id,\s*map\.getLayoutProperty\(layer\.id, "visibility"\)/s,
+  "original visibility must be saved before hiding base land layers",
+);
+assert.match(
+  map,
+  /map\.setLayoutProperty\(layerId, "visibility", visibility\);/s,
+  "restore must use the saved visibility instead of forcing visible",
+);
+assert.doesNotMatch(bathy, /xyz\/(?:std|blank)\//);
 assert.match(generator, /elevationMeters >= 0\) return \[0, 0, 0, 0\]/);
 assert.match(metadata.license, /GEBCO/);
 assert.match(metadata.dataset, /GEBCO_2026/);
@@ -87,6 +117,9 @@ assert.ok(contours.features.length > 5);
 assert.ok(new Set(contours.features.map((f) => f.properties.depth)).size > 2);
 assert.ok(contours.features.every((f) => typeof f.properties.depth === "number" && typeof f.properties.major === "boolean"));
 assert.ok(contours.features.some((f) => f.geometry.coordinates.length > 10));
+assert.ok(coastline.features.some((f) => f.geometry.type === "Polygon" && f.properties.kind === "land-mask"));
+assert.ok(coastline.features.some((f) => f.geometry.type === "LineString" && f.properties.kind === "coastline"));
+assert.match(generator, /generateCoastlineOverlay/);
 assert.ok(contours.features.some((f) => {
   const lons = f.geometry.coordinates.map(([lon]) => lon);
   const lats = f.geometry.coordinates.map(([, lat]) => lat);

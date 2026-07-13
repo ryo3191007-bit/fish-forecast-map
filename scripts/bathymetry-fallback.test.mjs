@@ -83,6 +83,36 @@ assert.equal(
 );
 assert.equal(runtime.classifyBathymetryError({ message: "unrelated error" }), null);
 
+const coastline404 = runtime.classifyBathymetryError({
+  sourceId: "bathymetry-coastline",
+  message: "HTTP 404 /bathymetry/gebco-2026/coastline.geojson",
+});
+assert.equal(
+  coastline404,
+  null,
+  "coastline overlay errors are not GEBCO bathymetry failures",
+);
+assert.equal(
+  runtime.classifyBathymetryError({
+    message: "Failed to parse /bathymetry/gebco-2026/coastline.geojson",
+  }),
+  null,
+  "coastline parse errors do not trigger fallback from GEBCO",
+);
+state = runtime.initialBathymetryFallbackState();
+if (coastline404) {
+  state = runtime.reduceBathymetryFallback(state, {
+    type: "source-error",
+    source: coastline404,
+    key: "coastline-404",
+  });
+}
+assert.equal(
+  state.display,
+  "gebco",
+  "coastline overlay failure keeps GEBCO bathymetry displayed",
+);
+
 const gebcoMetadata = {
   dataset: "GEBCO_2026 Grid",
   cropBounds: { west: 128.5, south: 32.5, east: 130.8, north: 34 },
