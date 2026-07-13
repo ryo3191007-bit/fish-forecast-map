@@ -113,3 +113,7 @@
 完了。Issue #135で、Post-MVP-046 Phase Aの最初の実装として、現行GEBCO_2026 15秒／ETOPO 2022 fallbackと海岸線ライン・緑の陸地マスク・TID表示を維持したまま、水深・3D地形パネルに高さ誇張スライダー（1.0〜4.0、step 0.25）、現在倍率表示、1.0×リセット、真上・斜め・低角度の視点プリセットを追加しました。誇張は表示上の強調であり水深データ精度は上がらない注記も追加済みです。高精細DEM追加、Phase B PoC、DB、SCORE変更は引き続き対象外です。
 
 次の機能は別Issueで決定する。
+
+## Phase 5 / Post-MVP-048: 水深モードのタップ地点参考水深
+
+実装中。水深モードでクリック／タップした地点に一時markerとcardを表示し、緯度経度、表示中source（GEBCO_2026 15秒／ETOPO 2022 fallback 60秒）、Terrain-RGBからdecodeした参考水深を表示する。地点は保存せず、DB／Supabase／localStorage／釣り場masterは変更しない。runtime外部取得は追加せず、自サイト配信済みのTerrain-RGB tileのみを参照する。高さ誇張倍率は水深計算に使わず、見た目反映の追加改善は別Issueで扱う。

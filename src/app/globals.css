@@ -340,4 +340,15 @@ dd { margin: 3px 0 0; font-weight: 700; overflow-wrap: anywhere; }
 .terrainMiniButton:disabled, .terrainToggleButton:disabled, .terrainExaggerationControl input:disabled { cursor: not-allowed; opacity: .5; }
 .tidSummary { grid-column: 1 / -1; display: grid; gap: 3px; padding: 8px 10px; border: 1px solid rgba(125, 211, 252, .24); border-radius: 12px; background: rgba(2, 8, 23, .54); color: #e0faff; font-size: .74rem; font-weight: 800; line-height: 1.45; }
 .tidSummary small { color: #bae6fd; font-size: .68rem; font-weight: 700; }
+.bathymetryPointMarker { width: 18px; height: 18px; border: 2px solid #f8fafc; border-radius: 999px; background: rgba(14, 165, 233, .24); box-shadow: 0 0 0 2px rgba(14, 165, 233, .74), 0 0 18px rgba(14, 165, 233, .8); pointer-events: none; position: relative; }
+.bathymetryPointMarker::before, .bathymetryPointMarker::after { content: ""; position: absolute; left: 50%; top: 50%; background: #f8fafc; transform: translate(-50%, -50%); }
+.bathymetryPointMarker::before { width: 22px; height: 2px; }
+.bathymetryPointMarker::after { width: 2px; height: 22px; }
+.bathymetryPointCard { position: absolute; right: 18px; bottom: 18px; z-index: 3; width: min(310px, calc(100% - 36px)); display: grid; gap: 6px; padding: 11px 12px; border: 1px solid rgba(224, 250, 255, .38); border-radius: 16px; background: rgba(2, 8, 23, .84); color: #e0faff; font-size: .76rem; font-weight: 800; line-height: 1.45; box-shadow: 0 14px 30px rgba(0,0,0,.36); backdrop-filter: blur(12px); overflow-wrap: anywhere; }
+.bathymetryPointHeader { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.bathymetryPointCard p { margin: 0; font-size: .95rem; font-weight: 950; color: #f8fdff; }
+.bathymetryPointCard span, .bathymetryPointCard small { display: block; }
+.bathymetryPointCard small { color: #bae6fd; font-size: .68rem; }
+.bathymetryPointClose { width: 30px; height: 30px; border: 1px solid rgba(125, 211, 252, .36); border-radius: 999px; background: rgba(8, 47, 73, .76); color: #dffbff; font: inherit; font-size: 1rem; font-weight: 900; cursor: pointer; }
 @media (max-width: 520px) { .bathymetryPanel { left: 12px; right: 12px; max-width: calc(100% - 24px); } .terrainToggleButton { font-size: .72rem; padding: 6px 8px; } .tidSummary { font-size: .7rem; } }
+@media (max-width: 520px) { .bathymetryPointCard { right: 12px; bottom: 12px; width: min(280px, calc(100% - 24px)); } }

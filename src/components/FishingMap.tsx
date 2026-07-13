@@ -84,6 +84,18 @@ import {
   shouldApplyBathymetryObliqueView,
   shouldClearPresetForCameraInteraction,
 } from "@/domain/bathymetryView";
+import {
+  BathymetryTileCache,
+  bathymetryElevationToPointResult,
+  decodeTerrainRgb,
+  getBathymetryPointTileConfig,
+  lonLatToBathymetryTilePixel,
+  shouldAcceptBathymetryPointResult,
+  shouldIgnoreBathymetryPointEvent,
+  shouldLookupBathymetryPoint,
+  type BathymetryLookupSource,
+  type BathymetryPointResult,
+} from "@/domain/bathymetryPoint";
 import { MapLayerToggle } from "./MapLayerToggle";
 
 type FishingMapProps = {
@@ -106,6 +118,14 @@ type TidGrid = {
   width: number;
   height: number;
   nodata: number;
+};
+
+type BathymetrySelection = {
+  id: number;
+  lon: number;
+  lat: number;
+  source: BathymetryLookupSource;
+  result: BathymetryPointResult | { status: "loading" };
 };
 
 const PRIMARY_LAYER_IDS = [
@@ -136,6 +156,9 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const previousTerrainEnabledRef = useRef<boolean | null>(null);
   const initialBathymetryViewAppliedRef = useRef(false);
   const suppressNextAutoObliqueRef = useRef(false);
+  const bathymetrySelectionIdRef = useRef(0);
+  const bathymetryTileCacheRef = useRef(new BathymetryTileCache<ImageData>());
+  const bathymetryMarkerRef = useRef<maplibregl.Marker | null>(null);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
   const [terrainExaggeration, setTerrainExaggeration] = useState(
@@ -152,6 +175,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const [tidGrid, setTidGrid] = useState<TidGrid | null>(null);
   const [tidSummary, setTidSummary] = useState<TidSummary | null>(null);
   const [tidStatus, setTidStatus] = useState("TID正本を読み込み中です");
+  const [bathymetrySelection, setBathymetrySelection] =
+    useState<BathymetrySelection | null>(null);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -457,6 +482,98 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   ]);
 
   useEffect(() => {
+    if (!shouldLookupBathymetryPoint(mapLayerMode, bathymetryRuntime.display)) {
+      bathymetrySelectionIdRef.current += 1;
+      setBathymetrySelection(null);
+    }
+  }, [bathymetryRuntime.display, mapLayerMode]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    let mounted = true;
+
+    const selectPoint = (event: maplibregl.MapMouseEvent) => {
+      const originalEvent = event.originalEvent as MouseEvent | undefined;
+      const target = originalEvent?.target as Element | null | undefined;
+      const targetClasses = target
+        ? Array.from(target.closest(".mapShell")?.querySelectorAll(":hover") ?? [])
+            .flatMap((item) => Array.from(item.classList))
+        : [];
+      if (
+        shouldIgnoreBathymetryPointEvent({
+          mode: mapLayerMode,
+          display: bathymetryRuntime.display,
+          defaultPrevented: originalEvent?.defaultPrevented,
+          dragging: map.isMoving(),
+          rotating: map.isRotating(),
+          zooming: map.isZooming(),
+          pitching: map.isMoving() && map.getPitch() > 0 && originalEvent?.type !== "click",
+          targetClasses,
+        })
+      ) {
+        return;
+      }
+
+      const source = bathymetryRuntime.display as BathymetryLookupSource;
+      const id = bathymetrySelectionIdRef.current + 1;
+      bathymetrySelectionIdRef.current = id;
+      const lon = event.lngLat.lng;
+      const lat = event.lngLat.lat;
+      setBathymetrySelection({ id, lon, lat, source, result: { status: "loading" } });
+      const tile = lonLatToBathymetryTilePixel(lon, lat, source);
+      if (!tile) {
+        setBathymetrySelection({ id, lon, lat, source, result: { status: "out-of-bounds", message: "対象範囲外" } });
+        return;
+      }
+      loadBathymetryTileImageData(tile.url, bathymetryTileCacheRef.current)
+        .then((imageData) => {
+          if (!mounted || !shouldAcceptBathymetryPointResult(id, bathymetrySelectionIdRef.current)) return;
+          const offset = (tile.pixelY * imageData.width + tile.pixelX) * 4;
+          const elevation = decodeTerrainRgb(
+            imageData.data[offset],
+            imageData.data[offset + 1],
+            imageData.data[offset + 2],
+          );
+          setBathymetrySelection({
+            id,
+            lon,
+            lat,
+            source,
+            result: bathymetryElevationToPointResult(elevation),
+          });
+        })
+        .catch(() => {
+          if (!mounted || !shouldAcceptBathymetryPointResult(id, bathymetrySelectionIdRef.current)) return;
+          setBathymetrySelection({ id, lon, lat, source, result: { status: "error", message: "水深を取得できません" } });
+        });
+    };
+
+    map.on("click", selectPoint);
+    return () => {
+      mounted = false;
+      map.off("click", selectPoint);
+    };
+  }, [bathymetryRuntime.display, mapLayerMode]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    bathymetryMarkerRef.current?.remove();
+    bathymetryMarkerRef.current = null;
+    if (!map || !bathymetrySelection) return;
+    const element = document.createElement("div");
+    element.className = "bathymetryPointMarker";
+    element.setAttribute("aria-hidden", "true");
+    bathymetryMarkerRef.current = new maplibregl.Marker({ element })
+      .setLngLat([bathymetrySelection.lon, bathymetrySelection.lat])
+      .addTo(map);
+    return () => {
+      bathymetryMarkerRef.current?.remove();
+      bathymetryMarkerRef.current = null;
+    };
+  }, [bathymetrySelection]);
+
+  useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
@@ -539,6 +656,9 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   };
 
   const fallbackActive = bathymetryRuntime.display === "etopo";
+  const bathymetrySelectionConfig = bathymetrySelection
+    ? getBathymetryPointTileConfig(bathymetrySelection.source)
+    : null;
 
   return (
     <div className="mapShell">
@@ -653,6 +773,43 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
               ))}
             </div>
           </div>
+          {bathymetrySelection && bathymetrySelectionConfig ? (
+            <div className="bathymetryPointCard" role="status" aria-live="polite">
+              <div className="bathymetryPointHeader">
+                <strong>タップ地点の参考水深</strong>
+                <button
+                  type="button"
+                  className="bathymetryPointClose"
+                  aria-label="タップ地点の参考水深を閉じる"
+                  onClick={() => {
+                    bathymetrySelectionIdRef.current += 1;
+                    setBathymetrySelection(null);
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+              <p>
+                {bathymetrySelection.result.status === "loading"
+                  ? "参考水深を取得中…"
+                  : bathymetrySelection.result.status === "success"
+                    ? `参考水深 ${bathymetrySelection.result.displayDepth}`
+                    : bathymetrySelection.result.status === "land"
+                      ? bathymetrySelection.result.displayDepth
+                      : bathymetrySelection.result.message}
+              </p>
+              <span>
+                緯度 {bathymetrySelection.lat.toFixed(5)} / 経度{" "}
+                {bathymetrySelection.lon.toFixed(5)}
+              </span>
+              <span>
+                {bathymetrySelectionConfig.label}（{bathymetrySelectionConfig.resolution}）
+              </span>
+              <small>
+                表示用データから算出した参考値です。航海・安全判断には使用できません。
+              </small>
+            </div>
+          ) : null}
           <div
             className="mapAttribution bathymetryAttribution"
             aria-label="水深・地形データの出典"
@@ -726,6 +883,28 @@ function createPopupContent(report: FishingReport) {
   reason.textContent = report.forecast.reasons[0] ?? "";
   popup.append(spotName, summary, method, reason);
   return popup;
+}
+
+async function loadBathymetryTileImageData(
+  url: string,
+  cache: BathymetryTileCache<ImageData>,
+) {
+  const cached = cache.get(url);
+  if (cached) return cached;
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`bathymetry-point-tile-${response.status}`);
+  const blob = await response.blob();
+  const bitmap = await createImageBitmap(blob);
+  const canvas = document.createElement("canvas");
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("bathymetry-point-canvas");
+  context.drawImage(bitmap, 0, 0);
+  bitmap.close();
+  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+  cache.set(url, imageData);
+  return imageData;
 }
 
 function createExternalMemoPopupContent(memo: MappableExternalMemo) {
