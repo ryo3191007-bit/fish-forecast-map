@@ -93,9 +93,60 @@ for (const preset of bathy.BATHYMETRY_VIEW_PRESETS) {
 const oblique = bathyView.getDefaultBathymetryViewPreset();
 sameJson({ pitch: oblique.pitch, bearing: oblique.bearing }, { pitch: 52, bearing: -18 });
 assert.equal(bathyView.buildBathymetryCameraOptions({ preset: oblique, reducedMotion: true }).duration, 0);
+const top = bathyView.getBathymetryTopViewPreset();
+sameJson({ pitch: top.pitch, bearing: top.bearing }, { pitch: 0, bearing: 0 });
+let manager;
 
 mock = createMockMap();
-let manager = bathyView.createBathymetryCameraTransitionManager();
+manager = bathyView.createBathymetryCameraTransitionManager();
+const checkboxOnDirectPreset = bathyView.getTerrainToggleCameraPreset({ nextEnabled: true });
+assert.equal(checkboxOnDirectPreset, null, "3D ON checkbox handler does not directly move camera");
+if (checkboxOnDirectPreset) {
+  bathyView.runBathymetryCameraTransition({ map: mock.map, manager, preset: checkboxOnDirectPreset, reducedMotion: false, duration: 320 });
+}
+if (bathyView.shouldApplyBathymetryObliqueView({ mode: "bathymetry", previousMode: "bathymetry", terrainEnabled: true, previousTerrainEnabled: false, initialBathymetryViewApplied: true })) {
+  bathyView.runBathymetryCameraTransition({ map: mock.map, manager, preset: oblique, reducedMotion: false, duration: 320 });
+}
+assert.equal(mock.calls.easeTo.length + mock.calls.jumpTo.length, 1, "checkbox 3D OFF->ON runs exactly one camera transition via effect");
+
+mock = createMockMap();
+manager = bathyView.createBathymetryCameraTransitionManager();
+if (bathyView.shouldApplyBathymetryObliqueView({ mode: "bathymetry", previousMode: "standard", terrainEnabled: true, previousTerrainEnabled: true, initialBathymetryViewApplied: false })) {
+  bathyView.runBathymetryCameraTransition({ map: mock.map, manager, preset: oblique, reducedMotion: false, duration: 320 });
+}
+assert.equal(mock.calls.easeTo.length + mock.calls.jumpTo.length, 1, "initial bathymetry mode with initial 3D ON runs exactly one oblique transition");
+
+mock = createMockMap();
+manager = bathyView.createBathymetryCameraTransitionManager();
+const presetOffToOnDirectPreset = bathy.BATHYMETRY_VIEW_PRESETS[2];
+bathyView.runBathymetryCameraTransition({ map: mock.map, manager, preset: presetOffToOnDirectPreset, reducedMotion: false, duration: 260 });
+const suppressNextAutoOblique = true;
+if (!suppressNextAutoOblique && bathyView.shouldApplyBathymetryObliqueView({ mode: "bathymetry", previousMode: "bathymetry", terrainEnabled: true, previousTerrainEnabled: false, initialBathymetryViewApplied: true })) {
+  bathyView.runBathymetryCameraTransition({ map: mock.map, manager, preset: oblique, reducedMotion: false, duration: 320 });
+}
+assert.equal(mock.calls.easeTo.length + mock.calls.jumpTo.length, 1, "preset OFF->ON applies only the requested preset and suppresses automatic oblique");
+assert.equal(mock.calls.easeTo[0].pitch, presetOffToOnDirectPreset.pitch);
+
+mock = createMockMap();
+manager = bathyView.createBathymetryCameraTransitionManager();
+const checkboxOffDirectPreset = bathyView.getTerrainToggleCameraPreset({ nextEnabled: false });
+bathyView.applyBathymetryTerrain(mock.map, { display: "gebco", exaggeration: 2, terrainEnabled: false });
+assert.equal(mock.calls.terrain.at(-1), null, "3D OFF clears terrain");
+bathyView.runBathymetryCameraTransition({ map: mock.map, manager, preset: checkboxOffDirectPreset, reducedMotion: false, duration: 180 });
+assert.equal(mock.calls.easeTo.length + mock.calls.jumpTo.length, 1, "3D OFF runs exactly one camera transition");
+assert.equal(mock.calls.easeTo[0].pitch, 0);
+assert.equal(mock.calls.easeTo[0].bearing, 0);
+assert.equal(mock.calls.easeTo[0].duration, 180);
+
+mock = createMockMap();
+manager = bathyView.createBathymetryCameraTransitionManager();
+bathyView.runBathymetryCameraTransition({ map: mock.map, manager, preset: checkboxOffDirectPreset, reducedMotion: true, duration: 180 });
+assert.equal(mock.calls.jumpTo.length, 1, "3D OFF reduced motion uses jumpTo");
+assert.equal(mock.calls.jumpTo[0].pitch, 0);
+assert.equal(mock.calls.jumpTo[0].bearing, 0);
+
+mock = createMockMap();
+manager = bathyView.createBathymetryCameraTransitionManager();
 bathyView.runBathymetryCameraTransition({ map: mock.map, manager, preset: oblique, reducedMotion: true });
 assert.equal(mock.calls.jumpTo.length, 1, "reduced motion uses jumpTo");
 assert.equal(mock.calls.easeTo.length, 0);

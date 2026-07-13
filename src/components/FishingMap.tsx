@@ -79,6 +79,7 @@ import {
   clearBathymetryCameraTransition,
   createBathymetryCameraTransitionManager,
   getDefaultBathymetryViewPreset,
+  getTerrainToggleCameraPreset,
   runBathymetryCameraTransition,
   shouldApplyBathymetryObliqueView,
   shouldClearPresetForCameraInteraction,
@@ -517,14 +518,11 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
 
   const handleTerrainToggle = (nextEnabled: boolean) => {
     setIsTerrainEnabled(nextEnabled);
-    if (nextEnabled) {
-      const oblique = getDefaultBathymetryViewPreset();
-      if (oblique) {
-        moveCameraTo(oblique, 320);
-        setSelectedViewPreset(oblique.id);
-      }
-    } else {
-      clearBathymetryCameraTransition(cameraTransitionRef.current, mapRef.current);
+    const cameraPreset = getTerrainToggleCameraPreset({ nextEnabled });
+    if (cameraPreset) {
+      moveCameraTo(cameraPreset, 180);
+    }
+    if (!nextEnabled) {
       setSelectedViewPreset(null);
     }
   };

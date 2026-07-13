@@ -163,3 +163,15 @@ export function shouldClearPresetForCameraInteraction({
 export function getDefaultBathymetryViewPreset() {
   return BATHYMETRY_VIEW_PRESETS.find((preset) => preset.id === "oblique") ?? null;
 }
+
+export function getBathymetryTopViewPreset() {
+  return BATHYMETRY_VIEW_PRESETS.find((preset) => preset.id === "top") ?? null;
+}
+
+export function getTerrainToggleCameraPreset({
+  nextEnabled,
+}: {
+  nextEnabled: boolean;
+}) {
+  return nextEnabled ? null : getBathymetryTopViewPreset();
+}
