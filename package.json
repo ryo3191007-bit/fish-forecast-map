@@ -18,7 +18,7 @@
     "check:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.mjs",
     "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs",
     "test:environment": "node scripts/environment.test.mjs",
-    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:migration-safety && npm run test:bootstrap-schema-diff && npm run test:bathymetry-ui && npm run test:bathymetry-view && npm run test:fishing-spot-research && npm run test:karatsu-east-port-research && npm run test:karatsu-east-port-gemini-output && npm run test:karatsu-east-port-claude-output",
+    "test": "npm run test:environment && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:migration-safety && npm run test:bootstrap-schema-diff && npm run test:bathymetry-ui && npm run test:bathymetry-view && npm run test:bathymetry-point && npm run test:fishing-spot-research && npm run test:karatsu-east-port-research && npm run test:karatsu-east-port-gemini-output && npm run test:karatsu-east-port-claude-output",
     "test:manual-catch-memos": "node scripts/manual-catch-memos.test.mjs",
     "test:ui-requirements": "node scripts/ui-requirements.test.mjs",
     "test:bathymetry-ui": "node scripts/bathymetry-ui.test.mjs",
@@ -29,7 +29,8 @@
     "predev": "node scripts/generate-bathymetry-assets.mjs",
     "pretest": "node scripts/generate-bathymetry-assets.mjs",
     "prebuild": "node scripts/generate-bathymetry-assets.mjs",
-    "test:bathymetry-view": "node scripts/bathymetry-view.test.mjs"
+    "test:bathymetry-view": "node scripts/bathymetry-view.test.mjs",
+    "test:bathymetry-point": "node scripts/bathymetry-point.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
