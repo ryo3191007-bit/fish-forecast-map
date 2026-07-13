@@ -101,6 +101,11 @@ const FALLBACK_LAYER_IDS = [
   BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
 ] as const;
 
+const HIDDEN_BASE_LAND_LAYER_VISIBILITY = new WeakMap<
+  maplibregl.Map,
+  Map<string, "visible" | "none" | undefined>
+>();
+
 export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -606,6 +611,7 @@ function applyBathymetryMode({
   onSourceError,
 }: ApplyBathymetryModeInput) {
   if (mode !== "bathymetry" || display === "standard") {
+    restoreBaseLandLayerVisibility(map);
     removeBathymetryRuntimeLayers(map);
     setTerrainStatus("2d");
     return;
@@ -631,6 +637,8 @@ function applyBathymetryMode({
     BATHYMETRY_COASTLINE_LAYER_ID,
     coastlineOverlayEnabled,
   );
+  if (coastlineOverlayEnabled) hideBaseLandLayersForBathymetryCoastline(map);
+  else restoreBaseLandLayerVisibility(map);
 
   try {
     if (terrainEnabled) {
@@ -883,6 +891,91 @@ function setLayerVisibility(
   if (map.getLayer(layerId)) {
     map.setLayoutProperty(layerId, "visibility", visible ? "visible" : "none");
   }
+}
+
+function hideBaseLandLayersForBathymetryCoastline(map: maplibregl.Map) {
+  const store =
+    HIDDEN_BASE_LAND_LAYER_VISIBILITY.get(map) ??
+    new Map<string, "visible" | "none" | undefined>();
+  HIDDEN_BASE_LAND_LAYER_VISIBILITY.set(map, store);
+
+  for (const layer of map.getStyle().layers ?? []) {
+    if (!isBaseMapLandColorLayer(layer)) continue;
+    if (!map.getLayer(layer.id)) continue;
+    if (!store.has(layer.id)) {
+      store.set(
+        layer.id,
+        map.getLayoutProperty(layer.id, "visibility") as
+          | "visible"
+          | "none"
+          | undefined,
+      );
+    }
+    map.setLayoutProperty(layer.id, "visibility", "none");
+  }
+}
+
+function restoreBaseLandLayerVisibility(map: maplibregl.Map) {
+  const store = HIDDEN_BASE_LAND_LAYER_VISIBILITY.get(map);
+  if (!store) return;
+  for (const [layerId, visibility] of store) {
+    if (!map.getLayer(layerId)) continue;
+    if (visibility === undefined) {
+      map.setLayoutProperty(layerId, "visibility", undefined);
+    } else {
+      map.setLayoutProperty(layerId, "visibility", visibility);
+    }
+  }
+  store.clear();
+}
+
+function isBaseMapLandColorLayer(layer: maplibregl.LayerSpecification) {
+  if (
+    layer.id.startsWith("bathymetry-") ||
+    GSI_AERIAL_TILE_LAYERS.some((aerialLayer) => aerialLayer.id === layer.id)
+  ) {
+    return false;
+  }
+  if (layer.type === "background") {
+    return hasBeigeYellowOrangeColor(layer.paint?.["background-color"]);
+  }
+  if (layer.type !== "fill") return false;
+  return (
+    hasBeigeYellowOrangeColor(layer.paint?.["fill-color"]) ||
+    landLikeLayerNamePattern.test(layer.id) ||
+    landLikeLayerNamePattern.test(String(layer["source-layer"] ?? ""))
+  );
+}
+
+const landLikeLayerNamePattern = /land|earth|wood|park|grass|sand|beach/i;
+
+function hasBeigeYellowOrangeColor(value: unknown): boolean {
+  if (typeof value === "string") return isBeigeYellowOrangeHex(value);
+  if (Array.isArray(value)) return value.some(hasBeigeYellowOrangeColor);
+  if (value && typeof value === "object") {
+    return Object.values(value).some(hasBeigeYellowOrangeColor);
+  }
+  return false;
+}
+
+function isBeigeYellowOrangeHex(value: string) {
+  const normalized = value.trim();
+  if (!/^#[0-9a-f]{6}$/i.test(normalized)) return false;
+  const red = Number.parseInt(normalized.slice(1, 3), 16) / 255;
+  const green = Number.parseInt(normalized.slice(3, 5), 16) / 255;
+  const blue = Number.parseInt(normalized.slice(5, 7), 16) / 255;
+  const max = Math.max(red, green, blue);
+  const min = Math.min(red, green, blue);
+  const saturation = max === 0 ? 0 : (max - min) / max;
+  const hue =
+    max === min
+      ? 0
+      : max === red
+        ? ((green - blue) / (max - min) + (green < blue ? 6 : 0)) * 60
+        : max === green
+          ? ((blue - red) / (max - min) + 2) * 60
+          : ((red - green) / (max - min) + 4) * 60;
+  return hue >= 20 && hue <= 65 && saturation >= 0.08 && max >= 0.45;
 }
 
 function removeBathymetryRuntimeLayers(map: maplibregl.Map) {
