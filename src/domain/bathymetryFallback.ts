@@ -61,6 +61,13 @@ export function classifyBathymetryError(input: {
   const message = input.message?.toLowerCase() ?? "";
 
   if (
+    sourceId.includes("bathymetry-coastline") ||
+    message.includes("coastline.geojson")
+  ) {
+    return null;
+  }
+
+  if (
     sourceId.includes("gebco-2026") ||
     message.includes("/bathymetry/gebco-2026") ||
     message.includes("gebco-2026")
