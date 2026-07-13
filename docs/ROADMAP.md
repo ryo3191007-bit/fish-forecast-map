@@ -66,16 +66,38 @@
 
 ## Phase 5 / Post-MVP-036: 水深・3D海底地形モード
 
-実装済み。マップに `通常地図 / 航空写真 / 水深・3D地形` の3モードを追加し、2D水深色分け、等深線、hillshade、MapLibre terrain、凡例、3D ON/OFF、端末条件に応じた2D表示を提供します。参考表示であり、航海・安全判断には使用できません。
+完了。マップに `通常地図 / 航空写真 / 水深・3D地形` の3モードを追加し、2D水深色分け、等深線、hillshade、MapLibre terrain、凡例、3D ON/OFF、端末条件に応じた2D表示を提供します。参考表示であり、航海・安全判断には使用できません。
 
 ## Phase 5 / Post-MVP-037: 沿岸水深高解像度化候補と海岸線データ調査
 
-実測比較完了。公式Grid Extract / GEBCO download appから一時取得した対象boundsの実データに基づき、ETOPO 2022 60秒、ETOPO 2022 15秒、GEBCO_2026 Grid 15秒、TID Grid、国土地理院標準地図等を比較しました。調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とします。
+完了。公式Grid Extract / GEBCO download appから一時取得した対象boundsの実データに基づき、ETOPO 2022 60秒、ETOPO 2022 15秒、GEBCO_2026 Grid 15秒、TID Grid、国土地理院標準地図等を比較しました。調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とします。
 
 ## Phase 5 / Post-MVP-038: GEBCO_2026・TID・GSI overlayへの更新
 
-実装中。第一sourceを `GEBCO_2026 Grid 15秒`、データ由来を `GEBCO_2026 TID Grid`、fallbackを `ETOPO 2022 60秒 Bedrock` とします。GEBCO失敗時はETOPOへ、ETOPOも失敗した場合は水深layer・terrain・GSI overlayを解除して通常地図へ戻します。正本は `552 x 360`、DEM nodata `-32767`、min/max `-277 / 1346`、TID nodata `127`、出現コード `0/11/17/40/43/44` です。GSI標準地図overlayはopacity `0.40`で任意表示し、公式追加出典を表示します。
+完了。第一sourceを `GEBCO_2026 Grid 15秒`、データ由来を `GEBCO_2026 TID Grid`、fallbackを `ETOPO 2022 60秒 Bedrock` へ更新しました。GEBCO失敗時はETOPOへ、ETOPOも失敗した場合は水深layer・terrain・GSI overlayを解除して通常地図へ戻します。正本は `552 x 360`、DEM nodata `-32767`、min/max `-277 / 1346`、TID nodata `127`、出現コード `0/11/17/40/43/44` です。GSI標準地図overlayはopacity `0.40`で任意表示し、公式追加出典を表示します。
 
 ## Post-MVP-039: 釣り場属性調査の共通仕様
 
-地点評価を拡充する前段として、複数AI・複数担当で共通利用する調査項目、判定基準、情報源ルール、JSON Schema、架空サンプル、検証スクリプトを `docs/FISHING_SPOT_RESEARCH_SPEC.md` 以下に定義します。民間釣りサイトは地点候補を知る入口に限定し、実地点の一括収集、DB変更、編集UI、魚種生態マスター、SCORE変更は後続Issueで扱います。
+完了。地点評価を拡充する前段として、複数AI・複数担当で共通利用する調査項目、判定基準、情報源ルール、JSON Schema、架空サンプル、検証スクリプトを `docs/FISHING_SPOT_RESEARCH_SPEC.md` 以下に定義しました。民間釣りサイトは地点候補を知る入口に限定し、実地点の一括収集、DB変更、編集UI、魚種生態マスター、SCORE変更は後続Issueで扱います。
+
+## Post-MVP-040: 唐津東港パイロット調査
+
+完了。唐津東港をパイロット地点としてChatGPT調査データを保存し、共通仕様とSchemaに沿った調査結果の扱いを検証しました。唐津東港の値は比較・検証用であり、本番地点マスター、DB、画面、SCOREへは未反映です。
+
+## Post-MVP-041: 唐津東港Gemini調査結果の保存・比較
+
+完了。Gemini調査原文とレビューを保存し、Schema適合、source品質、unknown運用、二次調査の実施状況をChatGPT調査と比較しました。Gemini原文は正本Schema不適合の記録として保持し、人間がSchemaへ移し替えた値を正本化していません。
+
+## Post-MVP-042: 唐津東港Claude調査結果の保存・3AI比較
+
+完了。Claude調査原文とレビューを保存し、ChatGPT / Gemini / Claudeの3AI比較を完成しました。Schema適合とsourceが値を直接裏付けるかを分けて評価し、次のSchema・共通プロンプト改訂候補を整理しました。
+
+## Post-MVP-043: Schema v1.1.0と共通プロンプト改訂
+
+完了。3AI比較結果を反映し、釣り場調査Schema v1.1.0、旧v1.0.0互換Schema、Ajv 2020 + custom validator、汎用共通プロンプトを追加・改訂しました。v1.1.0ではevidence source、source support path、調査stage、魚種観測時期、施設・規制の有効期間などを強化し、唐津東港の正本値は引き続き本番データへ反映していません。
+
+## Post-MVP-044: 開発引き継ぎ書とROADMAPの最新化
+
+完了。開発引き継ぎ書とROADMAPを最新化し、Codex既存PR更新手順を確定した。
+
+次の機能は別Issueで決定する。
