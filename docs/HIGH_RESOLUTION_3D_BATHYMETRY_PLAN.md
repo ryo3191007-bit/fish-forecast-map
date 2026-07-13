@@ -67,24 +67,30 @@
 
 ## 5. 公式データ候補比較表
 
-確認日はすべて2026-07-13。`確認済み`は公式/一次提供元で確認、`推定`は仕様からの推定、`unknown`は公式資料だけでは断定不可を示す。
+確認日はすべて2026-07-13。`確認済み`は公式/一次提供元で確認、`推定`は仕様からの推定、`unknown`は公式資料だけでは断定不可を示す。確認できない値は推測せず`unknown`とする。
 
-| 層 | 提供機関 | データ名・版 / 公式URL | 対象海域 | 水平解像度・精度/測深由来 | 形式・容量・更新 | 無料/加工/Web配信 | 出典要件 | 採用可否 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 広域 | GEBCO Compilation Group | GEBCO_2026 Grid / https://www.gebco.net/data-products-gridded-bathymetry-data/gebco2026-grid | 全球、現在対象boundsをcrop済み | 15 arc-second。公式は43200 x 86400、pixel-centre registered、TID Gridあり。測深・推定海底地形の混在はTIDで説明。 | NetCDF/GeoTIFF/ASCII等。全球は巨大、対象cropは軽量化可。年次更新傾向。 | Terms of Use上、無料利用・複製・配布は可能と確認済み。ただし航海不可。 | `Contains information from the GEBCO_2026 Grid, GEBCO Compilation Group (2026).` | 採用済み。広域ベースとして継続可。 |
-| 広域fallback | NOAA NCEI | ETOPO 2022 15 Arc-Second Global Relief Model / https://www.ncei.noaa.gov/products/etopo-global-relief-model | 全球 | 15 arc-second。航空LiDAR、衛星地形、船舶測深等を統合。現行fallbackは60秒Bedrock crop。 | GeoTIFF/NetCDF等。NOAA DOIあり。 | NOAA/NCEIメタデータではCC0-1.0相当として扱える。現行60秒fallbackは継続可、15秒fallback化は別Issue。 | NOAA NCEI ETOPO 2022 DOIとアクセス日。 | fallback採用済み。15秒化はPhase A/B候補。 |
-| 沿岸高精細候補 | JODC | J-EGG500 / https://www.jodc.go.jp/jodcweb/JDOSS/infoJEGG.html | 日本周辺 | 500m格子。海上保安庁海洋情報部や各海洋調査機関の測深データを統合。 | JODC配布。形式・更新・容量は対象単位で追加確認。 | 無料性は公開ページから確認できるが、加工・Web再配信条件はunknown。 | unknown。 | 現時点では本番採用不可。再配布・Web配信許可確認後にPoC候補。 |
-| 沿岸/参照 | 海上保安庁 | 海しる/API / https://portal.msil.go.jp/agreement / https://www.msil.go.jp/data/terms-of-use-ja.pdf | 日本周辺の海洋情報 | API提供の地理空間情報。水深レイヤーの詳細仕様・生DEM取得可否はunknown。 | APIは登録・キー管理が必要。リアルタイム参照型。 | 利用規約は公共データ利用規約/CC BY互換、無償、航海図誌代替不可を確認済み。ただしAPIコンテンツ単位の再配信可否は要確認。 | 海しる/海上保安庁、個別コンテンツ出典。 | 直接DEM正本としては保留。参照・公式情報確認用。 |
-| 陸地/海岸線補助 | 国土地理院 | 標準地図タイル / https://maps.gsi.go.jp/development/ichiran.html | 日本 | 地形図タイル。海底DEMではない。海岸線・陸地視認性補助。 | XYZタイル。リアルタイム読込可。 | 出典明示でリアルタイム利用は申請不要と確認済み。独立ベクトル化や基盤地図情報加工は測量法確認が必要。 | 国土地理院/地理院タイル、リンク。 | 海底データでは不採用。海岸線補助は条件付き候補。 |
-| 1海域PoC候補 | NOAA NCEI | Bathymetric Data Viewer / https://www.ncei.noaa.gov/maps/bathymetry/ | 全球の公開測深データ検索 | マルチビーム等の航跡データ。対象海域にデータがあるか、品質・密度は海域ごとに異なる。 | 生測深/航跡データ。容量は大きくなり得る。 | NOAA公開データは無料候補だが、日本沿岸対象データの有無、処理後DEMの配信条件は個別確認。 | データセット単位の引用。 | 1海域PoC候補。対象海域に有効データがある場合のみ。 |
-| 1海域PoC候補 | AIST/GSJ | 沿岸域のシームレス地質情報 / https://unit.aist.go.jp/igg/en/database/index.html | 日本の一部沿岸域 | 地質情報が主で、水深DEMとしての水平解像度・形式・再配信条件はunknown。 | WMS/WMTSやアーカイブ。 | 海底地形DEMとしての加工・Web配信可否はunknown。 | AIST/GSJ個別条件。 | 水深DEMとしては保留。地質レイヤー将来候補。 |
-| 参考/有料可能性 | 日本水路協会等 | M7000 Digital Bathymetric Chart等 | 日本近海 | 研究例では2秒等の高精細海底地形に使われることがある。 | 商品/許諾型の可能性。 | 有料または再配布制限の可能性が高く、公式購入条件確認が必要。 | 購入/許諾条件に従う。 | 今回対象外。有料データ購入禁止のため不採用。 |
+| 分類 | 提供機関 | データ名・版 / 公式URL | 対象海域 | 水平解像度 | 垂直精度または公式精度説明 | 測深由来 | データ形式 | 更新日/更新頻度 | ダウンロード単位 | 想定容量 | 無料利用可否 | 加工可否 | Web配信・再配布可否 | 出典要件 | 採用可否 | 確認状態/根拠 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 広域base | GEBCO Compilation Group | GEBCO_2026 Grid / https://www.gebco.net/data-products-gridded-bathymetry-data/gebco2026-grid | 全球、現在対象boundsをcrop済み | 15 arc-second | 公式の格子精度説明はデータ由来に依存。TID Gridで測深・推定由来を確認可能 | 測深・推定海底地形の混在。TID Gridあり | NetCDF、GeoTIFF、ASCII等 | 2026版。年次更新傾向 | 全球ファイルまたは範囲抽出 | 全球は巨大。対象cropは軽量化可 | 確認済み | 確認済み | 確認済み。ただし航海不可注記が必要 | `Contains information from the GEBCO_2026 Grid, GEBCO Compilation Group (2026).` | 採用済み。広域baseとして継続 | 確認済み: GEBCO Grid公式ページ、BODC Terms |
+| 広域fallback/比較 | NOAA NCEI | ETOPO 2022 Global Relief Model / https://www.ncei.noaa.gov/products/etopo-global-relief-model | 全球 | 15 arc-second版あり。現行fallbackは60 arc-second Bedrock crop | 公式精度は入力データセットに依存 | 航空LiDAR、衛星地形、船舶測深等を統合 | GeoTIFF、NetCDF等 | 2022版。更新頻度はunknown | 全球ファイルまたは範囲抽出 | 全球は大。対象cropは軽量化可 | 確認済み | 確認済み（CC0-1.0相当として扱える） | 確認済み（CC0-1.0相当として扱える） | NOAA NCEI ETOPO 2022 DOIとアクセス日 | fallback採用済み。15秒化は別Issue候補 | 確認済み: NOAA ETOPO公式ページ、NOAAメタデータ |
+| 日本周辺の比較・参考候補 | JODC | J-EGG500 / https://www.jodc.go.jp/jodcweb/JDOSS/infoJEGG.html | 日本周辺。Territory 2は北緯30〜38度、東経128〜144度を含む | 500m square grid。緯度経度格子ではなくLambert Conformal Conicの500m格子 | 公式ページは、平滑化により小さな起伏を描けないこと、沿岸・海山付近等で実測水深との差が大きい場所があることを説明 | 海上保安庁海洋情報部や各海洋調査機関の測深データを統合。分類0は実測水深/等深線、分類1は補間 | テキスト: Classification、Latitude、Longitude、Depth | 更新日/更新頻度はunknown | Territory 1〜3 | unknown | unknown | 書面許可が必要または要問い合わせ | 書面許可が必要または要問い合わせ。公式ページ末尾の `No reproduction or republication without written permission.` に基づく | JODC。詳細は許可条件に従う | 現行GEBCO 15秒を明確に高精細化するPhase B本命候補から外す。日本周辺の比較・参考候補 | 確認済み: JODC J-EGG500公式ページ |
+| 沿岸/参照 | 海上保安庁 | 海しる/API / https://portal.msil.go.jp/agreement / https://www.msil.go.jp/data/terms-of-use-ja.pdf | 日本周辺の海洋情報 | コンテンツ依存。水深DEMとしてはunknown | unknown | API提供の地理空間情報。DEM取得可否はunknown | API/地図コンテンツ。DEM形式はunknown | unknown | APIリクエスト/コンテンツ単位 | unknown | 確認済み（規約上の無償） | コンテンツ単位でunknown | APIコンテンツ単位の再配信可否はunknown | 海しる/海上保安庁、個別コンテンツ出典 | 直接DEM正本としては保留。参照・公式情報確認用 | 確認済み/unknown混在: 海しる規約 |
+| 陸地/海岸線補助 | 国土地理院 | 標準地図タイル / https://maps.gsi.go.jp/development/ichiran.html | 日本 | 地形図タイル。海底DEMではない | 海底水深精度は対象外 | 地形図/海岸線表現。測深DEMではない | XYZタイル | unknown | タイル単位 | runtime通信量のみ | 確認済み | リアルタイム表示は可。独立ベクトル化は測量法確認が必要 | タイル複製・独立ベクトル化は別途確認 | 国土地理院/地理院タイル、リンク | 海底データでは不採用。現行は外部GSI overlayを使用せず、GEBCO由来の海岸線ライン＋陸地マスクを使用 | 確認済み/unknown混在: GSIタイル一覧・利用規約 |
+| 検索入口 | NOAA NCEI | Bathymetric Data Viewer / https://www.ncei.noaa.gov/maps/bathymetry/ | 全球の公開測深データ検索 | データセットごとに異なる | データセットごとに異なる | マルチビーム等の航跡データ検索入口 | データセットごとに異なる | データセットごとに異なる | データセットごとに異なる | データセットごとに異なる | データセットごとにunknown | データセットごとにunknown | データセットごとにunknown | データセット単位の引用 | 今回は具体的PoCデータセット未確定。直ちにPoCへ使える候補として扱わない | unknown: 個別データセット未特定 |
+| 将来の地質レイヤー参考 | AIST/GSJ | 沿岸域のシームレス地質情報 / https://unit.aist.go.jp/igg/en/database/index.html | 日本の一部沿岸域 | 水深DEMとしてはunknown | 水深DEMとしてはunknown | 地質情報が主。水深DEMとして未確認 | WMS/WMTSやアーカイブの可能性。水深DEM形式はunknown | unknown | unknown | unknown | unknown | unknown | unknown | AIST/GSJ個別条件 | 水深DEM候補から外す。将来の地質レイヤー参考 | unknown: 水深DEMとして未特定 |
+| 参考/有料可能性 | 日本水路協会等 | M7000 Digital Bathymetric Chart等 | 日本近海 | 研究例では2秒等の高精細海底地形に使われることがある | unknown | unknown | 商品/許諾型の可能性 | unknown | 購入/許諾単位 | unknown | unknown。有料可能性あり | 許諾条件次第 | 許諾条件次第 | 購入/許諾条件に従う | 今回対象外。有料データ購入禁止のため不採用 | 推定/unknown: 公式購入条件未確認 |
+
+### 5.1 Phase B PoCデータセット確定状況
+
+今回の調査では、合法的に加工・Web配信できる具体的な高精細1海域PoCデータセットを確定できなかった。NOAA Bathymetric Data Viewerは検索入口、AIST/GSJ沿岸域のシームレス地質情報は将来の地質レイヤー参考であり、どちらもこのまま直ちにTerrain-RGB化するPoC正本データではない。
+
+そのため案Bは、現時点では推奨アーキテクチャ候補までとする。Phase Bを開始する条件は、`具体的データセット、bounds、解像度、容量、加工・配信許可の確認` とする。
 
 ## 6. ライセンス・再配布判断
 
 - 採用可: GEBCO_2026、現行ETOPO fallback。出典、Terms、航海不可注記を維持する。
 - 条件付き: GSI標準地図タイルは海底DEMではなく、リアルタイムタイル参照と出典明示に限定する。独立した海岸線ベクトル化や再配布は別途確認する。
-- 保留: J-EGG500、海しる水深関連コンテンツ、AIST沿岸地質情報、NOAA個別マルチビームは、対象海域・形式・加工・Web再配信可否をデータセット単位で確認するまで本番採用不可。
+- 保留: 海しる水深関連コンテンツ、NOAA個別マルチビームは、対象海域・形式・加工・Web再配信可否をデータセット単位で確認するまで本番採用不可。J-EGG500は500m格子で現行GEBCO 15秒を明確に高精細化する候補ではなく、加工・複製・Web配信には書面許可が必要または要問い合わせのため、Phase B本命候補から外す。AIST/GSJ沿岸域のシームレス地質情報は水深DEM候補から外し、将来の地質レイヤー参考に分離する。
 - 不採用: 有料データ、ライセンス不明データ、第三者サービス画面からの抽出、スクレイピング由来データ。
 
 ## 7. 技術方式比較
@@ -92,7 +98,7 @@
 | 案 | 見た目/精度 | 実装難易度 | スマホ性能/通信 | Vercel/更新/fallback | 保守/費用 | 判断 |
 | --- | --- | --- | --- | --- | --- | --- |
 | A. 現行Terrain-RGB高品質化 | 見た目は大きく改善できるが、GEBCO 15秒以上の地形情報は増えない。 | 低。既存MapLibre構成を維持。 | 軽量。現行静的タイル中心。 | 現行生成・fallbackを流用。 | 低コスト、保守容易。 | Phase A推奨。短期でUX改善。 |
-| B. 広域+沿岸高精細の多段階Terrain-RGB | 高精細データがある海域では瀬・かけ上がりの粒度が上がる。 | 中。source切替、bounds、LOD、段差対策が必要。 | 高精細tileは拡大時のみ読む。スマホ上限が必要。 | Vercel静的配信可能な小範囲から開始。広域fallback維持。 | データ更新・ライセンス管理が増えるが現実的。 | 中長期推奨。Phase B/Cの本命。 |
+| B. 広域+沿岸高精細の多段階Terrain-RGB | 合法的に加工・Web配信できる高精細データが確定した海域では瀬・かけ上がりの粒度が上がる。 | 中。source切替、bounds、LOD、段差対策が必要。 | 高精細tileは拡大時のみ読む。スマホ上限が必要。 | Vercel静的配信可能な小範囲から開始。広域fallback維持。 | データ更新・ライセンス管理が増えるが現実的。 | 条件付き中長期推奨。現時点では推奨アーキテクチャ候補であり、Phase B開始には具体的データセット、bounds、解像度、容量、加工・配信許可の確認が必要。 |
 | C. PMTiles/高密度メッシュ/別レンダラー | 見た目は最も自由。点群/meshなら動画風表現に近い。 | 高。座標同期、クリック判定、LOD、アクセシビリティ、既存marker連携が重い。 | 通信・GPU負荷が大。スマホfallback必須。 | Vercelで大容量配信・キャッシュ設計が難化。 | 依存・保守コスト増。 | 当面不採用。Bで不足が明確な場合の研究候補。 |
 
 推奨は、Phase Aで案Aを実施し、Phase B/Cで案Bへ進むこと。案Cは参考動画に近い自由な表現には有利だが、現時点の個人利用・低コスト・スマホ対応・既存MapLibre資産を優先すると過剰である。
@@ -101,7 +107,7 @@
 
 1. 広域base: GEBCO_2026 15秒Terrain-RGB + 色PNG + hillshade + contours。
 2. fallback: ETOPO 2022を同一UIに接続。Phase Aで15秒fallback化の可否を検討し、60秒fallbackは最低限維持。
-3. 沿岸高精細overlay: Phase Bでは1海域だけ高精細DEMをTerrain-RGBタイル化し、bounds/zoomでGEBCOから切替。データなし/失敗時はGEBCOへ戻す。
+3. 沿岸高精細overlay: Phase Bでは、具体的データセット、bounds、解像度、容量、加工・配信許可を確認できた場合に限り、1海域だけ高精細DEMをTerrain-RGBタイル化し、bounds/zoomでGEBCOから切替。データなし/失敗時はGEBCOへ戻す。
 4. LOD: ZL低〜中は広域、沿岸拡大時だけ高精細source。画面外・全域高精細は読み込まない。
 5. 表示: 色、hillshade、等深線、海岸線/陸地マスク、安全注記、参考水深/座標を同じMapLibre map上に維持。
 
@@ -131,6 +137,7 @@
 
 ### Phase B: 1海域限定の高精細データPoC
 
+- 今回の調査では具体的な高精細1海域PoCデータセットを確定できていないため、開始前に `具体的データセット、bounds、解像度、容量、加工・配信許可の確認` を必須条件とする。
 - ライセンス確認済みデータだけを小範囲で加工。
 - GEBCOとの切替、見た目、容量、速度、スマホ可否を比較。
 - 本番DB、全国展開、定期取得は行わない。
@@ -147,9 +154,9 @@
 
 ## 12. 未確認事項
 
-- J-EGG500の加工後Terrain-RGB/PNG/GeoJSONのWeb配信・再配布可否。
+- J-EGG500は公式ページ上の500m格子、平滑化による小起伏不可視、実測値との差が大きい場所、書面許可なしの複製・再掲載禁止を踏まえ、Phase B本命候補から外した。将来比較用に使う場合も加工後Terrain-RGB/PNG/GeoJSONのWeb配信・再配布は書面許可が必要または要問い合わせ。
 - 海しるAPIでDEM相当の水深格子を取得できるか、APIコンテンツ単位の再配信可否。
-- 対象海域にNOAA NCEI Bathymetric Data ViewerでPoCに足るマルチビーム等の公開測深が存在するか。
+- 対象海域にNOAA NCEI Bathymetric Data Viewer等でPoCに足るマルチビーム等の公開測深が存在し、具体的データセット、bounds、解像度、容量、加工・配信許可まで確認できるか。
 - 高精細sourceのVercel配信容量、tile数、スマホFPS、メモリ使用量の実測値。
 - GSI等を使った海岸線補助を独立ベクトル化する場合の測量法上の申請要否。
 
@@ -157,7 +164,7 @@
 
 1. Phase A: 現行GEBCO/ETOPOで高さ誇張UI・水深/座標表示・カメラプリセットを追加する。
 2. Phase A: 水深色・hillshade・等深線・海面表現の視認性比較を行い、PC/スマホの推奨初期値を決める。
-3. Phase B: 1海域PoC候補データのライセンス確認と小範囲Terrain-RGB生成手順を作る。
+3. Phase B: 具体的データセット、bounds、解像度、容量、加工・配信許可を公式一次提供元で確認し、合法的に加工・Web配信できる場合だけ小範囲Terrain-RGB生成手順を作る。
 4. Phase B: 高精細PoCタイルをローカル/Previewで比較し、容量・速度・見た目・fallbackの合格基準を検証する。
 5. Phase C: 多解像度source選択、metadata管理、Vercel配信・cache方針を本番化する。
 6. Phase D: 魚種・季節・適性レイヤーの情報源ポリシーを地点情報収集再開後に別途設計する。
