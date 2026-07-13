@@ -72,6 +72,11 @@
 
 完了。公式Grid Extract / GEBCO download appから一時取得した対象boundsの実データに基づき、ETOPO 2022 60秒、ETOPO 2022 15秒、GEBCO_2026 Grid 15秒、TID Grid、国土地理院標準地図等を比較しました。調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とします。
 
+
+## Phase 5 / Post-MVP-046: 高精細3D海底地形ビュー方針
+
+完了。参考動画に近い3D海底地形ビューへ段階的に進むため、現行GEBCO/ETOPO実装の棚卸し、公式データ候補、ライセンス・再配布判断、技術方式比較、Phase A〜Dのロードマップを `docs/HIGH_RESOLUTION_3D_BATHYMETRY_PLAN.md` に正本化しました。本Issueでは描画コード、高精細データ投入、DB、地点・魚種・釣果収集、SCORE変更は行いません。
+
 ## Phase 5 / Post-MVP-038: GEBCO_2026・TID・GSI overlayへの更新
 
 完了。第一sourceを `GEBCO_2026 Grid 15秒`、データ由来を `GEBCO_2026 TID Grid`、fallbackを `ETOPO 2022 60秒 Bedrock` へ更新しました。GEBCO失敗時はETOPOへ、ETOPOも失敗した場合は水深layer・terrain・GSI overlayを解除して通常地図へ戻します。正本は `552 x 360`、DEM nodata `-32767`、min/max `-277 / 1346`、TID nodata `127`、出現コード `0/11/17/40/43/44` です。GSI標準地図overlayはopacity `0.40`で任意表示し、公式追加出典を表示します。
