@@ -50,8 +50,6 @@ export const BATHYMETRY_EXAGGERATION_DEFAULT = 1.0;
 export const BATHYMETRY_EXAGGERATION_MIN = 1.0;
 export const BATHYMETRY_EXAGGERATION_MAX = 4.0;
 export const BATHYMETRY_EXAGGERATION_STEP = 0.25;
-export const BATHYMETRY_EXAGGERATION_NOTE =
-  "高さ誇張は起伏を見やすくする表示です。水深データの精度は上がりません。";
 
 export type BathymetryViewPresetId = "top" | "oblique" | "low";
 export type BathymetryViewPreset = {

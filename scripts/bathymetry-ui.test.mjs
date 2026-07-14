@@ -7,6 +7,7 @@ const mapLayer = fs.readFileSync("src/domain/mapLayer.ts", "utf8");
 const bathy = fs.readFileSync("src/domain/bathymetry.ts", "utf8");
 const map = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
 const css = fs.readFileSync("src/app/globals.css", "utf8");
+const appShell = fs.readFileSync("src/components/AppShell.tsx", "utf8");
 const generator = fs.readFileSync(
   "scripts/generate-bathymetry-assets.mjs",
   "utf8",
@@ -37,6 +38,24 @@ for (const token of ["GEBCO_2026", "高解像度水深を読み込めなかっ�
 assert.doesNotMatch(bathy + map, /bathymetry-coastline/);
 assert.doesNotMatch(bathy + map, /bathymetry-land-mask/);
 assert.doesNotMatch(map, /海岸線表示/);
+
+assert.doesNotMatch(
+  map,
+  /BATHYMETRY_EXAGGERATION_NOTE/,
+  "FishingMap must not render the consolidated exaggeration note",
+);
+assert.match(
+  map,
+  /!isTerrainEnabled[\s\S]*<small>3D OFF中の変更は次回3D表示時に適用されます。<\/small>/,
+  "3D OFF operation helper remains in the height slider control",
+);
+const appNoticeSections = appShell.match(/<section className="appNotice"/g) ?? [];
+assert.equal(appNoticeSections.length, 1, "AppShell renders a single appNotice section");
+assert.match(
+  appShell,
+  /<section className="appNotice"[^>]*aria-label="注意事項">[\s\S]*高さ誇張は表示上の演出であり、データ精度は変わりません。[\s\S]*<\/section>/,
+  "the consolidated appNotice includes the height exaggeration accuracy disclaimer",
+);
 assert.doesNotMatch(map, /hideBaseLandLayersForBathymetryCoastline/);
 assert.doesNotMatch(map, /isBaseMapLandColorLayer/);
 assert.doesNotMatch(map, /hasBeigeYellowOrangeColor/);

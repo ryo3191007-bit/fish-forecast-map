@@ -45,7 +45,6 @@ import {
   BATHYMETRY_EXAGGERATION_DEFAULT,
   BATHYMETRY_EXAGGERATION_MAX,
   BATHYMETRY_EXAGGERATION_MIN,
-  BATHYMETRY_EXAGGERATION_NOTE,
   BATHYMETRY_EXAGGERATION_STEP,
   BATHYMETRY_VIEW_PRESETS,
   bathymetryControlsDisabled,
@@ -820,11 +819,9 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                   )
                 }
               />
-              <small>
-                {isTerrainEnabled
-                  ? BATHYMETRY_EXAGGERATION_NOTE
-                  : `${BATHYMETRY_EXAGGERATION_NOTE} 3D OFF中の変更は次回3D表示時に適用されます。`}
-              </small>
+              {!isTerrainEnabled ? (
+                <small>3D OFF中の変更は次回3D表示時に適用されます。</small>
+              ) : null}
             </div>
             <div className="terrainPresetControl" aria-label="3D視点プリセット">
               {BATHYMETRY_VIEW_PRESETS.map((preset) => (

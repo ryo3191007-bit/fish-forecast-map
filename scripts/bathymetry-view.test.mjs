@@ -206,5 +206,6 @@ const mapSource = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
 assert.match(mapSource, /setSelectedViewPreset\(null\)/, "3D OFF clears selected preset");
 assert.match(mapSource, /shouldApplyBathymetryObliqueView/);
 assert.match(mapSource, /bathymetryControlsDisabled\(terrainStatus\)/, "unsupported state disables controls");
-assert.match(mapSource, /BATHYMETRY_EXAGGERATION_NOTE/);
+assert.doesNotMatch(mapSource, /BATHYMETRY_EXAGGERATION_NOTE/, "FishingMap does not render the removed exaggeration note constant");
+assert.match(mapSource, /!isTerrainEnabled[\s\S]*3D OFF中の変更は次回3D表示時に適用されます。/, "3D OFF helper text remains tied to the terrain control state");
 console.log("bathymetry view controls tests passed");
