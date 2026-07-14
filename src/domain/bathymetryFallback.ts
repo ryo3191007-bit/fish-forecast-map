@@ -1,5 +1,8 @@
 export type BathymetryDisplaySource = "gebco" | "etopo" | "standard";
-export type BathymetryFailureSource = Exclude<BathymetryDisplaySource, "standard">;
+export type BathymetryFailureSource = Exclude<
+  BathymetryDisplaySource,
+  "standard"
+>;
 
 export type BathymetryFallbackState = {
   display: BathymetryDisplaySource;
@@ -59,13 +62,6 @@ export function classifyBathymetryError(input: {
 }): BathymetryFailureSource | null {
   const sourceId = input.sourceId?.toLowerCase() ?? "";
   const message = input.message?.toLowerCase() ?? "";
-
-  if (
-    sourceId.includes("bathymetry-coastline") ||
-    message.includes("coastline.geojson")
-  ) {
-    return null;
-  }
 
   if (
     sourceId.includes("gebco-2026") ||
