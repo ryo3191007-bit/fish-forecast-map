@@ -51,12 +51,15 @@ function sameJson(actual, expected) {
   assert.equal(JSON.stringify(actual), JSON.stringify(expected));
 }
 
-function createMockMap() {
-  const calls = { terrain: [], easeTo: [], jumpTo: [], stop: 0, once: [], off: [] };
+function createMockMap(initialTerrain) {
+  const calls = { terrain: [], easeTo: [], jumpTo: [], stop: 0, once: [], off: [], repaint: 0 };
+  let terrain = initialTerrain;
   return {
     calls,
     map: {
-      setTerrain: (terrain) => calls.terrain.push(terrain),
+      setTerrain: (nextTerrain) => { terrain = nextTerrain; calls.terrain.push(nextTerrain); },
+      getTerrain: () => terrain,
+      triggerRepaint: () => { calls.repaint += 1; },
       easeTo: (camera) => calls.easeTo.push(camera),
       jumpTo: (camera) => calls.jumpTo.push(camera),
       stop: () => { calls.stop += 1; },
@@ -67,17 +70,29 @@ function createMockMap() {
 }
 
 let mock = createMockMap();
-bathyView.applyBathymetryTerrain(mock.map, { display: "gebco", exaggeration: 2.25 });
+let terrainResult = bathyView.applyBathymetryTerrain(mock.map, { display: "gebco", exaggeration: 2.25 });
 sameJson(mock.calls.terrain.at(-1), { source: bathy.BATHYMETRY_SOURCE_ID, exaggeration: 2.25 });
+assert.equal(terrainResult.applied, true, "1.0x->別倍率は最新倍率を持つterrain commandを適用する");
 assert.equal(mock.calls.easeTo.length + mock.calls.jumpTo.length, 0, "slider updates must not move camera");
+terrainResult = bathyView.applyBathymetryTerrain(mock.map, { display: "gebco", exaggeration: 2.25 });
+assert.equal(terrainResult.applied, false, "same source/exaggeration skips unnecessary reapply");
+assert.equal(mock.calls.terrain.length, 1, "same source/exaggeration does not call setTerrain again");
+terrainResult = bathyView.applyBathymetryTerrain(mock.map, { display: "gebco", exaggeration: 4 });
+assert.equal(terrainResult.clearedBeforeApply, true, "same-source exaggeration changes refresh terrain geometry before applying final value");
+sameJson(mock.calls.terrain.slice(-2), [null, { source: bathy.BATHYMETRY_SOURCE_ID, exaggeration: 4 }]);
+sameJson(mock.map.getTerrain(), { source: bathy.BATHYMETRY_SOURCE_ID, exaggeration: 4 });
+assert.equal(mock.calls.repaint > 0, true, "terrain changes request repaint");
 bathyView.applyBathymetryTerrain(mock.map, { display: "etopo", exaggeration: 3.75 });
 sameJson(mock.calls.terrain.at(-1), { source: bathy.BATHYMETRY_FALLBACK_SOURCE_ID, exaggeration: 3.75 });
+assert.equal(mock.map.getTerrain().exaggeration, 3.75, "GEBCO→ETOPO keeps selected multiplier");
 bathyView.applyBathymetryTerrain(mock.map, { display: "etopo", exaggeration: 3.75, terrainEnabled: false });
 assert.equal(mock.calls.terrain.at(-1), null, "3D OFF clears terrain");
 bathyView.applyBathymetryTerrain(mock.map, { display: "gebco", exaggeration: 3.75 });
 sameJson(mock.calls.terrain.at(-1), { source: bathy.BATHYMETRY_SOURCE_ID, exaggeration: 3.75 }, "3D re-ON restores multiplier");
 bathyView.applyBathymetryTerrain(mock.map, { display: "standard", exaggeration: 4 });
 assert.equal(mock.calls.terrain.at(-1), null, "standard/aerial layer modes clear terrain");
+assert.equal(bathyView.shouldApplyBathymetryTerrain({ current: undefined, requested: null }), true, "unsupported/unknown current clears only when needed");
+assert.equal(bathyView.shouldApplyBathymetryTerrain({ current: null, requested: null }), false, "null terrain is not cleared repeatedly");
 
 assert.equal(bathyView.shouldApplyBathymetryObliqueView({ mode: "bathymetry", previousMode: "standard", terrainEnabled: true, previousTerrainEnabled: true, initialBathymetryViewApplied: false }), true);
 assert.equal(bathyView.shouldApplyBathymetryObliqueView({ mode: "bathymetry", previousMode: "bathymetry", terrainEnabled: true, previousTerrainEnabled: true, initialBathymetryViewApplied: true }), false, "same-mode slider/coastline/fallback updates do not reapply camera");
@@ -174,6 +189,18 @@ assert.equal(bathyView.shouldClearPresetForCameraInteraction({ originalEvent: { 
 bathyView.clearBathymetryCameraTransition(manager, mock.map);
 assert.equal(manager.active, false, "user interruption clears programmatic transition");
 assert.equal(bathyView.shouldClearPresetForCameraInteraction({}), false);
+
+
+mock = createMockMap();
+for (const value of [1, 1.25, 2, 3, 4]) {
+  bathyView.applyBathymetryTerrain(mock.map, { display: "gebco", exaggeration: value });
+}
+assert.equal(mock.map.getTerrain().exaggeration, 4, "continuous slider operations leave the final multiplier applied");
+const staleRequest = { display: "gebco", exaggeration: 1.25 };
+const latestRequest = { display: "gebco", exaggeration: 3.5 };
+bathyView.applyBathymetryTerrain(mock.map, staleRequest);
+bathyView.applyBathymetryTerrain(mock.map, latestRequest);
+assert.equal(mock.map.getTerrain().exaggeration, 3.5, "newer effect overwrites older terrain requests with the latest multiplier");
 
 const mapSource = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
 assert.match(mapSource, /setSelectedViewPreset\(null\)/, "3D OFF clears selected preset");

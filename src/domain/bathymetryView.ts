@@ -9,7 +9,12 @@ import type { BathymetryDisplaySource } from "./bathymetryFallback";
 import type { MapLayerMode } from "./mapLayer";
 
 export type TerrainCommand = { source: string; exaggeration: number } | null;
-export type TerrainMap = { setTerrain: (terrain: TerrainCommand) => void };
+export type CurrentTerrain = { source: string; exaggeration?: number } | null;
+export type TerrainMap = {
+  setTerrain: (terrain: TerrainCommand) => void;
+  getTerrain?: () => CurrentTerrain | undefined;
+  triggerRepaint?: () => void;
+};
 export type CameraMap = {
   stop: () => void;
   easeTo: (options: BathymetryCameraOptions) => void;
@@ -68,11 +73,62 @@ export function buildBathymetryTerrainCommand({
   };
 }
 
+export type BathymetryTerrainApplyResult = {
+  command: TerrainCommand;
+  previous: CurrentTerrain | undefined;
+  applied: boolean;
+  clearedBeforeApply: boolean;
+};
+
+export function terrainsMatch(
+  current: CurrentTerrain | undefined,
+  requested: TerrainCommand,
+) {
+  if (!current || !requested) return current === requested;
+  return (
+    current.source === requested.source &&
+    normalizeBathymetryExaggeration(current.exaggeration ?? 1) ===
+      normalizeBathymetryExaggeration(requested.exaggeration)
+  );
+}
+
+export function shouldApplyBathymetryTerrain({
+  current,
+  requested,
+}: {
+  current: CurrentTerrain | undefined;
+  requested: TerrainCommand;
+}) {
+  return !terrainsMatch(current, requested);
+}
+
 export function applyBathymetryTerrain(
   map: TerrainMap,
   input: Parameters<typeof buildBathymetryTerrainCommand>[0],
-) {
-  map.setTerrain(buildBathymetryTerrainCommand(input));
+): BathymetryTerrainApplyResult {
+  const command = buildBathymetryTerrainCommand(input);
+  const previous = map.getTerrain?.();
+  if (!shouldApplyBathymetryTerrain({ current: previous, requested: command })) {
+    return { command, previous, applied: false, clearedBeforeApply: false };
+  }
+
+  const mustRefreshSameSourceGeometry = Boolean(
+    previous &&
+      command &&
+      previous.source === command.source &&
+      normalizeBathymetryExaggeration(previous.exaggeration ?? 1) !== command.exaggeration,
+  );
+  if (mustRefreshSameSourceGeometry) {
+    map.setTerrain(null);
+  }
+  map.setTerrain(command);
+  map.triggerRepaint?.();
+  return {
+    command,
+    previous,
+    applied: true,
+    clearedBeforeApply: mustRefreshSameSourceGeometry,
+  };
 }
 
 export function buildBathymetryCameraOptions({
