@@ -22,15 +22,11 @@ import { getManualCatchMemos } from "@/domain/manualCatchMemos";
 import {
   fetchMasterData,
   getStaticMasterData,
-  type MasterDataFallbackReason,
-  type MasterDataMeta,
   type MasterDataSet,
 } from "@/lib/masterDataRepository";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type ReportView = "reports" | "areas";
-type MasterDataStatus = MasterDataMeta & { isLoading: boolean };
-
 const reportSortOptions: { value: SortOption; label: string }[] = [
   { value: "dateDesc", label: "日付が新しい順" },
   { value: "dateAsc", label: "日付が古い順" },
@@ -41,12 +37,6 @@ const areaSortOptions: { value: SortOption; label: string }[] = [
   { value: "dateDesc", label: "日付が新しい順" },
   { value: "dateAsc", label: "日付が古い順" },
 ];
-
-const fallbackReasonLabels: Record<MasterDataFallbackReason, string> = {
-  "supabase-not-configured": "Supabase未設定のため静的データを使用",
-  "supabase-error": "Supabaseから取得できないため静的データを使用",
-  "empty-supabase-result": "Supabaseの有効データが0件のため静的データを使用",
-};
 
 function getFishSpeciesFilterNames(
   masterData: MasterDataSet,
@@ -81,10 +71,6 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [masterData, setMasterData] = useState<MasterDataSet>(() =>
     getStaticMasterData(),
   );
-  const [masterDataStatus, setMasterDataStatus] = useState<MasterDataStatus>({
-    source: "static-fallback",
-    isLoading: true,
-  });
   const manualCatchMemos = useMemo(
     () => getManualCatchMemos(externalMemos),
     [externalMemos],
@@ -104,22 +90,14 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(false);
   useEffect(() => {
     let isActive = true;
-    setMasterDataStatus((current) => ({ ...current, isLoading: true }));
-
     fetchMasterData()
       .then((result) => {
         if (!isActive) return;
         setMasterData(result.data);
-        setMasterDataStatus({ ...result.meta, isLoading: false });
       })
       .catch(() => {
         if (!isActive) return;
         setMasterData(getStaticMasterData());
-        setMasterDataStatus({
-          source: "static-fallback",
-          fallbackReason: "supabase-error",
-          isLoading: false,
-        });
       });
 
     return () => {
@@ -419,14 +397,6 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
 
   return (
     <section className="dashboard" id="map">
-      <div className="panel filters">
-        <div>
-          <p className="eyebrow">Post-MVP / 自分の釣果記録</p>
-          <h2>Map</h2>
-          <MasterDataStatusChip status={masterDataStatus} />
-        </div>
-      </div>
-
       <div className="mapEnvironmentGrid">
         <div className="mapSection">
           <FishingMap
@@ -738,24 +708,5 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
         </div>
       )}
     </section>
-  );
-}
-
-function MasterDataStatusChip({ status }: { status: MasterDataStatus }) {
-  const label = status.isLoading
-    ? "データ読込中..."
-    : status.source === "supabase"
-      ? "データ: Supabase"
-      : "データ: 静的fallback";
-  const reason =
-    !status.isLoading && status.fallbackReason
-      ? fallbackReasonLabels[status.fallbackReason]
-      : null;
-
-  return (
-    <p className="dataSourceStatus" aria-live="polite">
-      <span>{label}</span>
-      {reason ? <small>{reason}</small> : null}
-    </p>
   );
 }

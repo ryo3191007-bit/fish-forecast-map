@@ -44,9 +44,6 @@ export function AppShell() {
               福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面まで
             </p>
             <h1>Fish Forecast Map</h1>
-            <a className="button" href="#map">
-              マップを見る
-            </a>
           </div>
         </div>
       </section>

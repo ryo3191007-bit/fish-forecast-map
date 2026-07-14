@@ -37,6 +37,52 @@ assert.match(
 );
 assert.match(page, /<AppShell\s*\/?>/, "page renders AppShell");
 
+assert.doesNotMatch(
+  appShell,
+  /<a\s+className="button"[\s\S]*?href="#map"[\s\S]*?>[\s\S]*?マップを見る[\s\S]*?<\/a>/,
+  "hero must not render the redundant map CTA button",
+);
+assert.doesNotMatch(
+  appShell,
+  /マップを見る/,
+  "AppShell user-facing text must not include マップを見る",
+);
+assert.match(
+  appShell,
+  /<a href="#map">地図<\/a>/,
+  "header navigation map link remains available",
+);
+assert.doesNotMatch(
+  dashboard,
+  /<div className="panel filters">[\s\S]*?<\/div>/,
+  "FishingDashboard must not leave the removed panel filters card/container",
+);
+assert.doesNotMatch(
+  dashboard,
+  /Post-MVP \/ 自分の釣果記録/,
+  "FishingDashboard must not render the Post-MVP self-record eyebrow above the map",
+);
+assert.doesNotMatch(
+  dashboard,
+  /<h2>Map<\/h2>/,
+  "FishingDashboard must not render the redundant Map heading above the map",
+);
+assert.doesNotMatch(
+  dashboard,
+  /MasterDataStatusChip|dataSourceStatus|データ: Supabase|データ: 静的fallback|データ読込中/,
+  "master data status chip display code is removed from the map header area",
+);
+assert.match(
+  dashboard,
+  /fetchMasterData\(\)[\s\S]*?\.then\(\(result\) => \{[\s\S]*?setMasterData\(result\.data\)/,
+  "master data fetch from Supabase/static repository remains active",
+);
+assert.match(
+  dashboard,
+  /\.catch\(\(\) => \{[\s\S]*?setMasterData\(getStaticMasterData\(\)\)/,
+  "master data fallback to static data remains active",
+);
+
 assert.equal(
   countMatches(dashboard, /<AuthStatusPanel\b/g),
   0,
