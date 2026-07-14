@@ -779,7 +779,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                   )
                 }
               />
-              <small>{BATHYMETRY_EXAGGERATION_NOTE}</small>
+              <small>{isTerrainEnabled ? BATHYMETRY_EXAGGERATION_NOTE : `${BATHYMETRY_EXAGGERATION_NOTE} 3D OFF中の変更は次回3D表示時に適用されます。`}</small>
             </div>
             <div className="terrainPresetControl" aria-label="3D視点プリセット">
               {BATHYMETRY_VIEW_PRESETS.map((preset) => (

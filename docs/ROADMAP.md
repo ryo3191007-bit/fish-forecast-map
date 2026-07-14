@@ -116,4 +116,8 @@
 
 ## Phase 5 / Post-MVP-048: 水深モードのタップ地点参考水深
 
-実装中。水深モードでクリック／タップした地点に一時markerとcardを表示し、緯度経度、表示中source（GEBCO_2026 15秒／ETOPO 2022 fallback 60秒）、Terrain-RGBからdecodeした参考水深を表示する。地点は保存せず、DB／Supabase／localStorage／釣り場masterは変更しない。runtime外部取得は追加せず、自サイト配信済みのTerrain-RGB tileのみを参照する。高さ誇張倍率は水深計算に使わず、見た目反映の追加改善は別Issueで扱う。
+完了。Issue #137 / PR #138で、水深モードのクリック／タップ地点に一時markerとcardを表示し、緯度経度、表示中source（GEBCO_2026 15秒／ETOPO 2022 fallback 60秒）、Terrain-RGBからdecodeした参考水深を表示するようにしました。地点は保存せず、DB／Supabase／localStorage／釣り場masterは変更していません。高さ誇張倍率は参考水深計算に使いません。
+
+## Phase 5 / Post-MVP-049: 水深3D高さ誇張の実表示反映修正
+
+実装中。Issue #139では、UIの高さ誇張倍率とMapLibre terrain geometryへ適用される`source`／`exaggeration`を一致させ、同一sourceの倍率変更時はterrainを一度解除してから最新倍率で再設定することで描画更新を確実化します。GEBCO→ETOPO fallback、3D OFF→ON、3D OFF中に変更した倍率の次回ON反映を維持し、slider変更だけでcamera、source fallback、参考水深値を変更しません。最大倍率は引き続き4.0×で、高精細DEM追加、DB／Supabase／localStorage、地点保存、SCORE変更は対象外です。
