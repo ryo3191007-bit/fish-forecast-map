@@ -62,6 +62,11 @@ assert.doesNotMatch(map, /hasBeigeYellowOrangeColor/);
 assert.doesNotMatch(map, /HIDDEN_BASE_LAND_LAYER_VISIBILITY/);
 assert.doesNotMatch(bathy, /xyz\/(?:std|blank)\//);
 assert.match(generator, /elevationMeters >= 0\) return \[0, 0, 0, 0\]/);
+assert.match(map, /陰影/);
+assert.match(map, /等深線/);
+assert.match(map, /setHillshadeEnabled\(event\.target\.checked\)/);
+assert.match(map, /setContoursEnabled\(event\.target\.checked\)/);
+assert.match(map, /buildBathymetryLayerVisibility/);
 assert.match(metadata.license, /GEBCO/);
 assert.match(metadata.dataset, /GEBCO_2026/);
 assert.equal(metadata.tileSize, 256);
@@ -151,7 +156,18 @@ const computedTiles = expectedTiles(
 assert.deepEqual(metadata.tiles, computedTiles);
 assert.ok(metadata.tiles.length > 1);
 assert.equal(metadata.tileCount, metadata.tiles.length);
-assert.deepEqual(metadata.depthStopsMeters, [0, 20, 50, 100, 200, 500]);
+assert.deepEqual(metadata.depthStopsMeters, [0, 10, 20, 50, 100, 200, 500]);
+assert.deepEqual(
+  bathy.match(/depthMeters: \d+/g).map((item) => Number(item.match(/\d+/)[0])),
+  metadata.depthStopsMeters,
+  "legend depth stops and generated tile metadata must match",
+);
+assert.ok(generator.includes("BATHYMETRY_COLOR_STOPS"));
+assert.ok(generator.includes("{ depthMeters: 0, rgba: [184, 237, 243, 176] }"));
+assert.ok(generator.includes("{ depthMeters: 10, rgba: [143, 215, 233, 188] }"));
+assert.ok(generator.includes("{ depthMeters: 20, rgba: [95, 185, 220, 202] }"));
+assert.ok(generator.includes("sourceName === \"gebco-2026\" ? \"15 arc-second\" : \"60 arc-second\""));
+assert.doesNotMatch(generator, /coastlineOverlay|land-mask|kind: "coastline"/);
 assert.ok(contours.features.length > 5);
 assert.ok(new Set(contours.features.map((f) => f.properties.depth)).size > 2);
 assert.ok(

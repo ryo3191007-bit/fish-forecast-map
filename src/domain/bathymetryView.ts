@@ -1,5 +1,13 @@
 import {
+  BATHYMETRY_COLOR_LAYER_ID,
+  BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+  BATHYMETRY_CONTOUR_LAYER_ID,
+  BATHYMETRY_FALLBACK_COLOR_LAYER_ID,
+  BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+  BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
+  BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
   BATHYMETRY_FALLBACK_SOURCE_ID,
+  BATHYMETRY_HILLSHADE_LAYER_ID,
   BATHYMETRY_SOURCE_ID,
   BATHYMETRY_VIEW_PRESETS,
   normalizeBathymetryExaggeration,
@@ -14,6 +22,11 @@ export type TerrainMap = {
   setTerrain: (terrain: TerrainCommand) => void;
   getTerrain?: () => CurrentTerrain | undefined;
   triggerRepaint?: () => void;
+};
+export type BathymetryLayerVisibility = Record<string, boolean>;
+export type BathymetryOverlayToggles = {
+  hillshadeEnabled: boolean;
+  contoursEnabled: boolean;
 };
 export type CameraMap = {
   stop: () => void;
@@ -71,6 +84,46 @@ export function buildBathymetryTerrainCommand({
     source: display === "gebco" ? BATHYMETRY_SOURCE_ID : BATHYMETRY_FALLBACK_SOURCE_ID,
     exaggeration: normalizeBathymetryExaggeration(exaggeration),
   };
+}
+
+const PRIMARY_VISIBILITY_LAYER_IDS = {
+  color: BATHYMETRY_COLOR_LAYER_ID,
+  hillshade: BATHYMETRY_HILLSHADE_LAYER_ID,
+  contour: BATHYMETRY_CONTOUR_LAYER_ID,
+  contourLabel: BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+} as const;
+
+const FALLBACK_VISIBILITY_LAYER_IDS = {
+  color: BATHYMETRY_FALLBACK_COLOR_LAYER_ID,
+  hillshade: BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
+  contour: BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
+  contourLabel: BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+} as const;
+
+export function buildBathymetryLayerVisibility({
+  mode,
+  display,
+  hillshadeEnabled,
+  contoursEnabled,
+}: {
+  mode: MapLayerMode;
+  display: BathymetryDisplaySource;
+} & BathymetryOverlayToggles): BathymetryLayerVisibility {
+  const visibility: BathymetryLayerVisibility = {};
+  for (const ids of [PRIMARY_VISIBILITY_LAYER_IDS, FALLBACK_VISIBILITY_LAYER_IDS]) {
+    visibility[ids.color] = false;
+    visibility[ids.hillshade] = false;
+    visibility[ids.contour] = false;
+    visibility[ids.contourLabel] = false;
+  }
+  if (mode !== "bathymetry" || display === "standard") return visibility;
+  const active =
+    display === "gebco" ? PRIMARY_VISIBILITY_LAYER_IDS : FALLBACK_VISIBILITY_LAYER_IDS;
+  visibility[active.color] = true;
+  visibility[active.hillshade] = hillshadeEnabled;
+  visibility[active.contour] = contoursEnabled;
+  visibility[active.contourLabel] = contoursEnabled;
+  return visibility;
 }
 
 export type BathymetryTerrainApplyResult = {

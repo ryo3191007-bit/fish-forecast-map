@@ -29,8 +29,17 @@ const TID_PATH = `data/bathymetry/${sourceName}-tid-crop.json`;
 const OUT = `public/bathymetry/${sourceName}`;
 const MIN_ZOOM = 7;
 const MAX_ZOOM = sourceName === "gebco-2026" ? 9 : 8;
-const DEPTHS = [20, 50, 100, 200, 500];
+const DEPTHS = [10, 20, 50, 100, 200, 500];
 const TILE_SIZE = 256;
+const BATHYMETRY_COLOR_STOPS = [
+  { depthMeters: 0, rgba: [184, 237, 243, 176] },
+  { depthMeters: 10, rgba: [143, 215, 233, 188] },
+  { depthMeters: 20, rgba: [95, 185, 220, 202] },
+  { depthMeters: 50, rgba: [47, 143, 199, 216] },
+  { depthMeters: 100, rgba: [23, 106, 169, 228] },
+  { depthMeters: 200, rgba: [16, 75, 131, 238] },
+  { depthMeters: 500, rgba: [8, 47, 95, 245] },
+];
 
 const dem = JSON.parse(fs.readFileSync(DEM_PATH, "utf8"));
 if (
@@ -103,12 +112,11 @@ const expectedTiles = () => {
 function color(elevationMeters) {
   if (elevationMeters >= 0) return [0, 0, 0, 0];
   const depth = -elevationMeters;
-  if (depth < 20) return [191, 244, 255, 180];
-  if (depth < 50) return [109, 215, 243, 195];
-  if (depth < 100) return [45, 169, 225, 210];
-  if (depth < 200) return [20, 121, 201, 225];
-  if (depth < 500) return [15, 79, 159, 235];
-  return [8, 39, 95, 245];
+  for (let index = BATHYMETRY_COLOR_STOPS.length - 1; index >= 0; index--) {
+    const stop = BATHYMETRY_COLOR_STOPS[index];
+    if (depth >= stop.depthMeters) return stop.rgba;
+  }
+  return BATHYMETRY_COLOR_STOPS[0].rgba;
 }
 
 function writeTile(kind, zoom, x, y, checksums) {
@@ -280,52 +288,6 @@ function generateContours() {
   };
 }
 
-function cellCorner(demGrid, column, row) {
-  const { west, north } = demGrid.bounds;
-  return [
-    west + column * demGrid.cellSizeDegrees.longitude,
-    north - row * demGrid.cellSizeDegrees.latitude,
-  ];
-}
-
-function generateLandMaskFeatures() {
-  const features = [];
-  for (let row = 0; row < dem.height; row++) {
-    let startColumn = null;
-    for (let column = 0; column <= dem.width; column++) {
-      const isLand = column < dem.width && dem.values[row * dem.width + column] >= 0;
-      if (isLand && startColumn === null) startColumn = column;
-      if ((!isLand || column === dem.width) && startColumn !== null) {
-        const [west, north] = cellCorner(dem, startColumn, row);
-        const [east, south] = cellCorner(dem, column, row + 1);
-        features.push({
-          type: "Feature",
-          properties: { kind: "land-mask", source: `${dem.dataset} non-negative elevation cells` },
-          geometry: {
-            type: "Polygon",
-            coordinates: [[[west, north], [east, north], [east, south], [west, south], [west, north]]],
-          },
-        });
-        startColumn = null;
-      }
-    }
-  }
-  return features;
-}
-
-function generateCoastlineOverlay() {
-  return {
-    type: "FeatureCollection",
-    features: [
-      ...generateLandMaskFeatures(),
-      ...generateContourLines([{ depth: 0, level: 0 }]).map((feature) => ({
-        ...feature,
-        properties: { ...feature.properties, kind: "coastline" },
-      })),
-    ],
-  };
-}
-
 fs.rmSync(path.join(OUT, "terrain"), { recursive: true, force: true });
 fs.rmSync(path.join(OUT, "color"), { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
@@ -342,14 +304,6 @@ fs.writeFileSync(contoursPath, JSON.stringify(contours, null, 2));
 checksums[contoursPath] = crypto
   .createHash("sha256")
   .update(fs.readFileSync(contoursPath))
-  .digest("hex");
-
-const coastline = generateCoastlineOverlay();
-const coastlinePath = path.join(OUT, "coastline.geojson");
-fs.writeFileSync(coastlinePath, JSON.stringify(coastline, null, 2));
-checksums[coastlinePath] = crypto
-  .createHash("sha256")
-  .update(fs.readFileSync(coastlinePath))
   .digest("hex");
 
 const metadata = {
@@ -375,17 +329,13 @@ const metadata = {
   tileSize: TILE_SIZE,
   tileCount: tiles.length,
   tiles,
-  depthStopsMeters: [0, ...DEPTHS],
+  depthStopsMeters: BATHYMETRY_COLOR_STOPS.map((stop) => stop.depthMeters),
+  colorStops: BATHYMETRY_COLOR_STOPS,
   generationCommand: `BATHYMETRY_SOURCE=${sourceName} node scripts/generate-bathymetry-assets.mjs`,
   checksums,
   navigationWarning: "Reference only; not for navigation or safety decisions.",
   contourAlgorithm:
     "marching squares with segment stitching on pixel-centre registered cells",
-  coastlineOverlay: {
-    file: "coastline.geojson",
-    landMask: "horizontal runs of non-negative DEM cells",
-    shoreline: "0m marching-squares LineString features",
-  },
 };
 
 if (fs.existsSync(TID_PATH)) {

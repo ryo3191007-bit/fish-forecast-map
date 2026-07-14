@@ -66,6 +66,7 @@ import {
 } from "@/domain/bathymetryFallback";
 import {
   applyBathymetryTerrain,
+  buildBathymetryLayerVisibility,
   clearBathymetryCameraTransition,
   createBathymetryCameraTransitionManager,
   getDefaultBathymetryViewPreset,
@@ -160,6 +161,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const [terrainExaggeration, setTerrainExaggeration] = useState(
     BATHYMETRY_EXAGGERATION_DEFAULT,
   );
+  const [hillshadeEnabled, setHillshadeEnabled] = useState(true);
+  const [contoursEnabled, setContoursEnabled] = useState(true);
   const [selectedViewPreset, setSelectedViewPreset] =
     useState<BathymetryViewPresetId | null>(null);
   const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>("2d");
@@ -435,6 +438,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         display: bathymetryRuntime.display,
         terrainEnabled: isTerrainEnabled,
         terrainExaggeration,
+        hillshadeEnabled,
+        contoursEnabled,
         setTerrainStatus,
         onSourceError: (source, key) =>
           setBathymetryRuntime((current) =>
@@ -476,6 +481,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     };
   }, [
     bathymetryRuntime.display,
+    contoursEnabled,
+    hillshadeEnabled,
     isTerrainEnabled,
     mapLayerMode,
     terrainExaggeration,
@@ -782,6 +789,22 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             >
               データ由来
             </button>
+            <label className="terrainToggle compactToggle">
+              <input
+                type="checkbox"
+                checked={hillshadeEnabled}
+                onChange={(event) => setHillshadeEnabled(event.target.checked)}
+              />
+              陰影
+            </label>
+            <label className="terrainToggle compactToggle">
+              <input
+                type="checkbox"
+                checked={contoursEnabled}
+                onChange={(event) => setContoursEnabled(event.target.checked)}
+              />
+              等深線
+            </label>
             <span className="terrainStatus">
               {terrainStatus === "3d"
                 ? "3D地形表示"
@@ -1017,6 +1040,8 @@ type ApplyBathymetryModeInput = {
   display: BathymetryDisplaySource;
   terrainEnabled: boolean;
   terrainExaggeration: number;
+  hillshadeEnabled: boolean;
+  contoursEnabled: boolean;
   setTerrainStatus: (status: TerrainStatus) => void;
   onSourceError: (source: BathymetryFailureSource, key: string) => void;
 };
@@ -1027,6 +1052,8 @@ function applyBathymetryMode({
   display,
   terrainEnabled,
   terrainExaggeration,
+  hillshadeEnabled,
+  contoursEnabled,
   setTerrainStatus,
   onSourceError,
 }: ApplyBathymetryModeInput) {
@@ -1038,11 +1065,14 @@ function applyBathymetryMode({
 
   if (display === "gebco") addPrimaryBathymetryLayers(map);
   else addFallbackBathymetryLayers(map);
-  for (const layerId of PRIMARY_LAYER_IDS) {
-    setLayerVisibility(map, layerId, display === "gebco");
-  }
-  for (const layerId of FALLBACK_LAYER_IDS) {
-    setLayerVisibility(map, layerId, display === "etopo");
+  const visibility = buildBathymetryLayerVisibility({
+    mode,
+    display,
+    hillshadeEnabled,
+    contoursEnabled,
+  });
+  for (const [layerId, visible] of Object.entries(visibility)) {
+    setLayerVisibility(map, layerId, visible);
   }
   try {
     if (terrainEnabled) {
