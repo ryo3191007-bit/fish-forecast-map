@@ -43,7 +43,11 @@ state = runtime.reduceBathymetryFallback(state, {
   source: "etopo",
   key: "decode",
 });
-assert.equal(state.display, "standard", "ETOPO failure returns to standard map");
+assert.equal(
+  state.display,
+  "standard",
+  "ETOPO failure returns to standard map",
+);
 assert.equal(state.notice, runtime.BATHYMETRY_STANDARD_NOTICE);
 
 const once = state;
@@ -81,36 +85,9 @@ assert.equal(
   }),
   "etopo",
 );
-assert.equal(runtime.classifyBathymetryError({ message: "unrelated error" }), null);
-
-const coastline404 = runtime.classifyBathymetryError({
-  sourceId: "bathymetry-coastline",
-  message: "HTTP 404 /bathymetry/gebco-2026/coastline.geojson",
-});
 assert.equal(
-  coastline404,
+  runtime.classifyBathymetryError({ message: "unrelated error" }),
   null,
-  "coastline overlay errors are not GEBCO bathymetry failures",
-);
-assert.equal(
-  runtime.classifyBathymetryError({
-    message: "Failed to parse /bathymetry/gebco-2026/coastline.geojson",
-  }),
-  null,
-  "coastline parse errors do not trigger fallback from GEBCO",
-);
-state = runtime.initialBathymetryFallbackState();
-if (coastline404) {
-  state = runtime.reduceBathymetryFallback(state, {
-    type: "source-error",
-    source: coastline404,
-    key: "coastline-404",
-  });
-}
-assert.equal(
-  state.display,
-  "gebco",
-  "coastline overlay failure keeps GEBCO bathymetry displayed",
 );
 
 const gebcoMetadata = {

@@ -1,77 +1,243 @@
-import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
-const appShell = readFileSync('src/components/AppShell.tsx', 'utf8');
-const dashboard = readFileSync('src/components/FishingDashboard.tsx', 'utf8');
-const page = readFileSync('src/app/page.tsx', 'utf8');
+const appShell = readFileSync("src/components/AppShell.tsx", "utf8");
+const dashboard = readFileSync("src/components/FishingDashboard.tsx", "utf8");
+const page = readFileSync("src/app/page.tsx", "utf8");
 
-const hookSource = readFileSync('src/hooks/useExternalCatchMemos.ts', 'utf8');
-const externalSources = readFileSync('src/data/externalSources.ts', 'utf8');
-const masterDataSeed = readFileSync('supabase/sql/003_master_data_seed.sql', 'utf8');
-const userSelfReportMigration = readFileSync('supabase/migrations/20260712000100_add_user_self_report_source.sql', 'utf8');
+const hookSource = readFileSync("src/hooks/useExternalCatchMemos.ts", "utf8");
+const externalSources = readFileSync("src/data/externalSources.ts", "utf8");
+const masterDataSeed = readFileSync(
+  "supabase/sql/003_master_data_seed.sql",
+  "utf8",
+);
+const userSelfReportMigration = readFileSync(
+  "supabase/migrations/20260712000100_add_user_self_report_source.sql",
+  "utf8",
+);
 
 function countMatches(source, pattern) {
   return [...source.matchAll(pattern)].length;
 }
 
-assert.equal(countMatches(appShell, /useSupabaseAuth\s*\(/g), 1, 'AppShell must call useSupabaseAuth() exactly once');
-assert.equal(countMatches(dashboard, /useSupabaseAuth\s*\(/g), 0, 'FishingDashboard must not call useSupabaseAuth()');
-assert.match(dashboard, /type FishingDashboardProps = \{ auth: ReturnType<typeof useSupabaseAuth> \}/, 'FishingDashboard receives auth from AppShell props');
-assert.match(page, /<AppShell\s*\/?>/, 'page renders AppShell');
+assert.equal(
+  countMatches(appShell, /useSupabaseAuth\s*\(/g),
+  1,
+  "AppShell must call useSupabaseAuth() exactly once",
+);
+assert.equal(
+  countMatches(dashboard, /useSupabaseAuth\s*\(/g),
+  0,
+  "FishingDashboard must not call useSupabaseAuth()",
+);
+assert.match(
+  dashboard,
+  /type FishingDashboardProps = \{ auth: ReturnType<typeof useSupabaseAuth> \}/,
+  "FishingDashboard receives auth from AppShell props",
+);
+assert.match(page, /<AppShell\s*\/?>/, "page renders AppShell");
 
-assert.equal(countMatches(dashboard, /<AuthStatusPanel\b/g), 0, 'Dashboard must not contain persistent AuthStatusPanel');
-assert.equal(countMatches(appShell, /<AuthStatusPanel\b/g), 1, 'AuthStatusPanel is only inside the header modal');
-assert.match(appShell, /className="authNavButton"[\s\S]*?onClick=\{\(\) => setIsAuthOpen\(true\)\}/, 'header button opens auth modal');
-assert.match(appShell, /role="dialog"/, 'auth modal has dialog role');
-assert.match(appShell, /aria-modal="true"/, 'auth modal is aria-modal');
-assert.match(appShell, /aria-labelledby="auth-modal-heading"/, 'auth modal is labelled');
-assert.match(appShell, /className="authModalClose"[\s\S]*?setIsAuthOpen\(false\)/, 'auth modal has close button');
-assert.match(appShell, /event\.key === "Escape"[\s\S]*?setIsAuthOpen\(false\)/, 'Escape closes auth modal');
-assert.match(appShell, /className="authModalBackdrop"[\s\S]*?onClick=\{\(\) => setIsAuthOpen\(false\)\}/, 'backdrop click closes auth modal');
+assert.equal(
+  countMatches(dashboard, /<AuthStatusPanel\b/g),
+  0,
+  "Dashboard must not contain persistent AuthStatusPanel",
+);
+assert.equal(
+  countMatches(appShell, /<AuthStatusPanel\b/g),
+  1,
+  "AuthStatusPanel is only inside the header modal",
+);
+assert.match(
+  appShell,
+  /className="authNavButton"[\s\S]*?onClick=\{\(\) => setIsAuthOpen\(true\)\}/,
+  "header button opens auth modal",
+);
+assert.match(appShell, /role="dialog"/, "auth modal has dialog role");
+assert.match(appShell, /aria-modal="true"/, "auth modal is aria-modal");
+assert.match(
+  appShell,
+  /aria-labelledby="auth-modal-heading"/,
+  "auth modal is labelled",
+);
+assert.match(
+  appShell,
+  /className="authModalClose"[\s\S]*?setIsAuthOpen\(false\)/,
+  "auth modal has close button",
+);
+assert.match(
+  appShell,
+  /event\.key === "Escape"[\s\S]*?setIsAuthOpen\(false\)/,
+  "Escape closes auth modal",
+);
+assert.match(
+  appShell,
+  /className="authModalBackdrop"[\s\S]*?onClick=\{\(\) => setIsAuthOpen\(false\)\}/,
+  "backdrop click closes auth modal",
+);
 
 const expectedLinks = [
-  'https://www.chowari.jp/',
-  'https://anglers.jp/catches',
-  'https://marukin-net.co.jp/fishing-report/',
-  'https://釣り場.com/',
+  "https://www.chowari.jp/",
+  "https://anglers.jp/catches",
+  "https://marukin-net.co.jp/fishing-report/",
+  "https://釣り場.com/",
 ];
 for (const href of expectedLinks) {
-  const escaped = href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  assert.match(appShell, new RegExp(`<a href="${escaped}" target="_blank" rel="noopener noreferrer"`), `external link ${href} must open safely in a new tab`);
+  const escaped = href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  assert.match(
+    appShell,
+    new RegExp(
+      String.raw`<a[\s\S]*?href="${escaped}"[\s\S]*?target="_blank"[\s\S]*?rel="noopener noreferrer"`,
+    ),
+    `external link ${href} must open safely in a new tab`,
+  );
 }
-assert.equal(countMatches(appShell, /target="_blank" rel="noopener noreferrer"/g), 4, 'exactly four external reference links are rendered');
+assert.equal(
+  countMatches(appShell, /target="_blank"/g),
+  4,
+  "exactly four external reference links are rendered",
+);
+assert.equal(
+  countMatches(appShell, /rel="noopener noreferrer"/g),
+  4,
+  "all external reference links use noopener noreferrer",
+);
 
-assert.match(dashboard, /const filteredManualCatchMemos = useMemo\(\(\) => \{[\s\S]*?manualCatchMemos\.filter/, 'catch list filters manual memos only');
-assert.match(dashboard, /displayMemos=\{filteredManualCatchMemos\}/, 'catch list passes filtered manual memos to the catch record section');
-assert.doesNotMatch(dashboard, /mockFishingReports\.map\(\(report\) => <ExternalMemoCard/, 'mock reports must not be rendered as catch list cards');
-assert.doesNotMatch(dashboard, /reports\.map\(\(report\) => <ExternalMemoCard/, 'filtered mock reports must not be rendered as catch list cards');
+assert.match(
+  dashboard,
+  /const filteredManualCatchMemos = useMemo\(\(\) => \{[\s\S]*?manualCatchMemos\.filter/,
+  "catch list filters manual memos only",
+);
+assert.match(
+  dashboard,
+  /displayMemos=\{filteredManualCatchMemos\}/,
+  "catch list passes filtered manual memos to the catch record section",
+);
+assert.doesNotMatch(
+  dashboard,
+  /mockFishingReports\.map\(\(report\) => <ExternalMemoCard/,
+  "mock reports must not be rendered as catch list cards",
+);
+assert.doesNotMatch(
+  dashboard,
+  /reports\.map\(\(report\) => <ExternalMemoCard/,
+  "filtered mock reports must not be rendered as catch list cards",
+);
 
-assert.doesNotMatch(dashboard, /manual memo|手入力釣果期間フィルタ/, 'FishingDashboard user-facing labels do not use legacy manual memo wording');
-assert.doesNotMatch(dashboard, /魚種、釣り方、日付、出典をカードごとに確認できます。/, 'catch list description does not mention source display');
-assert.match(dashboard, /自分の釣果期間フィルタ/, 'catch date filter is labelled as self catch records');
-assert.match(dashboard, /条件に合う本人の釣果は/, 'area evaluation score note refers to self catch records');
-assert.doesNotMatch(hookSource, /外部釣果メモ/, 'save and migration errors shown in the catch record UI do not mention external catch memos');
+assert.doesNotMatch(
+  dashboard,
+  /manual memo|手入力釣果期間フィルタ/,
+  "FishingDashboard user-facing labels do not use legacy manual memo wording",
+);
+assert.doesNotMatch(
+  dashboard,
+  /魚種、釣り方、日付、出典をカードごとに確認できます。/,
+  "catch list description does not mention source display",
+);
+assert.match(
+  dashboard,
+  /自分の釣果期間フィルタ/,
+  "catch date filter is labelled as self catch records",
+);
+assert.match(
+  dashboard,
+  /条件に合う本人の釣果は/,
+  "area evaluation score note refers to self catch records",
+);
+assert.doesNotMatch(
+  hookSource,
+  /外部釣果メモ/,
+  "save and migration errors shown in the catch record UI do not mention external catch memos",
+);
 
-const staticUserSelfReportReviewedAt = externalSources.match(/sourceId: "user-self-report"[\s\S]*?reviewedAt: "(\d{4}-\d{2}-\d{2})"/)?.[1];
-const seedUserSelfReportReviewedAt = masterDataSeed.match(/'user-self-report'[\s\S]*?'(\d{4}-\d{2}-\d{2})'::date/)?.[1];
-const migrationUserSelfReportReviewedAt = userSelfReportMigration.match(/'user-self-report'[\s\S]*?date '(\d{4}-\d{2}-\d{2})'/)?.[1];
-assert.equal(staticUserSelfReportReviewedAt, '2026-07-12', 'static user-self-report reviewedAt is the current reviewed date');
-assert.equal(staticUserSelfReportReviewedAt, seedUserSelfReportReviewedAt, 'static user-self-report reviewedAt matches seed SQL');
-assert.equal(staticUserSelfReportReviewedAt, migrationUserSelfReportReviewedAt, 'static user-self-report reviewedAt matches migration SQL');
+const staticUserSelfReportReviewedAt = externalSources.match(
+  /sourceId: "user-self-report"[\s\S]*?reviewedAt: "(\d{4}-\d{2}-\d{2})"/,
+)?.[1];
+const seedUserSelfReportReviewedAt = masterDataSeed.match(
+  /'user-self-report'[\s\S]*?'(\d{4}-\d{2}-\d{2})'::date/,
+)?.[1];
+const migrationUserSelfReportReviewedAt = userSelfReportMigration.match(
+  /'user-self-report'[\s\S]*?date '(\d{4}-\d{2}-\d{2})'/,
+)?.[1];
+assert.equal(
+  staticUserSelfReportReviewedAt,
+  "2026-07-12",
+  "static user-self-report reviewedAt is the current reviewed date",
+);
+assert.equal(
+  staticUserSelfReportReviewedAt,
+  seedUserSelfReportReviewedAt,
+  "static user-self-report reviewedAt matches seed SQL",
+);
+assert.equal(
+  staticUserSelfReportReviewedAt,
+  migrationUserSelfReportReviewedAt,
+  "static user-self-report reviewedAt matches migration SQL",
+);
 
-assert.match(dashboard, /const filteredExternalMemosForMap = useMemo\(\(\) => \{[\s\S]*?externalMemos\.filter/, 'map filters from all external memos');
-assert.match(dashboard, /<FishingMap reports=\{reports\} externalMemos=\{filteredExternalMemosForMap\}/, 'map receives the all-acquisition-method memo candidates');
-assert.doesNotMatch(dashboard, /<FishingMap reports=\{reports\} externalMemos=\{filteredManualCatchMemos\}/, 'map must not receive manual-only list candidates');
+assert.match(
+  dashboard,
+  /const filteredExternalMemosForMap = useMemo\(\(\) => \{[\s\S]*?externalMemos\.filter/,
+  "map filters from all external memos",
+);
+assert.match(
+  dashboard,
+  /<FishingMap[\s\S]*?reports=\{reports\}[\s\S]*?externalMemos=\{filteredExternalMemosForMap\}/,
+  "map receives the all-acquisition-method memo candidates",
+);
+assert.doesNotMatch(
+  dashboard,
+  /<FishingMap[\s\S]*?reports=\{reports\}[\s\S]*?externalMemos=\{filteredManualCatchMemos\}/,
+  "map must not receive manual-only list candidates",
+);
 
-const memoSection = readFileSync('src/components/ExternalCatchMemoSection.tsx', 'utf8');
-assert.match(memoSection, /<h2 id="external-memos-heading">\{title\}<\/h2>/, 'registration/edit modal uses dynamic create/edit heading');
-assert.doesNotMatch(memoSection, /情報元URL\*|情報元\*|信頼度<select|出典URL/, 'catch record form and cards do not expose external source fields');
-assert.match(memoSection, /USER_SELF_REPORT_SOURCE_ID = "user-self-report"/, 'new catch records use internal self-report source id');
-assert.match(memoSection, /confidence: editingMemo\?\.confidence \?\? "high"/, 'new catch records default to high confidence while edits keep existing confidence');
-assert.match(memoSection, /sourceId: editingMemo\?\.sourceId \?\? USER_SELF_REPORT_SOURCE_ID/, 'edits keep existing hidden source id');
-assert.match(memoSection, /createdAt: editingMemo\?\.createdAt \?\? now/, 'edits preserve createdAt');
-assert.match(memoSection, /if \(!window\.confirm/, 'delete requires confirmation');
-assert.match(memoSection, /<details className="externalMemoMigration">/, 'localStorage migration UI is outside the modal in compact details');
-assert.match(memoSection, /aria-label=\{`\$\{memo\.caughtDate\} \$\{memo\.species\} \$\{memo\.areaName\}の釣果を編集`\}/, 'each catch card has an accessible edit button');
+const memoSection = readFileSync(
+  "src/components/ExternalCatchMemoSection.tsx",
+  "utf8",
+);
+assert.match(
+  memoSection,
+  /<h2 id="external-memos-heading">\{title\}<\/h2>/,
+  "registration/edit modal uses dynamic create/edit heading",
+);
+assert.doesNotMatch(
+  memoSection,
+  /情報元URL\*|情報元\*|信頼度<select|出典URL/,
+  "catch record form and cards do not expose external source fields",
+);
+assert.match(
+  memoSection,
+  /USER_SELF_REPORT_SOURCE_ID = "user-self-report"/,
+  "new catch records use internal self-report source id",
+);
+assert.match(
+  memoSection,
+  /confidence: editingMemo\?\.confidence \?\? "high"/,
+  "new catch records default to high confidence while edits keep existing confidence",
+);
+assert.match(
+  memoSection,
+  /sourceId: editingMemo\?\.sourceId \?\? USER_SELF_REPORT_SOURCE_ID/,
+  "edits keep existing hidden source id",
+);
+assert.match(
+  memoSection,
+  /createdAt: editingMemo\?\.createdAt \?\? now/,
+  "edits preserve createdAt",
+);
+assert.match(
+  memoSection,
+  /if \(!window\.confirm/,
+  "delete requires confirmation",
+);
+assert.match(
+  memoSection,
+  /<details className="externalMemoMigration">/,
+  "localStorage migration UI is outside the modal in compact details",
+);
+assert.match(
+  memoSection,
+  /aria-label=\{`\$\{memo\.caughtDate\} \$\{memo\.species\} \$\{memo\.areaName\}の釣果を編集`\}/,
+  "each catch card has an accessible edit button",
+);
 
-console.log('UI requirement static checks passed');
+console.log("UI requirement static checks passed");

@@ -7,53 +7,49 @@ const mapLayer = fs.readFileSync("src/domain/mapLayer.ts", "utf8");
 const bathy = fs.readFileSync("src/domain/bathymetry.ts", "utf8");
 const map = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
 const css = fs.readFileSync("src/app/globals.css", "utf8");
-const generator = fs.readFileSync("scripts/generate-bathymetry-assets.mjs", "utf8");
-const dem = JSON.parse(fs.readFileSync("data/bathymetry/gebco-2026-crop.json", "utf8"));
-const metadata = JSON.parse(fs.readFileSync("public/bathymetry/gebco-2026/metadata.json", "utf8"));
-const contours = JSON.parse(fs.readFileSync("public/bathymetry/gebco-2026/contours.geojson", "utf8"));
-const coastline = JSON.parse(fs.readFileSync("public/bathymetry/gebco-2026/coastline.geojson", "utf8"));
+const generator = fs.readFileSync(
+  "scripts/generate-bathymetry-assets.mjs",
+  "utf8",
+);
+const dem = JSON.parse(
+  fs.readFileSync("data/bathymetry/gebco-2026-crop.json", "utf8"),
+);
+const metadata = JSON.parse(
+  fs.readFileSync("public/bathymetry/gebco-2026/metadata.json", "utf8"),
+);
+const contours = JSON.parse(
+  fs.readFileSync("public/bathymetry/gebco-2026/contours.geojson", "utf8"),
+);
 
 assert.match(mapLayer, /"bathymetry"/);
-for (const label of ["通常地図", "航空写真", "水深・3D地形"]) assert.match(mapLayer, new RegExp(label));
-for (const token of ["bathymetry-color-relief", "bathymetry-hillshade", "bathymetry-contours", "setTerrain", "shouldEnableInitialTerrain"]) assert.match(map + bathy, new RegExp(token));
-for (const token of ["GEBCO_2026", "航海・安全判断には使用不可", "高解像度水深を読み込めなかったため"]) assert.match(map + bathy, new RegExp(token));
-assert.match(bathy + map, /bathymetry-coastline/);
-assert.match(bathy + map, /bathymetry-land-mask/);
-assert.match(bathy + map, /#5f8f5a/);
-const landMaskOpacityMatch = bathy.match(/BATHYMETRY_LAND_MASK_OPACITY = ([0-9.]+);/);
-assert.ok(landMaskOpacityMatch, "land-mask opacity constant must be defined");
-assert.strictEqual(Number(landMaskOpacityMatch[1]), 1.0, "land-mask opacity must be fully opaque to hide beige/orange base-map land colors");
-assert.match(map, /hideBaseLandLayersForBathymetryCoastline/);
-assert.match(map, /isBaseMapLandColorLayer/);
-assert.match(map, /hasBeigeYellowOrangeColor/);
-assert.match(map, /HIDDEN_BASE_LAND_LAYER_VISIBILITY/);
-assert.match(
-  map,
-  /if \(coastlineOverlayEnabled\) hideBaseLandLayersForBathymetryCoastline\(map\);\s*else restoreBaseLandLayerVisibility\(map\);/s,
-  "bathymetry coastline ON must hide detected beige/yellow/orange base land layers and OFF must restore them",
-);
-assert.match(
-  map,
-  /if \(mode !== "bathymetry" \|\| display === "standard"\) \{\s*restoreBaseLandLayerVisibility\(map\);/s,
-  "standard/aerial mode exits must restore the original base land-layer visibility",
-);
-assert.match(
-  map,
-  /store\.set\(\s*layer\.id,\s*map\.getLayoutProperty\(layer\.id, "visibility"\)/s,
-  "original visibility must be saved before hiding base land layers",
-);
-assert.match(
-  map,
-  /map\.setLayoutProperty\(layerId, "visibility", visibility\);/s,
-  "restore must use the saved visibility instead of forcing visible",
-);
+for (const label of ["通常地図", "航空写真", "水深・3D地形"])
+  assert.match(mapLayer, new RegExp(label));
+for (const token of [
+  "bathymetry-color-relief",
+  "bathymetry-hillshade",
+  "bathymetry-contours",
+  "setTerrain",
+  "shouldEnableInitialTerrain",
+])
+  assert.match(map + bathy, new RegExp(token));
+for (const token of ["GEBCO_2026", "高解像度水深を読み込めなかったため"])
+  assert.match(map + bathy, new RegExp(token));
+assert.doesNotMatch(bathy + map, /bathymetry-coastline/);
+assert.doesNotMatch(bathy + map, /bathymetry-land-mask/);
+assert.doesNotMatch(map, /海岸線表示/);
+assert.doesNotMatch(map, /hideBaseLandLayersForBathymetryCoastline/);
+assert.doesNotMatch(map, /isBaseMapLandColorLayer/);
+assert.doesNotMatch(map, /hasBeigeYellowOrangeColor/);
+assert.doesNotMatch(map, /HIDDEN_BASE_LAND_LAYER_VISIBILITY/);
 assert.doesNotMatch(bathy, /xyz\/(?:std|blank)\//);
 assert.match(generator, /elevationMeters >= 0\) return \[0, 0, 0, 0\]/);
 assert.match(metadata.license, /GEBCO/);
 assert.match(metadata.dataset, /GEBCO_2026/);
 assert.equal(metadata.tileSize, 256);
 assert.equal(metadata.sourceResolution, "15 arc-second");
-assert.ok(dem.cellSizeDegrees.longitude > 0 && dem.cellSizeDegrees.latitude > 0);
+assert.ok(
+  dem.cellSizeDegrees.longitude > 0 && dem.cellSizeDegrees.latitude > 0,
+);
 assert.match(bathy, /BATHYMETRY_SOURCE_RESOLUTION = "15 arc-second"/);
 assert.match(bathy, /BATHYMETRY_BOUNDS = \[128\.5, 32\.5, 130\.8, 34\.0\]/);
 assert.deepEqual(metadata.cropBounds, dem.bounds);
@@ -67,11 +63,21 @@ assert.ok(dem.textSha256);
 
 function expectedTiles(bounds, minZoom, maxZoom) {
   const lon2x = (lon, z) => Math.floor(((lon + 180) / 360) * 2 ** z);
-  const lat2y = (lat, z) => Math.floor((1 - Math.log(Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180)) / Math.PI) / 2 * 2 ** z);
+  const lat2y = (lat, z) =>
+    Math.floor(
+      ((1 -
+        Math.log(
+          Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180),
+        ) /
+          Math.PI) /
+        2) *
+        2 ** z,
+    );
   const tiles = [];
   for (let z = minZoom; z <= maxZoom; z++) {
     for (let x = lon2x(bounds.west, z); x <= lon2x(bounds.east, z); x++) {
-      for (let y = lat2y(bounds.north, z); y <= lat2y(bounds.south, z); y++) tiles.push({ z, x, y });
+      for (let y = lat2y(bounds.north, z); y <= lat2y(bounds.south, z); y++)
+        tiles.push({ z, x, y });
     }
   }
   return tiles;
@@ -80,8 +86,10 @@ function expectedTiles(bounds, minZoom, maxZoom) {
 function decodeTerrain(png) {
   const vals = new Set();
   for (let i = 0; i < png.data.length; i += 4096) {
-    const r = png.data[i], g = png.data[i + 1], b = png.data[i + 2];
-    vals.add(Math.round(-10000 + ((r * 256 * 256 + g * 256 + b) * 0.1)));
+    const r = png.data[i],
+      g = png.data[i + 1],
+      b = png.data[i + 2];
+    vals.add(Math.round(-10000 + (r * 256 * 256 + g * 256 + b) * 0.1));
   }
   return vals;
 }
@@ -96,43 +104,72 @@ for (const { z, x, y } of metadata.tiles) {
     const png = PNG.sync.read(buf);
     assert.equal(png.width, 256);
     assert.equal(png.height, 256);
-    assert.equal(crypto.createHash("sha256").update(buf).digest("hex"), metadata.checksums[file]);
+    assert.equal(
+      crypto.createHash("sha256").update(buf).digest("hex"),
+      metadata.checksums[file],
+    );
   }
   const colorPng = PNG.sync.read(fs.readFileSync(colorPath));
   for (let index = 3; index < colorPng.data.length; index += 4) {
     if (colorPng.data[index] === 0) transparentColorPixels++;
     else visibleColorPixels++;
   }
-  assert.notEqual(fs.readFileSync(terrainPath, "hex"), fs.readFileSync(colorPath, "hex"));
-  assert.ok(decodeTerrain(PNG.sync.read(fs.readFileSync(terrainPath))).size > 3);
+  assert.notEqual(
+    fs.readFileSync(terrainPath, "hex"),
+    fs.readFileSync(colorPath, "hex"),
+  );
+  assert.ok(
+    decodeTerrain(PNG.sync.read(fs.readFileSync(terrainPath))).size > 3,
+  );
 }
 assert.ok(transparentColorPixels > 0, "land pixels must be fully transparent");
 assert.ok(visibleColorPixels > 0, "sea depth pixels must remain visible");
-const computedTiles = expectedTiles(metadata.cropBounds, metadata.generatedZoomRange.min, metadata.generatedZoomRange.max);
+const computedTiles = expectedTiles(
+  metadata.cropBounds,
+  metadata.generatedZoomRange.min,
+  metadata.generatedZoomRange.max,
+);
 assert.deepEqual(metadata.tiles, computedTiles);
 assert.ok(metadata.tiles.length > 1);
 assert.equal(metadata.tileCount, metadata.tiles.length);
 assert.deepEqual(metadata.depthStopsMeters, [0, 20, 50, 100, 200, 500]);
 assert.ok(contours.features.length > 5);
 assert.ok(new Set(contours.features.map((f) => f.properties.depth)).size > 2);
-assert.ok(contours.features.every((f) => typeof f.properties.depth === "number" && typeof f.properties.major === "boolean"));
+assert.ok(
+  contours.features.every(
+    (f) =>
+      typeof f.properties.depth === "number" &&
+      typeof f.properties.major === "boolean",
+  ),
+);
 assert.ok(contours.features.some((f) => f.geometry.coordinates.length > 10));
-assert.ok(coastline.features.some((f) => f.geometry.type === "Polygon" && f.properties.kind === "land-mask"));
-assert.ok(coastline.features.some((f) => f.geometry.type === "LineString" && f.properties.kind === "coastline"));
-assert.match(generator, /generateCoastlineOverlay/);
-assert.ok(contours.features.some((f) => {
-  const lons = f.geometry.coordinates.map(([lon]) => lon);
-  const lats = f.geometry.coordinates.map(([, lat]) => lat);
-  return f.properties.depth === 50 && Math.max(...lons) - Math.min(...lons) > 0.01 && Math.max(...lats) - Math.min(...lats) > 0.01;
-}));
-for (const f of contours.features) for (const [lon, lat] of f.geometry.coordinates) {
-  assert.ok(lon >= metadata.cropBounds.west && lon <= metadata.cropBounds.east);
-  assert.ok(lat >= metadata.cropBounds.south && lat <= metadata.cropBounds.north);
-}
+assert.ok(
+  contours.features.some((f) => {
+    const lons = f.geometry.coordinates.map(([lon]) => lon);
+    const lats = f.geometry.coordinates.map(([, lat]) => lat);
+    return (
+      f.properties.depth === 50 &&
+      Math.max(...lons) - Math.min(...lons) > 0.01 &&
+      Math.max(...lats) - Math.min(...lats) > 0.01
+    );
+  }),
+);
+for (const f of contours.features)
+  for (const [lon, lat] of f.geometry.coordinates) {
+    assert.ok(
+      lon >= metadata.cropBounds.west && lon <= metadata.cropBounds.east,
+    );
+    assert.ok(
+      lat >= metadata.cropBounds.south && lat <= metadata.cropBounds.north,
+    );
+  }
 assert.doesNotMatch(map, /外部メモ \/ 手動メモ|信頼度:|出典URLを開く/);
 assert.match(css, /bathymetryLegend/);
 assert.match(css, /@media \(max-width: 620px\).*mapLayerToggle/s);
-assert.doesNotMatch(fs.readFileSync("README.md", "utf8"), /現在やらないこと[\s\S]*3D海底地形表示/);
+assert.doesNotMatch(
+  fs.readFileSync("README.md", "utf8"),
+  /現在やらないこと[\s\S]*3D海底地形表示/,
+);
 
 await import("./bathymetry-data.test.mjs");
 await import("./bathymetry-fallback.test.mjs");

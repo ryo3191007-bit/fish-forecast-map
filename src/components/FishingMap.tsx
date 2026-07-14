@@ -40,16 +40,8 @@ import {
   BATHYMETRY_MAX_ZOOM,
   BATHYMETRY_METADATA_URL,
   BATHYMETRY_MIN_ZOOM,
-  BATHYMETRY_SAFETY_NOTE,
   BATHYMETRY_SOURCE_ID,
   BATHYMETRY_TILE_URL,
-  BATHYMETRY_COASTLINE_ATTRIBUTION,
-  BATHYMETRY_COASTLINE_GEOJSON_URL,
-  BATHYMETRY_COASTLINE_LAYER_ID,
-  BATHYMETRY_COASTLINE_NOTE,
-  BATHYMETRY_COASTLINE_SOURCE_ID,
-  BATHYMETRY_LAND_MASK_LAYER_ID,
-  BATHYMETRY_LAND_MASK_OPACITY,
   BATHYMETRY_EXAGGERATION_DEFAULT,
   BATHYMETRY_EXAGGERATION_MAX,
   BATHYMETRY_EXAGGERATION_MIN,
@@ -61,7 +53,6 @@ import {
   normalizeBathymetryExaggeration,
   resetBathymetryExaggeration,
   lonLatToTidCell,
-  shouldEnableInitialCoastlineOverlay,
   shouldEnableInitialTerrain,
   summarizeTidAround,
   type TidSummary,
@@ -150,11 +141,6 @@ const FALLBACK_LAYER_IDS = [
   BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
 ] as const;
 
-const HIDDEN_BASE_LAND_LAYER_VISIBILITY = new WeakMap<
-  maplibregl.Map,
-  Map<string, "visible" | "none" | undefined>
->();
-
 export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -165,7 +151,9 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const initialBathymetryViewAppliedRef = useRef(false);
   const suppressNextAutoObliqueRef = useRef(false);
   const bathymetrySelectionIdRef = useRef(0);
-  const bathymetryTileStoreRef = useRef(new BathymetryTileImageDataStore<ImageData>());
+  const bathymetryTileStoreRef = useRef(
+    new BathymetryTileImageDataStore<ImageData>(),
+  );
   const bathymetryGestureRef = useRef(createBathymetryPointGestureState());
   const bathymetryMarkerRef = useRef<maplibregl.Marker | null>(null);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
@@ -179,7 +167,6 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const [bathymetryRuntime, setBathymetryRuntime] = useState(
     initialBathymetryFallbackState,
   );
-  const [isCoastlineOverlayEnabled, setIsCoastlineOverlayEnabled] = useState(false);
   const previousBathymetryPointModeRef = useRef(mapLayerMode);
   const previousBathymetryPointDisplayRef = useRef(bathymetryRuntime.display);
   const [tidExpanded, setTidExpanded] = useState(false);
@@ -233,7 +220,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     let cancelled = false;
     fetch("/bathymetry/gebco-2026/tid-crop.json")
       .then((response) => {
-        if (!response.ok) throw new Error(`TID fetch failed: ${response.status}`);
+        if (!response.ok)
+          throw new Error(`TID fetch failed: ${response.status}`);
         return response.json();
       })
       .then((data: TidGrid) => {
@@ -361,7 +349,6 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     });
     setIsTerrainEnabled(enabled);
     setTerrainStatus(enabled ? "3d" : supportsWebGl ? "2d" : "unsupported");
-    setIsCoastlineOverlayEnabled(shouldEnableInitialCoastlineOverlay(window.innerWidth));
   }, []);
 
   useEffect(() => {
@@ -370,7 +357,11 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     if (!map) return;
 
     const clearManualPreset = (event: { originalEvent?: unknown }) => {
-      if (!shouldClearPresetForCameraInteraction({ originalEvent: event.originalEvent })) {
+      if (
+        !shouldClearPresetForCameraInteraction({
+          originalEvent: event.originalEvent,
+        })
+      ) {
         return;
       }
       clearBathymetryCameraTransition(manager, map);
@@ -419,7 +410,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
-        const message = error instanceof Error ? error.message : "metadata-error";
+        const message =
+          error instanceof Error ? error.message : "metadata-error";
         setBathymetryRuntime((current) =>
           reduceBathymetryFallback(current, {
             type: "source-error",
@@ -444,7 +436,6 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         display: bathymetryRuntime.display,
         terrainEnabled: isTerrainEnabled,
         terrainExaggeration,
-        coastlineOverlayEnabled: isCoastlineOverlayEnabled,
         setTerrainStatus,
         onSourceError: (source, key) =>
           setBathymetryRuntime((current) =>
@@ -486,7 +477,6 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     };
   }, [
     bathymetryRuntime.display,
-    isCoastlineOverlayEnabled,
     isTerrainEnabled,
     mapLayerMode,
     terrainExaggeration,
@@ -521,8 +511,12 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
 
     const selectPoint = (event: maplibregl.MapMouseEvent) => {
       const originalEvent = event.originalEvent as MouseEvent | undefined;
-      const blockedAncestor = getBathymetryPointBlockedAncestor(originalEvent?.target);
-      const gestureSuppressed = consumeBathymetryPointSuppressedClick(bathymetryGestureRef.current);
+      const blockedAncestor = getBathymetryPointBlockedAncestor(
+        originalEvent?.target,
+      );
+      const gestureSuppressed = consumeBathymetryPointSuppressedClick(
+        bathymetryGestureRef.current,
+      );
       if (
         shouldIgnoreBathymetryPointEvent({
           mode: mapLayerMode,
@@ -531,7 +525,10 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
           dragging: map.isMoving(),
           rotating: map.isRotating(),
           zooming: map.isZooming(),
-          pitching: map.isMoving() && map.getPitch() > 0 && originalEvent?.type !== "click",
+          pitching:
+            map.isMoving() &&
+            map.getPitch() > 0 &&
+            originalEvent?.type !== "click",
           gestureSuppressed,
           blockedAncestor,
         })
@@ -544,15 +541,35 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
       bathymetrySelectionIdRef.current = id;
       const lon = event.lngLat.lng;
       const lat = event.lngLat.lat;
-      setBathymetrySelection({ id, lon, lat, source, result: { status: "loading" } });
+      setBathymetrySelection({
+        id,
+        lon,
+        lat,
+        source,
+        result: { status: "loading" },
+      });
       const tile = lonLatToBathymetryTilePixel(lon, lat, source);
       if (!tile) {
-        setBathymetrySelection({ id, lon, lat, source, result: { status: "out-of-bounds", message: "対象範囲外" } });
+        setBathymetrySelection({
+          id,
+          lon,
+          lat,
+          source,
+          result: { status: "out-of-bounds", message: "対象範囲外" },
+        });
         return;
       }
-      bathymetryTileStoreRef.current.load(tile.url, loadBathymetryTileImageData)
+      bathymetryTileStoreRef.current
+        .load(tile.url, loadBathymetryTileImageData)
         .then((imageData) => {
-          if (!mounted || !shouldAcceptBathymetryPointResult(id, bathymetrySelectionIdRef.current)) return;
+          if (
+            !mounted ||
+            !shouldAcceptBathymetryPointResult(
+              id,
+              bathymetrySelectionIdRef.current,
+            )
+          )
+            return;
           const offset = (tile.pixelY * imageData.width + tile.pixelX) * 4;
           const elevation = decodeTerrainRgb(
             imageData.data[offset],
@@ -568,16 +585,47 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
           });
         })
         .catch(() => {
-          if (!mounted || !shouldAcceptBathymetryPointResult(id, bathymetrySelectionIdRef.current)) return;
-          setBathymetrySelection({ id, lon, lat, source, result: { status: "error", message: "水深を取得できません" } });
+          if (
+            !mounted ||
+            !shouldAcceptBathymetryPointResult(
+              id,
+              bathymetrySelectionIdRef.current,
+            )
+          )
+            return;
+          setBathymetrySelection({
+            id,
+            lon,
+            lat,
+            source,
+            result: { status: "error", message: "水深を取得できません" },
+          });
         });
     };
 
     const canvas = map.getCanvas();
-    const pointerDown = (event: PointerEvent) => beginBathymetryPointPointerGesture(bathymetryGestureRef.current, event.clientX, event.clientY, event.timeStamp);
-    const pointerMove = (event: PointerEvent) => moveBathymetryPointPointerGesture(bathymetryGestureRef.current, event.clientX, event.clientY);
-    const pointerUp = (event: PointerEvent) => endBathymetryPointPointerGesture(bathymetryGestureRef.current, event.clientX, event.clientY, event.timeStamp);
-    const suppressGestureClick = () => noteBathymetryPointMapGesture(bathymetryGestureRef.current);
+    const pointerDown = (event: PointerEvent) =>
+      beginBathymetryPointPointerGesture(
+        bathymetryGestureRef.current,
+        event.clientX,
+        event.clientY,
+        event.timeStamp,
+      );
+    const pointerMove = (event: PointerEvent) =>
+      moveBathymetryPointPointerGesture(
+        bathymetryGestureRef.current,
+        event.clientX,
+        event.clientY,
+      );
+    const pointerUp = (event: PointerEvent) =>
+      endBathymetryPointPointerGesture(
+        bathymetryGestureRef.current,
+        event.clientX,
+        event.clientY,
+        event.timeStamp,
+      );
+    const suppressGestureClick = () =>
+      noteBathymetryPointMapGesture(bathymetryGestureRef.current);
     canvas.addEventListener("pointerdown", pointerDown);
     canvas.addEventListener("pointermove", pointerMove);
     canvas.addEventListener("pointerup", pointerUp);
@@ -689,7 +737,9 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     }
   };
 
-  const applyViewPreset = (preset: (typeof BATHYMETRY_VIEW_PRESETS)[number]) => {
+  const applyViewPreset = (
+    preset: (typeof BATHYMETRY_VIEW_PRESETS)[number],
+  ) => {
     const map = mapRef.current;
     if (!map || controlsDisabled) return;
     if (!isTerrainEnabled) {
@@ -724,15 +774,6 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
               />
               3D表示
             </label>
-            <button
-              className="terrainToggleButton"
-              type="button"
-              aria-pressed={isCoastlineOverlayEnabled}
-              title="海岸線ラインと緑の陸地マスクを切り替え"
-              onClick={() => setIsCoastlineOverlayEnabled((value) => !value)}
-            >
-              海岸線表示
-            </button>
             <button
               className="terrainToggleButton"
               type="button"
@@ -779,7 +820,11 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                   )
                 }
               />
-              <small>{isTerrainEnabled ? BATHYMETRY_EXAGGERATION_NOTE : `${BATHYMETRY_EXAGGERATION_NOTE} 3D OFF中の変更は次回3D表示時に適用されます。`}</small>
+              <small>
+                {isTerrainEnabled
+                  ? BATHYMETRY_EXAGGERATION_NOTE
+                  : `${BATHYMETRY_EXAGGERATION_NOTE} 3D OFF中の変更は次回3D表示時に適用されます。`}
+              </small>
             </div>
             <div className="terrainPresetControl" aria-label="3D視点プリセット">
               {BATHYMETRY_VIEW_PRESETS.map((preset) => (
@@ -819,7 +864,11 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             </div>
           </div>
           {bathymetrySelection && bathymetrySelectionConfig ? (
-            <div className="bathymetryPointCard" role="status" aria-live="polite">
+            <div
+              className="bathymetryPointCard"
+              role="status"
+              aria-live="polite"
+            >
               <div className="bathymetryPointHeader">
                 <strong>タップ地点の参考水深</strong>
                 <button
@@ -852,11 +901,9 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                 {bathymetrySelection.lon.toFixed(5)}
               </span>
               <span>
-                {bathymetrySelectionConfig.label}（{bathymetrySelectionConfig.resolution}）
+                {bathymetrySelectionConfig.label}（
+                {bathymetrySelectionConfig.resolution}）
               </span>
-              <small>
-                表示用データから算出した参考値です。航海・安全判断には使用できません。
-              </small>
             </div>
           ) : null}
           <div
@@ -871,15 +918,6 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                 ? BATHYMETRY_FALLBACK_LICENSE_NOTE
                 : BATHYMETRY_LICENSE_NOTE}
             </span>
-            <span>{BATHYMETRY_SAFETY_NOTE}</span>
-            {isCoastlineOverlayEnabled ? (
-              <span>
-                <span
-                  dangerouslySetInnerHTML={{ __html: BATHYMETRY_COASTLINE_ATTRIBUTION }}
-                />
-                {` / ${BATHYMETRY_COASTLINE_NOTE}`}
-              </span>
-            ) : null}
           </div>
         </>
       ) : null}
@@ -934,9 +972,7 @@ function createPopupContent(report: FishingReport) {
   return popup;
 }
 
-async function loadBathymetryTileImageData(
-  url: string,
-) {
+async function loadBathymetryTileImageData(url: string) {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`bathymetry-point-tile-${response.status}`);
   const blob = await response.blob();
@@ -984,7 +1020,6 @@ type ApplyBathymetryModeInput = {
   display: BathymetryDisplaySource;
   terrainEnabled: boolean;
   terrainExaggeration: number;
-  coastlineOverlayEnabled: boolean;
   setTerrainStatus: (status: TerrainStatus) => void;
   onSourceError: (source: BathymetryFailureSource, key: string) => void;
 };
@@ -995,12 +1030,10 @@ function applyBathymetryMode({
   display,
   terrainEnabled,
   terrainExaggeration,
-  coastlineOverlayEnabled,
   setTerrainStatus,
   onSourceError,
 }: ApplyBathymetryModeInput) {
   if (mode !== "bathymetry" || display === "standard") {
-    restoreBaseLandLayerVisibility(map);
     removeBathymetryRuntimeLayers(map);
     setTerrainStatus("2d");
     return;
@@ -1008,30 +1041,19 @@ function applyBathymetryMode({
 
   if (display === "gebco") addPrimaryBathymetryLayers(map);
   else addFallbackBathymetryLayers(map);
-  if (coastlineOverlayEnabled) ensureCoastlineOverlay(map);
-
   for (const layerId of PRIMARY_LAYER_IDS) {
     setLayerVisibility(map, layerId, display === "gebco");
   }
   for (const layerId of FALLBACK_LAYER_IDS) {
     setLayerVisibility(map, layerId, display === "etopo");
   }
-  setLayerVisibility(
-    map,
-    BATHYMETRY_LAND_MASK_LAYER_ID,
-    coastlineOverlayEnabled,
-  );
-  setLayerVisibility(
-    map,
-    BATHYMETRY_COASTLINE_LAYER_ID,
-    coastlineOverlayEnabled,
-  );
-  if (coastlineOverlayEnabled) hideBaseLandLayersForBathymetryCoastline(map);
-  else restoreBaseLandLayerVisibility(map);
-
   try {
     if (terrainEnabled) {
-      updateBathymetryTerrain({ map, display, exaggeration: terrainExaggeration });
+      updateBathymetryTerrain({
+        map,
+        display,
+        exaggeration: terrainExaggeration,
+      });
       setTerrainStatus("3d");
     } else {
       updateBathymetryTerrain({
@@ -1205,12 +1227,7 @@ function addBathymetryLayersForSources(
         paint: {
           "line-color": "#dffbff",
           "line-opacity": 0.72,
-          "line-width": [
-            "case",
-            ["==", ["get", "major"], true],
-            1.4,
-            0.7,
-          ],
+          "line-width": ["case", ["==", ["get", "major"], true], 1.4, 0.7],
         },
       },
       beforeId,
@@ -1243,50 +1260,6 @@ function addBathymetryLayersForSources(
   }
 }
 
-function ensureCoastlineOverlay(map: maplibregl.Map) {
-  if (!map.getSource(BATHYMETRY_COASTLINE_SOURCE_ID)) {
-    map.addSource(BATHYMETRY_COASTLINE_SOURCE_ID, {
-      type: "geojson",
-      data: BATHYMETRY_COASTLINE_GEOJSON_URL,
-      attribution: BATHYMETRY_COASTLINE_ATTRIBUTION,
-    });
-  }
-  const beforeId = firstSymbolLayerId(map);
-  if (!map.getLayer(BATHYMETRY_LAND_MASK_LAYER_ID)) {
-    map.addLayer(
-      {
-        id: BATHYMETRY_LAND_MASK_LAYER_ID,
-        type: "fill",
-        source: BATHYMETRY_COASTLINE_SOURCE_ID,
-        filter: ["==", ["geometry-type"], "Polygon"],
-        layout: { visibility: "none" },
-        paint: {
-          "fill-color": "#5f8f5a",
-          "fill-opacity": BATHYMETRY_LAND_MASK_OPACITY,
-        },
-      },
-      beforeId,
-    );
-  }
-  if (!map.getLayer(BATHYMETRY_COASTLINE_LAYER_ID)) {
-    map.addLayer(
-      {
-        id: BATHYMETRY_COASTLINE_LAYER_ID,
-        type: "line",
-        source: BATHYMETRY_COASTLINE_SOURCE_ID,
-        filter: ["==", ["geometry-type"], "LineString"],
-        layout: { visibility: "none", "line-join": "round", "line-cap": "round" },
-        paint: {
-          "line-color": "#064e3b",
-          "line-opacity": 0.92,
-          "line-width": ["interpolate", ["linear"], ["zoom"], 7, 1.2, 10, 2.2, 13, 3],
-        },
-      },
-      beforeId,
-    );
-  }
-}
-
 function setLayerVisibility(
   map: maplibregl.Map,
   layerId: string,
@@ -1297,96 +1270,9 @@ function setLayerVisibility(
   }
 }
 
-function hideBaseLandLayersForBathymetryCoastline(map: maplibregl.Map) {
-  const store =
-    HIDDEN_BASE_LAND_LAYER_VISIBILITY.get(map) ??
-    new Map<string, "visible" | "none" | undefined>();
-  HIDDEN_BASE_LAND_LAYER_VISIBILITY.set(map, store);
-
-  for (const layer of map.getStyle().layers ?? []) {
-    if (!isBaseMapLandColorLayer(layer)) continue;
-    if (!map.getLayer(layer.id)) continue;
-    if (!store.has(layer.id)) {
-      store.set(
-        layer.id,
-        map.getLayoutProperty(layer.id, "visibility") as
-          | "visible"
-          | "none"
-          | undefined,
-      );
-    }
-    map.setLayoutProperty(layer.id, "visibility", "none");
-  }
-}
-
-function restoreBaseLandLayerVisibility(map: maplibregl.Map) {
-  const store = HIDDEN_BASE_LAND_LAYER_VISIBILITY.get(map);
-  if (!store) return;
-  for (const [layerId, visibility] of store) {
-    if (!map.getLayer(layerId)) continue;
-    if (visibility === undefined) {
-      map.setLayoutProperty(layerId, "visibility", undefined);
-    } else {
-      map.setLayoutProperty(layerId, "visibility", visibility);
-    }
-  }
-  store.clear();
-}
-
-function isBaseMapLandColorLayer(layer: maplibregl.LayerSpecification) {
-  if (
-    layer.id.startsWith("bathymetry-") ||
-    GSI_AERIAL_TILE_LAYERS.some((aerialLayer) => aerialLayer.id === layer.id)
-  ) {
-    return false;
-  }
-  if (layer.type === "background") {
-    return hasBeigeYellowOrangeColor(layer.paint?.["background-color"]);
-  }
-  if (layer.type !== "fill") return false;
-  return (
-    hasBeigeYellowOrangeColor(layer.paint?.["fill-color"]) ||
-    landLikeLayerNamePattern.test(layer.id) ||
-    landLikeLayerNamePattern.test(String(layer["source-layer"] ?? ""))
-  );
-}
-
-const landLikeLayerNamePattern = /land|earth|wood|park|grass|sand|beach/i;
-
-function hasBeigeYellowOrangeColor(value: unknown): boolean {
-  if (typeof value === "string") return isBeigeYellowOrangeHex(value);
-  if (Array.isArray(value)) return value.some(hasBeigeYellowOrangeColor);
-  if (value && typeof value === "object") {
-    return Object.values(value).some(hasBeigeYellowOrangeColor);
-  }
-  return false;
-}
-
-function isBeigeYellowOrangeHex(value: string) {
-  const normalized = value.trim();
-  if (!/^#[0-9a-f]{6}$/i.test(normalized)) return false;
-  const red = Number.parseInt(normalized.slice(1, 3), 16) / 255;
-  const green = Number.parseInt(normalized.slice(3, 5), 16) / 255;
-  const blue = Number.parseInt(normalized.slice(5, 7), 16) / 255;
-  const max = Math.max(red, green, blue);
-  const min = Math.min(red, green, blue);
-  const saturation = max === 0 ? 0 : (max - min) / max;
-  const hue =
-    max === min
-      ? 0
-      : max === red
-        ? ((green - blue) / (max - min) + (green < blue ? 6 : 0)) * 60
-        : max === green
-          ? ((blue - red) / (max - min) + 2) * 60
-          : ((red - green) / (max - min) + 4) * 60;
-  return hue >= 20 && hue <= 65 && saturation >= 0.08 && max >= 0.45;
-}
-
 function removeBathymetryRuntimeLayers(map: maplibregl.Map) {
   map.setTerrain(null);
   const layers = [
-    BATHYMETRY_COASTLINE_LAYER_ID,
-    BATHYMETRY_LAND_MASK_LAYER_ID,
     ...PRIMARY_LAYER_IDS.slice().reverse(),
     ...FALLBACK_LAYER_IDS.slice().reverse(),
   ];
@@ -1394,7 +1280,6 @@ function removeBathymetryRuntimeLayers(map: maplibregl.Map) {
     if (map.getLayer(layerId)) map.removeLayer(layerId);
   }
   const sources = [
-    BATHYMETRY_COASTLINE_SOURCE_ID,
     BATHYMETRY_CONTOUR_SOURCE_ID,
     BATHYMETRY_COLOR_SOURCE_ID,
     BATHYMETRY_SOURCE_ID,
