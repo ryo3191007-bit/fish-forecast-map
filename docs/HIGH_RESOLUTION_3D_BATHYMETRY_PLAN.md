@@ -1,7 +1,7 @@
 # 高精細3D海底地形ビュー実現方針
 
-確認日: 2026-07-13  
-対象Issue: #133  
+確認日: 2026-07-15
+対象Issue: #133 / #151
 正本: 本ドキュメントは、参考動画に近い3D海底地形ビューを実装する前の技術方針・データ構成・制約判断の正本です。
 
 ## 1. 目標と非目標
@@ -82,9 +82,11 @@
 
 ### 5.1 Phase B PoCデータセット確定状況
 
-今回の調査では、合法的に加工・Web配信できる具体的な高精細1海域PoCデータセットを確定できなかった。NOAA Bathymetric Data Viewerは検索入口、AIST/GSJ沿岸域のシームレス地質情報は将来の地質レイヤー参考であり、どちらもこのまま直ちにTerrain-RGB化するPoC正本データではない。
+Issue #151 / Post-MVP-054で、公式一次提供元だけを根拠に高精細1海域PoC候補を再調査した。調査正本は `docs/HIGH_RESOLUTION_BATHYMETRY_POC_DATASET_RESEARCH.md` とする。
 
-そのため案Bは、現時点では推奨アーキテクチャ候補までとする。Phase Bを開始する条件は、`具体的データセット、bounds、解像度、容量、加工・配信許可の確認` とする。
+結論は **No-Go**。2026-07-15時点では、合法的に加工・Web配信でき、GEBCO_2026 15秒より有意に細かい比較が期待できる具体的な `1データセット + 1海域` を採用確定できない。最有力の海しるAPI `等深線` は要問い合わせであり、元グリッドproduct ID、bounds、native grid spacing、鉛直基準、nodata、取得容量、Terrain-RGB/PNG/GeoJSON派生物生成可否、GitHub/Vercel PreviewでのWeb配信・再配布可否が未確認である。
+
+そのため案Bは、現時点では推奨アーキテクチャ候補までとする。Phase Bを開始する条件は、`具体的データセット、bounds、解像度、容量、加工・配信許可の公式確認` とする。
 
 ## 6. ライセンス・再配布判断
 
@@ -101,7 +103,7 @@
 | B. 広域+沿岸高精細の多段階Terrain-RGB | 合法的に加工・Web配信できる高精細データが確定した海域では瀬・かけ上がりの粒度が上がる。 | 中。source切替、bounds、LOD、段差対策が必要。 | 高精細tileは拡大時のみ読む。スマホ上限が必要。 | Vercel静的配信可能な小範囲から開始。広域fallback維持。 | データ更新・ライセンス管理が増えるが現実的。 | 条件付き中長期推奨。現時点では推奨アーキテクチャ候補であり、Phase B開始には具体的データセット、bounds、解像度、容量、加工・配信許可の確認が必要。 |
 | C. PMTiles/高密度メッシュ/別レンダラー | 見た目は最も自由。点群/meshなら動画風表現に近い。 | 高。座標同期、クリック判定、LOD、アクセシビリティ、既存marker連携が重い。 | 通信・GPU負荷が大。スマホfallback必須。 | Vercelで大容量配信・キャッシュ設計が難化。 | 依存・保守コスト増。 | 当面不採用。Bで不足が明確な場合の研究候補。 |
 
-推奨は、Phase Aで案Aを実施し、Phase B/Cで案Bへ進むこと。案Cは参考動画に近い自由な表現には有利だが、現時点の個人利用・低コスト・スマホ対応・既存MapLibre資産を優先すると過剰である。
+Phase AはPost-MVP-046〜053で完了扱いとする。Phase B/Cの案Bは、Issue #151でNo-Goとなった未確認事項が解消され、採用ゲートをすべて満たす公式データセットが確定した場合だけ進める。案Cは参考動画に近い自由な表現には有利だが、現時点の個人利用・低コスト・スマホ対応・既存MapLibre資産を優先すると過剰である。
 
 ## 8. 推奨アーキテクチャ
 
@@ -127,17 +129,14 @@
 
 ## 11. 段階的ロードマップ
 
-### Phase A: 現行データで3D視認性改善
+### Phase A: 現行データで3D視認性改善（完了）
 
-- 高さ誇張スライダー、現在値、1.0リセット。
-- カメラプリセット、pitch/bearing/zoomの見直し。
-- 浅場色、hillshade、等深線ON/OFF、海面表現の比較。
-- タップ地点の参考水深・緯度経度。
-- PC/スマホ操作と2D fallbackのUI改善。
+Post-MVP-046〜053で完了扱いとする。高さ誇張スライダー、現在値、1.0リセット、カメラプリセット、浅場7段階palette、hillshade profile、等深線ON/OFF、zoom別等深線filter、compact端末のlabel抑制、タップ地点の参考水深・緯度経度、PC/スマホの2D fallback案内を実装済みである。
 
-### Phase B: 1海域限定の高精細データPoC
+### Phase B: 1海域限定の高精細データPoC（開始保留 / No-Go）
 
-- 今回の調査では具体的な高精細1海域PoCデータセットを確定できていないため、開始前に `具体的データセット、bounds、解像度、容量、加工・配信許可の確認` を必須条件とする。
+- Issue #151の調査では具体的な高精細1海域PoCデータセットを確定できていないため、開始前に `具体的データセット、bounds、解像度、容量、加工・配信許可の公式確認` を必須条件とする。
+- 海しるAPI `等深線` は平戸瀬戸周辺の暫定問い合わせ候補に留め、採用データセットとはしない。
 - ライセンス確認済みデータだけを小範囲で加工。
 - GEBCOとの切替、見た目、容量、速度、スマホ可否を比較。
 - 本番DB、全国展開、定期取得は行わない。
@@ -155,7 +154,7 @@
 ## 12. 未確認事項
 
 - J-EGG500は公式ページ上の500m格子、平滑化による小起伏不可視、実測値との差が大きい場所、書面許可なしの複製・再掲載禁止を踏まえ、Phase B本命候補から外した。将来比較用に使う場合も加工後Terrain-RGB/PNG/GeoJSONのWeb配信・再配布は書面許可が必要または要問い合わせ。
-- 海しるAPIでDEM相当の水深格子を取得できるか、APIコンテンツ単位の再配信可否。
+- 海しるAPI `等深線` について、元グリッドproduct ID、平戸瀬戸周辺暫定boundsでのcoverage、native grid spacing、鉛直基準、nodata、取得容量、派生Terrain-RGB/PNG/GeoJSON生成可否、GitHub/Vercel PreviewでのWeb配信・再配布可否。
 - 対象海域にNOAA NCEI Bathymetric Data Viewer等でPoCに足るマルチビーム等の公開測深が存在し、具体的データセット、bounds、解像度、容量、加工・配信許可まで確認できるか。
 - 高精細sourceのVercel配信容量、tile数、スマホFPS、メモリ使用量の実測値。
 - GSI等を使った海岸線補助を独立ベクトル化する場合の測量法上の申請要否。
@@ -164,7 +163,7 @@
 
 1. Phase A: 現行GEBCO/ETOPOで高さ誇張UI・水深/座標表示・カメラプリセットを追加する。
 2. Phase A: 水深色・hillshade・等深線・海面表現の視認性比較を行い、PC/スマホの推奨初期値を決める（Post-MVP-053でzoom別等深線filter、compact label抑制、GEBCO/ETOPO hillshade profileを実装）。
-3. Phase B: 具体的データセット、bounds、解像度、容量、加工・配信許可を公式一次提供元で確認し、合法的に加工・Web配信できる場合だけ小範囲Terrain-RGB生成手順を作る。
+3. Phase B: 海しるAPI `等深線` またはNOAA個別surveyについて、具体的データセット、bounds、解像度、容量、加工・配信許可を公式一次提供元で確認し、合法的に加工・Web配信できる場合だけ小範囲Terrain-RGB生成手順を作る。
 4. Phase B: 高精細PoCタイルをローカル/Previewで比較し、容量・速度・見た目・fallbackの合格基準を検証する。
 5. Phase C: 多解像度source選択、metadata管理、Vercel配信・cache方針を本番化する。
 6. Phase D: 魚種・季節・適性レイヤーの情報源ポリシーを地点情報収集再開後に別途設計する。
@@ -182,3 +181,5 @@
 - 国土地理院コンテンツ利用規約: https://www.gsi.go.jp/kikakuchousei/kikakuchousei40182.html
 - NOAA Bathymetric Data Viewer: https://www.ncei.noaa.gov/maps/bathymetry/
 - AIST/GSJ Database: https://unit.aist.go.jp/igg/en/database/index.html
+
+- 高精細1海域PoCデータセット調査: docs/HIGH_RESOLUTION_BATHYMETRY_POC_DATASET_RESEARCH.md

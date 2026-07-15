@@ -136,4 +136,8 @@
 
 ## Phase 5 / Post-MVP-053: 水深モードの等深線密度と陰影profile調整
 
-実装中。Issue #149では、GEBCO_2026 15秒／ETOPO 2022 60秒の元DEM、Terrain-RGB、参考水深decode、浅場7段階paletteを変更せず、表示zoomに応じて等深線を `100 / 200 / 500m`、`50 / 100 / 200 / 500m`、`10 / 20 / 50 / 100 / 200 / 500m` へ段階表示します。compact端末では等深線lineは既存toggleに従って維持しつつ、label密度だけをPCより抑制します。hillshadeはGEBCO／ETOPO別profileとして誇張・色・光源を本番domain定数へ集約し、陰影toggle、3D ON/OFF、高さ誇張、視点preset、source fallback、タップ地点参考水深、半透明海面表現は既存挙動を維持します。
+完了。Issue #149 / PR #150では、GEBCO_2026 15秒／ETOPO 2022 60秒の元DEM、Terrain-RGB、参考水深decode、浅場7段階paletteを変更せず、表示zoomに応じて等深線を `100 / 200 / 500m`、`50 / 100 / 200 / 500m`、`10 / 20 / 50 / 100 / 200 / 500m` へ段階表示しました。compact端末では等深線lineは既存toggleに従って維持しつつ、label密度だけをPCより抑制します。hillshadeはGEBCO／ETOPO別profileとして誇張・色・光源を本番domain定数へ集約し、陰影toggle、3D ON/OFF、高さ誇張、視点preset、source fallback、タップ地点参考水深、半透明海面表現は既存挙動を維持します。merge commitは `2a40ce0a554b625b0b402b739cbd98a06e350d29` です。
+
+## Phase 5 / Post-MVP-054: 高精細1海域PoC候補データセットとWeb配信可否の確定
+
+完了。Issue #151では、公式一次提供元だけを根拠に、NOAA NCEI Bathymetric Data Viewer、海しるAPI／海洋状況表示システム、AIST/GSJ、JODC J-EGG500、国土地理院等を調査しました。採用ゲートをすべて満たす `1データセット + 1海域` は確定せず、Phase Bの高精細データ取得・Terrain-RGB生成・Web配信PoCはNo-Goと判断しました。最有力候補は海しるAPI `等深線` ですが、元グリッドproduct ID、bounds、native grid spacing、鉛直基準、nodata、取得容量、派生物生成、GitHub/Vercel PreviewでのWeb配信・再配布可否が未確認のため要問い合わせです。調査正本は `docs/HIGH_RESOLUTION_BATHYMETRY_POC_DATASET_RESEARCH.md` です。
