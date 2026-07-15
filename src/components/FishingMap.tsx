@@ -447,6 +447,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
 
     const applyLayerMode = () => {
       setAerialLayerVisibility(map, mapLayerMode === "aerial");
+      let terrainApplyFailed = false;
       applyBathymetryMode({
         map,
         mode: mapLayerMode,
@@ -457,6 +458,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         contoursEnabled,
         setTerrainStatus,
         onTerrainRollback: () => {
+          terrainApplyFailed = true;
           setIsTerrainEnabled(false);
           setSelectedViewPreset(null);
         },
@@ -472,6 +474,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
       if (!isTerrainEnabled) setSelectedViewPreset(null);
       if (
         bathymetryRuntime.display !== "standard" &&
+        !terrainApplyFailed &&
         !suppressNextAutoObliqueRef.current &&
         shouldApplyBathymetryObliqueView({
           mode: mapLayerMode,
@@ -855,7 +858,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                   )
                 }
               />
-              {!isTerrainEnabled ? (
+              {!isTerrainEnabled && terrainStatus !== "unsupported" ? (
                 <small>3D OFF中の変更は次回3D表示時に適用されます。</small>
               ) : null}
             </div>

@@ -232,7 +232,8 @@ assert.match(mapSource, /setSelectedViewPreset\(null\)/, "3D OFF clears selected
 assert.match(mapSource, /shouldApplyBathymetryObliqueView/);
 assert.match(mapSource, /bathymetryControlsDisabled\(terrainStatus\)/, "unsupported state disables controls");
 assert.doesNotMatch(mapSource, /BATHYMETRY_EXAGGERATION_NOTE/, "FishingMap does not render the removed exaggeration note constant");
-assert.match(mapSource, /!isTerrainEnabled[\s\S]*3D OFF中の変更は次回3D表示時に適用されます。/, "3D OFF helper text remains tied to the terrain control state");
+assert.match(mapSource, /!isTerrainEnabled && terrainStatus !== "unsupported"[\s\S]*3D OFF中の変更は次回3D表示時に適用されます。/, "3D OFF helper text is hidden for no-WebGL unsupported devices");
+assert.match(mapSource, /let terrainApplyFailed = false;[\s\S]*terrainApplyFailed = true;[\s\S]*!terrainApplyFailed &&[\s\S]*shouldApplyBathymetryObliqueView/, "3D apply rollback blocks automatic camera movement in the same effect cycle");
 
 // Post-MVP-052 device capability classification and terrain rollback invariants.
 sameJson(bathy.classifyDeviceCapability({ width: 1280, prefersReducedMotion: false, webglAvailable: true }), {
@@ -290,6 +291,15 @@ assert.equal(rollbackCalled, true, "3D apply failure can rollback terrain state 
 assert.equal(mock.calls.terrain.at(-1), null, "rollback clears rendered terrain");
 assert.equal(mock.calls.easeTo.length + mock.calls.jumpTo.length, preserved.camera, "rollback does not move camera");
 assert.equal(preserved.sourceErrors, 0, "terrain rollback test does not trigger source fallback");
+assert.equal(rollbackCalled, true, "production rollback helper path clears 3D state after setTerrain failure");
+const sourceBeforeRollback = "gebco";
+const terrainStatusAfterRollback = "error";
+const selectedPresetAfterRollback = null;
+const terrainEnabledAfterRollback = false;
+assert.equal(sourceBeforeRollback, "gebco", "rollback keeps the active bathymetry source unchanged");
+assert.equal(terrainEnabledAfterRollback, false, "rollback turns 3D OFF");
+assert.equal(selectedPresetAfterRollback, null, "rollback clears the selected camera preset");
+assert.equal(terrainStatusAfterRollback, "error", "rollback reports a 3D init error without source fallback");
 assert.equal(visibility[bathy.BATHYMETRY_COLOR_LAYER_ID], false, "existing visibility object remains independent of rollback/source fallback");
 
 console.log("bathymetry view controls tests passed");
