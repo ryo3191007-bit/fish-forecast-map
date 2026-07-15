@@ -133,3 +133,7 @@
 ## Phase 5 / Post-MVP-052: 端末性能に応じた水深3D初期表示と2D fallback案内
 
 完了。Issue #146 / PR #147で、端末能力を `auto-3d`、`manual-3d / compact`、`manual-3d / low-memory`、`manual-3d / reduced-motion`、`unsupported / no-webgl` に分類しました。720px／4GBの既存閾値を維持し、`deviceMemory` 未定義だけでは低性能扱いにしません。`manual-3d` は理由付き2D初期表示から手動3D ONを許可し、`unsupported` は3D表示・高さ誇張・視点presetを無効化します。3D適用失敗時はチェック状態、preset、実表示を2Dへrollbackし、2D水深レイヤー、参考水深、陰影、等深線、GEBCO／ETOPO表示sourceを維持します。3D失敗だけを理由にsource fallbackは発火しません。スマホPreviewでは2D初期理由、手動3D ON、3D OFF時の陰影・等深線・参考水深、操作欄の重なり・横スクロールなしを確認済みです。merge commitは `d0912d1ad944e09ca459907245d07eaeccdf8555` です。
+
+## Phase 5 / Post-MVP-053: 水深モードの等深線密度と陰影profile調整
+
+実装中。Issue #149では、GEBCO_2026 15秒／ETOPO 2022 60秒の元DEM、Terrain-RGB、参考水深decode、浅場7段階paletteを変更せず、表示zoomに応じて等深線を `100 / 200 / 500m`、`50 / 100 / 200 / 500m`、`10 / 20 / 50 / 100 / 200 / 500m` へ段階表示します。compact端末では等深線lineは既存toggleに従って維持しつつ、label密度だけをPCより抑制します。hillshadeはGEBCO／ETOPO別profileとして誇張・色・光源を本番domain定数へ集約し、陰影toggle、3D ON/OFF、高さ誇張、視点preset、source fallback、タップ地点参考水深、半透明海面表現は既存挙動を維持します。

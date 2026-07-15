@@ -16,6 +16,7 @@ import {
   normalizeBathymetryExaggeration,
   type BathymetryViewPreset,
 } from "./bathymetry";
+import type { FilterSpecification } from "maplibre-gl";
 import type { BathymetryDisplaySource } from "./bathymetryFallback";
 import type { MapLayerMode } from "./mapLayer";
 
@@ -30,7 +31,128 @@ export type TerrainMap = {
 export type BathymetryModeMap = TerrainMap & {
   getLayer: (layerId: string) => unknown;
   setLayoutProperty: (layerId: string, name: "visibility", value: "visible" | "none") => void;
+  setFilter?: (layerId: string, filter?: FilterSpecification | null) => unknown;
 };
+
+
+export const BATHYMETRY_CONTOUR_LEVELS = [10, 20, 50, 100, 200, 500] as const;
+export const BATHYMETRY_CONTOUR_GUIDANCE =
+  "表示水深: 10・20・50・100・200・500m（ズームに応じて間引き）";
+export const BATHYMETRY_CONTOUR_ZOOM_BREAKPOINTS = {
+  initialWideZoom: 8.2,
+  etopoMaxZoom: 8,
+  gebcoMaxZoom: 9,
+  medium: 8.6,
+  coastal: 9.35,
+  compactLabelDelay: 0.55,
+} as const;
+
+export type BathymetryContourDensity = "wide" | "medium" | "coastal";
+export type BathymetryContourLevel = (typeof BATHYMETRY_CONTOUR_LEVELS)[number];
+
+export type BathymetryContourDisplay = {
+  density: BathymetryContourDensity;
+  lineLevels: BathymetryContourLevel[];
+  labelLevels: BathymetryContourLevel[];
+};
+
+export const BATHYMETRY_HILLSHADE_PROFILES = {
+  gebco: {
+    exaggeration: 0.22,
+    shadowColor: "#0b2a3a",
+    highlightColor: "#d8f7ff",
+    accentColor: "#38bdf8",
+    illuminationDirection: 315,
+    illuminationAnchor: "viewport",
+  },
+  etopo: {
+    exaggeration: 0.18,
+    shadowColor: "#0f3040",
+    highlightColor: "#e0fbff",
+    accentColor: "#60c7ee",
+    illuminationDirection: 315,
+    illuminationAnchor: "viewport",
+  },
+} as const;
+
+export function getBathymetryHillshadeProfile(display: Exclude<BathymetryDisplaySource, "standard">) {
+  return BATHYMETRY_HILLSHADE_PROFILES[display];
+}
+
+export function getBathymetryContourDisplay({
+  zoom,
+  compact,
+}: {
+  zoom: number;
+  compact: boolean;
+}): BathymetryContourDisplay {
+  const density: BathymetryContourDensity =
+    zoom >= BATHYMETRY_CONTOUR_ZOOM_BREAKPOINTS.coastal
+      ? "coastal"
+      : zoom >= BATHYMETRY_CONTOUR_ZOOM_BREAKPOINTS.medium
+        ? "medium"
+        : "wide";
+  const lineLevels =
+    density === "coastal"
+      ? [10, 20, 50, 100, 200, 500]
+      : density === "medium"
+        ? [50, 100, 200, 500]
+        : [100, 200, 500];
+  const labelZoom = compact ? zoom - BATHYMETRY_CONTOUR_ZOOM_BREAKPOINTS.compactLabelDelay : zoom;
+  const labelLevels =
+    labelZoom >= BATHYMETRY_CONTOUR_ZOOM_BREAKPOINTS.coastal
+      ? lineLevels
+      : labelZoom >= BATHYMETRY_CONTOUR_ZOOM_BREAKPOINTS.medium
+        ? lineLevels.filter((level) => level >= 50)
+        : lineLevels.filter((level) => level >= 100);
+  return {
+    density,
+    lineLevels: lineLevels as BathymetryContourLevel[],
+    labelLevels: labelLevels as BathymetryContourLevel[],
+  };
+}
+
+function depthFilter(levels: BathymetryContourLevel[]): FilterSpecification {
+  return ["in", ["get", "depth"], ["literal", levels]] as FilterSpecification;
+}
+
+export function applyBathymetryContourFilters({
+  map,
+  mode,
+  display,
+  zoom,
+  compact,
+  contoursEnabled,
+}: {
+  map: BathymetryModeMap;
+  mode: MapLayerMode;
+  display: BathymetryDisplaySource;
+  zoom: number;
+  compact: boolean;
+  contoursEnabled: boolean;
+}) {
+  const visibility = buildBathymetryLayerVisibility({
+    mode,
+    display,
+    hillshadeEnabled: false,
+    contoursEnabled,
+  });
+  const contourIds = {
+    gebco: { line: BATHYMETRY_CONTOUR_LAYER_ID, label: BATHYMETRY_CONTOUR_LABEL_LAYER_ID },
+    etopo: { line: BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID, label: BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID },
+  } as const;
+  const contourDisplay = getBathymetryContourDisplay({ zoom, compact });
+  for (const source of ["gebco", "etopo"] as const) {
+    const active = mode === "bathymetry" && display === source && contoursEnabled;
+    for (const [kind, layerId] of Object.entries(contourIds[source])) {
+      if (!map.getLayer(layerId)) continue;
+      map.setLayoutProperty(layerId, "visibility", active ? "visible" : "none");
+      if (!active || !map.setFilter) continue;
+      map.setFilter(layerId, depthFilter(kind === "line" ? contourDisplay.lineLevels : contourDisplay.labelLevels));
+    }
+  }
+  return { visibility, contourDisplay };
+}
 
 export type ApplyBathymetryModeInput = {
   map: BathymetryModeMap;
