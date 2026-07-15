@@ -68,7 +68,10 @@ import {
   validateBathymetryMetadata,
 } from "@/domain/bathymetryFallback";
 import {
+  BATHYMETRY_CONTOUR_GUIDANCE,
+  applyBathymetryContourFilters,
   applyBathymetryMode,
+  getBathymetryHillshadeProfile,
   clearBathymetryCameraTransition,
   createBathymetryCameraTransitionManager,
   getDefaultBathymetryViewPreset,
@@ -503,6 +506,29 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   ]);
 
   useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const applyContourDensity = () => {
+      applyBathymetryContourFilters({
+        map,
+        mode: mapLayerMode,
+        display: bathymetryRuntime.display,
+        zoom: map.getZoom(),
+        compact: deviceCapability?.reason === "compact",
+        contoursEnabled,
+      });
+    };
+
+    if (map.loaded()) applyContourDensity();
+    else map.once("load", applyContourDensity);
+    map.on("zoom", applyContourDensity);
+    return () => {
+      map.off("load", applyContourDensity);
+      map.off("zoom", applyContourDensity);
+    };
+  }, [bathymetryRuntime.display, contoursEnabled, deviceCapability?.reason, mapLayerMode]);
+
+  useEffect(() => {
     const previousMode = previousBathymetryPointModeRef.current;
     const previousDisplay = previousBathymetryPointDisplayRef.current;
     previousBathymetryPointModeRef.current = mapLayerMode;
@@ -882,6 +908,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                 </small>
               </div>
             ) : null}
+            <small className="bathymetryContourGuidance">{BATHYMETRY_CONTOUR_GUIDANCE}</small>
             <div className="bathymetryLegend" aria-label="水深凡例">
               {BATHYMETRY_DEPTH_STOPS.map((stop) => (
                 <span key={stop.label}>
@@ -1081,7 +1108,7 @@ function addPrimaryBathymetryLayers(map: maplibregl.Map) {
     contourLabelLayerId: BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
     contourSourceId: BATHYMETRY_CONTOUR_SOURCE_ID,
     seaSurfaceLayerId: BATHYMETRY_SEA_SURFACE_LAYER_ID,
-    hillshadeExaggeration: 0.28,
+    hillshadeProfile: getBathymetryHillshadeProfile("gebco"),
   });
 }
 
@@ -1124,7 +1151,7 @@ function addFallbackBathymetryLayers(map: maplibregl.Map) {
     contourLabelLayerId: BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
     contourSourceId: BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID,
     seaSurfaceLayerId: BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
-    hillshadeExaggeration: 0.24,
+    hillshadeProfile: getBathymetryHillshadeProfile("etopo"),
   });
 }
 
@@ -1137,7 +1164,7 @@ type BathymetryLayerSources = {
   contourLabelLayerId: string;
   contourSourceId: string;
   seaSurfaceLayerId: string;
-  hillshadeExaggeration: number;
+  hillshadeProfile: ReturnType<typeof getBathymetryHillshadeProfile>;
 };
 
 function addBathymetryLayersForSources(
@@ -1178,10 +1205,12 @@ function addBathymetryLayersForSources(
         source: sources.demSourceId,
         layout: { visibility: "none" },
         paint: {
-          "hillshade-shadow-color": "#082f49",
-          "hillshade-highlight-color": "#dffbff",
-          "hillshade-accent-color": "#0ea5e9",
-          "hillshade-exaggeration": sources.hillshadeExaggeration,
+          "hillshade-shadow-color": sources.hillshadeProfile.shadowColor,
+          "hillshade-highlight-color": sources.hillshadeProfile.highlightColor,
+          "hillshade-accent-color": sources.hillshadeProfile.accentColor,
+          "hillshade-exaggeration": sources.hillshadeProfile.exaggeration,
+          "hillshade-illumination-direction": sources.hillshadeProfile.illuminationDirection,
+          "hillshade-illumination-anchor": sources.hillshadeProfile.illuminationAnchor,
         },
       },
       beforeId,

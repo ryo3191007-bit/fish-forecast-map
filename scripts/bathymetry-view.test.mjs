@@ -343,4 +343,61 @@ assert.equal(mock.visibility.get(bathy.BATHYMETRY_CONTOUR_LAYER_ID), "visible", 
 assert.equal(mock.visibility.get(bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID), "visible", "2D contour label toggle state is preserved after rollback");
 assert.equal(mock.visibility.get(bathy.BATHYMETRY_FALLBACK_COLOR_LAYER_ID), "none", "fallback color remains hidden after GEBCO rollback");
 
+sameJson(bathyView.getBathymetryContourDisplay({ zoom: 8.2, compact: false }).lineLevels, [100, 200, 500]);
+sameJson(bathyView.getBathymetryContourDisplay({ zoom: 8.7, compact: false }).lineLevels, [50, 100, 200, 500]);
+sameJson(bathyView.getBathymetryContourDisplay({ zoom: 9.5, compact: false }).lineLevels, [10, 20, 50, 100, 200, 500]);
+const desktopCoastalLabels = bathyView.getBathymetryContourDisplay({ zoom: 9.5, compact: false }).labelLevels;
+const compactCoastalLabels = bathyView.getBathymetryContourDisplay({ zoom: 9.5, compact: true }).labelLevels;
+assert.equal(compactCoastalLabels.length < desktopCoastalLabels.length, true, "compact labels are less dense than desktop at the same coastal zoom");
+assert.deepEqual(bathyView.getBathymetryHillshadeProfile("gebco"), bathyView.BATHYMETRY_HILLSHADE_PROFILES.gebco);
+assert.deepEqual(bathyView.getBathymetryHillshadeProfile("etopo"), bathyView.BATHYMETRY_HILLSHADE_PROFILES.etopo);
+assert.notDeepEqual(bathyView.getBathymetryHillshadeProfile("gebco"), bathyView.getBathymetryHillshadeProfile("etopo"));
+
+function createContourMockMap() {
+  const layers = new Set([
+    bathy.BATHYMETRY_CONTOUR_LAYER_ID,
+    bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+    bathy.BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
+    bathy.BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+  ]);
+  const calls = { visibility: [], filter: [], terrain: [], camera: [], fallback: [], point: [] };
+  return {
+    calls,
+    map: {
+      getLayer: (id) => layers.has(id),
+      setLayoutProperty: (layerId, name, value) => calls.visibility.push({ layerId, name, value }),
+      setFilter: (layerId, filter) => calls.filter.push({ layerId, filter }),
+      setTerrain: (terrain) => calls.terrain.push(terrain),
+    },
+  };
+}
+
+let contourMock = createContourMockMap();
+let contourResult = bathyView.applyBathymetryContourFilters({
+  map: contourMock.map,
+  mode: "bathymetry",
+  display: "gebco",
+  zoom: 8.2,
+  compact: false,
+  contoursEnabled: true,
+});
+sameJson(contourResult.contourDisplay.lineLevels, [100, 200, 500]);
+assert.equal(contourMock.calls.visibility.find((call) => call.layerId === bathy.BATHYMETRY_CONTOUR_LAYER_ID).value, "visible", "active contour line is visible");
+assert.equal(contourMock.calls.visibility.find((call) => call.layerId === bathy.BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID).value, "none", "inactive fallback contour line stays hidden");
+assert.equal(contourMock.calls.filter.length, 2, "filters apply only to active line/label layers");
+assert.equal(contourMock.calls.terrain.length, 0, "zoom-only contour update does not touch terrain/camera/fallback/point state");
+assert.equal(contourMock.calls.camera.length + contourMock.calls.fallback.length + contourMock.calls.point.length, 0, "zoom-only contour update is structurally isolated");
+
+contourMock = createContourMockMap();
+bathyView.applyBathymetryContourFilters({
+  map: contourMock.map,
+  mode: "bathymetry",
+  display: "gebco",
+  zoom: 9.5,
+  compact: false,
+  contoursEnabled: false,
+});
+assert.ok(contourMock.calls.visibility.every((call) => call.value === "none"), "contour toggle OFF hides all line/label layers");
+assert.equal(contourMock.calls.filter.length, 0, "contour toggle OFF does not apply active filters");
+
 console.log("bathymetry view controls tests passed");

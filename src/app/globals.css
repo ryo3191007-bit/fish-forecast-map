@@ -1648,6 +1648,14 @@ dd {
 .terrainStatus {
   color: #bae6fd;
 }
+.bathymetryContourGuidance {
+  display: block;
+  width: 100%;
+  color: #d8f3ff;
+  font-size: 0.72rem;
+  line-height: 1.35;
+}
+
 .bathymetryLegend {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));

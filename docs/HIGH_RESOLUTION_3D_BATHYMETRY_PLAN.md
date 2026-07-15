@@ -52,8 +52,8 @@
 | --- | --- | --- |
 | 元データ解像度 | GEBCO 15秒は緯度33度付近で概ね数百m級、ETOPO 60秒fallbackはさらに粗い。港内、小さな根、細い瀬は元データにない可能性が高い。 | 高さ誇張では解決不可。Phase Bで数十m〜数m級データPoCが必要。 |
 | レンダリング | Terrain-RGBはZL7〜9、tileSize 256、MapLibre terrain。表示zoomに対してサンプル不足だと滑らかだが詳細は増えない。 | Phase Aでmaxzoom、overscale、カメラ、opacityを調整。 |
-| 配色 | 水深色の段階が広域向けで、浅場の微地形が潰れる場合がある。 | 浅場強調パレット、等深線ON/OFF、海面表現で改善可能。 |
-| 陰影 | hillshade誇張はGEBCO 0.28、fallback 0.24で控えめ。光源方向は固定。 | Phase Aでhillshade強度・色・opacityを比較。 |
+| 配色 | 浅場7段階palette、半透明海面表現、等深線ON/OFFを維持する。等深線は表示zoom別に主要levelから浅場levelへ段階追加し、compact端末ではlabel密度を抑える。 | Post-MVP-053で表示filterと水深パネル案内を追加。元のcontour生成levelは増やさない。 |
+| 陰影 | hillshadeはGEBCO/ETOPO別profileで誇張・shadow/highlight/accent・光源方向/anchorを管理し、浅場7段階paletteと等深線labelを潰さない控えめな値にする。 | Post-MVP-053でprofile化済み。元DEMや参考水深decodeは変更しない。 |
 | カメラ | 3D ON時の標準obliqueに加え、高さ誇張、リセット、視点プリセットはPhase A相当として実装済み。 | Post-MVP-052では3D適用失敗時にcamera変更なし・source切替なしで2Dへrollbackする。 |
 | 端末制限 | スマホ幅、低memory、reduced motion、WebGL不可では初期2D。 | 正しいfallback。スマホ3Dは明示ONと軽量LODが必要。 |
 
@@ -163,7 +163,7 @@
 ## 13. 後続Issue案
 
 1. Phase A: 現行GEBCO/ETOPOで高さ誇張UI・水深/座標表示・カメラプリセットを追加する。
-2. Phase A: 水深色・hillshade・等深線・海面表現の視認性比較を行い、PC/スマホの推奨初期値を決める。
+2. Phase A: 水深色・hillshade・等深線・海面表現の視認性比較を行い、PC/スマホの推奨初期値を決める（Post-MVP-053でzoom別等深線filter、compact label抑制、GEBCO/ETOPO hillshade profileを実装）。
 3. Phase B: 具体的データセット、bounds、解像度、容量、加工・配信許可を公式一次提供元で確認し、合法的に加工・Web配信できる場合だけ小範囲Terrain-RGB生成手順を作る。
 4. Phase B: 高精細PoCタイルをローカル/Previewで比較し、容量・速度・見た目・fallbackの合格基準を検証する。
 5. Phase C: 多解像度source選択、metadata管理、Vercel配信・cache方針を本番化する。
