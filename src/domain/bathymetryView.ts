@@ -6,8 +6,10 @@ import {
   BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
   BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
   BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
+  BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
   BATHYMETRY_FALLBACK_SOURCE_ID,
   BATHYMETRY_HILLSHADE_LAYER_ID,
+  BATHYMETRY_SEA_SURFACE_LAYER_ID,
   BATHYMETRY_SOURCE_ID,
   BATHYMETRY_VIEW_PRESETS,
   normalizeBathymetryExaggeration,
@@ -91,6 +93,7 @@ const PRIMARY_VISIBILITY_LAYER_IDS = {
   hillshade: BATHYMETRY_HILLSHADE_LAYER_ID,
   contour: BATHYMETRY_CONTOUR_LAYER_ID,
   contourLabel: BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+  seaSurface: BATHYMETRY_SEA_SURFACE_LAYER_ID,
 } as const;
 
 const FALLBACK_VISIBILITY_LAYER_IDS = {
@@ -98,6 +101,7 @@ const FALLBACK_VISIBILITY_LAYER_IDS = {
   hillshade: BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
   contour: BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
   contourLabel: BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+  seaSurface: BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
 } as const;
 
 export function buildBathymetryLayerVisibility({
@@ -115,6 +119,7 @@ export function buildBathymetryLayerVisibility({
     visibility[ids.hillshade] = false;
     visibility[ids.contour] = false;
     visibility[ids.contourLabel] = false;
+    visibility[ids.seaSurface] = false;
   }
   if (mode !== "bathymetry" || display === "standard") return visibility;
   const active =
@@ -123,6 +128,7 @@ export function buildBathymetryLayerVisibility({
   visibility[active.hillshade] = hillshadeEnabled;
   visibility[active.contour] = contoursEnabled;
   visibility[active.contourLabel] = contoursEnabled;
+  visibility[active.seaSurface] = true;
   return visibility;
 }
 

@@ -33,6 +33,7 @@ import {
   BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
   BATHYMETRY_FALLBACK_LICENSE_NOTE,
   BATHYMETRY_FALLBACK_METADATA_URL,
+  BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
   BATHYMETRY_FALLBACK_SOURCE_ID,
   BATHYMETRY_FALLBACK_TILE_URL,
   BATHYMETRY_HILLSHADE_LAYER_ID,
@@ -40,6 +41,7 @@ import {
   BATHYMETRY_MAX_ZOOM,
   BATHYMETRY_METADATA_URL,
   BATHYMETRY_MIN_ZOOM,
+  BATHYMETRY_SEA_SURFACE_LAYER_ID,
   BATHYMETRY_SOURCE_ID,
   BATHYMETRY_TILE_URL,
   BATHYMETRY_EXAGGERATION_DEFAULT,
@@ -132,6 +134,7 @@ const PRIMARY_LAYER_IDS = [
   BATHYMETRY_HILLSHADE_LAYER_ID,
   BATHYMETRY_CONTOUR_LAYER_ID,
   BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+  BATHYMETRY_SEA_SURFACE_LAYER_ID,
 ] as const;
 
 const FALLBACK_LAYER_IDS = [
@@ -139,6 +142,7 @@ const FALLBACK_LAYER_IDS = [
   BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
   BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
   BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+  BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
 ] as const;
 
 export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
@@ -1153,6 +1157,7 @@ function addPrimaryBathymetryLayers(map: maplibregl.Map) {
     contourLayerId: BATHYMETRY_CONTOUR_LAYER_ID,
     contourLabelLayerId: BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
     contourSourceId: BATHYMETRY_CONTOUR_SOURCE_ID,
+    seaSurfaceLayerId: BATHYMETRY_SEA_SURFACE_LAYER_ID,
     hillshadeExaggeration: 0.28,
   });
 }
@@ -1195,6 +1200,7 @@ function addFallbackBathymetryLayers(map: maplibregl.Map) {
     contourLayerId: BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
     contourLabelLayerId: BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
     contourSourceId: BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID,
+    seaSurfaceLayerId: BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
     hillshadeExaggeration: 0.24,
   });
 }
@@ -1207,6 +1213,7 @@ type BathymetryLayerSources = {
   contourLayerId: string;
   contourLabelLayerId: string;
   contourSourceId: string;
+  seaSurfaceLayerId: string;
   hillshadeExaggeration: number;
 };
 
@@ -1223,6 +1230,19 @@ function addBathymetryLayersForSources(
         source: sources.colorSourceId,
         layout: { visibility: "none" },
         paint: { "raster-opacity": 0.62 },
+      },
+      beforeId,
+    );
+  }
+
+  if (!map.getLayer(sources.seaSurfaceLayerId)) {
+    map.addLayer(
+      {
+        id: sources.seaSurfaceLayerId,
+        type: "raster",
+        source: sources.colorSourceId,
+        layout: { visibility: "none" },
+        paint: { "raster-opacity": 0.18 },
       },
       beforeId,
     );

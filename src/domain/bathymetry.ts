@@ -11,6 +11,7 @@ export const BATHYMETRY_COLOR_LAYER_ID = "bathymetry-color-relief";
 export const BATHYMETRY_HILLSHADE_LAYER_ID = "bathymetry-hillshade";
 export const BATHYMETRY_CONTOUR_LAYER_ID = "bathymetry-contours";
 export const BATHYMETRY_CONTOUR_LABEL_LAYER_ID = "bathymetry-contour-labels";
+export const BATHYMETRY_SEA_SURFACE_LAYER_ID = "bathymetry-sea-surface";
 export const BATHYMETRY_FALLBACK_COLOR_LAYER_ID =
   "bathymetry-fallback-color-relief";
 export const BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID =
@@ -19,6 +20,8 @@ export const BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID =
   "bathymetry-fallback-contours";
 export const BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID =
   "bathymetry-fallback-contour-labels";
+export const BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID =
+  "bathymetry-fallback-sea-surface";
 
 export const BATHYMETRY_TILE_BASE_PATH = "/bathymetry/gebco-2026";
 export const BATHYMETRY_FALLBACK_TILE_BASE_PATH = "/bathymetry/etopo-2022";

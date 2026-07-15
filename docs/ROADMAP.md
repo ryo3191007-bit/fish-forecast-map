@@ -128,4 +128,4 @@
 
 ## Phase 5 / Post-MVP-051: 水深モードの浅場配色・陰影・等深線表示調整
 
-実装中。Issue #143では、GEBCO／ETOPOの元DEM、Terrain-RGB、参考水深decodeを変更せず、color tileの浅場パレットを `0〜10m / 10〜20m / 20〜50m` から識別できる構成へ更新します。水深パネルには一時UI状態の `陰影` と `等深線` toggleを追加し、表示中sourceだけにcolor、hillshade、contour line、contour labelのvisibilityを整合させます。toggle状態はcomponent生存中だけ維持し、localStorage、DB、Supabaseへ保存しません。海面表現はCodex環境で実画面比較ができないため今回は本番実装せず、実画面比較なしに採用判断できないこと、海底色・等深線・操作性を悪化させる可能性があること、潮位や実海面高度と誤認させないため保留したことを記録します。
+実装中。Issue #143では、GEBCO／ETOPOの元DEM、Terrain-RGB、参考水深decodeを変更せず、color tileの浅場パレットを `0〜10m / 10〜20m / 20〜50m` から識別できる構成へ更新しました。水深パネルには一時UI状態の `陰影` と `等深線` toggleを追加し、表示中sourceだけにcolor、hillshade、contour line、contour label、半透明海面layerのvisibilityを整合させます。toggle状態はcomponent生存中だけ維持し、localStorage、DB、Supabaseへ保存しません。PCの同一条件比較でユーザーが「海面表現なし」より半透明候補を選択したため、比較用query/UI/stateは残さず、半透明海面表現を通常の水深モードへ標準採用しました。半透明表現は実潮位・実海面高度ではない表示上の演出として既存の統合注意事項に明記しています。スマホ最終確認は未実施です。
