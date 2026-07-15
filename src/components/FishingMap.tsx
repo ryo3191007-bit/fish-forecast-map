@@ -50,12 +50,15 @@ import {
   BATHYMETRY_EXAGGERATION_STEP,
   BATHYMETRY_VIEW_PRESETS,
   bathymetryControlsDisabled,
+  classifyDeviceCapability,
   formatBathymetryExaggeration,
   normalizeBathymetryExaggeration,
   resetBathymetryExaggeration,
   lonLatToTidCell,
-  shouldEnableInitialTerrain,
+  terrainStatusLabel,
   summarizeTidAround,
+  type DeviceCapabilityClass,
+  type TerrainStatus,
   type TidSummary,
 } from "@/domain/bathymetry";
 import {
@@ -111,7 +114,6 @@ type MappableExternalMemo = ExternalCatchMemo & {
   spotName: string;
 };
 
-type TerrainStatus = "3d" | "2d" | "unsupported" | "error";
 type BathymetryViewPresetId = (typeof BATHYMETRY_VIEW_PRESETS)[number]["id"];
 
 type TidGrid = {
@@ -170,6 +172,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const [selectedViewPreset, setSelectedViewPreset] =
     useState<BathymetryViewPresetId | null>(null);
   const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>("2d");
+  const [deviceCapability, setDeviceCapability] =
+    useState<DeviceCapabilityClass | null>(null);
   const [bathymetryRuntime, setBathymetryRuntime] = useState(
     initialBathymetryFallbackState,
   );
@@ -347,14 +351,21 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             (navigator as Navigator & { deviceMemory?: number }).deviceMemory,
           )
         : undefined;
-    const enabled = shouldEnableInitialTerrain({
+    const capability = classifyDeviceCapability({
       width: window.innerWidth,
       prefersReducedMotion,
       deviceMemory,
       webglAvailable: supportsWebGl,
     });
-    setIsTerrainEnabled(enabled);
-    setTerrainStatus(enabled ? "3d" : supportsWebGl ? "2d" : "unsupported");
+    setDeviceCapability(capability);
+    setIsTerrainEnabled(capability.initialTerrainEnabled);
+    setTerrainStatus(
+      capability.mode === "unsupported"
+        ? "unsupported"
+        : capability.initialTerrainEnabled
+          ? "3d"
+          : "2d",
+    );
   }, []);
 
   useEffect(() => {
@@ -445,6 +456,10 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         hillshadeEnabled,
         contoursEnabled,
         setTerrainStatus,
+        onTerrainRollback: () => {
+          setIsTerrainEnabled(false);
+          setSelectedViewPreset(null);
+        },
         onSourceError: (source, key) =>
           setBathymetryRuntime((current) =>
             reduceBathymetryFallback(current, {
@@ -779,7 +794,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
               <input
                 type="checkbox"
                 checked={isTerrainEnabled}
-                disabled={terrainStatus === "unsupported"}
+                disabled={controlsDisabled}
                 onChange={(event) => handleTerrainToggle(event.target.checked)}
               />
               3D表示
@@ -810,13 +825,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
               等深線
             </label>
             <span className="terrainStatus">
-              {terrainStatus === "3d"
-                ? "3D地形表示"
-                : terrainStatus === "error"
-                  ? "3D初期化失敗"
-                  : terrainStatus === "unsupported"
-                    ? "この端末では2D表示"
-                    : "2D軽量表示"}
+              {terrainStatusLabel(terrainStatus, deviceCapability)}
             </span>
             <div className="terrainExaggerationControl">
               <div className="terrainControlHeader">
@@ -1047,6 +1056,7 @@ type ApplyBathymetryModeInput = {
   hillshadeEnabled: boolean;
   contoursEnabled: boolean;
   setTerrainStatus: (status: TerrainStatus) => void;
+  onTerrainRollback: () => void;
   onSourceError: (source: BathymetryFailureSource, key: string) => void;
 };
 
@@ -1059,7 +1069,7 @@ function applyBathymetryMode({
   hillshadeEnabled,
   contoursEnabled,
   setTerrainStatus,
-  onSourceError,
+  onTerrainRollback,
 }: ApplyBathymetryModeInput) {
   if (mode !== "bathymetry" || display === "standard") {
     removeBathymetryRuntimeLayers(map);
@@ -1095,11 +1105,10 @@ function applyBathymetryMode({
       });
       setTerrainStatus("2d");
     }
-  } catch (error) {
+  } catch {
     map.setTerrain(null);
+    onTerrainRollback();
     setTerrainStatus("error");
-    const message = error instanceof Error ? error.message : "terrain-init";
-    onSourceError(display, `terrain-init:${message}`);
   }
 }
 

@@ -233,4 +233,63 @@ assert.match(mapSource, /shouldApplyBathymetryObliqueView/);
 assert.match(mapSource, /bathymetryControlsDisabled\(terrainStatus\)/, "unsupported state disables controls");
 assert.doesNotMatch(mapSource, /BATHYMETRY_EXAGGERATION_NOTE/, "FishingMap does not render the removed exaggeration note constant");
 assert.match(mapSource, /!isTerrainEnabled[\s\S]*3D OFF中の変更は次回3D表示時に適用されます。/, "3D OFF helper text remains tied to the terrain control state");
+
+// Post-MVP-052 device capability classification and terrain rollback invariants.
+sameJson(bathy.classifyDeviceCapability({ width: 1280, prefersReducedMotion: false, webglAvailable: true }), {
+  mode: "auto-3d",
+  reason: "supported",
+  initialTerrainEnabled: true,
+  terrainControlsEnabled: true,
+});
+sameJson(bathy.classifyDeviceCapability({ width: 719, prefersReducedMotion: false, deviceMemory: 8, webglAvailable: true }), {
+  mode: "manual-3d",
+  reason: "compact",
+  initialTerrainEnabled: false,
+  terrainControlsEnabled: true,
+});
+sameJson(bathy.classifyDeviceCapability({ width: 720, prefersReducedMotion: false, deviceMemory: 3.5, webglAvailable: true }), {
+  mode: "manual-3d",
+  reason: "low-memory",
+  initialTerrainEnabled: false,
+  terrainControlsEnabled: true,
+});
+sameJson(bathy.classifyDeviceCapability({ width: 720, prefersReducedMotion: true, deviceMemory: 4, webglAvailable: true }), {
+  mode: "manual-3d",
+  reason: "reduced-motion",
+  initialTerrainEnabled: false,
+  terrainControlsEnabled: true,
+});
+sameJson(bathy.classifyDeviceCapability({ width: 1280, prefersReducedMotion: false, deviceMemory: 8, webglAvailable: false }), {
+  mode: "unsupported",
+  reason: "no-webgl",
+  initialTerrainEnabled: false,
+  terrainControlsEnabled: false,
+});
+assert.equal(bathy.shouldEnableInitialTerrain({ width: 1280, prefersReducedMotion: false, webglAvailable: true }), true, "undefined deviceMemory does not block initial 3D");
+assert.equal(bathy.classifyDeviceCapability({ width: 500, prefersReducedMotion: true, deviceMemory: 2, webglAvailable: false }).reason, "no-webgl", "no-webgl has highest priority");
+assert.equal(bathy.classifyDeviceCapability({ width: 500, prefersReducedMotion: true, deviceMemory: 2, webglAvailable: true }).reason, "compact", "compact beats low-memory/reduced-motion");
+assert.equal(bathy.classifyDeviceCapability({ width: 720, prefersReducedMotion: true, deviceMemory: 2, webglAvailable: true }).reason, "low-memory", "low-memory beats reduced-motion");
+assert.equal(bathy.terrainStatusLabel("2d", bathy.classifyDeviceCapability({ width: 500, prefersReducedMotion: false, webglAvailable: true })), "スマホのため2D初期表示");
+assert.equal(bathy.terrainStatusLabel("3d", bathy.classifyDeviceCapability({ width: 500, prefersReducedMotion: false, webglAvailable: true })), "3D地形表示", "manual-3d switches to 3D label after user enables terrain");
+assert.equal(bathy.terrainStatusLabel("unsupported", bathy.classifyDeviceCapability({ width: 1280, prefersReducedMotion: false, webglAvailable: false })), "WebGL非対応のため2D表示");
+assert.equal(bathy.terrainStatusLabel("error", null), "3D初期化失敗のため2D表示");
+assert.equal(bathy.bathymetryControlsDisabled("unsupported"), true, "unsupported disables 3D/exaggeration/preset controls");
+assert.equal(bathy.bathymetryControlsDisabled("2d"), false, "manual-3d 2D still allows manual 3D controls");
+
+mock = createMockMap();
+let rollbackCalled = false;
+const preserved = { camera: mock.calls.easeTo.length + mock.calls.jumpTo.length, sourceErrors: 0 };
+try {
+  mock.map.setTerrain = (nextTerrain) => { mock.calls.terrain.push(nextTerrain); if (nextTerrain) throw new Error("boom"); };
+  bathyView.applyBathymetryTerrain(mock.map, { display: "gebco", exaggeration: 2, terrainEnabled: true });
+} catch {
+  mock.map.setTerrain(null);
+  rollbackCalled = true;
+}
+assert.equal(rollbackCalled, true, "3D apply failure can rollback terrain state to 2D");
+assert.equal(mock.calls.terrain.at(-1), null, "rollback clears rendered terrain");
+assert.equal(mock.calls.easeTo.length + mock.calls.jumpTo.length, preserved.camera, "rollback does not move camera");
+assert.equal(preserved.sourceErrors, 0, "terrain rollback test does not trigger source fallback");
+assert.equal(visibility[bathy.BATHYMETRY_COLOR_LAYER_ID], false, "existing visibility object remains independent of rollback/source fallback");
+
 console.log("bathymetry view controls tests passed");

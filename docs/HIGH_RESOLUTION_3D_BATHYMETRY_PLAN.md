@@ -42,7 +42,7 @@
 - Terrain-RGB PNG、色別水深PNG、等深線GeoJSON、metadata、checksum、TID軽量JSON、海岸線GeoJSONは`npm run generate:bathymetry`で静的生成する。
 - MapLibreでは`raster-dem`、`hillshade`、`raster`色レイヤー、等深線/ラベル、`setTerrain`を使う。GEBCO表示失敗時はETOPO、ETOPO失敗時は通常地図へ戻る。
 - 現在の3D高さ誇張は`exaggeration: 1`固定、3D ON時のカメラは`pitch: 52`、`bearing: -18`、初期地図は`center: [129.95, 33.48]`、`zoom: 8.2`である。
-- 端末判定は、WebGL可、幅720px以上、reduced motionなし、`deviceMemory`が未定義または4GB以上の場合だけ初期3D ONとする。
+- 端末判定は、WebGL可、幅720px以上、reduced motionなし、`deviceMemory`が未定義または4GB以上の場合だけ `auto-3d` として初期3D ONにする。WebGL可でも幅720px未満、`deviceMemory < 4`、reduced motionは `manual-3d` として2D初期表示にし、ユーザーの明示操作で3D ON可能にする。WebGL不可は `unsupported / no-webgl` として3D関連controlsを無効化する。
 - 海岸線補助はGEBCO 15秒DEMの非負標高セルから作る完全不透明の陸地マスクと、0m境界から作る海岸線ラインである。
 - runtime/build時に外部GEBCO/NOAA/GSIへ取得せず、Vercel/Next.jsでは自サイト内の静的assetを配信する。
 
@@ -115,7 +115,7 @@
 
 - PC: 初期3D可。高さ誇張上限はPhase Aで試験し、過度な誤認を避けるため既定1.0、候補上限3〜5程度から検証する。
 - スマホ: 初期2D。ユーザーが明示ONした場合だけ3D。高精細source、等深線、hillshadeの同時表示は端末性能に応じて抑制する。
-- fallback条件: WebGL不可、`deviceMemory < 4`、幅720px未満、`prefers-reduced-motion`、tile/metadata/decode失敗、操作不能なFPS低下。
+- fallback条件: WebGL不可、`deviceMemory < 4`、幅720px未満、`prefers-reduced-motion`、tile/metadata/decode失敗、操作不能なFPS低下。ただし3D適用失敗は2D terrain rollbackに限定し、それだけを理由にGEBCO→ETOPO source fallbackは発火させない。
 - PoC合格基準案: 初期表示で高精細全域を読まない、スマホで巨大GeoJSONを読まない、同一tileを毎回再取得しない、source失敗時も広域水深または通常地図を維持する。FPSやLCP等の数値はPhase Bで実測して確定する。
 
 ## 10. fallback・安全注記
