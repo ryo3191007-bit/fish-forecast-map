@@ -121,9 +121,9 @@ function normalizeBearing(value: number) {
   return ((((value + 180) % 360) + 360) % 360) - 180;
 }
 
-export function bathymetryControlsDisabled(
-  terrainStatus: "3d" | "2d" | "unsupported" | "error",
-) {
+export type TerrainStatus = "3d" | "2d" | "unsupported" | "error";
+
+export function bathymetryControlsDisabled(terrainStatus: TerrainStatus) {
   return terrainStatus === "unsupported";
 }
 
@@ -257,13 +257,75 @@ export type DeviceCapabilityInput = {
   deviceMemory?: number;
   webglAvailable: boolean;
 };
+export type DeviceCapabilityClass =
+  | { mode: "auto-3d"; reason: "supported"; initialTerrainEnabled: true; terrainControlsEnabled: true }
+  | { mode: "manual-3d"; reason: "compact" | "low-memory" | "reduced-motion"; initialTerrainEnabled: false; terrainControlsEnabled: true }
+  | { mode: "unsupported"; reason: "no-webgl"; initialTerrainEnabled: false; terrainControlsEnabled: false };
+
+export function classifyDeviceCapability(
+  input: DeviceCapabilityInput,
+): DeviceCapabilityClass {
+  if (!input.webglAvailable) {
+    return {
+      mode: "unsupported",
+      reason: "no-webgl",
+      initialTerrainEnabled: false,
+      terrainControlsEnabled: false,
+    };
+  }
+  if (input.width < 720) {
+    return {
+      mode: "manual-3d",
+      reason: "compact",
+      initialTerrainEnabled: false,
+      terrainControlsEnabled: true,
+    };
+  }
+  if (typeof input.deviceMemory === "number" && input.deviceMemory < 4) {
+    return {
+      mode: "manual-3d",
+      reason: "low-memory",
+      initialTerrainEnabled: false,
+      terrainControlsEnabled: true,
+    };
+  }
+  if (input.prefersReducedMotion) {
+    return {
+      mode: "manual-3d",
+      reason: "reduced-motion",
+      initialTerrainEnabled: false,
+      terrainControlsEnabled: true,
+    };
+  }
+  return {
+    mode: "auto-3d",
+    reason: "supported",
+    initialTerrainEnabled: true,
+    terrainControlsEnabled: true,
+  };
+}
+
 export function shouldEnableInitialTerrain(input: DeviceCapabilityInput) {
-  return (
-    input.webglAvailable &&
-    input.width >= 720 &&
-    !input.prefersReducedMotion &&
-    (input.deviceMemory ?? 4) >= 4
-  );
+  return classifyDeviceCapability(input).initialTerrainEnabled;
+}
+
+export function terrainStatusLabel(
+  terrainStatus: TerrainStatus,
+  capability: DeviceCapabilityClass | null,
+) {
+  if (terrainStatus === "3d") return "3D地形表示";
+  if (terrainStatus === "error") return "3D初期化失敗のため2D表示";
+  if (terrainStatus === "unsupported" || capability?.mode === "unsupported") {
+    return "WebGL非対応のため2D表示";
+  }
+  if (capability?.reason === "compact") return "スマホのため2D初期表示";
+  if (capability?.reason === "low-memory") {
+    return "端末性能を考慮して2D初期表示";
+  }
+  if (capability?.reason === "reduced-motion") {
+    return "動きを抑える設定のため2D初期表示";
+  }
+  return "2D軽量表示";
 }
 export function formatDepthLabel(elevationMeters: number) {
   return `${Math.abs(Math.round(elevationMeters))}m`;

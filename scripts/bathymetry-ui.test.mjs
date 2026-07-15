@@ -5,6 +5,7 @@ import { PNG } from "pngjs";
 
 const mapLayer = fs.readFileSync("src/domain/mapLayer.ts", "utf8");
 const bathy = fs.readFileSync("src/domain/bathymetry.ts", "utf8");
+const bathyView = fs.readFileSync("src/domain/bathymetryView.ts", "utf8");
 const map = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
 const css = fs.readFileSync("src/app/globals.css", "utf8");
 const appShell = fs.readFileSync("src/components/AppShell.tsx", "utf8");
@@ -73,7 +74,8 @@ assert.match(map, /陰影/);
 assert.match(map, /等深線/);
 assert.match(map, /setHillshadeEnabled\(event\.target\.checked\)/);
 assert.match(map, /setContoursEnabled\(event\.target\.checked\)/);
-assert.match(map, /buildBathymetryLayerVisibility/);
+assert.match(bathyView, /buildBathymetryLayerVisibility/);
+assert.match(map, /applyBathymetryMode/);
 assert.match(metadata.license, /GEBCO/);
 assert.match(metadata.dataset, /GEBCO_2026/);
 assert.equal(metadata.tileSize, 256);

@@ -26,7 +26,7 @@
 | Must | タッチ/マウスで回転・傾斜・ズーム | MapLibre NavigationControlと標準ジェスチャーを維持し、3Dモードでは初期pitch/bearingを設定する。 |
 | Must | 高さ誇張スライダー、現在値、リセット | Phase Aで`exaggeration`をUI state化する。現在値を凡例近くに表示し、1.0へ戻すボタンを置く。 |
 | Must | 水深色、陰影、等深線 | 色別PNG、hillshade、等深線GeoJSONを重ねる現行構成を維持し、色・opacity・陰影を再調整する。 |
-| Must | 海岸線・陸地・海底の分離 | GEBCO 0m境界由来の海岸線ラインと陸地マスクを維持し、海底色が陸地に見える問題を抑える。 |
+| Must | 海岸線・陸地・海底の分離 | Post-MVP-050以降はGEBCO由来の緑の海岸線ライン・完全不透明の陸地マスクを本番表示せず、陸地pixelはcolor tileで透明のまま扱う。必要な海岸線明瞭化は将来IssueでGSI等の利用条件を確認して検討する。 |
 | Must | 参考水深・座標 | Phase Aでクリック/タップ地点の緯度経度と最近傍DEM参考水深を表示する。安全注記を併記する。 |
 | Should | 海面表示ON/OFFまたは半透明表現 | Phase Aでは見た目検討、Phase B以降で海面平面や0m透明レイヤーの必要性を評価する。 |
 | Should | 等深線ON/OFF、間隔表示 | Phase AでON/OFFを追加し、間隔は元データと表示zoomに応じて固定/段階化を検討する。 |
@@ -41,9 +41,9 @@
 - 第一sourceは`GEBCO_2026 Grid 15 arc-second`、fallbackは`NOAA NCEI ETOPO 2022 60 Arc-Second Bedrock`で、対象boundsは`128.5,32.5,130.8,34.0`、GEBCO cropは`552 x 360`である。
 - Terrain-RGB PNG、色別水深PNG、等深線GeoJSON、metadata、checksum、TID軽量JSON、海岸線GeoJSONは`npm run generate:bathymetry`で静的生成する。
 - MapLibreでは`raster-dem`、`hillshade`、`raster`色レイヤー、等深線/ラベル、`setTerrain`を使う。GEBCO表示失敗時はETOPO、ETOPO失敗時は通常地図へ戻る。
-- 現在の3D高さ誇張は`exaggeration: 1`固定、3D ON時のカメラは`pitch: 52`、`bearing: -18`、初期地図は`center: [129.95, 33.48]`、`zoom: 8.2`である。
-- 端末判定は、WebGL可、幅720px以上、reduced motionなし、`deviceMemory`が未定義または4GB以上の場合だけ初期3D ONとする。
-- 海岸線補助はGEBCO 15秒DEMの非負標高セルから作る完全不透明の陸地マスクと、0m境界から作る海岸線ラインである。
+- 現在の3D高さ誇張はUI state化済みで、既定`1.0×`、範囲`1.0×〜4.0×`、`0.25×`刻み、リセット可能である。3D ON時の標準カメラは`pitch: 52`、`bearing: -18`、初期地図は`center: [129.95, 33.48]`、`zoom: 8.2`である。
+- 端末判定は、WebGL可、幅720px以上、reduced motionなし、`deviceMemory`が未定義または4GB以上の場合だけ `auto-3d` として初期3D ONにする。WebGL可でも幅720px未満、`deviceMemory < 4`、reduced motionは `manual-3d` として2D初期表示にし、ユーザーの明示操作で3D ON可能にする。WebGL不可は `unsupported / no-webgl` として3D関連controlsを無効化する。
+- Post-MVP-050以降、海岸線補助の緑ライン・完全不透明陸地マスク・海岸線表示ボタンは削除済みである。半透明海面表現は表示上の演出として維持し、実潮位・実海面高度は示さない。
 - runtime/build時に外部GEBCO/NOAA/GSIへ取得せず、Vercel/Next.jsでは自サイト内の静的assetを配信する。
 
 ### 粗く見える原因の分解
@@ -54,7 +54,7 @@
 | レンダリング | Terrain-RGBはZL7〜9、tileSize 256、MapLibre terrain。表示zoomに対してサンプル不足だと滑らかだが詳細は増えない。 | Phase Aでmaxzoom、overscale、カメラ、opacityを調整。 |
 | 配色 | 水深色の段階が広域向けで、浅場の微地形が潰れる場合がある。 | 浅場強調パレット、等深線ON/OFF、海面表現で改善可能。 |
 | 陰影 | hillshade誇張はGEBCO 0.28、fallback 0.24で控えめ。光源方向は固定。 | Phase Aでhillshade強度・色・opacityを比較。 |
-| カメラ | 3D ON時はpitch/bearing固定で、誇張・カメラプリセットがない。 | Phase Aで高さ誇張、リセット、視点プリセットを追加。 |
+| カメラ | 3D ON時の標準obliqueに加え、高さ誇張、リセット、視点プリセットはPhase A相当として実装済み。 | Post-MVP-052では3D適用失敗時にcamera変更なし・source切替なしで2Dへrollbackする。 |
 | 端末制限 | スマホ幅、低memory、reduced motion、WebGL不可では初期2D。 | 正しいfallback。スマホ3Dは明示ONと軽量LODが必要。 |
 
 ## 4. データ解像度と表示精度の関係
@@ -109,13 +109,13 @@
 2. fallback: ETOPO 2022を同一UIに接続。Phase Aで15秒fallback化の可否を検討し、60秒fallbackは最低限維持。
 3. 沿岸高精細overlay: Phase Bでは、具体的データセット、bounds、解像度、容量、加工・配信許可を確認できた場合に限り、1海域だけ高精細DEMをTerrain-RGBタイル化し、bounds/zoomでGEBCOから切替。データなし/失敗時はGEBCOへ戻す。
 4. LOD: ZL低〜中は広域、沿岸拡大時だけ高精細source。画面外・全域高精細は読み込まない。
-5. 表示: 色、hillshade、等深線、海岸線/陸地マスク、安全注記、参考水深/座標を同じMapLibre map上に維持。
+5. 表示: 色、hillshade、等深線、半透明海面表現、安全注記、参考水深/座標を同じMapLibre map上に維持する。Post-MVP-050以降の方針に合わせ、緑の海岸線ライン・完全不透明陸地マスクは復活させない。
 
 ## 9. PC/スマホ性能方針
 
 - PC: 初期3D可。高さ誇張上限はPhase Aで試験し、過度な誤認を避けるため既定1.0、候補上限3〜5程度から検証する。
 - スマホ: 初期2D。ユーザーが明示ONした場合だけ3D。高精細source、等深線、hillshadeの同時表示は端末性能に応じて抑制する。
-- fallback条件: WebGL不可、`deviceMemory < 4`、幅720px未満、`prefers-reduced-motion`、tile/metadata/decode失敗、操作不能なFPS低下。
+- fallback条件: WebGL不可、`deviceMemory < 4`、幅720px未満、`prefers-reduced-motion`、tile/metadata/decode失敗、操作不能なFPS低下。ただし3D適用失敗は2D terrain rollbackに限定し、それだけを理由にGEBCO→ETOPO source fallbackは発火させない。
 - PoC合格基準案: 初期表示で高精細全域を読まない、スマホで巨大GeoJSONを読まない、同一tileを毎回再取得しない、source失敗時も広域水深または通常地図を維持する。FPSやLCP等の数値はPhase Bで実測して確定する。
 
 ## 10. fallback・安全注記

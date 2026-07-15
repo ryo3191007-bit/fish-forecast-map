@@ -50,12 +50,15 @@ import {
   BATHYMETRY_EXAGGERATION_STEP,
   BATHYMETRY_VIEW_PRESETS,
   bathymetryControlsDisabled,
+  classifyDeviceCapability,
   formatBathymetryExaggeration,
   normalizeBathymetryExaggeration,
   resetBathymetryExaggeration,
   lonLatToTidCell,
-  shouldEnableInitialTerrain,
+  terrainStatusLabel,
   summarizeTidAround,
+  type DeviceCapabilityClass,
+  type TerrainStatus,
   type TidSummary,
 } from "@/domain/bathymetry";
 import {
@@ -63,12 +66,9 @@ import {
   initialBathymetryFallbackState,
   reduceBathymetryFallback,
   validateBathymetryMetadata,
-  type BathymetryFailureSource,
-  type BathymetryDisplaySource,
 } from "@/domain/bathymetryFallback";
 import {
-  applyBathymetryTerrain,
-  buildBathymetryLayerVisibility,
+  applyBathymetryMode,
   clearBathymetryCameraTransition,
   createBathymetryCameraTransitionManager,
   getDefaultBathymetryViewPreset,
@@ -111,7 +111,6 @@ type MappableExternalMemo = ExternalCatchMemo & {
   spotName: string;
 };
 
-type TerrainStatus = "3d" | "2d" | "unsupported" | "error";
 type BathymetryViewPresetId = (typeof BATHYMETRY_VIEW_PRESETS)[number]["id"];
 
 type TidGrid = {
@@ -170,6 +169,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const [selectedViewPreset, setSelectedViewPreset] =
     useState<BathymetryViewPresetId | null>(null);
   const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>("2d");
+  const [deviceCapability, setDeviceCapability] =
+    useState<DeviceCapabilityClass | null>(null);
   const [bathymetryRuntime, setBathymetryRuntime] = useState(
     initialBathymetryFallbackState,
   );
@@ -347,14 +348,21 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             (navigator as Navigator & { deviceMemory?: number }).deviceMemory,
           )
         : undefined;
-    const enabled = shouldEnableInitialTerrain({
+    const capability = classifyDeviceCapability({
       width: window.innerWidth,
       prefersReducedMotion,
       deviceMemory,
       webglAvailable: supportsWebGl,
     });
-    setIsTerrainEnabled(enabled);
-    setTerrainStatus(enabled ? "3d" : supportsWebGl ? "2d" : "unsupported");
+    setDeviceCapability(capability);
+    setIsTerrainEnabled(capability.initialTerrainEnabled);
+    setTerrainStatus(
+      capability.mode === "unsupported"
+        ? "unsupported"
+        : capability.initialTerrainEnabled
+          ? "3d"
+          : "2d",
+    );
   }, []);
 
   useEffect(() => {
@@ -436,6 +444,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
 
     const applyLayerMode = () => {
       setAerialLayerVisibility(map, mapLayerMode === "aerial");
+      let terrainApplyFailed = false;
       applyBathymetryMode({
         map,
         mode: mapLayerMode,
@@ -445,18 +454,19 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         hillshadeEnabled,
         contoursEnabled,
         setTerrainStatus,
-        onSourceError: (source, key) =>
-          setBathymetryRuntime((current) =>
-            reduceBathymetryFallback(current, {
-              type: "source-error",
-              source,
-              key,
-            }),
-          ),
+        onTerrainRollback: () => {
+          terrainApplyFailed = true;
+          setIsTerrainEnabled(false);
+          setSelectedViewPreset(null);
+        },
+        addPrimaryBathymetryLayers: (targetMap) => addPrimaryBathymetryLayers(targetMap as maplibregl.Map),
+        addFallbackBathymetryLayers: (targetMap) => addFallbackBathymetryLayers(targetMap as maplibregl.Map),
+        removeBathymetryRuntimeLayers: (targetMap) => removeBathymetryRuntimeLayers(targetMap as maplibregl.Map),
       });
       if (!isTerrainEnabled) setSelectedViewPreset(null);
       if (
         bathymetryRuntime.display !== "standard" &&
+        !terrainApplyFailed &&
         !suppressNextAutoObliqueRef.current &&
         shouldApplyBathymetryObliqueView({
           mode: mapLayerMode,
@@ -779,7 +789,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
               <input
                 type="checkbox"
                 checked={isTerrainEnabled}
-                disabled={terrainStatus === "unsupported"}
+                disabled={controlsDisabled}
                 onChange={(event) => handleTerrainToggle(event.target.checked)}
               />
               3D表示
@@ -810,13 +820,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
               等深線
             </label>
             <span className="terrainStatus">
-              {terrainStatus === "3d"
-                ? "3D地形表示"
-                : terrainStatus === "error"
-                  ? "3D初期化失敗"
-                  : terrainStatus === "unsupported"
-                    ? "この端末では2D表示"
-                    : "2D軽量表示"}
+              {terrainStatusLabel(terrainStatus, deviceCapability)}
             </span>
             <div className="terrainExaggerationControl">
               <div className="terrainControlHeader">
@@ -846,7 +850,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                   )
                 }
               />
-              {!isTerrainEnabled ? (
+              {!isTerrainEnabled && terrainStatus !== "unsupported" ? (
                 <small>3D OFF中の変更は次回3D表示時に適用されます。</small>
               ) : null}
             </div>
@@ -1038,87 +1042,6 @@ function createExternalMemoPopupContent(memo: MappableExternalMemo) {
   return popup;
 }
 
-type ApplyBathymetryModeInput = {
-  map: maplibregl.Map;
-  mode: MapLayerMode;
-  display: BathymetryDisplaySource;
-  terrainEnabled: boolean;
-  terrainExaggeration: number;
-  hillshadeEnabled: boolean;
-  contoursEnabled: boolean;
-  setTerrainStatus: (status: TerrainStatus) => void;
-  onSourceError: (source: BathymetryFailureSource, key: string) => void;
-};
-
-function applyBathymetryMode({
-  map,
-  mode,
-  display,
-  terrainEnabled,
-  terrainExaggeration,
-  hillshadeEnabled,
-  contoursEnabled,
-  setTerrainStatus,
-  onSourceError,
-}: ApplyBathymetryModeInput) {
-  if (mode !== "bathymetry" || display === "standard") {
-    removeBathymetryRuntimeLayers(map);
-    setTerrainStatus("2d");
-    return;
-  }
-
-  if (display === "gebco") addPrimaryBathymetryLayers(map);
-  else addFallbackBathymetryLayers(map);
-  const visibility = buildBathymetryLayerVisibility({
-    mode,
-    display,
-    hillshadeEnabled,
-    contoursEnabled,
-  });
-  for (const [layerId, visible] of Object.entries(visibility)) {
-    setLayerVisibility(map, layerId, visible);
-  }
-  try {
-    if (terrainEnabled) {
-      updateBathymetryTerrain({
-        map,
-        display,
-        exaggeration: terrainExaggeration,
-      });
-      setTerrainStatus("3d");
-    } else {
-      updateBathymetryTerrain({
-        map,
-        display,
-        exaggeration: terrainExaggeration,
-        terrainEnabled: false,
-      });
-      setTerrainStatus("2d");
-    }
-  } catch (error) {
-    map.setTerrain(null);
-    setTerrainStatus("error");
-    const message = error instanceof Error ? error.message : "terrain-init";
-    onSourceError(display, `terrain-init:${message}`);
-  }
-}
-
-type UpdateBathymetryTerrainInput = {
-  map: maplibregl.Map;
-  display: BathymetryDisplaySource;
-  exaggeration: number;
-  terrainEnabled?: boolean;
-};
-
-function updateBathymetryTerrain({
-  map,
-  display,
-  exaggeration,
-  terrainEnabled = true,
-}: UpdateBathymetryTerrainInput) {
-  applyBathymetryTerrain(map, { display, exaggeration, terrainEnabled });
-}
-
 function addPrimaryBathymetryLayers(map: maplibregl.Map) {
   if (!map.getSource(BATHYMETRY_SOURCE_ID)) {
     map.addSource(BATHYMETRY_SOURCE_ID, {
@@ -1304,16 +1227,6 @@ function addBathymetryLayersForSources(
         "text-halo-width": 1.2,
       },
     });
-  }
-}
-
-function setLayerVisibility(
-  map: maplibregl.Map,
-  layerId: string,
-  visible: boolean,
-) {
-  if (map.getLayer(layerId)) {
-    map.setLayoutProperty(layerId, "visibility", visible ? "visible" : "none");
   }
 }
 

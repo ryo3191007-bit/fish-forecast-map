@@ -128,4 +128,8 @@
 
 ## Phase 5 / Post-MVP-051: 水深モードの浅場配色・陰影・等深線表示調整
 
-実装中。Issue #143では、GEBCO／ETOPOの元DEM、Terrain-RGB、参考水深decodeを変更せず、color tileの浅場パレットを `0〜10m / 10〜20m / 20〜50m` から識別できる構成へ更新しました。水深パネルには一時UI状態の `陰影` と `等深線` toggleを追加し、表示中sourceだけにcolor、hillshade、contour line、contour label、半透明海面layerのvisibilityを整合させます。toggle状態はcomponent生存中だけ維持し、localStorage、DB、Supabaseへ保存しません。PCの同一条件比較でユーザーが「海面表現なし」より半透明候補を選択したため、比較用query/UI/stateは残さず、半透明海面表現を通常の水深モードへ標準採用しました。半透明表現は実潮位・実海面高度ではない表示上の演出として既存の統合注意事項に明記しています。スマホ最終確認は未実施です。
+完了。Issue #143では、GEBCO／ETOPOの元DEM、Terrain-RGB、参考水深decodeを変更せず、color tileの浅場パレットを `0〜10m / 10〜20m / 20〜50m` から識別できる構成へ更新しました。水深パネルには一時UI状態の `陰影` と `等深線` toggleを追加し、表示中sourceだけにcolor、hillshade、contour line、contour label、半透明海面layerのvisibilityを整合させます。toggle状態はcomponent生存中だけ維持し、localStorage、DB、Supabaseへ保存しません。PCの同一条件比較でユーザーが「海面表現なし」より半透明候補を選択したため、比較用query/UI/stateは残さず、半透明海面表現を通常の水深モードへ標準採用しました。半透明表現は実潮位・実海面高度ではない表示上の演出として既存の統合注意事項に明記しています。スマホ最終確認は未実施です。
+
+## Phase 5 / Post-MVP-052: 端末性能に応じた水深3D初期表示と2D fallback案内
+
+実装中。Issue #146では、本番helperで端末能力を `auto-3d`、`manual-3d / compact`、`manual-3d / low-memory`、`manual-3d / reduced-motion`、`unsupported / no-webgl` に分類します。720px／4GBの既存閾値は維持し、`deviceMemory` 未定義だけでは低性能扱いにしません。`manual-3d` は理由付き2D初期表示から手動3D ONを許可し、`unsupported` は3D表示・高さ誇張・視点presetを無効化します。3D適用失敗時はチェック状態、preset、実表示を2Dへrollbackし、2D水深レイヤー、参考水深、陰影、等深線、GEBCO／ETOPO表示sourceを維持します。3D失敗だけを理由にsource fallbackは発火しません。PC／スマホ実ブラウザ確認はDraft PR時点では未実施です。

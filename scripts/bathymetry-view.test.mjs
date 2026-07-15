@@ -232,5 +232,115 @@ assert.match(mapSource, /setSelectedViewPreset\(null\)/, "3D OFF clears selected
 assert.match(mapSource, /shouldApplyBathymetryObliqueView/);
 assert.match(mapSource, /bathymetryControlsDisabled\(terrainStatus\)/, "unsupported state disables controls");
 assert.doesNotMatch(mapSource, /BATHYMETRY_EXAGGERATION_NOTE/, "FishingMap does not render the removed exaggeration note constant");
-assert.match(mapSource, /!isTerrainEnabled[\s\S]*3D OFF中の変更は次回3D表示時に適用されます。/, "3D OFF helper text remains tied to the terrain control state");
+assert.match(mapSource, /!isTerrainEnabled && terrainStatus !== "unsupported"[\s\S]*3D OFF中の変更は次回3D表示時に適用されます。/, "3D OFF helper text is hidden for no-WebGL unsupported devices");
+assert.match(mapSource, /let terrainApplyFailed = false;[\s\S]*terrainApplyFailed = true;[\s\S]*!terrainApplyFailed &&[\s\S]*shouldApplyBathymetryObliqueView/, "3D apply rollback blocks automatic camera movement in the same effect cycle");
+
+// Post-MVP-052 device capability classification and terrain rollback invariants.
+sameJson(bathy.classifyDeviceCapability({ width: 1280, prefersReducedMotion: false, webglAvailable: true }), {
+  mode: "auto-3d",
+  reason: "supported",
+  initialTerrainEnabled: true,
+  terrainControlsEnabled: true,
+});
+sameJson(bathy.classifyDeviceCapability({ width: 719, prefersReducedMotion: false, deviceMemory: 8, webglAvailable: true }), {
+  mode: "manual-3d",
+  reason: "compact",
+  initialTerrainEnabled: false,
+  terrainControlsEnabled: true,
+});
+sameJson(bathy.classifyDeviceCapability({ width: 720, prefersReducedMotion: false, deviceMemory: 3.5, webglAvailable: true }), {
+  mode: "manual-3d",
+  reason: "low-memory",
+  initialTerrainEnabled: false,
+  terrainControlsEnabled: true,
+});
+sameJson(bathy.classifyDeviceCapability({ width: 720, prefersReducedMotion: true, deviceMemory: 4, webglAvailable: true }), {
+  mode: "manual-3d",
+  reason: "reduced-motion",
+  initialTerrainEnabled: false,
+  terrainControlsEnabled: true,
+});
+sameJson(bathy.classifyDeviceCapability({ width: 1280, prefersReducedMotion: false, deviceMemory: 8, webglAvailable: false }), {
+  mode: "unsupported",
+  reason: "no-webgl",
+  initialTerrainEnabled: false,
+  terrainControlsEnabled: false,
+});
+assert.equal(bathy.shouldEnableInitialTerrain({ width: 1280, prefersReducedMotion: false, webglAvailable: true }), true, "undefined deviceMemory does not block initial 3D");
+assert.equal(bathy.classifyDeviceCapability({ width: 500, prefersReducedMotion: true, deviceMemory: 2, webglAvailable: false }).reason, "no-webgl", "no-webgl has highest priority");
+assert.equal(bathy.classifyDeviceCapability({ width: 500, prefersReducedMotion: true, deviceMemory: 2, webglAvailable: true }).reason, "compact", "compact beats low-memory/reduced-motion");
+assert.equal(bathy.classifyDeviceCapability({ width: 720, prefersReducedMotion: true, deviceMemory: 2, webglAvailable: true }).reason, "low-memory", "low-memory beats reduced-motion");
+assert.equal(bathy.terrainStatusLabel("2d", bathy.classifyDeviceCapability({ width: 500, prefersReducedMotion: false, webglAvailable: true })), "スマホのため2D初期表示");
+assert.equal(bathy.terrainStatusLabel("3d", bathy.classifyDeviceCapability({ width: 500, prefersReducedMotion: false, webglAvailable: true })), "3D地形表示", "manual-3d switches to 3D label after user enables terrain");
+assert.equal(bathy.terrainStatusLabel("unsupported", bathy.classifyDeviceCapability({ width: 1280, prefersReducedMotion: false, webglAvailable: false })), "WebGL非対応のため2D表示");
+assert.equal(bathy.terrainStatusLabel("error", null), "3D初期化失敗のため2D表示");
+assert.equal(bathy.bathymetryControlsDisabled("unsupported"), true, "unsupported disables 3D/exaggeration/preset controls");
+assert.equal(bathy.bathymetryControlsDisabled("2d"), false, "manual-3d 2D still allows manual 3D controls");
+
+mock = createMockMap();
+mock.layers = new Set([
+  bathy.BATHYMETRY_COLOR_LAYER_ID,
+  bathy.BATHYMETRY_HILLSHADE_LAYER_ID,
+  bathy.BATHYMETRY_CONTOUR_LAYER_ID,
+  bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+  bathy.BATHYMETRY_SEA_SURFACE_LAYER_ID,
+  bathy.BATHYMETRY_FALLBACK_COLOR_LAYER_ID,
+  bathy.BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
+  bathy.BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
+  bathy.BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+  bathy.BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
+]);
+mock.visibility = new Map();
+mock.map.getLayer = (layerId) => mock.layers.has(layerId);
+mock.map.setLayoutProperty = (layerId, name, value) => {
+  assert.equal(name, "visibility");
+  mock.visibility.set(layerId, value);
+};
+const terrainCallsBeforeFailure = mock.calls.terrain.length;
+mock.map.setTerrain = (nextTerrain) => {
+  mock.calls.terrain.push(nextTerrain);
+  if (nextTerrain) throw new Error("boom");
+};
+let terrainEnabledState = true;
+let selectedPresetState = "oblique";
+let terrainStatusState = "3d";
+let sourceErrorCount = 0;
+let activeDisplay = "gebco";
+let terrainApplyFailed = false;
+const previousCameraCallCount = mock.calls.easeTo.length + mock.calls.jumpTo.length;
+bathyView.applyBathymetryMode({
+  map: mock.map,
+  mode: "bathymetry",
+  display: activeDisplay,
+  terrainEnabled: terrainEnabledState,
+  terrainExaggeration: 2,
+  hillshadeEnabled: false,
+  contoursEnabled: true,
+  setTerrainStatus: (status) => { terrainStatusState = status; },
+  onTerrainRollback: () => {
+    terrainApplyFailed = true;
+    terrainEnabledState = false;
+    selectedPresetState = null;
+  },
+  addPrimaryBathymetryLayers: () => {},
+  addFallbackBathymetryLayers: () => { activeDisplay = "etopo"; sourceErrorCount += 1; },
+  removeBathymetryRuntimeLayers: () => { throw new Error("rollback test must stay in bathymetry mode"); },
+});
+if (!terrainApplyFailed && bathyView.shouldApplyBathymetryObliqueView({ mode: "bathymetry", previousMode: "standard", terrainEnabled: true, previousTerrainEnabled: true, initialBathymetryViewApplied: false })) {
+  bathyView.runBathymetryCameraTransition({ map: mock.map, manager: bathyView.createBathymetryCameraTransitionManager(), preset: oblique, reducedMotion: false, duration: 320 });
+}
+assert.equal(terrainEnabledState, false, "production applyBathymetryMode rollback turns 3D OFF");
+assert.equal(selectedPresetState, null, "production applyBathymetryMode rollback clears selected preset");
+assert.equal(terrainStatusState, "error", "production applyBathymetryMode reports 3D init error");
+assert.equal(mock.calls.easeTo.length + mock.calls.jumpTo.length, previousCameraCallCount, "rollback does not move camera in the same effect cycle");
+assert.equal(activeDisplay, "gebco", "rollback keeps the active bathymetry source unchanged");
+assert.equal(sourceErrorCount, 0, "terrain rollback does not trigger GEBCO→ETOPO fallback");
+assert.equal(mock.calls.terrain.length, terrainCallsBeforeFailure + 2, "failed terrain apply is followed by one terrain clear");
+assert.equal(mock.calls.terrain.at(-1), null, "rollback clears rendered terrain");
+assert.equal(mock.visibility.get(bathy.BATHYMETRY_COLOR_LAYER_ID), "visible", "2D color remains visible after rollback");
+assert.equal(mock.visibility.get(bathy.BATHYMETRY_HILLSHADE_LAYER_ID), "none", "2D hillshade toggle state is preserved after rollback");
+assert.equal(mock.visibility.get(bathy.BATHYMETRY_CONTOUR_LAYER_ID), "visible", "2D contour line toggle state is preserved after rollback");
+assert.equal(mock.visibility.get(bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID), "visible", "2D contour label toggle state is preserved after rollback");
+assert.equal(mock.visibility.get(bathy.BATHYMETRY_FALLBACK_COLOR_LAYER_ID), "none", "fallback color remains hidden after GEBCO rollback");
+
 console.log("bathymetry view controls tests passed");
