@@ -140,6 +140,19 @@ const FALLBACK_LAYER_IDS = [
   BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
   BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
 ] as const;
+const BATHYMETRY_SEA_COMPARE_QUERY = "bathymetrySeaCompare";
+const BATHYMETRY_SEA_SURFACE_LAYER_ID = "bathymetry-sea-surface-compare";
+const BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID =
+  "bathymetry-fallback-sea-surface-compare";
+
+function isBathymetrySeaCompareEnabled() {
+  if (typeof window === "undefined") return false;
+  return (
+    new URLSearchParams(window.location.search).get(
+      BATHYMETRY_SEA_COMPARE_QUERY,
+    ) === "1"
+  );
+}
 
 export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -163,6 +176,11 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   );
   const [hillshadeEnabled, setHillshadeEnabled] = useState(true);
   const [contoursEnabled, setContoursEnabled] = useState(true);
+  const [seaSurfaceComparisonAvailable] = useState(
+    isBathymetrySeaCompareEnabled,
+  );
+  const [seaSurfaceComparisonEnabled, setSeaSurfaceComparisonEnabled] =
+    useState(false);
   const [selectedViewPreset, setSelectedViewPreset] =
     useState<BathymetryViewPresetId | null>(null);
   const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>("2d");
@@ -440,6 +458,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         terrainExaggeration,
         hillshadeEnabled,
         contoursEnabled,
+        seaSurfaceComparisonAvailable,
+        seaSurfaceComparisonEnabled,
         setTerrainStatus,
         onSourceError: (source, key) =>
           setBathymetryRuntime((current) =>
@@ -484,6 +504,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     contoursEnabled,
     hillshadeEnabled,
     isTerrainEnabled,
+    seaSurfaceComparisonAvailable,
+    seaSurfaceComparisonEnabled,
     mapLayerMode,
     terrainExaggeration,
   ]);
@@ -805,6 +827,33 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
               />
               等深線
             </label>
+            {seaSurfaceComparisonAvailable ? (
+              <div
+                className="seaSurfaceCompareControl"
+                aria-label="海面比較候補"
+              >
+                <span>海面比較</span>
+                <button
+                  type="button"
+                  className="terrainToggleButton"
+                  aria-pressed={!seaSurfaceComparisonEnabled}
+                  onClick={() => setSeaSurfaceComparisonEnabled(false)}
+                >
+                  なし
+                </button>
+                <button
+                  type="button"
+                  className="terrainToggleButton"
+                  aria-pressed={seaSurfaceComparisonEnabled}
+                  onClick={() => setSeaSurfaceComparisonEnabled(true)}
+                >
+                  半透明候補
+                </button>
+                <small>
+                  比較用の仮表示です。実潮位・実海面高度ではありません。
+                </small>
+              </div>
+            ) : null}
             <span className="terrainStatus">
               {terrainStatus === "3d"
                 ? "3D地形表示"
@@ -1042,6 +1091,8 @@ type ApplyBathymetryModeInput = {
   terrainExaggeration: number;
   hillshadeEnabled: boolean;
   contoursEnabled: boolean;
+  seaSurfaceComparisonAvailable: boolean;
+  seaSurfaceComparisonEnabled: boolean;
   setTerrainStatus: (status: TerrainStatus) => void;
   onSourceError: (source: BathymetryFailureSource, key: string) => void;
 };
@@ -1054,6 +1105,8 @@ function applyBathymetryMode({
   terrainExaggeration,
   hillshadeEnabled,
   contoursEnabled,
+  seaSurfaceComparisonAvailable,
+  seaSurfaceComparisonEnabled,
   setTerrainStatus,
   onSourceError,
 }: ApplyBathymetryModeInput) {
@@ -1074,6 +1127,11 @@ function applyBathymetryMode({
   for (const [layerId, visible] of Object.entries(visibility)) {
     setLayerVisibility(map, layerId, visible);
   }
+  setBathymetrySeaSurfaceComparisonVisibility({
+    map,
+    display,
+    visible: seaSurfaceComparisonAvailable && seaSurfaceComparisonEnabled,
+  });
   try {
     if (terrainEnabled) {
       updateBathymetryTerrain({
@@ -1148,6 +1206,7 @@ function addPrimaryBathymetryLayers(map: maplibregl.Map) {
   addBathymetryLayersForSources(map, {
     colorLayerId: BATHYMETRY_COLOR_LAYER_ID,
     colorSourceId: BATHYMETRY_COLOR_SOURCE_ID,
+    seaSurfaceLayerId: BATHYMETRY_SEA_SURFACE_LAYER_ID,
     hillshadeLayerId: BATHYMETRY_HILLSHADE_LAYER_ID,
     demSourceId: BATHYMETRY_SOURCE_ID,
     contourLayerId: BATHYMETRY_CONTOUR_LAYER_ID,
@@ -1190,6 +1249,7 @@ function addFallbackBathymetryLayers(map: maplibregl.Map) {
   addBathymetryLayersForSources(map, {
     colorLayerId: BATHYMETRY_FALLBACK_COLOR_LAYER_ID,
     colorSourceId: BATHYMETRY_FALLBACK_COLOR_SOURCE_ID,
+    seaSurfaceLayerId: BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
     hillshadeLayerId: BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
     demSourceId: BATHYMETRY_FALLBACK_SOURCE_ID,
     contourLayerId: BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
@@ -1202,6 +1262,7 @@ function addFallbackBathymetryLayers(map: maplibregl.Map) {
 type BathymetryLayerSources = {
   colorLayerId: string;
   colorSourceId: string;
+  seaSurfaceLayerId: string;
   hillshadeLayerId: string;
   demSourceId: string;
   contourLayerId: string;
@@ -1223,6 +1284,22 @@ function addBathymetryLayersForSources(
         source: sources.colorSourceId,
         layout: { visibility: "none" },
         paint: { "raster-opacity": 0.62 },
+      },
+      beforeId,
+    );
+  }
+  if (!map.getLayer(sources.seaSurfaceLayerId)) {
+    map.addLayer(
+      {
+        id: sources.seaSurfaceLayerId,
+        type: "raster",
+        source: sources.colorSourceId,
+        layout: { visibility: "none" },
+        paint: {
+          "raster-opacity": 0.18,
+          "raster-brightness-min": 0.16,
+          "raster-saturation": -0.35,
+        },
       },
       beforeId,
     );
@@ -1287,6 +1364,27 @@ function addBathymetryLayersForSources(
   }
 }
 
+function setBathymetrySeaSurfaceComparisonVisibility({
+  map,
+  display,
+  visible,
+}: {
+  map: maplibregl.Map;
+  display: BathymetryDisplaySource;
+  visible: boolean;
+}) {
+  setLayerVisibility(
+    map,
+    BATHYMETRY_SEA_SURFACE_LAYER_ID,
+    visible && display === "gebco",
+  );
+  setLayerVisibility(
+    map,
+    BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
+    visible && display === "etopo",
+  );
+}
+
 function setLayerVisibility(
   map: maplibregl.Map,
   layerId: string,
@@ -1300,6 +1398,8 @@ function setLayerVisibility(
 function removeBathymetryRuntimeLayers(map: maplibregl.Map) {
   map.setTerrain(null);
   const layers = [
+    BATHYMETRY_SEA_SURFACE_LAYER_ID,
+    BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
     ...PRIMARY_LAYER_IDS.slice().reverse(),
     ...FALLBACK_LAYER_IDS.slice().reverse(),
   ];

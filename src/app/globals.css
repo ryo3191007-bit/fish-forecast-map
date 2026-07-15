@@ -1648,6 +1648,23 @@ dd {
 .terrainStatus {
   color: #bae6fd;
 }
+.seaSurfaceCompareControl {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 7px;
+  border: 1px dashed rgba(125, 211, 252, 0.34);
+  border-radius: 12px;
+  background: rgba(8, 47, 73, 0.36);
+}
+.seaSurfaceCompareControl small {
+  flex-basis: 100%;
+  color: #bae6fd;
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
 .bathymetryLegend {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));

@@ -22,6 +22,58 @@ const contours = JSON.parse(
   fs.readFileSync("public/bathymetry/gebco-2026/contours.geojson", "utf8"),
 );
 
+function parseDomainDepthStops(source) {
+  const match = source.match(/export const BATHYMETRY_DEPTH_STOPS = \[([\s\S]*?)\] as const;/);
+  assert.ok(match, "domain bathymetry depth stops must be exported");
+  return [...match[1].matchAll(/\{ depthMeters: (\d+), label: "([^"]+)", color: "(#(?:[0-9a-f]{6}))", alpha: (\d+) \}/gi)].map(([, depthMeters, label, color, alpha]) => ({
+    depthMeters: Number(depthMeters),
+    label,
+    color: color.toLowerCase(),
+    alpha: Number(alpha),
+  }));
+}
+
+function parseGeneratorColorStops(source) {
+  const match = source.match(/const BATHYMETRY_COLOR_STOPS = \[([\s\S]*?)\];/);
+  assert.ok(match, "generator bathymetry color stops must be declared");
+  return [...match[1].matchAll(/\{ depthMeters: (\d+), rgba: \[(\d+), (\d+), (\d+), (\d+)\] \}/g)].map(([, depthMeters, r, g, b, a]) => ({
+    depthMeters: Number(depthMeters),
+    rgba: [Number(r), Number(g), Number(b), Number(a)],
+  }));
+}
+
+function hexAlphaToRgba(color, alpha) {
+  return [
+    Number.parseInt(color.slice(1, 3), 16),
+    Number.parseInt(color.slice(3, 5), 16),
+    Number.parseInt(color.slice(5, 7), 16),
+    alpha,
+  ];
+}
+
+const domainDepthStops = parseDomainDepthStops(bathy);
+const generatorColorStops = parseGeneratorColorStops(generator);
+const expectedDepthStops = [0, 10, 20, 50, 100, 200, 500];
+assert.equal(domainDepthStops.length, 7, "domain palette must keep all 7 stops");
+assert.equal(generatorColorStops.length, 7, "generator palette must keep all 7 stops");
+assert.deepEqual(domainDepthStops.map((stop) => stop.depthMeters), expectedDepthStops);
+assert.deepEqual(generatorColorStops.map((stop) => stop.depthMeters), expectedDepthStops);
+assert.deepEqual(
+  generatorColorStops,
+  domainDepthStops.map((stop) => ({
+    depthMeters: stop.depthMeters,
+    rgba: hexAlphaToRgba(stop.color, stop.alpha),
+  })),
+  "domain hex+alpha palette must exactly match generator RGBA palette",
+);
+for (const sourceName of ["gebco-2026", "etopo-2022"]) {
+  const sourceMetadata = JSON.parse(
+    fs.readFileSync(`public/bathymetry/${sourceName}/metadata.json`, "utf8"),
+  );
+  assert.deepEqual(sourceMetadata.depthStopsMeters, expectedDepthStops);
+  assert.deepEqual(sourceMetadata.colorStops, generatorColorStops);
+}
+
 assert.match(mapLayer, /"bathymetry"/);
 for (const label of ["通常地図", "航空写真", "水深・3D地形"])
   assert.match(mapLayer, new RegExp(label));
@@ -66,6 +118,10 @@ assert.match(map, /陰影/);
 assert.match(map, /等深線/);
 assert.match(map, /setHillshadeEnabled\(event\.target\.checked\)/);
 assert.match(map, /setContoursEnabled\(event\.target\.checked\)/);
+assert.match(map, /BATHYMETRY_SEA_COMPARE_QUERY = "bathymetrySeaCompare"/);
+assert.match(map, /seaSurfaceComparisonAvailable \? \(/);
+assert.match(map, /実潮位・実海面高度ではありません/);
+assert.match(map, /seaSurfaceComparisonAvailable && seaSurfaceComparisonEnabled/);
 assert.match(map, /buildBathymetryLayerVisibility/);
 assert.match(metadata.license, /GEBCO/);
 assert.match(metadata.dataset, /GEBCO_2026/);
@@ -156,16 +212,7 @@ const computedTiles = expectedTiles(
 assert.deepEqual(metadata.tiles, computedTiles);
 assert.ok(metadata.tiles.length > 1);
 assert.equal(metadata.tileCount, metadata.tiles.length);
-assert.deepEqual(metadata.depthStopsMeters, [0, 10, 20, 50, 100, 200, 500]);
-assert.deepEqual(
-  bathy.match(/depthMeters: \d+/g).map((item) => Number(item.match(/\d+/)[0])),
-  metadata.depthStopsMeters,
-  "legend depth stops and generated tile metadata must match",
-);
 assert.ok(generator.includes("BATHYMETRY_COLOR_STOPS"));
-assert.ok(generator.includes("{ depthMeters: 0, rgba: [184, 237, 243, 176] }"));
-assert.ok(generator.includes("{ depthMeters: 10, rgba: [143, 215, 233, 188] }"));
-assert.ok(generator.includes("{ depthMeters: 20, rgba: [95, 185, 220, 202] }"));
 assert.ok(generator.includes("sourceName === \"gebco-2026\" ? \"15 arc-second\" : \"60 arc-second\""));
 assert.doesNotMatch(generator, /coastlineOverlay|land-mask|kind: "coastline"/);
 assert.ok(contours.features.length > 5);
