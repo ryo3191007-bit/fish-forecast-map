@@ -1642,19 +1642,22 @@ dd {
   height: 18px;
   accent-color: #22d3ee;
 }
+.compactToggle {
+  font-size: 0.76rem;
+}
 .terrainStatus {
   color: #bae6fd;
 }
 .bathymetryLegend {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
   gap: 5px;
 }
 .bathymetryLegend span {
   display: inline-flex;
   gap: 5px;
   align-items: center;
-  white-space: nowrap;
+  min-width: 0;
 }
 .bathymetryLegend i {
   width: 16px;

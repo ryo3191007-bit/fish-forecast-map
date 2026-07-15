@@ -33,6 +33,7 @@ import {
   BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
   BATHYMETRY_FALLBACK_LICENSE_NOTE,
   BATHYMETRY_FALLBACK_METADATA_URL,
+  BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
   BATHYMETRY_FALLBACK_SOURCE_ID,
   BATHYMETRY_FALLBACK_TILE_URL,
   BATHYMETRY_HILLSHADE_LAYER_ID,
@@ -40,6 +41,7 @@ import {
   BATHYMETRY_MAX_ZOOM,
   BATHYMETRY_METADATA_URL,
   BATHYMETRY_MIN_ZOOM,
+  BATHYMETRY_SEA_SURFACE_LAYER_ID,
   BATHYMETRY_SOURCE_ID,
   BATHYMETRY_TILE_URL,
   BATHYMETRY_EXAGGERATION_DEFAULT,
@@ -66,6 +68,7 @@ import {
 } from "@/domain/bathymetryFallback";
 import {
   applyBathymetryTerrain,
+  buildBathymetryLayerVisibility,
   clearBathymetryCameraTransition,
   createBathymetryCameraTransitionManager,
   getDefaultBathymetryViewPreset,
@@ -131,6 +134,7 @@ const PRIMARY_LAYER_IDS = [
   BATHYMETRY_HILLSHADE_LAYER_ID,
   BATHYMETRY_CONTOUR_LAYER_ID,
   BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+  BATHYMETRY_SEA_SURFACE_LAYER_ID,
 ] as const;
 
 const FALLBACK_LAYER_IDS = [
@@ -138,6 +142,7 @@ const FALLBACK_LAYER_IDS = [
   BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
   BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
   BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+  BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
 ] as const;
 
 export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
@@ -160,6 +165,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   const [terrainExaggeration, setTerrainExaggeration] = useState(
     BATHYMETRY_EXAGGERATION_DEFAULT,
   );
+  const [hillshadeEnabled, setHillshadeEnabled] = useState(true);
+  const [contoursEnabled, setContoursEnabled] = useState(true);
   const [selectedViewPreset, setSelectedViewPreset] =
     useState<BathymetryViewPresetId | null>(null);
   const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>("2d");
@@ -435,6 +442,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         display: bathymetryRuntime.display,
         terrainEnabled: isTerrainEnabled,
         terrainExaggeration,
+        hillshadeEnabled,
+        contoursEnabled,
         setTerrainStatus,
         onSourceError: (source, key) =>
           setBathymetryRuntime((current) =>
@@ -476,6 +485,8 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
     };
   }, [
     bathymetryRuntime.display,
+    contoursEnabled,
+    hillshadeEnabled,
     isTerrainEnabled,
     mapLayerMode,
     terrainExaggeration,
@@ -782,6 +793,22 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
             >
               データ由来
             </button>
+            <label className="terrainToggle compactToggle">
+              <input
+                type="checkbox"
+                checked={hillshadeEnabled}
+                onChange={(event) => setHillshadeEnabled(event.target.checked)}
+              />
+              陰影
+            </label>
+            <label className="terrainToggle compactToggle">
+              <input
+                type="checkbox"
+                checked={contoursEnabled}
+                onChange={(event) => setContoursEnabled(event.target.checked)}
+              />
+              等深線
+            </label>
             <span className="terrainStatus">
               {terrainStatus === "3d"
                 ? "3D地形表示"
@@ -1017,6 +1044,8 @@ type ApplyBathymetryModeInput = {
   display: BathymetryDisplaySource;
   terrainEnabled: boolean;
   terrainExaggeration: number;
+  hillshadeEnabled: boolean;
+  contoursEnabled: boolean;
   setTerrainStatus: (status: TerrainStatus) => void;
   onSourceError: (source: BathymetryFailureSource, key: string) => void;
 };
@@ -1027,6 +1056,8 @@ function applyBathymetryMode({
   display,
   terrainEnabled,
   terrainExaggeration,
+  hillshadeEnabled,
+  contoursEnabled,
   setTerrainStatus,
   onSourceError,
 }: ApplyBathymetryModeInput) {
@@ -1038,11 +1069,14 @@ function applyBathymetryMode({
 
   if (display === "gebco") addPrimaryBathymetryLayers(map);
   else addFallbackBathymetryLayers(map);
-  for (const layerId of PRIMARY_LAYER_IDS) {
-    setLayerVisibility(map, layerId, display === "gebco");
-  }
-  for (const layerId of FALLBACK_LAYER_IDS) {
-    setLayerVisibility(map, layerId, display === "etopo");
+  const visibility = buildBathymetryLayerVisibility({
+    mode,
+    display,
+    hillshadeEnabled,
+    contoursEnabled,
+  });
+  for (const [layerId, visible] of Object.entries(visibility)) {
+    setLayerVisibility(map, layerId, visible);
   }
   try {
     if (terrainEnabled) {
@@ -1123,6 +1157,7 @@ function addPrimaryBathymetryLayers(map: maplibregl.Map) {
     contourLayerId: BATHYMETRY_CONTOUR_LAYER_ID,
     contourLabelLayerId: BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
     contourSourceId: BATHYMETRY_CONTOUR_SOURCE_ID,
+    seaSurfaceLayerId: BATHYMETRY_SEA_SURFACE_LAYER_ID,
     hillshadeExaggeration: 0.28,
   });
 }
@@ -1165,6 +1200,7 @@ function addFallbackBathymetryLayers(map: maplibregl.Map) {
     contourLayerId: BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
     contourLabelLayerId: BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
     contourSourceId: BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID,
+    seaSurfaceLayerId: BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
     hillshadeExaggeration: 0.24,
   });
 }
@@ -1177,6 +1213,7 @@ type BathymetryLayerSources = {
   contourLayerId: string;
   contourLabelLayerId: string;
   contourSourceId: string;
+  seaSurfaceLayerId: string;
   hillshadeExaggeration: number;
 };
 
@@ -1193,6 +1230,19 @@ function addBathymetryLayersForSources(
         source: sources.colorSourceId,
         layout: { visibility: "none" },
         paint: { "raster-opacity": 0.62 },
+      },
+      beforeId,
+    );
+  }
+
+  if (!map.getLayer(sources.seaSurfaceLayerId)) {
+    map.addLayer(
+      {
+        id: sources.seaSurfaceLayerId,
+        type: "raster",
+        source: sources.colorSourceId,
+        layout: { visibility: "none" },
+        paint: { "raster-opacity": 0.18 },
       },
       beforeId,
     );

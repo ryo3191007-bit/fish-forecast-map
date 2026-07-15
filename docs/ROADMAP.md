@@ -120,4 +120,12 @@
 
 ## Phase 5 / Post-MVP-049: 水深3D高さ誇張の実表示反映修正
 
-実装中。Issue #139では、UIの高さ誇張倍率とMapLibre terrain geometryへ適用される`source`／`exaggeration`を一致させ、同一sourceの倍率変更時はterrainを一度解除してから最新倍率で再設定することで描画更新を確実化します。GEBCO→ETOPO fallback、3D OFF→ON、3D OFF中に変更した倍率の次回ON反映を維持し、slider変更だけでcamera、source fallback、参考水深値を変更しません。最大倍率は引き続き4.0×で、高精細DEM追加、DB／Supabase／localStorage、地点保存、SCORE変更は対象外です。
+完了。Issue #139では、UIの高さ誇張倍率とMapLibre terrain geometryへ適用される`source`／`exaggeration`を一致させ、同一sourceの倍率変更時はterrainを一度解除してから最新倍率で再設定することで描画更新を確実化しました。GEBCO→ETOPO fallback、3D OFF→ON、3D OFF中に変更した倍率の次回ON反映を維持し、slider変更だけでcamera、source fallback、参考水深値を変更しません。最大倍率は引き続き4.0×で、高精細DEM追加、DB／Supabase／localStorage、地点保存、SCORE変更は対象外です。
+
+## Phase 5 / Post-MVP-050: 水深モードの緑の海岸線ライン・陸地マスク削除
+
+完了。Issue #141 / PR #142で、Post-MVP-045で追加したGEBCO由来の濃緑海岸線ライン、完全不透明の緑の陸地マスク、海岸線表示ボタンを削除しました。水深モードでは陸地pixelを透明のまま扱い、色別水深、hillshade、等深線、TID表示、参考水深、GEBCO→ETOPO→通常地図fallbackを維持します。
+
+## Phase 5 / Post-MVP-051: 水深モードの浅場配色・陰影・等深線表示調整
+
+実装中。Issue #143では、GEBCO／ETOPOの元DEM、Terrain-RGB、参考水深decodeを変更せず、color tileの浅場パレットを `0〜10m / 10〜20m / 20〜50m` から識別できる構成へ更新しました。水深パネルには一時UI状態の `陰影` と `等深線` toggleを追加し、表示中sourceだけにcolor、hillshade、contour line、contour label、半透明海面layerのvisibilityを整合させます。toggle状態はcomponent生存中だけ維持し、localStorage、DB、Supabaseへ保存しません。PCの同一条件比較でユーザーが「海面表現なし」より半透明候補を選択したため、比較用query/UI/stateは残さず、半透明海面表現を通常の水深モードへ標準採用しました。半透明表現は実潮位・実海面高度ではない表示上の演出として既存の統合注意事項に明記しています。スマホ最終確認は未実施です。

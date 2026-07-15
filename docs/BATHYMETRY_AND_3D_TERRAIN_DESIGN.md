@@ -2,7 +2,7 @@
 
 ## 採用データ
 
-Post-MVP-037 / Issue #111 の調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とします。Post-MVP-038では、第一sourceを `GEBCO_2026 Grid 15 arc-second`、同一boundsのデータ由来説明を `GEBCO_2026 TID Grid`、fallbackを `ETOPO 2022 60 Arc-Second Bedrock` とします。陸海境界の補助はGEBCO 0m境界から生成した海岸線ラインと完全不透明の落ち着いた緑の陸地マスクを任意表示します。JODC J-EGG500は再配布・Web配信許可が確認できるまで本番採用しません。
+Post-MVP-037 / Issue #111 の調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEARCH.md` を正本とします。Post-MVP-038では、第一sourceを `GEBCO_2026 Grid 15 arc-second`、同一boundsのデータ由来説明を `GEBCO_2026 TID Grid`、fallbackを `ETOPO 2022 60 Arc-Second Bedrock` とします。Post-MVP-050以降、GEBCO 0m境界から生成した海岸線ラインと完全不透明の緑の陸地マスクは表示しません。JODC J-EGG500は再配布・Web配信許可が確認できるまで本番採用しません。
 
 ### GEBCO_2026 canonical
 
@@ -42,12 +42,12 @@ Post-MVP-037 / Issue #111 の調査結果は `docs/COASTAL_BATHYMETRY_DATA_RESEA
 - 水深source/layerは水深モード選択時に遅延追加します。
 - GEBCO成功時はGEBCOのcolor、hillshade、contour、label、terrainを表示します。
 - GEBCO失敗時はETOPOの対応layerとterrainへ切り替えます。
-- ETOPOも失敗した場合は水深layer、terrain、海岸線overlay、各水深出典を解除し、通常地図へ戻します。
+- ETOPOも失敗した場合は水深layer、terrain、各水深出典を解除し、通常地図へ戻します。
 - 同じsource errorはdedupeし、遅れて届いた非表示sourceのerrorで状態を飛ばしません。
 - metadataはsource追加前後に検証し、GEBCOではbounds、`552 x 360`、nodata、source SHAを固定値と照合します。
 - 3D初期値はデスクトップ相当でON、スマホ幅、reduced motion、低deviceMemory、WebGL不可では2D表示です。
 - TIDは現在のmap center周辺17×17セルを集計し、nodata `127`を割合の分母から除外します。
-- 海岸線overlayは任意ON/OFFです。OFF時はoverlay source自体を追加せず、追加出典も表示しません。データ由来ON/OFFとは独立して動作します。
+- Post-MVP-051では陰影と等深線を任意ON/OFFにします。OFF時もDEM、Terrain-RGB、参考水深decode、fallback状態、cameraは変更しません。
 
 ## データ生成
 
@@ -57,7 +57,7 @@ Git管理する正本は次です。
 - `data/bathymetry/gebco-2026-tid-crop.json`
 - `data/bathymetry/etopo-2022-crop.json`
 
-NetCDF、GeoTIFF、ZIP、PNG等のバイナリはGitへコミットしません。`npm run generate:bathymetry` がbuild前に正本JSONからTerrain-RGB PNG、色別水深PNG、等深線GeoJSON、TID軽量JSON、metadata/checksumを生成します。通常のdev/test/build/runtimeではNOAA、GEBCO、GSIへデータ取得リクエストを行いません。海岸線表示は生成済みGeoJSONを使うため、ONにしても外部地図タイルをリアルタイム取得しません。
+NetCDF、GeoTIFF、ZIP、PNG等のバイナリはGitへコミットしません。`npm run generate:bathymetry` がbuild前に正本JSONからTerrain-RGB PNG、色別水深PNG、等深線GeoJSON、TID軽量JSON、metadata/checksumを生成します。通常のdev/test/build/runtimeではNOAA、GEBCO、GSIへデータ取得リクエストを行いません。Post-MVP-050以降、緑の海岸線ライン・陸地マスク用GeoJSONは本番表示に使いません。
 
 ```bash
 npm run generate:bathymetry
@@ -72,14 +72,11 @@ node tools/bathymetry/convert-gebco-netcdf.mjs /local/gebco.nc /local/gebco_tid.
 
 詳細は `tools/bathymetry/README.md` を参照してください。
 
-## 海岸線ライン・陸地マスクoverlay
+## Post-MVP-050以降の海岸線・海面表現
 
-- 使用データ: `public/bathymetry/gebco-2026/coastline.geojson`
-- 陸地マスク: GEBCO 15秒DEMの非負標高セルを横方向runにまとめたPolygon
-- 海岸線ライン: GEBCO 15秒DEMの0m境界をmarching squaresで抽出したLineString
-- 表示色: 陸地は完全不透明の落ち着いた緑、海岸線は濃い緑のライン
-- ベージュ / オレンジ系の塗りつぶしや外部地図タイルoverlayは使いません。
-- GEBCO正本の出典と海岸線ライン・陸地マスクの生成元を分けて表示します。
+- Post-MVP-045で追加した緑の海岸線ライン・完全不透明の緑の陸地マスク・海岸線表示ボタンは、Post-MVP-050で削除済みです。
+- 陸地pixelはcolor tileで完全透明のまま扱い、緑の海岸線枠や緑の陸地塗りを復活させません。
+- Post-MVP-051では、PCの同一条件比較でユーザーが「海面表現なし」より半透明候補を選択したため、半透明海面表現を通常の水深モードへ標準採用します。比較用query/UI/stateは残さず、表示中source（GEBCOまたはETOPO）だけに半透明layerを表示します。これは実潮位・実海面高度ではなく表示上の演出です。スマホ最終確認は未実施です。
 
 ## テスト
 

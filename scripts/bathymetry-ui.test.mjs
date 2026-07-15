@@ -18,6 +18,9 @@ const dem = JSON.parse(
 const metadata = JSON.parse(
   fs.readFileSync("public/bathymetry/gebco-2026/metadata.json", "utf8"),
 );
+const fallbackMetadata = JSON.parse(
+  fs.readFileSync("public/bathymetry/etopo-2022/metadata.json", "utf8"),
+);
 const contours = JSON.parse(
   fs.readFileSync("public/bathymetry/gebco-2026/contours.geojson", "utf8"),
 );
@@ -38,6 +41,10 @@ for (const token of ["GEBCO_2026", "高解像度水深を読み込めなかっ�
 assert.doesNotMatch(bathy + map, /bathymetry-coastline/);
 assert.doesNotMatch(bathy + map, /bathymetry-land-mask/);
 assert.doesNotMatch(map, /海岸線表示/);
+assert.doesNotMatch(map, /bathymetrySeaCompare|SeaCompare|海面比較|半透明候補/);
+assert.match(map + bathy, /BATHYMETRY_SEA_SURFACE_LAYER_ID/);
+assert.match(map + bathy, /BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID/);
+assert.match(map, /"raster-opacity": 0\.18/);
 
 assert.doesNotMatch(
   map,
@@ -53,7 +60,7 @@ const appNoticeSections = appShell.match(/<section className="appNotice"/g) ?? [
 assert.equal(appNoticeSections.length, 1, "AppShell renders a single appNotice section");
 assert.match(
   appShell,
-  /<section className="appNotice"[^>]*aria-label="注意事項">[\s\S]*高さ誇張は表示上の演出であり、データ精度は変わりません。[\s\S]*<\/section>/,
+  /<section className="appNotice"[^>]*aria-label="注意事項">[\s\S]*高さ誇張と水深モードの半透明海面表現は表示上の演出であり、データ精度は変わらず、実潮位・実海面高度を示すものではありません。[\s\S]*<\/section>/,
   "the consolidated appNotice includes the height exaggeration accuracy disclaimer",
 );
 assert.doesNotMatch(map, /hideBaseLandLayersForBathymetryCoastline/);
@@ -62,6 +69,11 @@ assert.doesNotMatch(map, /hasBeigeYellowOrangeColor/);
 assert.doesNotMatch(map, /HIDDEN_BASE_LAND_LAYER_VISIBILITY/);
 assert.doesNotMatch(bathy, /xyz\/(?:std|blank)\//);
 assert.match(generator, /elevationMeters >= 0\) return \[0, 0, 0, 0\]/);
+assert.match(map, /陰影/);
+assert.match(map, /等深線/);
+assert.match(map, /setHillshadeEnabled\(event\.target\.checked\)/);
+assert.match(map, /setContoursEnabled\(event\.target\.checked\)/);
+assert.match(map, /buildBathymetryLayerVisibility/);
 assert.match(metadata.license, /GEBCO/);
 assert.match(metadata.dataset, /GEBCO_2026/);
 assert.equal(metadata.tileSize, 256);
@@ -129,9 +141,14 @@ for (const { z, x, y } of metadata.tiles) {
     );
   }
   const colorPng = PNG.sync.read(fs.readFileSync(colorPath));
-  for (let index = 3; index < colorPng.data.length; index += 4) {
-    if (colorPng.data[index] === 0) transparentColorPixels++;
-    else visibleColorPixels++;
+  for (let index = 0; index < colorPng.data.length; index += 4) {
+    const rgba = Array.from(colorPng.data.slice(index, index + 4));
+    if (rgba[3] === 0) {
+      assert.deepEqual(rgba, [0, 0, 0, 0], "land pixels must remain fully transparent RGBA");
+      transparentColorPixels++;
+    } else {
+      visibleColorPixels++;
+    }
   }
   assert.notEqual(
     fs.readFileSync(terrainPath, "hex"),
@@ -151,7 +168,61 @@ const computedTiles = expectedTiles(
 assert.deepEqual(metadata.tiles, computedTiles);
 assert.ok(metadata.tiles.length > 1);
 assert.equal(metadata.tileCount, metadata.tiles.length);
-assert.deepEqual(metadata.depthStopsMeters, [0, 20, 50, 100, 200, 500]);
+function parseDomainDepthStops(source) {
+  const block = source.match(/export const BATHYMETRY_DEPTH_STOPS = \[([\s\S]*?)\] as const;/)?.[1];
+  assert.ok(block, "domain depth stops are defined");
+  return [...block.matchAll(/depthMeters: (\d+), label: "[^"]+", color: "(#[0-9a-fA-F]{6})", alpha: (\d+)/g)].map((match) => ({
+    depthMeters: Number(match[1]),
+    color: match[2].toLowerCase(),
+    alpha: Number(match[3]),
+  }));
+}
+
+function parseGeneratorColorStops(source) {
+  const block = source.match(/const BATHYMETRY_COLOR_STOPS = \[([\s\S]*?)\];/)?.[1];
+  assert.ok(block, "generator color stops are defined");
+  return [...block.matchAll(/depthMeters: (\d+), rgba: \[(\d+), (\d+), (\d+), (\d+)\]/g)].map((match) => ({
+    depthMeters: Number(match[1]),
+    rgba: match.slice(2).map(Number),
+  }));
+}
+
+function hexAlphaToRgba(color, alpha) {
+  return [
+    Number.parseInt(color.slice(1, 3), 16),
+    Number.parseInt(color.slice(3, 5), 16),
+    Number.parseInt(color.slice(5, 7), 16),
+    alpha,
+  ];
+}
+
+const domainDepthStops = parseDomainDepthStops(bathy);
+const generatorColorStops = parseGeneratorColorStops(generator);
+assert.equal(domainDepthStops.length, 7, "domain palette has exactly 7 stops");
+assert.equal(generatorColorStops.length, 7, "generator palette has exactly 7 stops");
+assert.deepEqual(
+  generatorColorStops,
+  domainDepthStops.map((stop) => ({
+    depthMeters: stop.depthMeters,
+    rgba: hexAlphaToRgba(stop.color, stop.alpha),
+  })),
+  "domain hex+alpha palette and generator RGBA palette must match exactly",
+);
+for (const sourceMetadata of [metadata, fallbackMetadata]) {
+  assert.deepEqual(
+    sourceMetadata.depthStopsMeters,
+    generatorColorStops.map((stop) => stop.depthMeters),
+    `${sourceMetadata.source} metadata depth stop order must match the generator`,
+  );
+  assert.deepEqual(
+    sourceMetadata.colorStops,
+    generatorColorStops,
+    `${sourceMetadata.source} metadata RGBA stops must match the generator`,
+  );
+}
+assert.ok(generator.includes("BATHYMETRY_COLOR_STOPS"));
+assert.ok(generator.includes("sourceName === \"gebco-2026\" ? \"15 arc-second\" : \"60 arc-second\""));
+assert.doesNotMatch(generator, /coastlineOverlay|land-mask|kind: "coastline"/);
 assert.ok(contours.features.length > 5);
 assert.ok(new Set(contours.features.map((f) => f.properties.depth)).size > 2);
 assert.ok(

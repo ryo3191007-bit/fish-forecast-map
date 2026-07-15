@@ -94,6 +94,31 @@ assert.equal(mock.calls.terrain.at(-1), null, "standard/aerial layer modes clear
 assert.equal(bathyView.shouldApplyBathymetryTerrain({ current: undefined, requested: null }), true, "unsupported/unknown current clears only when needed");
 assert.equal(bathyView.shouldApplyBathymetryTerrain({ current: null, requested: null }), false, "null terrain is not cleared repeatedly");
 
+let visibility = bathyView.buildBathymetryLayerVisibility({ mode: "bathymetry", display: "gebco", hillshadeEnabled: true, contoursEnabled: true });
+assert.equal(visibility[bathy.BATHYMETRY_COLOR_LAYER_ID], true);
+assert.equal(visibility[bathy.BATHYMETRY_HILLSHADE_LAYER_ID], true);
+assert.equal(visibility[bathy.BATHYMETRY_CONTOUR_LAYER_ID], true);
+assert.equal(visibility[bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID], true);
+assert.equal(visibility[bathy.BATHYMETRY_SEA_SURFACE_LAYER_ID], true, "active primary sea-surface overlay is visible");
+assert.equal(visibility[bathy.BATHYMETRY_FALLBACK_COLOR_LAYER_ID], false);
+assert.equal(visibility[bathy.BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID], false, "inactive fallback sea-surface overlay is hidden");
+visibility = bathyView.buildBathymetryLayerVisibility({ mode: "bathymetry", display: "gebco", hillshadeEnabled: false, contoursEnabled: false });
+assert.equal(visibility[bathy.BATHYMETRY_COLOR_LAYER_ID], true, "color remains visible for active source");
+assert.equal(visibility[bathy.BATHYMETRY_HILLSHADE_LAYER_ID], false, "primary hillshade OFF hides hillshade only");
+assert.equal(visibility[bathy.BATHYMETRY_CONTOUR_LAYER_ID], false, "primary contour OFF hides line");
+assert.equal(visibility[bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID], false, "primary contour OFF hides label");
+assert.equal(visibility[bathy.BATHYMETRY_SEA_SURFACE_LAYER_ID], true, "sea-surface overlay does not depend on hillshade/contour toggles");
+visibility = bathyView.buildBathymetryLayerVisibility({ mode: "bathymetry", display: "etopo", hillshadeEnabled: false, contoursEnabled: true });
+assert.equal(visibility[bathy.BATHYMETRY_COLOR_LAYER_ID], false, "fallback hides primary color");
+assert.equal(visibility[bathy.BATHYMETRY_FALLBACK_COLOR_LAYER_ID], true, "fallback color is active");
+assert.equal(visibility[bathy.BATHYMETRY_SEA_SURFACE_LAYER_ID], false, "fallback hides primary sea-surface overlay");
+assert.equal(visibility[bathy.BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID], true, "fallback sea-surface overlay is active");
+assert.equal(visibility[bathy.BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID], false, "fallback uses preserved hillshade toggle state");
+assert.equal(visibility[bathy.BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID], true, "fallback uses preserved contour toggle state for line");
+assert.equal(visibility[bathy.BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID], true, "fallback uses preserved contour toggle state for label");
+visibility = bathyView.buildBathymetryLayerVisibility({ mode: "standard", display: "etopo", hillshadeEnabled: true, contoursEnabled: true });
+assert.ok(Object.values(visibility).every((value) => value === false), "mode exit hides all bathymetry layers");
+
 assert.equal(bathyView.shouldApplyBathymetryObliqueView({ mode: "bathymetry", previousMode: "standard", terrainEnabled: true, previousTerrainEnabled: true, initialBathymetryViewApplied: false }), true);
 assert.equal(bathyView.shouldApplyBathymetryObliqueView({ mode: "bathymetry", previousMode: "bathymetry", terrainEnabled: true, previousTerrainEnabled: true, initialBathymetryViewApplied: true }), false, "same-mode slider/coastline/fallback updates do not reapply camera");
 assert.equal(bathyView.shouldApplyBathymetryObliqueView({ mode: "bathymetry", previousMode: "bathymetry", terrainEnabled: true, previousTerrainEnabled: false, initialBathymetryViewApplied: true }), true, "3D OFF->ON applies oblique view");

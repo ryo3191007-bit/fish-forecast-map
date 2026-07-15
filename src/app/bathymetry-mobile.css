@@ -54,15 +54,14 @@
 
   .mapShell .bathymetryLegend {
     grid-column: 1 / -1;
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    overflow-x: hidden;
     padding: 4px 2px 2px;
-    scrollbar-width: thin;
   }
 
   .mapShell .bathymetryLegend span {
-    flex: 0 0 auto;
     font-size: 0.68rem;
   }
 

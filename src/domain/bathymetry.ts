@@ -11,6 +11,7 @@ export const BATHYMETRY_COLOR_LAYER_ID = "bathymetry-color-relief";
 export const BATHYMETRY_HILLSHADE_LAYER_ID = "bathymetry-hillshade";
 export const BATHYMETRY_CONTOUR_LAYER_ID = "bathymetry-contours";
 export const BATHYMETRY_CONTOUR_LABEL_LAYER_ID = "bathymetry-contour-labels";
+export const BATHYMETRY_SEA_SURFACE_LAYER_ID = "bathymetry-sea-surface";
 export const BATHYMETRY_FALLBACK_COLOR_LAYER_ID =
   "bathymetry-fallback-color-relief";
 export const BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID =
@@ -19,6 +20,8 @@ export const BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID =
   "bathymetry-fallback-contours";
 export const BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID =
   "bathymetry-fallback-contour-labels";
+export const BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID =
+  "bathymetry-fallback-sea-surface";
 
 export const BATHYMETRY_TILE_BASE_PATH = "/bathymetry/gebco-2026";
 export const BATHYMETRY_FALLBACK_TILE_BASE_PATH = "/bathymetry/etopo-2022";
@@ -125,12 +128,13 @@ export function bathymetryControlsDisabled(
 }
 
 export const BATHYMETRY_DEPTH_STOPS = [
-  { depthMeters: 0, label: "0m", color: "#bff4ff" },
-  { depthMeters: 20, label: "20m", color: "#6dd7f3" },
-  { depthMeters: 50, label: "50m", color: "#2da9e1" },
-  { depthMeters: 100, label: "100m", color: "#1479c9" },
-  { depthMeters: 200, label: "200m", color: "#0f4f9f" },
-  { depthMeters: 500, label: "500m以上", color: "#08275f" },
+  { depthMeters: 0, label: "0〜10m", color: "#b8edf3", alpha: 176 },
+  { depthMeters: 10, label: "10〜20m", color: "#8fd7e9", alpha: 188 },
+  { depthMeters: 20, label: "20〜50m", color: "#5fb9dc", alpha: 202 },
+  { depthMeters: 50, label: "50〜100m", color: "#2f8fc7", alpha: 216 },
+  { depthMeters: 100, label: "100〜200m", color: "#176aa9", alpha: 228 },
+  { depthMeters: 200, label: "200〜500m", color: "#104b83", alpha: 238 },
+  { depthMeters: 500, label: "500m以上", color: "#082f5f", alpha: 245 },
 ] as const;
 
 export const TID_CLASSIFICATION = {
