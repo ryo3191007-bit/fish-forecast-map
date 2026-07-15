@@ -12,6 +12,7 @@ import {
   BATHYMETRY_SEA_SURFACE_LAYER_ID,
   BATHYMETRY_SOURCE_ID,
   BATHYMETRY_VIEW_PRESETS,
+  type TerrainStatus,
   normalizeBathymetryExaggeration,
   type BathymetryViewPreset,
 } from "./bathymetry";
@@ -25,6 +26,27 @@ export type TerrainMap = {
   getTerrain?: () => CurrentTerrain | undefined;
   triggerRepaint?: () => void;
 };
+
+export type BathymetryModeMap = TerrainMap & {
+  getLayer: (layerId: string) => unknown;
+  setLayoutProperty: (layerId: string, name: "visibility", value: "visible" | "none") => void;
+};
+
+export type ApplyBathymetryModeInput = {
+  map: BathymetryModeMap;
+  mode: MapLayerMode;
+  display: BathymetryDisplaySource;
+  terrainEnabled: boolean;
+  terrainExaggeration: number;
+  hillshadeEnabled: boolean;
+  contoursEnabled: boolean;
+  setTerrainStatus: (status: TerrainStatus) => void;
+  onTerrainRollback: () => void;
+  addPrimaryBathymetryLayers: (map: BathymetryModeMap) => void;
+  addFallbackBathymetryLayers: (map: BathymetryModeMap) => void;
+  removeBathymetryRuntimeLayers: (map: BathymetryModeMap) => void;
+};
+
 export type BathymetryLayerVisibility = Record<string, boolean>;
 export type BathymetryOverlayToggles = {
   hillshadeEnabled: boolean;
@@ -130,6 +152,49 @@ export function buildBathymetryLayerVisibility({
   visibility[active.contourLabel] = contoursEnabled;
   visibility[active.seaSurface] = true;
   return visibility;
+}
+
+export function applyBathymetryMode({
+  map,
+  mode,
+  display,
+  terrainEnabled,
+  terrainExaggeration,
+  hillshadeEnabled,
+  contoursEnabled,
+  setTerrainStatus,
+  onTerrainRollback,
+  addPrimaryBathymetryLayers,
+  addFallbackBathymetryLayers,
+  removeBathymetryRuntimeLayers,
+}: ApplyBathymetryModeInput) {
+  if (mode !== "bathymetry" || display === "standard") {
+    removeBathymetryRuntimeLayers(map);
+    setTerrainStatus("2d");
+    return;
+  }
+
+  if (display === "gebco") addPrimaryBathymetryLayers(map);
+  else addFallbackBathymetryLayers(map);
+  const visibility = buildBathymetryLayerVisibility({
+    mode,
+    display,
+    hillshadeEnabled,
+    contoursEnabled,
+  });
+  for (const [layerId, visible] of Object.entries(visibility)) {
+    if (map.getLayer(layerId)) {
+      map.setLayoutProperty(layerId, "visibility", visible ? "visible" : "none");
+    }
+  }
+  try {
+    applyBathymetryTerrain(map, { display, exaggeration: terrainExaggeration, terrainEnabled });
+    setTerrainStatus(terrainEnabled ? "3d" : "2d");
+  } catch {
+    map.setTerrain(null);
+    onTerrainRollback();
+    setTerrainStatus("error");
+  }
 }
 
 export type BathymetryTerrainApplyResult = {

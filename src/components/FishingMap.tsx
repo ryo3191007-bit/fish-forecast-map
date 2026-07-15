@@ -66,12 +66,9 @@ import {
   initialBathymetryFallbackState,
   reduceBathymetryFallback,
   validateBathymetryMetadata,
-  type BathymetryFailureSource,
-  type BathymetryDisplaySource,
 } from "@/domain/bathymetryFallback";
 import {
-  applyBathymetryTerrain,
-  buildBathymetryLayerVisibility,
+  applyBathymetryMode,
   clearBathymetryCameraTransition,
   createBathymetryCameraTransitionManager,
   getDefaultBathymetryViewPreset,
@@ -462,14 +459,9 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
           setIsTerrainEnabled(false);
           setSelectedViewPreset(null);
         },
-        onSourceError: (source, key) =>
-          setBathymetryRuntime((current) =>
-            reduceBathymetryFallback(current, {
-              type: "source-error",
-              source,
-              key,
-            }),
-          ),
+        addPrimaryBathymetryLayers: (targetMap) => addPrimaryBathymetryLayers(targetMap as maplibregl.Map),
+        addFallbackBathymetryLayers: (targetMap) => addFallbackBathymetryLayers(targetMap as maplibregl.Map),
+        removeBathymetryRuntimeLayers: (targetMap) => removeBathymetryRuntimeLayers(targetMap as maplibregl.Map),
       });
       if (!isTerrainEnabled) setSelectedViewPreset(null);
       if (
@@ -1050,87 +1042,6 @@ function createExternalMemoPopupContent(memo: MappableExternalMemo) {
   return popup;
 }
 
-type ApplyBathymetryModeInput = {
-  map: maplibregl.Map;
-  mode: MapLayerMode;
-  display: BathymetryDisplaySource;
-  terrainEnabled: boolean;
-  terrainExaggeration: number;
-  hillshadeEnabled: boolean;
-  contoursEnabled: boolean;
-  setTerrainStatus: (status: TerrainStatus) => void;
-  onTerrainRollback: () => void;
-  onSourceError: (source: BathymetryFailureSource, key: string) => void;
-};
-
-function applyBathymetryMode({
-  map,
-  mode,
-  display,
-  terrainEnabled,
-  terrainExaggeration,
-  hillshadeEnabled,
-  contoursEnabled,
-  setTerrainStatus,
-  onTerrainRollback,
-}: ApplyBathymetryModeInput) {
-  if (mode !== "bathymetry" || display === "standard") {
-    removeBathymetryRuntimeLayers(map);
-    setTerrainStatus("2d");
-    return;
-  }
-
-  if (display === "gebco") addPrimaryBathymetryLayers(map);
-  else addFallbackBathymetryLayers(map);
-  const visibility = buildBathymetryLayerVisibility({
-    mode,
-    display,
-    hillshadeEnabled,
-    contoursEnabled,
-  });
-  for (const [layerId, visible] of Object.entries(visibility)) {
-    setLayerVisibility(map, layerId, visible);
-  }
-  try {
-    if (terrainEnabled) {
-      updateBathymetryTerrain({
-        map,
-        display,
-        exaggeration: terrainExaggeration,
-      });
-      setTerrainStatus("3d");
-    } else {
-      updateBathymetryTerrain({
-        map,
-        display,
-        exaggeration: terrainExaggeration,
-        terrainEnabled: false,
-      });
-      setTerrainStatus("2d");
-    }
-  } catch {
-    map.setTerrain(null);
-    onTerrainRollback();
-    setTerrainStatus("error");
-  }
-}
-
-type UpdateBathymetryTerrainInput = {
-  map: maplibregl.Map;
-  display: BathymetryDisplaySource;
-  exaggeration: number;
-  terrainEnabled?: boolean;
-};
-
-function updateBathymetryTerrain({
-  map,
-  display,
-  exaggeration,
-  terrainEnabled = true,
-}: UpdateBathymetryTerrainInput) {
-  applyBathymetryTerrain(map, { display, exaggeration, terrainEnabled });
-}
-
 function addPrimaryBathymetryLayers(map: maplibregl.Map) {
   if (!map.getSource(BATHYMETRY_SOURCE_ID)) {
     map.addSource(BATHYMETRY_SOURCE_ID, {
@@ -1316,16 +1227,6 @@ function addBathymetryLayersForSources(
         "text-halo-width": 1.2,
       },
     });
-  }
-}
-
-function setLayerVisibility(
-  map: maplibregl.Map,
-  layerId: string,
-  visible: boolean,
-) {
-  if (map.getLayer(layerId)) {
-    map.setLayoutProperty(layerId, "visibility", visible ? "visible" : "none");
   }
 }
 

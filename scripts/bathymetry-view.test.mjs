@@ -278,28 +278,69 @@ assert.equal(bathy.bathymetryControlsDisabled("unsupported"), true, "unsupported
 assert.equal(bathy.bathymetryControlsDisabled("2d"), false, "manual-3d 2D still allows manual 3D controls");
 
 mock = createMockMap();
-let rollbackCalled = false;
-const preserved = { camera: mock.calls.easeTo.length + mock.calls.jumpTo.length, sourceErrors: 0 };
-try {
-  mock.map.setTerrain = (nextTerrain) => { mock.calls.terrain.push(nextTerrain); if (nextTerrain) throw new Error("boom"); };
-  bathyView.applyBathymetryTerrain(mock.map, { display: "gebco", exaggeration: 2, terrainEnabled: true });
-} catch {
-  mock.map.setTerrain(null);
-  rollbackCalled = true;
+mock.layers = new Set([
+  bathy.BATHYMETRY_COLOR_LAYER_ID,
+  bathy.BATHYMETRY_HILLSHADE_LAYER_ID,
+  bathy.BATHYMETRY_CONTOUR_LAYER_ID,
+  bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
+  bathy.BATHYMETRY_SEA_SURFACE_LAYER_ID,
+  bathy.BATHYMETRY_FALLBACK_COLOR_LAYER_ID,
+  bathy.BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
+  bathy.BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
+  bathy.BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID,
+  bathy.BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
+]);
+mock.visibility = new Map();
+mock.map.getLayer = (layerId) => mock.layers.has(layerId);
+mock.map.setLayoutProperty = (layerId, name, value) => {
+  assert.equal(name, "visibility");
+  mock.visibility.set(layerId, value);
+};
+const terrainCallsBeforeFailure = mock.calls.terrain.length;
+mock.map.setTerrain = (nextTerrain) => {
+  mock.calls.terrain.push(nextTerrain);
+  if (nextTerrain) throw new Error("boom");
+};
+let terrainEnabledState = true;
+let selectedPresetState = "oblique";
+let terrainStatusState = "3d";
+let sourceErrorCount = 0;
+let activeDisplay = "gebco";
+let terrainApplyFailed = false;
+const previousCameraCallCount = mock.calls.easeTo.length + mock.calls.jumpTo.length;
+bathyView.applyBathymetryMode({
+  map: mock.map,
+  mode: "bathymetry",
+  display: activeDisplay,
+  terrainEnabled: terrainEnabledState,
+  terrainExaggeration: 2,
+  hillshadeEnabled: false,
+  contoursEnabled: true,
+  setTerrainStatus: (status) => { terrainStatusState = status; },
+  onTerrainRollback: () => {
+    terrainApplyFailed = true;
+    terrainEnabledState = false;
+    selectedPresetState = null;
+  },
+  addPrimaryBathymetryLayers: () => {},
+  addFallbackBathymetryLayers: () => { activeDisplay = "etopo"; sourceErrorCount += 1; },
+  removeBathymetryRuntimeLayers: () => { throw new Error("rollback test must stay in bathymetry mode"); },
+});
+if (!terrainApplyFailed && bathyView.shouldApplyBathymetryObliqueView({ mode: "bathymetry", previousMode: "standard", terrainEnabled: true, previousTerrainEnabled: true, initialBathymetryViewApplied: false })) {
+  bathyView.runBathymetryCameraTransition({ map: mock.map, manager: bathyView.createBathymetryCameraTransitionManager(), preset: oblique, reducedMotion: false, duration: 320 });
 }
-assert.equal(rollbackCalled, true, "3D apply failure can rollback terrain state to 2D");
+assert.equal(terrainEnabledState, false, "production applyBathymetryMode rollback turns 3D OFF");
+assert.equal(selectedPresetState, null, "production applyBathymetryMode rollback clears selected preset");
+assert.equal(terrainStatusState, "error", "production applyBathymetryMode reports 3D init error");
+assert.equal(mock.calls.easeTo.length + mock.calls.jumpTo.length, previousCameraCallCount, "rollback does not move camera in the same effect cycle");
+assert.equal(activeDisplay, "gebco", "rollback keeps the active bathymetry source unchanged");
+assert.equal(sourceErrorCount, 0, "terrain rollback does not trigger GEBCO→ETOPO fallback");
+assert.equal(mock.calls.terrain.length, terrainCallsBeforeFailure + 2, "failed terrain apply is followed by one terrain clear");
 assert.equal(mock.calls.terrain.at(-1), null, "rollback clears rendered terrain");
-assert.equal(mock.calls.easeTo.length + mock.calls.jumpTo.length, preserved.camera, "rollback does not move camera");
-assert.equal(preserved.sourceErrors, 0, "terrain rollback test does not trigger source fallback");
-assert.equal(rollbackCalled, true, "production rollback helper path clears 3D state after setTerrain failure");
-const sourceBeforeRollback = "gebco";
-const terrainStatusAfterRollback = "error";
-const selectedPresetAfterRollback = null;
-const terrainEnabledAfterRollback = false;
-assert.equal(sourceBeforeRollback, "gebco", "rollback keeps the active bathymetry source unchanged");
-assert.equal(terrainEnabledAfterRollback, false, "rollback turns 3D OFF");
-assert.equal(selectedPresetAfterRollback, null, "rollback clears the selected camera preset");
-assert.equal(terrainStatusAfterRollback, "error", "rollback reports a 3D init error without source fallback");
-assert.equal(visibility[bathy.BATHYMETRY_COLOR_LAYER_ID], false, "existing visibility object remains independent of rollback/source fallback");
+assert.equal(mock.visibility.get(bathy.BATHYMETRY_COLOR_LAYER_ID), "visible", "2D color remains visible after rollback");
+assert.equal(mock.visibility.get(bathy.BATHYMETRY_HILLSHADE_LAYER_ID), "none", "2D hillshade toggle state is preserved after rollback");
+assert.equal(mock.visibility.get(bathy.BATHYMETRY_CONTOUR_LAYER_ID), "visible", "2D contour line toggle state is preserved after rollback");
+assert.equal(mock.visibility.get(bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID), "visible", "2D contour label toggle state is preserved after rollback");
+assert.equal(mock.visibility.get(bathy.BATHYMETRY_FALLBACK_COLOR_LAYER_ID), "none", "fallback color remains hidden after GEBCO rollback");
 
 console.log("bathymetry view controls tests passed");
