@@ -353,6 +353,17 @@ assert.deepEqual(bathyView.getBathymetryHillshadeProfile("gebco"), bathyView.BAT
 assert.deepEqual(bathyView.getBathymetryHillshadeProfile("etopo"), bathyView.BATHYMETRY_HILLSHADE_PROFILES.etopo);
 assert.notDeepEqual(bathyView.getBathymetryHillshadeProfile("gebco"), bathyView.getBathymetryHillshadeProfile("etopo"));
 
+
+function expectedDepthFilter(levels) {
+  return ["in", ["get", "depth"], ["literal", levels]];
+}
+
+function assertLatestFilter(calls, layerId, levels, message) {
+  const match = calls.filter.filter((call) => call.layerId === layerId).at(-1);
+  assert.ok(match, `${message}: missing ${layerId} filter`);
+  sameJson(match.filter, expectedDepthFilter(levels));
+}
+
 function createContourMockMap() {
   const layers = new Set([
     bathy.BATHYMETRY_CONTOUR_LAYER_ID,
@@ -385,8 +396,66 @@ sameJson(contourResult.contourDisplay.lineLevels, [100, 200, 500]);
 assert.equal(contourMock.calls.visibility.find((call) => call.layerId === bathy.BATHYMETRY_CONTOUR_LAYER_ID).value, "visible", "active contour line is visible");
 assert.equal(contourMock.calls.visibility.find((call) => call.layerId === bathy.BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID).value, "none", "inactive fallback contour line stays hidden");
 assert.equal(contourMock.calls.filter.length, 2, "filters apply only to active line/label layers");
+assertLatestFilter(contourMock.calls, bathy.BATHYMETRY_CONTOUR_LAYER_ID, [100, 200, 500], "wide zoom line filter uses 100/200/500m");
+assertLatestFilter(contourMock.calls, bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID, [100, 200, 500], "desktop wide zoom label filter uses helper levels");
+assert.equal(contourMock.calls.filter.some((call) => call.layerId === bathy.BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID || call.layerId === bathy.BATHYMETRY_FALLBACK_CONTOUR_LABEL_LAYER_ID), false, "inactive source is not filtered");
 assert.equal(contourMock.calls.terrain.length, 0, "zoom-only contour update does not touch terrain/camera/fallback/point state");
 assert.equal(contourMock.calls.camera.length + contourMock.calls.fallback.length + contourMock.calls.point.length, 0, "zoom-only contour update is structurally isolated");
+
+
+contourMock = createContourMockMap();
+bathyView.applyBathymetryContourFilters({
+  map: contourMock.map,
+  mode: "bathymetry",
+  display: "gebco",
+  zoom: 8.7,
+  compact: false,
+  contoursEnabled: true,
+});
+assertLatestFilter(contourMock.calls, bathy.BATHYMETRY_CONTOUR_LAYER_ID, [50, 100, 200, 500], "medium zoom line filter uses 50/100/200/500m");
+assertLatestFilter(contourMock.calls, bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID, bathyView.getBathymetryContourDisplay({ zoom: 8.7, compact: false }).labelLevels, "desktop medium label filter uses helper levels");
+
+contourMock = createContourMockMap();
+bathyView.applyBathymetryContourFilters({
+  map: contourMock.map,
+  mode: "bathymetry",
+  display: "gebco",
+  zoom: 9.5,
+  compact: true,
+  contoursEnabled: true,
+});
+assertLatestFilter(contourMock.calls, bathy.BATHYMETRY_CONTOUR_LAYER_ID, [10, 20, 50, 100, 200, 500], "coastal zoom line filter uses 10/20/50/100/200/500m");
+assertLatestFilter(contourMock.calls, bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID, bathyView.getBathymetryContourDisplay({ zoom: 9.5, compact: true }).labelLevels, "compact coastal label filter uses helper levels");
+
+const lateLayerMock = createContourMockMap();
+lateLayerMock.calls.loaded = [];
+bathyView.applyBathymetryMode({
+  map: lateLayerMock.map,
+  mode: "bathymetry",
+  display: "gebco",
+  terrainEnabled: false,
+  terrainExaggeration: 1,
+  hillshadeEnabled: false,
+  contoursEnabled: true,
+  setTerrainStatus: () => {},
+  onTerrainRollback: () => { throw new Error("2D late-layer case must not rollback terrain"); },
+  addPrimaryBathymetryLayers: () => { lateLayerMock.calls.loaded.push("primary-added-after-map-load"); },
+  addFallbackBathymetryLayers: () => { throw new Error("primary display must not add fallback layers"); },
+  removeBathymetryRuntimeLayers: () => { throw new Error("bathymetry mode must not remove runtime layers"); },
+});
+bathyView.applyBathymetryContourFilters({
+  map: lateLayerMock.map,
+  mode: "bathymetry",
+  display: "gebco",
+  zoom: 8.2,
+  compact: false,
+  contoursEnabled: true,
+});
+assert.deepEqual(lateLayerMock.calls.loaded, ["primary-added-after-map-load"], "late source/layer add path ran without relying on a future load event");
+assertLatestFilter(lateLayerMock.calls, bathy.BATHYMETRY_CONTOUR_LAYER_ID, [100, 200, 500], "late-added active line gets initial filter without zoom");
+assertLatestFilter(lateLayerMock.calls, bathy.BATHYMETRY_CONTOUR_LABEL_LAYER_ID, bathyView.getBathymetryContourDisplay({ zoom: 8.2, compact: false }).labelLevels, "late-added active label gets initial helper filter without zoom");
+assert.equal(lateLayerMock.calls.terrain.length, 1, "initial contour apply does not add terrain work beyond applyBathymetryMode's 2D terrain clear");
+assert.equal(lateLayerMock.calls.camera.length + lateLayerMock.calls.fallback.length + lateLayerMock.calls.point.length, 0, "initial contour apply does not touch camera/fallback/point state");
 
 contourMock = createContourMockMap();
 bathyView.applyBathymetryContourFilters({

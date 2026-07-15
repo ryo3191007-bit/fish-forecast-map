@@ -486,6 +486,14 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
           initialBathymetryViewAppliedRef.current = true;
         }
       }
+      applyBathymetryContourFilters({
+        map,
+        mode: mapLayerMode,
+        display: bathymetryRuntime.display,
+        zoom: map.getZoom(),
+        compact: deviceCapability?.reason === "compact",
+        contoursEnabled,
+      });
       suppressNextAutoObliqueRef.current = false;
       previousModeRef.current = mapLayerMode;
       previousTerrainEnabledRef.current = isTerrainEnabled;
@@ -499,6 +507,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   }, [
     bathymetryRuntime.display,
     contoursEnabled,
+    deviceCapability?.reason,
     hillshadeEnabled,
     isTerrainEnabled,
     mapLayerMode,
