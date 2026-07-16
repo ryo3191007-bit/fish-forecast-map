@@ -8,7 +8,7 @@
 
 **No-Go。2026-07-16時点では、採用ゲートをすべて満たす「1データセット＋1海域」は確定しない。**
 
-最も近い候補は海しるAPIの `等深線` コンテンツである。海しるAPIの一般仕様として、JSON/GeoJSON/PNGで取得可能、1回最大1,000レコード、1応答最大64MB、`resultOffset` によるページング取得が可能であることは確認済みである。一方、`等深線` コンテンツ固有のendpoint/layer ID/product ID、属性schema、元グリッドの正式名称、native grid spacingまたは等深線間隔、coverage、鉛直基準、nodata、対象boundsでの総レコード数・総容量、Terrain-RGB/PNG/GeoJSON等の派生物生成可否、GitHub/Vercel Previewでの派生物Web配信可否をコンテンツ単位で確認できない。そのため採用ではなく **要問い合わせ** とする。
+最も近い候補は海しるAPIの `等深線` コンテンツである。海しるAPIの一般仕様として、JSON/GeoJSONで取得可能、1回最大1,000レコード、1応答最大64MB、`resultOffset` によるページング取得が可能であることは確認済みである。一方、`等深線` コンテンツ固有のendpoint/layer ID/product ID、属性schema、元グリッドの正式名称、native grid spacingまたは等深線間隔、coverage、鉛直基準、nodata、対象boundsでの総レコード数・総容量、Terrain-RGB/PNG/GeoJSON等の派生物生成可否、GitHub/Vercel Previewでの派生物Web配信可否をコンテンツ単位で確認できない。そのため採用ではなく **要問い合わせ** とする。
 
 NOAA NCEI Bathymetric Data ViewerとAIST/GSJ公式DBも候補5海域・代表boundsで再確認したが、2026-07-16時点で本PoCに採用できる具体的dataset/survey/product ID、bounds、解像度、形式、容量、利用条件を揃えて確定できなかった。Phase Bのデータ取得・加工・Terrain-RGB生成・Web配信PoCは開始しない。
 
@@ -35,10 +35,10 @@ NOAA NCEI Bathymetric Data ViewerとAIST/GSJ公式DBも候補5海域・代表bou
 
 | 候補 | 正式名称 / 提供機関 / 公式URL | ID | 対象候補海域 | bounds | native resolution / grid spacing / 測線間隔 | 座標系 / 鉛直基準 / 単位 | 形式 / nodata | 容量・取得サイズ | 取得方法 | 利用条件・加工・派生物・Web配信 | GEBCO_2026 15秒との差 | 判定 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 海しるAPI 等深線 | 海洋状況表示システム公開API `等深線` / 海上保安庁 / https://portal.msil.go.jp/msil-api-list | API項目名: `等深線`。endpoint/layer ID/product IDは未確認 | 日本周辺。候補5海域を含む可能性が高いが、個別coverageはコンテンツmetadata/APIで要確認 | 公式項目一覧では個別bounds未確認。問い合わせ・API metadata確認が必要 | 公式説明は「水深のグリッドデータから作成した等深線」。元グリッドspacing、等深線間隔は未確認 | 水平座標系、鉛直基準、単位はコンテンツmetadataで未確認 | 一般API仕様としてJSON/GeoJSON/PNG取得可は確認済み。`等深線` 固有の属性schema、nodataは未確認 | 一般API仕様として1回最大1,000レコード、1応答最大64MBは確認済み。対象boundsの総レコード数・総容量は未確認 | 利用登録、subscription key、API呼び出し。1,000件超は `resultOffset` でページング可能。試用keyは予告なく停止・変更可能 | 一般規約上は条件付きで複製・公衆送信・編集/加工が可能。ただし `等深線` 固有の提供元、第三者権利、外部DB条件、個別制約、派生Terrain-RGB/PNG/GeoJSONおよびGitHub/Vercelでの公開・再配布可否は未確認 | 元グリッドまたは等深線間隔が確認できれば有意差の可能性はあるが未確認 | 要問い合わせ。最有力だが採用不可 |
+| 海しるAPI 等深線 | 海洋状況表示システム公開API `等深線` / 海上保安庁 / https://portal.msil.go.jp/msil-api-list | API項目名: `等深線`。endpoint/layer ID/product IDは未確認 | 日本周辺。候補5海域を含む可能性が高いが、個別coverageはコンテンツmetadata/APIで要確認 | 公式項目一覧では個別bounds未確認。問い合わせ・API metadata確認が必要 | 公式説明は「水深のグリッドデータから作成した等深線」。元グリッドspacing、等深線間隔は未確認 | 水平座標系、鉛直基準、単位はコンテンツmetadataで未確認 | 一般API仕様としてJSON/GeoJSON取得可は確認済み。`等深線` 固有の属性schema、nodataは未確認 | 一般API仕様として1回最大1,000レコード、1応答最大64MBは確認済み。対象boundsの総レコード数・総容量は未確認 | 利用登録、subscription key、API呼び出し。1,000件超は `resultOffset` でページング可能。試用keyは予告なく停止・変更可能 | 一般規約上は条件付きで複製・公衆送信・編集/加工が可能。ただし `等深線` 固有の提供元、第三者権利、外部DB条件、個別制約、派生Terrain-RGB/PNG/GeoJSONおよびGitHub/Vercelでの公開・再配布可否は未確認 | 元グリッドまたは等深線間隔が確認できれば有意差の可能性はあるが未確認 | 要問い合わせ。最有力だが採用不可 |
 | NOAA NCEI Bathymetric Data Viewer / IHO DCDB等 | Bathymetric Data Viewer / NOAA NCEI / https://www.ncei.noaa.gov/maps/bathymetry/ | 候補5海域で採用可能な個別survey IDを特定できず | 候補5海域周辺 | 下記検索記録の代表boundsで確認 | 個別surveyごと。対象海域で有効な高密度測線を確認できず | 個別survey metadata依存 | 個別survey metadata依存 | 採用候補ID未特定のため容量未確認 | BDV公式検索で候補boundsを確認。個別survey metadataで採用可否を確認する想定 | NOAA一般公開データでも、個別surveyの出典、利用条件、派生物配信可否を確認する必要がある | 個別マルチビームがあれば大きい可能性。ただし対象海域coverage未確定 | 保留/不採用。今回採用IDなし |
 | JODC J-EGG500 | 500m Gridded Bathymetry Data (J-EGG500) / JODC / https://www.jodc.go.jp/jodcweb/JDOSS/infoJEGG.html | J-EGG500 Territory 2 | 候補5海域はTerritory 2内（北緯30〜38度、東経128〜144度） | Territory 2: N30〜38, E128〜144 | Lambert Conformal Conicの500m square grid。緯度経度格子ではない | 世界測地系WGS-84。鉛直基準はページ上未確認。Depth単位m | テキスト: Classification, Latitude, Longitude, Depth。Classification 0/1。nodata未確認 | Territory単位。対象切り出しサイズは未確認 | J-DOSS/J-EGG500配布ページ確認 | 公式ページ末尾は書面許可なしの複製・再掲載禁止を示す。公開・再配布・Web掲載には書面許可が必要。派生物生成や内部加工の可否は許可条件確認まで未確定 | GEBCO_2026 15秒（緯度33度付近で数百m級）より有意に細かいとは言いにくい | 不採用 |
-| AIST/GSJ 海洋地質・地形系DB | AIST/GSJ Database / 産業技術総合研究所 地質調査総合センター / https://unit.aist.go.jp/igg/en/database/index.html | 下記確認DBでは水深DEM候補IDを特定できず | 一部日本沿岸。候補5海域coverageは水深DEMとして未確認 | 代表boundsで確認したがDEM boundsは特定できず | 水深DEMのgrid spacingとして確認できず | 未確認 | 地質情報中心。水深DEM形式/nodata未確認 | 水深DEM容量未確認 | 公式DB一覧から海洋地質図、海陸シームレス地質情報集、地質図Navi等を確認 | 地質レイヤー参考にはなり得るが、今回のTerrain-RGB用水深DEMとしてのID、bounds、容量、配信可否を確認できない | 水深DEM比較対象として未確認 | 不採用 |
+| AIST/GSJ 海洋地質・地形系DB | AIST/GSJ Database / 産業技術総合研究所 地質調査総合センター / https://unit.aist.go.jp/igg/en/database/index.html | 下記確認DBでは水深DEM候補IDを特定できず | 一部日本沿岸。候補5海域coverageは水深DEMとして未確認 | 代表boundsで確認したがDEM boundsは特定できず | 水深DEMのgrid spacingとして確認できず | 未確認 | 地質情報中心。水深DEM形式/nodata未確認 | 水深DEM容量未確認 | 公式DB一覧から海洋地質図、海陸シームレス地質情報集、地質図Navi等を確認。確認URLは検索記録と主要根拠URLに記録 | 地質レイヤー参考にはなり得るが、今回のTerrain-RGB用水深DEMとしてのID、bounds、容量、配信可否を確認できない | 水深DEM比較対象として未確認 | 不採用 |
 | 国土地理院 標準地図タイル等 | 地理院タイル / 国土地理院 / https://maps.gsi.go.jp/development/ichiran.html | 標準地図等 | 日本 | タイルcoverageは日本。海底DEM boundsではない | 地形図タイルであり海底水深DEMではない | Web Mercator tile。水深鉛直基準なし | XYZタイル。DEM nodata対象外 | タイル通信量のみ | リアルタイム参照 | 海岸線補助には検討余地があるが、独立ベクトル化や複製・再配布は測量法/規約確認が必要。海底高精細DEMではない | 水深DEMではない | 不採用 |
 
 ## 5. 再現可能な公式検索記録
@@ -50,7 +50,7 @@ NOAA NCEI Bathymetric Data ViewerとAIST/GSJ公式DBも候補5海域・代表bou
 | 検索日 | 2026-07-16 |
 | 使用した公式ページ | 海しるAPI Home、項目一覧、利用方法、利用規約 |
 | 検索条件 | 項目一覧で `等深線` を確認し、利用方法で一般API仕様、利用規約で加工・公衆送信条件を確認 |
-| 確認済み一般仕様 | JSON/GeoJSON/PNG取得可、1回最大1,000レコード、1応答最大64MB、`exceededTransferLimit` と `resultOffset` によるページング |
+| 確認済み一般仕様 | JSON/GeoJSON取得可、1回最大1,000レコード、1応答最大64MB、`exceededTransferLimit` と `resultOffset` によるページング |
 | `等深線` 固有の未確認 | endpoint/layer ID/product ID、属性schema、coverage、公式bounds、等深線間隔、元グリッド正式名称・spacing、水平座標系、鉛直基準、単位、nodata、対象bounds総レコード数・総容量、派生物生成・Web公開可否 |
 | 採否理由 | 一般API仕様はゲート未達から外す。ただし水深DEM/Terrain-RGB PoCに必要なコンテンツ固有条件と配信条件が未確認のため採用保留/No-Go |
 
@@ -70,9 +70,9 @@ NOAA NCEI Bathymetric Data ViewerとAIST/GSJ公式DBも候補5海域・代表bou
 
 | 検索日 | 使用した公式DB/metadataページ | 検索条件 | 確認した個別DB | ヒットしたdataset/product ID | 確認できた範囲 | 水深DEM PoC採否理由 |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-07-16 | AIST/GSJ Database | 候補5海域名（芥屋大門、唐津湾、呼子、鷹島、平戸瀬戸）と水深DEM/Terrain-RGB用途を想定して公式DB一覧を確認 | Marine geological map、Seamless digital geological map of Japan、Geological Map Navi等の地質・海洋地質系入口 | Terrain-RGB用の水深DEMとして採用できる個別product IDは特定できず | 地質図・海洋地質情報として参照余地はあるが、bounds、grid spacing、DEM形式、容量、Web配信可否を揃えた水深DEM候補は確認できず | 水深DEMではなく地質レイヤー候補として後続分離。不採用 |
+| 2026-07-16 | AIST/GSJ Database、Marine Geology Map Series、Seamless Digital Geological Map of Japan、Geological Map Navi、Seamless Geological Map of Coastal Zone | 候補5海域名（芥屋大門、唐津湾、呼子、鷹島、平戸瀬戸）と水深DEM/Terrain-RGB用途を想定して公式DB一覧、Marine Geological Maps、地質図Navi、海陸シームレス地質情報入口を確認 | Marine Geological Maps（`https://www.gsj.jp/Map/EN/marine-geology.html`）、Seamless Digital Geological Map of Japan（`https://gbank.gsj.jp/owscontents/contents/seamless200k_en.html`）、Geological Map Navi（`https://gbank.gsj.jp/geonavi/?lang=en`）、Seamless Geological Map of Coastal Zone（`https://www.gsj.jp/Map/EN/seamless-geomap.html`） | Terrain-RGB用の水深DEMとして採用できる個別product IDは特定できず | 地質図・海洋地質情報として参照余地はあるが、bounds、grid spacing、DEM形式、容量、Web配信可否を揃えた水深DEM候補は確認できず | 水深DEMではなく地質レイヤー候補として後続分離。不採用 |
 
-補足: AIST/GSJは地質情報の公式一次提供元として有用だが、今回の目的は海底地形Terrain-RGB用の高精細DEMである。候補5海域に対してDEM grid spacing、形式、容量、派生物配信条件を確認できる個別DBを特定できなかったため、PoC採用候補から外す。
+補足: AIST/GSJは地質情報の公式一次提供元として有用だが、今回の目的は海底地形Terrain-RGB用の高精細DEMである。確認した直接URLはいずれも地質図・WMS/WMTS・海洋地質図・沿岸域地質情報の入口またはシリーズページであり、候補5海域に対してDEM grid spacing、形式、容量、派生物配信条件を確認できる水深DEM個別DBを特定できなかったため、PoC採用候補から外す。
 
 ## 6. 候補海域の扱い
 
@@ -106,7 +106,7 @@ west=129.52, south=33.31, east=129.62, north=33.40
 | --- | --- | --- |
 | 対象海域を具体的boundsで切り出せる | 未達 | 海しるAPI `等深線` の公式coverage/bounds、endpoint/layer ID、対象bounds総件数が未確認。暫定boundsは問い合わせ用に留まる |
 | GEBCO_2026 15秒より有意に細かい地形比較が期待できる | 未達 | 海しるの元グリッドspacingまたは等深線間隔が未確認。J-EGG500は500m格子で有意な高精細化とは言いにくい。NOAA/AISTは採用IDなし |
-| 取得方法が公式手順として再現可能 | 一部達成 | 海しるAPIの一般取得手順、JSON/GeoJSON/PNG、1,000件/64MB制限、`resultOffset` pagingは確認済み。ただし `等深線` 固有endpoint・属性schema・総容量は未確認 |
+| 取得方法が公式手順として再現可能 | 一部達成 | 海しるAPIの一般取得手順、JSON/GeoJSON、1,000件/64MB制限、`resultOffset` pagingは確認済み。ただし `等深線` 固有endpoint・属性schema・総容量は未確認 |
 | 元データ加工が許可される | 未達 | 海しる一般規約は条件付き加工を認めるが、`等深線` 固有の第三者権利・外部DB条件・個別制約が未確認。J-EGG500の内部加工条件も未確定 |
 | 派生Terrain-RGB/PNG/GeoJSON等の作成が許可される | 未達 | 海しる `等深線` 派生物とJ-EGG500派生物はいずれも条件確認が必要。NOAA/AISTは採用IDなし |
 | GitHub/Vercel Preview等で派生物を公開できる | 未達 | 海しる派生物の公開・再配布条件が未確認。J-EGG500は公開・再配布・再掲載に書面許可が必要。NOAA/AISTは採用IDなし |
@@ -159,4 +159,8 @@ west=129.52, south=33.31, east=129.62, north=33.40
 - NOAA NCEI Bathymetric Data Viewer: https://www.ncei.noaa.gov/maps/bathymetry/
 - JODC J-EGG500: https://www.jodc.go.jp/jodcweb/JDOSS/infoJEGG.html
 - AIST/GSJ Database: https://unit.aist.go.jp/igg/en/database/index.html
+- AIST/GSJ Marine Geology Map Series: https://www.gsj.jp/Map/EN/marine-geology.html
+- AIST/GSJ Seamless Digital Geological Map of Japan (WMS/WMTS): https://gbank.gsj.jp/owscontents/contents/seamless200k_en.html
+- AIST/GSJ Geological Map Navi: https://gbank.gsj.jp/geonavi/?lang=en
+- AIST/GSJ Seamless Geological Map of Coastal Zone: https://www.gsj.jp/Map/EN/seamless-geomap.html
 - 国土地理院 地理院タイル一覧: https://maps.gsi.go.jp/development/ichiran.html
