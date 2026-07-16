@@ -68,7 +68,6 @@ import {
   validateBathymetryMetadata,
 } from "@/domain/bathymetryFallback";
 import {
-  BATHYMETRY_CONTOUR_GUIDANCE,
   applyBathymetryContourFilters,
   applyBathymetryMode,
   getBathymetryHillshadeProfile,
@@ -917,7 +916,6 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
                 </small>
               </div>
             ) : null}
-            <small className="bathymetryContourGuidance">{BATHYMETRY_CONTOUR_GUIDANCE}</small>
             <div className="bathymetryLegend" aria-label="水深凡例">
               {BATHYMETRY_DEPTH_STOPS.map((stop) => (
                 <span key={stop.label}>

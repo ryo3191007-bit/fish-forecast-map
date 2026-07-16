@@ -141,3 +141,9 @@
 ## Phase 5 / Post-MVP-054: 高精細1海域PoC候補データセットとWeb配信可否の確定
 
 完了。Issue #151では、公式一次提供元だけを根拠に、NOAA NCEI Bathymetric Data Viewer、海しるAPI／海洋状況表示システム、AIST/GSJ、JODC J-EGG500、国土地理院等を調査しました。採用ゲートをすべて満たす `1データセット + 1海域` は確定せず、Phase Bの高精細データ取得・Terrain-RGB生成・Web配信PoCはNo-Goと判断しました。海しるAPIは一般仕様としてJSON/GeoJSON取得、1回最大1,000レコード、1応答最大64MB、`resultOffset` pagingを確認済みですが、最有力候補の `等深線` はendpoint/layer ID、属性schema、元グリッドproduct ID、bounds、native grid spacingまたは等深線間隔、鉛直基準、nodata、対象bounds総容量、派生物生成、GitHub/Vercel PreviewでのWeb配信・再配布可否が未確認のため要問い合わせです。NOAA/AIST/GSJも候補5海域の代表boundsで採用可能な個別survey/product IDを確定できませんでした。調査正本は `docs/HIGH_RESOLUTION_BATHYMETRY_POC_DATASET_RESEARCH.md` です。
+
+## Phase 5 / Post-MVP-055: 海しるAPI等深線の仕様・派生物Web配信可否の公式問い合わせ
+
+作業中。Issue #153では、Post-MVP-054で最有力候補として残った海しるAPI `等深線` について、公式問い合わせ窓口、送信前文面、送信状況、回答状況、未確認事項、Phase B開始可否を記録します。公式問い合わせフォームは確認済みですが、利用者本人の連絡先入力と送信確認が必要なため、Codex環境からは未送信として扱います。公式回答または公式文書で全判断ゲートを満たすまで、Phase Bの高精細データ取得、Terrain-RGB/PNG/GeoJSON生成、GitHub/Vercel配信は開始しません。
+
+Post-MVP-054はIssue #151 / PR #152で完了済みです。merge commitは `7f1c97396fa28e3b1763dabc2202c6658c446f6e` です。

@@ -36,8 +36,6 @@ export type BathymetryModeMap = TerrainMap & {
 
 
 export const BATHYMETRY_CONTOUR_LEVELS = [10, 20, 50, 100, 200, 500] as const;
-export const BATHYMETRY_CONTOUR_GUIDANCE =
-  "表示水深: 10・20・50・100・200・500m（ズームに応じて間引き）";
 export const BATHYMETRY_CONTOUR_ZOOM_BREAKPOINTS = {
   initialWideZoom: 8.2,
   etopoMaxZoom: 8,
