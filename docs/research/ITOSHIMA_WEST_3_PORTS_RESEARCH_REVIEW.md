@@ -86,7 +86,7 @@
 
 - `scripts/fishing-spot-research-schema.test.mjs`でattributes / facilities / restrictions / sourcesをセクション別にcanonical化し、spot ID、地点名、座標、確認日、source ID接頭辞、漁港コード、数値を正規化して比較する。
 - セクション単位の類似率閾値は80%で、主要4セクション中3セクション以上が閾値以上なら機械コピーとして失敗させる。共通公式source URLの共有自体は許可し、supports、採否role、noteを含む構造コピーを検知対象にする。
-- negative fixtureは野北レコードをベースに地点名・ID・座標・source ID接頭辞だけを差し替えた配列を作り、類似率ベース検知で必ず失敗することを確認する。現3JSONは、C09 feature、現行自治体source、二次source採否、river/openSeaの地点別判断が複数異なるため通過する。
+- negative fixtureは野北レコードを3地点分へ機械コピーし、地点名・ID・座標・source ID接頭辞・漁港コード・確認日を地点固有値として差し替えたうえで、複製先の1レコードだけ`attributes.openSeaExposure.value`を1項目変更する。それでもattributes / facilities / restrictions / sourcesの大部分がコピーであるため、類似率ベース検知で必ず失敗することを確認する。現3JSONは、C09 feature、現行自治体source、二次source採否、river/openSeaの地点別判断が複数異なるため通過する。
 
 ## 追加確認事項
 

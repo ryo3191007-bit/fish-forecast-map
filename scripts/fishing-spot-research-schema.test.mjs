@@ -219,16 +219,39 @@ for (const record of issue163Records) {
 assertNotMechanicalIssue163Copy(issue163Records, "Issue #163 records");
 const copiedFixture = issue163Records.map((record, index) => {
   const copy = structuredClone(issue163Records[0]);
-  copy.spotId = record.spotId;
-  copy.identity.spotName = record.identity.spotName;
-  copy.identity.coordinates.latitude = record.identity.coordinates.latitude;
-  copy.identity.coordinates.longitude = record.identity.coordinates.longitude;
-  copy.identity.coordinates.checkedAt = record.identity.coordinates.checkedAt;
-  copy.sources = copy.sources.map((source) => ({ ...source, id: source.id.replace("nokita", record.spotId.split("-")[0]) }));
-  if (index === 0) return issue163Records[0];
-  return copy;
+  const spotPrefix = record.spotId.split("-")[0];
+  const spotSpecificDates = ["2026-07-17", "2026-07-18", "2026-07-19"];
+  const replaceSpotSpecificText = (value) => {
+    if (typeof value !== "string") return value;
+    return value
+      .replaceAll("nokita", spotPrefix)
+      .replaceAll("野北漁港", record.identity.spotName)
+      .replaceAll("野北", record.identity.spotName.replace("漁港", ""))
+      .replaceAll("4320150", String(record.sources.find((source) => source.id.includes("ksj-fishing-port"))?.title.match(/漁港コード(\d+)/)?.[1] ?? ["4320150", "4310260", "4320160"][index]))
+      .replaceAll("2026-07-17", spotSpecificDates[index]);
+  };
+  const replaceSpotSpecificValues = (value) => {
+    if (typeof value === "string") return replaceSpotSpecificText(value);
+    if (Array.isArray(value)) return value.map(replaceSpotSpecificValues);
+    if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, replaceSpotSpecificValues(item)]));
+    return value;
+  };
+  const replaced = replaceSpotSpecificValues(copy);
+  replaced.spotId = record.spotId;
+  replaced.identity.spotName = record.identity.spotName;
+  replaced.identity.coordinates.latitude = record.identity.coordinates.latitude;
+  replaced.identity.coordinates.longitude = record.identity.coordinates.longitude;
+  replaced.identity.coordinates.checkedAt = spotSpecificDates[index];
+  if (index === 2) {
+    replaced.attributes.openSeaExposure.value = "bay";
+  }
+  return replaced;
 });
-assert.throws(() => assertNotMechanicalIssue163Copy(copiedFixture, "negative fixture"), /normalized sections are too similar/, "Issue #163 copy detection must fail a fixture with only spot-specific values changed");
+assert.throws(
+  () => assertNotMechanicalIssue163Copy(copiedFixture, "one-attribute-changed negative fixture"),
+  /normalized sections are too similar/,
+  "Issue #163 copy detection must fail a fixture copied from Nokita to three spots even when one copied record changes one attribute value",
+);
 const notes = issue163Records.map((record) => record.researchNotes);
 assert.equal(new Set(notes).size, issue163Records.length, "Issue #163 research notes must not be mechanically copied");
 
