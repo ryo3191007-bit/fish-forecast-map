@@ -24,7 +24,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "国土数値情報C09実データで漁港名「芥屋」のfeature（漁港コード4310260）に直接対応する地点を確認し、facility代表点として採用。地理院地図では同名漁港周辺に位置することを照合。既存マスターとの差は約0.7km。実釣位置・入口・駐車位置・堤防先端ではない。"
+      "note": "国土数値情報C09実データで漁港名「芥屋」のfeature（漁港コード4310260）に直接対応する地点を確認し、facility代表点として採用。地理院地図では同名漁港周辺に位置することを照合。現在の糸島市域は糸島市公式ガイドマップで当該漁港名が市内地図に掲載されることを別sourceで確認。既存マスターとの差は約0.7km。実釣位置・入口・駐車位置・堤防先端ではない。"
     }
   },
   "researchedAt": "2026-07-17T00:00:00.000Z",
@@ -34,7 +34,7 @@
     "secondaryResearch": "incomplete",
     "schemaValidation": "passed"
   },
-  "researchNotes": "芥屋漁港単独でC09実データ、地理院地図、既存マスターを再照合。C09名称・漁港コード・行政区域の直接対応を優先し、二次個別ページは直接性・現行性を満たす採用sourceを確認できなかったためincomplete。",
+  "researchNotes": "芥屋漁港単独でC09実データ、地理院地図、既存マスターを再照合。C09名称・漁港コードと糸島市公式ガイドマップの現行市域掲載を分けて確認し、二次sourceはトップページ・検索結果・カテゴリ一覧を登録せず、芥屋漁港の地点別個別記事を確認できず、架空sourceを作らないためincomplete。",
   "sources": [
     {
       "id": "src-keya-ksj-fishing-port",
@@ -51,10 +51,25 @@
       "supports": [
         "identity.spotName",
         "identity.prefecture",
-        "identity.municipality",
         "identity.coordinates.latitude",
         "identity.coordinates.longitude",
         "attributes.spotType.value"
+      ]
+    },
+    {
+      "id": "src-keya-itoshima-official-guide-map",
+      "url": "https://www.city.itoshima.lg.jp/s026/s040/010/080/40/itoshimaguidemap-taiwanese-ura.pdf",
+      "title": "糸島市観光ガイドマップ（芥屋漁港掲載）",
+      "publisher": "糸島市",
+      "sourceType": "government",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "itoshima-city-official-guide-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.municipality"
       ]
     },
     {
@@ -87,20 +102,6 @@
         "attributes.riverInfluence.value",
         "attributes.openSeaExposure.value"
       ]
-    },
-    {
-      "id": "src-keya-secondary-check",
-      "url": "https://meets-itoshima.com/",
-      "title": "糸島地域情報サイトでの芥屋漁港個別ページ未採用確認",
-      "publisher": "いとしまぐらし",
-      "sourceType": "private_reference",
-      "checkedAt": "2026-07-17",
-      "publishedAt": null,
-      "lastUpdatedAt": null,
-      "sourceGroup": "meets-itoshima-fish-trip",
-      "originalSourceId": null,
-      "independenceStatus": "independent",
-      "supports": []
     }
   ],
   "attributes": {
@@ -136,7 +137,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "芥屋漁港の一次・限定二次調査ではattributes.seabedを直接確認できる根拠を確認できなかったためunknown。"
+      "note": "芥屋漁港の一次・限定二次調査ではattributes.seabedを底質（砂泥・岩礁等）を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。"
     },
     "waterDepth": {
       "value": "unknown",
@@ -150,7 +151,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "芥屋漁港の一次・限定二次調査ではattributes.waterDepthを直接確認できる根拠を確認できなかったためunknown。"
+      "note": "芥屋漁港の一次・限定二次調査ではattributes.waterDepthを水深数値を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。"
     },
     "riverInfluence": {
       "value": "none",
@@ -178,7 +179,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "芥屋漁港の一次・限定二次調査ではattributes.tidalFlowを直接確認できる根拠を確認できなかったためunknown。"
+      "note": "芥屋漁港の一次・限定二次調査ではattributes.tidalFlowを潮流の強弱を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。"
     },
     "streetLights": {
       "value": "unknown",
@@ -186,13 +187,11 @@
       "confidence": "low",
       "evidenceSources": {
         "supportingSourceIds": [],
-        "checkedSourceIds": [
-          "src-keya-secondary-check"
-        ],
+        "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "芥屋漁港の一次・限定二次調査ではattributes.streetLightsを直接確認できる根拠を確認できなかったためunknown。"
+      "note": "芥屋漁港の一次・限定二次調査ではattributes.streetLightsを夜間常夜灯の点灯状況を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。"
     },
     "obstacles": {
       "value": [
@@ -208,7 +207,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "芥屋漁港の一次・限定二次調査ではattributes.obstaclesを直接確認できる根拠を確認できなかったためunknown。"
+      "note": "芥屋漁港の一次・限定二次調査ではattributes.obstaclesを根・テトラ等の障害物を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。"
     },
     "openSeaExposure": {
       "value": "bay_mouth",
@@ -238,7 +237,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "芥屋漁港の一次・限定二次調査ではattributes.fishingRangeを直接確認できる根拠を確認できなかったためunknown。"
+      "note": "芥屋漁港の一次・限定二次調査ではattributes.fishingRangeを投釣り・足元等の釣り可能範囲を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。"
     }
   },
   "facilities": {
@@ -248,13 +247,11 @@
       "confidence": "low",
       "evidenceSources": {
         "supportingSourceIds": [],
-        "checkedSourceIds": [
-          "src-keya-secondary-check"
-        ],
+        "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "芥屋漁港の一次・限定二次調査ではfacilities.parkingを直接確認できる根拠を確認できなかったためunknown。",
+      "note": "芥屋漁港の一次・限定二次調査ではfacilities.parkingを一般釣り利用可能な駐車場を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
       "validFrom": null,
       "validUntil": null,
       "officiallyConfirmed": null
@@ -265,13 +262,11 @@
       "confidence": "low",
       "evidenceSources": {
         "supportingSourceIds": [],
-        "checkedSourceIds": [
-          "src-keya-secondary-check"
-        ],
+        "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "芥屋漁港の一次・限定二次調査ではfacilities.toiletを直接確認できる根拠を確認できなかったためunknown。",
+      "note": "芥屋漁港の一次・限定二次調査ではfacilities.toiletを一般利用可能なトイレを直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
       "validFrom": null,
       "validUntil": null,
       "officiallyConfirmed": null
@@ -284,13 +279,11 @@
       "confidence": "low",
       "evidenceSources": {
         "supportingSourceIds": [],
-        "checkedSourceIds": [
-          "src-keya-secondary-check"
-        ],
+        "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "芥屋漁港の一次・限定二次調査ではrestrictions.fishingProhibitedを直接確認できる根拠を確認できなかったためunknown。",
+      "note": "芥屋漁港の一次・限定二次調査ではrestrictions.fishingProhibitedを釣り禁止有無を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
       "validFrom": null,
       "validUntil": null,
       "officiallyConfirmed": null
@@ -301,13 +294,11 @@
       "confidence": "low",
       "evidenceSources": {
         "supportingSourceIds": [],
-        "checkedSourceIds": [
-          "src-keya-secondary-check"
-        ],
+        "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "芥屋漁港の一次・限定二次調査ではrestrictions.entryProhibitedを直接確認できる根拠を確認できなかったためunknown。",
+      "note": "芥屋漁港の一次・限定二次調査ではrestrictions.entryProhibitedを立入禁止有無を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
       "validFrom": null,
       "validUntil": null,
       "officiallyConfirmed": null
@@ -318,13 +309,11 @@
       "confidence": "low",
       "evidenceSources": {
         "supportingSourceIds": [],
-        "checkedSourceIds": [
-          "src-keya-secondary-check"
-        ],
+        "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "芥屋漁港の一次・限定二次調査ではrestrictions.constructionOrClosureを直接確認できる根拠を確認できなかったためunknown。",
+      "note": "芥屋漁港の一次・限定二次調査ではrestrictions.constructionOrClosureを工事・閉鎖予定を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
       "validFrom": null,
       "validUntil": null,
       "officiallyConfirmed": null

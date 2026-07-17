@@ -6,10 +6,10 @@
 ## 共通方針
 
 - 野北漁港、芥屋漁港、船越漁港は別JSONとして自己完結させ、source ID、evidence、noteを地点ごとに分離した。
-- 国土数値情報C09-06_GML.zipの実データ内で、`fishingPortName`がそれぞれ芥屋、野北、船越である`FishingPort` featureを直接確認した。
+- 国土数値情報C09-06_GML.zipの実データ内で、`fishingPortName`がそれぞれ芥屋、野北、船越である`FishingPort` featureを直接確認した。C09は旧行政区域コードを含むため、現在の`identity.municipality: 糸島市`はC09ではなく糸島市公式観光ガイドマップ（3漁港名が市内地図に掲載）で地点ごとに直接supportさせた。
 - 代表座標はC09の`gml:Point`をfacility代表点として採用し、実釣位置、入口、駐車位置、堤防先端は代表点にしていない。
 - 国土地理院地図は同名漁港周辺への位置照合と、河川影響・外海露出の机上判読に限定した。
-- 二次sourceは地点別個別ページの直接性・現行性を満たす採用sourceを確認できなかったため、3地点とも`secondaryResearch: incomplete`とした。トップページ、検索結果、カテゴリ一覧は関連記事確認sourceとして採用しない。
+- 二次sourceは地点別個別ページの直接性・現行性を満たす採用sourceを確認できなかったため、3地点とも`secondaryResearch: incomplete`とした。トップページ、検索結果、カテゴリ一覧はsource登録しない。野北・船越はmeets糸島の個別記事（野北: `https://meets-itoshima.com/post-24077/`, 2024-08-31 / 船越: `https://meets-itoshima.com/post-24079/`, 2024-07-30）を確認したが、私的体験記事で現行性・管理者独立性が不足するためsupportsなしのchecked sourceに留めた。芥屋は地点別個別ページを確認できず、架空sourceを作らない。
 - 福岡県計画PDFは芥屋漁港を直接支える記載を確認できなかったため、芥屋のsupporting sourceから外し、checked sourceとして不採用理由をnoteに残した。
 - 本レビューは本番値の自動採用を目的とせず、次Issueで人間が反映可否を判断するための整理である。
 
@@ -24,7 +24,7 @@
 ## 野北漁港
 
 - 調査JSON: `data/research/fishing-spots/nokita-port.json`
-- 二次source採否: 地点別個別ページを採用できず、地域サイトトップページはsource不採用。魚種・施設・規制はunknownを維持。
+- 二次source採否: `糸島フィッシュトリップ vol.3｜野北漁港編`（2024-08-31, 個別URL確認）は私的体験記事で現行性・管理者独立性が不足するため、魚種・施設・規制のsupportには採用せずcheckedに留める。地域サイトトップページはsource不採用。
 - `riverInfluence: none`: 地理院地図で代表点周辺に大河川流入口が見えない範囲の推定。排水路・季節変化は未確認。
 - `openSeaExposure: open_sea`: 地理院地図で外海側の防波堤を持つ港湾形状と判読。波浪実測ではない。
 
@@ -45,7 +45,7 @@
 
 - 調査JSON: `data/research/fishing-spots/keya-port.json`
 - 福岡県計画PDF: 再確認したが芥屋漁港の名称を直接支える根拠として採用できないため、`src-keya-fukuoka-plan`はsupporting sourceから除外。
-- 二次source採否: 地点別個別ページを採用できず、地域サイトトップページはsource不採用。観光・遊覧船施設と釣り目的利用は混同しない。
+- 二次source採否: 芥屋漁港の地点別個別記事を確認できず、架空sourceは作成しない。地域サイトトップページ・検索結果・カテゴリ一覧はsource不採用。観光・遊覧船施設と釣り目的利用は混同しない。
 - `riverInfluence: none`: 地理院地図で代表点近傍に大河川流入口は見えない範囲の推定。現地排水は未確認。
 - `openSeaExposure: bay_mouth`: 芥屋大門・湾口側の位置関係からの机上推定。潮流・安全性の断定ではない。
 
@@ -65,8 +65,8 @@
 ## 船越漁港
 
 - 調査JSON: `data/research/fishing-spots/funakoshi-port.json`
-- 二次source採否: 地点別個別ページを採用できず、地域サイトトップページはsource不採用。牡蠣小屋・観光施設の情報と釣り目的利用は混同しない。
-- `riverInfluence: weak`: 地理院地図で湾内・周辺水路の影響余地を低めに推定。流量や実釣影響は未確認。
+- 二次source採否: `糸島フィッシュトリップ vol.2｜船越漁港編`（2024-07-30, 個別URL確認）は私的体験記事で現行性・管理者独立性が不足するため、魚種・施設・規制のsupportには採用せずcheckedに留める。地域サイトトップページはsource不採用。牡蠣小屋・観光施設の情報と釣り目的利用は混同しない。
+- `riverInfluence: none`: 地理院地図で船越湾内の代表点近傍に大河川流入口は見えないためnoneと推定。小水路・排水、降雨後の濁りや季節変化は未確認。
 - `openSeaExposure: bay`: 地理院地図で船越湾内の奥まった港湾形状と判読。風向・潮汐による変化は未評価。
 
 ### 現行地点マスターとの比較
@@ -81,6 +81,12 @@
 | targetSpecies | アジ、チヌ、アオリイカ、キス | 空配列 | 本調査からは採用不可 | 魚種は根拠不足として未登録。現行魚種維持の根拠ではない。 | hold |
 | recommendedMethods | サビキ、コマセ、エギング、その他 | 直接評価対象なし／根拠なし | 本調査では未評価 | 釣法はSchema調査対象外で直接根拠なし。 | hold |
 | notes | なし | C09代表点・既存値との差・二次未完了note | 追加あり | 座標差と机上判読限界を記録。 | adopt_with_warning |
+
+## コピー検知テスト
+
+- `scripts/fishing-spot-research-schema.test.mjs`でattributes / facilities / restrictions / sourcesをセクション別にcanonical化し、spot ID、地点名、座標、確認日、source ID接頭辞、漁港コード、数値を正規化して比較する。
+- セクション単位の類似率閾値は80%で、主要4セクション中3セクション以上が閾値以上なら機械コピーとして失敗させる。共通公式source URLの共有自体は許可し、supports、採否role、noteを含む構造コピーを検知対象にする。
+- negative fixtureは野北レコードをベースに地点名・ID・座標・source ID接頭辞だけを差し替えた配列を作り、類似率ベース検知で必ず失敗することを確認する。現3JSONは、C09 feature、現行自治体source、二次source採否、river/openSeaの地点別判断が複数異なるため通過する。
 
 ## 追加確認事項
 
