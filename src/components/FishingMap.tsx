@@ -8,6 +8,7 @@ import type { FishingReport } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import {
   GSI_AERIAL_TILE_ATTRIBUTION,
+  GSI_TILE_ATTRIBUTION,
   GSI_AERIAL_TILE_NOTE,
   type MapLayerMode,
 } from "@/domain/mapLayer";
@@ -190,7 +191,25 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: "https://demotiles.maplibre.org/style.json",
+      style: {
+        version: 8,
+        sources: {
+          "gsi-pale": {
+            type: "raster",
+            tiles: ["https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png"],
+            tileSize: 256,
+            maxzoom: 18,
+            attribution: GSI_TILE_ATTRIBUTION,
+          },
+        },
+        layers: [
+          {
+            id: "gsi-pale",
+            type: "raster",
+            source: "gsi-pale",
+          },
+        ],
+      },
       center: [129.95, 33.48],
       zoom: 8.2,
     });
