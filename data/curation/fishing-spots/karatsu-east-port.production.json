@@ -1,0 +1,130 @@
+{
+  "curationVersion": "1.0.0",
+  "spotId": "karatsu-east-port",
+  "researchSource": "data/research/fishing-spots/karatsu-east-port.json",
+  "researchSchemaVersion": "1.0.0",
+  "status": "approved",
+  "curatedAt": "2026-07-17",
+  "curator": "repository-owner",
+  "productionValue": {
+    "id": "karatsu-east-port",
+    "name": "唐津東港",
+    "areaName": "唐津湾",
+    "latitude": 33.459,
+    "longitude": 129.993,
+    "spotType": "その他",
+    "shoreAccess": "不明",
+    "targetSpecies": [
+      "アジ",
+      "シーバス",
+      "チヌ"
+    ],
+    "recommendedMethods": [],
+    "notes": [
+      "唐津港東港地区の代表点です。一般利用可能な釣り位置や入口を示すものではありません。",
+      "立入・釣り可否は、現地表示と港湾管理者の最新案内を確認してください。",
+      "魚種は過去の公開情報に基づく参考情報で、現在の釣果や時期を保証しません。"
+    ],
+    "coordinatePrecision": "approximate"
+  },
+  "fields": [
+    {
+      "path": "spotType",
+      "decision": "reject",
+      "previousValue": "堤防",
+      "productionValue": "その他",
+      "reason": "東港地区は岸壁・防波堤・護岸を含み、地点全体を堤防と断定できない",
+      "researchPaths": [
+        "attributes.spotType"
+      ]
+    },
+    {
+      "path": "shoreAccess",
+      "decision": "reject",
+      "previousValue": "足場良い",
+      "productionValue": "不明",
+      "reason": "足場と一般立入可能範囲を直接支える根拠がない",
+      "researchPaths": [
+        "restrictions.entryProhibited",
+        "attributes.spotType"
+      ]
+    },
+    {
+      "path": "coordinatePrecision",
+      "decision": "adopt",
+      "previousValue": "rounded",
+      "productionValue": "approximate",
+      "reason": "座標は東港地区の代表点であり実釣位置や入口ではない",
+      "researchPaths": [
+        "identity.coordinates"
+      ]
+    },
+    {
+      "path": "targetSpecies",
+      "decision": "adopt_with_warning",
+      "previousValue": [
+        "青物",
+        "真鯛",
+        "サバ",
+        "アジ"
+      ],
+      "productionValue": [
+        "アジ",
+        "シーバス",
+        "チヌ"
+      ],
+      "reason": "アジ・スズキ・クロダイは独立した公開情報2件で一致し、スズキをシーバス、クロダイをチヌへ名称対応する。現在の釣果や時期は保証しない",
+      "researchPaths": [
+        "fishSpecies"
+      ]
+    },
+    {
+      "path": "recommendedMethods",
+      "decision": "reject",
+      "previousValue": [
+        "ジギング",
+        "コマセ",
+        "サビキ"
+      ],
+      "productionValue": [],
+      "reason": "推奨釣法を直接支える根拠がなく、魚種から自動推定しない",
+      "researchPaths": [
+        "attributes.fishingRange"
+      ]
+    },
+    {
+      "path": "notes",
+      "decision": "adopt_with_warning",
+      "previousValue": [],
+      "productionValue": [
+        "唐津港東港地区の代表点です。一般利用可能な釣り位置や入口を示すものではありません。",
+        "立入・釣り可否は、現地表示と港湾管理者の最新案内を確認してください。",
+        "魚種は過去の公開情報に基づく参考情報で、現在の釣果や時期を保証しません。"
+      ],
+      "reason": "対象範囲・利用可否・魚種の不確実性を利用者へ伝えるため",
+      "researchPaths": [
+        "identity.coordinates",
+        "restrictions",
+        "fishSpecies"
+      ]
+    }
+  ],
+  "heldFields": [
+    "attributes.seabed",
+    "attributes.waterDepth",
+    "attributes.riverInfluence",
+    "attributes.tidalFlow",
+    "attributes.streetLights",
+    "attributes.obstacles",
+    "facilities",
+    "restrictions"
+  ],
+  "warnings": [
+    "代表点であり実釣位置ではない",
+    "立入・釣り可否は現地表示と管理者案内を優先する",
+    "魚種は過去の公開情報に基づく参考情報で現在の釣果や時期を保証しない"
+  ],
+  "approvalReference": "Issue #161 / PR #160",
+  "approvedBy": "repository-owner",
+  "approvedAt": "2026-07-17"
+}
