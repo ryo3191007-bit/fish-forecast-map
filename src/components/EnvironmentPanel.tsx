@@ -101,6 +101,19 @@ export function EnvironmentPanel({
             ）の環境データを表示します。一覧・地図フィルタとは独立しています。
           </p>
         ) : null}
+        {selectedSpot?.notes && selectedSpot.notes.length > 0 ? (
+          <div
+            className="environmentState warning spotNote"
+            aria-label="地点の注意事項"
+          >
+            <strong>地点の注意事項</strong>
+            <ul>
+              {selectedSpot.notes.map((note) => (
+                <li key={note}>{note}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </div>
 
       {!selectedSpot ? (
