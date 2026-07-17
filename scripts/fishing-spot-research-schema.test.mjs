@@ -140,6 +140,42 @@ const issue163Expected = new Map([
   ["funakoshi-port", { spotName: "船越漁港", municipality: "糸島市" }],
 ]);
 const issue163Records = issue163SpotPaths.map(readJson);
+function normalizeIssue163Value(value, record) {
+  if (typeof value === "string") {
+    const prefix = record.spotId.split("-")[0];
+    return value
+      .replaceAll(record.spotId, "<spot-id>")
+      .replaceAll(record.identity.spotName, "<spot-name>")
+      .replaceAll(prefix, "<spot-prefix>")
+      .replaceAll(record.identity.coordinates.checkedAt, "<checked-at>")
+      .replace(/src-[a-z]+-/g, "src-<spot-prefix>-")
+      .replace(/[0-9]{4}-[0-9]{2}-[0-9]{2}/g, "<date>")
+      .replace(/[0-9]+\.[0-9]+/g, "<number>");
+  }
+  if (typeof value === "number") return "<number>";
+  if (Array.isArray(value)) return value.map((item) => normalizeIssue163Value(item, record));
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, normalizeIssue163Value(item, record)]));
+  return value;
+}
+function canonicalIssue163Record(record) {
+  return normalizeIssue163Value({
+    sources: record.sources.map(({ url, sourceGroup, supports }) => ({ url, sourceGroup, supports: [...supports].sort() })),
+    attributes: record.attributes,
+    facilities: record.facilities,
+    restrictions: record.restrictions,
+  }, record);
+}
+function assertNotMechanicalIssue163Copy(records, label) {
+  const canonical = records.map(canonicalIssue163Record);
+  for (let left = 0; left < canonical.length; left += 1) for (let right = left + 1; right < canonical.length; right += 1) {
+    assert.notDeepEqual(canonical[left], canonical[right], `${label}: canonical source/attribute/facility/restriction structures must not be copied between ${records[left].spotId} and ${records[right].spotId}`);
+  }
+  const commonUnknownNotes = new Map();
+  for (const record of records) for (const section of [record.attributes, record.facilities, record.restrictions]) for (const item of Object.values(section ?? {})) {
+    if (item?.status === "unknown") commonUnknownNotes.set(item.note, (commonUnknownNotes.get(item.note) ?? 0) + 1);
+  }
+  for (const [note, count] of commonUnknownNotes) assert.ok(count < 9, `${label}: repeated unknown note is too generic: ${note}`);
+}
 for (const record of issue163Records) {
   const expected = issue163Expected.get(record.spotId);
   assert.ok(expected, `${record.spotId} must be an Issue #163 target spot`);
@@ -153,10 +189,19 @@ for (const record of issue163Records) {
   assert.ok(Object.values(record.attributes).some((attribute) => attribute.status === "unknown"), `${record.spotId} must retain unknown attributes`);
   assert.ok(record.researchNotes.includes(record.identity.spotName), `${record.spotId} research notes must be spot-specific`);
 }
-const sourceIdSignatures = issue163Records.map((record) => JSON.stringify(record.sources.map((source) => source.id)));
-assert.equal(new Set(sourceIdSignatures).size, issue163Records.length, "Issue #163 source ID arrays must not be mechanically copied across spots");
-const attributeSignatures = issue163Records.map((record) => JSON.stringify(record.attributes));
-assert.equal(new Set(attributeSignatures).size, issue163Records.length, "Issue #163 attribute values must not be identical across the three spots");
+assertNotMechanicalIssue163Copy(issue163Records, "Issue #163 records");
+const copiedFixture = issue163Records.map((record, index) => {
+  const copy = structuredClone(issue163Records[0]);
+  copy.spotId = record.spotId;
+  copy.identity.spotName = record.identity.spotName;
+  copy.identity.coordinates.latitude = record.identity.coordinates.latitude;
+  copy.identity.coordinates.longitude = record.identity.coordinates.longitude;
+  copy.identity.coordinates.checkedAt = record.identity.coordinates.checkedAt;
+  copy.sources = copy.sources.map((source) => ({ ...source, id: source.id.replace("nokita", record.spotId.split("-")[0]) }));
+  if (index === 0) return issue163Records[0];
+  return copy;
+});
+assert.throws(() => assertNotMechanicalIssue163Copy(copiedFixture, "negative fixture"), /canonical source\/attribute\/facility\/restriction structures/, "Issue #163 copy detection must fail a fixture with only spot-specific values changed");
 const notes = issue163Records.map((record) => record.researchNotes);
 assert.equal(new Set(notes).size, issue163Records.length, "Issue #163 research notes must not be mechanically copied");
 

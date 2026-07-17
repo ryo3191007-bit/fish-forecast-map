@@ -6,124 +6,85 @@
 ## 共通方針
 
 - 野北漁港、芥屋漁港、船越漁港は別JSONとして自己完結させ、source ID、evidence、noteを地点ごとに分離した。
-- 一次調査は国土数値情報、福岡県の水産基盤整備資料、国土地理院地図を優先した。
-- 二次調査は不足項目の有無確認に限定し、本文、画像、コメント、地図ピン、地点DB・魚種DBは転載・再現していない。
-- 漁港であることから、一般立入可能、釣り可能、足場良好、駐車可能、トイレ利用可能、常夜灯あり、対象魚ありとは推測していない。
+- 国土数値情報C09-06_GML.zipの実データ内で、`fishingPortName`がそれぞれ芥屋、野北、船越である`FishingPort` featureを直接確認した。
+- 代表座標はC09の`gml:Point`をfacility代表点として採用し、実釣位置、入口、駐車位置、堤防先端は代表点にしていない。
+- 国土地理院地図は同名漁港周辺への位置照合と、河川影響・外海露出の机上判読に限定した。
+- 二次sourceは地点別個別ページの直接性・現行性を満たす採用sourceを確認できなかったため、3地点とも`secondaryResearch: incomplete`とした。トップページ、検索結果、カテゴリ一覧は関連記事確認sourceとして採用しない。
+- 福岡県計画PDFは芥屋漁港を直接支える記載を確認できなかったため、芥屋のsupporting sourceから外し、checked sourceとして不採用理由をnoteに残した。
 - 本レビューは本番値の自動採用を目的とせず、次Issueで人間が反映可否を判断するための整理である。
+
+## C09・地理院地図・既存マスターの座標再照合
+
+| 地点 | C09 feature直接確認 | C09 facility代表点 | 地理院地図との照合 | 既存マスター座標 | 概算差 | 採用判断 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 野北漁港 | `fishingPortName: 野北`, `fishingPortCode: 4320150`, `administrativeAreaCode: 40463`, `type: 2` | 33.611311, 130.161569 | 同名漁港周辺として照合。既存値より西南西側のC09点を公的facility代表点として優先。 | 33.623, 130.138 | 約2.5km | adopt_with_warning: C09名寄せは直接だが、既存値との差が大きいため本番反映前に人間確認が必要。 |
+| 芥屋漁港 | `fishingPortName: 芥屋`, `fishingPortCode: 4310260`, `administrativeAreaCode: 40463`, `type: 1` | 33.58937974, 130.10658056 | 同名漁港周辺として照合。既存値との差は比較的小さい。 | 33.594, 130.112 | 約0.7km | adopt_with_warning: C09を代表点候補にできるが、福岡県計画PDFは直接根拠から除外。 |
+| 船越漁港 | `fishingPortName: 船越`, `fishingPortCode: 4320160`, `administrativeAreaCode: 40463`, `type: 2` | 33.55389244, 130.13025931 | 船越湾側の同名漁港周辺として照合。既存値との差が非常に大きい。 | 33.577, 130.177 | 約5.1km | adopt_with_warning: C09名寄せは直接だが、既存値との差が大きいため本番反映前に人間確認が必要。 |
 
 ## 野北漁港
 
 - 調査JSON: `data/research/fishing-spots/nokita-port.json`
+- 二次source採否: 地点別個別ページを採用できず、地域サイトトップページはsource不採用。魚種・施設・規制はunknownを維持。
+- `riverInfluence: none`: 地理院地図で代表点周辺に大河川流入口が見えない範囲の推定。排水路・季節変化は未確認。
+- `openSeaExposure: open_sea`: 地理院地図で外海側の防波堤を持つ港湾形状と判読。波浪実測ではない。
 
-### 採用候補
+### 現行地点マスターとの比較
 
-- `spotName`, `prefecture`, `municipality`: 国土数値情報と福岡県資料で漁港名を確認したため候補。
-- `scopeType: facility`: Issue指定に従う。
-- `attributes.spotType: fishing_port`: 国土数値情報と福岡県資料で漁港として確認できるため候補。
-- `identity.coordinates`: 国土地理院地図上の施設代表点として候補。ただし実釣位置・入口ではない。
-- `attributes.openSeaExposure: open_sea`: 国土地理院地図で玄界灘側に面する施設代表点として推定候補。
-
-### 注意付き採用候補
-
-- `attributes.riverInfluence: none`: 代表点周辺の公的地図確認に基づく推定であり、水路・排水の季節変動や現地状況は未確認。
-
-### 保留・unknown
-
-- 海底、水深、潮通し、常夜灯、障害物、釣れる範囲。
-- 駐車場、トイレ。
-- 釣り禁止、立入禁止、工事・閉鎖。
-- 魚種。民間sourceの魚種一覧や釣果情報を採用条件として使わなかったため未登録。
-
-### 現行地点マスターとの差
-
-- 現行 `src/data/fishingSpots.ts` の値は正解として流用していない。
-- 既存マスターに釣り向け属性、施設、魚種、SCORE向け補正が存在する場合も、本調査では根拠不足項目をunknownに戻す可能性がある。
-
-### 追加確認事項
-
-- 漁港管理者または関係漁協への釣り可否、立入制限、駐車・トイレ利用可否、常夜灯の現行確認。
-- 現地掲示の有無、工事・閉鎖予定、夜間利用制限。
-- 水深・底質の公的または管理者資料。
-
-### 本番反映可否
-
-- 地点名、自治体、漁港種別、代表座標、外海区分は次Issueで注意付き反映候補。
-- 安全・規制・施設・魚種は追加確認前の本番反映不可。
+| 属性 | 現行マスター値 | 調査値 | 差異 | 根拠・判断 | 本番反映候補 |
+| --- | --- | --- | --- | --- | --- |
+| latitude | 33.623 | 33.611311 | 約1.3km南 | C09の野北feature代表点を採用。既存値との差が大きい。 | adopt_with_warning |
+| longitude | 130.138 | 130.161569 | 約2.2km東 | C09の野北feature代表点を採用。既存値との差が大きい。 | adopt_with_warning |
+| coordinatePrecision | rounded | facility / official_coordinate / high | Schemaが異なり単純対応なし | C09点をfacility代表点として採用。 | adopt_with_warning |
+| spotType | 漁港 | fishing_port | 表現差のみ | C09で漁港featureを直接確認。 | adopt |
+| shoreAccess | 足場良い | 直接評価対象なし／根拠なし | 本調査では未評価 | 足場や立入可否を公的sourceで確認していない。 | hold |
+| targetSpecies | アジ、イワシ、サバ、チヌ、アオリイカ | 空配列 | 本調査からは採用不可 | 魚種は二次sourceから転載・推定せず、根拠不足として未登録。現行魚種維持の根拠ではない。 | hold |
+| recommendedMethods | サビキ、コマセ、エギング | 直接評価対象なし／根拠なし | 本調査では未評価 | 釣法はSchema調査対象外で直接根拠なし。 | hold |
+| notes | なし | C09代表点・地理院地図照合・不確実性note | 追加あり | 座標差と机上判読限界を記録。 | adopt_with_warning |
 
 ## 芥屋漁港
 
 - 調査JSON: `data/research/fishing-spots/keya-port.json`
+- 福岡県計画PDF: 再確認したが芥屋漁港の名称を直接支える根拠として採用できないため、`src-keya-fukuoka-plan`はsupporting sourceから除外。
+- 二次source採否: 地点別個別ページを採用できず、地域サイトトップページはsource不採用。観光・遊覧船施設と釣り目的利用は混同しない。
+- `riverInfluence: none`: 地理院地図で代表点近傍に大河川流入口は見えない範囲の推定。現地排水は未確認。
+- `openSeaExposure: bay_mouth`: 芥屋大門・湾口側の位置関係からの机上推定。潮流・安全性の断定ではない。
 
-### 採用候補
+### 現行地点マスターとの比較
 
-- `spotName`, `prefecture`, `municipality`: 国土数値情報と福岡県資料で漁港名を確認したため候補。
-- `scopeType: facility`: Issue指定に従う。
-- `attributes.spotType: fishing_port`: 国土数値情報と福岡県資料で漁港として確認できるため候補。
-- `identity.coordinates`: 国土地理院地図上の施設代表点として候補。ただし実釣位置・入口ではない。
-
-### 注意付き採用候補
-
-- `attributes.openSeaExposure: bay_mouth`: 芥屋の大門・周辺地形との位置関係を公的地図で確認した推定であり、潮流・安全性の断定ではない。
-- `attributes.riverInfluence: none`: 代表点周辺の公的地図確認に基づく推定であり、現地排水等は未確認。
-
-### 保留・unknown
-
-- 海底、水深、潮通し、常夜灯、障害物、釣れる範囲。
-- 駐車場、トイレ。観光施設・遊覧船関連の施設と釣り目的利用を混同しないためunknown。
-- 釣り禁止、立入禁止、工事・閉鎖。
-- 魚種。地域水産物の一般情報や民間釣り情報から地点魚種へ転記していない。
-
-### 現行地点マスターとの差
-
-- 現行 `src/data/fishingSpots.ts` の値は正解として流用していない。
-- 観光施設の駐車場・トイレが既存データにある場合も、釣り目的利用の直接根拠がない限り本調査ではunknown。
-
-### 追加確認事項
-
-- 漁港管理者または関係漁協への釣り可否、立入制限、遊覧船運航区域との動線分離、駐車・トイレ利用可否。
-- 現地掲示、工事・閉鎖、夜間利用、常夜灯。
-- 水深・底質の公的または管理者資料。
-
-### 本番反映可否
-
-- 地点名、自治体、漁港種別、代表座標、外海区分は次Issueで注意付き反映候補。
-- 安全・規制・施設・魚種は追加確認前の本番反映不可。
+| 属性 | 現行マスター値 | 調査値 | 差異 | 根拠・判断 | 本番反映候補 |
+| --- | --- | --- | --- | --- | --- |
+| latitude | 33.594 | 33.58937974 | 約0.5km南 | C09の芥屋feature代表点を採用。 | adopt_with_warning |
+| longitude | 130.112 | 130.10658056 | 約0.5km西 | C09の芥屋feature代表点を採用。 | adopt_with_warning |
+| coordinatePrecision | rounded | facility / official_coordinate / high | Schemaが異なり単純対応なし | C09点をfacility代表点として採用。 | adopt_with_warning |
+| spotType | 漁港 | fishing_port | 表現差のみ | C09で漁港featureを直接確認。福岡県計画PDFは不採用。 | adopt |
+| shoreAccess | 足場良い | 直接評価対象なし／根拠なし | 本調査では未評価 | 足場や立入可否を公的sourceで確認していない。 | hold |
+| targetSpecies | アオリイカ、コウイカ、アジ、チヌ | 空配列 | 本調査からは採用不可 | 魚種は根拠不足として未登録。現行魚種維持の根拠ではない。 | hold |
+| recommendedMethods | エギング、サビキ、コマセ | 直接評価対象なし／根拠なし | 本調査では未評価 | 釣法はSchema調査対象外で直接根拠なし。 | hold |
+| notes | なし | C09代表点・福岡県計画PDF不採用・二次未完了note | 追加あり | source採否と不確実性を記録。 | adopt_with_warning |
 
 ## 船越漁港
 
 - 調査JSON: `data/research/fishing-spots/funakoshi-port.json`
+- 二次source採否: 地点別個別ページを採用できず、地域サイトトップページはsource不採用。牡蠣小屋・観光施設の情報と釣り目的利用は混同しない。
+- `riverInfluence: weak`: 地理院地図で湾内・周辺水路の影響余地を低めに推定。流量や実釣影響は未確認。
+- `openSeaExposure: bay`: 地理院地図で船越湾内の奥まった港湾形状と判読。風向・潮汐による変化は未評価。
 
-### 採用候補
+### 現行地点マスターとの比較
 
-- `spotName`, `prefecture`, `municipality`: 国土数値情報と福岡県資料で漁港名を確認したため候補。
-- `scopeType: facility`: Issue指定に従う。
-- `attributes.spotType: fishing_port`: 国土数値情報と福岡県資料で漁港として確認できるため候補。
-- `identity.coordinates`: 国土地理院地図上の施設代表点として候補。ただし実釣位置・入口ではない。
+| 属性 | 現行マスター値 | 調査値 | 差異 | 根拠・判断 | 本番反映候補 |
+| --- | --- | --- | --- | --- | --- |
+| latitude | 33.577 | 33.55389244 | 約2.6km南 | C09の船越feature代表点を採用。既存値との差が大きい。 | adopt_with_warning |
+| longitude | 130.177 | 130.13025931 | 約4.3km西 | C09の船越feature代表点を採用。既存値との差が大きい。 | adopt_with_warning |
+| coordinatePrecision | rounded | facility / official_coordinate / high | Schemaが異なり単純対応なし | C09点をfacility代表点として採用。 | adopt_with_warning |
+| spotType | 漁港 | fishing_port | 表現差のみ | C09で漁港featureを直接確認。 | adopt |
+| shoreAccess | 足場良い | 直接評価対象なし／根拠なし | 本調査では未評価 | 足場や立入可否を公的sourceで確認していない。 | hold |
+| targetSpecies | アジ、チヌ、アオリイカ、キス | 空配列 | 本調査からは採用不可 | 魚種は根拠不足として未登録。現行魚種維持の根拠ではない。 | hold |
+| recommendedMethods | サビキ、コマセ、エギング、その他 | 直接評価対象なし／根拠なし | 本調査では未評価 | 釣法はSchema調査対象外で直接根拠なし。 | hold |
+| notes | なし | C09代表点・既存値との差・二次未完了note | 追加あり | 座標差と机上判読限界を記録。 | adopt_with_warning |
 
-### 注意付き採用候補
+## 追加確認事項
 
-- `attributes.openSeaExposure: bay`: 糸島半島西側の入江・船越湾周辺の位置関係を公的地図で確認した推定であり、波・潮流・安全性の断定ではない。
-- `attributes.riverInfluence: weak`: 代表点周辺の地形・水路関係からの低めの推定であり、流量や実釣影響は未確認。
-
-### 保留・unknown
-
-- 海底、水深、潮通し、常夜灯、障害物、釣れる範囲。
-- 駐車場、トイレ。牡蠣小屋・観光施設の施設情報と漁港での釣り目的利用を混同しないためunknown。
-- 釣り禁止、立入禁止、工事・閉鎖。
-- 魚種。二次情報の釣果記事から恒常的な地点魚種へ転記していない。
-
-### 現行地点マスターとの差
-
-- 現行 `src/data/fishingSpots.ts` の値は正解として流用していない。
-- 既存マスターにファミリー向け・施設利用・魚種情報がある場合も、本調査では直接根拠不足の項目をunknownに戻す可能性がある。
-
-### 追加確認事項
-
-- 漁港管理者または関係漁協への釣り可否、立入制限、牡蠣小屋営業期の動線、駐車・トイレ利用可否。
-- 現地掲示、工事・閉鎖、夜間利用、常夜灯。
+- 漁港管理者または関係漁協への釣り可否、立入制限、駐車・トイレ利用可否、常夜灯の現行確認。
+- 現地掲示の有無、工事・閉鎖予定、夜間利用制限。
 - 水深・底質の公的または管理者資料。
-
-### 本番反映可否
-
-- 地点名、自治体、漁港種別、代表座標、外海区分は次Issueで注意付き反映候補。
-- 安全・規制・施設・魚種は追加確認前の本番反映不可。
+- 二次sourceは地点別個別ページの正確なURL、ページタイトル、公開日または確認可能な日付を確認できた場合のみ採用する。

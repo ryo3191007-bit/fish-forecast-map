@@ -8,36 +8,38 @@
     "prefecture": "福岡県",
     "municipality": "糸島市",
     "coordinates": {
-      "latitude": 33.6316,
-      "longitude": 130.1767,
-      "coordinateMethod": "map_measurement",
+      "latitude": 33.611311,
+      "longitude": 130.161569,
+      "coordinateMethod": "official_coordinate",
       "coordinateScope": "facility",
-      "status": "inferred",
-      "confidence": "medium",
+      "status": "confirmed",
+      "confidence": "high",
       "evidenceSources": {
         "supportingSourceIds": [
+          "src-nokita-ksj-fishing-port"
+        ],
+        "checkedSourceIds": [
           "src-nokita-gsi-map"
         ],
-        "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "国土地理院標準地図上で漁港施設の代表点として手動設定。実釣位置・入口・access pointではない。"
+      "note": "国土数値情報C09実データで漁港名「野北」のfeature（漁港コード4320150）に直接対応する地点を確認し、facility代表点として採用。地理院地図では同名漁港周辺に位置することを照合。既存マスターとの差は約2.5km。実釣位置・入口・駐車位置・堤防先端ではない。"
     }
   },
   "researchedAt": "2026-07-17T00:00:00.000Z",
   "reviewStatus": "draft",
   "researchStages": {
     "officialResearch": "completed",
-    "secondaryResearch": "completed",
+    "secondaryResearch": "incomplete",
     "schemaValidation": "passed"
   },
-  "researchNotes": "野北漁港単独で調査。3地点間で属性値・source配列・noteを機械コピーせず、直接根拠がない項目はunknownを維持。規制・施設は変化しやすいため現地表示と管理者確認が必要。",
+  "researchNotes": "野北漁港単独でC09実データ、地理院地図、既存マスターを再照合。C09名称・漁港コード・行政区域の直接対応を優先し、二次個別ページは直接性・現行性を満たす採用sourceを確認できなかったためincomplete。",
   "sources": [
     {
       "id": "src-nokita-ksj-fishing-port",
-      "url": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-C09.html",
-      "title": "国土数値情報 漁港データ",
+      "url": "https://nlftp.mlit.go.jp/ksj/gml/data/C09/C09-06/C09-06_GML.zip",
+      "title": "国土数値情報 C09-06 漁港データ 野北 feature",
       "publisher": "国土交通省 国土政策局",
       "sourceType": "government",
       "checkedAt": "2026-07-17",
@@ -50,6 +52,8 @@
         "identity.spotName",
         "identity.prefecture",
         "identity.municipality",
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude",
         "attributes.spotType.value"
       ]
     },
@@ -72,7 +76,7 @@
     },
     {
       "id": "src-nokita-gsi-map",
-      "url": "https://maps.gsi.go.jp/#16/33.6316/130.1767/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
+      "url": "https://maps.gsi.go.jp/#16/33.611311/130.161569/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
       "title": "国土地理院地理院地図 野北漁港周辺",
       "publisher": "国土地理院",
       "sourceType": "public_map",
@@ -83,8 +87,6 @@
       "originalSourceId": null,
       "independenceStatus": "independent",
       "supports": [
-        "identity.coordinates.latitude",
-        "identity.coordinates.longitude",
         "attributes.riverInfluence.value",
         "attributes.openSeaExposure.value"
       ]
@@ -92,7 +94,7 @@
     {
       "id": "src-nokita-secondary-check",
       "url": "https://meets-itoshima.com/",
-      "title": "糸島地域情報サイトでの野北漁港関連記事確認",
+      "title": "糸島地域情報サイトでの野北漁港個別ページ未採用確認",
       "publisher": "いとしまぐらし",
       "sourceType": "private_reference",
       "checkedAt": "2026-07-17",
@@ -113,14 +115,13 @@
       "confidence": "high",
       "evidenceSources": {
         "supportingSourceIds": [
-          "src-nokita-ksj-fishing-port",
-          "src-nokita-fukuoka-plan"
+          "src-nokita-ksj-fishing-port"
         ],
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": ""
+      "note": "C09実データで対象漁港featureの種別を確認。福岡県計画PDFは補助確認に留める。"
     },
     "seabed": {
       "value": [
@@ -136,7 +137,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+      "note": "野北漁港の一次・限定二次調査ではattributes.seabedを直接確認できる根拠を確認できなかったためunknown。"
     },
     "waterDepth": {
       "value": "unknown",
@@ -150,7 +151,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+      "note": "野北漁港の一次・限定二次調査ではattributes.waterDepthを直接確認できる根拠を確認できなかったためunknown。"
     },
     "riverInfluence": {
       "value": "none",
@@ -164,7 +165,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": ""
+      "note": "地理院地図で代表点周辺に大河川流入口は見えずnoneと推定。ただし机上判読で排水路等の現地状況は未確認。"
     },
     "tidalFlow": {
       "value": "unknown",
@@ -178,7 +179,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+      "note": "野北漁港の一次・限定二次調査ではattributes.tidalFlowを直接確認できる根拠を確認できなかったためunknown。"
     },
     "streetLights": {
       "value": "unknown",
@@ -192,7 +193,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+      "note": "野北漁港の一次・限定二次調査ではattributes.streetLightsを直接確認できる根拠を確認できなかったためunknown。"
     },
     "obstacles": {
       "value": [
@@ -208,7 +209,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+      "note": "野北漁港の一次・限定二次調査ではattributes.obstaclesを直接確認できる根拠を確認できなかったためunknown。"
     },
     "openSeaExposure": {
       "value": "open_sea",
@@ -222,7 +223,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": ""
+      "note": "地理院地図で外海側の防波堤を持つ港湾形状を確認しopen_seaと推定。ただし波浪条件の実測ではない。"
     },
     "fishingRange": {
       "value": [
@@ -238,7 +239,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+      "note": "野北漁港の一次・限定二次調査ではattributes.fishingRangeを直接確認できる根拠を確認できなかったためunknown。"
     }
   },
   "facilities": {
@@ -254,7 +255,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。",
+      "note": "野北漁港の一次・限定二次調査ではfacilities.parkingを直接確認できる根拠を確認できなかったためunknown。",
       "validFrom": null,
       "validUntil": null,
       "officiallyConfirmed": null
@@ -271,7 +272,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。",
+      "note": "野北漁港の一次・限定二次調査ではfacilities.toiletを直接確認できる根拠を確認できなかったためunknown。",
       "validFrom": null,
       "validUntil": null,
       "officiallyConfirmed": null
@@ -290,7 +291,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。",
+      "note": "野北漁港の一次・限定二次調査ではrestrictions.fishingProhibitedを直接確認できる根拠を確認できなかったためunknown。",
       "validFrom": null,
       "validUntil": null,
       "officiallyConfirmed": null
@@ -307,7 +308,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。",
+      "note": "野北漁港の一次・限定二次調査ではrestrictions.entryProhibitedを直接確認できる根拠を確認できなかったためunknown。",
       "validFrom": null,
       "validUntil": null,
       "officiallyConfirmed": null
@@ -324,7 +325,7 @@
         "contradictingSourceIds": []
       },
       "checkedAt": "2026-07-17",
-      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。",
+      "note": "野北漁港の一次・限定二次調査ではrestrictions.constructionOrClosureを直接確認できる根拠を確認できなかったためunknown。",
       "validFrom": null,
       "validUntil": null,
       "officiallyConfirmed": null
