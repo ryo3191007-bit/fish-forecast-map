@@ -8,6 +8,13 @@
 
 公式・公的情報で不足する項目について民間情報を補助利用する場合も、スクレイピング、自動巡回、定期実行は行いません。文章、写真、地図画像、コメント、プロフィール、掲載魚種一覧は保存しません。
 
+## 糸島西岸3漁港バッチ調査
+
+- レビュー文書: `ITOSHIMA_WEST_3_PORTS_RESEARCH_REVIEW.md`
+- 野北漁港: `../../data/research/fishing-spots/nokita-port.json`
+- 芥屋漁港: `../../data/research/fishing-spots/keya-port.json`
+- 船越漁港: `../../data/research/fishing-spots/funakoshi-port.json`
+
 ## パイロット調査
 
 - 唐津東港

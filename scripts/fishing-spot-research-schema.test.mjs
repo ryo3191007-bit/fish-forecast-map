@@ -13,6 +13,11 @@ const schemaPaths = {
 const examplePath = path.join(ROOT, "docs/examples/fishing-spot-research.example.json");
 const commonPromptPath = path.join(ROOT, "docs/research/FISHING_SPOT_RESEARCH_COMMON_PROMPT.md");
 const pilotPath = path.join(ROOT, "data/research/fishing-spots/karatsu-east-port.json");
+const issue163SpotPaths = [
+  path.join(ROOT, "data/research/fishing-spots/nokita-port.json"),
+  path.join(ROOT, "data/research/fishing-spots/keya-port.json"),
+  path.join(ROOT, "data/research/fishing-spots/funakoshi-port.json"),
+];
 const claudePath = path.join(ROOT, "data/research/fishing-spots/ai-outputs/karatsu-east-port.claude.raw.json");
 const geminiPath = path.join(ROOT, "data/research/fishing-spots/ai-outputs/karatsu-east-port.gemini.raw.json");
 const schemas = Object.fromEntries(Object.entries(schemaPaths).map(([version, file]) => [version, readJson(file)]));
@@ -129,6 +134,127 @@ const example = readJson(examplePath);
 assert.deepEqual(validateRecord(example), [], "example must satisfy schema and source references");
 assert.deepEqual(validateRecord(extractPromptSkeleton()), [], "common prompt JSON skeleton must validate as-is");
 assert.deepEqual(validateRecord(readJson(pilotPath)), [], "ChatGPT pilot JSON must remain valid against Schema v1.0.0");
+const issue163Expected = new Map([
+  ["nokita-port", { spotName: "野北漁港", municipality: "糸島市" }],
+  ["keya-port", { spotName: "芥屋漁港", municipality: "糸島市" }],
+  ["funakoshi-port", { spotName: "船越漁港", municipality: "糸島市" }],
+]);
+const issue163Records = issue163SpotPaths.map(readJson);
+const ISSUE163_SECTION_SIMILARITY_THRESHOLD = 0.8;
+const ISSUE163_MAJOR_SECTION_COPY_THRESHOLD = 3;
+const ISSUE163_MAJOR_SECTIONS = ["attributes", "facilities", "restrictions", "sources"];
+function normalizeIssue163Text(text, record) {
+  const prefix = record.spotId.split("-")[0];
+  return text
+    .replaceAll(record.spotId, "<spot-id>")
+    .replaceAll(record.identity.spotName, "<spot-name>")
+    .replaceAll(prefix, "<spot-prefix>")
+    .replaceAll(record.identity.coordinates.checkedAt, "<checked-at>")
+    .replace(/src-[a-z]+-/g, "src-<spot-prefix>-")
+    .replace(/漁港コード[0-9]+/g, "漁港コード<port-code>")
+    .replace(/[0-9]{4}-[0-9]{2}-[0-9]{2}(?:T[0-9:.]+Z)?/g, "<date>")
+    .replace(/[0-9]+\.[0-9]+/g, "<number>")
+    .replace(/約[0-9.]+km/g, "約<number>km");
+}
+function normalizeIssue163Value(value, record) {
+  if (typeof value === "string") return normalizeIssue163Text(value, record);
+  if (typeof value === "number") return "<number>";
+  if (Array.isArray(value)) return value.map((item) => normalizeIssue163Value(item, record));
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => [key, normalizeIssue163Value(item, record)]));
+  return value;
+}
+function canonicalIssue163Sections(record) {
+  return {
+    sources: record.sources.map(({ url, title, publisher, sourceGroup, independenceStatus, supports }) => normalizeIssue163Value({ url, title, publisher, sourceGroup, independenceStatus, supports: [...supports].sort() }, record)),
+    attributes: Object.fromEntries(Object.entries(record.attributes).map(([key, value]) => [key, normalizeIssue163Value(value, record)])),
+    facilities: Object.fromEntries(Object.entries(record.facilities).map(([key, value]) => [key, normalizeIssue163Value(value, record)])),
+    restrictions: Object.fromEntries(Object.entries(record.restrictions).map(([key, value]) => [key, normalizeIssue163Value(value, record)])),
+  };
+}
+function sectionItems(section) {
+  if (Array.isArray(section)) return section.map((item) => JSON.stringify(item));
+  return Object.entries(section).map(([key, value]) => `${key}:${JSON.stringify(value)}`);
+}
+function similarity(leftSection, rightSection) {
+  const leftItems = sectionItems(leftSection);
+  const rightItems = new Set(sectionItems(rightSection));
+  const matches = leftItems.filter((item) => rightItems.has(item)).length;
+  return { matches, total: Math.max(leftItems.length, rightItems.size), ratio: matches / Math.max(leftItems.length, rightItems.size, 1) };
+}
+function assertNotMechanicalIssue163Copy(records, label) {
+  const canonical = records.map(canonicalIssue163Sections);
+  for (let left = 0; left < canonical.length; left += 1) for (let right = left + 1; right < canonical.length; right += 1) {
+    const copiedSections = [];
+    for (const section of ISSUE163_MAJOR_SECTIONS) {
+      const result = similarity(canonical[left][section], canonical[right][section]);
+      if (result.ratio >= ISSUE163_SECTION_SIMILARITY_THRESHOLD) copiedSections.push(`${section} ${result.matches}/${result.total}`);
+    }
+    assert.ok(
+      copiedSections.length < ISSUE163_MAJOR_SECTION_COPY_THRESHOLD,
+      `${label}: normalized sections are too similar between ${records[left].spotId} and ${records[right].spotId}: ${copiedSections.join(", ")}`,
+    );
+  }
+  const commonUnknownNotes = new Map();
+  for (const record of records) for (const [sectionName, section] of Object.entries({ attributes: record.attributes, facilities: record.facilities, restrictions: record.restrictions })) for (const [path, item] of Object.entries(section ?? {})) {
+    if (item?.status === "unknown") {
+      const normalizedNote = normalizeIssue163Text(item.note.replaceAll(path, "<attribute-path>").replaceAll(sectionName, "<section>"), record);
+      commonUnknownNotes.set(normalizedNote, (commonUnknownNotes.get(normalizedNote) ?? 0) + 1);
+    }
+  }
+  for (const [note, count] of commonUnknownNotes) assert.ok(count < 5, `${label}: repeated normalized unknown note is too generic: ${note}`);
+}
+for (const record of issue163Records) {
+  const expected = issue163Expected.get(record.spotId);
+  assert.ok(expected, `${record.spotId} must be an Issue #163 target spot`);
+  assert.equal(record.schemaVersion, "1.1.0", `${record.spotId} must use Schema v1.1.0`);
+  assert.equal(record.identity.spotName, expected.spotName);
+  assert.equal(record.identity.prefecture, "福岡県");
+  assert.equal(record.identity.municipality, expected.municipality);
+  assert.equal(record.scopeType, "facility");
+  assert.deepEqual(validateRecord(record), [], `${record.spotId} must satisfy Schema v1.1.0 and source references`);
+  assert.ok(record.sources.every((source) => source.sourceGroup && source.independenceStatus), `${record.spotId} sources must include independence metadata`);
+  assert.ok(Object.values(record.attributes).some((attribute) => attribute.status === "unknown"), `${record.spotId} must retain unknown attributes`);
+  assert.ok(record.researchNotes.includes(record.identity.spotName), `${record.spotId} research notes must be spot-specific`);
+}
+assertNotMechanicalIssue163Copy(issue163Records, "Issue #163 records");
+const copiedFixture = issue163Records.map((record, index) => {
+  const copy = structuredClone(issue163Records[0]);
+  const spotPrefix = record.spotId.split("-")[0];
+  const spotSpecificDates = ["2026-07-17", "2026-07-18", "2026-07-19"];
+  const replaceSpotSpecificText = (value) => {
+    if (typeof value !== "string") return value;
+    return value
+      .replaceAll("nokita", spotPrefix)
+      .replaceAll("野北漁港", record.identity.spotName)
+      .replaceAll("野北", record.identity.spotName.replace("漁港", ""))
+      .replaceAll("4320150", String(record.sources.find((source) => source.id.includes("ksj-fishing-port"))?.title.match(/漁港コード(\d+)/)?.[1] ?? ["4320150", "4310260", "4320160"][index]))
+      .replaceAll("2026-07-17", spotSpecificDates[index]);
+  };
+  const replaceSpotSpecificValues = (value) => {
+    if (typeof value === "string") return replaceSpotSpecificText(value);
+    if (Array.isArray(value)) return value.map(replaceSpotSpecificValues);
+    if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, replaceSpotSpecificValues(item)]));
+    return value;
+  };
+  const replaced = replaceSpotSpecificValues(copy);
+  replaced.spotId = record.spotId;
+  replaced.identity.spotName = record.identity.spotName;
+  replaced.identity.coordinates.latitude = record.identity.coordinates.latitude;
+  replaced.identity.coordinates.longitude = record.identity.coordinates.longitude;
+  replaced.identity.coordinates.checkedAt = spotSpecificDates[index];
+  if (index === 2) {
+    replaced.attributes.openSeaExposure.value = "bay";
+  }
+  return replaced;
+});
+assert.throws(
+  () => assertNotMechanicalIssue163Copy(copiedFixture, "one-attribute-changed negative fixture"),
+  /normalized sections are too similar/,
+  "Issue #163 copy detection must fail a fixture copied from Nokita to three spots even when one copied record changes one attribute value",
+);
+const notes = issue163Records.map((record) => record.researchNotes);
+assert.equal(new Set(notes).size, issue163Records.length, "Issue #163 research notes must not be mechanically copied");
+
 assert.deepEqual(validateRecord(readJson(claudePath)), [], "Claude raw JSON must remain valid against Schema v1.0.0");
 assert.ok(validateRecord(readJson(geminiPath)).length > 0, "Gemini raw JSON must remain intentionally non-compliant");
 

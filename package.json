@@ -32,7 +32,8 @@
     "pretest": "node scripts/generate-bathymetry-assets.mjs",
     "prebuild": "node scripts/generate-bathymetry-assets.mjs",
     "test:bathymetry-view": "node scripts/bathymetry-view.test.mjs",
-    "test:bathymetry-point": "node scripts/bathymetry-point.test.mjs"
+    "test:bathymetry-point": "node scripts/bathymetry-point.test.mjs",
+    "test:issue-163-fishing-spots": "node scripts/fishing-spot-research-schema.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
