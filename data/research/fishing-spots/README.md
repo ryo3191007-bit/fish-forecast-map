@@ -7,6 +7,11 @@
 - `docs/schemas/fishing-spot-research.schema.json`
 
 - `karatsu-east-port.json`: 唐津東港のPost-MVP-040パイロット調査
+- `nokita-port.json`: Issue #163 野北漁港のSchema v1.1.0調査
+- `keya-port.json`: Issue #163 芥屋漁港のSchema v1.1.0調査
+- `funakoshi-port.json`: Issue #163 船越漁港のSchema v1.1.0調査
+
+Issue #163の3地点レビューは `docs/research/ITOSHIMA_WEST_3_PORTS_RESEARCH_REVIEW.md` を参照してください。
 
 民間情報を補助利用した値は、source種別、`status`、`confidence`、確認日、判定理由を保持します。記事本文、写真、地図画像、コメント、プロフィール、掲載魚種一覧は保存しません。
 

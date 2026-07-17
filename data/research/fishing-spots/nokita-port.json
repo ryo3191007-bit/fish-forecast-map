@@ -1,0 +1,343 @@
+{
+  "schemaVersion": "1.1.0",
+  "spotId": "nokita-port",
+  "scopeType": "facility",
+  "identity": {
+    "spotName": "野北漁港",
+    "aliases": [],
+    "prefecture": "福岡県",
+    "municipality": "糸島市",
+    "coordinates": {
+      "latitude": 33.6316,
+      "longitude": 130.1767,
+      "coordinateMethod": "map_measurement",
+      "coordinateScope": "facility",
+      "status": "inferred",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-nokita-gsi-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "国土地理院標準地図上で漁港施設の代表点として手動設定。実釣位置・入口・access pointではない。"
+    }
+  },
+  "researchedAt": "2026-07-17T00:00:00.000Z",
+  "reviewStatus": "draft",
+  "researchStages": {
+    "officialResearch": "completed",
+    "secondaryResearch": "completed",
+    "schemaValidation": "passed"
+  },
+  "researchNotes": "野北漁港単独で調査。3地点間で属性値・source配列・noteを機械コピーせず、直接根拠がない項目はunknownを維持。規制・施設は変化しやすいため現地表示と管理者確認が必要。",
+  "sources": [
+    {
+      "id": "src-nokita-ksj-fishing-port",
+      "url": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-C09.html",
+      "title": "国土数値情報 漁港データ",
+      "publisher": "国土交通省 国土政策局",
+      "sourceType": "government",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "mlit-ksj-c09",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.spotName",
+        "identity.prefecture",
+        "identity.municipality",
+        "attributes.spotType.value"
+      ]
+    },
+    {
+      "id": "src-nokita-fukuoka-plan",
+      "url": "https://www.pref.fukuoka.lg.jp/uploaded/life/657436_61488945_misc.pdf",
+      "title": "福岡県 福岡圏域 総合水産基盤整備事業計画",
+      "publisher": "福岡県",
+      "sourceType": "government",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "fukuoka-fisheries-plan",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.spotName",
+        "attributes.spotType.value"
+      ]
+    },
+    {
+      "id": "src-nokita-gsi-map",
+      "url": "https://maps.gsi.go.jp/#16/33.6316/130.1767/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
+      "title": "国土地理院地理院地図 野北漁港周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "gsi-standard-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude",
+        "attributes.riverInfluence.value",
+        "attributes.openSeaExposure.value"
+      ]
+    },
+    {
+      "id": "src-nokita-secondary-check",
+      "url": "https://meets-itoshima.com/",
+      "title": "糸島地域情報サイトでの野北漁港関連記事確認",
+      "publisher": "いとしまぐらし",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "meets-itoshima-fish-trip",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": []
+    }
+  ],
+  "attributes": {
+    "spotType": {
+      "value": [
+        "fishing_port"
+      ],
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-nokita-ksj-fishing-port",
+          "src-nokita-fukuoka-plan"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": ""
+    },
+    "seabed": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+    },
+    "riverInfluence": {
+      "value": "none",
+      "status": "inferred",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-nokita-gsi-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": ""
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-secondary-check"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+    },
+    "openSeaExposure": {
+      "value": "open_sea",
+      "status": "inferred",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-nokita-gsi-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": ""
+    },
+    "fishingRange": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。"
+    }
+  },
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-secondary-check"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-secondary-check"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-secondary-check"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-secondary-check"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-secondary-check"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "一次・限定二次調査では直接根拠を確認できなかったためunknown。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "officialContact": {
+      "name": null,
+      "url": null,
+      "checkedAt": "2026-07-17",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null,
+      "note": "漁港利用・釣り可否を直接確認できる公式連絡先は本調査では未確定。"
+    }
+  },
+  "fishSpecies": []
+}

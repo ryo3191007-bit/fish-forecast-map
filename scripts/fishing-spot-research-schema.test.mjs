@@ -13,6 +13,11 @@ const schemaPaths = {
 const examplePath = path.join(ROOT, "docs/examples/fishing-spot-research.example.json");
 const commonPromptPath = path.join(ROOT, "docs/research/FISHING_SPOT_RESEARCH_COMMON_PROMPT.md");
 const pilotPath = path.join(ROOT, "data/research/fishing-spots/karatsu-east-port.json");
+const issue163SpotPaths = [
+  path.join(ROOT, "data/research/fishing-spots/nokita-port.json"),
+  path.join(ROOT, "data/research/fishing-spots/keya-port.json"),
+  path.join(ROOT, "data/research/fishing-spots/funakoshi-port.json"),
+];
 const claudePath = path.join(ROOT, "data/research/fishing-spots/ai-outputs/karatsu-east-port.claude.raw.json");
 const geminiPath = path.join(ROOT, "data/research/fishing-spots/ai-outputs/karatsu-east-port.gemini.raw.json");
 const schemas = Object.fromEntries(Object.entries(schemaPaths).map(([version, file]) => [version, readJson(file)]));
@@ -129,6 +134,32 @@ const example = readJson(examplePath);
 assert.deepEqual(validateRecord(example), [], "example must satisfy schema and source references");
 assert.deepEqual(validateRecord(extractPromptSkeleton()), [], "common prompt JSON skeleton must validate as-is");
 assert.deepEqual(validateRecord(readJson(pilotPath)), [], "ChatGPT pilot JSON must remain valid against Schema v1.0.0");
+const issue163Expected = new Map([
+  ["nokita-port", { spotName: "野北漁港", municipality: "糸島市" }],
+  ["keya-port", { spotName: "芥屋漁港", municipality: "糸島市" }],
+  ["funakoshi-port", { spotName: "船越漁港", municipality: "糸島市" }],
+]);
+const issue163Records = issue163SpotPaths.map(readJson);
+for (const record of issue163Records) {
+  const expected = issue163Expected.get(record.spotId);
+  assert.ok(expected, `${record.spotId} must be an Issue #163 target spot`);
+  assert.equal(record.schemaVersion, "1.1.0", `${record.spotId} must use Schema v1.1.0`);
+  assert.equal(record.identity.spotName, expected.spotName);
+  assert.equal(record.identity.prefecture, "福岡県");
+  assert.equal(record.identity.municipality, expected.municipality);
+  assert.equal(record.scopeType, "facility");
+  assert.deepEqual(validateRecord(record), [], `${record.spotId} must satisfy Schema v1.1.0 and source references`);
+  assert.ok(record.sources.every((source) => source.sourceGroup && source.independenceStatus), `${record.spotId} sources must include independence metadata`);
+  assert.ok(Object.values(record.attributes).some((attribute) => attribute.status === "unknown"), `${record.spotId} must retain unknown attributes`);
+  assert.ok(record.researchNotes.includes(record.identity.spotName), `${record.spotId} research notes must be spot-specific`);
+}
+const sourceIdSignatures = issue163Records.map((record) => JSON.stringify(record.sources.map((source) => source.id)));
+assert.equal(new Set(sourceIdSignatures).size, issue163Records.length, "Issue #163 source ID arrays must not be mechanically copied across spots");
+const attributeSignatures = issue163Records.map((record) => JSON.stringify(record.attributes));
+assert.equal(new Set(attributeSignatures).size, issue163Records.length, "Issue #163 attribute values must not be identical across the three spots");
+const notes = issue163Records.map((record) => record.researchNotes);
+assert.equal(new Set(notes).size, issue163Records.length, "Issue #163 research notes must not be mechanically copied");
+
 assert.deepEqual(validateRecord(readJson(claudePath)), [], "Claude raw JSON must remain valid against Schema v1.0.0");
 assert.ok(validateRecord(readJson(geminiPath)).length > 0, "Gemini raw JSON must remain intentionally non-compliant");
 
