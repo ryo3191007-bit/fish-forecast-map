@@ -126,9 +126,15 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     manualCatchMemos.forEach((memo) => {
       counts.set(memo.areaName, (counts.get(memo.areaName) ?? 0) + 1);
     });
+    const areaNames = Array.from(
+      new Set(fishingSpots.map((spot) => spot.areaName)),
+    );
 
-    return Array.from(counts, ([areaName, count]) => ({ areaName, count }));
-  }, [manualCatchMemos]);
+    return areaNames.map((areaName) => ({
+      areaName,
+      count: counts.get(areaName) ?? 0,
+    }));
+  }, [fishingSpots, manualCatchMemos]);
 
   const normalizedKeyword = searchKeyword.trim().toLowerCase();
 
