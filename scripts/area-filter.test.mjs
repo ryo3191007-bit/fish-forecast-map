@@ -6,6 +6,11 @@ const dashboard = fs.readFileSync(
   "src/components/FishingDashboard.tsx",
   "utf8",
 );
+const layout = fs.readFileSync("src/app/layout.tsx", "utf8");
+const filterCountStyles = fs.readFileSync(
+  "src/app/filter-counts.css",
+  "utf8",
+);
 const fishingSpotsSource = fs
   .readFileSync("src/data/fishingSpots.ts", "utf8")
   .replace(/^import[^;]+;\n/gm, "")
@@ -38,12 +43,12 @@ assert.match(
 assert.match(
   dashboard,
   /return areaNames\.map\(\(areaName\) => \(\{[\s\S]*?count: counts\.get\(areaName\) \?\? 0/,
-  "areas without catch memos must remain visible with count zero",
+  "areas without catch memos must remain available internally",
 );
 assert.match(
   dashboard,
   /\}, \[fishingSpots, manualCatchMemos\]\);/,
-  "area filter counts must refresh for both master data and catch memos",
+  "area filter data must refresh for both master data and catch memos",
 );
 assert.doesNotMatch(
   dashboard,
@@ -54,6 +59,17 @@ assert.match(
   dashboard,
   /areaCounts\.map\(\(\{ areaName, count \}\) =>/,
   "all generated area candidates must render as filter buttons",
+);
+
+assert.match(
+  layout,
+  /import "\.\/filter-counts\.css";/,
+  "filter count visibility rules must be loaded globally",
+);
+assert.match(
+  filterCountStyles,
+  /\.reportFilters \.speciesChip strong\s*\{[\s\S]*?display:\s*none;/,
+  "fish and area filter count badges must stay hidden",
 );
 
 console.log("Area filter regression checks passed");
