@@ -1,4 +1,4 @@
--- Master data seed for Post-MVP-020.
+-- Master data seed for Post-MVP-020, updated by Post-MVP-059.
 -- Run manually after supabase/sql/002_master_data_tables.sql in the Supabase SQL Editor.
 -- This file is idempotent and does not contain project secrets or live DB connection settings.
 
@@ -38,7 +38,7 @@ values
   ('fukuyoshi-port', '福吉漁港', '糸島西岸', 33.517, 130.058, '漁港', '足場良い', 'rounded', array['キス', 'アジ', 'チヌ', 'シーバス']::text[], array['その他', 'サビキ', 'コマセ', 'キャスティング']::text[], array[]::text[], true),
   ('hamasaki-beach', '浜崎海岸', '唐津湾', 33.447, 130.039, 'サーフ', '注意必要', 'approximate', array['キス', 'マゴチ', 'ヒラメ', 'シーバス']::text[], array['その他', 'キャスティング', '泳がせ']::text[], array[]::text[], true),
   ('niji-matsubara', '虹の松原周辺', '唐津湾', 33.462, 130.016, 'サーフ', '注意必要', 'approximate', array['キス', 'マゴチ', 'ヒラメ']::text[], array['その他', 'キャスティング', '泳がせ']::text[], array[]::text[], true),
-  ('karatsu-east-port', '唐津東港', '唐津湾', 33.459, 129.993, '堤防', '足場良い', 'rounded', array['青物', '真鯛', 'サバ', 'アジ']::text[], array['ジギング', 'コマセ', 'サビキ']::text[], array[]::text[], true),
+  ('karatsu-east-port', '唐津東港', '唐津湾', 33.459, 129.993, 'その他', '不明', 'approximate', array['アジ', 'シーバス', 'チヌ']::text[], array[]::text[], array['唐津港東港地区の代表点です。一般利用可能な釣り位置や入口を示すものではありません。', '立入・釣り可否は、現地表示と港湾管理者の最新案内を確認してください。', '魚種は過去の公開情報に基づく参考情報で、現在の釣果や時期を保証しません。']::text[], true),
   ('karatsu-west-port', '唐津西港', '唐津湾', 33.468, 129.978, '堤防', '足場良い', 'rounded', array['サバ', 'アジ', '青物', 'チヌ']::text[], array['サビキ', 'ジギング', 'コマセ']::text[], array[]::text[], true),
   ('yobuko-area', '呼子周辺', '唐津湾北部', 33.543, 129.892, '漁港', '注意必要', 'approximate', array['ヤリイカ', 'アオリイカ', '根魚', '青物']::text[], array['エギング', 'その他', 'ジギング']::text[], array[]::text[], true),
   ('imari-inner-bay', '伊万里湾奥', '伊万里湾', 33.281, 129.861, '湾岸', '足場良い', 'rounded', array['アジ', 'シーバス', 'チヌ', 'ヒラメ']::text[], array['サビキ', 'キャスティング', 'コマセ', '泳がせ']::text[], array[]::text[], true),
