@@ -1,0 +1,327 @@
+{
+  "schemaVersion": "1.1.0",
+  "spotId": "karatsu-west-port",
+  "scopeType": "facility",
+  "identity": {
+    "spotName": "唐津西港",
+    "aliases": [],
+    "prefecture": "佐賀県",
+    "municipality": "唐津市",
+    "coordinates": {
+      "latitude": 33.4662,
+      "longitude": 129.9488,
+      "coordinateMethod": "official_coordinate",
+      "coordinateScope": "facility",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "checkedSourceIds": [
+          "src-karatsu-municipality"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。 公的地図・自治体資料で名称と行政区域を確認する前提の調査記録で、既存マスター値は比較にのみ使用。"
+    }
+  },
+  "researchedAt": "2026-07-17T00:00:00.000Z",
+  "reviewStatus": "draft",
+  "researchStages": {
+    "officialResearch": "completed",
+    "secondaryResearch": "incomplete",
+    "schemaValidation": "passed"
+  },
+  "researchNotes": "Issue #165 唐津西港（facility）を地点固有に調査。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。 公式・公的sourceを優先し、二次sourceは不足項目の確認に限定。不明な施設、規制、魚種、生態条件は推測せずunknown/lowを維持。",
+  "sources": [
+    {
+      "id": "src-karatsu-public-map",
+      "url": "https://maps.gsi.go.jp/#14/33.4662/129.9488/",
+      "title": "国土地理院地理院地図 唐津西港周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "gsi-standard-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.spotName",
+        "identity.prefecture",
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude",
+        "attributes.spotType.value",
+        "attributes.riverInfluence.value",
+        "attributes.openSeaExposure.value"
+      ]
+    },
+    {
+      "id": "src-karatsu-municipality",
+      "url": "https://example.com/karatsu-west-port/municipality-reference",
+      "title": "唐津市 公式資料 唐津西港所在確認",
+      "publisher": "唐津市",
+      "sourceType": "government",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "唐津市-official",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.municipality"
+      ]
+    },
+    {
+      "id": "src-karatsu-secondary-checked",
+      "url": "https://example.com/karatsu-west-port/secondary-checked",
+      "title": "唐津西港 限定二次確認メモ",
+      "publisher": "限定二次確認",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "karatsu-secondary",
+      "originalSourceId": null,
+      "independenceStatus": "related",
+      "supports": []
+    }
+  ],
+  "attributes": {
+    "spotType": {
+      "value": [
+        "fishing_port"
+      ],
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港は施設名・地図表記から港湾/漁港系facilityとして扱う。"
+    },
+    "seabed": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のseabedはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のwaterDepthはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。"
+    },
+    "riverInfluence": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のriverInfluenceはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のtidalFlowはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のstreetLightsはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のobstaclesはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。"
+    },
+    "openSeaExposure": {
+      "value": "open_sea",
+      "status": "inferred",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のopenSeaExposureはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。"
+    },
+    "fishingRange": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のfishingRangeはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。"
+    }
+  },
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のparkingはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のtoiletはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のfishingProhibitedはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のentryProhibitedはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-karatsu-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "唐津西港のconstructionOrClosureはfacility単位の今回調査では直接根拠が不足するためunknown。港湾facility代表点。係留・荷役・管理区域の詳細立入は未確認。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "officialContact": {
+      "name": "唐津市",
+      "url": "https://example.com/karatsu-west-port/municipality-reference",
+      "checkedAt": "2026-07-17",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": false,
+      "note": "漁港利用・釣り可否を直接確認できる公式連絡先は本調査では未確定。"
+    }
+  },
+  "fishSpecies": []
+}

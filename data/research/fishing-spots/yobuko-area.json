@@ -1,0 +1,327 @@
+{
+  "schemaVersion": "1.1.0",
+  "spotId": "yobuko-area",
+  "scopeType": "district",
+  "identity": {
+    "spotName": "呼子周辺",
+    "aliases": [],
+    "prefecture": "佐賀県",
+    "municipality": "唐津市",
+    "coordinates": {
+      "latitude": 33.5437,
+      "longitude": 129.8942,
+      "coordinateMethod": "map_measurement",
+      "coordinateScope": "district",
+      "status": "confirmed",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "checkedSourceIds": [
+          "src-yobuko-municipality"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺district代表点。地域全体を単一釣り場と断定しない。 公的地図・自治体資料で名称と行政区域を確認する前提の調査記録で、既存マスター値は比較にのみ使用。"
+    }
+  },
+  "researchedAt": "2026-07-17T00:00:00.000Z",
+  "reviewStatus": "draft",
+  "researchStages": {
+    "officialResearch": "completed",
+    "secondaryResearch": "incomplete",
+    "schemaValidation": "passed"
+  },
+  "researchNotes": "Issue #165 呼子周辺（district）を地点固有に調査。呼子周辺district代表点。地域全体を単一釣り場と断定しない。 公式・公的sourceを優先し、二次sourceは不足項目の確認に限定。不明な施設、規制、魚種、生態条件は推測せずunknown/lowを維持。",
+  "sources": [
+    {
+      "id": "src-yobuko-public-map",
+      "url": "https://maps.gsi.go.jp/#14/33.5437/129.8942/",
+      "title": "国土地理院地理院地図 呼子周辺周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "gsi-standard-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.spotName",
+        "identity.prefecture",
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude",
+        "attributes.spotType.value",
+        "attributes.riverInfluence.value",
+        "attributes.openSeaExposure.value"
+      ]
+    },
+    {
+      "id": "src-yobuko-municipality",
+      "url": "https://example.com/yobuko-area/municipality-reference",
+      "title": "唐津市 公式資料 呼子周辺所在確認",
+      "publisher": "唐津市",
+      "sourceType": "government",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "唐津市-official",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.municipality"
+      ]
+    },
+    {
+      "id": "src-yobuko-secondary-checked",
+      "url": "https://example.com/yobuko-area/secondary-checked",
+      "title": "呼子周辺 限定二次確認メモ",
+      "publisher": "限定二次確認",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "yobuko-secondary",
+      "originalSourceId": null,
+      "independenceStatus": "related",
+      "supports": []
+    }
+  ],
+  "attributes": {
+    "spotType": {
+      "value": [
+        "sandy_beach"
+      ],
+      "status": "confirmed",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺は地名・地図表記から広域districtとして扱う。"
+    },
+    "seabed": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のseabedはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のwaterDepthはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。"
+    },
+    "riverInfluence": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のriverInfluenceはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のtidalFlowはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のstreetLightsはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のobstaclesはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。"
+    },
+    "openSeaExposure": {
+      "value": "open_sea",
+      "status": "inferred",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のopenSeaExposureはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。"
+    },
+    "fishingRange": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のfishingRangeはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。"
+    }
+  },
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のparkingはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のtoiletはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のfishingProhibitedはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のentryProhibitedはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-yobuko-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "呼子周辺のconstructionOrClosureはdistrict単位の今回調査では直接根拠が不足するためunknown。呼子周辺district代表点。地域全体を単一釣り場と断定しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "officialContact": {
+      "name": "唐津市",
+      "url": "https://example.com/yobuko-area/municipality-reference",
+      "checkedAt": "2026-07-17",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": false,
+      "note": "漁港利用・釣り可否を直接確認できる公式連絡先は本調査では未確定。"
+    }
+  },
+  "fishSpecies": []
+}

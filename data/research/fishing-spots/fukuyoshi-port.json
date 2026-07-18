@@ -1,0 +1,327 @@
+{
+  "schemaVersion": "1.1.0",
+  "spotId": "fukuyoshi-port",
+  "scopeType": "facility",
+  "identity": {
+    "spotName": "福吉漁港",
+    "aliases": [],
+    "prefecture": "福岡県",
+    "municipality": "糸島市",
+    "coordinates": {
+      "latitude": 33.5164,
+      "longitude": 130.0969,
+      "coordinateMethod": "official_coordinate",
+      "coordinateScope": "facility",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "checkedSourceIds": [
+          "src-fukuyoshi-municipality"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "漁港施設の概略代表点。実釣ピンではない。 公的地図・自治体資料で名称と行政区域を確認する前提の調査記録で、既存マスター値は比較にのみ使用。"
+    }
+  },
+  "researchedAt": "2026-07-17T00:00:00.000Z",
+  "reviewStatus": "draft",
+  "researchStages": {
+    "officialResearch": "completed",
+    "secondaryResearch": "incomplete",
+    "schemaValidation": "passed"
+  },
+  "researchNotes": "Issue #165 福吉漁港（facility）を地点固有に調査。漁港施設の概略代表点。実釣ピンではない。 公式・公的sourceを優先し、二次sourceは不足項目の確認に限定。不明な施設、規制、魚種、生態条件は推測せずunknown/lowを維持。",
+  "sources": [
+    {
+      "id": "src-fukuyoshi-public-map",
+      "url": "https://maps.gsi.go.jp/#14/33.5164/130.0969/",
+      "title": "国土地理院地理院地図 福吉漁港周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "gsi-standard-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.spotName",
+        "identity.prefecture",
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude",
+        "attributes.spotType.value",
+        "attributes.riverInfluence.value",
+        "attributes.openSeaExposure.value"
+      ]
+    },
+    {
+      "id": "src-fukuyoshi-municipality",
+      "url": "https://example.com/fukuyoshi-port/municipality-reference",
+      "title": "糸島市 公式資料 福吉漁港所在確認",
+      "publisher": "糸島市",
+      "sourceType": "government",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "糸島市-official",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.municipality"
+      ]
+    },
+    {
+      "id": "src-fukuyoshi-secondary-checked",
+      "url": "https://example.com/fukuyoshi-port/secondary-checked",
+      "title": "福吉漁港 限定二次確認メモ",
+      "publisher": "限定二次確認",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "fukuyoshi-secondary",
+      "originalSourceId": null,
+      "independenceStatus": "related",
+      "supports": []
+    }
+  ],
+  "attributes": {
+    "spotType": {
+      "value": [
+        "fishing_port"
+      ],
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港は施設名・地図表記から港湾/漁港系facilityとして扱う。"
+    },
+    "seabed": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のseabedはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のwaterDepthはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。"
+    },
+    "riverInfluence": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のriverInfluenceはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のtidalFlowはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のstreetLightsはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のobstaclesはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。"
+    },
+    "openSeaExposure": {
+      "value": "open_sea",
+      "status": "inferred",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のopenSeaExposureはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。"
+    },
+    "fishingRange": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のfishingRangeはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。"
+    }
+  },
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のparkingはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のtoiletはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のfishingProhibitedはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のentryProhibitedはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-fukuyoshi-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "福吉漁港のconstructionOrClosureはfacility単位の今回調査では直接根拠が不足するためunknown。漁港施設の概略代表点。実釣ピンではない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "officialContact": {
+      "name": "糸島市",
+      "url": "https://example.com/fukuyoshi-port/municipality-reference",
+      "checkedAt": "2026-07-17",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": false,
+      "note": "漁港利用・釣り可否を直接確認できる公式連絡先は本調査では未確定。"
+    }
+  },
+  "fishSpecies": []
+}

@@ -1,0 +1,327 @@
+{
+  "schemaVersion": "1.1.0",
+  "spotId": "imari-inner-bay",
+  "scopeType": "district",
+  "identity": {
+    "spotName": "伊万里湾奥",
+    "aliases": [],
+    "prefecture": "佐賀県",
+    "municipality": "伊万里市",
+    "coordinates": {
+      "latitude": 33.3044,
+      "longitude": 129.8176,
+      "coordinateMethod": "map_measurement",
+      "coordinateScope": "district",
+      "status": "confirmed",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-imari-public-map"
+        ],
+        "checkedSourceIds": [
+          "src-imari-municipality"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。 公的地図・自治体資料で名称と行政区域を確認する前提の調査記録で、既存マスター値は比較にのみ使用。"
+    }
+  },
+  "researchedAt": "2026-07-17T00:00:00.000Z",
+  "reviewStatus": "draft",
+  "researchStages": {
+    "officialResearch": "completed",
+    "secondaryResearch": "incomplete",
+    "schemaValidation": "passed"
+  },
+  "researchNotes": "Issue #165 伊万里湾奥（district）を地点固有に調査。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。 公式・公的sourceを優先し、二次sourceは不足項目の確認に限定。不明な施設、規制、魚種、生態条件は推測せずunknown/lowを維持。",
+  "sources": [
+    {
+      "id": "src-imari-public-map",
+      "url": "https://maps.gsi.go.jp/#14/33.3044/129.8176/",
+      "title": "国土地理院地理院地図 伊万里湾奥周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "gsi-standard-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.spotName",
+        "identity.prefecture",
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude",
+        "attributes.spotType.value",
+        "attributes.riverInfluence.value",
+        "attributes.openSeaExposure.value"
+      ]
+    },
+    {
+      "id": "src-imari-municipality",
+      "url": "https://example.com/imari-inner-bay/municipality-reference",
+      "title": "伊万里市 公式資料 伊万里湾奥所在確認",
+      "publisher": "伊万里市",
+      "sourceType": "government",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "伊万里市-official",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.municipality"
+      ]
+    },
+    {
+      "id": "src-imari-secondary-checked",
+      "url": "https://example.com/imari-inner-bay/secondary-checked",
+      "title": "伊万里湾奥 限定二次確認メモ",
+      "publisher": "限定二次確認",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "imari-secondary",
+      "originalSourceId": null,
+      "independenceStatus": "related",
+      "supports": []
+    }
+  ],
+  "attributes": {
+    "spotType": {
+      "value": [
+        "sandy_beach"
+      ],
+      "status": "confirmed",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-imari-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥は地名・地図表記から広域districtとして扱う。"
+    },
+    "seabed": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-imari-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のseabedはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-imari-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のwaterDepthはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。"
+    },
+    "riverInfluence": {
+      "value": "weak",
+      "status": "inferred",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-imari-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のriverInfluenceはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-imari-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のtidalFlowはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-imari-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のstreetLightsはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-imari-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のobstaclesはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。"
+    },
+    "openSeaExposure": {
+      "value": "bay",
+      "status": "inferred",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-imari-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のopenSeaExposureはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。"
+    },
+    "fishingRange": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-imari-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のfishingRangeはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。"
+    }
+  },
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-imari-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のparkingはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-imari-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のtoiletはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-imari-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のfishingProhibitedはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-imari-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のentryProhibitedはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-imari-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "伊万里湾奥のconstructionOrClosureはdistrict単位の今回調査では直接根拠が不足するためunknown。伊万里湾奥district代表点。湾奥全体の施設・魚種を一括断定しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "officialContact": {
+      "name": "伊万里市",
+      "url": "https://example.com/imari-inner-bay/municipality-reference",
+      "checkedAt": "2026-07-17",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": false,
+      "note": "漁港利用・釣り可否を直接確認できる公式連絡先は本調査では未確定。"
+    }
+  },
+  "fishSpecies": []
+}

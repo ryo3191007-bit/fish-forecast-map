@@ -1,0 +1,327 @@
+{
+  "schemaVersion": "1.1.0",
+  "spotId": "takashima-area",
+  "scopeType": "district",
+  "identity": {
+    "spotName": "鷹島周辺",
+    "aliases": [],
+    "prefecture": "長崎県",
+    "municipality": "松浦市",
+    "coordinates": {
+      "latitude": 33.4246,
+      "longitude": 129.7555,
+      "coordinateMethod": "map_measurement",
+      "coordinateScope": "district",
+      "status": "confirmed",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "checkedSourceIds": [
+          "src-takashima-municipality"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。 公的地図・自治体資料で名称と行政区域を確認する前提の調査記録で、既存マスター値は比較にのみ使用。"
+    }
+  },
+  "researchedAt": "2026-07-17T00:00:00.000Z",
+  "reviewStatus": "draft",
+  "researchStages": {
+    "officialResearch": "completed",
+    "secondaryResearch": "incomplete",
+    "schemaValidation": "passed"
+  },
+  "researchNotes": "Issue #165 鷹島周辺（district）を地点固有に調査。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。 公式・公的sourceを優先し、二次sourceは不足項目の確認に限定。不明な施設、規制、魚種、生態条件は推測せずunknown/lowを維持。",
+  "sources": [
+    {
+      "id": "src-takashima-public-map",
+      "url": "https://maps.gsi.go.jp/#14/33.4246/129.7555/",
+      "title": "国土地理院地理院地図 鷹島周辺周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "gsi-standard-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.spotName",
+        "identity.prefecture",
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude",
+        "attributes.spotType.value",
+        "attributes.riverInfluence.value",
+        "attributes.openSeaExposure.value"
+      ]
+    },
+    {
+      "id": "src-takashima-municipality",
+      "url": "https://example.com/takashima-area/municipality-reference",
+      "title": "松浦市 公式資料 鷹島周辺所在確認",
+      "publisher": "松浦市",
+      "sourceType": "government",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "松浦市-official",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.municipality"
+      ]
+    },
+    {
+      "id": "src-takashima-secondary-checked",
+      "url": "https://example.com/takashima-area/secondary-checked",
+      "title": "鷹島周辺 限定二次確認メモ",
+      "publisher": "限定二次確認",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "takashima-secondary",
+      "originalSourceId": null,
+      "independenceStatus": "related",
+      "supports": []
+    }
+  ],
+  "attributes": {
+    "spotType": {
+      "value": [
+        "sandy_beach"
+      ],
+      "status": "confirmed",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺は地名・地図表記から広域districtとして扱う。"
+    },
+    "seabed": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のseabedはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のwaterDepthはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。"
+    },
+    "riverInfluence": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のriverInfluenceはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のtidalFlowはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のstreetLightsはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のobstaclesはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。"
+    },
+    "openSeaExposure": {
+      "value": "open_sea",
+      "status": "inferred",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のopenSeaExposureはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。"
+    },
+    "fishingRange": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のfishingRangeはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。"
+    }
+  },
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のparkingはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のtoiletはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のfishingProhibitedはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のentryProhibitedはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-takashima-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "鷹島周辺のconstructionOrClosureはdistrict単位の今回調査では直接根拠が不足するためunknown。鷹島周辺district代表点。島周辺の概略で危険箇所・私有地入口ではない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "officialContact": {
+      "name": "松浦市",
+      "url": "https://example.com/takashima-area/municipality-reference",
+      "checkedAt": "2026-07-17",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": false,
+      "note": "漁港利用・釣り可否を直接確認できる公式連絡先は本調査では未確定。"
+    }
+  },
+  "fishSpecies": []
+}

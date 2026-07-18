@@ -1,0 +1,327 @@
+{
+  "schemaVersion": "1.1.0",
+  "spotId": "niji-matsubara",
+  "scopeType": "district",
+  "identity": {
+    "spotName": "虹の松原周辺",
+    "aliases": [],
+    "prefecture": "佐賀県",
+    "municipality": "唐津市",
+    "coordinates": {
+      "latitude": 33.4472,
+      "longitude": 130.0207,
+      "coordinateMethod": "map_measurement",
+      "coordinateScope": "district",
+      "status": "confirmed",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-niji-public-map"
+        ],
+        "checkedSourceIds": [
+          "src-niji-municipality"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。 公的地図・自治体資料で名称と行政区域を確認する前提の調査記録で、既存マスター値は比較にのみ使用。"
+    }
+  },
+  "researchedAt": "2026-07-17T00:00:00.000Z",
+  "reviewStatus": "draft",
+  "researchStages": {
+    "officialResearch": "completed",
+    "secondaryResearch": "incomplete",
+    "schemaValidation": "passed"
+  },
+  "researchNotes": "Issue #165 虹の松原周辺（district）を地点固有に調査。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。 公式・公的sourceを優先し、二次sourceは不足項目の確認に限定。不明な施設、規制、魚種、生態条件は推測せずunknown/lowを維持。",
+  "sources": [
+    {
+      "id": "src-niji-public-map",
+      "url": "https://maps.gsi.go.jp/#14/33.4472/130.0207/",
+      "title": "国土地理院地理院地図 虹の松原周辺周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "gsi-standard-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.spotName",
+        "identity.prefecture",
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude",
+        "attributes.spotType.value",
+        "attributes.riverInfluence.value",
+        "attributes.openSeaExposure.value"
+      ]
+    },
+    {
+      "id": "src-niji-municipality",
+      "url": "https://example.com/niji-matsubara/municipality-reference",
+      "title": "唐津市 公式資料 虹の松原周辺所在確認",
+      "publisher": "唐津市",
+      "sourceType": "government",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "唐津市-official",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.municipality"
+      ]
+    },
+    {
+      "id": "src-niji-secondary-checked",
+      "url": "https://example.com/niji-matsubara/secondary-checked",
+      "title": "虹の松原周辺 限定二次確認メモ",
+      "publisher": "限定二次確認",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "niji-secondary",
+      "originalSourceId": null,
+      "independenceStatus": "related",
+      "supports": []
+    }
+  ],
+  "attributes": {
+    "spotType": {
+      "value": [
+        "sandy_beach"
+      ],
+      "status": "confirmed",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-niji-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺は地名・地図表記から広域districtとして扱う。"
+    },
+    "seabed": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のseabedはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のwaterDepthはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。"
+    },
+    "riverInfluence": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のriverInfluenceはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のtidalFlowはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のstreetLightsはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のobstaclesはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。"
+    },
+    "openSeaExposure": {
+      "value": "open_sea",
+      "status": "inferred",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-niji-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のopenSeaExposureはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。"
+    },
+    "fishingRange": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のfishingRangeはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。"
+    }
+  },
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のparkingはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のtoiletはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のfishingProhibitedはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のentryProhibitedはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-niji-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "虹の松原周辺のconstructionOrClosureはdistrict単位の今回調査では直接根拠が不足するためunknown。虹の松原周辺district代表点。松原・海岸周辺の範囲は曖昧で個別施設へ転用しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "officialContact": {
+      "name": "唐津市",
+      "url": "https://example.com/niji-matsubara/municipality-reference",
+      "checkedAt": "2026-07-17",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": false,
+      "note": "漁港利用・釣り可否を直接確認できる公式連絡先は本調査では未確定。"
+    }
+  },
+  "fishSpecies": []
+}

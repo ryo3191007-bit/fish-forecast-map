@@ -1,0 +1,327 @@
+{
+  "schemaVersion": "1.1.0",
+  "spotId": "nokita-beach",
+  "scopeType": "district",
+  "identity": {
+    "spotName": "野北海岸",
+    "aliases": [],
+    "prefecture": "福岡県",
+    "municipality": "糸島市",
+    "coordinates": {
+      "latitude": 33.6048,
+      "longitude": 130.1552,
+      "coordinateMethod": "map_measurement",
+      "coordinateScope": "district",
+      "status": "confirmed",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "checkedSourceIds": [
+          "src-nokita-municipality"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。 公的地図・自治体資料で名称と行政区域を確認する前提の調査記録で、既存マスター値は比較にのみ使用。"
+    }
+  },
+  "researchedAt": "2026-07-17T00:00:00.000Z",
+  "reviewStatus": "draft",
+  "researchStages": {
+    "officialResearch": "completed",
+    "secondaryResearch": "incomplete",
+    "schemaValidation": "passed"
+  },
+  "researchNotes": "Issue #165 野北海岸（district）を地点固有に調査。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。 公式・公的sourceを優先し、二次sourceは不足項目の確認に限定。不明な施設、規制、魚種、生態条件は推測せずunknown/lowを維持。",
+  "sources": [
+    {
+      "id": "src-nokita-public-map",
+      "url": "https://maps.gsi.go.jp/#14/33.6048/130.1552/",
+      "title": "国土地理院地理院地図 野北海岸周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "gsi-standard-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.spotName",
+        "identity.prefecture",
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude",
+        "attributes.spotType.value",
+        "attributes.riverInfluence.value",
+        "attributes.openSeaExposure.value"
+      ]
+    },
+    {
+      "id": "src-nokita-municipality",
+      "url": "https://example.com/nokita-beach/municipality-reference",
+      "title": "糸島市 公式資料 野北海岸所在確認",
+      "publisher": "糸島市",
+      "sourceType": "government",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "糸島市-official",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.municipality"
+      ]
+    },
+    {
+      "id": "src-nokita-secondary-checked",
+      "url": "https://example.com/nokita-beach/secondary-checked",
+      "title": "野北海岸 限定二次確認メモ",
+      "publisher": "限定二次確認",
+      "sourceType": "private_reference",
+      "checkedAt": "2026-07-17",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "nokita-secondary",
+      "originalSourceId": null,
+      "independenceStatus": "related",
+      "supports": []
+    }
+  ],
+  "attributes": {
+    "spotType": {
+      "value": [
+        "sandy_beach"
+      ],
+      "status": "confirmed",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸は地名・地図表記から広域districtとして扱う。"
+    },
+    "seabed": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のseabedはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のwaterDepthはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。"
+    },
+    "riverInfluence": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のriverInfluenceはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のtidalFlowはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のstreetLightsはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のobstaclesはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。"
+    },
+    "openSeaExposure": {
+      "value": "open_sea",
+      "status": "inferred",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のopenSeaExposureはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。"
+    },
+    "fishingRange": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のfishingRangeはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。"
+    }
+  },
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のparkingはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のtoiletはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のfishingProhibitedはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のentryProhibitedはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-nokita-public-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-17",
+      "note": "野北海岸のconstructionOrClosureはdistrict単位の今回調査では直接根拠が不足するためunknown。海岸district代表点。実釣位置や入口を示さず、砂浜と周辺集落の範囲を便宜的に表す。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "officialContact": {
+      "name": "糸島市",
+      "url": "https://example.com/nokita-beach/municipality-reference",
+      "checkedAt": "2026-07-17",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": false,
+      "note": "漁港利用・釣り可否を直接確認できる公式連絡先は本調査では未確定。"
+    }
+  },
+  "fishSpecies": []
+}
