@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fish-forecast-map.local/schemas/fish-species-ecology.v1.0.0.schema.json",
+  "title": "Fish species ecology research record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "speciesId", "identity", "researchScope", "ecology", "sources", "review"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "speciesId": { "enum": ["aji", "seabass", "chinu"] },
+    "identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["displayNameJa", "canonicalNameJa", "scientificName", "aliases", "entityType", "note"],
+      "properties": {
+        "displayNameJa": { "type": "string", "minLength": 1 },
+        "canonicalNameJa": { "$ref": "#/$defs/textClaim" },
+        "scientificName": { "$ref": "#/$defs/textClaim" },
+        "aliases": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "entityType": { "enum": ["exact_species", "species_group", "squid_species", "unknown"] },
+        "note": { "type": "string" }
+      }
+    },
+    "researchScope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["targetArea", "checkedAt", "sourcePolicy"],
+      "properties": { "targetArea": { "type": "string" }, "checkedAt": { "type": "string", "format": "date" }, "sourcePolicy": { "type": "string" } }
+    },
+    "ecology": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stableGeneral", "regionalCatchability"],
+      "properties": {
+        "stableGeneral": { "$ref": "#/$defs/ecologyClaims" },
+        "regionalCatchability": { "$ref": "#/$defs/ecologyClaims" }
+      }
+    },
+    "sources": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/source" } },
+    "review": {
+      "type": "object", "additionalProperties": false,
+      "required": ["officialResearch", "secondaryResearch", "schemaValidation", "comparisonWithCurrentImplementation", "attributeDecisions", "reviewStatus"],
+      "properties": {
+        "officialResearch": { "type": "string" }, "secondaryResearch": { "type": "string" }, "schemaValidation": { "type": "string" },
+        "comparisonWithCurrentImplementation": { "type": "object" },
+        "attributeDecisions": { "type": "array", "items": { "$ref": "#/$defs/decision" } },
+        "reviewStatus": { "enum": ["draft", "ready_for_review", "approved", "rejected"] }
+      }
+    }
+  },
+  "$defs": {
+    "claimStatus": { "enum": ["confirmed", "inferred", "unknown", "not_applicable"] },
+    "confidence": { "enum": ["high", "medium", "low", "unknown"] },
+    "sourceIdList": { "type": "array", "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$" }, "uniqueItems": true },
+    "textClaim": { "type": "object", "additionalProperties": false, "required": ["value", "status", "confidence", "evidenceSources", "note"], "properties": { "value": { "type": ["string", "null"] }, "status": { "$ref": "#/$defs/claimStatus" }, "confidence": { "$ref": "#/$defs/confidence" }, "evidenceSources": { "$ref": "#/$defs/evidenceSources" }, "note": { "type": "string" } } },
+    "claim": { "type": "object", "additionalProperties": false, "required": ["value", "status", "confidence", "evidenceSources", "note"], "properties": { "value": {}, "status": { "$ref": "#/$defs/claimStatus" }, "confidence": { "$ref": "#/$defs/confidence" }, "evidenceSources": { "$ref": "#/$defs/evidenceSources" }, "note": { "type": "string" }, "regionScope": { "type": "string" }, "unit": { "type": "string" } } },
+    "evidenceSources": { "type": "object", "additionalProperties": false, "required": ["supportingSourceIds", "checkedSourceIds", "contradictingSourceIds"], "properties": { "supportingSourceIds": { "$ref": "#/$defs/sourceIdList" }, "checkedSourceIds": { "$ref": "#/$defs/sourceIdList" }, "contradictingSourceIds": { "$ref": "#/$defs/sourceIdList" } } },
+    "ecologyClaims": { "type": "object", "additionalProperties": false, "required": ["seasonality", "waterTemperature", "depthRange", "substrateHabitat", "salinityAndWaterBody", "dayNightTiming", "fishingMethods", "spawningOrConfusableInfo"], "properties": { "seasonality": { "$ref": "#/$defs/claim" }, "waterTemperature": { "$ref": "#/$defs/claim" }, "depthRange": { "$ref": "#/$defs/claim" }, "substrateHabitat": { "$ref": "#/$defs/claim" }, "salinityAndWaterBody": { "$ref": "#/$defs/claim" }, "dayNightTiming": { "$ref": "#/$defs/claim" }, "fishingMethods": { "$ref": "#/$defs/claim" }, "spawningOrConfusableInfo": { "$ref": "#/$defs/claim" } } },
+    "source": { "type": "object", "additionalProperties": false, "required": ["id", "title", "url", "publisher", "publisherType", "publishedOrUpdatedAt", "checkedAt", "regionScope", "sourceType", "directness", "derivationGroup", "supports", "usageNote"], "properties": { "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$" }, "title": { "type": "string" }, "url": { "type": "string" }, "publisher": { "type": "string" }, "publisherType": { "enum": ["government", "public_research", "university", "museum_aquarium", "peer_reviewed", "secondary", "private_fishing", "unknown"] }, "publishedOrUpdatedAt": { "type": ["string", "null"] }, "checkedAt": { "type": "string", "format": "date" }, "regionScope": { "type": "string" }, "sourceType": { "enum": ["supporting", "checked", "contradicting"] }, "directness": { "enum": ["direct", "indirect", "background"] }, "derivationGroup": { "type": "string" }, "supports": { "type": "array", "items": { "type": "string", "pattern": "^/" }, "uniqueItems": true }, "usageNote": { "type": "string" } } },
+    "decision": { "type": "object", "additionalProperties": false, "required": ["path", "decision", "reason"], "properties": { "path": { "type": "string", "pattern": "^/" }, "decision": { "enum": ["adopt", "adopt_with_warning", "hold", "reject"] }, "reason": { "type": "string" } } }
+  }
+}

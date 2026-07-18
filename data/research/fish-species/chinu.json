@@ -1,0 +1,300 @@
+{
+  "schemaVersion": "1.0.0",
+  "speciesId": "chinu",
+  "identity": {
+    "displayNameJa": "チヌ",
+    "canonicalNameJa": {
+      "value": "クロダイ",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "mlit_ootagawa_kurodai"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "チヌ表示とcanonical候補を分離。通称から自動確定せずsourceで確認した範囲。"
+    },
+    "scientificName": {
+      "value": "Acanthopagrus schlegelii",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "mlit_ootagawa_kurodai"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "学名はsourceで直接確認できる場合のみ採用。"
+    },
+    "aliases": [
+      "クロダイ",
+      "チヌ"
+    ],
+    "entityType": "exact_species",
+    "note": "表示魚種、生物学的canonical名、alias、entityTypeを分離した調査記録。"
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。ただし本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-18",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "depthRange": {
+        "value": {
+          "min": 0,
+          "max": 50
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mlit_ootagawa_kurodai"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "越冬移動先の内湾等の水深で岸から釣れる水深ではない。",
+        "unit": "m",
+        "regionScope": "内湾等"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "salinityAndWaterBody": {
+        "value": [
+          "内湾",
+          "沿岸域",
+          "汽水域",
+          "河口域"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mlit_ootagawa_kurodai"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "稚魚・幼魚期の河口域利用を含む。",
+        "regionScope": "太田川・内湾沿岸域"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "spawningOrConfusableInfo": {
+        "value": {
+          "months": [
+            4,
+            5,
+            6
+          ]
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mlit_ootagawa_kurodai"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "産卵期であり釣れやすい時期ではない。",
+        "regionScope": "太田川資料の一般解説"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "mlit_ootagawa_kurodai",
+      "title": "クロダイ",
+      "url": "https://www.cgr.mlit.go.jp/ootagawa/Bio/fishes/index264.htm",
+      "publisher": "国土交通省中国地方整備局 太田川河川事務所",
+      "publisherType": "government",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-18",
+      "regionScope": "太田川・内湾沿岸域",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "mlit-ootagawa-kurodai",
+      "supports": [
+        "/identity/canonicalNameJa",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "河川・汽水域利用と産卵の確認に限定。遊漁釣期へ直結しない。"
+    }
+  ],
+  "review": {
+    "officialResearch": "公的または研究機関sourceを優先。原典派生ページはderivationGroupで重複管理。",
+    "secondaryResearch": "民間釣りサイト、SNS、動画、ブログ単独ではmedium以上にしない。",
+    "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
+    "comparisonWithCurrentImplementation": {
+      "currentFishSpeciesNameJa": "チヌ",
+      "currentSeasonMonths": "比較対象のみ。sourceまたは正解として不使用。",
+      "currentMethodAffinity": "比較対象のみ。sourceまたは正解として不使用。"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt_with_warning",
+        "reason": "sourceで確認したcanonical候補。ただし表示名から単一種を推測確定しない。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "対象地域の遊漁釣れやすさを直接支えるsource未確認。unknown維持。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt_with_warning",
+        "reason": "生態情報として採用候補。釣期やSCORE入力値へ転用しない。"
+      }
+    ],
+    "reviewStatus": "ready_for_review"
+  }
+}
