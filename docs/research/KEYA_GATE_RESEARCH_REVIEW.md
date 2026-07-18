@@ -24,7 +24,7 @@
 - canonical name: `芥屋大門周辺`
 - aliases: `芥屋大門`, `芥屋の大門`
 
-現行アプリのdistrict表示名を維持しつつ、公式sourceで確認できる対象名は`芥屋大門`、別表記は`芥屋の大門`として整理しました。`芥屋漁港`は別spotIdのfacilityであり、本調査ではaliasにも含めません。
+`芥屋大門周辺`はリポジトリ内で安全に丸めた内部canonical district表示名です。公式sourceが直接確認できる表記は`芥屋大門`と`芥屋の大門`であり、内部canonical district表示名そのものが公式ページに記載された名称であるとは扱いません。`芥屋漁港`は別spotIdのfacilityであり、本調査ではaliasにも含めません。
 
 ## district代表座標
 
@@ -34,7 +34,7 @@
 
 | 項目 | 現行地点マスター | 今回調査 | 判断 |
 |---|---|---|---|
-| 名称 | 芥屋大門周辺 | 芥屋大門周辺 | 表示名は維持可能。ただし根拠sourceは大門本体名まで |
+| 名称 | 芥屋大門周辺 | 芥屋大門周辺 | 内部canonical district表示名は維持可能。ただし公式に確認できる表記は`芥屋大門` / `芥屋の大門`まで |
 | 座標 | `33.596, 130.109` | `33.5967, 130.1106` | 現行値は流用せず再測定。どちらも安全判断不可 |
 | spotType | 磯場 | unknown | 天然記念物の地質説明だけでdistrict全体を磯場分類しない |
 | shoreAccess | 注意必要 | unknown | 管理者の現行立入情報がないため採用不可 |
@@ -47,8 +47,8 @@
 
 ## 公式sourceで確定できた値
 
-- `identity.spotName`: `芥屋大門周辺`（公式対象名`芥屋大門`を含むdistrict表示）
-- `identity.aliases`: `芥屋大門`, `芥屋の大門`
+- `identity.spotName`: `芥屋大門周辺`（内部canonical district表示名。公式ページにそのまま記載された名称としては扱わない）
+- `identity.aliases`: `芥屋大門`, `芥屋の大門`（公式に確認できる表記）
 - `identity.prefecture`: `福岡県`
 - `identity.municipality`: `糸島市`
 - `identity.coordinates`: district概略代表点（低確度の机上測定）

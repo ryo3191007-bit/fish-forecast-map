@@ -203,6 +203,23 @@ function assertNotMechanicalIssue163Copy(records, label) {
   }
   for (const [note, count] of commonUnknownNotes) assert.ok(count < 5, `${label}: repeated normalized unknown note is too generic: ${note}`);
 }
+
+function assertIssue172KeyaGateNotCopiedFromPort(portRecord, gateRecord, label) {
+  const portSections = canonicalIssue163Sections(portRecord);
+  const gateSections = canonicalIssue163Sections(gateRecord);
+  const matchingSections = [];
+  let matchingItems = 0;
+  for (const section of ISSUE163_MAJOR_SECTIONS) {
+    const result = similarity(portSections[section], gateSections[section]);
+    matchingItems += result.matches;
+    if (result.matches > 0) matchingSections.push(`${section} ${result.matches}/${result.total}`);
+  }
+  assert.ok(
+    matchingItems < 6,
+    `${label}: normalized sections are too similar between ${portRecord.spotId} and ${gateRecord.spotId}: ${matchingSections.join(", ")}`,
+  );
+}
+
 for (const record of issue163Records) {
   const expected = issue163Expected.get(record.spotId);
   assert.ok(expected, `${record.spotId} must be an Issue #163 target spot`);
@@ -268,7 +285,31 @@ assert.deepEqual(validateRecord(issue172Record), [], "keya-gate must satisfy Sch
 assert.deepEqual(issue172Record.fishSpecies, [], "keya-gate must not add fish species without direct evidence");
 assert.ok(Object.values(issue172Record.attributes).every((attribute) => attribute.status === "unknown"), "keya-gate must leave all fishing attributes unknown");
 assert.ok(Object.values(issue172Record.facilities).every((facility) => facility.status === "unknown"), "keya-gate must not convert park facilities into fishing spot facilities");
+const keyaGateCulturalMonumentsSource = issue172Record.sources.find((source) => source.id === "src-keya-gate-cultural-monuments");
+assert.ok(keyaGateCulturalMonumentsSource, "keya-gate must keep the cultural-monuments source for checked official naming context");
+assert.ok(!keyaGateCulturalMonumentsSource.supports.includes("identity.spotName"), "cultural-monuments source must not support the internal canonical district spotName");
 assert.ok(!JSON.stringify(issue172Record.sources).includes("C09-06_GML.zip"), "keya-gate must not reuse keya-port C09 source");
+assertIssue172KeyaGateNotCopiedFromPort(issue163Records.find((record) => record.spotId === "keya-port"), issue172Record, "Issue #172 keya-port/keya-gate records");
+const replaceKeyaPortSpecificText = (value) => {
+  if (typeof value === "string") return value.replaceAll("keya-port", "keya-gate").replaceAll("芥屋漁港", issue172Record.identity.spotName).replaceAll("漁港", "大門周辺");
+  if (Array.isArray(value)) return value.map(replaceKeyaPortSpecificText);
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, replaceKeyaPortSpecificText(item)]));
+  return value;
+};
+const keyaPortCopiedToGateFixture = replaceKeyaPortSpecificText(structuredClone(issue163Records.find((record) => record.spotId === "keya-port")));
+keyaPortCopiedToGateFixture.spotId = issue172Record.spotId;
+keyaPortCopiedToGateFixture.scopeType = issue172Record.scopeType;
+keyaPortCopiedToGateFixture.identity.spotName = issue172Record.identity.spotName;
+keyaPortCopiedToGateFixture.identity.aliases = issue172Record.identity.aliases;
+keyaPortCopiedToGateFixture.identity.coordinates.latitude = issue172Record.identity.coordinates.latitude;
+keyaPortCopiedToGateFixture.identity.coordinates.longitude = issue172Record.identity.coordinates.longitude;
+keyaPortCopiedToGateFixture.identity.coordinates.coordinateScope = issue172Record.identity.coordinates.coordinateScope;
+keyaPortCopiedToGateFixture.attributes.openSeaExposure.value = "bay";
+assert.throws(
+  () => assertIssue172KeyaGateNotCopiedFromPort(issue163Records.find((record) => record.spotId === "keya-port"), keyaPortCopiedToGateFixture, "Issue #172 keya-port copied negative fixture"),
+  /normalized sections are too similar/,
+  "Issue #172 copy detection must fail a fixture copied from keya-port to keya-gate even when one attribute value changes",
+);
 
 const issue165SpotPaths = [
   "nokita-beach", "kishi-port", "fukuyoshi-port", "hamasaki-beach", "niji-matsubara",
