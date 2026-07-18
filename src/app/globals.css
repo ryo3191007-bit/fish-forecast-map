@@ -1029,6 +1029,79 @@ dd {
     grid-template-columns: 1fr;
   }
 }
+.dashboardModeSwitch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 22px;
+  padding: 8px;
+  border: 1px solid rgba(125, 211, 252, 0.3);
+  border-radius: 24px;
+  background: rgba(2, 8, 23, 0.62);
+  box-shadow:
+    0 18px 48px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.dashboardModeButton {
+  display: grid;
+  gap: 4px;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  padding: 16px clamp(14px, 3vw, 22px);
+  background: rgba(15, 23, 42, 0.66);
+  color: #dffbff;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    color 0.15s ease;
+}
+.dashboardModeButton span {
+  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+}
+.dashboardModeButton small {
+  color: #a7f3d0;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+.dashboardModeButton:hover,
+.dashboardModeButton:focus-visible {
+  border-color: rgba(103, 232, 249, 0.58);
+  background: rgba(14, 116, 144, 0.72);
+  outline: 3px solid rgba(125, 211, 252, 0.35);
+  outline-offset: 2px;
+}
+.dashboardModeButton.active {
+  border-color: rgba(224, 250, 255, 0.9);
+  background: linear-gradient(135deg, #e0faff, #7dd3fc);
+  color: #083344;
+  box-shadow: 0 0 28px rgba(34, 211, 238, 0.34);
+}
+.dashboardModeButton.active small {
+  color: #155e75;
+}
+.spotEvaluationMode {
+  display: grid;
+  gap: 18px;
+}
+@media (max-width: 620px) {
+  .dashboardModeSwitch {
+    gap: 8px;
+    border-radius: 20px;
+  }
+  .dashboardModeButton {
+    padding: 13px 10px;
+    border-radius: 14px;
+  }
+  .dashboardModeButton small {
+    font-size: 0.68rem;
+  }
+}
+
 .reportViewBar {
   display: inline-flex;
   gap: 6px;

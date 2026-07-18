@@ -222,18 +222,43 @@ assert.equal(
 
 assert.match(
   dashboard,
-  /const filteredExternalMemosForMap = useMemo\(\(\) => \{[\s\S]*?externalMemos\.filter/,
-  "map filters from all external memos",
+  /useState<DashboardMode>\("catchReports"\)/,
+  "initial dashboard mode is catch reports",
 );
 assert.match(
   dashboard,
-  /<FishingMap[\s\S]*?reports=\{reports\}[\s\S]*?externalMemos=\{filteredExternalMemosForMap\}/,
-  "map receives the all-acquisition-method memo candidates",
+  /className="dashboardModeSwitch"[\s\S]*?釣果情報[\s\S]*?地点評価/,
+  "large catch report / spot evaluation mode switch exists",
 );
 assert.doesNotMatch(
   dashboard,
-  /<FishingMap[\s\S]*?reports=\{reports\}[\s\S]*?externalMemos=\{filteredManualCatchMemos\}/,
-  "map must not receive manual-only list candidates",
+  /釣果一覧[\s\S]*?地点評価一覧/,
+  "legacy small report / area list switch is removed",
+);
+assert.match(
+  dashboard,
+  /<FishingMap[\s\S]*?reports=\{adjustedMockFishingReports\}[\s\S]*?externalMemos=\{externalMemos\}[\s\S]*?spots=\{fishingSpots\}/,
+  "map receives unfiltered reports, memos, and spots",
+);
+assert.doesNotMatch(
+  dashboard,
+  /filteredExternalMemosForMap|<FishingMap[\s\S]*?reports=\{reports\}/,
+  "map inputs are independent from catch filters",
+);
+assert.match(
+  dashboard,
+  /dashboardMode === "catchReports"[\s\S]*?aria-label="釣果フィルタ"[\s\S]*?ExternalCatchMemoSection[\s\S]*?dashboardMode === "spotEvaluation"|dashboardMode === "catchReports"[\s\S]*?aria-label="釣果フィルタ"[\s\S]*?ExternalCatchMemoSection[\s\S]*?\) : \(/,
+  "catch filters and catch memo CRUD remain inside catch report mode",
+);
+assert.match(
+  dashboard,
+  /const \[spotEvaluationTab\] = useState<SpotEvaluationTab>\("評価"\)/,
+  "spot evaluation internal tab state is owned by FishingDashboard",
+);
+assert.match(
+  dashboard,
+  /selectedTime=\{selectedEnvironmentTime\}[\s\S]*?onSelectedTimeChange=\{setSelectedEnvironmentTime\}/,
+  "EnvironmentPanel selected time is controlled by FishingDashboard",
 );
 
 const memoSection = readFileSync(

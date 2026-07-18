@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import {
   getFishingEnvironmentAvailability,
   getNearestForecastTime,
@@ -20,6 +20,8 @@ type EnvironmentPanelProps = {
   selectedSpotId: string;
   onSelectedSpotIdChange: (spotId: string) => void;
   environment: FishingEnvironment | null;
+  selectedTime: string | null;
+  onSelectedTimeChange: (forecastTime: string | null) => void;
   isLoading: boolean;
   error: string | null;
 };
@@ -30,16 +32,26 @@ export function EnvironmentPanel({
   selectedSpotId,
   onSelectedSpotIdChange,
   environment,
+  selectedTime,
+  onSelectedTimeChange,
   isLoading,
   error,
 }: EnvironmentPanelProps) {
   const targetName = selectedSpot?.name ?? "対象地点なし";
   const rows = useMemo(() => environment?.hourly ?? [], [environment]);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
   useEffect(() => {
-    setSelectedTime(getNearestForecastTime(rows));
-  }, [rows]);
+    if (rows.length === 0) {
+      if (selectedTime !== null) onSelectedTimeChange(null);
+      return;
+    }
+    if (
+      !selectedTime ||
+      !rows.some((row) => row.forecastTime === selectedTime)
+    ) {
+      onSelectedTimeChange(getNearestForecastTime(rows));
+    }
+  }, [onSelectedTimeChange, rows, selectedTime]);
 
   const selectedRow = useMemo(
     () =>
@@ -156,7 +168,7 @@ export function EnvironmentPanel({
                 type="date"
                 value={selectedDate}
                 onChange={(event) =>
-                  setSelectedTime(
+                  onSelectedTimeChange(
                     rows.find((row) =>
                       row.forecastTime.startsWith(event.target.value),
                     )?.forecastTime ?? selectedTime,
@@ -169,7 +181,7 @@ export function EnvironmentPanel({
               <select
                 className="sortSelect"
                 value={selectedRow.forecastTime}
-                onChange={(event) => setSelectedTime(event.target.value)}
+                onChange={(event) => onSelectedTimeChange(event.target.value)}
               >
                 {dayRows.map((row) => (
                   <option key={row.forecastTime} value={row.forecastTime}>
@@ -182,7 +194,7 @@ export function EnvironmentPanel({
               className="environmentNavButton"
               type="button"
               onClick={() =>
-                setSelectedTime(
+                onSelectedTimeChange(
                   rows[selectedIndex - 1]?.forecastTime ?? selectedTime,
                 )
               }
@@ -193,7 +205,7 @@ export function EnvironmentPanel({
             <button
               className="environmentNavButton"
               type="button"
-              onClick={() => setSelectedTime(getNearestForecastTime(rows))}
+              onClick={() => onSelectedTimeChange(getNearestForecastTime(rows))}
             >
               現在時刻へ戻る
             </button>
@@ -201,7 +213,7 @@ export function EnvironmentPanel({
               className="environmentNavButton"
               type="button"
               onClick={() =>
-                setSelectedTime(
+                onSelectedTimeChange(
                   rows[selectedIndex + 1]?.forecastTime ?? selectedTime,
                 )
               }
@@ -304,7 +316,7 @@ export function EnvironmentPanel({
             tideEvents={tideEvents}
             rows={dayRows}
             selectedTime={selectedRow.forecastTime}
-            onSelect={setSelectedTime}
+            onSelect={onSelectedTimeChange}
           />
         </div>
       ) : !isLoading && !error ? (
