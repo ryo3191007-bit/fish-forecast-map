@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const spotIds = [
+  "keya-gate",
   "nokita-beach",
   "kishi-port",
   "fukuyoshi-port",
@@ -50,6 +51,12 @@ for (const spotId of spotIds) {
   assert.equal(record.researchStages.schemaValidation, "passed", `${spotId} schema validation status must record the successful CI result`);
   assert.ok(record.sources.some((source) => source.sourceType === "government"), `${spotId} needs at least one official government source`);
 
+  if (spotId === "keya-gate") {
+    const culturalMonumentsSource = record.sources.find((source) => source.id === "src-keya-gate-cultural-monuments");
+    assert.ok(culturalMonumentsSource, "keya-gate must keep the cultural-monuments source as checked official context");
+    assert.ok(!culturalMonumentsSource.supports.includes("identity.spotName"), "keya-gate cultural-monuments source must not support internal canonical spotName");
+  }
+
   for (const source of record.sources) {
     const url = new URL(source.url);
     assert.equal(url.protocol, "https:", `${spotId}/${source.id} must use HTTPS`);
@@ -92,4 +99,4 @@ for (const spotId of spotIds) {
   assert.deepEqual(record.fishSpecies, [], `${spotId} must not add fish species without dated, spot-specific evidence`);
 }
 
-console.log("Issue #165 source quality checks passed.");
+console.log("Issue #165/#172 source quality checks passed.");
