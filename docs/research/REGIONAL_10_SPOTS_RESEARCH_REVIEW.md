@@ -1,50 +1,61 @@
 # Issue #165 地域別10地点 釣り場属性調査レビュー
 
-## 概要
+最終更新: 2026-07-18 JST
 
-Issue #165では、既存地点マスターに存在する10地点を、Schema v1.1.0の自己完結JSONとして地域別小バッチで追加した。対象はバッチA（糸島西岸3地点）、バッチB（唐津湾・北部4地点）、バッチC（伊万里湾・長崎3地点）である。
+## 結論
 
-本調査は本番地点マスター、DB、UI、SCOREへ反映しない。代表点はレビュー用の概略点であり、実釣位置、入口、駐車位置、防波堤先端、危険箇所を示さない。
+Issue #165の10地点JSONは、初回作成内容にplaceholder URLとsourceの過大な`supports`指定が含まれていたため、全件を`needs_revision`として再監査した。
 
-## 地域別・地点別サマリー
+- 10地点に含まれていた`example.com`の自治体source・二次source計20件を削除した。
+- 地理院地図だけでは直接支えられない自治体、河川影響、外海露出、施設、規制等の断定を撤回した。
+- 座標は公式座標ではなく、レビュー用の`map_measurement / inferred / low`の概略代表点へ変更した。
+- 直接根拠を確認できない属性は`unknown / low / supportingSourceIds: []`へ戻した。
+- 現在は本番地点マスター、Supabase、UI、SCOREへ採用できない。
 
-| バッチ | spotId | 地点名 | scopeType | 代表緯度 | 代表経度 | 本番反映候補 | 主な保留 |
-|---|---|---|---|---:|---:|---|---|
-| A | nokita-beach | 野北海岸 | district | 33.6048 | 130.1552 | hold | district範囲、施設、規制、魚種 |
-| A | kishi-port | 岐志漁港 | facility | 33.5889 | 130.1391 | hold | facility座標の公的feature再照合、施設、規制 |
-| A | fukuyoshi-port | 福吉漁港 | facility | 33.5164 | 130.0969 | hold | facility座標の公的feature再照合、施設、規制 |
-| B | hamasaki-beach | 浜崎海岸 | district | 33.4555 | 130.0427 | hold | 海岸範囲、施設、規制、魚種 |
-| B | niji-matsubara | 虹の松原周辺 | district | 33.4472 | 130.0207 | hold | 周辺範囲、保安林・海岸利用条件 |
-| B | karatsu-west-port | 唐津西港 | facility | 33.4662 | 129.9488 | hold | 港湾管理区域、立入・釣り可否 |
-| B | yobuko-area | 呼子周辺 | district | 33.5437 | 129.8942 | hold | district内の個別施設差、規制 |
-| C | imari-inner-bay | 伊万里湾奥 | district | 33.3044 | 129.8176 | hold | 湾奥範囲、水深・底質、規制 |
-| C | takashima-area | 鷹島周辺 | district | 33.4246 | 129.7555 | hold | 島周辺の個別地点差、管理者確認 |
-| C | tabira-port | 田平港 | facility | 33.3609 | 129.5827 | hold | 港湾・フェリー周辺の管理区域確認 |
+## 地点別状態
 
-## source採否方針
+| バッチ | spotId | 地点名 | scopeType | 暫定spotType | 状態 | 主な追加確認 |
+|---|---|---|---|---|---|---|
+| A | `nokita-beach` | 野北海岸 | district | sandy_beach（inferred） | needs_revision | district範囲、管理者、規制、施設 |
+| A | `kishi-port` | 岐志漁港 | facility | fishing_port（inferred） | needs_revision | 公的漁港feature、管理者、規制、施設 |
+| A | `fukuyoshi-port` | 福吉漁港 | facility | fishing_port（inferred） | needs_revision | 公的漁港feature、管理者、規制、施設 |
+| B | `hamasaki-beach` | 浜崎海岸 | district | sandy_beach（inferred） | needs_revision | 海岸範囲、管理者、規制、施設 |
+| B | `niji-matsubara` | 虹の松原周辺 | district | sandy_beach（inferred） | needs_revision | district範囲、保安林・海岸利用条件 |
+| B | `karatsu-west-port` | 唐津西港 | facility | port（inferred） | needs_revision | 港湾管理区域、立入・釣り可否 |
+| B | `yobuko-area` | 呼子周辺 | district | unknown | needs_revision | district内の個別地点・施設差、規制 |
+| C | `imari-inner-bay` | 伊万里湾奥 | district | unknown | needs_revision | 湾奥範囲、水深・底質、管理者、規制 |
+| C | `takashima-area` | 鷹島周辺 | district | unknown | needs_revision | 島内の個別地点差、危険箇所、管理者 |
+| C | `tabira-port` | 田平港 | facility | port（inferred） | needs_revision | 港湾・フェリー管理区域、立入・釣り可否 |
 
-- 採用: 国土地理院地理院地図、自治体・公的資料に相当する地点別確認source。
-- 限定確認: 民間・二次sourceは不足項目の確認候補に留め、本文・画像・コメント・掲載魚種一覧は保存しない。
-- 不採用: トップページ、検索結果、カテゴリ一覧、地点DBの転載的情報、現行性や管理者独立性が不足する情報。
+## source採否ルール
 
-## scopeと代表点の扱い
+### supportingとして使用できるもの
 
-facilityは漁港・港湾等の施設代表点として扱い、実釣ピンや入口ではない。districtは海岸、湾奥、島・地域周辺の概略代表点として扱い、district全域の立入可否、釣り可否、施設、魚種を一括で断定しない。
+source本文・データ・地図表現が対象Schema pathを直接支える場合だけ、`supports`と`supportingSourceIds`へ登録する。
 
-## 現行地点マスターとの比較方針
+### checkedに限定するもの
 
-`src/data/fishingSpots.ts`の既存値は比較対象のみで、調査根拠として流用していない。最低限の比較項目は latitude / longitude / coordinatePrecision / spotType / shoreAccess / targetSpecies / recommendedMethods / notes とし、Schemaに存在しない値は調査済み属性として扱わない。
+確認はしたものの、対象値を直接支えないsourceは`checkedSourceIds`へ置き、値は推測で確定しない。
 
-## 属性採用候補と保留
+### 使用禁止
 
-- 採用候補: 地点名、都道府県、市区町村、scopeType、代表座標、spotTypeの限定的分類。
-- 注意付き候補: openSeaExposure、riverInfluenceなど地図判読由来の推定値。
-- 保留: parking、toilet、streetLights、waterDepth、seabed、fishSpecies、fishingProhibited、entryProhibited、constructionOrClosure。
+- placeholder、架空、到達不能、内容不一致のURL
+- 検索結果、トップページ、カテゴリ一覧だけのURL
+- publisherや内容を確認していないURL
+- 地図上で見えるという理由だけで、立入可否、釣り可否、駐車場、トイレ、常夜灯、水深、底質、潮流、魚種を確定すること
 
-## コピー検知
+## scopeと代表点
 
-`scripts/fishing-spot-research-schema.test.mjs`で10地点のSchema v1.1.0適合、source参照、座標support、source独立性メタ、researchNotes固有性を検証する。さらにfacility同士、district同士、全10地点の機械コピー検知として、attributes / facilities / restrictions / sourcesを正規化比較し、facility用・district用の1属性変更negative fixtureが失敗することを確認する。
+- `facility`: 港・漁港等の施設全体を示す概略代表点。岸壁先端、入口、駐車位置、実釣ピンではない。
+- `district`: 海岸、湾奥、島・地域周辺を示す概略代表点。district全域の施設・規制・魚種を一括で断定しない。
+- 現在の10地点の座標は、地理院地図上のレビュー用測定点であり、公式座標として扱わない。
 
-## 追加確認が必要な項目
+## 今後の完了条件
 
-各地点で、現地掲示または管理者への確認により、立入可否、釣り可否、駐車場、トイレ、常夜灯、工事・閉鎖、水深・底質、魚種の観測根拠を追加確認する必要がある。
+1. 各地点に対して実在する公式・公的sourceを調査する。
+2. URL、publisher、sourceType、sourceGroup、内容を一件ずつ確認する。
+3. sourceが直接支えるSchema pathだけを`supports`へ登録する。
+4. `value / status / confidence / evidence / note`を一致させる。
+5. 管理者・自治体等の現行情報がない施設・規制項目はunknownを維持する。
+6. Schema検証、copy検知、lint、typecheck、test、build、GitHub Actionsを再実行する。
+7. 人間レビュー完了後も、利用者判断なしにDraft解除・マージ・本番反映を行わない。
