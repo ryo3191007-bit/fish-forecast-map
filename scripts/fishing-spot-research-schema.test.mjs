@@ -378,9 +378,9 @@ assert.throws(() => assertIssue165NotMechanicalCopy(issue165DistrictFixture, "Is
 
 const issue175SpotPaths = ["fukushima-area", "hirado-seto", "ikitsuki-area"].map((spotId) => path.join(ROOT, `data/research/fishing-spots/${spotId}.json`));
 const issue175Expected = new Map([
-  ["fukushima-area", { spotName: "福島周辺", municipality: "松浦市" }],
-  ["hirado-seto", { spotName: "平戸瀬戸周辺", municipality: "平戸市" }],
-  ["ikitsuki-area", { spotName: "生月島方面", municipality: "平戸市" }],
+  ["fukushima-area", { spotName: "福島周辺", municipality: "松浦市", coordinateText: "33.332, 129.773", reviewPath: "docs/research/FUKUSHIMA_AREA_RESEARCH_REVIEW.md" }],
+  ["hirado-seto", { spotName: "平戸瀬戸周辺", municipality: "平戸市", coordinateText: "33.354, 129.579", reviewPath: "docs/research/HIRADO_SETO_RESEARCH_REVIEW.md" }],
+  ["ikitsuki-area", { spotName: "生月島方面", municipality: "平戸市", coordinateText: "33.390, 129.564", reviewPath: "docs/research/IKITSUKI_AREA_RESEARCH_REVIEW.md" }],
 ]);
 const issue175Records = issue175SpotPaths.map(readJson);
 for (const record of issue175Records) {
@@ -396,6 +396,12 @@ for (const record of issue175Records) {
   assert.ok(Object.values(record.attributes).every((attribute) => attribute.status === "unknown" && attribute.confidence === "low" && attribute.evidenceSources.supportingSourceIds.length === 0), `${record.spotId} must keep fishing attributes unknown/low without support`);
   assert.ok(Object.values(record.facilities).every((facility) => facility.status === "unknown" && facility.evidenceSources.supportingSourceIds.length === 0), `${record.spotId} must not infer district facilities`);
   assert.ok(record.identity.coordinates.note.includes("実釣ピン") && record.identity.coordinates.note.includes("危険箇所"), `${record.spotId} coordinate note must reject fishing and danger pins`);
+  assert.ok(record.identity.coordinates.note.includes("独立再計測") && record.identity.coordinates.note.includes("偶然同値"), `${record.spotId} coordinate note must document independent remeasurement and same-value confirmation`);
+  assert.ok(record.researchNotes.includes("本番地点マスター採用判断はhold"), `${record.spotId} research notes must separate repository storage from production adoption`);
+  const review = fs.readFileSync(path.join(ROOT, expected.reviewPath), "utf8");
+  assert.ok(review.includes("本番採用判断: `hold`"), `${record.spotId} review must mark production adoption as hold`);
+  assert.ok(review.includes("### 独立再計測証跡") && review.includes(expected.coordinateText), `${record.spotId} review must document independent coordinate remeasurement`);
+  assert.ok(review.includes("偶然同じ丸め値") && review.includes("現行地点マスター座標"), `${record.spotId} review must compare remeasurement with current master coordinates`);
 }
 assertIssue165NotMechanicalCopy([...issue175Records, issue172Record, ...issue165Records.filter((record) => ["imari-inner-bay", "takashima-area", "yobuko-area"].includes(record.spotId))], "Issue #175 district records");
 const issue175CopiedDistrictFixture = issue175Records.map((record, index) => {
