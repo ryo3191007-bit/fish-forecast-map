@@ -103,7 +103,7 @@ create index if not exists fishing_spot_detail_values_origin_status_idx on publi
 create index if not exists fishing_spot_detail_sources_type_checked_idx on public.fishing_spot_detail_sources (source_type, checked_on desc);
 
 create policy "Public read fishing spot detail item definitions" on public.fishing_spot_detail_item_definitions for select to anon, authenticated using (is_active = true);
-create policy "Public read adopted curated fishing spot detail values" on public.fishing_spot_detail_values for select to anon, authenticated using (adoption_status = 'adopted' and moderation_status in ('not_required', 'approved') and contribution_origin = 'curated_research');
+create policy "Public read adopted curated fishing spot detail values" on public.fishing_spot_detail_values for select to anon, authenticated using (adoption_status = 'adopted' and review_status = 'reviewed' and moderation_status in ('not_required', 'approved') and contribution_origin = 'curated_research');
 create policy "Public read sources for adopted curated values" on public.fishing_spot_detail_sources for select to anon, authenticated using (
     exists (
         select 1
@@ -111,6 +111,7 @@ create policy "Public read sources for adopted curated values" on public.fishing
         join public.fishing_spot_detail_values val on val.id = vsrc.detail_value_id
         where vsrc.source_id = fishing_spot_detail_sources.id
           and val.adoption_status = 'adopted'
+          and val.review_status = 'reviewed'
           and val.moderation_status in ('not_required', 'approved')
           and val.contribution_origin = 'curated_research'
     )
@@ -121,6 +122,7 @@ create policy "Public read source links for adopted curated values" on public.fi
         from public.fishing_spot_detail_values val
         where val.id = fishing_spot_detail_value_sources.detail_value_id
           and val.adoption_status = 'adopted'
+          and val.review_status = 'reviewed'
           and val.moderation_status in ('not_required', 'approved')
           and val.contribution_origin = 'curated_research'
     )

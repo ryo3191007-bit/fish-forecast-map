@@ -32,7 +32,7 @@ export function mapSpotDetailItemDefinitionRow(row: SpotDetailItemDefinitionRow)
   return { itemKey: row.item_key, category, valueKind, labelJa: row.label_ja, description: row.description ?? undefined, displayOrder: row.display_order ?? 0 };
 }
 
-export function mapSpotDetailValueRow(row: SpotDetailValueRow): SpotDetailValue | null {
+export function mapSpotDetailValueRow(row: SpotDetailValueRow, itemDefinition?: SpotDetailItemDefinition): SpotDetailValue | null {
   const informationState = enumOrNull(row.information_state, informationStates);
   const contributionOrigin = enumOrNull(row.contribution_origin ?? "curated_research", origins);
   const moderationStatus = enumOrNull(row.moderation_status, moderationStatuses);
@@ -52,6 +52,16 @@ export function mapSpotDetailValueRow(row: SpotDetailValueRow): SpotDetailValue 
   const hasConcreteInformation = informationState === "has_evidence" || informationState === "weak_evidence";
   if (hasConcreteInformation && (concreteValueCount !== 1 || confidence === null)) return null;
   if (!hasConcreteInformation && (concreteValueCount !== 0 || row.confidence !== null && row.confidence !== undefined)) return null;
+  if (itemDefinition && !valueMatchesKind(itemDefinition.valueKind, { valueText, valueTextList, valueNumber, valueBoolean, valueJson })) return null;
+
+  const sources = (row.fishing_spot_detail_value_sources ?? []).flatMap((join) => {
+    const source = Array.isArray(join.fishing_spot_detail_sources) ? join.fishing_spot_detail_sources[0] : join.fishing_spot_detail_sources;
+    const relation = enumOrNull(join.relation, relations);
+    const sourceType = enumOrNull(source?.source_type, sourceTypes);
+    if (!source || !relation || !sourceType) return [];
+    return [{ relation, note: join.note ?? null, source: { id: source.id, sourceType, sourceName: source.source_name, sourceUrl: source.source_url ?? null, checkedOn: source.checked_on ?? null, note: source.note ?? null } }];
+  });
+  if (hasConcreteInformation && !sources.some((source) => source.relation === "supporting")) return null;
 
   return {
     id: row.id,
@@ -73,19 +83,32 @@ export function mapSpotDetailValueRow(row: SpotDetailValueRow): SpotDetailValue 
     adoptionStatus,
     note: row.note ?? null,
     checkedAt: row.checked_at ?? null,
-    sources: (row.fishing_spot_detail_value_sources ?? []).flatMap((join) => {
-      const source = Array.isArray(join.fishing_spot_detail_sources) ? join.fishing_spot_detail_sources[0] : join.fishing_spot_detail_sources;
-      const relation = enumOrNull(join.relation, relations);
-      const sourceType = enumOrNull(source?.source_type, sourceTypes);
-      if (!source || !relation || !sourceType) return [];
-      return [{ relation, note: join.note ?? null, source: { id: source.id, sourceType, sourceName: source.source_name, sourceUrl: source.source_url ?? null, checkedOn: source.checked_on ?? null, note: source.note ?? null } }];
-    }),
+    sources,
   };
 }
 
+function valueMatchesKind(valueKind: SpotDetailValueKind, value: { valueText: string | null; valueTextList: string[]; valueNumber: number | null; valueBoolean: boolean | null; valueJson: unknown | null }): boolean {
+  switch (valueKind) {
+    case "text":
+    case "status":
+    case "enum":
+      return value.valueText !== null;
+    case "text_list":
+      return value.valueTextList.length > 0;
+    case "number":
+      return value.valueNumber !== null;
+    case "boolean":
+      return value.valueBoolean !== null;
+    case "json":
+      return value.valueJson !== null;
+  }
+}
+
 export function mapFishingSpotDetailRows(itemRows: SpotDetailItemDefinitionRow[], valueRows: SpotDetailValueRow[]): FishingSpotDetailSet {
+  const itemDefinitions = itemRows.map(mapSpotDetailItemDefinitionRow).filter((row): row is SpotDetailItemDefinition => row !== null);
+  const definitionsByKey = new Map(itemDefinitions.map((definition) => [definition.itemKey, definition]));
   return {
-    itemDefinitions: itemRows.map(mapSpotDetailItemDefinitionRow).filter((row): row is SpotDetailItemDefinition => row !== null),
-    values: valueRows.map(mapSpotDetailValueRow).filter((row): row is SpotDetailValue => row !== null),
+    itemDefinitions,
+    values: valueRows.map((row) => mapSpotDetailValueRow(row, definitionsByKey.get(row.item_key))).filter((row): row is SpotDetailValue => row !== null),
   };
 }

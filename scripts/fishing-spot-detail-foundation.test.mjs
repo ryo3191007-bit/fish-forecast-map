@@ -41,6 +41,7 @@ assert(mapper.includes('note: row.note ?? null'), 'mapper must preserve notes wi
 
 assert(!migration.includes('using (true)'), 'source and join-table public RLS must not use using (true)');
 assert(migration.includes("contribution_origin = 'curated_research'"), 'public values must be limited to curated research');
+assert(migration.includes("review_status = 'reviewed'"), 'public values and related sources must be review-gated');
 assert(!migration.includes('grant select on table public.fishing_spot_detail_values to anon'), 'anon must not receive table-wide select on detail values');
 assert(!/grant select \([^)]*contribution_origin[^)]*\) on table public\.fishing_spot_detail_values to anon/.test(migration), 'anon column grants must not expose contribution_origin');
 assert(!/grant select \([^)]*contributor_id[^)]*\) on table public\.fishing_spot_detail_values to anon/.test(migration), 'anon column grants must not expose contributor_id');
@@ -49,5 +50,7 @@ assert(migration.includes('fishing_spot_detail_values_number_is_valid_check'), '
 assert(mapper.includes('concreteValueCount !== 1'), 'mapper must reject missing or multiple concrete value columns for information rows');
 assert(mapper.includes('!Number.isFinite'), 'mapper must reject invalid numeric values');
 assert(mapper.includes('valueTextList === null'), 'mapper must reject non-string array values');
+assert(mapper.includes('valueMatchesKind'), 'mapper must validate each row value column against its item definition value_kind');
+assert(mapper.includes('source.relation === "supporting"'), 'mapper must require supporting sources for concrete evidence rows');
 
 console.log('Fishing spot detail foundation checks passed.');
