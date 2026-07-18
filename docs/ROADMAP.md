@@ -103,9 +103,9 @@
 
 完了。通常地図をMapLibreデモスタイルから国土地理院の淡色地図へ変更し、細かな海岸線、離島、道路、地名の視認性を改善しました。航空写真、水深/3D地形、地点マーカー、初期中心、初期ズーム、自動フィットは維持しています。CI、Vercel Preview、利用者による実ブラウザ目視確認が完了しています。Issue #155 / PR #156、merge commit `9ac11d97d57632807a4d59fa385a364d13c90183`。
 
-### Post-MVP-065: 調査済み17地点の安全な最小本番値反映
+### Post-MVP-065: 調査済み17地点の安全な最小本番値反映準備
 
-完了。唐津東港を除く調査済み17地点について、新規追加・削除を行わず、静的fallback、seed、migration、production curationを同期しました。未確認の `shoreAccess` は `不明`、魚種・釣法は空配列とし、糸島西岸3漁港のみC09公的facility代表座標、Issue #165の10地点は既存座標を暫定保持、4つの広域districtは安全な概略代表点として扱います。remote Supabaseへの直接適用は行わず、migration merge後の適用確認対象です。Issue #178。
+リポジトリ上の反映準備中。唐津東港を除く調査済み17地点について、新規追加・削除を行わず、静的fallback、seed、migration、production curationを同期するPRを用意しています。未確認の `shoreAccess` は `不明`、魚種・釣法は空配列とし、糸島西岸3漁港のみC09公的facility代表座標、Issue #165の10地点は既存座標を暫定保持、4つの広域districtは安全な概略代表点として扱います。remote Supabaseへの直接適用は未実施で、migration merge後の適用確認が別途必要です。Issue #178。
 
 ---
 
@@ -117,7 +117,7 @@
 
 ### 2. 調査済み地点の本番適用確認と追加調査方針
 
-Issue #178の17地点は安全な最小値へ反映済みですが、remote Supabaseへの適用確認、プレビュー目視、未確定代表座標の追加確認は後続Issueで扱います。新規調査では `district / facility / access_point` の単位を明示し、魚種・釣法は直接根拠がある場合だけ採用します。
+Issue #178の17地点はリポジトリ上の安全な最小値反映準備段階であり、remote Supabaseへの適用確認、プレビュー目視、未確定代表座標の追加確認は後続Issueで扱います。新規調査では `district / facility / access_point` の単位を明示し、魚種・釣法は直接根拠がある場合だけ採用します。
 
 ### 4. 魚種生態マスター
 
