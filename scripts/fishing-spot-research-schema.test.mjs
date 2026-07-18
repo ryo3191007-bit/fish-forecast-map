@@ -255,6 +255,71 @@ assert.throws(
 const notes = issue163Records.map((record) => record.researchNotes);
 assert.equal(new Set(notes).size, issue163Records.length, "Issue #163 research notes must not be mechanically copied");
 
+
+const issue165SpotPaths = [
+  "nokita-beach", "kishi-port", "fukuyoshi-port", "hamasaki-beach", "niji-matsubara",
+  "karatsu-west-port", "yobuko-area", "imari-inner-bay", "takashima-area", "tabira-port",
+].map((spotId) => path.join(ROOT, `data/research/fishing-spots/${spotId}.json`));
+const issue165Expected = new Map([
+  ["nokita-beach", { spotName: "野北海岸", prefecture: "福岡県", municipality: "糸島市", scopeType: "district" }],
+  ["kishi-port", { spotName: "岐志漁港", prefecture: "福岡県", municipality: "糸島市", scopeType: "facility" }],
+  ["fukuyoshi-port", { spotName: "福吉漁港", prefecture: "福岡県", municipality: "糸島市", scopeType: "facility" }],
+  ["hamasaki-beach", { spotName: "浜崎海岸", prefecture: "佐賀県", municipality: "唐津市", scopeType: "district" }],
+  ["niji-matsubara", { spotName: "虹の松原周辺", prefecture: "佐賀県", municipality: "唐津市", scopeType: "district" }],
+  ["karatsu-west-port", { spotName: "唐津西港", prefecture: "佐賀県", municipality: "唐津市", scopeType: "facility" }],
+  ["yobuko-area", { spotName: "呼子周辺", prefecture: "佐賀県", municipality: "唐津市", scopeType: "district" }],
+  ["imari-inner-bay", { spotName: "伊万里湾奥", prefecture: "佐賀県", municipality: "伊万里市", scopeType: "district" }],
+  ["takashima-area", { spotName: "鷹島周辺", prefecture: "長崎県", municipality: "松浦市", scopeType: "district" }],
+  ["tabira-port", { spotName: "田平港", prefecture: "長崎県", municipality: "平戸市", scopeType: "facility" }],
+]);
+function normalizeIssue165Value(value) {
+  if (typeof value === "string") return value.replace(/[0-9]{4}-[0-9]{2}-[0-9]{2}(?:T[0-9:.]+Z)?/g, "<date>").replace(/[0-9]+\.[0-9]+/g, "<number>").replace(/src-[a-z]+-/g, "src-<prefix>-");
+  if (typeof value === "number") return "<number>";
+  if (Array.isArray(value)) return value.map(normalizeIssue165Value);
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => [key, normalizeIssue165Value(item)]));
+  return value;
+}
+function issue165SectionSignature(record, section) { return JSON.stringify(normalizeIssue165Value(record[section])); }
+function assertIssue165NotMechanicalCopy(records, label) {
+  for (let left = 0; left < records.length; left += 1) for (let right = left + 1; right < records.length; right += 1) {
+    const sameSections = ["attributes", "facilities", "restrictions", "sources"].filter((section) => issue165SectionSignature(records[left], section) === issue165SectionSignature(records[right], section));
+    assert.ok(sameSections.length < 3, `${label}: ${records[left].spotId} and ${records[right].spotId} share too many normalized sections: ${sameSections.join(", ")}`);
+  }
+}
+const issue165Records = issue165SpotPaths.map(readJson);
+for (const record of issue165Records) {
+  const expected = issue165Expected.get(record.spotId);
+  assert.ok(expected, `${record.spotId} must be an Issue #165 target spot`);
+  assert.equal(record.schemaVersion, "1.1.0");
+  assert.equal(record.identity.spotName, expected.spotName);
+  assert.equal(record.identity.prefecture, expected.prefecture);
+  assert.equal(record.identity.municipality, expected.municipality);
+  assert.equal(record.scopeType, expected.scopeType);
+  assert.deepEqual(validateRecord(record), [], `${record.spotId} must satisfy Schema v1.1.0 and source references`);
+  assert.ok(record.sources.every((source) => source.sourceGroup && source.independenceStatus), `${record.spotId} sources must include independence metadata`);
+  assert.ok(record.identity.coordinates.evidenceSources.supportingSourceIds.length > 0, `${record.spotId} coordinates need supporting sources`);
+  assert.ok(record.researchNotes.includes(record.identity.spotName), `${record.spotId} research notes must be spot-specific`);
+  assert.ok(Object.values(record.facilities).every((facility) => facility.status === "unknown"), `${record.spotId} must not infer facilities from spot type`);
+}
+assert.equal(new Set(issue165Records.map((record) => record.researchNotes)).size, issue165Records.length, "Issue #165 research notes must be unique");
+assertIssue165NotMechanicalCopy(issue165Records, "Issue #165 records");
+const issue165FacilityFixture = issue165Records.filter((record) => record.scopeType === "facility").map((record, index, records) => {
+  const copy = structuredClone(records[0]);
+  copy.spotId = record.spotId; copy.identity.spotName = record.identity.spotName; copy.identity.municipality = record.identity.municipality;
+  copy.identity.coordinates.latitude = record.identity.coordinates.latitude; copy.identity.coordinates.longitude = record.identity.coordinates.longitude;
+  if (index === 1) copy.attributes.openSeaExposure.value = "bay";
+  return copy;
+});
+const issue165DistrictFixture = issue165Records.filter((record) => record.scopeType === "district").map((record, index, records) => {
+  const copy = structuredClone(records[0]);
+  copy.spotId = record.spotId; copy.identity.spotName = record.identity.spotName; copy.identity.municipality = record.identity.municipality;
+  copy.identity.coordinates.latitude = record.identity.coordinates.latitude; copy.identity.coordinates.longitude = record.identity.coordinates.longitude;
+  if (index === 1) copy.attributes.openSeaExposure.value = "bay";
+  return copy;
+});
+assert.throws(() => assertIssue165NotMechanicalCopy(issue165FacilityFixture, "Issue #165 facility negative fixture"), /share too many normalized sections/, "facility copy fixture must fail");
+assert.throws(() => assertIssue165NotMechanicalCopy(issue165DistrictFixture, "Issue #165 district negative fixture"), /share too many normalized sections/, "district copy fixture must fail");
+
 assert.deepEqual(validateRecord(readJson(claudePath)), [], "Claude raw JSON must remain valid against Schema v1.0.0");
 assert.ok(validateRecord(readJson(geminiPath)).length > 0, "Gemini raw JSON must remain intentionally non-compliant");
 
