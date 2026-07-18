@@ -5,6 +5,9 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const spotIds = [
+  "fukushima-area",
+  "hirado-seto",
+  "ikitsuki-area",
   "keya-gate",
   "nokita-beach",
   "kishi-port",
@@ -50,6 +53,12 @@ for (const spotId of spotIds) {
   assert.equal(record.researchStages.secondaryResearch, "incomplete", `${spotId} secondary research must remain incomplete`);
   assert.equal(record.researchStages.schemaValidation, "passed", `${spotId} schema validation status must record the successful CI result`);
   assert.ok(record.sources.some((source) => source.sourceType === "government"), `${spotId} needs at least one official government source`);
+
+  if (["fukushima-area", "hirado-seto", "ikitsuki-area"].includes(spotId)) {
+    for (const source of record.sources) {
+      assert.ok(!source.supports.includes("identity.spotName"), `${spotId}/${source.id} must not support internal canonical spotName unless the source directly states it`);
+    }
+  }
 
   if (spotId === "keya-gate") {
     const culturalMonumentsSource = record.sources.find((source) => source.id === "src-keya-gate-cultural-monuments");
