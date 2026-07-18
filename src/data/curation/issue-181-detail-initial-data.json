@@ -109,10 +109,10 @@
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-17",
           "sources": {
-            "supporting": [
+            "supporting": [],
+            "checked": [
               "nokita-port-src-nokita-ksj-fishing-port"
             ],
-            "checked": [],
             "contradicting": []
           }
         },
@@ -429,11 +429,10 @@
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
-            "supporting": [
-              "nokita-beach-src-nokita-itoshima-sakurano"
-            ],
+            "supporting": [],
             "checked": [
-              "nokita-beach-src-nokita-gsi-map"
+              "nokita-beach-src-nokita-gsi-map",
+              "nokita-beach-src-nokita-itoshima-sakurano"
             ],
             "contradicting": []
           }
@@ -768,11 +767,10 @@
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-17",
           "sources": {
-            "supporting": [
-              "keya-port-src-keya-ksj-fishing-port"
-            ],
+            "supporting": [],
             "checked": [
-              "keya-port-src-keya-fukuoka-plan"
+              "keya-port-src-keya-fukuoka-plan",
+              "keya-port-src-keya-ksj-fishing-port"
             ],
             "contradicting": []
           }
@@ -1462,10 +1460,10 @@
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-17",
           "sources": {
-            "supporting": [
+            "supporting": [],
+            "checked": [
               "funakoshi-port-src-funakoshi-ksj-fishing-port"
             ],
-            "checked": [],
             "contradicting": []
           }
         },
@@ -1790,11 +1788,10 @@
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
-            "supporting": [
-              "kishi-port-src-kishi-fukuoka-port-list"
-            ],
+            "supporting": [],
             "checked": [
-              "kishi-port-src-kishi-gsi-map"
+              "kishi-port-src-kishi-gsi-map",
+              "kishi-port-src-kishi-fukuoka-port-list"
             ],
             "contradicting": []
           }
@@ -2123,11 +2120,10 @@
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
-            "supporting": [
-              "fukuyoshi-port-src-fukuyoshi-fukuoka-port-list"
-            ],
+            "supporting": [],
             "checked": [
-              "fukuyoshi-port-src-fukuyoshi-gsi-map"
+              "fukuyoshi-port-src-fukuyoshi-gsi-map",
+              "fukuyoshi-port-src-fukuyoshi-fukuoka-port-list"
             ],
             "contradicting": []
           }
@@ -2458,12 +2454,11 @@
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
-            "supporting": [
-              "hamasaki-beach-src-hamasaki-saga-coast"
-            ],
+            "supporting": [],
             "checked": [
               "hamasaki-beach-src-hamasaki-gsi-map",
-              "hamasaki-beach-src-hamasaki-karatsu-beach-ops"
+              "hamasaki-beach-src-hamasaki-karatsu-beach-ops",
+              "hamasaki-beach-src-hamasaki-saga-coast"
             ],
             "contradicting": []
           }
@@ -3129,7 +3124,9 @@
           "note": null,
           "checkedAt": "2026-07-12",
           "sources": {
-            "supporting": [],
+            "supporting": [
+              "karatsu-east-port-src-uosoku-karatsu-east-port"
+            ],
             "checked": [],
             "contradicting": []
           }
@@ -3262,7 +3259,10 @@
           "note": "民間釣り情報が『釣り禁止の部分あり』と明記する。ただし禁止範囲・根拠・現行性を公式確認できていないため、現地表示と管理者情報を必ず優先する。",
           "checkedAt": "2026-07-12",
           "sources": {
-            "supporting": [],
+            "supporting": [
+              "karatsu-east-port-src-uosoku-karatsu-east-port",
+              "karatsu-east-port-src-kyusyu-ins-karatsu-east-port"
+            ],
             "checked": [],
             "contradicting": []
           }
@@ -3303,7 +3303,9 @@
           "note": "民間釣り情報1件が砂地・砂泥地中心とする。公的な底質資料では未確認のため低確度の推定。",
           "checkedAt": "2026-07-12",
           "sources": {
-            "supporting": [],
+            "supporting": [
+              "karatsu-east-port-src-uosoku-karatsu-east-port"
+            ],
             "checked": [],
             "contradicting": []
           }
@@ -3324,7 +3326,10 @@
           "note": "唐津港の東港地区として唐津湾側の港湾区域内に位置することから湾内と推定。風波や安全性の評価ではない。",
           "checkedAt": "2026-07-12",
           "sources": {
-            "supporting": [],
+            "supporting": [
+              "karatsu-east-port-src-gsi-karatsu-east-port",
+              "karatsu-east-port-src-saga-port-plan"
+            ],
             "checked": [],
             "contradicting": []
           }
@@ -3366,7 +3371,11 @@
           "note": "佐賀県の港湾施設資料で東港地区の岸壁、防波堤、護岸を確認。地区全体の構成であり、各施設への一般立入可否は別途確認が必要。",
           "checkedAt": "2026-07-12",
           "sources": {
-            "supporting": [],
+            "supporting": [
+              "karatsu-east-port-src-saga-port-facilities",
+              "karatsu-east-port-src-saga-port-plan",
+              "karatsu-east-port-src-gsi-karatsu-east-port"
+            ],
             "checked": [],
             "contradicting": []
           }
@@ -3388,7 +3397,10 @@
           "note": "確認済み要素を保持し、不明要素はnoteへ分離: tidal_flow:unknown",
           "checkedAt": "2026-07-18",
           "sources": {
-            "supporting": [],
+            "supporting": [
+              "karatsu-east-port-src-gsi-karatsu-east-port",
+              "karatsu-east-port-src-saga-port-plan"
+            ],
             "checked": [],
             "contradicting": []
           }
@@ -3470,11 +3482,10 @@
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
-            "supporting": [
-              "karatsu-west-port-src-karatsu-jtsb-west-port"
-            ],
+            "supporting": [],
             "checked": [
-              "karatsu-west-port-src-karatsu-gsi-map"
+              "karatsu-west-port-src-karatsu-gsi-map",
+              "karatsu-west-port-src-karatsu-jtsb-west-port"
             ],
             "contradicting": []
           }
@@ -5164,13 +5175,12 @@
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
-            "supporting": [
-              "tabira-port-src-tabira-mlit-hirado-route",
-              "tabira-port-src-tabira-nagasaki-port-plan"
-            ],
+            "supporting": [],
             "checked": [
               "tabira-port-src-tabira-gsi-map",
-              "tabira-port-src-tabira-nagasaki-market"
+              "tabira-port-src-tabira-nagasaki-market",
+              "tabira-port-src-tabira-mlit-hirado-route",
+              "tabira-port-src-tabira-nagasaki-port-plan"
             ],
             "contradicting": []
           }
