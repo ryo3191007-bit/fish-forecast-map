@@ -294,3 +294,48 @@ Post-MVP-019時点でも、以下は未実施です。
 - ローカル差分確認: `npm run check:master-seed`。
 
 `003_master_data_seed.sql` は `insert ... on conflict ... do update` で再実行しやすい形にし、既存静的データのID/件数とズレがないかをDB接続なしで確認できます。この段階ではSupabase SQL Editorでの実行、実DBへのseed投入、アプリ画面からのSupabase参照はまだ行いません。
+
+## Issue #180: 地点詳細・根拠・信憑性管理の追加設計
+
+### 目的と範囲
+
+Issue #180では、既存の `fishing_spots` 共有マスターを破壊せず、地点詳細を項目単位でSupabaseに保持するためのexpand migrationを追加します。17地点の初期データ投入、地点評価UIの再構成、ユーザー投稿UI/API、SCORE v2、本番DBへの手動反映は対象外です。
+
+### テーブル構成
+
+| テーブル | 責務 |
+| --- | --- |
+| `fishing_spot_detail_item_definitions` | `target_species`、`toilet`、`depth`などの項目定義。項目名を専用列へ固定せず、後続UIが項目定義を参照できる汎用構造にします。 |
+| `fishing_spot_detail_values` | 地点にひもづく項目値、情報状態、信憑性、由来、レビュー状態、採否を保持します。 |
+| `fishing_spot_detail_sources` | source種別、名称、URL、確認日、noteを保持します。 |
+| `fishing_spot_detail_value_sources` | 項目値とsourceの関連を `supporting` / `checked` / `contradicting` で保持します。 |
+
+項目定義の初期レコードは項目名だけを投入し、17地点の値データは投入しません。最低限、対象魚種、推奨釣法、足場、トイレ、常夜灯・照明、駐車場、アクセス情報、禁止・閉鎖等の状態、水深、底質、海底・沿岸地形、テトラ・根・障害物、堤防・磯・サーフ等の特徴、潮通し・河川影響・外海影響を表現できます。
+
+### 情報状態と信憑性の区別
+
+`fishing_spot_detail_values.information_state` は次を保持します。
+
+- `has_evidence`: 情報があり根拠も保持している。
+- `weak_evidence`: 情報はあるが根拠が弱い。UIでは `信憑性：低` の候補になる。
+- `researched_unknown`: 調査したが判断できない。UIでは `情報なし` の候補になり、信憑性ラベルは付けない。
+- `unresearched`: 未調査。UIでは `情報なし` の候補になり、信憑性ラベルは付けない。
+- `rejected`: 採用しない情報。
+
+`confidence` は `high` / `medium` / `low` / `null` です。`researched_unknown` と `unresearched` では `confidence is null` をDB制約で要求し、`情報なし` と `信憑性：低` をデータ上で明確に分離します。アプリ側mapperも `unknown` や `null` を具体値へ推測変換せず、未知のenum値は行ごと除外します。
+
+### curated/research と user contribution
+
+`contribution_origin` は `curated_research` / `user_contribution` を保持します。将来の投稿機能に備え、`contributor_id`、`submitted_at`、`moderation_status`、`review_status`、`adoption_status` を同じ値テーブルに用意します。`user_contribution` では `submitted_at is not null` を制約で要求します。今回のPRでは投稿UI/APIやanon write権限は追加しません。
+
+### RLS・権限
+
+追加4テーブルはすべてRLSを有効化します。読み取りは既存共有マスター方針に合わせ、`anon` と `authenticated` に `select` のみをgrantします。`insert` / `update` / `delete` / `all privileges` は付与しません。値テーブルの公開select policyは `adoption_status = 'adopted'` かつ `moderation_status in ('not_required', 'approved')` に限定します。
+
+### fallbackとアプリ側利用
+
+`src/lib/fishingSpotDetailRepository.ts` はSupabase未設定・取得失敗時に空の静的fallbackを返します。既存の `fishing_spots` 静的マスターには変更を加えないため、地点一覧・地図・既存スコア表示は壊しません。source noteや値noteは型・mapperでは保持しますが、今回UIへ自動表示しません。
+
+### 復旧方針
+
+このmigrationはforward-onlyのexpand変更で、既存テーブルの削除・列削除・大量更新・RLS無効化を行いません。問題発生時はアプリ側が静的fallbackで動作継続できます。DB適用後に戻す必要がある場合は、次のforward migrationで追加テーブルのRLS policy / grantを閉じて参照を停止し、必要に応じてバックアップ取得後に追加テーブルを削除する復旧migrationをユーザー承認のうえ作成します。
