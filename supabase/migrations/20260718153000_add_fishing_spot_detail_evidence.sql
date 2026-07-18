@@ -153,7 +153,7 @@ create policy "Public read source links for adopted curated values" on public.fi
 );
 
 grant select on table public.fishing_spot_detail_item_definitions to anon, authenticated;
-grant select (id, spot_id, item_key, information_state, value_text, value_text_list, value_number, value_boolean, value_json, unit, confidence, submitted_at, moderation_status, review_status, adoption_status, note, checked_at, created_at, updated_at) on table public.fishing_spot_detail_values to anon, authenticated;
+grant select (id, spot_id, item_key, information_state, value_text, value_text_list, value_number, value_boolean, value_json, unit, confidence, contribution_origin, submitted_at, moderation_status, review_status, adoption_status, note, checked_at, created_at, updated_at) on table public.fishing_spot_detail_values to anon, authenticated;
 grant select on table public.fishing_spot_detail_sources to anon, authenticated;
 grant select on table public.fishing_spot_detail_value_sources to anon, authenticated;
 

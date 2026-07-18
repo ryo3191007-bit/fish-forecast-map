@@ -35,7 +35,7 @@ export function mapSpotDetailItemDefinitionRow(row: SpotDetailItemDefinitionRow)
 export function mapSpotDetailValueRow(row: SpotDetailValueRow, itemDefinition?: SpotDetailItemDefinition): SpotDetailValue | null {
   if (!itemDefinition) return null;
   const informationState = enumOrNull(row.information_state, informationStates);
-  const contributionOrigin = enumOrNull(row.contribution_origin ?? "curated_research", origins);
+  const contributionOrigin = enumOrNull(row.contribution_origin, origins);
   const moderationStatus = enumOrNull(row.moderation_status, moderationStatuses);
   const reviewStatus = enumOrNull(row.review_status, reviewStatuses);
   const adoptionStatus = enumOrNull(row.adoption_status, adoptionStatuses);

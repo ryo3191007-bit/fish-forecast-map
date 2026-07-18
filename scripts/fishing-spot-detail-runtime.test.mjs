@@ -21,6 +21,30 @@ function loadTsModule(relativePath) {
   return compiledModule.exports;
 }
 
+
+function createSupabaseClientWithError(errorTable) {
+  return {
+    from(table) {
+      return {
+        select() {
+          const result = table === errorTable ? { data: null, error: { message: `${table} failed` } } : { data: [], error: null };
+          return {
+            order() {
+              return Promise.resolve(result);
+            },
+            eq() {
+              return Promise.resolve(result);
+            },
+            then(resolve, reject) {
+              return Promise.resolve(result).then(resolve, reject);
+            },
+          };
+        },
+      };
+    },
+  };
+}
+
 function assert(condition, message) {
   if (!condition) {
     console.error(message);
@@ -45,13 +69,19 @@ const baseValue = {
   value_boolean: null,
   value_json: null,
   confidence: 'low',
+  contribution_origin: 'curated_research',
   moderation_status: 'not_required',
   review_status: 'reviewed',
   adoption_status: 'adopted',
   fishing_spot_detail_value_sources: [validSource],
 };
 
-assert(mapper.mapFishingSpotDetailRows(definitions, [baseValue]).values.length === 1, 'mapper should accept valid rows with a matching item definition');
+const mappedBase = mapper.mapFishingSpotDetailRows(definitions, [baseValue]);
+assert(mappedBase.values.length === 1, 'mapper should accept valid rows with a matching item definition');
+const mappedUserContribution = mapper.mapFishingSpotDetailRows(definitions, [{ ...baseValue, contribution_origin: 'user_contribution', moderation_status: 'approved', review_status: 'reviewed', adoption_status: 'adopted' }]);
+assert(mappedUserContribution.values[0]?.contributionOrigin === 'user_contribution', 'mapper should preserve adopted user_contribution origins');
+assert(mapper.mapFishingSpotDetailRows(definitions, [{ ...baseValue, contribution_origin: undefined }]).values.length === 0, 'mapper should reject rows missing contribution_origin');
+assert(mapper.mapFishingSpotDetailRows(definitions, [{ ...baseValue, contribution_origin: 'invalid_origin' }]).values.length === 0, 'mapper should reject rows with invalid contribution_origin');
 assert(mapper.mapFishingSpotDetailRows([], [baseValue]).values.length === 0, 'mapper should exclude values without an item definition');
 assert(mapper.mapFishingSpotDetailRows(definitions, [{ ...baseValue, item_key: 'undefined_item' }]).values.length === 0, 'mapper should exclude values whose item key has no definition');
 assert(mapper.mapFishingSpotDetailRows(definitions, [{ ...baseValue, information_state: 'researched_unknown', value_text: '不明', confidence: null }]).values.length === 0, 'mapper should reject unknown rows carrying concrete values');
@@ -76,5 +106,13 @@ const supabaseFallback = await repository.fetchFishingSpotDetails('known');
 assert(supabaseFallback.meta.source === 'static-fallback', 'repository should fallback to static data when Supabase fetch is unavailable');
 assert(supabaseFallback.meta.fallbackReason === 'supabase-not-configured', 'repository should report Supabase fallback reason when public env is missing');
 assert(supabaseFallback.data.values.every((value) => value.spotId !== 'known') || supabaseFallback.data.values.length === 0, 'repository fallback should safely handle unknown spot ids');
+
+const itemErrorFallback = await repository.fetchFishingSpotDetails(undefined, { isConfigured: true, missingEnvVars: [], client: createSupabaseClientWithError('fishing_spot_detail_item_definitions') });
+assert(itemErrorFallback.meta.source === 'static-fallback', 'repository should return static fallback when item definition fetch fails');
+assert(itemErrorFallback.meta.fallbackReason === 'supabase-error', 'repository should report supabase-error when item definition fetch fails');
+
+const valueErrorFallback = await repository.fetchFishingSpotDetails(undefined, { isConfigured: true, missingEnvVars: [], client: createSupabaseClientWithError('fishing_spot_detail_values') });
+assert(valueErrorFallback.meta.source === 'static-fallback', 'repository should return static fallback when detail value fetch fails');
+assert(valueErrorFallback.meta.fallbackReason === 'supabase-error', 'repository should report supabase-error when detail value fetch fails');
 
 console.log('Fishing spot detail runtime checks passed.');

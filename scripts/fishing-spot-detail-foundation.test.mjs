@@ -36,6 +36,7 @@ assert(migration.includes("adoption_status text not null default 'candidate'"), 
 assert(migration.includes('contributor_id is not null') && migration.includes("moderation_status in ('pending', 'approved', 'rejected')"), 'user contributions must require contributor identity, submission time, and moderation workflow state');
 assert(repository.includes('supabase-not-configured') && repository.includes('static-fallback'), 'repository must fallback when Supabase is not configured');
 assert(repository.includes('supabase-error'), 'repository must fallback on Supabase errors');
+assert(repository.includes('contribution_origin'), 'repository must select contribution_origin from public detail values');
 assert(repository.includes('fishingSpots') && repository.includes('buildStaticFishingSpotDetailsFromSpots'), 'repository fallback must derive details from existing fishingSpots');
 assert(!repository.includes('警告') && !repository.includes('warning'), 'fallback must not inject warning notes');
 assert(!mapper.includes('信憑性') && !mapper.includes('情報なし'), 'mapper must not convert unknown/null states into UI labels');
@@ -47,8 +48,8 @@ assert(migration.includes("or (adoption_status = 'adopted' and moderation_status
 assert(migration.includes("moderation_status <> 'not_required'"), 'user contributions must not allow not_required moderation');
 assert(migration.includes("review_status = 'reviewed'"), 'public values and related sources must be review-gated');
 assert(!migration.includes('grant select on table public.fishing_spot_detail_values to anon'), 'anon must not receive table-wide select on detail values');
-assert(!/grant select \([^)]*contribution_origin[^)]*\) on table public\.fishing_spot_detail_values to anon/.test(migration), 'anon column grants must not expose contribution_origin');
-assert(!/grant select \([^)]*contributor_id[^)]*\) on table public\.fishing_spot_detail_values to anon/.test(migration), 'anon column grants must not expose contributor_id');
+assert(/grant select \([^)]*contribution_origin[^)]*\) on table public\.fishing_spot_detail_values to anon/.test(migration), 'anon/authenticated column grants must expose contribution_origin for adopted public values');
+assert(!/grant select \([^)]*contributor_id[^)]*\) on table public\.fishing_spot_detail_values to anon/.test(migration), 'anon/authenticated column grants must not expose contributor_id');
 assert(migration.includes('fishing_spot_detail_values_exactly_one_value_for_information_check'), 'DB must reject unknown with concrete values, missing concrete values, and multiple value columns');
 assert(migration.includes('fishing_spot_detail_values_number_is_valid_check'), 'DB must reject invalid numeric values');
 assert(mapper.includes('concreteValueCount !== 1'), 'mapper must reject missing or multiple concrete value columns for information rows');
