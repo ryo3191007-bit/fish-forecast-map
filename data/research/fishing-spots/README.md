@@ -12,6 +12,10 @@
 - `funakoshi-port.json`: Issue #163 船越漁港のSchema v1.1.0調査
 
 
+Issue #172の単独調査:
+
+- `keya-gate.json`: 芥屋大門周辺
+
 Issue #165の地域別10地点Schema v1.1.0調査:
 
 - `nokita-beach.json`: 野北海岸
@@ -24,6 +28,8 @@ Issue #165の地域別10地点Schema v1.1.0調査:
 - `imari-inner-bay.json`: 伊万里湾奥
 - `takashima-area.json`: 鷹島周辺
 - `tabira-port.json`: 田平港
+
+Issue #172のレビューは `docs/research/KEYA_GATE_RESEARCH_REVIEW.md` を参照してください。
 
 Issue #165の10地点レビューは `docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md` を参照してください。
 

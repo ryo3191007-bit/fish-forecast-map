@@ -8,6 +8,11 @@
 
 公式・公的情報で不足する項目について民間情報を補助利用する場合も、スクレイピング、自動巡回、定期実行は行いません。文章、写真、地図画像、コメント、プロフィール、掲載魚種一覧は保存しません。
 
+## Issue #172 芥屋大門周辺単独調査
+
+- レビュー文書: `KEYA_GATE_RESEARCH_REVIEW.md`
+- 対象JSON: `../../data/research/fishing-spots/keya-gate.json`
+
 ## Issue #165 地域別10地点バッチ調査
 
 - レビュー文書: `REGIONAL_10_SPOTS_RESEARCH_REVIEW.md`

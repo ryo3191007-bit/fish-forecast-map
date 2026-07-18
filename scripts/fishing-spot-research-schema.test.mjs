@@ -256,6 +256,20 @@ const notes = issue163Records.map((record) => record.researchNotes);
 assert.equal(new Set(notes).size, issue163Records.length, "Issue #163 research notes must not be mechanically copied");
 
 
+const issue172SpotPath = path.join(ROOT, "data/research/fishing-spots/keya-gate.json");
+const issue172Record = readJson(issue172SpotPath);
+assert.equal(issue172Record.schemaVersion, "1.1.0", "keya-gate must use Schema v1.1.0");
+assert.equal(issue172Record.spotId, "keya-gate");
+assert.equal(issue172Record.identity.spotName, "芥屋大門周辺");
+assert.equal(issue172Record.identity.prefecture, "福岡県");
+assert.equal(issue172Record.identity.municipality, "糸島市");
+assert.equal(issue172Record.scopeType, "district");
+assert.deepEqual(validateRecord(issue172Record), [], "keya-gate must satisfy Schema v1.1.0 and source references");
+assert.deepEqual(issue172Record.fishSpecies, [], "keya-gate must not add fish species without direct evidence");
+assert.ok(Object.values(issue172Record.attributes).every((attribute) => attribute.status === "unknown"), "keya-gate must leave all fishing attributes unknown");
+assert.ok(Object.values(issue172Record.facilities).every((facility) => facility.status === "unknown"), "keya-gate must not convert park facilities into fishing spot facilities");
+assert.ok(!JSON.stringify(issue172Record.sources).includes("C09-06_GML.zip"), "keya-gate must not reuse keya-port C09 source");
+
 const issue165SpotPaths = [
   "nokita-beach", "kishi-port", "fukuyoshi-port", "hamasaki-beach", "niji-matsubara",
   "karatsu-west-port", "yobuko-area", "imari-inner-bay", "takashima-area", "tabira-port",

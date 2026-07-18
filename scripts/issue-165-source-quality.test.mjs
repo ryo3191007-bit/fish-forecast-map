@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const spotIds = [
+  "keya-gate",
   "nokita-beach",
   "kishi-port",
   "fukuyoshi-port",
@@ -92,4 +93,4 @@ for (const spotId of spotIds) {
   assert.deepEqual(record.fishSpecies, [], `${spotId} must not add fish species without dated, spot-specific evidence`);
 }
 
-console.log("Issue #165 source quality checks passed.");
+console.log("Issue #165/#172 source quality checks passed.");

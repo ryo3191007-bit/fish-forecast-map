@@ -1,0 +1,378 @@
+{
+  "schemaVersion": "1.1.0",
+  "spotId": "keya-gate",
+  "scopeType": "district",
+  "identity": {
+    "spotName": "芥屋大門周辺",
+    "aliases": [
+      "芥屋大門",
+      "芥屋の大門"
+    ],
+    "prefecture": "福岡県",
+    "municipality": "糸島市",
+    "coordinates": {
+      "latitude": 33.5967,
+      "longitude": 130.1106,
+      "coordinateMethod": "map_measurement",
+      "coordinateScope": "district",
+      "status": "inferred",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-keya-gate-gsi-map"
+        ],
+        "checkedSourceIds": [
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "地理院地図で芥屋大門周辺districtの概略照合用代表点として机上測定。洞窟入口、岩場、遊歩道入口、危険箇所、駐車位置、芥屋漁港、防波堤先端、実釣ピンではない。公式座標データではないためlow。"
+    }
+  },
+  "researchedAt": "2026-07-18T00:00:00.000Z",
+  "reviewStatus": "draft",
+  "researchStages": {
+    "officialResearch": "completed",
+    "secondaryResearch": "incomplete",
+    "schemaValidation": "passed"
+  },
+  "researchNotes": "Issue #172としてkeya-gate（芥屋大門周辺）だけを単独調査。糸島市の天然記念物一覧、引津校区紹介、公園案内、地理院地図を個別確認し、芥屋漁港facilityのC09値やkeya-port.jsonの属性・note・evidenceは流用しない。公式・公的sourceが直接支える名称、別表記、自治体、公園施設の存在だけを整理し、釣り場施設・魚種・釣法・立入/釣り可否・足場・底質・水深はunknownのまま残す。",
+  "sources": [
+    {
+      "id": "src-keya-gate-cultural-monuments",
+      "url": "https://www.city.itoshima.lg.jp/s033/010/020/010/050/050/bunkazai5.html",
+      "title": "糸島市 天然記念物一覧 芥屋大門",
+      "publisher": "糸島市",
+      "sourceType": "government",
+      "checkedAt": "2026-07-18",
+      "publishedAt": null,
+      "lastUpdatedAt": "2016-05-12",
+      "sourceGroup": "itoshima-city-cultural-properties",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.spotName",
+        "identity.aliases",
+        "identity.prefecture"
+      ]
+    },
+    {
+      "id": "src-keya-gate-hikitsu",
+      "url": "https://www.city.itoshima.lg.jp/c015/020/010/hikitsu-syoukai.html",
+      "title": "引津校区の紹介 芥屋の大門",
+      "publisher": "糸島市立引津コミュニティセンターあおぞら館",
+      "sourceType": "government",
+      "checkedAt": "2026-07-18",
+      "publishedAt": null,
+      "lastUpdatedAt": "2025-07-27",
+      "sourceGroup": "itoshima-city-hikitsu",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.aliases",
+        "identity.municipality"
+      ]
+    },
+    {
+      "id": "src-keya-gate-city-parks",
+      "url": "https://www.city.itoshima.lg.jp/s023/itoshimacitypark.html",
+      "title": "糸島市の主な公園のご案内 芥屋の大門公園",
+      "publisher": "糸島市",
+      "sourceType": "government",
+      "checkedAt": "2026-07-18",
+      "publishedAt": null,
+      "lastUpdatedAt": "2024-02-09",
+      "sourceGroup": "itoshima-city-parks",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": []
+    },
+    {
+      "id": "src-keya-gate-gsi-map",
+      "url": "https://maps.gsi.go.jp/#16/33.596700/130.110600/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
+      "title": "国土地理院地理院地図 芥屋大門周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-18",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "gsi-standard-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude"
+      ]
+    }
+  ],
+  "attributes": {
+    "spotType": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtのspotTypeを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。"
+    },
+    "seabed": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtのseabedを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtのwaterDepthを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。"
+    },
+    "riverInfluence": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtのriverInfluenceを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtのtidalFlowを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtのstreetLightsを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtのobstaclesを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。"
+    },
+    "openSeaExposure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtのopenSeaExposureを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。"
+    },
+    "fishingRange": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtのfishingRangeを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。"
+    }
+  },
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu",
+          "src-keya-gate-city-parks"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "糸島市公園案内で芥屋の大門公園の駐車場は確認したが、公園施設であり釣り場・岩場・海岸の駐車施設や利用条件として転用しないためunknown。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu",
+          "src-keya-gate-city-parks"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "糸島市公園案内で芥屋の大門公園のトイレは確認したが、公園施設であり釣り場施設として扱える直接根拠ではないためunknown。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu",
+          "src-keya-gate-city-parks"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtの釣り禁止・許可状況を確認できる管理者の現行公式情報がないためunknown。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu",
+          "src-keya-gate-city-parks"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtの一般立入可否や範囲を確認できる管理者の現行公式情報がないためunknown。危険箇所・岩場経路の座標化は行わない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-keya-gate-gsi-map",
+          "src-keya-gate-cultural-monuments",
+          "src-keya-gate-hikitsu",
+          "src-keya-gate-city-parks"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "芥屋大門周辺districtの工事・閉鎖状況を確認できる管理者の現行公式情報がないためunknown。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "officialContact": {
+      "name": null,
+      "url": null,
+      "checkedAt": "2026-07-18",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null,
+      "note": "芥屋大門周辺districtの釣り利用・立入・閉鎖を直接案内する公式連絡先は未確定。文化財・公園の部署情報を釣り場管理連絡先として転用しない。"
+    }
+  },
+  "fishSpecies": []
+}
