@@ -47,6 +47,7 @@ for (const spotId of spotIds) {
   assert.equal(record.reviewStatus, "draft", `${spotId} must remain draft after official-source review`);
   assert.equal(record.researchStages.officialResearch, "completed", `${spotId} official research must be completed`);
   assert.equal(record.researchStages.secondaryResearch, "incomplete", `${spotId} secondary research must remain incomplete`);
+  assert.equal(record.researchStages.schemaValidation, "passed", `${spotId} schema validation status must record the successful CI result`);
   assert.ok(record.sources.some((source) => source.sourceType === "government"), `${spotId} needs at least one official government source`);
 
   for (const source of record.sources) {
