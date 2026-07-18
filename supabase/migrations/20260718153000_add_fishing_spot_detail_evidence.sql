@@ -34,7 +34,7 @@ create table if not exists public.fishing_spot_detail_values (
     submitted_at timestamptz,
     moderation_status text not null default 'not_required',
     review_status text not null default 'pending_review',
-    adoption_status text not null default 'adopted',
+    adoption_status text not null default 'candidate',
     note text,
     internal_note text,
     checked_at date,
@@ -50,7 +50,10 @@ create table if not exists public.fishing_spot_detail_values (
         (information_state in ('has_evidence', 'weak_evidence') and confidence is not null)
         or (information_state in ('researched_unknown', 'unresearched', 'rejected') and confidence is null)
     ),
-    constraint fishing_spot_detail_values_user_submission_check check ((contribution_origin = 'user_contribution' and submitted_at is not null) or contribution_origin <> 'user_contribution'),
+    constraint fishing_spot_detail_values_user_submission_check check (
+        (contribution_origin = 'user_contribution' and contributor_id is not null and submitted_at is not null and moderation_status in ('pending', 'approved', 'rejected') and adoption_status in ('candidate', 'not_adopted'))
+        or (contribution_origin = 'curated_research' and contributor_id is null)
+    ),
     constraint fishing_spot_detail_values_text_list_no_nulls_check check (array_position(value_text_list, null::text) is null),
     constraint fishing_spot_detail_values_exactly_one_value_for_information_check check (
         (

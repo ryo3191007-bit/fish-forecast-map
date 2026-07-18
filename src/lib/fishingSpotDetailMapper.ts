@@ -33,6 +33,7 @@ export function mapSpotDetailItemDefinitionRow(row: SpotDetailItemDefinitionRow)
 }
 
 export function mapSpotDetailValueRow(row: SpotDetailValueRow, itemDefinition?: SpotDetailItemDefinition): SpotDetailValue | null {
+  if (!itemDefinition) return null;
   const informationState = enumOrNull(row.information_state, informationStates);
   const contributionOrigin = enumOrNull(row.contribution_origin ?? "curated_research", origins);
   const moderationStatus = enumOrNull(row.moderation_status, moderationStatuses);
@@ -52,7 +53,7 @@ export function mapSpotDetailValueRow(row: SpotDetailValueRow, itemDefinition?: 
   const hasConcreteInformation = informationState === "has_evidence" || informationState === "weak_evidence";
   if (hasConcreteInformation && (concreteValueCount !== 1 || confidence === null)) return null;
   if (!hasConcreteInformation && (concreteValueCount !== 0 || row.confidence !== null && row.confidence !== undefined)) return null;
-  if (itemDefinition && !valueMatchesKind(itemDefinition.valueKind, { valueText, valueTextList, valueNumber, valueBoolean, valueJson })) return null;
+  if (!valueMatchesKind(itemDefinition.valueKind, { valueText, valueTextList, valueNumber, valueBoolean, valueJson })) return null;
 
   const sources = (row.fishing_spot_detail_value_sources ?? []).flatMap((join) => {
     const source = Array.isArray(join.fishing_spot_detail_sources) ? join.fishing_spot_detail_sources[0] : join.fishing_spot_detail_sources;

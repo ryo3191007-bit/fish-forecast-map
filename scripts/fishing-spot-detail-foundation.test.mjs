@@ -32,9 +32,11 @@ assert(migration.includes("information_state in ('has_evidence', 'weak_evidence'
 assert(migration.includes("information_state in ('researched_unknown', 'unresearched', 'rejected') and confidence is null"), 'unknown/no information/rejected states must not carry confidence');
 assert(migration.includes("relation = any (array['supporting', 'checked', 'contradicting']"), 'source relation must support supporting/checked/contradicting');
 assert(migration.includes("contribution_origin = any (array['curated_research', 'user_contribution']"), 'origin must distinguish curated research and future user contributions');
+assert(migration.includes("adoption_status text not null default 'candidate'"), 'initial adoption status must default to candidate');
+assert(migration.includes('contributor_id is not null') && migration.includes("moderation_status in ('pending', 'approved', 'rejected')"), 'user contributions must require contributor identity, submission time, and moderation workflow state');
 assert(repository.includes('supabase-not-configured') && repository.includes('static-fallback'), 'repository must fallback when Supabase is not configured');
 assert(repository.includes('supabase-error'), 'repository must fallback on Supabase errors');
-assert(repository.includes('fishingSpots') && repository.includes('targetSpecies') && repository.includes('recommendedMethods') && repository.includes('shoreAccess'), 'fallback must derive target species, recommended methods, and shore access from existing fishingSpots');
+assert(repository.includes('fishingSpots') && repository.includes('buildStaticFishingSpotDetailsFromSpots'), 'repository fallback must derive details from existing fishingSpots');
 assert(!repository.includes('警告') && !repository.includes('warning'), 'fallback must not inject warning notes');
 assert(!mapper.includes('信憑性') && !mapper.includes('情報なし'), 'mapper must not convert unknown/null states into UI labels');
 assert(mapper.includes('note: row.note ?? null'), 'mapper must preserve notes without UI display side effects');
@@ -50,7 +52,12 @@ assert(migration.includes('fishing_spot_detail_values_number_is_valid_check'), '
 assert(mapper.includes('concreteValueCount !== 1'), 'mapper must reject missing or multiple concrete value columns for information rows');
 assert(mapper.includes('!Number.isFinite'), 'mapper must reject invalid numeric values');
 assert(mapper.includes('valueTextList === null'), 'mapper must reject non-string array values');
+assert(mapper.includes('if (!itemDefinition) return null'), 'mapper must exclude values without item definitions');
 assert(mapper.includes('valueMatchesKind'), 'mapper must validate each row value column against its item definition value_kind');
 assert(mapper.includes('source.relation === "supporting"'), 'mapper must require supporting sources for concrete evidence rows');
+
+const fallback = readFileSync(join(process.cwd(), 'src/lib/fishingSpotDetailFallback.ts'), 'utf8');
+assert(fallback.includes('value.trim() === "不明"'), 'fallback must treat 不明 as no information instead of weak evidence');
+assert(fallback.includes('adoptionStatus: "candidate"'), 'fallback initial values must stay candidate until adopted');
 
 console.log('Fishing spot detail foundation checks passed.');
