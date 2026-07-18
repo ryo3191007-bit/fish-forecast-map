@@ -69,7 +69,7 @@ MVP v0.1の基本データはモック釣果です。モック釣果は地図・
 
 Supabase連携はmaster read、Auth、ログインユーザー単位のowner-scoped read/write、論理削除RPC、localStorage明示移行、migration安全チェックと本番反映自動化まで完了しています。新しいDB変更の正本は `supabase/migrations/` です。現時点でSQL Editorから手動実行すべきSQLはありません。
 
-Supabaseから `fish_species` / `fishing_spots` / `source_registry` を読み取り、未設定・通信失敗・0件時は静的データへfallbackします。
+Supabaseから `fish_species` / `fishing_spots` / `source_registry` を読み取り、未設定・通信失敗・0件時は静的データへfallbackします。調査済み17地点は安全な最小本番値として、未確認の魚種・釣法を空配列、立入状態を `不明` に揃え、代表点の限界を地点別notesで表示します。
 
 ## 水深・3D地形モード
 

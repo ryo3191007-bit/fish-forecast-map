@@ -1,0 +1,493 @@
+{
+  "curationVersion": "1.0.0",
+  "issue": "#178",
+  "status": "approved_for_safe_minimum_production_values",
+  "curatedAt": "2026-07-18",
+  "scope": "唐津東港を除く調査済み17地点",
+  "spots": [
+    {
+      "spotId": "nokita-port",
+      "group": "Issue #163 / 糸島西岸3漁港",
+      "researchSource": "data/research/fishing-spots/nokita-port.json",
+      "reviewSource": "docs/research/ITOSHIMA_WEST_3_PORTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "nokita-port",
+        "name": "野北漁港",
+        "areaName": "糸島西岸",
+        "latitude": 33.611311,
+        "longitude": 130.161569,
+        "spotType": "漁港",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "C09公的facility代表点であり、野北漁港の実釣位置、入口、駐車位置、堤防先端、危険箇所を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "exact"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "nokita-beach",
+      "group": "Issue #165 / 地域別10地点",
+      "researchSource": "data/research/fishing-spots/nokita-beach.json",
+      "reviewSource": "docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "nokita-beach",
+        "name": "野北海岸",
+        "areaName": "糸島西岸",
+        "latitude": 33.625,
+        "longitude": 130.158,
+        "spotType": "サーフ",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "既存本番座標を暫定保持した海岸代表点です。調査済みですが公的な本番代表座標は未確定で、実釣位置や離岸流・危険箇所を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "keya-port",
+      "group": "Issue #163 / 糸島西岸3漁港",
+      "researchSource": "data/research/fishing-spots/keya-port.json",
+      "reviewSource": "docs/research/ITOSHIMA_WEST_3_PORTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "keya-port",
+        "name": "芥屋漁港",
+        "areaName": "糸島西岸",
+        "latitude": 33.58937974,
+        "longitude": 130.10658056,
+        "spotType": "漁港",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "C09公的facility代表点であり、芥屋漁港の実釣位置、入口、駐車位置、堤防先端、芥屋大門側の危険箇所を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "exact"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "keya-gate",
+      "group": "Issue #172 / 芥屋大門周辺",
+      "researchSource": "data/research/fishing-spots/keya-gate.json",
+      "reviewSource": "docs/research/KEYA_GATE_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "keya-gate",
+        "name": "芥屋大門周辺",
+        "areaName": "糸島西岸",
+        "latitude": 33.5967,
+        "longitude": 130.1106,
+        "spotType": "その他",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "芥屋大門周辺のdistrict概略代表点であり、洞窟入口、岩場、遊歩道入口、駐車場、芥屋漁港、危険箇所、実釣位置を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "funakoshi-port",
+      "group": "Issue #163 / 糸島西岸3漁港",
+      "researchSource": "data/research/fishing-spots/funakoshi-port.json",
+      "reviewSource": "docs/research/ITOSHIMA_WEST_3_PORTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "funakoshi-port",
+        "name": "船越漁港",
+        "areaName": "糸島西岸",
+        "latitude": 33.55389244,
+        "longitude": 130.13025931,
+        "spotType": "漁港",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "C09公的facility代表点であり、船越漁港の実釣位置、入口、駐車位置、堤防先端、船越湾内の危険箇所を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "exact"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "kishi-port",
+      "group": "Issue #165 / 地域別10地点",
+      "researchSource": "data/research/fishing-spots/kishi-port.json",
+      "reviewSource": "docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "kishi-port",
+        "name": "岐志漁港",
+        "areaName": "糸島西岸",
+        "latitude": 33.568,
+        "longitude": 130.151,
+        "spotType": "漁港",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "既存本番座標を暫定保持した港代表点です。調査済みですが公的な本番代表座標は未確定で、実釣位置、入口、駐車位置、堤防先端を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "fukuyoshi-port",
+      "group": "Issue #165 / 地域別10地点",
+      "researchSource": "data/research/fishing-spots/fukuyoshi-port.json",
+      "reviewSource": "docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "fukuyoshi-port",
+        "name": "福吉漁港",
+        "areaName": "糸島西岸",
+        "latitude": 33.517,
+        "longitude": 130.058,
+        "spotType": "漁港",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "既存本番座標を暫定保持した港代表点です。調査済みですが公的な本番代表座標は未確定で、実釣位置、入口、駐車位置、導流堤先端を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "hamasaki-beach",
+      "group": "Issue #165 / 地域別10地点",
+      "researchSource": "data/research/fishing-spots/hamasaki-beach.json",
+      "reviewSource": "docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "hamasaki-beach",
+        "name": "浜崎海岸",
+        "areaName": "唐津湾",
+        "latitude": 33.447,
+        "longitude": 130.039,
+        "spotType": "サーフ",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "既存本番座標を暫定保持した海岸代表点です。調査済みですが公的な本番代表座標は未確定で、実釣位置、駐車位置、海水浴場範囲、危険箇所を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "niji-matsubara",
+      "group": "Issue #165 / 地域別10地点",
+      "researchSource": "data/research/fishing-spots/niji-matsubara.json",
+      "reviewSource": "docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "niji-matsubara",
+        "name": "虹の松原周辺",
+        "areaName": "唐津湾",
+        "latitude": 33.462,
+        "longitude": 130.016,
+        "spotType": "その他",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "既存本番座標を暫定保持した虹の松原周辺代表点です。調査済みですが公的な本番代表座標は未確定で、海岸・松原・駐車位置・実釣位置を個別に示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "karatsu-west-port",
+      "group": "Issue #165 / 地域別10地点",
+      "researchSource": "data/research/fishing-spots/karatsu-west-port.json",
+      "reviewSource": "docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "karatsu-west-port",
+        "name": "唐津西港",
+        "areaName": "唐津湾",
+        "latitude": 33.468,
+        "longitude": 129.978,
+        "spotType": "その他",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "既存本番座標を暫定保持した唐津西港周辺代表点です。調査済みですが公的な本番代表座標は未確定で、港内の岸壁、入口、駐車位置、堤防先端を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "yobuko-area",
+      "group": "Issue #165 / 地域別10地点",
+      "researchSource": "data/research/fishing-spots/yobuko-area.json",
+      "reviewSource": "docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "yobuko-area",
+        "name": "呼子周辺",
+        "areaName": "唐津湾北部",
+        "latitude": 33.543,
+        "longitude": 129.892,
+        "spotType": "その他",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "既存本番座標を暫定保持した呼子周辺代表点です。調査済みですが公的な本番代表座標は未確定で、港、岸壁、磯、駐車位置、危険箇所、実釣位置を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "imari-inner-bay",
+      "group": "Issue #165 / 地域別10地点",
+      "researchSource": "data/research/fishing-spots/imari-inner-bay.json",
+      "reviewSource": "docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "imari-inner-bay",
+        "name": "伊万里湾奥",
+        "areaName": "伊万里湾",
+        "latitude": 33.281,
+        "longitude": 129.861,
+        "spotType": "その他",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "既存本番座標を暫定保持した伊万里湾奥の広域内湾文脈代表点です。調査済みですが公的な本番代表座標は未確定で、岸壁、河口、駐車位置、実釣位置を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "fukushima-area",
+      "group": "Issue #175 / 残り3district",
+      "researchSource": "data/research/fishing-spots/fukushima-area.json",
+      "reviewSource": "docs/research/FUKUSHIMA_AREA_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "fukushima-area",
+        "name": "福島周辺",
+        "areaName": "伊万里湾",
+        "latitude": 33.332,
+        "longitude": 129.773,
+        "spotType": "その他",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "福島周辺の広域district概略代表点であり、港、橋、橋脚、灯台、堤防先端、磯入口、駐車位置、危険箇所、実釣位置を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "takashima-area",
+      "group": "Issue #165 / 地域別10地点",
+      "researchSource": "data/research/fishing-spots/takashima-area.json",
+      "reviewSource": "docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "takashima-area",
+        "name": "鷹島周辺",
+        "areaName": "伊万里湾",
+        "latitude": 33.448,
+        "longitude": 129.844,
+        "spotType": "その他",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "既存本番座標を暫定保持した鷹島周辺代表点です。調査済みですが公的な本番代表座標は未確定で、港、橋、堤防、磯入口、駐車位置、実釣位置を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "tabira-port",
+      "group": "Issue #165 / 地域別10地点",
+      "researchSource": "data/research/fishing-spots/tabira-port.json",
+      "reviewSource": "docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "tabira-port",
+        "name": "田平港",
+        "areaName": "平戸",
+        "latitude": 33.365,
+        "longitude": 129.553,
+        "spotType": "その他",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "既存本番座標を暫定保持した田平港周辺代表点です。調査済みですが公的な本番代表座標は未確定で、港内の岸壁、入口、駐車位置、堤防先端を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "hirado-seto",
+      "group": "Issue #175 / 残り3district",
+      "researchSource": "data/research/fishing-spots/hirado-seto.json",
+      "reviewSource": "docs/research/HIRADO_SETO_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "hirado-seto",
+        "name": "平戸瀬戸周辺",
+        "areaName": "平戸",
+        "latitude": 33.354,
+        "longitude": 129.579,
+        "spotType": "その他",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "平戸瀬戸周辺の広域district概略代表点であり、港、橋、橋脚、灯台、堤防先端、磯入口、駐車位置、危険箇所、実釣位置を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    },
+    {
+      "spotId": "ikitsuki-area",
+      "group": "Issue #175 / 残り3district",
+      "researchSource": "data/research/fishing-spots/ikitsuki-area.json",
+      "reviewSource": "docs/research/IKITSUKI_AREA_RESEARCH_REVIEW.md",
+      "productionValue": {
+        "id": "ikitsuki-area",
+        "name": "生月島方面",
+        "areaName": "平戸",
+        "latitude": 33.39,
+        "longitude": 129.564,
+        "spotType": "その他",
+        "shoreAccess": "不明",
+        "targetSpecies": [],
+        "recommendedMethods": [],
+        "notes": [
+          "生月島方面の広域district概略代表点であり、港、橋、橋脚、灯台、堤防先端、磯入口、駐車位置、危険箇所、実釣位置を示しません。",
+          "一般立入・釣り可否は未確認のため、現地表示と管理者の最新案内を確認してください。",
+          "魚種・釣法は日付・地点・遊漁文脈を伴う直接根拠不足のため掲載していません。"
+        ],
+        "coordinatePrecision": "approximate"
+      },
+      "decisions": [
+        "未確認shoreAccessは不明へ戻す",
+        "魚種・釣法は直接根拠不足のため空配列",
+        "代表点の限界と立入・釣り可否未確認をnotesへ明記"
+      ]
+    }
+  ],
+  "notChanged": [
+    "karatsu-east-port"
+  ],
+  "safety": [
+    "対象17 IDのみをupsert",
+    "DROP / DELETE / TRUNCATE / Schema / RLS / RPC / 権限変更なし",
+    "remote Supabase未適用"
+  ]
+}
