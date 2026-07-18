@@ -32,7 +32,7 @@ export type ScoreV2SpotEvidenceKey = "directSpecies" | "habitat" | "catchHistory
 export type ScoreV2EnvironmentEvidenceKey = keyof typeof SCORE_V2_ENVIRONMENT_WEIGHTS;
 
 export type ScoreV2MethodCompatibility = Partial<Record<FishingMethod, readonly FishSpeciesName[]>>;
-export type ScoreV2SpotSuitabilityEvidence = Partial<Record<"footing" | "depth" | "terrain" | "lighting" | "access" | "safety", ScoreEvidence | null>>;
+export type ScoreV2SpotSuitabilityInput = ScoreEvidence;
 
 export type ScoreV2MethodResult = {
   method: FishingMethod;
@@ -67,7 +67,6 @@ export const SCORE_V2_TOTAL_WEIGHTS = { spotCompatibility: 70, environment: 30 }
 export const SCORE_V2_SPOT_WEIGHTS = { directSpecies: 40, habitat: 30, catchHistory: 20, methodAffinity: 10 } as const;
 export const SCORE_V2_ENVIRONMENT_WEIGHTS = { waterTemperature: 30, tideCurrent: 25, windWave: 20, seasonTime: 15, weatherRain: 10 } as const;
 export const SCORE_V2_METHOD_WEIGHTS = { speciesAverage: 70, spotSuitability: 30 } as const;
-export const SCORE_V2_SPOT_SUITABILITY_WEIGHTS = { footing: 25, depth: 20, terrain: 20, lighting: 15, access: 10, safety: 10 } as const;
 export const SCORE_V2_MIN_COVERAGE_PERCENT = 60;
 
 const clampScoreV2 = (score: number) => Math.max(0, Math.min(100, Math.round(score)));
@@ -99,35 +98,12 @@ function buildApprovedSpotEvidence(input: ScoreV2SpeciesInput): Required<NonNull
 }
 
 function buildApprovedEnvironmentEvidence(input: ScoreV2SpeciesInput) {
-  if (input.environmentEvidence) {
-    return {
-      waterTemperature: input.environmentEvidence.waterTemperature ?? null,
-      tideCurrent: input.environmentEvidence.tideCurrent ?? null,
-      windWave: input.environmentEvidence.windWave ?? null,
-      seasonTime: input.environmentEvidence.seasonTime ?? null,
-      weatherRain: input.environmentEvidence.weatherRain ?? null,
-    } satisfies Record<ScoreV2EnvironmentEvidenceKey, ScoreEvidence | null>;
-  }
-  return getEnvironmentEvidenceFromAvailableValues(input.environmentRow);
-}
-
-function getEnvironmentEvidenceFromAvailableValues(row?: EnvironmentForecastRow | null) {
-  if (!row) return null;
-  const temp = row.marine?.seaSurfaceTemperatureCelsius;
-  const current = row.marine?.oceanCurrentVelocityKmh;
-  const seaLevel = row.marine?.seaLevelHeightMslMeters;
-  const wave = row.marine?.waveHeightMeters;
-  const wind = row.weather?.windSpeedKmh;
-  const rain = row.weather?.precipitationMm;
-  const weatherCode = row.weather?.weatherCode;
-  const windWaveScore = typeof wave === "number" && typeof wind === "number" ? (wave <= 1.5 && wind <= 25 ? 80 : 45) : typeof wave === "number" ? (wave <= 1.5 ? 75 : 45) : typeof wind === "number" ? (wind <= 25 ? 75 : 45) : null;
-
   return {
-    waterTemperature: typeof temp === "number" ? { score: temp >= 16 && temp <= 28 ? 80 : 55, confidence: "medium", reason: "海面水温の承認済み入力があるため評価します" } : null,
-    tideCurrent: typeof seaLevel === "number" || typeof current === "number" ? { score: 65, confidence: "low", reason: "潮位または海流の入力があるため参考評価します" } : null,
-    windWave: windWaveScore === null ? null : { score: windWaveScore, confidence: typeof wave === "number" && typeof wind === "number" ? "medium" : "low", reason: "欠損値を0扱いせず、利用可能な風または波だけで評価します" },
-    seasonTime: null,
-    weatherRain: typeof rain === "number" ? { score: rain <= 2 ? 75 : 45, confidence: "low", reason: "雨量入力があるため参考評価します" } : typeof weatherCode === "number" ? { score: 60, confidence: "low", reason: "天気コードのみを参考評価します" } : null,
+    waterTemperature: input.environmentEvidence?.waterTemperature ?? null,
+    tideCurrent: input.environmentEvidence?.tideCurrent ?? null,
+    windWave: input.environmentEvidence?.windWave ?? null,
+    seasonTime: input.environmentEvidence?.seasonTime ?? null,
+    weatherRain: input.environmentEvidence?.weatherRain ?? null,
   } satisfies Record<ScoreV2EnvironmentEvidenceKey, ScoreEvidence | null>;
 }
 
@@ -144,16 +120,15 @@ export function calculateScoreV2ForSpecies(input: ScoreV2SpeciesInput): ScoreV2S
   return { species: input.species, selectedDateTime: input.selectedDateTime, overallScore, spotCompatibilityScore: spot.score, environmentScore: env?.score ?? null, confidence: spot.confidence, coverage, coveragePercent: overallPercent, partialData: overallScore === null || overallPercent < 100, informationStatus: overallScore !== null ? (overallPercent < 100 ? "partial" : "available") : spot.score !== null ? "reference_only" : "no_information", reasons: [...spot.reasons, ...(env?.reasons ?? [])] };
 }
 
-export function calculateScoreV2ForMethod(method: FishingMethod, speciesResults: ScoreV2SpeciesResult[], methodCompatibility: ScoreV2MethodCompatibility, spotSuitabilityEvidence?: ScoreV2SpotSuitabilityEvidence | null): ScoreV2MethodResult {
+export function calculateScoreV2ForMethod(method: FishingMethod, speciesResults: ScoreV2SpeciesResult[], methodCompatibility: ScoreV2MethodCompatibility, spotSuitability?: ScoreV2SpotSuitabilityInput | null): ScoreV2MethodResult {
   const compatibleSpecies = new Set(methodCompatibility[method] ?? []);
   if (compatibleSpecies.size === 0) return { method, overallScore: null, spotSuitabilityScore: null, speciesAverageScore: null, contributingSpecies: [], contributingSpeciesCount: 0, coverage: { spotSuitabilityPercent: 0, speciesPercent: 0, overallPercent: 0 }, partialData: false, informationStatus: "no_information", reasons: [{ label: "釣法対応魚種", points: 0, weight: 0, note: "この釣法に対応する承認済み魚種入力がありません" }] };
   const contributing = speciesResults.filter((result) => compatibleSpecies.has(result.species) && result.overallScore !== null).sort((a, b) => b.overallScore! - a.overallScore!).slice(0, 3);
   const speciesAverageScore = contributing.length > 0 ? clampScoreV2(contributing.reduce((sum, result) => sum + result.overallScore!, 0) / contributing.length) : null;
   const speciesPercent = Math.round((contributing.length / Math.min(3, compatibleSpecies.size)) * 100);
-  const spotSuitability = weightedAverage(Object.entries(spotSuitabilityEvidence ?? {}).map(([key, evidence]) => ({ weight: SCORE_V2_SPOT_SUITABILITY_WEIGHTS[key as keyof typeof SCORE_V2_SPOT_SUITABILITY_WEIGHTS], evidence, label: `釣り場適性:${key}` })));
-  const spotSuitabilityScore = spotSuitability.score;
-  const canUseSpotSuitability = spotSuitabilityScore !== null && spotSuitability.coveragePercent >= SCORE_V2_MIN_COVERAGE_PERCENT;
-  const overallScore = speciesAverageScore !== null && canUseSpotSuitability ? clampScoreV2(speciesAverageScore * 0.7 + spotSuitabilityScore! * 0.3) : null;
-  const overallPercent = overallScore !== null ? Math.round((speciesPercent * 70 + spotSuitability.coveragePercent * 30) / 100) : 0;
-  return { method, overallScore, spotSuitabilityScore, speciesAverageScore, contributingSpecies: contributing.map((result) => result.species), contributingSpeciesCount: contributing.length, coverage: { spotSuitabilityPercent: spotSuitability.coveragePercent, speciesPercent, overallPercent }, partialData: overallScore === null || overallPercent < 100, informationStatus: overallScore !== null ? (overallPercent < 100 ? "partial" : "available") : spotSuitabilityScore !== null ? "reference_only" : "no_information", reasons: [ ...spotSuitability.reasons, ...(contributing.length > 0 ? [{ label: "対応魚種平均", points: speciesAverageScore!, weight: 70, note: `${contributing.length}魚種の評価を釣法別点へ反映します` }] : []) ] };
+  const spotSuitabilityScore = spotSuitability ? clampScoreV2(spotSuitability.score * SCORE_V2_CONFIDENCE_COEFFICIENT[spotSuitability.confidence]) : null;
+  const spotSuitabilityPercent = spotSuitability ? 100 : 0;
+  const overallScore = speciesAverageScore !== null && spotSuitabilityScore !== null ? clampScoreV2(speciesAverageScore * 0.7 + spotSuitabilityScore * 0.3) : null;
+  const overallPercent = overallScore !== null ? Math.round((speciesPercent * 70 + spotSuitabilityPercent * 30) / 100) : 0;
+  return { method, overallScore, spotSuitabilityScore, speciesAverageScore, contributingSpecies: contributing.map((result) => result.species), contributingSpeciesCount: contributing.length, coverage: { spotSuitabilityPercent, speciesPercent, overallPercent }, partialData: overallScore === null || overallPercent < 100, informationStatus: overallScore !== null ? (overallPercent < 100 ? "partial" : "available") : spotSuitabilityScore !== null ? "reference_only" : "no_information", reasons: [ ...(spotSuitability ? [{ label: "釣り場適性", points: spotSuitabilityScore!, weight: 30, confidence: spotSuitability.confidence, note: spotSuitability.reason }] : []), ...(contributing.length > 0 ? [{ label: "対応魚種平均", points: speciesAverageScore!, weight: 70, note: `${contributing.length}魚種の評価を釣法別点へ反映します` }] : []) ] };
 }
