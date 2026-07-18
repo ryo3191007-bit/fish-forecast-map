@@ -1,0 +1,5419 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 181,
+  "generatedAt": "2026-07-18T00:00:00.000Z",
+  "classificationPolicy": [
+    "high",
+    "medium",
+    "low",
+    "researched_unknown",
+    "rejected"
+  ],
+  "spots": [
+    {
+      "spotId": "nokita-port",
+      "researchSource": "data/research/fishing-spots/nokita-port.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-nokita-ksj-fishing-port",
+          "sourceType": "official",
+          "sourceName": "国土数値情報 C09-06 漁港データ 野北 feature",
+          "sourceUrl": "https://nlftp.mlit.go.jp/ksj/gml/data/C09/C09-06/C09-06_GML.zip",
+          "checkedOn": "2026-07-17",
+          "note": "国土交通省 国土政策局 / government"
+        },
+        {
+          "id": "src-nokita-itoshima-official-guide-map",
+          "sourceType": "official",
+          "sourceName": "糸島市観光ガイドマップ（野北漁港掲載）",
+          "sourceUrl": "https://www.city.itoshima.lg.jp/s026/s040/010/080/40/itoshimaguidemap-taiwanese-ura.pdf",
+          "checkedOn": "2026-07-17",
+          "note": "糸島市 / government"
+        },
+        {
+          "id": "src-nokita-fukuoka-plan",
+          "sourceType": "official",
+          "sourceName": "福岡県 福岡圏域 総合水産基盤整備事業計画",
+          "sourceUrl": "https://www.pref.fukuoka.lg.jp/uploaded/life/657436_61488945_misc.pdf",
+          "checkedOn": "2026-07-17",
+          "note": "福岡県 / government"
+        },
+        {
+          "id": "src-nokita-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 野北漁港周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#16/33.611311/130.161569/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
+          "checkedOn": "2026-07-17",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-nokita-meets-fish-trip-article",
+          "sourceType": "other",
+          "sourceName": "糸島フィッシュトリップ vol.3｜野北漁港編",
+          "sourceUrl": "https://meets-itoshima.com/post-24077/",
+          "checkedOn": "2026-07-17",
+          "note": "meets糸島 / private_reference"
+        }
+      ],
+      "values": [
+        {
+          "id": "nokita-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "fishing_port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "C09実データで対象漁港featureの種別を確認。福岡県計画PDFは補助確認に留める。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [
+              "src-nokita-ksj-fishing-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北漁港の一次・限定二次調査ではfacilities.toiletを一般利用可能なトイレを直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-meets-fish-trip-article"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北漁港の一次・限定二次調査ではattributes.streetLightsを夜間常夜灯の点灯状況を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-meets-fish-trip-article"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北漁港の一次・限定二次調査ではfacilities.parkingを一般釣り利用可能な駐車場を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-meets-fish-trip-article"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北漁港の一次・限定二次調査ではrestrictions.fishingProhibitedを釣り禁止有無を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-meets-fish-trip-article"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北漁港の一次・限定二次調査ではattributes.seabedを底質（砂泥・岩礁等）を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "has_evidence",
+          "valueText": "open_sea",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "地理院地図で外海側の防波堤を持つ港湾形状を確認しopen_seaと推定。ただし波浪条件の実測ではない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [
+              "src-nokita-gsi-map"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北漁港の一次・限定二次調査ではattributes.obstaclesを根・テトラ等の障害物を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "fishing_port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "C09実データで対象漁港featureの種別を確認。福岡県計画PDFは補助確認に留める。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [
+              "src-nokita-ksj-fishing-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北漁港の一次・限定二次調査ではattributes.tidalFlowを潮流の強弱を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "nokita-beach",
+      "researchSource": "data/research/fishing-spots/nokita-beach.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-nokita-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 野北海岸周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#14/33.6048/130.1552/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-nokita-itoshima-sakurano",
+          "sourceType": "official",
+          "sourceName": "桜野校区の紹介（野北海岸）",
+          "sourceUrl": "https://www.city.itoshima.lg.jp/c014/020/010/sakurano-syoukai.html",
+          "checkedOn": "2026-07-18",
+          "note": "糸島市 / government"
+        }
+      ],
+      "values": [
+        {
+          "id": "nokita-beach:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "sandy_beach"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "糸島市の桜野校区紹介が野北海岸を明記し、砂浜の海岸線として説明しているためsandy_beachをconfirmed/mediumとした。海岸全域の釣り可否や立入可否は示さない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-nokita-itoshima-sakurano"
+            ],
+            "checked": [
+              "src-nokita-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北海岸（district）で一般利用できるトイレの現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-gsi-map",
+              "src-nokita-itoshima-sakurano"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北海岸（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-gsi-map",
+              "src-nokita-itoshima-sakurano"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北海岸districtで一般釣り利用できる駐車場の現行根拠がないためunknown。校区紹介は海岸の存在と砂浜を示すが、駐車利用条件は示さない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-gsi-map",
+              "src-nokita-itoshima-sakurano"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北海岸（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-gsi-map",
+              "src-nokita-itoshima-sakurano"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北海岸（district）の底質を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北海岸（district）の外海露出度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北海岸（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "sandy_beach"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "糸島市の桜野校区紹介が野北海岸を明記し、砂浜の海岸線として説明しているためsandy_beachをconfirmed/mediumとした。海岸全域の釣り可否や立入可否は示さない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-nokita-itoshima-sakurano"
+            ],
+            "checked": [
+              "src-nokita-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北海岸（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-nokita-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "keya-port",
+      "researchSource": "data/research/fishing-spots/keya-port.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-keya-ksj-fishing-port",
+          "sourceType": "official",
+          "sourceName": "国土数値情報 C09-06 漁港データ 芥屋 feature",
+          "sourceUrl": "https://nlftp.mlit.go.jp/ksj/gml/data/C09/C09-06/C09-06_GML.zip",
+          "checkedOn": "2026-07-17",
+          "note": "国土交通省 国土政策局 / government"
+        },
+        {
+          "id": "src-keya-itoshima-official-guide-map",
+          "sourceType": "official",
+          "sourceName": "糸島市観光ガイドマップ（芥屋漁港掲載）",
+          "sourceUrl": "https://www.city.itoshima.lg.jp/s026/s040/010/080/40/itoshimaguidemap-taiwanese-ura.pdf",
+          "checkedOn": "2026-07-17",
+          "note": "糸島市 / government"
+        },
+        {
+          "id": "src-keya-fukuoka-plan",
+          "sourceType": "official",
+          "sourceName": "福岡県 福岡圏域 総合水産基盤整備事業計画",
+          "sourceUrl": "https://www.pref.fukuoka.lg.jp/uploaded/life/657436_61488945_misc.pdf",
+          "checkedOn": "2026-07-17",
+          "note": "福岡県 / government"
+        },
+        {
+          "id": "src-keya-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 芥屋漁港周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#16/33.589380/130.106581/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
+          "checkedOn": "2026-07-17",
+          "note": "国土地理院 / public_map"
+        }
+      ],
+      "values": [
+        {
+          "id": "keya-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "fishing_port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "C09実データで芥屋featureの種別を確認。福岡県計画PDFは再確認したが芥屋漁港の直接記載を確認できず、直接根拠から除外。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [
+              "src-keya-ksj-fishing-port"
+            ],
+            "checked": [
+              "src-keya-fukuoka-plan"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋漁港の一次・限定二次調査ではfacilities.toiletを一般利用可能なトイレを直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋漁港の一次・限定二次調査ではattributes.streetLightsを夜間常夜灯の点灯状況を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋漁港の一次・限定二次調査ではfacilities.parkingを一般釣り利用可能な駐車場を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋漁港の一次・限定二次調査ではrestrictions.fishingProhibitedを釣り禁止有無を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋漁港の一次・限定二次調査ではattributes.seabedを底質（砂泥・岩礁等）を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "has_evidence",
+          "valueText": "bay_mouth",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "地理院地図で湾口側に面した港湾形状を確認しbay_mouthと推定。潮流・波浪実測ではない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [
+              "src-keya-gsi-map"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋漁港の一次・限定二次調査ではattributes.obstaclesを根・テトラ等の障害物を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "fishing_port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "C09実データで芥屋featureの種別を確認。福岡県計画PDFは再確認したが芥屋漁港の直接記載を確認できず、直接根拠から除外。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [
+              "src-keya-ksj-fishing-port"
+            ],
+            "checked": [
+              "src-keya-fukuoka-plan"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋漁港の一次・限定二次調査ではattributes.tidalFlowを潮流の強弱を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "keya-gate",
+      "researchSource": "data/research/fishing-spots/keya-gate.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-keya-gate-cultural-monuments",
+          "sourceType": "official",
+          "sourceName": "糸島市 天然記念物一覧 芥屋大門",
+          "sourceUrl": "https://www.city.itoshima.lg.jp/s033/010/020/010/050/050/bunkazai5.html",
+          "checkedOn": "2026-07-18",
+          "note": "糸島市 / government"
+        },
+        {
+          "id": "src-keya-gate-hikitsu",
+          "sourceType": "official",
+          "sourceName": "引津校区の紹介 芥屋の大門",
+          "sourceUrl": "https://www.city.itoshima.lg.jp/c015/020/010/hikitsu-syoukai.html",
+          "checkedOn": "2026-07-18",
+          "note": "糸島市立引津コミュニティセンターあおぞら館 / government"
+        },
+        {
+          "id": "src-keya-gate-city-parks",
+          "sourceType": "official",
+          "sourceName": "糸島市の主な公園のご案内 芥屋の大門公園",
+          "sourceUrl": "https://www.city.itoshima.lg.jp/s023/itoshimacitypark.html",
+          "checkedOn": "2026-07-18",
+          "note": "糸島市 / government"
+        },
+        {
+          "id": "src-keya-gate-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 芥屋大門周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#16/33.596700/130.110600/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        }
+      ],
+      "values": [
+        {
+          "id": "keya-gate:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋大門周辺districtのspotTypeを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gate-gsi-map",
+              "src-keya-gate-cultural-monuments",
+              "src-keya-gate-hikitsu"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "糸島市公園案内で芥屋の大門公園のトイレは確認したが、公園施設であり釣り場施設として扱える直接根拠ではないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gate-gsi-map",
+              "src-keya-gate-cultural-monuments",
+              "src-keya-gate-hikitsu",
+              "src-keya-gate-city-parks"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋大門周辺districtのstreetLightsを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gate-gsi-map",
+              "src-keya-gate-cultural-monuments",
+              "src-keya-gate-hikitsu"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "糸島市公園案内で芥屋の大門公園の駐車場は確認したが、公園施設であり釣り場・岩場・海岸の駐車施設や利用条件として転用しないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gate-gsi-map",
+              "src-keya-gate-cultural-monuments",
+              "src-keya-gate-hikitsu",
+              "src-keya-gate-city-parks"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋大門周辺districtの釣り禁止・許可状況を確認できる管理者の現行公式情報がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gate-gsi-map",
+              "src-keya-gate-cultural-monuments",
+              "src-keya-gate-hikitsu",
+              "src-keya-gate-city-parks"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋大門周辺districtのseabedを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gate-gsi-map",
+              "src-keya-gate-cultural-monuments",
+              "src-keya-gate-hikitsu"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋大門周辺districtのopenSeaExposureを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gate-gsi-map",
+              "src-keya-gate-cultural-monuments",
+              "src-keya-gate-hikitsu"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋大門周辺districtのobstaclesを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gate-gsi-map",
+              "src-keya-gate-cultural-monuments",
+              "src-keya-gate-hikitsu"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋大門周辺districtのspotTypeを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gate-gsi-map",
+              "src-keya-gate-cultural-monuments",
+              "src-keya-gate-hikitsu"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋大門周辺districtのtidalFlowを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-keya-gate-gsi-map",
+              "src-keya-gate-cultural-monuments",
+              "src-keya-gate-hikitsu"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "funakoshi-port",
+      "researchSource": "data/research/fishing-spots/funakoshi-port.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-funakoshi-ksj-fishing-port",
+          "sourceType": "official",
+          "sourceName": "国土数値情報 C09-06 漁港データ 船越 feature",
+          "sourceUrl": "https://nlftp.mlit.go.jp/ksj/gml/data/C09/C09-06/C09-06_GML.zip",
+          "checkedOn": "2026-07-17",
+          "note": "国土交通省 国土政策局 / government"
+        },
+        {
+          "id": "src-funakoshi-itoshima-official-guide-map",
+          "sourceType": "official",
+          "sourceName": "糸島市観光ガイドマップ（船越漁港掲載）",
+          "sourceUrl": "https://www.city.itoshima.lg.jp/s026/s040/010/080/40/itoshimaguidemap-taiwanese-ura.pdf",
+          "checkedOn": "2026-07-17",
+          "note": "糸島市 / government"
+        },
+        {
+          "id": "src-funakoshi-fukuoka-plan",
+          "sourceType": "official",
+          "sourceName": "福岡県 福岡圏域 総合水産基盤整備事業計画",
+          "sourceUrl": "https://www.pref.fukuoka.lg.jp/uploaded/life/657436_61488945_misc.pdf",
+          "checkedOn": "2026-07-17",
+          "note": "福岡県 / government"
+        },
+        {
+          "id": "src-funakoshi-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 船越漁港周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#16/33.553892/130.130259/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
+          "checkedOn": "2026-07-17",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-funakoshi-meets-fish-trip-article",
+          "sourceType": "other",
+          "sourceName": "糸島フィッシュトリップ vol.2｜船越漁港編",
+          "sourceUrl": "https://meets-itoshima.com/post-24079/",
+          "checkedOn": "2026-07-17",
+          "note": "meets糸島 / private_reference"
+        }
+      ],
+      "values": [
+        {
+          "id": "funakoshi-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "fishing_port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "C09実データで対象漁港featureの種別を確認。福岡県計画PDFは補助確認に留める。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [
+              "src-funakoshi-ksj-fishing-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "船越漁港の一次・限定二次調査ではfacilities.toiletを一般利用可能なトイレを直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-funakoshi-meets-fish-trip-article"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "船越漁港の一次・限定二次調査ではattributes.streetLightsを夜間常夜灯の点灯状況を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-funakoshi-meets-fish-trip-article"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "船越漁港の一次・限定二次調査ではfacilities.parkingを一般釣り利用可能な駐車場を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-funakoshi-meets-fish-trip-article"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "船越漁港の一次・限定二次調査ではrestrictions.fishingProhibitedを釣り禁止有無を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-funakoshi-meets-fish-trip-article"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "船越漁港の一次・限定二次調査ではattributes.seabedを底質（砂泥・岩礁等）を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-funakoshi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "has_evidence",
+          "valueText": "bay",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "地理院地図で船越湾内の奥まった港湾形状を確認しshelteredと推定。風向・潮汐による変化は未評価。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [
+              "src-funakoshi-gsi-map"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "船越漁港の一次・限定二次調査ではattributes.obstaclesを根・テトラ等の障害物を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-funakoshi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "fishing_port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "C09実データで対象漁港featureの種別を確認。福岡県計画PDFは補助確認に留める。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [
+              "src-funakoshi-ksj-fishing-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "船越漁港の一次・限定二次調査ではattributes.tidalFlowを潮流の強弱を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-funakoshi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "kishi-port",
+      "researchSource": "data/research/fishing-spots/kishi-port.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-kishi-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 岐志漁港周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#14/33.5889/130.1391/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-kishi-fukuoka-port-list",
+          "sourceType": "official",
+          "sourceName": "Fukuoka Data Web 1 筑前海区の漁港（岐志掲載）",
+          "sourceUrl": "https://www.pref.fukuoka.lg.jp/dataweb/search/1/1233_496.html",
+          "checkedOn": "2026-07-18",
+          "note": "福岡県 / government"
+        },
+        {
+          "id": "src-kishi-itoshima-ferry",
+          "sourceType": "official",
+          "sourceName": "市営渡船ひめしまの運航（岐志漁港周辺）",
+          "sourceUrl": "https://www.city.itoshima.lg.jp/s006/010/020/020/090/tosen.html",
+          "checkedOn": "2026-07-18",
+          "note": "糸島市 / government"
+        }
+      ],
+      "values": [
+        {
+          "id": "kishi-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "fishing_port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "福岡県Data Webの「筑前海区の漁港」に岐志が掲載されているためfishing_portをconfirmed/mediumとした。釣り可能範囲や一般利用可否は示さない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-kishi-fukuoka-port-list"
+            ],
+            "checked": [
+              "src-kishi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "岐志漁港（facility）で一般利用できるトイレの現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-kishi-gsi-map",
+              "src-kishi-fukuoka-port-list",
+              "src-kishi-itoshima-ferry"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "岐志漁港（facility）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-kishi-gsi-map",
+              "src-kishi-fukuoka-port-list",
+              "src-kishi-itoshima-ferry"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "糸島市ページで市営渡船利用者向けの無料駐車場を確認したが、一般の釣り利用者が利用可能とは確認できないためunknown。渡船利用条件を釣り場施設へ転用しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-kishi-itoshima-ferry"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "岐志漁港（facility）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-kishi-gsi-map",
+              "src-kishi-fukuoka-port-list",
+              "src-kishi-itoshima-ferry"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "岐志漁港（facility）の底質を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-kishi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "岐志漁港（facility）の外海露出度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-kishi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "岐志漁港（facility）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-kishi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "fishing_port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "福岡県Data Webの「筑前海区の漁港」に岐志が掲載されているためfishing_portをconfirmed/mediumとした。釣り可能範囲や一般利用可否は示さない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-kishi-fukuoka-port-list"
+            ],
+            "checked": [
+              "src-kishi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "岐志漁港（facility）の潮流強度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-kishi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "fukuyoshi-port",
+      "researchSource": "data/research/fishing-spots/fukuyoshi-port.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-fukuyoshi-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 福吉漁港周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#14/33.5164/130.0969/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-fukuyoshi-fukuoka-port-list",
+          "sourceType": "official",
+          "sourceName": "Fukuoka Data Web 1 筑前海区の漁港（福吉掲載）",
+          "sourceUrl": "https://www.pref.fukuoka.lg.jp/dataweb/search/1/1233_496.html",
+          "checkedOn": "2026-07-18",
+          "note": "福岡県 / government"
+        },
+        {
+          "id": "src-fukuyoshi-itoshima-fukui",
+          "sourceType": "official",
+          "sourceName": "福井行政区（福吉漁港掲載）",
+          "sourceUrl": "https://itoshimalife.city.itoshima.lg.jp/administrative/?govId=52",
+          "checkedOn": "2026-07-18",
+          "note": "糸島市 / government"
+        }
+      ],
+      "values": [
+        {
+          "id": "fukuyoshi-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "fishing_port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "福岡県Data Webの「筑前海区の漁港」に福吉が掲載されているためfishing_portをconfirmed/mediumとした。釣り可能範囲や一般利用可否は示さない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-fukuyoshi-fukuoka-port-list"
+            ],
+            "checked": [
+              "src-fukuyoshi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福吉漁港（facility）で一般利用できるトイレの現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukuyoshi-gsi-map",
+              "src-fukuyoshi-fukuoka-port-list",
+              "src-fukuyoshi-itoshima-fukui"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福吉漁港（facility）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukuyoshi-gsi-map",
+              "src-fukuyoshi-fukuoka-port-list",
+              "src-fukuyoshi-itoshima-fukui"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福吉漁港facilityで一般釣り利用できる駐車場の現行根拠がないためunknown。地域紹介や水揚げ・カキ小屋情報を一般駐車可の根拠へ転用しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukuyoshi-gsi-map",
+              "src-fukuyoshi-fukuoka-port-list",
+              "src-fukuyoshi-itoshima-fukui"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福吉漁港（facility）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukuyoshi-gsi-map",
+              "src-fukuyoshi-fukuoka-port-list",
+              "src-fukuyoshi-itoshima-fukui"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福吉漁港（facility）の底質を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukuyoshi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福吉漁港（facility）の外海露出度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukuyoshi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福吉漁港（facility）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukuyoshi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "fishing_port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "福岡県Data Webの「筑前海区の漁港」に福吉が掲載されているためfishing_portをconfirmed/mediumとした。釣り可能範囲や一般利用可否は示さない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-fukuyoshi-fukuoka-port-list"
+            ],
+            "checked": [
+              "src-fukuyoshi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福吉漁港（facility）の潮流強度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukuyoshi-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "hamasaki-beach",
+      "researchSource": "data/research/fishing-spots/hamasaki-beach.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-hamasaki-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 浜崎海岸周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#14/33.4555/130.0427/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-hamasaki-saga-coast",
+          "sourceType": "official",
+          "sourceName": "唐津湾海岸侵食対策調査検討委員会（浜崎海岸の砂浜）",
+          "sourceUrl": "https://www.pref.saga.lg.jp/kiji00312170/index.html",
+          "checkedOn": "2026-07-18",
+          "note": "佐賀県 / government"
+        },
+        {
+          "id": "src-hamasaki-karatsu-beach-ops",
+          "sourceType": "official",
+          "sourceName": "浜崎海水浴場草刈業務",
+          "sourceUrl": "https://www.city.karatsu.lg.jp/site/nyusatsu/49222.html",
+          "checkedOn": "2026-07-18",
+          "note": "唐津市 / government"
+        }
+      ],
+      "values": [
+        {
+          "id": "hamasaki-beach:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "sandy_beach"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "佐賀県資料が浜崎海岸を砂浜として明記するためsandy_beachをconfirmed/mediumとした。浜崎海水浴場の季節運用、立入・釣り可否はこの分類から推定しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-hamasaki-saga-coast"
+            ],
+            "checked": [
+              "src-hamasaki-gsi-map",
+              "src-hamasaki-karatsu-beach-ops"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "浜崎海岸（district）で一般利用できるトイレの現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hamasaki-gsi-map",
+              "src-hamasaki-saga-coast",
+              "src-hamasaki-karatsu-beach-ops"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "浜崎海岸（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hamasaki-gsi-map",
+              "src-hamasaki-saga-coast",
+              "src-hamasaki-karatsu-beach-ops"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "浜崎海岸（district）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hamasaki-gsi-map",
+              "src-hamasaki-saga-coast",
+              "src-hamasaki-karatsu-beach-ops"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "浜崎海岸（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hamasaki-gsi-map",
+              "src-hamasaki-saga-coast",
+              "src-hamasaki-karatsu-beach-ops"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "浜崎海岸（district）の底質を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hamasaki-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "浜崎海岸（district）の外海露出度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hamasaki-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "浜崎海岸（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hamasaki-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "sandy_beach"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "佐賀県資料が浜崎海岸を砂浜として明記するためsandy_beachをconfirmed/mediumとした。浜崎海水浴場の季節運用、立入・釣り可否はこの分類から推定しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-hamasaki-saga-coast"
+            ],
+            "checked": [
+              "src-hamasaki-gsi-map",
+              "src-hamasaki-karatsu-beach-ops"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "浜崎海岸（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hamasaki-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "niji-matsubara",
+      "researchSource": "data/research/fishing-spots/niji-matsubara.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-niji-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 虹の松原周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#14/33.4472/130.0207/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-niji-karatsu-conservation",
+          "sourceType": "official",
+          "sourceName": "虹の松原の再生・保全活動",
+          "sourceUrl": "https://www.city.karatsu.lg.jp/page/42113.html",
+          "checkedOn": "2026-07-18",
+          "note": "唐津市 / government"
+        },
+        {
+          "id": "src-niji-karatsu-heritage",
+          "sourceType": "official",
+          "sourceName": "名勝・天然記念物（虹の松原）",
+          "sourceUrl": "https://www.city.karatsu.lg.jp/page/3475.html",
+          "checkedOn": "2026-07-18",
+          "note": "唐津市 / government"
+        }
+      ],
+      "values": [
+        {
+          "id": "niji-matsubara:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "虹の松原周辺は松原と隣接海岸を含む広域districtで、Schemaの単一spotTypeへ直接分類できる公式根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-niji-gsi-map",
+              "src-niji-karatsu-conservation",
+              "src-niji-karatsu-heritage"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "虹の松原周辺（district）で一般利用できるトイレの現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-niji-gsi-map",
+              "src-niji-karatsu-conservation",
+              "src-niji-karatsu-heritage"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "虹の松原周辺（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-niji-gsi-map",
+              "src-niji-karatsu-conservation",
+              "src-niji-karatsu-heritage"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "虹の松原周辺（district）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-niji-gsi-map",
+              "src-niji-karatsu-conservation",
+              "src-niji-karatsu-heritage"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "虹の松原周辺（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-niji-gsi-map",
+              "src-niji-karatsu-conservation",
+              "src-niji-karatsu-heritage"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "虹の松原周辺（district）の底質を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-niji-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "虹の松原周辺（district）の外海露出度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-niji-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "虹の松原周辺（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-niji-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "虹の松原周辺は松原と隣接海岸を含む広域districtで、Schemaの単一spotTypeへ直接分類できる公式根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-niji-gsi-map",
+              "src-niji-karatsu-conservation",
+              "src-niji-karatsu-heritage"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "虹の松原周辺（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-niji-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "karatsu-east-port",
+      "researchSource": "data/research/fishing-spots/karatsu-east-port.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-saga-port-facilities",
+          "sourceType": "other",
+          "sourceName": "県が管理する港湾施設の概要",
+          "sourceUrl": "https://www.pref.saga.lg.jp/kiji00329386/3_29386_321357_up_ibeqpe4w.pdf",
+          "checkedOn": "2026-07-12",
+          "note": "佐賀県 / port_manager"
+        },
+        {
+          "id": "src-saga-karatsu-decarbonization-plan",
+          "sourceType": "other",
+          "sourceName": "唐津港・伊万里港港湾脱炭素化推進計画",
+          "sourceUrl": "https://www.pref.saga.lg.jp/kiji003110833/index.html",
+          "checkedOn": "2026-07-12",
+          "note": "佐賀県 / port_manager"
+        },
+        {
+          "id": "src-saga-port-plan",
+          "sourceType": "other",
+          "sourceName": "港湾計画図（唐津港、伊万里港）",
+          "sourceUrl": "https://www.pref.saga.lg.jp/kiji00313547/index.html",
+          "checkedOn": "2026-07-12",
+          "note": "佐賀県 / port_manager"
+        },
+        {
+          "id": "src-gsi-karatsu-east-port",
+          "sourceType": "official",
+          "sourceName": "地理院地図 唐津東港代表点周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#16/33.459000/129.993000/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-12",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-saga-port-information",
+          "sourceType": "official",
+          "sourceName": "港湾",
+          "sourceUrl": "https://www.pref.saga.lg.jp/list00674.html",
+          "checkedOn": "2026-07-12",
+          "note": "佐賀県 / government"
+        },
+        {
+          "id": "src-uosoku-karatsu-east-port",
+          "sourceType": "other",
+          "sourceName": "唐津東港の釣り場情報",
+          "sourceUrl": "https://uosoku.com/home/kyuu/saga/kara/",
+          "checkedOn": "2026-07-12",
+          "note": "魚速報 / private_reference"
+        },
+        {
+          "id": "src-kyusyu-ins-karatsu-east-port",
+          "sourceType": "other",
+          "sourceName": "唐津東港・・・いったいここは・・・。",
+          "sourceUrl": "https://kyusyu-ins.com/2021/01/15/2021-01-15karatu/",
+          "checkedOn": "2026-07-12",
+          "note": "釣好大全九州 / personal_blog"
+        }
+      ],
+      "values": [
+        {
+          "id": "karatsu-east-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "アジ",
+            "コノシロ",
+            "スズキ",
+            "クロダイ",
+            "キビレ",
+            "シログチ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": null,
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "port",
+            "breakwater",
+            "revetment"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "佐賀県の港湾施設資料で東港地区の岸壁、防波堤、護岸を確認。地区全体の構成であり、各施設への一般立入可否は別途確認が必要。",
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一般利用可能なトイレの公式案内を確認できず、民間釣り情報でも不明とされる。",
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "夜間釣行への言及はあるが、港湾照明、航路標識灯、街路灯と釣り場を照らす常夜灯を区別できないため判定しない。",
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公式港湾施設資料に壱岐フェリー駐車場は記載されるが、釣り目的の利用可否を確認できない。民間釣り情報でも駐車場は不明とされる。",
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "weak_evidence",
+          "valueText": "partial",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間釣り情報が『釣り禁止の部分あり』と明記する。ただし禁止範囲・根拠・現行性を公式確認できていないため、現地表示と管理者情報を必ず優先する。",
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "sand",
+            "mud"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間釣り情報1件が砂地・砂泥地中心とする。公的な底質資料では未確認のため低確度の推定。",
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "has_evidence",
+          "valueText": "bay",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "唐津港の東港地区として唐津湾側の港湾区域内に位置することから湾内と推定。風波や安全性の評価ではない。",
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "防波堤・護岸の存在とコンクリート波止での釣行例は確認できるが、釣り位置周辺の消波ブロック、岩、海藻等を地点全体として分類できない。",
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "port",
+            "breakwater",
+            "revetment"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "佐賀県の港湾施設資料で東港地区の岸壁、防波堤、護岸を確認。地区全体の構成であり、各施設への一般立入可否は別途確認が必要。",
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "民間情報に潮の動く時間帯への言及はあるが、地点の潮通しを弱・普通・強へ分類できる流況根拠は確認できなかった。",
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "karatsu-west-port",
+      "researchSource": "data/research/fishing-spots/karatsu-west-port.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-karatsu-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 唐津港西港周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#14/33.4662/129.9488/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-karatsu-jtsb-west-port",
+          "sourceType": "official",
+          "sourceName": "船舶事故概要（唐津港西港東防波堤西灯台）",
+          "sourceUrl": "https://jtsb.mlit.go.jp/jtsb/ship/detail.php?id=16844",
+          "checkedOn": "2026-07-18",
+          "note": "運輸安全委員会 / government"
+        }
+      ],
+      "values": [
+        {
+          "id": "karatsu-west-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "国の資料で「唐津港西港」という港区名を確認したためportをconfirmed/mediumとした。港湾管理区域の一般立入・釣り可否は示さない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-karatsu-jtsb-west-port"
+            ],
+            "checked": [
+              "src-karatsu-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "唐津西港（facility）で一般利用できるトイレの現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-karatsu-gsi-map",
+              "src-karatsu-jtsb-west-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "唐津西港（facility）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-karatsu-gsi-map",
+              "src-karatsu-jtsb-west-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "唐津西港（facility）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-karatsu-gsi-map",
+              "src-karatsu-jtsb-west-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "唐津西港（facility）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-karatsu-gsi-map",
+              "src-karatsu-jtsb-west-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "唐津西港（facility）の底質を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-karatsu-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "唐津西港（facility）の外海露出度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-karatsu-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "唐津西港（facility）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-karatsu-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "国の資料で「唐津港西港」という港区名を確認したためportをconfirmed/mediumとした。港湾管理区域の一般立入・釣り可否は示さない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-karatsu-jtsb-west-port"
+            ],
+            "checked": [
+              "src-karatsu-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "唐津西港（facility）の潮流強度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-karatsu-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "yobuko-area",
+      "researchSource": "data/research/fishing-spots/yobuko-area.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-yobuko-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 呼子地区周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#14/33.5437/129.8942/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-yobuko-karatsu-center",
+          "sourceType": "official",
+          "sourceName": "呼子市民センター",
+          "sourceUrl": "https://www.city.karatsu.lg.jp/soshiki/31.html",
+          "checkedOn": "2026-07-18",
+          "note": "唐津市 / government"
+        },
+        {
+          "id": "src-yobuko-karatsu-district",
+          "sourceType": "official",
+          "sourceName": "唐津市の投票所（呼子地区）",
+          "sourceUrl": "https://www.city.karatsu.lg.jp/page/3405.html",
+          "checkedOn": "2026-07-18",
+          "note": "唐津市 / government"
+        }
+      ],
+      "values": [
+        {
+          "id": "yobuko-area:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "呼子周辺は港、市街地、島、海岸を含む広域districtで、単一の地物種別へ直接分類できないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-yobuko-gsi-map",
+              "src-yobuko-karatsu-center",
+              "src-yobuko-karatsu-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "呼子周辺（district）で一般利用できるトイレの現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-yobuko-gsi-map",
+              "src-yobuko-karatsu-center",
+              "src-yobuko-karatsu-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "呼子周辺（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-yobuko-gsi-map",
+              "src-yobuko-karatsu-center",
+              "src-yobuko-karatsu-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "呼子周辺（district）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-yobuko-gsi-map",
+              "src-yobuko-karatsu-center",
+              "src-yobuko-karatsu-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "呼子周辺（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-yobuko-gsi-map",
+              "src-yobuko-karatsu-center",
+              "src-yobuko-karatsu-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "呼子周辺（district）の底質を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-yobuko-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "呼子周辺（district）の外海露出度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-yobuko-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "呼子周辺（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-yobuko-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "呼子周辺は港、市街地、島、海岸を含む広域districtで、単一の地物種別へ直接分類できないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-yobuko-gsi-map",
+              "src-yobuko-karatsu-center",
+              "src-yobuko-karatsu-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "呼子周辺（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-yobuko-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "imari-inner-bay",
+      "researchSource": "data/research/fishing-spots/imari-inner-bay.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-imari-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 伊万里湾奥周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#14/33.3044/129.8176/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-imari-city-bay",
+          "sourceType": "official",
+          "sourceName": "伊万里湾",
+          "sourceUrl": "https://www.city.imari.lg.jp/9641.htm",
+          "checkedOn": "2026-07-18",
+          "note": "伊万里市 / government"
+        }
+      ],
+      "values": [
+        {
+          "id": "imari-inner-bay:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "伊万里湾奥は港湾、市街地沿岸、河口、干潟等を含み得る広域districtで、単一のspotTypeへ直接分類できる公式根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-imari-gsi-map",
+              "src-imari-city-bay"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "伊万里湾奥（district）で一般利用できるトイレの現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-imari-gsi-map",
+              "src-imari-city-bay"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "伊万里湾奥（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-imari-gsi-map",
+              "src-imari-city-bay"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "伊万里湾奥（district）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-imari-gsi-map",
+              "src-imari-city-bay"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "伊万里湾奥（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-imari-gsi-map",
+              "src-imari-city-bay"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "伊万里湾奥（district）の底質を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-imari-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "has_evidence",
+          "valueText": "inner_bay",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "伊万里市公式ページが伊万里湾を、島々が外海の風や波を遮る「穏やかな内海」と説明しているためinner_bayをconfirmed/mediumとした。リアルタイムの波浪・潮流を示すものではない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-imari-city-bay"
+            ],
+            "checked": [
+              "src-imari-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "伊万里湾奥（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-imari-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "伊万里湾奥は港湾、市街地沿岸、河口、干潟等を含み得る広域districtで、単一のspotTypeへ直接分類できる公式根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-imari-gsi-map",
+              "src-imari-city-bay"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "伊万里湾奥（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-imari-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "fukushima-area",
+      "researchSource": "data/research/fishing-spots/fukushima-area.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-fukushima-area-matsuura-fishery",
+          "sourceType": "official",
+          "sourceName": "松浦市で漁業に従事したい人向け情報",
+          "sourceUrl": "https://www.city-matsuura.jp/top/purpose/shushoku/7818.html",
+          "checkedOn": "2026-07-18",
+          "note": "松浦市 / government"
+        },
+        {
+          "id": "src-fukushima-area-museum",
+          "sourceType": "official",
+          "sourceName": "福島歴史民俗資料館",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kyoikuiinkai/bunkazaika/5/983.html",
+          "checkedOn": "2026-07-18",
+          "note": "松浦市 / government"
+        },
+        {
+          "id": "src-fukushima-area-history",
+          "sourceType": "official",
+          "sourceName": "市の沿革",
+          "sourceUrl": "https://www.city-matsuura.jp/top/shiseijoho/shinogaiyo_aramashi/2398.html",
+          "checkedOn": "2026-07-18",
+          "note": "松浦市 / government"
+        },
+        {
+          "id": "src-fukushima-area-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 福島周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#13/33.332000/129.773000/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        }
+      ],
+      "values": [
+        {
+          "id": "fukushima-area:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukushima-area-matsuura-fishery",
+              "src-fukushima-area-museum",
+              "src-fukushima-area-history",
+              "src-fukushima-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからtoiletを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukushima-area-matsuura-fishery",
+              "src-fukushima-area-museum",
+              "src-fukushima-area-history",
+              "src-fukushima-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからstreetLightsを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukushima-area-matsuura-fishery",
+              "src-fukushima-area-museum",
+              "src-fukushima-area-history",
+              "src-fukushima-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからparkingを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukushima-area-matsuura-fishery",
+              "src-fukushima-area-museum",
+              "src-fukushima-area-history",
+              "src-fukushima-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからfishingProhibitedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukushima-area-matsuura-fishery",
+              "src-fukushima-area-museum",
+              "src-fukushima-area-history",
+              "src-fukushima-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからseabedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukushima-area-matsuura-fishery",
+              "src-fukushima-area-museum",
+              "src-fukushima-area-history",
+              "src-fukushima-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからopenSeaExposureを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukushima-area-matsuura-fishery",
+              "src-fukushima-area-museum",
+              "src-fukushima-area-history",
+              "src-fukushima-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからobstaclesを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukushima-area-matsuura-fishery",
+              "src-fukushima-area-museum",
+              "src-fukushima-area-history",
+              "src-fukushima-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukushima-area-matsuura-fishery",
+              "src-fukushima-area-museum",
+              "src-fukushima-area-history",
+              "src-fukushima-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからtidalFlowを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-fukushima-area-matsuura-fishery",
+              "src-fukushima-area-museum",
+              "src-fukushima-area-history",
+              "src-fukushima-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "takashima-area",
+      "researchSource": "data/research/fishing-spots/takashima-area.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-takashima-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 鷹島周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#14/33.4246/129.7555/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-takashima-matsuura-history",
+          "sourceType": "official",
+          "sourceName": "鷹島地区の歴史・文化",
+          "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kyoikuiinkai/bunkazaika/5/4/index.html",
+          "checkedOn": "2026-07-18",
+          "note": "松浦市 / government"
+        },
+        {
+          "id": "src-takashima-matsuura-district",
+          "sourceType": "official",
+          "sourceName": "避難場所（鷹島地区）",
+          "sourceUrl": "https://www.city-matsuura.jp/top/kurashi_tetsuzuki/bosaijoho/hinambasho/1808.html",
+          "checkedOn": "2026-07-18",
+          "note": "松浦市 / government"
+        }
+      ],
+      "values": [
+        {
+          "id": "takashima-area:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "鷹島周辺は島内の港、海岸、地磯、市街地、橋周辺等を含む広域districtで、単一のspotTypeへ直接分類できないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-takashima-gsi-map",
+              "src-takashima-matsuura-history",
+              "src-takashima-matsuura-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "鷹島周辺（district）で一般利用できるトイレの現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-takashima-gsi-map",
+              "src-takashima-matsuura-history",
+              "src-takashima-matsuura-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "鷹島周辺（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-takashima-gsi-map",
+              "src-takashima-matsuura-history",
+              "src-takashima-matsuura-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "鷹島周辺（district）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-takashima-gsi-map",
+              "src-takashima-matsuura-history",
+              "src-takashima-matsuura-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "鷹島周辺（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-takashima-gsi-map",
+              "src-takashima-matsuura-history",
+              "src-takashima-matsuura-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "鷹島周辺（district）の底質を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-takashima-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "鷹島周辺（district）の外海露出度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-takashima-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "鷹島周辺（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-takashima-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "鷹島周辺は島内の港、海岸、地磯、市街地、橋周辺等を含む広域districtで、単一のspotTypeへ直接分類できないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-takashima-gsi-map",
+              "src-takashima-matsuura-history",
+              "src-takashima-matsuura-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "鷹島周辺（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-takashima-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "tabira-port",
+      "researchSource": "data/research/fishing-spots/tabira-port.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-tabira-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 田平港周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#14/33.3609/129.5827/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        },
+        {
+          "id": "src-tabira-mlit-hirado-route",
+          "sourceType": "official",
+          "sourceName": "平戸瀬戸航路（田平港掲載）",
+          "sourceUrl": "https://www.pa.qsr.mlit.go.jp/nagasaki/port/route/hirado/",
+          "checkedOn": "2026-07-18",
+          "note": "国土交通省 九州地方整備局 長崎港湾・空港整備事務所 / government"
+        },
+        {
+          "id": "src-tabira-nagasaki-port-plan",
+          "sourceType": "official",
+          "sourceName": "地域再生計画（田平港の港湾施設）",
+          "sourceUrl": "https://www.pref.nagasaki.jp/bunrui/machidukuri/kowan-kuko/kowan/kouwan-kowan-kuko/tihosousei/",
+          "checkedOn": "2026-07-18",
+          "note": "長崎県 / government"
+        },
+        {
+          "id": "src-tabira-nagasaki-market",
+          "sourceType": "official",
+          "sourceName": "平戸瀬戸市場レストラン（田平港・平戸市田平町）",
+          "sourceUrl": "https://www.pref.nagasaki.jp/tisan/fish/detail.php?id=10",
+          "checkedOn": "2026-07-18",
+          "note": "長崎県 / government"
+        }
+      ],
+      "values": [
+        {
+          "id": "tabira-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "国土交通省が平戸瀬戸航路周辺の港として田平港を明記し、長崎県が田平港を港湾施設として扱っているためportをconfirmed/mediumとした。一般立入・釣り可否は示さない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-tabira-mlit-hirado-route",
+              "src-tabira-nagasaki-port-plan"
+            ],
+            "checked": [
+              "src-tabira-gsi-map",
+              "src-tabira-nagasaki-market"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "田平港（facility）で一般利用できるトイレの現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-tabira-gsi-map",
+              "src-tabira-mlit-hirado-route",
+              "src-tabira-nagasaki-port-plan",
+              "src-tabira-nagasaki-market"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "田平港（facility）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-tabira-gsi-map",
+              "src-tabira-mlit-hirado-route",
+              "src-tabira-nagasaki-port-plan",
+              "src-tabira-nagasaki-market"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "田平港（facility）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-tabira-gsi-map",
+              "src-tabira-mlit-hirado-route",
+              "src-tabira-nagasaki-port-plan",
+              "src-tabira-nagasaki-market"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "田平港（facility）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-tabira-gsi-map",
+              "src-tabira-mlit-hirado-route",
+              "src-tabira-nagasaki-port-plan",
+              "src-tabira-nagasaki-market"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "田平港（facility）の底質を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-tabira-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "田平港（facility）の外海露出度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-tabira-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "田平港（facility）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-tabira-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "port"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "国土交通省が平戸瀬戸航路周辺の港として田平港を明記し、長崎県が田平港を港湾施設として扱っているためportをconfirmed/mediumとした。一般立入・釣り可否は示さない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [
+              "src-tabira-mlit-hirado-route",
+              "src-tabira-nagasaki-port-plan"
+            ],
+            "checked": [
+              "src-tabira-gsi-map",
+              "src-tabira-nagasaki-market"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "田平港（facility）の潮流強度を直接評価できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-tabira-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "hirado-seto",
+      "researchSource": "data/research/fishing-spots/hirado-seto.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-hirado-seto-mlit-route",
+          "sourceType": "official",
+          "sourceName": "平戸瀬戸航路",
+          "sourceUrl": "https://www.pa.qsr.mlit.go.jp/nagasaki/port/route/hirado/",
+          "checkedOn": "2026-07-18",
+          "note": "国土交通省 九州地方整備局 / government"
+        },
+        {
+          "id": "src-hirado-seto-city-gallery",
+          "sourceType": "official",
+          "sourceName": "平戸瀬戸市場フォトギャラリー",
+          "sourceUrl": "https://www.city.hirado.nagasaki.jp/kurashi/gyosei/photogallery/tabira/setoichiba.html",
+          "checkedOn": "2026-07-18",
+          "note": "平戸市 / government"
+        },
+        {
+          "id": "src-hirado-seto-chart-archive",
+          "sourceType": "official",
+          "sourceName": "海図アーカイブ 平戸瀬戸",
+          "sourceUrl": "https://www1.kaiho.mlit.go.jp/kaizuArchive/kaizu/kaizu.cgi?id=JLAA00501&p=954",
+          "checkedOn": "2026-07-18",
+          "note": "海上保安庁 / government"
+        },
+        {
+          "id": "src-hirado-seto-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 平戸瀬戸周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#13/33.354000/129.579000/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        }
+      ],
+      "values": [
+        {
+          "id": "hirado-seto:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hirado-seto-mlit-route",
+              "src-hirado-seto-city-gallery",
+              "src-hirado-seto-chart-archive",
+              "src-hirado-seto-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからtoiletを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hirado-seto-mlit-route",
+              "src-hirado-seto-city-gallery",
+              "src-hirado-seto-chart-archive",
+              "src-hirado-seto-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからstreetLightsを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hirado-seto-mlit-route",
+              "src-hirado-seto-city-gallery",
+              "src-hirado-seto-chart-archive",
+              "src-hirado-seto-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからparkingを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hirado-seto-mlit-route",
+              "src-hirado-seto-city-gallery",
+              "src-hirado-seto-chart-archive",
+              "src-hirado-seto-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからfishingProhibitedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hirado-seto-mlit-route",
+              "src-hirado-seto-city-gallery",
+              "src-hirado-seto-chart-archive",
+              "src-hirado-seto-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからseabedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hirado-seto-mlit-route",
+              "src-hirado-seto-city-gallery",
+              "src-hirado-seto-chart-archive",
+              "src-hirado-seto-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからopenSeaExposureを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hirado-seto-mlit-route",
+              "src-hirado-seto-city-gallery",
+              "src-hirado-seto-chart-archive",
+              "src-hirado-seto-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからobstaclesを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hirado-seto-mlit-route",
+              "src-hirado-seto-city-gallery",
+              "src-hirado-seto-chart-archive",
+              "src-hirado-seto-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hirado-seto-mlit-route",
+              "src-hirado-seto-city-gallery",
+              "src-hirado-seto-chart-archive",
+              "src-hirado-seto-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからtidalFlowを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-hirado-seto-mlit-route",
+              "src-hirado-seto-city-gallery",
+              "src-hirado-seto-chart-archive",
+              "src-hirado-seto-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "ikitsuki-area",
+      "researchSource": "data/research/fishing-spots/ikitsuki-area.json",
+      "reviewSources": [],
+      "sources": [
+        {
+          "id": "src-ikitsuki-area-city-gallery",
+          "sourceType": "official",
+          "sourceName": "生月フォトギャラリー",
+          "sourceUrl": "https://www.city.hirado.nagasaki.jp/kurashi/gyosei/photogallery/ikituki/index.html",
+          "checkedOn": "2026-07-18",
+          "note": "平戸市 / government"
+        },
+        {
+          "id": "src-ikitsuki-area-statistics",
+          "sourceType": "official",
+          "sourceName": "主要統計指標",
+          "sourceUrl": "https://www.city.hirado.nagasaki.jp/kurashi/gyosei/toukei/tki01.html",
+          "checkedOn": "2026-07-18",
+          "note": "平戸市 / government"
+        },
+        {
+          "id": "src-ikitsuki-area-org",
+          "sourceType": "official",
+          "sourceName": "組織機構図・各課業務内容",
+          "sourceUrl": "https://www.city.hirado.nagasaki.jp/kurashi/gyosei/guide/gd02.html",
+          "checkedOn": "2026-07-18",
+          "note": "平戸市 / government"
+        },
+        {
+          "id": "src-ikitsuki-area-gsi-map",
+          "sourceType": "official",
+          "sourceName": "国土地理院地理院地図 生月島方面",
+          "sourceUrl": "https://maps.gsi.go.jp/#13/33.390000/129.564000/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
+          "checkedOn": "2026-07-18",
+          "note": "国土地理院 / public_map"
+        }
+      ],
+      "values": [
+        {
+          "id": "ikitsuki-area:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": null,
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-ikitsuki-area-city-gallery",
+              "src-ikitsuki-area-statistics",
+              "src-ikitsuki-area-org",
+              "src-ikitsuki-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからtoiletを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-ikitsuki-area-city-gallery",
+              "src-ikitsuki-area-statistics",
+              "src-ikitsuki-area-org",
+              "src-ikitsuki-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからstreetLightsを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-ikitsuki-area-city-gallery",
+              "src-ikitsuki-area-statistics",
+              "src-ikitsuki-area-org",
+              "src-ikitsuki-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからparkingを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-ikitsuki-area-city-gallery",
+              "src-ikitsuki-area-statistics",
+              "src-ikitsuki-area-org",
+              "src-ikitsuki-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからfishingProhibitedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-ikitsuki-area-city-gallery",
+              "src-ikitsuki-area-statistics",
+              "src-ikitsuki-area-org",
+              "src-ikitsuki-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからseabedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-ikitsuki-area-city-gallery",
+              "src-ikitsuki-area-statistics",
+              "src-ikitsuki-area-org",
+              "src-ikitsuki-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからopenSeaExposureを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-ikitsuki-area-city-gallery",
+              "src-ikitsuki-area-statistics",
+              "src-ikitsuki-area-org",
+              "src-ikitsuki-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからobstaclesを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-ikitsuki-area-city-gallery",
+              "src-ikitsuki-area-statistics",
+              "src-ikitsuki-area-org",
+              "src-ikitsuki-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-ikitsuki-area-city-gallery",
+              "src-ikitsuki-area-statistics",
+              "src-ikitsuki-area-org",
+              "src-ikitsuki-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからtidalFlowを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-ikitsuki-area-city-gallery",
+              "src-ikitsuki-area-statistics",
+              "src-ikitsuki-area-org",
+              "src-ikitsuki-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    }
+  ]
+}

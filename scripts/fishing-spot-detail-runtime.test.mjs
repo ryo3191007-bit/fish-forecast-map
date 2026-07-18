@@ -14,6 +14,10 @@ function loadTsModule(relativePath) {
   moduleCache.set(relativePath, compiledModule);
   const localRequire = (specifier) => {
     if (specifier.startsWith('@/')) return loadTsModule(`src/${specifier.slice(2)}.ts`);
+    if (specifier.startsWith('../')) {
+      const required = nodeRequire(join(process.cwd(), 'src/lib', specifier));
+      return specifier.endsWith('.json') ? { default: required } : required;
+    }
     return nodeRequire(specifier);
   };
   const fn = new Function('exports', 'require', 'module', '__filename', '__dirname', outputText);
