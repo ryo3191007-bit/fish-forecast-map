@@ -186,8 +186,13 @@ assert.match(
 );
 assert.match(
   dashboard,
-  /条件に合う本人の釣果は/,
-  "area evaluation score note refers to self catch records",
+  /本人の釣果は、平均SCOREに使う既存地点SCOREへ参考反映しています。/,
+  "area evaluation score note refers to self catch records without filter-linked wording",
+);
+assert.doesNotMatch(
+  dashboard,
+  /条件に合う本人の釣果/,
+  "area evaluation score note does not describe filter-linked self catch records",
 );
 assert.doesNotMatch(
   hookSource,
@@ -227,8 +232,18 @@ assert.match(
 );
 assert.match(
   dashboard,
-  /className="dashboardModeSwitch"[\s\S]*?釣果情報[\s\S]*?地点評価/,
-  "large catch report / spot evaluation mode switch exists",
+  /className="dashboardModeSwitch"[\s\S]*?role="group"[\s\S]*?aria-label="メイン表示モードを選択"[\s\S]*?釣果情報[\s\S]*?地点評価/,
+  "large catch report / spot evaluation button group exists",
+);
+assert.match(
+  dashboard,
+  /aria-pressed=\{dashboardMode === "catchReports"\}[\s\S]*?aria-pressed=\{dashboardMode === "spotEvaluation"\}/,
+  "mode switch buttons expose selected state with aria-pressed",
+);
+assert.doesNotMatch(
+  dashboard,
+  /role="tablist"|role="tab"|role="tabpanel"|aria-controls=|aria-selected=|aria-labelledby="catch-reports-mode-tab"|aria-labelledby="spot-evaluation-mode-tab"/,
+  "incomplete tab semantics are not used for the main mode switch",
 );
 assert.doesNotMatch(
   dashboard,
@@ -254,6 +269,11 @@ assert.match(
   dashboard,
   /const \[spotEvaluationTab\] = useState<SpotEvaluationTab>\("評価"\)/,
   "spot evaluation internal tab state is owned by FishingDashboard",
+);
+assert.doesNotMatch(
+  dashboard,
+  /内部タブ状態/,
+  "spot evaluation internal tab state is not exposed in user-facing UI",
 );
 assert.match(
   dashboard,

@@ -56,6 +56,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [spotEvaluationTab] = useState<SpotEvaluationTab>("評価");
+  void spotEvaluationTab;
   const [selectedEnvironmentTime, setSelectedEnvironmentTime] = useState<
     string | null
   >(null);
@@ -318,15 +319,12 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
 
       <div
         className="dashboardModeSwitch"
-        role="tablist"
-        aria-label="メイン表示モード"
+        role="group"
+        aria-label="メイン表示モードを選択"
       >
         <button
           type="button"
-          role="tab"
-          id="catch-reports-mode-tab"
-          aria-controls="catch-reports-mode-panel"
-          aria-selected={dashboardMode === "catchReports"}
+          aria-pressed={dashboardMode === "catchReports"}
           className={
             dashboardMode === "catchReports"
               ? "dashboardModeButton active"
@@ -339,10 +337,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
         </button>
         <button
           type="button"
-          role="tab"
-          id="spot-evaluation-mode-tab"
-          aria-controls="spot-evaluation-mode-panel"
-          aria-selected={dashboardMode === "spotEvaluation"}
+          aria-pressed={dashboardMode === "spotEvaluation"}
           className={
             dashboardMode === "spotEvaluation"
               ? "dashboardModeButton active"
@@ -356,11 +351,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
       </div>
 
       {dashboardMode === "catchReports" ? (
-        <div
-          id="catch-reports-mode-panel"
-          role="tabpanel"
-          aria-labelledby="catch-reports-mode-tab"
-        >
+        <div>
           <div className="sectionHeading">
             <div>
               <p className="eyebrow">Catch reports</p>
@@ -552,12 +543,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           />
         </div>
       ) : (
-        <div
-          id="spot-evaluation-mode-panel"
-          role="tabpanel"
-          aria-labelledby="spot-evaluation-mode-tab"
-          className="spotEvaluationMode"
-        >
+        <div className="spotEvaluationMode">
           <EnvironmentPanel
             selectedSpot={environmentSpot}
             spots={fishingSpots}
@@ -573,7 +559,6 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             <div>
               <p className="eyebrow">Spot evaluation</p>
               <h2>地点評価</h2>
-              <p className="muted">内部タブ状態: {spotEvaluationTab}</p>
             </div>
           </div>
           <div className="cards" id="reports">
@@ -638,7 +623,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                     <p>簡易メモ</p>
                     <p className="muted">{evaluation.memo}</p>
                     <p className="muted">
-                      条件に合う本人の釣果は、平均SCOREに使う既存地点SCOREへ参考反映しています。
+                      本人の釣果は、平均SCOREに使う既存地点SCOREへ参考反映しています。
                     </p>
                   </div>
                 </article>
