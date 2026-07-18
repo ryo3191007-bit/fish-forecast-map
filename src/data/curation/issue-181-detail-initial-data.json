@@ -16,7 +16,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-nokita-ksj-fishing-port",
+          "id": "nokita-port-src-nokita-ksj-fishing-port",
           "sourceType": "official",
           "sourceName": "国土数値情報 C09-06 漁港データ 野北 feature",
           "sourceUrl": "https://nlftp.mlit.go.jp/ksj/gml/data/C09/C09-06/C09-06_GML.zip",
@@ -24,7 +24,7 @@
           "note": "国土交通省 国土政策局 / government"
         },
         {
-          "id": "src-nokita-itoshima-official-guide-map",
+          "id": "nokita-port-src-nokita-itoshima-official-guide-map",
           "sourceType": "official",
           "sourceName": "糸島市観光ガイドマップ（野北漁港掲載）",
           "sourceUrl": "https://www.city.itoshima.lg.jp/s026/s040/010/080/40/itoshimaguidemap-taiwanese-ura.pdf",
@@ -32,7 +32,7 @@
           "note": "糸島市 / government"
         },
         {
-          "id": "src-nokita-fukuoka-plan",
+          "id": "nokita-port-src-nokita-fukuoka-plan",
           "sourceType": "official",
           "sourceName": "福岡県 福岡圏域 総合水産基盤整備事業計画",
           "sourceUrl": "https://www.pref.fukuoka.lg.jp/uploaded/life/657436_61488945_misc.pdf",
@@ -40,7 +40,7 @@
           "note": "福岡県 / government"
         },
         {
-          "id": "src-nokita-gsi-map",
+          "id": "nokita-port-src-nokita-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 野北漁港周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#16/33.611311/130.161569/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
@@ -48,7 +48,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-nokita-meets-fish-trip-article",
+          "id": "nokita-port-src-nokita-meets-fish-trip-article",
           "sourceType": "other",
           "sourceName": "糸島フィッシュトリップ vol.3｜野北漁港編",
           "sourceUrl": "https://meets-itoshima.com/post-24077/",
@@ -98,21 +98,19 @@
         {
           "id": "nokita-port:shore_access",
           "itemKey": "shore_access",
-          "informationState": "has_evidence",
+          "informationState": "researched_unknown",
           "valueText": null,
-          "valueTextList": [
-            "fishing_port"
-          ],
+          "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "high",
-          "note": "C09実データで対象漁港featureの種別を確認。福岡県計画PDFは補助確認に留める。",
+          "confidence": null,
+          "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-17",
           "sources": {
             "supporting": [
-              "src-nokita-ksj-fishing-port"
+              "nokita-port-src-nokita-ksj-fishing-port"
             ],
             "checked": [],
             "contradicting": []
@@ -134,7 +132,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-meets-fish-trip-article"
+              "nokita-port-src-nokita-meets-fish-trip-article"
             ],
             "contradicting": []
           }
@@ -155,7 +153,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-meets-fish-trip-article"
+              "nokita-port-src-nokita-meets-fish-trip-article"
             ],
             "contradicting": []
           }
@@ -176,8 +174,27 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-meets-fish-trip-article"
+              "nokita-port-src-nokita-meets-fish-trip-article"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -197,7 +214,28 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-meets-fish-trip-article"
+              "nokita-port-src-nokita-meets-fish-trip-article"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北漁港の一次・限定二次調査ではattributes.waterDepthを水深数値を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "nokita-port-src-nokita-gsi-map"
             ],
             "contradicting": []
           }
@@ -218,7 +256,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-gsi-map"
+              "nokita-port-src-nokita-gsi-map"
             ],
             "contradicting": []
           }
@@ -227,8 +265,10 @@
           "id": "nokita-port:coastal_topography",
           "itemKey": "coastal_topography",
           "informationState": "has_evidence",
-          "valueText": "open_sea",
-          "valueTextList": [],
+          "valueText": null,
+          "valueTextList": [
+            "open_sea"
+          ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
@@ -238,7 +278,7 @@
           "checkedAt": "2026-07-17",
           "sources": {
             "supporting": [
-              "src-nokita-gsi-map"
+              "nokita-port-src-nokita-gsi-map"
             ],
             "checked": [],
             "contradicting": []
@@ -260,7 +300,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-gsi-map"
+              "nokita-port-src-nokita-gsi-map"
             ],
             "contradicting": []
           }
@@ -282,7 +322,7 @@
           "checkedAt": "2026-07-17",
           "sources": {
             "supporting": [
-              "src-nokita-ksj-fishing-port"
+              "nokita-port-src-nokita-ksj-fishing-port"
             ],
             "checked": [],
             "contradicting": []
@@ -291,21 +331,24 @@
         {
           "id": "nokita-port:water_flow_influences",
           "itemKey": "water_flow_influences",
-          "informationState": "researched_unknown",
+          "informationState": "has_evidence",
           "valueText": null,
-          "valueTextList": [],
+          "valueTextList": [
+            "river_influence:none",
+            "open_sea_exposure:open_sea"
+          ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": null,
-          "note": "野北漁港の一次・限定二次調査ではattributes.tidalFlowを潮流の強弱を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。",
-          "checkedAt": "2026-07-17",
+          "confidence": "medium",
+          "note": "確認済み要素を保持し、不明要素はnoteへ分離: tidal_flow:unknown",
+          "checkedAt": "2026-07-18",
           "sources": {
-            "supporting": [],
-            "checked": [
-              "src-nokita-gsi-map"
+            "supporting": [
+              "nokita-port-src-nokita-gsi-map"
             ],
+            "checked": [],
             "contradicting": []
           }
         }
@@ -317,7 +360,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-nokita-gsi-map",
+          "id": "nokita-beach-src-nokita-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 野北海岸周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#14/33.6048/130.1552/&base=std&ls=std&disp=1",
@@ -325,7 +368,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-nokita-itoshima-sakurano",
+          "id": "nokita-beach-src-nokita-itoshima-sakurano",
           "sourceType": "official",
           "sourceName": "桜野校区の紹介（野北海岸）",
           "sourceUrl": "https://www.city.itoshima.lg.jp/c014/020/010/sakurano-syoukai.html",
@@ -375,24 +418,22 @@
         {
           "id": "nokita-beach:shore_access",
           "itemKey": "shore_access",
-          "informationState": "has_evidence",
+          "informationState": "researched_unknown",
           "valueText": null,
-          "valueTextList": [
-            "sandy_beach"
-          ],
+          "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "medium",
-          "note": "糸島市の桜野校区紹介が野北海岸を明記し、砂浜の海岸線として説明しているためsandy_beachをconfirmed/mediumとした。海岸全域の釣り可否や立入可否は示さない。",
+          "confidence": null,
+          "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-nokita-itoshima-sakurano"
+              "nokita-beach-src-nokita-itoshima-sakurano"
             ],
             "checked": [
-              "src-nokita-gsi-map"
+              "nokita-beach-src-nokita-gsi-map"
             ],
             "contradicting": []
           }
@@ -413,8 +454,8 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-gsi-map",
-              "src-nokita-itoshima-sakurano"
+              "nokita-beach-src-nokita-gsi-map",
+              "nokita-beach-src-nokita-itoshima-sakurano"
             ],
             "contradicting": []
           }
@@ -435,8 +476,8 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-gsi-map",
-              "src-nokita-itoshima-sakurano"
+              "nokita-beach-src-nokita-gsi-map",
+              "nokita-beach-src-nokita-itoshima-sakurano"
             ],
             "contradicting": []
           }
@@ -457,9 +498,28 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-gsi-map",
-              "src-nokita-itoshima-sakurano"
+              "nokita-beach-src-nokita-gsi-map",
+              "nokita-beach-src-nokita-itoshima-sakurano"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -479,8 +539,29 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-gsi-map",
-              "src-nokita-itoshima-sakurano"
+              "nokita-beach-src-nokita-gsi-map",
+              "nokita-beach-src-nokita-itoshima-sakurano"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nokita-beach:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "野北海岸（district）の水深を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "nokita-beach-src-nokita-gsi-map"
             ],
             "contradicting": []
           }
@@ -501,7 +582,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-gsi-map"
+              "nokita-beach-src-nokita-gsi-map"
             ],
             "contradicting": []
           }
@@ -522,7 +603,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-gsi-map"
+              "nokita-beach-src-nokita-gsi-map"
             ],
             "contradicting": []
           }
@@ -543,7 +624,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-gsi-map"
+              "nokita-beach-src-nokita-gsi-map"
             ],
             "contradicting": []
           }
@@ -565,10 +646,10 @@
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-nokita-itoshima-sakurano"
+              "nokita-beach-src-nokita-itoshima-sakurano"
             ],
             "checked": [
-              "src-nokita-gsi-map"
+              "nokita-beach-src-nokita-gsi-map"
             ],
             "contradicting": []
           }
@@ -589,7 +670,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-nokita-gsi-map"
+              "nokita-beach-src-nokita-gsi-map"
             ],
             "contradicting": []
           }
@@ -602,7 +683,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-keya-ksj-fishing-port",
+          "id": "keya-port-src-keya-ksj-fishing-port",
           "sourceType": "official",
           "sourceName": "国土数値情報 C09-06 漁港データ 芥屋 feature",
           "sourceUrl": "https://nlftp.mlit.go.jp/ksj/gml/data/C09/C09-06/C09-06_GML.zip",
@@ -610,7 +691,7 @@
           "note": "国土交通省 国土政策局 / government"
         },
         {
-          "id": "src-keya-itoshima-official-guide-map",
+          "id": "keya-port-src-keya-itoshima-official-guide-map",
           "sourceType": "official",
           "sourceName": "糸島市観光ガイドマップ（芥屋漁港掲載）",
           "sourceUrl": "https://www.city.itoshima.lg.jp/s026/s040/010/080/40/itoshimaguidemap-taiwanese-ura.pdf",
@@ -618,7 +699,7 @@
           "note": "糸島市 / government"
         },
         {
-          "id": "src-keya-fukuoka-plan",
+          "id": "keya-port-src-keya-fukuoka-plan",
           "sourceType": "official",
           "sourceName": "福岡県 福岡圏域 総合水産基盤整備事業計画",
           "sourceUrl": "https://www.pref.fukuoka.lg.jp/uploaded/life/657436_61488945_misc.pdf",
@@ -626,7 +707,7 @@
           "note": "福岡県 / government"
         },
         {
-          "id": "src-keya-gsi-map",
+          "id": "keya-port-src-keya-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 芥屋漁港周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#16/33.589380/130.106581/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
@@ -676,24 +757,22 @@
         {
           "id": "keya-port:shore_access",
           "itemKey": "shore_access",
-          "informationState": "has_evidence",
+          "informationState": "researched_unknown",
           "valueText": null,
-          "valueTextList": [
-            "fishing_port"
-          ],
+          "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "high",
-          "note": "C09実データで芥屋featureの種別を確認。福岡県計画PDFは再確認したが芥屋漁港の直接記載を確認できず、直接根拠から除外。",
+          "confidence": null,
+          "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-17",
           "sources": {
             "supporting": [
-              "src-keya-ksj-fishing-port"
+              "keya-port-src-keya-ksj-fishing-port"
             ],
             "checked": [
-              "src-keya-fukuoka-plan"
+              "keya-port-src-keya-fukuoka-plan"
             ],
             "contradicting": []
           }
@@ -756,6 +835,25 @@
           }
         },
         {
+          "id": "keya-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
           "id": "keya-port:restriction_status",
           "itemKey": "restriction_status",
           "informationState": "researched_unknown",
@@ -775,6 +873,27 @@
           }
         },
         {
+          "id": "keya-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋漁港の一次・限定二次調査ではattributes.waterDepthを水深数値を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "keya-port-src-keya-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
           "id": "keya-port:bottom_material",
           "itemKey": "bottom_material",
           "informationState": "researched_unknown",
@@ -790,7 +909,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gsi-map"
+              "keya-port-src-keya-gsi-map"
             ],
             "contradicting": []
           }
@@ -799,8 +918,10 @@
           "id": "keya-port:coastal_topography",
           "itemKey": "coastal_topography",
           "informationState": "has_evidence",
-          "valueText": "bay_mouth",
-          "valueTextList": [],
+          "valueText": null,
+          "valueTextList": [
+            "bay_mouth"
+          ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
@@ -810,7 +931,7 @@
           "checkedAt": "2026-07-17",
           "sources": {
             "supporting": [
-              "src-keya-gsi-map"
+              "keya-port-src-keya-gsi-map"
             ],
             "checked": [],
             "contradicting": []
@@ -832,7 +953,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gsi-map"
+              "keya-port-src-keya-gsi-map"
             ],
             "contradicting": []
           }
@@ -854,10 +975,10 @@
           "checkedAt": "2026-07-17",
           "sources": {
             "supporting": [
-              "src-keya-ksj-fishing-port"
+              "keya-port-src-keya-ksj-fishing-port"
             ],
             "checked": [
-              "src-keya-fukuoka-plan"
+              "keya-port-src-keya-fukuoka-plan"
             ],
             "contradicting": []
           }
@@ -865,21 +986,24 @@
         {
           "id": "keya-port:water_flow_influences",
           "itemKey": "water_flow_influences",
-          "informationState": "researched_unknown",
+          "informationState": "has_evidence",
           "valueText": null,
-          "valueTextList": [],
+          "valueTextList": [
+            "river_influence:none",
+            "open_sea_exposure:bay_mouth"
+          ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": null,
-          "note": "芥屋漁港の一次・限定二次調査ではattributes.tidalFlowを潮流の強弱を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。",
-          "checkedAt": "2026-07-17",
+          "confidence": "medium",
+          "note": "確認済み要素を保持し、不明要素はnoteへ分離: tidal_flow:unknown",
+          "checkedAt": "2026-07-18",
           "sources": {
-            "supporting": [],
-            "checked": [
-              "src-keya-gsi-map"
+            "supporting": [
+              "keya-port-src-keya-gsi-map"
             ],
+            "checked": [],
             "contradicting": []
           }
         }
@@ -891,7 +1015,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-keya-gate-cultural-monuments",
+          "id": "keya-gate-src-keya-gate-cultural-monuments",
           "sourceType": "official",
           "sourceName": "糸島市 天然記念物一覧 芥屋大門",
           "sourceUrl": "https://www.city.itoshima.lg.jp/s033/010/020/010/050/050/bunkazai5.html",
@@ -899,7 +1023,7 @@
           "note": "糸島市 / government"
         },
         {
-          "id": "src-keya-gate-hikitsu",
+          "id": "keya-gate-src-keya-gate-hikitsu",
           "sourceType": "official",
           "sourceName": "引津校区の紹介 芥屋の大門",
           "sourceUrl": "https://www.city.itoshima.lg.jp/c015/020/010/hikitsu-syoukai.html",
@@ -907,7 +1031,7 @@
           "note": "糸島市立引津コミュニティセンターあおぞら館 / government"
         },
         {
-          "id": "src-keya-gate-city-parks",
+          "id": "keya-gate-src-keya-gate-city-parks",
           "sourceType": "official",
           "sourceName": "糸島市の主な公園のご案内 芥屋の大門公園",
           "sourceUrl": "https://www.city.itoshima.lg.jp/s023/itoshimacitypark.html",
@@ -915,7 +1039,7 @@
           "note": "糸島市 / government"
         },
         {
-          "id": "src-keya-gate-gsi-map",
+          "id": "keya-gate-src-keya-gate-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 芥屋大門周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#16/33.596700/130.110600/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
@@ -978,9 +1102,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gate-gsi-map",
-              "src-keya-gate-cultural-monuments",
-              "src-keya-gate-hikitsu"
+              "keya-gate-src-keya-gate-gsi-map",
+              "keya-gate-src-keya-gate-cultural-monuments",
+              "keya-gate-src-keya-gate-hikitsu"
             ],
             "contradicting": []
           }
@@ -1001,10 +1125,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gate-gsi-map",
-              "src-keya-gate-cultural-monuments",
-              "src-keya-gate-hikitsu",
-              "src-keya-gate-city-parks"
+              "keya-gate-src-keya-gate-gsi-map",
+              "keya-gate-src-keya-gate-cultural-monuments",
+              "keya-gate-src-keya-gate-hikitsu",
+              "keya-gate-src-keya-gate-city-parks"
             ],
             "contradicting": []
           }
@@ -1025,9 +1149,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gate-gsi-map",
-              "src-keya-gate-cultural-monuments",
-              "src-keya-gate-hikitsu"
+              "keya-gate-src-keya-gate-gsi-map",
+              "keya-gate-src-keya-gate-cultural-monuments",
+              "keya-gate-src-keya-gate-hikitsu"
             ],
             "contradicting": []
           }
@@ -1048,11 +1172,30 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gate-gsi-map",
-              "src-keya-gate-cultural-monuments",
-              "src-keya-gate-hikitsu",
-              "src-keya-gate-city-parks"
+              "keya-gate-src-keya-gate-gsi-map",
+              "keya-gate-src-keya-gate-cultural-monuments",
+              "keya-gate-src-keya-gate-hikitsu",
+              "keya-gate-src-keya-gate-city-parks"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -1072,10 +1215,33 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gate-gsi-map",
-              "src-keya-gate-cultural-monuments",
-              "src-keya-gate-hikitsu",
-              "src-keya-gate-city-parks"
+              "keya-gate-src-keya-gate-gsi-map",
+              "keya-gate-src-keya-gate-cultural-monuments",
+              "keya-gate-src-keya-gate-hikitsu",
+              "keya-gate-src-keya-gate-city-parks"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "keya-gate:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "芥屋大門周辺districtのwaterDepthを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "keya-gate-src-keya-gate-gsi-map",
+              "keya-gate-src-keya-gate-cultural-monuments",
+              "keya-gate-src-keya-gate-hikitsu"
             ],
             "contradicting": []
           }
@@ -1096,9 +1262,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gate-gsi-map",
-              "src-keya-gate-cultural-monuments",
-              "src-keya-gate-hikitsu"
+              "keya-gate-src-keya-gate-gsi-map",
+              "keya-gate-src-keya-gate-cultural-monuments",
+              "keya-gate-src-keya-gate-hikitsu"
             ],
             "contradicting": []
           }
@@ -1119,9 +1285,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gate-gsi-map",
-              "src-keya-gate-cultural-monuments",
-              "src-keya-gate-hikitsu"
+              "keya-gate-src-keya-gate-gsi-map",
+              "keya-gate-src-keya-gate-cultural-monuments",
+              "keya-gate-src-keya-gate-hikitsu"
             ],
             "contradicting": []
           }
@@ -1142,9 +1308,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gate-gsi-map",
-              "src-keya-gate-cultural-monuments",
-              "src-keya-gate-hikitsu"
+              "keya-gate-src-keya-gate-gsi-map",
+              "keya-gate-src-keya-gate-cultural-monuments",
+              "keya-gate-src-keya-gate-hikitsu"
             ],
             "contradicting": []
           }
@@ -1165,9 +1331,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gate-gsi-map",
-              "src-keya-gate-cultural-monuments",
-              "src-keya-gate-hikitsu"
+              "keya-gate-src-keya-gate-gsi-map",
+              "keya-gate-src-keya-gate-cultural-monuments",
+              "keya-gate-src-keya-gate-hikitsu"
             ],
             "contradicting": []
           }
@@ -1188,9 +1354,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-keya-gate-gsi-map",
-              "src-keya-gate-cultural-monuments",
-              "src-keya-gate-hikitsu"
+              "keya-gate-src-keya-gate-gsi-map",
+              "keya-gate-src-keya-gate-cultural-monuments",
+              "keya-gate-src-keya-gate-hikitsu"
             ],
             "contradicting": []
           }
@@ -1203,7 +1369,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-funakoshi-ksj-fishing-port",
+          "id": "funakoshi-port-src-funakoshi-ksj-fishing-port",
           "sourceType": "official",
           "sourceName": "国土数値情報 C09-06 漁港データ 船越 feature",
           "sourceUrl": "https://nlftp.mlit.go.jp/ksj/gml/data/C09/C09-06/C09-06_GML.zip",
@@ -1211,7 +1377,7 @@
           "note": "国土交通省 国土政策局 / government"
         },
         {
-          "id": "src-funakoshi-itoshima-official-guide-map",
+          "id": "funakoshi-port-src-funakoshi-itoshima-official-guide-map",
           "sourceType": "official",
           "sourceName": "糸島市観光ガイドマップ（船越漁港掲載）",
           "sourceUrl": "https://www.city.itoshima.lg.jp/s026/s040/010/080/40/itoshimaguidemap-taiwanese-ura.pdf",
@@ -1219,7 +1385,7 @@
           "note": "糸島市 / government"
         },
         {
-          "id": "src-funakoshi-fukuoka-plan",
+          "id": "funakoshi-port-src-funakoshi-fukuoka-plan",
           "sourceType": "official",
           "sourceName": "福岡県 福岡圏域 総合水産基盤整備事業計画",
           "sourceUrl": "https://www.pref.fukuoka.lg.jp/uploaded/life/657436_61488945_misc.pdf",
@@ -1227,7 +1393,7 @@
           "note": "福岡県 / government"
         },
         {
-          "id": "src-funakoshi-gsi-map",
+          "id": "funakoshi-port-src-funakoshi-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 船越漁港周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#16/33.553892/130.130259/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
@@ -1235,7 +1401,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-funakoshi-meets-fish-trip-article",
+          "id": "funakoshi-port-src-funakoshi-meets-fish-trip-article",
           "sourceType": "other",
           "sourceName": "糸島フィッシュトリップ vol.2｜船越漁港編",
           "sourceUrl": "https://meets-itoshima.com/post-24079/",
@@ -1285,21 +1451,19 @@
         {
           "id": "funakoshi-port:shore_access",
           "itemKey": "shore_access",
-          "informationState": "has_evidence",
+          "informationState": "researched_unknown",
           "valueText": null,
-          "valueTextList": [
-            "fishing_port"
-          ],
+          "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "high",
-          "note": "C09実データで対象漁港featureの種別を確認。福岡県計画PDFは補助確認に留める。",
+          "confidence": null,
+          "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-17",
           "sources": {
             "supporting": [
-              "src-funakoshi-ksj-fishing-port"
+              "funakoshi-port-src-funakoshi-ksj-fishing-port"
             ],
             "checked": [],
             "contradicting": []
@@ -1321,7 +1485,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-funakoshi-meets-fish-trip-article"
+              "funakoshi-port-src-funakoshi-meets-fish-trip-article"
             ],
             "contradicting": []
           }
@@ -1342,7 +1506,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-funakoshi-meets-fish-trip-article"
+              "funakoshi-port-src-funakoshi-meets-fish-trip-article"
             ],
             "contradicting": []
           }
@@ -1363,8 +1527,27 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-funakoshi-meets-fish-trip-article"
+              "funakoshi-port-src-funakoshi-meets-fish-trip-article"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -1384,7 +1567,28 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-funakoshi-meets-fish-trip-article"
+              "funakoshi-port-src-funakoshi-meets-fish-trip-article"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakoshi-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "船越漁港の一次・限定二次調査ではattributes.waterDepthを水深数値を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。",
+          "checkedAt": "2026-07-17",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "funakoshi-port-src-funakoshi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1405,7 +1609,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-funakoshi-gsi-map"
+              "funakoshi-port-src-funakoshi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1414,8 +1618,10 @@
           "id": "funakoshi-port:coastal_topography",
           "itemKey": "coastal_topography",
           "informationState": "has_evidence",
-          "valueText": "bay",
-          "valueTextList": [],
+          "valueText": null,
+          "valueTextList": [
+            "bay"
+          ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
@@ -1425,7 +1631,7 @@
           "checkedAt": "2026-07-17",
           "sources": {
             "supporting": [
-              "src-funakoshi-gsi-map"
+              "funakoshi-port-src-funakoshi-gsi-map"
             ],
             "checked": [],
             "contradicting": []
@@ -1447,7 +1653,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-funakoshi-gsi-map"
+              "funakoshi-port-src-funakoshi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1469,7 +1675,7 @@
           "checkedAt": "2026-07-17",
           "sources": {
             "supporting": [
-              "src-funakoshi-ksj-fishing-port"
+              "funakoshi-port-src-funakoshi-ksj-fishing-port"
             ],
             "checked": [],
             "contradicting": []
@@ -1478,21 +1684,24 @@
         {
           "id": "funakoshi-port:water_flow_influences",
           "itemKey": "water_flow_influences",
-          "informationState": "researched_unknown",
+          "informationState": "has_evidence",
           "valueText": null,
-          "valueTextList": [],
+          "valueTextList": [
+            "river_influence:none",
+            "open_sea_exposure:bay"
+          ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": null,
-          "note": "船越漁港の一次・限定二次調査ではattributes.tidalFlowを潮流の強弱を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。",
-          "checkedAt": "2026-07-17",
+          "confidence": "medium",
+          "note": "確認済み要素を保持し、不明要素はnoteへ分離: tidal_flow:unknown",
+          "checkedAt": "2026-07-18",
           "sources": {
-            "supporting": [],
-            "checked": [
-              "src-funakoshi-gsi-map"
+            "supporting": [
+              "funakoshi-port-src-funakoshi-gsi-map"
             ],
+            "checked": [],
             "contradicting": []
           }
         }
@@ -1504,7 +1713,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-kishi-gsi-map",
+          "id": "kishi-port-src-kishi-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 岐志漁港周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#14/33.5889/130.1391/&base=std&ls=std&disp=1",
@@ -1512,7 +1721,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-kishi-fukuoka-port-list",
+          "id": "kishi-port-src-kishi-fukuoka-port-list",
           "sourceType": "official",
           "sourceName": "Fukuoka Data Web 1 筑前海区の漁港（岐志掲載）",
           "sourceUrl": "https://www.pref.fukuoka.lg.jp/dataweb/search/1/1233_496.html",
@@ -1520,7 +1729,7 @@
           "note": "福岡県 / government"
         },
         {
-          "id": "src-kishi-itoshima-ferry",
+          "id": "kishi-port-src-kishi-itoshima-ferry",
           "sourceType": "official",
           "sourceName": "市営渡船ひめしまの運航（岐志漁港周辺）",
           "sourceUrl": "https://www.city.itoshima.lg.jp/s006/010/020/020/090/tosen.html",
@@ -1570,24 +1779,22 @@
         {
           "id": "kishi-port:shore_access",
           "itemKey": "shore_access",
-          "informationState": "has_evidence",
+          "informationState": "researched_unknown",
           "valueText": null,
-          "valueTextList": [
-            "fishing_port"
-          ],
+          "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "medium",
-          "note": "福岡県Data Webの「筑前海区の漁港」に岐志が掲載されているためfishing_portをconfirmed/mediumとした。釣り可能範囲や一般利用可否は示さない。",
+          "confidence": null,
+          "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-kishi-fukuoka-port-list"
+              "kishi-port-src-kishi-fukuoka-port-list"
             ],
             "checked": [
-              "src-kishi-gsi-map"
+              "kishi-port-src-kishi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1608,9 +1815,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-kishi-gsi-map",
-              "src-kishi-fukuoka-port-list",
-              "src-kishi-itoshima-ferry"
+              "kishi-port-src-kishi-gsi-map",
+              "kishi-port-src-kishi-fukuoka-port-list",
+              "kishi-port-src-kishi-itoshima-ferry"
             ],
             "contradicting": []
           }
@@ -1631,9 +1838,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-kishi-gsi-map",
-              "src-kishi-fukuoka-port-list",
-              "src-kishi-itoshima-ferry"
+              "kishi-port-src-kishi-gsi-map",
+              "kishi-port-src-kishi-fukuoka-port-list",
+              "kishi-port-src-kishi-itoshima-ferry"
             ],
             "contradicting": []
           }
@@ -1654,8 +1861,27 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-kishi-itoshima-ferry"
+              "kishi-port-src-kishi-itoshima-ferry"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -1675,9 +1901,30 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-kishi-gsi-map",
-              "src-kishi-fukuoka-port-list",
-              "src-kishi-itoshima-ferry"
+              "kishi-port-src-kishi-gsi-map",
+              "kishi-port-src-kishi-fukuoka-port-list",
+              "kishi-port-src-kishi-itoshima-ferry"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kishi-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "岐志漁港（facility）の水深を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "kishi-port-src-kishi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1698,7 +1945,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-kishi-gsi-map"
+              "kishi-port-src-kishi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1719,7 +1966,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-kishi-gsi-map"
+              "kishi-port-src-kishi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1740,7 +1987,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-kishi-gsi-map"
+              "kishi-port-src-kishi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1762,10 +2009,10 @@
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-kishi-fukuoka-port-list"
+              "kishi-port-src-kishi-fukuoka-port-list"
             ],
             "checked": [
-              "src-kishi-gsi-map"
+              "kishi-port-src-kishi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1786,7 +2033,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-kishi-gsi-map"
+              "kishi-port-src-kishi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1799,7 +2046,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-fukuyoshi-gsi-map",
+          "id": "fukuyoshi-port-src-fukuyoshi-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 福吉漁港周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#14/33.5164/130.0969/&base=std&ls=std&disp=1",
@@ -1807,7 +2054,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-fukuyoshi-fukuoka-port-list",
+          "id": "fukuyoshi-port-src-fukuyoshi-fukuoka-port-list",
           "sourceType": "official",
           "sourceName": "Fukuoka Data Web 1 筑前海区の漁港（福吉掲載）",
           "sourceUrl": "https://www.pref.fukuoka.lg.jp/dataweb/search/1/1233_496.html",
@@ -1815,7 +2062,7 @@
           "note": "福岡県 / government"
         },
         {
-          "id": "src-fukuyoshi-itoshima-fukui",
+          "id": "fukuyoshi-port-src-fukuyoshi-itoshima-fukui",
           "sourceType": "official",
           "sourceName": "福井行政区（福吉漁港掲載）",
           "sourceUrl": "https://itoshimalife.city.itoshima.lg.jp/administrative/?govId=52",
@@ -1865,24 +2112,22 @@
         {
           "id": "fukuyoshi-port:shore_access",
           "itemKey": "shore_access",
-          "informationState": "has_evidence",
+          "informationState": "researched_unknown",
           "valueText": null,
-          "valueTextList": [
-            "fishing_port"
-          ],
+          "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "medium",
-          "note": "福岡県Data Webの「筑前海区の漁港」に福吉が掲載されているためfishing_portをconfirmed/mediumとした。釣り可能範囲や一般利用可否は示さない。",
+          "confidence": null,
+          "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-fukuyoshi-fukuoka-port-list"
+              "fukuyoshi-port-src-fukuyoshi-fukuoka-port-list"
             ],
             "checked": [
-              "src-fukuyoshi-gsi-map"
+              "fukuyoshi-port-src-fukuyoshi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1903,9 +2148,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukuyoshi-gsi-map",
-              "src-fukuyoshi-fukuoka-port-list",
-              "src-fukuyoshi-itoshima-fukui"
+              "fukuyoshi-port-src-fukuyoshi-gsi-map",
+              "fukuyoshi-port-src-fukuyoshi-fukuoka-port-list",
+              "fukuyoshi-port-src-fukuyoshi-itoshima-fukui"
             ],
             "contradicting": []
           }
@@ -1926,9 +2171,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukuyoshi-gsi-map",
-              "src-fukuyoshi-fukuoka-port-list",
-              "src-fukuyoshi-itoshima-fukui"
+              "fukuyoshi-port-src-fukuyoshi-gsi-map",
+              "fukuyoshi-port-src-fukuyoshi-fukuoka-port-list",
+              "fukuyoshi-port-src-fukuyoshi-itoshima-fukui"
             ],
             "contradicting": []
           }
@@ -1949,10 +2194,29 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukuyoshi-gsi-map",
-              "src-fukuyoshi-fukuoka-port-list",
-              "src-fukuyoshi-itoshima-fukui"
+              "fukuyoshi-port-src-fukuyoshi-gsi-map",
+              "fukuyoshi-port-src-fukuyoshi-fukuoka-port-list",
+              "fukuyoshi-port-src-fukuyoshi-itoshima-fukui"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -1972,9 +2236,30 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukuyoshi-gsi-map",
-              "src-fukuyoshi-fukuoka-port-list",
-              "src-fukuyoshi-itoshima-fukui"
+              "fukuyoshi-port-src-fukuyoshi-gsi-map",
+              "fukuyoshi-port-src-fukuyoshi-fukuoka-port-list",
+              "fukuyoshi-port-src-fukuyoshi-itoshima-fukui"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukuyoshi-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福吉漁港（facility）の水深を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "fukuyoshi-port-src-fukuyoshi-gsi-map"
             ],
             "contradicting": []
           }
@@ -1995,7 +2280,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukuyoshi-gsi-map"
+              "fukuyoshi-port-src-fukuyoshi-gsi-map"
             ],
             "contradicting": []
           }
@@ -2016,7 +2301,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukuyoshi-gsi-map"
+              "fukuyoshi-port-src-fukuyoshi-gsi-map"
             ],
             "contradicting": []
           }
@@ -2037,7 +2322,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukuyoshi-gsi-map"
+              "fukuyoshi-port-src-fukuyoshi-gsi-map"
             ],
             "contradicting": []
           }
@@ -2059,10 +2344,10 @@
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-fukuyoshi-fukuoka-port-list"
+              "fukuyoshi-port-src-fukuyoshi-fukuoka-port-list"
             ],
             "checked": [
-              "src-fukuyoshi-gsi-map"
+              "fukuyoshi-port-src-fukuyoshi-gsi-map"
             ],
             "contradicting": []
           }
@@ -2083,7 +2368,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukuyoshi-gsi-map"
+              "fukuyoshi-port-src-fukuyoshi-gsi-map"
             ],
             "contradicting": []
           }
@@ -2096,7 +2381,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-hamasaki-gsi-map",
+          "id": "hamasaki-beach-src-hamasaki-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 浜崎海岸周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#14/33.4555/130.0427/&base=std&ls=std&disp=1",
@@ -2104,7 +2389,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-hamasaki-saga-coast",
+          "id": "hamasaki-beach-src-hamasaki-saga-coast",
           "sourceType": "official",
           "sourceName": "唐津湾海岸侵食対策調査検討委員会（浜崎海岸の砂浜）",
           "sourceUrl": "https://www.pref.saga.lg.jp/kiji00312170/index.html",
@@ -2112,7 +2397,7 @@
           "note": "佐賀県 / government"
         },
         {
-          "id": "src-hamasaki-karatsu-beach-ops",
+          "id": "hamasaki-beach-src-hamasaki-karatsu-beach-ops",
           "sourceType": "official",
           "sourceName": "浜崎海水浴場草刈業務",
           "sourceUrl": "https://www.city.karatsu.lg.jp/site/nyusatsu/49222.html",
@@ -2162,25 +2447,23 @@
         {
           "id": "hamasaki-beach:shore_access",
           "itemKey": "shore_access",
-          "informationState": "has_evidence",
+          "informationState": "researched_unknown",
           "valueText": null,
-          "valueTextList": [
-            "sandy_beach"
-          ],
+          "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "medium",
-          "note": "佐賀県資料が浜崎海岸を砂浜として明記するためsandy_beachをconfirmed/mediumとした。浜崎海水浴場の季節運用、立入・釣り可否はこの分類から推定しない。",
+          "confidence": null,
+          "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-hamasaki-saga-coast"
+              "hamasaki-beach-src-hamasaki-saga-coast"
             ],
             "checked": [
-              "src-hamasaki-gsi-map",
-              "src-hamasaki-karatsu-beach-ops"
+              "hamasaki-beach-src-hamasaki-gsi-map",
+              "hamasaki-beach-src-hamasaki-karatsu-beach-ops"
             ],
             "contradicting": []
           }
@@ -2201,9 +2484,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hamasaki-gsi-map",
-              "src-hamasaki-saga-coast",
-              "src-hamasaki-karatsu-beach-ops"
+              "hamasaki-beach-src-hamasaki-gsi-map",
+              "hamasaki-beach-src-hamasaki-saga-coast",
+              "hamasaki-beach-src-hamasaki-karatsu-beach-ops"
             ],
             "contradicting": []
           }
@@ -2224,9 +2507,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hamasaki-gsi-map",
-              "src-hamasaki-saga-coast",
-              "src-hamasaki-karatsu-beach-ops"
+              "hamasaki-beach-src-hamasaki-gsi-map",
+              "hamasaki-beach-src-hamasaki-saga-coast",
+              "hamasaki-beach-src-hamasaki-karatsu-beach-ops"
             ],
             "contradicting": []
           }
@@ -2247,10 +2530,29 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hamasaki-gsi-map",
-              "src-hamasaki-saga-coast",
-              "src-hamasaki-karatsu-beach-ops"
+              "hamasaki-beach-src-hamasaki-gsi-map",
+              "hamasaki-beach-src-hamasaki-saga-coast",
+              "hamasaki-beach-src-hamasaki-karatsu-beach-ops"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -2270,9 +2572,30 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hamasaki-gsi-map",
-              "src-hamasaki-saga-coast",
-              "src-hamasaki-karatsu-beach-ops"
+              "hamasaki-beach-src-hamasaki-gsi-map",
+              "hamasaki-beach-src-hamasaki-saga-coast",
+              "hamasaki-beach-src-hamasaki-karatsu-beach-ops"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hamasaki-beach:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "浜崎海岸（district）の水深を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "hamasaki-beach-src-hamasaki-gsi-map"
             ],
             "contradicting": []
           }
@@ -2293,7 +2616,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hamasaki-gsi-map"
+              "hamasaki-beach-src-hamasaki-gsi-map"
             ],
             "contradicting": []
           }
@@ -2314,7 +2637,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hamasaki-gsi-map"
+              "hamasaki-beach-src-hamasaki-gsi-map"
             ],
             "contradicting": []
           }
@@ -2335,7 +2658,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hamasaki-gsi-map"
+              "hamasaki-beach-src-hamasaki-gsi-map"
             ],
             "contradicting": []
           }
@@ -2357,11 +2680,11 @@
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-hamasaki-saga-coast"
+              "hamasaki-beach-src-hamasaki-saga-coast"
             ],
             "checked": [
-              "src-hamasaki-gsi-map",
-              "src-hamasaki-karatsu-beach-ops"
+              "hamasaki-beach-src-hamasaki-gsi-map",
+              "hamasaki-beach-src-hamasaki-karatsu-beach-ops"
             ],
             "contradicting": []
           }
@@ -2382,7 +2705,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hamasaki-gsi-map"
+              "hamasaki-beach-src-hamasaki-gsi-map"
             ],
             "contradicting": []
           }
@@ -2395,7 +2718,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-niji-gsi-map",
+          "id": "niji-matsubara-src-niji-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 虹の松原周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#14/33.4472/130.0207/&base=std&ls=std&disp=1",
@@ -2403,7 +2726,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-niji-karatsu-conservation",
+          "id": "niji-matsubara-src-niji-karatsu-conservation",
           "sourceType": "official",
           "sourceName": "虹の松原の再生・保全活動",
           "sourceUrl": "https://www.city.karatsu.lg.jp/page/42113.html",
@@ -2411,7 +2734,7 @@
           "note": "唐津市 / government"
         },
         {
-          "id": "src-niji-karatsu-heritage",
+          "id": "niji-matsubara-src-niji-karatsu-heritage",
           "sourceType": "official",
           "sourceName": "名勝・天然記念物（虹の松原）",
           "sourceUrl": "https://www.city.karatsu.lg.jp/page/3475.html",
@@ -2474,9 +2797,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-niji-gsi-map",
-              "src-niji-karatsu-conservation",
-              "src-niji-karatsu-heritage"
+              "niji-matsubara-src-niji-gsi-map",
+              "niji-matsubara-src-niji-karatsu-conservation",
+              "niji-matsubara-src-niji-karatsu-heritage"
             ],
             "contradicting": []
           }
@@ -2497,9 +2820,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-niji-gsi-map",
-              "src-niji-karatsu-conservation",
-              "src-niji-karatsu-heritage"
+              "niji-matsubara-src-niji-gsi-map",
+              "niji-matsubara-src-niji-karatsu-conservation",
+              "niji-matsubara-src-niji-karatsu-heritage"
             ],
             "contradicting": []
           }
@@ -2520,9 +2843,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-niji-gsi-map",
-              "src-niji-karatsu-conservation",
-              "src-niji-karatsu-heritage"
+              "niji-matsubara-src-niji-gsi-map",
+              "niji-matsubara-src-niji-karatsu-conservation",
+              "niji-matsubara-src-niji-karatsu-heritage"
             ],
             "contradicting": []
           }
@@ -2543,10 +2866,29 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-niji-gsi-map",
-              "src-niji-karatsu-conservation",
-              "src-niji-karatsu-heritage"
+              "niji-matsubara-src-niji-gsi-map",
+              "niji-matsubara-src-niji-karatsu-conservation",
+              "niji-matsubara-src-niji-karatsu-heritage"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -2566,9 +2908,30 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-niji-gsi-map",
-              "src-niji-karatsu-conservation",
-              "src-niji-karatsu-heritage"
+              "niji-matsubara-src-niji-gsi-map",
+              "niji-matsubara-src-niji-karatsu-conservation",
+              "niji-matsubara-src-niji-karatsu-heritage"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "niji-matsubara:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "虹の松原周辺（district）の水深を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "niji-matsubara-src-niji-gsi-map"
             ],
             "contradicting": []
           }
@@ -2589,7 +2952,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-niji-gsi-map"
+              "niji-matsubara-src-niji-gsi-map"
             ],
             "contradicting": []
           }
@@ -2610,7 +2973,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-niji-gsi-map"
+              "niji-matsubara-src-niji-gsi-map"
             ],
             "contradicting": []
           }
@@ -2631,7 +2994,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-niji-gsi-map"
+              "niji-matsubara-src-niji-gsi-map"
             ],
             "contradicting": []
           }
@@ -2652,9 +3015,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-niji-gsi-map",
-              "src-niji-karatsu-conservation",
-              "src-niji-karatsu-heritage"
+              "niji-matsubara-src-niji-gsi-map",
+              "niji-matsubara-src-niji-karatsu-conservation",
+              "niji-matsubara-src-niji-karatsu-heritage"
             ],
             "contradicting": []
           }
@@ -2675,7 +3038,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-niji-gsi-map"
+              "niji-matsubara-src-niji-gsi-map"
             ],
             "contradicting": []
           }
@@ -2688,7 +3051,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-saga-port-facilities",
+          "id": "karatsu-east-port-src-saga-port-facilities",
           "sourceType": "other",
           "sourceName": "県が管理する港湾施設の概要",
           "sourceUrl": "https://www.pref.saga.lg.jp/kiji00329386/3_29386_321357_up_ibeqpe4w.pdf",
@@ -2696,7 +3059,7 @@
           "note": "佐賀県 / port_manager"
         },
         {
-          "id": "src-saga-karatsu-decarbonization-plan",
+          "id": "karatsu-east-port-src-saga-karatsu-decarbonization-plan",
           "sourceType": "other",
           "sourceName": "唐津港・伊万里港港湾脱炭素化推進計画",
           "sourceUrl": "https://www.pref.saga.lg.jp/kiji003110833/index.html",
@@ -2704,7 +3067,7 @@
           "note": "佐賀県 / port_manager"
         },
         {
-          "id": "src-saga-port-plan",
+          "id": "karatsu-east-port-src-saga-port-plan",
           "sourceType": "other",
           "sourceName": "港湾計画図（唐津港、伊万里港）",
           "sourceUrl": "https://www.pref.saga.lg.jp/kiji00313547/index.html",
@@ -2712,7 +3075,7 @@
           "note": "佐賀県 / port_manager"
         },
         {
-          "id": "src-gsi-karatsu-east-port",
+          "id": "karatsu-east-port-src-gsi-karatsu-east-port",
           "sourceType": "official",
           "sourceName": "地理院地図 唐津東港代表点周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#16/33.459000/129.993000/&base=std&ls=std&disp=1",
@@ -2720,7 +3083,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-saga-port-information",
+          "id": "karatsu-east-port-src-saga-port-information",
           "sourceType": "official",
           "sourceName": "港湾",
           "sourceUrl": "https://www.pref.saga.lg.jp/list00674.html",
@@ -2728,7 +3091,7 @@
           "note": "佐賀県 / government"
         },
         {
-          "id": "src-uosoku-karatsu-east-port",
+          "id": "karatsu-east-port-src-uosoku-karatsu-east-port",
           "sourceType": "other",
           "sourceName": "唐津東港の釣り場情報",
           "sourceUrl": "https://uosoku.com/home/kyuu/saga/kara/",
@@ -2736,7 +3099,7 @@
           "note": "魚速報 / private_reference"
         },
         {
-          "id": "src-kyusyu-ins-karatsu-east-port",
+          "id": "karatsu-east-port-src-kyusyu-ins-karatsu-east-port",
           "sourceType": "other",
           "sourceName": "唐津東港・・・いったいここは・・・。",
           "sourceUrl": "https://kyusyu-ins.com/2021/01/15/2021-01-15karatu/",
@@ -2793,19 +3156,15 @@
         {
           "id": "karatsu-east-port:shore_access",
           "itemKey": "shore_access",
-          "informationState": "has_evidence",
+          "informationState": "researched_unknown",
           "valueText": null,
-          "valueTextList": [
-            "port",
-            "breakwater",
-            "revetment"
-          ],
+          "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "high",
-          "note": "佐賀県の港湾施設資料で東港地区の岸壁、防波堤、護岸を確認。地区全体の構成であり、各施設への一般立入可否は別途確認が必要。",
+          "confidence": null,
+          "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-12",
           "sources": {
             "supporting": [],
@@ -2871,6 +3230,25 @@
           }
         },
         {
+          "id": "karatsu-east-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
           "id": "karatsu-east-port:restriction_status",
           "itemKey": "restriction_status",
           "informationState": "weak_evidence",
@@ -2882,6 +3260,25 @@
           "unit": null,
           "confidence": "low",
           "note": "民間釣り情報が『釣り禁止の部分あり』と明記する。ただし禁止範囲・根拠・現行性を公式確認できていないため、現地表示と管理者情報を必ず優先する。",
+          "checkedAt": "2026-07-12",
+          "sources": {
+            "supporting": [],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-east-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公式施設値はおおむね0mから-9mまで幅があり、民間情報は港内の足元から比較的水深があるとする。一般に釣り可能な位置との対応は未確認のため、5m超〜15mのmoderateを暫定推定とする。",
           "checkedAt": "2026-07-12",
           "sources": {
             "supporting": [],
@@ -2915,8 +3312,10 @@
           "id": "karatsu-east-port:coastal_topography",
           "itemKey": "coastal_topography",
           "informationState": "has_evidence",
-          "valueText": "bay",
-          "valueTextList": [],
+          "valueText": null,
+          "valueTextList": [
+            "bay"
+          ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
@@ -2975,16 +3374,19 @@
         {
           "id": "karatsu-east-port:water_flow_influences",
           "itemKey": "water_flow_influences",
-          "informationState": "researched_unknown",
+          "informationState": "has_evidence",
           "valueText": null,
-          "valueTextList": [],
+          "valueTextList": [
+            "river_influence:weak",
+            "open_sea_exposure:bay"
+          ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": null,
-          "note": "民間情報に潮の動く時間帯への言及はあるが、地点の潮通しを弱・普通・強へ分類できる流況根拠は確認できなかった。",
-          "checkedAt": "2026-07-12",
+          "confidence": "medium",
+          "note": "確認済み要素を保持し、不明要素はnoteへ分離: tidal_flow:unknown",
+          "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [],
             "checked": [],
@@ -2999,7 +3401,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-karatsu-gsi-map",
+          "id": "karatsu-west-port-src-karatsu-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 唐津港西港周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#14/33.4662/129.9488/&base=std&ls=std&disp=1",
@@ -3007,7 +3409,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-karatsu-jtsb-west-port",
+          "id": "karatsu-west-port-src-karatsu-jtsb-west-port",
           "sourceType": "official",
           "sourceName": "船舶事故概要（唐津港西港東防波堤西灯台）",
           "sourceUrl": "https://jtsb.mlit.go.jp/jtsb/ship/detail.php?id=16844",
@@ -3057,24 +3459,22 @@
         {
           "id": "karatsu-west-port:shore_access",
           "itemKey": "shore_access",
-          "informationState": "has_evidence",
+          "informationState": "researched_unknown",
           "valueText": null,
-          "valueTextList": [
-            "port"
-          ],
+          "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "medium",
-          "note": "国の資料で「唐津港西港」という港区名を確認したためportをconfirmed/mediumとした。港湾管理区域の一般立入・釣り可否は示さない。",
+          "confidence": null,
+          "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-karatsu-jtsb-west-port"
+              "karatsu-west-port-src-karatsu-jtsb-west-port"
             ],
             "checked": [
-              "src-karatsu-gsi-map"
+              "karatsu-west-port-src-karatsu-gsi-map"
             ],
             "contradicting": []
           }
@@ -3095,8 +3495,8 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-karatsu-gsi-map",
-              "src-karatsu-jtsb-west-port"
+              "karatsu-west-port-src-karatsu-gsi-map",
+              "karatsu-west-port-src-karatsu-jtsb-west-port"
             ],
             "contradicting": []
           }
@@ -3117,8 +3517,8 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-karatsu-gsi-map",
-              "src-karatsu-jtsb-west-port"
+              "karatsu-west-port-src-karatsu-gsi-map",
+              "karatsu-west-port-src-karatsu-jtsb-west-port"
             ],
             "contradicting": []
           }
@@ -3139,9 +3539,28 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-karatsu-gsi-map",
-              "src-karatsu-jtsb-west-port"
+              "karatsu-west-port-src-karatsu-gsi-map",
+              "karatsu-west-port-src-karatsu-jtsb-west-port"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -3161,8 +3580,29 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-karatsu-gsi-map",
-              "src-karatsu-jtsb-west-port"
+              "karatsu-west-port-src-karatsu-gsi-map",
+              "karatsu-west-port-src-karatsu-jtsb-west-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "karatsu-west-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "唐津西港（facility）の水深を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "karatsu-west-port-src-karatsu-gsi-map"
             ],
             "contradicting": []
           }
@@ -3183,7 +3623,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-karatsu-gsi-map"
+              "karatsu-west-port-src-karatsu-gsi-map"
             ],
             "contradicting": []
           }
@@ -3204,7 +3644,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-karatsu-gsi-map"
+              "karatsu-west-port-src-karatsu-gsi-map"
             ],
             "contradicting": []
           }
@@ -3225,7 +3665,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-karatsu-gsi-map"
+              "karatsu-west-port-src-karatsu-gsi-map"
             ],
             "contradicting": []
           }
@@ -3247,10 +3687,10 @@
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-karatsu-jtsb-west-port"
+              "karatsu-west-port-src-karatsu-jtsb-west-port"
             ],
             "checked": [
-              "src-karatsu-gsi-map"
+              "karatsu-west-port-src-karatsu-gsi-map"
             ],
             "contradicting": []
           }
@@ -3271,7 +3711,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-karatsu-gsi-map"
+              "karatsu-west-port-src-karatsu-gsi-map"
             ],
             "contradicting": []
           }
@@ -3284,7 +3724,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-yobuko-gsi-map",
+          "id": "yobuko-area-src-yobuko-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 呼子地区周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#14/33.5437/129.8942/&base=std&ls=std&disp=1",
@@ -3292,7 +3732,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-yobuko-karatsu-center",
+          "id": "yobuko-area-src-yobuko-karatsu-center",
           "sourceType": "official",
           "sourceName": "呼子市民センター",
           "sourceUrl": "https://www.city.karatsu.lg.jp/soshiki/31.html",
@@ -3300,7 +3740,7 @@
           "note": "唐津市 / government"
         },
         {
-          "id": "src-yobuko-karatsu-district",
+          "id": "yobuko-area-src-yobuko-karatsu-district",
           "sourceType": "official",
           "sourceName": "唐津市の投票所（呼子地区）",
           "sourceUrl": "https://www.city.karatsu.lg.jp/page/3405.html",
@@ -3363,9 +3803,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-yobuko-gsi-map",
-              "src-yobuko-karatsu-center",
-              "src-yobuko-karatsu-district"
+              "yobuko-area-src-yobuko-gsi-map",
+              "yobuko-area-src-yobuko-karatsu-center",
+              "yobuko-area-src-yobuko-karatsu-district"
             ],
             "contradicting": []
           }
@@ -3386,9 +3826,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-yobuko-gsi-map",
-              "src-yobuko-karatsu-center",
-              "src-yobuko-karatsu-district"
+              "yobuko-area-src-yobuko-gsi-map",
+              "yobuko-area-src-yobuko-karatsu-center",
+              "yobuko-area-src-yobuko-karatsu-district"
             ],
             "contradicting": []
           }
@@ -3409,9 +3849,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-yobuko-gsi-map",
-              "src-yobuko-karatsu-center",
-              "src-yobuko-karatsu-district"
+              "yobuko-area-src-yobuko-gsi-map",
+              "yobuko-area-src-yobuko-karatsu-center",
+              "yobuko-area-src-yobuko-karatsu-district"
             ],
             "contradicting": []
           }
@@ -3432,10 +3872,29 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-yobuko-gsi-map",
-              "src-yobuko-karatsu-center",
-              "src-yobuko-karatsu-district"
+              "yobuko-area-src-yobuko-gsi-map",
+              "yobuko-area-src-yobuko-karatsu-center",
+              "yobuko-area-src-yobuko-karatsu-district"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -3455,9 +3914,30 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-yobuko-gsi-map",
-              "src-yobuko-karatsu-center",
-              "src-yobuko-karatsu-district"
+              "yobuko-area-src-yobuko-gsi-map",
+              "yobuko-area-src-yobuko-karatsu-center",
+              "yobuko-area-src-yobuko-karatsu-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-area:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "呼子周辺（district）の水深を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "yobuko-area-src-yobuko-gsi-map"
             ],
             "contradicting": []
           }
@@ -3478,7 +3958,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-yobuko-gsi-map"
+              "yobuko-area-src-yobuko-gsi-map"
             ],
             "contradicting": []
           }
@@ -3499,7 +3979,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-yobuko-gsi-map"
+              "yobuko-area-src-yobuko-gsi-map"
             ],
             "contradicting": []
           }
@@ -3520,7 +4000,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-yobuko-gsi-map"
+              "yobuko-area-src-yobuko-gsi-map"
             ],
             "contradicting": []
           }
@@ -3541,9 +4021,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-yobuko-gsi-map",
-              "src-yobuko-karatsu-center",
-              "src-yobuko-karatsu-district"
+              "yobuko-area-src-yobuko-gsi-map",
+              "yobuko-area-src-yobuko-karatsu-center",
+              "yobuko-area-src-yobuko-karatsu-district"
             ],
             "contradicting": []
           }
@@ -3564,7 +4044,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-yobuko-gsi-map"
+              "yobuko-area-src-yobuko-gsi-map"
             ],
             "contradicting": []
           }
@@ -3577,7 +4057,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-imari-gsi-map",
+          "id": "imari-inner-bay-src-imari-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 伊万里湾奥周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#14/33.3044/129.8176/&base=std&ls=std&disp=1",
@@ -3585,7 +4065,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-imari-city-bay",
+          "id": "imari-inner-bay-src-imari-city-bay",
           "sourceType": "official",
           "sourceName": "伊万里湾",
           "sourceUrl": "https://www.city.imari.lg.jp/9641.htm",
@@ -3648,8 +4128,8 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-imari-gsi-map",
-              "src-imari-city-bay"
+              "imari-inner-bay-src-imari-gsi-map",
+              "imari-inner-bay-src-imari-city-bay"
             ],
             "contradicting": []
           }
@@ -3670,8 +4150,8 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-imari-gsi-map",
-              "src-imari-city-bay"
+              "imari-inner-bay-src-imari-gsi-map",
+              "imari-inner-bay-src-imari-city-bay"
             ],
             "contradicting": []
           }
@@ -3692,8 +4172,8 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-imari-gsi-map",
-              "src-imari-city-bay"
+              "imari-inner-bay-src-imari-gsi-map",
+              "imari-inner-bay-src-imari-city-bay"
             ],
             "contradicting": []
           }
@@ -3714,9 +4194,28 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-imari-gsi-map",
-              "src-imari-city-bay"
+              "imari-inner-bay-src-imari-gsi-map",
+              "imari-inner-bay-src-imari-city-bay"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -3736,8 +4235,29 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-imari-gsi-map",
-              "src-imari-city-bay"
+              "imari-inner-bay-src-imari-gsi-map",
+              "imari-inner-bay-src-imari-city-bay"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "imari-inner-bay:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "伊万里湾奥（district）の水深を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "imari-inner-bay-src-imari-gsi-map"
             ],
             "contradicting": []
           }
@@ -3758,7 +4278,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-imari-gsi-map"
+              "imari-inner-bay-src-imari-gsi-map"
             ],
             "contradicting": []
           }
@@ -3767,8 +4287,10 @@
           "id": "imari-inner-bay:coastal_topography",
           "itemKey": "coastal_topography",
           "informationState": "has_evidence",
-          "valueText": "inner_bay",
-          "valueTextList": [],
+          "valueText": null,
+          "valueTextList": [
+            "inner_bay"
+          ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
@@ -3778,10 +4300,10 @@
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-imari-city-bay"
+              "imari-inner-bay-src-imari-city-bay"
             ],
             "checked": [
-              "src-imari-gsi-map"
+              "imari-inner-bay-src-imari-gsi-map"
             ],
             "contradicting": []
           }
@@ -3802,7 +4324,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-imari-gsi-map"
+              "imari-inner-bay-src-imari-gsi-map"
             ],
             "contradicting": []
           }
@@ -3823,8 +4345,8 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-imari-gsi-map",
-              "src-imari-city-bay"
+              "imari-inner-bay-src-imari-gsi-map",
+              "imari-inner-bay-src-imari-city-bay"
             ],
             "contradicting": []
           }
@@ -3832,20 +4354,24 @@
         {
           "id": "imari-inner-bay:water_flow_influences",
           "itemKey": "water_flow_influences",
-          "informationState": "researched_unknown",
+          "informationState": "has_evidence",
           "valueText": null,
-          "valueTextList": [],
+          "valueTextList": [
+            "open_sea_exposure:inner_bay"
+          ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": null,
-          "note": "伊万里湾奥（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
+          "confidence": "medium",
+          "note": "確認済み要素を保持し、不明要素はnoteへ分離: tidal_flow:unknown, river_influence:unknown",
           "checkedAt": "2026-07-18",
           "sources": {
-            "supporting": [],
+            "supporting": [
+              "imari-inner-bay-src-imari-city-bay"
+            ],
             "checked": [
-              "src-imari-gsi-map"
+              "imari-inner-bay-src-imari-gsi-map"
             ],
             "contradicting": []
           }
@@ -3858,7 +4384,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-fukushima-area-matsuura-fishery",
+          "id": "fukushima-area-src-fukushima-area-matsuura-fishery",
           "sourceType": "official",
           "sourceName": "松浦市で漁業に従事したい人向け情報",
           "sourceUrl": "https://www.city-matsuura.jp/top/purpose/shushoku/7818.html",
@@ -3866,7 +4392,7 @@
           "note": "松浦市 / government"
         },
         {
-          "id": "src-fukushima-area-museum",
+          "id": "fukushima-area-src-fukushima-area-museum",
           "sourceType": "official",
           "sourceName": "福島歴史民俗資料館",
           "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kyoikuiinkai/bunkazaika/5/983.html",
@@ -3874,7 +4400,7 @@
           "note": "松浦市 / government"
         },
         {
-          "id": "src-fukushima-area-history",
+          "id": "fukushima-area-src-fukushima-area-history",
           "sourceType": "official",
           "sourceName": "市の沿革",
           "sourceUrl": "https://www.city-matsuura.jp/top/shiseijoho/shinogaiyo_aramashi/2398.html",
@@ -3882,7 +4408,7 @@
           "note": "松浦市 / government"
         },
         {
-          "id": "src-fukushima-area-gsi-map",
+          "id": "fukushima-area-src-fukushima-area-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 福島周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#13/33.332000/129.773000/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
@@ -3945,10 +4471,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukushima-area-matsuura-fishery",
-              "src-fukushima-area-museum",
-              "src-fukushima-area-history",
-              "src-fukushima-area-gsi-map"
+              "fukushima-area-src-fukushima-area-matsuura-fishery",
+              "fukushima-area-src-fukushima-area-museum",
+              "fukushima-area-src-fukushima-area-history",
+              "fukushima-area-src-fukushima-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -3969,10 +4495,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukushima-area-matsuura-fishery",
-              "src-fukushima-area-museum",
-              "src-fukushima-area-history",
-              "src-fukushima-area-gsi-map"
+              "fukushima-area-src-fukushima-area-matsuura-fishery",
+              "fukushima-area-src-fukushima-area-museum",
+              "fukushima-area-src-fukushima-area-history",
+              "fukushima-area-src-fukushima-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -3993,10 +4519,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukushima-area-matsuura-fishery",
-              "src-fukushima-area-museum",
-              "src-fukushima-area-history",
-              "src-fukushima-area-gsi-map"
+              "fukushima-area-src-fukushima-area-matsuura-fishery",
+              "fukushima-area-src-fukushima-area-museum",
+              "fukushima-area-src-fukushima-area-history",
+              "fukushima-area-src-fukushima-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -4017,11 +4543,30 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukushima-area-matsuura-fishery",
-              "src-fukushima-area-museum",
-              "src-fukushima-area-history",
-              "src-fukushima-area-gsi-map"
+              "fukushima-area-src-fukushima-area-matsuura-fishery",
+              "fukushima-area-src-fukushima-area-museum",
+              "fukushima-area-src-fukushima-area-history",
+              "fukushima-area-src-fukushima-area-gsi-map"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -4041,10 +4586,34 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukushima-area-matsuura-fishery",
-              "src-fukushima-area-museum",
-              "src-fukushima-area-history",
-              "src-fukushima-area-gsi-map"
+              "fukushima-area-src-fukushima-area-matsuura-fishery",
+              "fukushima-area-src-fukushima-area-museum",
+              "fukushima-area-src-fukushima-area-history",
+              "fukushima-area-src-fukushima-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-area:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからwaterDepthを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "fukushima-area-src-fukushima-area-matsuura-fishery",
+              "fukushima-area-src-fukushima-area-museum",
+              "fukushima-area-src-fukushima-area-history",
+              "fukushima-area-src-fukushima-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -4065,10 +4634,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukushima-area-matsuura-fishery",
-              "src-fukushima-area-museum",
-              "src-fukushima-area-history",
-              "src-fukushima-area-gsi-map"
+              "fukushima-area-src-fukushima-area-matsuura-fishery",
+              "fukushima-area-src-fukushima-area-museum",
+              "fukushima-area-src-fukushima-area-history",
+              "fukushima-area-src-fukushima-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -4089,10 +4658,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukushima-area-matsuura-fishery",
-              "src-fukushima-area-museum",
-              "src-fukushima-area-history",
-              "src-fukushima-area-gsi-map"
+              "fukushima-area-src-fukushima-area-matsuura-fishery",
+              "fukushima-area-src-fukushima-area-museum",
+              "fukushima-area-src-fukushima-area-history",
+              "fukushima-area-src-fukushima-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -4113,10 +4682,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukushima-area-matsuura-fishery",
-              "src-fukushima-area-museum",
-              "src-fukushima-area-history",
-              "src-fukushima-area-gsi-map"
+              "fukushima-area-src-fukushima-area-matsuura-fishery",
+              "fukushima-area-src-fukushima-area-museum",
+              "fukushima-area-src-fukushima-area-history",
+              "fukushima-area-src-fukushima-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -4137,10 +4706,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukushima-area-matsuura-fishery",
-              "src-fukushima-area-museum",
-              "src-fukushima-area-history",
-              "src-fukushima-area-gsi-map"
+              "fukushima-area-src-fukushima-area-matsuura-fishery",
+              "fukushima-area-src-fukushima-area-museum",
+              "fukushima-area-src-fukushima-area-history",
+              "fukushima-area-src-fukushima-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -4161,10 +4730,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-fukushima-area-matsuura-fishery",
-              "src-fukushima-area-museum",
-              "src-fukushima-area-history",
-              "src-fukushima-area-gsi-map"
+              "fukushima-area-src-fukushima-area-matsuura-fishery",
+              "fukushima-area-src-fukushima-area-museum",
+              "fukushima-area-src-fukushima-area-history",
+              "fukushima-area-src-fukushima-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -4177,7 +4746,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-takashima-gsi-map",
+          "id": "takashima-area-src-takashima-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 鷹島周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#14/33.4246/129.7555/&base=std&ls=std&disp=1",
@@ -4185,7 +4754,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-takashima-matsuura-history",
+          "id": "takashima-area-src-takashima-matsuura-history",
           "sourceType": "official",
           "sourceName": "鷹島地区の歴史・文化",
           "sourceUrl": "https://www.city-matsuura.jp/top/soshikikarasagasu/kyoikuiinkai/bunkazaika/5/4/index.html",
@@ -4193,7 +4762,7 @@
           "note": "松浦市 / government"
         },
         {
-          "id": "src-takashima-matsuura-district",
+          "id": "takashima-area-src-takashima-matsuura-district",
           "sourceType": "official",
           "sourceName": "避難場所（鷹島地区）",
           "sourceUrl": "https://www.city-matsuura.jp/top/kurashi_tetsuzuki/bosaijoho/hinambasho/1808.html",
@@ -4256,9 +4825,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-takashima-gsi-map",
-              "src-takashima-matsuura-history",
-              "src-takashima-matsuura-district"
+              "takashima-area-src-takashima-gsi-map",
+              "takashima-area-src-takashima-matsuura-history",
+              "takashima-area-src-takashima-matsuura-district"
             ],
             "contradicting": []
           }
@@ -4279,9 +4848,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-takashima-gsi-map",
-              "src-takashima-matsuura-history",
-              "src-takashima-matsuura-district"
+              "takashima-area-src-takashima-gsi-map",
+              "takashima-area-src-takashima-matsuura-history",
+              "takashima-area-src-takashima-matsuura-district"
             ],
             "contradicting": []
           }
@@ -4302,9 +4871,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-takashima-gsi-map",
-              "src-takashima-matsuura-history",
-              "src-takashima-matsuura-district"
+              "takashima-area-src-takashima-gsi-map",
+              "takashima-area-src-takashima-matsuura-history",
+              "takashima-area-src-takashima-matsuura-district"
             ],
             "contradicting": []
           }
@@ -4325,10 +4894,29 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-takashima-gsi-map",
-              "src-takashima-matsuura-history",
-              "src-takashima-matsuura-district"
+              "takashima-area-src-takashima-gsi-map",
+              "takashima-area-src-takashima-matsuura-history",
+              "takashima-area-src-takashima-matsuura-district"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -4348,9 +4936,30 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-takashima-gsi-map",
-              "src-takashima-matsuura-history",
-              "src-takashima-matsuura-district"
+              "takashima-area-src-takashima-gsi-map",
+              "takashima-area-src-takashima-matsuura-history",
+              "takashima-area-src-takashima-matsuura-district"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takashima-area:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "鷹島周辺（district）の水深を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "takashima-area-src-takashima-gsi-map"
             ],
             "contradicting": []
           }
@@ -4371,7 +4980,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-takashima-gsi-map"
+              "takashima-area-src-takashima-gsi-map"
             ],
             "contradicting": []
           }
@@ -4392,7 +5001,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-takashima-gsi-map"
+              "takashima-area-src-takashima-gsi-map"
             ],
             "contradicting": []
           }
@@ -4413,7 +5022,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-takashima-gsi-map"
+              "takashima-area-src-takashima-gsi-map"
             ],
             "contradicting": []
           }
@@ -4434,9 +5043,9 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-takashima-gsi-map",
-              "src-takashima-matsuura-history",
-              "src-takashima-matsuura-district"
+              "takashima-area-src-takashima-gsi-map",
+              "takashima-area-src-takashima-matsuura-history",
+              "takashima-area-src-takashima-matsuura-district"
             ],
             "contradicting": []
           }
@@ -4457,7 +5066,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-takashima-gsi-map"
+              "takashima-area-src-takashima-gsi-map"
             ],
             "contradicting": []
           }
@@ -4470,7 +5079,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-tabira-gsi-map",
+          "id": "tabira-port-src-tabira-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 田平港周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#14/33.3609/129.5827/&base=std&ls=std&disp=1",
@@ -4478,7 +5087,7 @@
           "note": "国土地理院 / public_map"
         },
         {
-          "id": "src-tabira-mlit-hirado-route",
+          "id": "tabira-port-src-tabira-mlit-hirado-route",
           "sourceType": "official",
           "sourceName": "平戸瀬戸航路（田平港掲載）",
           "sourceUrl": "https://www.pa.qsr.mlit.go.jp/nagasaki/port/route/hirado/",
@@ -4486,7 +5095,7 @@
           "note": "国土交通省 九州地方整備局 長崎港湾・空港整備事務所 / government"
         },
         {
-          "id": "src-tabira-nagasaki-port-plan",
+          "id": "tabira-port-src-tabira-nagasaki-port-plan",
           "sourceType": "official",
           "sourceName": "地域再生計画（田平港の港湾施設）",
           "sourceUrl": "https://www.pref.nagasaki.jp/bunrui/machidukuri/kowan-kuko/kowan/kouwan-kowan-kuko/tihosousei/",
@@ -4494,7 +5103,7 @@
           "note": "長崎県 / government"
         },
         {
-          "id": "src-tabira-nagasaki-market",
+          "id": "tabira-port-src-tabira-nagasaki-market",
           "sourceType": "official",
           "sourceName": "平戸瀬戸市場レストラン（田平港・平戸市田平町）",
           "sourceUrl": "https://www.pref.nagasaki.jp/tisan/fish/detail.php?id=10",
@@ -4544,26 +5153,24 @@
         {
           "id": "tabira-port:shore_access",
           "itemKey": "shore_access",
-          "informationState": "has_evidence",
+          "informationState": "researched_unknown",
           "valueText": null,
-          "valueTextList": [
-            "port"
-          ],
+          "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "medium",
-          "note": "国土交通省が平戸瀬戸航路周辺の港として田平港を明記し、長崎県が田平港を港湾施設として扱っているためportをconfirmed/mediumとした。一般立入・釣り可否は示さない。",
+          "confidence": null,
+          "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-tabira-mlit-hirado-route",
-              "src-tabira-nagasaki-port-plan"
+              "tabira-port-src-tabira-mlit-hirado-route",
+              "tabira-port-src-tabira-nagasaki-port-plan"
             ],
             "checked": [
-              "src-tabira-gsi-map",
-              "src-tabira-nagasaki-market"
+              "tabira-port-src-tabira-gsi-map",
+              "tabira-port-src-tabira-nagasaki-market"
             ],
             "contradicting": []
           }
@@ -4584,10 +5191,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-tabira-gsi-map",
-              "src-tabira-mlit-hirado-route",
-              "src-tabira-nagasaki-port-plan",
-              "src-tabira-nagasaki-market"
+              "tabira-port-src-tabira-gsi-map",
+              "tabira-port-src-tabira-mlit-hirado-route",
+              "tabira-port-src-tabira-nagasaki-port-plan",
+              "tabira-port-src-tabira-nagasaki-market"
             ],
             "contradicting": []
           }
@@ -4608,10 +5215,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-tabira-gsi-map",
-              "src-tabira-mlit-hirado-route",
-              "src-tabira-nagasaki-port-plan",
-              "src-tabira-nagasaki-market"
+              "tabira-port-src-tabira-gsi-map",
+              "tabira-port-src-tabira-mlit-hirado-route",
+              "tabira-port-src-tabira-nagasaki-port-plan",
+              "tabira-port-src-tabira-nagasaki-market"
             ],
             "contradicting": []
           }
@@ -4632,11 +5239,30 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-tabira-gsi-map",
-              "src-tabira-mlit-hirado-route",
-              "src-tabira-nagasaki-port-plan",
-              "src-tabira-nagasaki-market"
+              "tabira-port-src-tabira-gsi-map",
+              "tabira-port-src-tabira-mlit-hirado-route",
+              "tabira-port-src-tabira-nagasaki-port-plan",
+              "tabira-port-src-tabira-nagasaki-market"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -4656,10 +5282,31 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-tabira-gsi-map",
-              "src-tabira-mlit-hirado-route",
-              "src-tabira-nagasaki-port-plan",
-              "src-tabira-nagasaki-market"
+              "tabira-port-src-tabira-gsi-map",
+              "tabira-port-src-tabira-mlit-hirado-route",
+              "tabira-port-src-tabira-nagasaki-port-plan",
+              "tabira-port-src-tabira-nagasaki-market"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tabira-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "田平港（facility）の水深を直接確認できる一次根拠がないためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "tabira-port-src-tabira-gsi-map"
             ],
             "contradicting": []
           }
@@ -4680,7 +5327,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-tabira-gsi-map"
+              "tabira-port-src-tabira-gsi-map"
             ],
             "contradicting": []
           }
@@ -4701,7 +5348,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-tabira-gsi-map"
+              "tabira-port-src-tabira-gsi-map"
             ],
             "contradicting": []
           }
@@ -4722,7 +5369,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-tabira-gsi-map"
+              "tabira-port-src-tabira-gsi-map"
             ],
             "contradicting": []
           }
@@ -4744,12 +5391,12 @@
           "checkedAt": "2026-07-18",
           "sources": {
             "supporting": [
-              "src-tabira-mlit-hirado-route",
-              "src-tabira-nagasaki-port-plan"
+              "tabira-port-src-tabira-mlit-hirado-route",
+              "tabira-port-src-tabira-nagasaki-port-plan"
             ],
             "checked": [
-              "src-tabira-gsi-map",
-              "src-tabira-nagasaki-market"
+              "tabira-port-src-tabira-gsi-map",
+              "tabira-port-src-tabira-nagasaki-market"
             ],
             "contradicting": []
           }
@@ -4770,7 +5417,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-tabira-gsi-map"
+              "tabira-port-src-tabira-gsi-map"
             ],
             "contradicting": []
           }
@@ -4783,7 +5430,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-hirado-seto-mlit-route",
+          "id": "hirado-seto-src-hirado-seto-mlit-route",
           "sourceType": "official",
           "sourceName": "平戸瀬戸航路",
           "sourceUrl": "https://www.pa.qsr.mlit.go.jp/nagasaki/port/route/hirado/",
@@ -4791,7 +5438,7 @@
           "note": "国土交通省 九州地方整備局 / government"
         },
         {
-          "id": "src-hirado-seto-city-gallery",
+          "id": "hirado-seto-src-hirado-seto-city-gallery",
           "sourceType": "official",
           "sourceName": "平戸瀬戸市場フォトギャラリー",
           "sourceUrl": "https://www.city.hirado.nagasaki.jp/kurashi/gyosei/photogallery/tabira/setoichiba.html",
@@ -4799,7 +5446,7 @@
           "note": "平戸市 / government"
         },
         {
-          "id": "src-hirado-seto-chart-archive",
+          "id": "hirado-seto-src-hirado-seto-chart-archive",
           "sourceType": "official",
           "sourceName": "海図アーカイブ 平戸瀬戸",
           "sourceUrl": "https://www1.kaiho.mlit.go.jp/kaizuArchive/kaizu/kaizu.cgi?id=JLAA00501&p=954",
@@ -4807,7 +5454,7 @@
           "note": "海上保安庁 / government"
         },
         {
-          "id": "src-hirado-seto-gsi-map",
+          "id": "hirado-seto-src-hirado-seto-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 平戸瀬戸周辺",
           "sourceUrl": "https://maps.gsi.go.jp/#13/33.354000/129.579000/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
@@ -4870,10 +5517,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hirado-seto-mlit-route",
-              "src-hirado-seto-city-gallery",
-              "src-hirado-seto-chart-archive",
-              "src-hirado-seto-gsi-map"
+              "hirado-seto-src-hirado-seto-mlit-route",
+              "hirado-seto-src-hirado-seto-city-gallery",
+              "hirado-seto-src-hirado-seto-chart-archive",
+              "hirado-seto-src-hirado-seto-gsi-map"
             ],
             "contradicting": []
           }
@@ -4894,10 +5541,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hirado-seto-mlit-route",
-              "src-hirado-seto-city-gallery",
-              "src-hirado-seto-chart-archive",
-              "src-hirado-seto-gsi-map"
+              "hirado-seto-src-hirado-seto-mlit-route",
+              "hirado-seto-src-hirado-seto-city-gallery",
+              "hirado-seto-src-hirado-seto-chart-archive",
+              "hirado-seto-src-hirado-seto-gsi-map"
             ],
             "contradicting": []
           }
@@ -4918,10 +5565,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hirado-seto-mlit-route",
-              "src-hirado-seto-city-gallery",
-              "src-hirado-seto-chart-archive",
-              "src-hirado-seto-gsi-map"
+              "hirado-seto-src-hirado-seto-mlit-route",
+              "hirado-seto-src-hirado-seto-city-gallery",
+              "hirado-seto-src-hirado-seto-chart-archive",
+              "hirado-seto-src-hirado-seto-gsi-map"
             ],
             "contradicting": []
           }
@@ -4942,11 +5589,30 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hirado-seto-mlit-route",
-              "src-hirado-seto-city-gallery",
-              "src-hirado-seto-chart-archive",
-              "src-hirado-seto-gsi-map"
+              "hirado-seto-src-hirado-seto-mlit-route",
+              "hirado-seto-src-hirado-seto-city-gallery",
+              "hirado-seto-src-hirado-seto-chart-archive",
+              "hirado-seto-src-hirado-seto-gsi-map"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -4966,10 +5632,34 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hirado-seto-mlit-route",
-              "src-hirado-seto-city-gallery",
-              "src-hirado-seto-chart-archive",
-              "src-hirado-seto-gsi-map"
+              "hirado-seto-src-hirado-seto-mlit-route",
+              "hirado-seto-src-hirado-seto-city-gallery",
+              "hirado-seto-src-hirado-seto-chart-archive",
+              "hirado-seto-src-hirado-seto-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-seto:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからwaterDepthを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "hirado-seto-src-hirado-seto-mlit-route",
+              "hirado-seto-src-hirado-seto-city-gallery",
+              "hirado-seto-src-hirado-seto-chart-archive",
+              "hirado-seto-src-hirado-seto-gsi-map"
             ],
             "contradicting": []
           }
@@ -4990,10 +5680,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hirado-seto-mlit-route",
-              "src-hirado-seto-city-gallery",
-              "src-hirado-seto-chart-archive",
-              "src-hirado-seto-gsi-map"
+              "hirado-seto-src-hirado-seto-mlit-route",
+              "hirado-seto-src-hirado-seto-city-gallery",
+              "hirado-seto-src-hirado-seto-chart-archive",
+              "hirado-seto-src-hirado-seto-gsi-map"
             ],
             "contradicting": []
           }
@@ -5014,10 +5704,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hirado-seto-mlit-route",
-              "src-hirado-seto-city-gallery",
-              "src-hirado-seto-chart-archive",
-              "src-hirado-seto-gsi-map"
+              "hirado-seto-src-hirado-seto-mlit-route",
+              "hirado-seto-src-hirado-seto-city-gallery",
+              "hirado-seto-src-hirado-seto-chart-archive",
+              "hirado-seto-src-hirado-seto-gsi-map"
             ],
             "contradicting": []
           }
@@ -5038,10 +5728,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hirado-seto-mlit-route",
-              "src-hirado-seto-city-gallery",
-              "src-hirado-seto-chart-archive",
-              "src-hirado-seto-gsi-map"
+              "hirado-seto-src-hirado-seto-mlit-route",
+              "hirado-seto-src-hirado-seto-city-gallery",
+              "hirado-seto-src-hirado-seto-chart-archive",
+              "hirado-seto-src-hirado-seto-gsi-map"
             ],
             "contradicting": []
           }
@@ -5062,10 +5752,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hirado-seto-mlit-route",
-              "src-hirado-seto-city-gallery",
-              "src-hirado-seto-chart-archive",
-              "src-hirado-seto-gsi-map"
+              "hirado-seto-src-hirado-seto-mlit-route",
+              "hirado-seto-src-hirado-seto-city-gallery",
+              "hirado-seto-src-hirado-seto-chart-archive",
+              "hirado-seto-src-hirado-seto-gsi-map"
             ],
             "contradicting": []
           }
@@ -5086,10 +5776,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-hirado-seto-mlit-route",
-              "src-hirado-seto-city-gallery",
-              "src-hirado-seto-chart-archive",
-              "src-hirado-seto-gsi-map"
+              "hirado-seto-src-hirado-seto-mlit-route",
+              "hirado-seto-src-hirado-seto-city-gallery",
+              "hirado-seto-src-hirado-seto-chart-archive",
+              "hirado-seto-src-hirado-seto-gsi-map"
             ],
             "contradicting": []
           }
@@ -5102,7 +5792,7 @@
       "reviewSources": [],
       "sources": [
         {
-          "id": "src-ikitsuki-area-city-gallery",
+          "id": "ikitsuki-area-src-ikitsuki-area-city-gallery",
           "sourceType": "official",
           "sourceName": "生月フォトギャラリー",
           "sourceUrl": "https://www.city.hirado.nagasaki.jp/kurashi/gyosei/photogallery/ikituki/index.html",
@@ -5110,7 +5800,7 @@
           "note": "平戸市 / government"
         },
         {
-          "id": "src-ikitsuki-area-statistics",
+          "id": "ikitsuki-area-src-ikitsuki-area-statistics",
           "sourceType": "official",
           "sourceName": "主要統計指標",
           "sourceUrl": "https://www.city.hirado.nagasaki.jp/kurashi/gyosei/toukei/tki01.html",
@@ -5118,7 +5808,7 @@
           "note": "平戸市 / government"
         },
         {
-          "id": "src-ikitsuki-area-org",
+          "id": "ikitsuki-area-src-ikitsuki-area-org",
           "sourceType": "official",
           "sourceName": "組織機構図・各課業務内容",
           "sourceUrl": "https://www.city.hirado.nagasaki.jp/kurashi/gyosei/guide/gd02.html",
@@ -5126,7 +5816,7 @@
           "note": "平戸市 / government"
         },
         {
-          "id": "src-ikitsuki-area-gsi-map",
+          "id": "ikitsuki-area-src-ikitsuki-area-gsi-map",
           "sourceType": "official",
           "sourceName": "国土地理院地理院地図 生月島方面",
           "sourceUrl": "https://maps.gsi.go.jp/#13/33.390000/129.564000/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
@@ -5189,10 +5879,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-ikitsuki-area-city-gallery",
-              "src-ikitsuki-area-statistics",
-              "src-ikitsuki-area-org",
-              "src-ikitsuki-area-gsi-map"
+              "ikitsuki-area-src-ikitsuki-area-city-gallery",
+              "ikitsuki-area-src-ikitsuki-area-statistics",
+              "ikitsuki-area-src-ikitsuki-area-org",
+              "ikitsuki-area-src-ikitsuki-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -5213,10 +5903,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-ikitsuki-area-city-gallery",
-              "src-ikitsuki-area-statistics",
-              "src-ikitsuki-area-org",
-              "src-ikitsuki-area-gsi-map"
+              "ikitsuki-area-src-ikitsuki-area-city-gallery",
+              "ikitsuki-area-src-ikitsuki-area-statistics",
+              "ikitsuki-area-src-ikitsuki-area-org",
+              "ikitsuki-area-src-ikitsuki-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -5237,10 +5927,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-ikitsuki-area-city-gallery",
-              "src-ikitsuki-area-statistics",
-              "src-ikitsuki-area-org",
-              "src-ikitsuki-area-gsi-map"
+              "ikitsuki-area-src-ikitsuki-area-city-gallery",
+              "ikitsuki-area-src-ikitsuki-area-statistics",
+              "ikitsuki-area-src-ikitsuki-area-org",
+              "ikitsuki-area-src-ikitsuki-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -5261,11 +5951,30 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-ikitsuki-area-city-gallery",
-              "src-ikitsuki-area-statistics",
-              "src-ikitsuki-area-org",
-              "src-ikitsuki-area-gsi-map"
+              "ikitsuki-area-src-ikitsuki-area-city-gallery",
+              "ikitsuki-area-src-ikitsuki-area-statistics",
+              "ikitsuki-area-src-ikitsuki-area-org",
+              "ikitsuki-area-src-ikitsuki-area-gsi-map"
             ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [],
             "contradicting": []
           }
         },
@@ -5285,10 +5994,34 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-ikitsuki-area-city-gallery",
-              "src-ikitsuki-area-statistics",
-              "src-ikitsuki-area-org",
-              "src-ikitsuki-area-gsi-map"
+              "ikitsuki-area-src-ikitsuki-area-city-gallery",
+              "ikitsuki-area-src-ikitsuki-area-statistics",
+              "ikitsuki-area-src-ikitsuki-area-org",
+              "ikitsuki-area-src-ikitsuki-area-gsi-map"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-area:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからwaterDepthを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+          "checkedAt": "2026-07-18",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "ikitsuki-area-src-ikitsuki-area-city-gallery",
+              "ikitsuki-area-src-ikitsuki-area-statistics",
+              "ikitsuki-area-src-ikitsuki-area-org",
+              "ikitsuki-area-src-ikitsuki-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -5309,10 +6042,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-ikitsuki-area-city-gallery",
-              "src-ikitsuki-area-statistics",
-              "src-ikitsuki-area-org",
-              "src-ikitsuki-area-gsi-map"
+              "ikitsuki-area-src-ikitsuki-area-city-gallery",
+              "ikitsuki-area-src-ikitsuki-area-statistics",
+              "ikitsuki-area-src-ikitsuki-area-org",
+              "ikitsuki-area-src-ikitsuki-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -5333,10 +6066,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-ikitsuki-area-city-gallery",
-              "src-ikitsuki-area-statistics",
-              "src-ikitsuki-area-org",
-              "src-ikitsuki-area-gsi-map"
+              "ikitsuki-area-src-ikitsuki-area-city-gallery",
+              "ikitsuki-area-src-ikitsuki-area-statistics",
+              "ikitsuki-area-src-ikitsuki-area-org",
+              "ikitsuki-area-src-ikitsuki-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -5357,10 +6090,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-ikitsuki-area-city-gallery",
-              "src-ikitsuki-area-statistics",
-              "src-ikitsuki-area-org",
-              "src-ikitsuki-area-gsi-map"
+              "ikitsuki-area-src-ikitsuki-area-city-gallery",
+              "ikitsuki-area-src-ikitsuki-area-statistics",
+              "ikitsuki-area-src-ikitsuki-area-org",
+              "ikitsuki-area-src-ikitsuki-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -5381,10 +6114,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-ikitsuki-area-city-gallery",
-              "src-ikitsuki-area-statistics",
-              "src-ikitsuki-area-org",
-              "src-ikitsuki-area-gsi-map"
+              "ikitsuki-area-src-ikitsuki-area-city-gallery",
+              "ikitsuki-area-src-ikitsuki-area-statistics",
+              "ikitsuki-area-src-ikitsuki-area-org",
+              "ikitsuki-area-src-ikitsuki-area-gsi-map"
             ],
             "contradicting": []
           }
@@ -5405,10 +6138,10 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-ikitsuki-area-city-gallery",
-              "src-ikitsuki-area-statistics",
-              "src-ikitsuki-area-org",
-              "src-ikitsuki-area-gsi-map"
+              "ikitsuki-area-src-ikitsuki-area-city-gallery",
+              "ikitsuki-area-src-ikitsuki-area-statistics",
+              "ikitsuki-area-src-ikitsuki-area-org",
+              "ikitsuki-area-src-ikitsuki-area-gsi-map"
             ],
             "contradicting": []
           }
