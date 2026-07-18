@@ -46,9 +46,27 @@ create table if not exists public.fishing_spot_detail_values (
     constraint fishing_spot_detail_values_moderation_status_check check (moderation_status = any (array['not_required', 'pending', 'approved', 'rejected']::text[])),
     constraint fishing_spot_detail_values_review_status_check check (review_status = any (array['pending_review', 'reviewed', 'needs_recheck']::text[])),
     constraint fishing_spot_detail_values_adoption_status_check check (adoption_status = any (array['adopted', 'candidate', 'not_adopted']::text[])),
-    constraint fishing_spot_detail_values_no_confidence_without_information_check check ((information_state in ('researched_unknown', 'unresearched') and confidence is null) or information_state not in ('researched_unknown', 'unresearched')),
+    constraint fishing_spot_detail_values_confidence_matches_information_check check (
+        (information_state in ('has_evidence', 'weak_evidence') and confidence is not null)
+        or (information_state in ('researched_unknown', 'unresearched', 'rejected') and confidence is null)
+    ),
     constraint fishing_spot_detail_values_user_submission_check check ((contribution_origin = 'user_contribution' and submitted_at is not null) or contribution_origin <> 'user_contribution'),
-    constraint fishing_spot_detail_values_text_list_no_nulls_check check (array_position(value_text_list, null::text) is null)
+    constraint fishing_spot_detail_values_text_list_no_nulls_check check (array_position(value_text_list, null::text) is null),
+    constraint fishing_spot_detail_values_exactly_one_value_for_information_check check (
+        (
+            information_state in ('has_evidence', 'weak_evidence')
+            and ((value_text is not null)::integer + (cardinality(value_text_list) > 0)::integer + (value_number is not null)::integer + (value_boolean is not null)::integer + (value_json is not null)::integer) = 1
+        )
+        or (
+            information_state in ('researched_unknown', 'unresearched', 'rejected')
+            and value_text is null
+            and cardinality(value_text_list) = 0
+            and value_number is null
+            and value_boolean is null
+            and value_json is null
+        )
+    ),
+    constraint fishing_spot_detail_values_number_is_valid_check check (value_number is null or value_number::text <> 'NaN')
 );
 
 alter table public.fishing_spot_detail_values enable row level security;
@@ -85,12 +103,31 @@ create index if not exists fishing_spot_detail_values_origin_status_idx on publi
 create index if not exists fishing_spot_detail_sources_type_checked_idx on public.fishing_spot_detail_sources (source_type, checked_on desc);
 
 create policy "Public read fishing spot detail item definitions" on public.fishing_spot_detail_item_definitions for select to anon, authenticated using (is_active = true);
-create policy "Public read adopted fishing spot detail values" on public.fishing_spot_detail_values for select to anon, authenticated using (adoption_status = 'adopted' and moderation_status in ('not_required', 'approved'));
-create policy "Public read fishing spot detail sources" on public.fishing_spot_detail_sources for select to anon, authenticated using (true);
-create policy "Public read fishing spot detail value sources" on public.fishing_spot_detail_value_sources for select to anon, authenticated using (true);
+create policy "Public read adopted curated fishing spot detail values" on public.fishing_spot_detail_values for select to anon, authenticated using (adoption_status = 'adopted' and moderation_status in ('not_required', 'approved') and contribution_origin = 'curated_research');
+create policy "Public read sources for adopted curated values" on public.fishing_spot_detail_sources for select to anon, authenticated using (
+    exists (
+        select 1
+        from public.fishing_spot_detail_value_sources vsrc
+        join public.fishing_spot_detail_values val on val.id = vsrc.detail_value_id
+        where vsrc.source_id = fishing_spot_detail_sources.id
+          and val.adoption_status = 'adopted'
+          and val.moderation_status in ('not_required', 'approved')
+          and val.contribution_origin = 'curated_research'
+    )
+);
+create policy "Public read source links for adopted curated values" on public.fishing_spot_detail_value_sources for select to anon, authenticated using (
+    exists (
+        select 1
+        from public.fishing_spot_detail_values val
+        where val.id = fishing_spot_detail_value_sources.detail_value_id
+          and val.adoption_status = 'adopted'
+          and val.moderation_status in ('not_required', 'approved')
+          and val.contribution_origin = 'curated_research'
+    )
+);
 
 grant select on table public.fishing_spot_detail_item_definitions to anon, authenticated;
-grant select on table public.fishing_spot_detail_values to anon, authenticated;
+grant select (id, spot_id, item_key, information_state, value_text, value_text_list, value_number, value_boolean, value_json, unit, confidence, submitted_at, moderation_status, review_status, adoption_status, note, checked_at, created_at, updated_at) on table public.fishing_spot_detail_values to anon, authenticated;
 grant select on table public.fishing_spot_detail_sources to anon, authenticated;
 grant select on table public.fishing_spot_detail_value_sources to anon, authenticated;
 

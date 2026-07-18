@@ -1,7 +1,7 @@
 import type { FishingSpotDetailSet, SpotDetailAdoptionStatus, SpotDetailCategory, SpotDetailConfidence, SpotDetailContributionOrigin, SpotDetailInformationState, SpotDetailItemDefinition, SpotDetailModerationStatus, SpotDetailReviewStatus, SpotDetailSourceRelation, SpotDetailSourceType, SpotDetailValue, SpotDetailValueKind } from "@/domain/fishingSpotDetail";
 
 export type SpotDetailItemDefinitionRow = { item_key: string; category: string; value_kind: string; label_ja: string; description?: string | null; display_order?: number | null; is_active?: boolean | null };
-export type SpotDetailValueRow = { id: string; spot_id: string; item_key: string; information_state: string; value_text?: string | null; value_text_list?: unknown; value_number?: number | string | null; value_boolean?: boolean | null; value_json?: unknown | null; unit?: string | null; confidence?: string | null; contribution_origin: string; contributor_id?: string | null; submitted_at?: string | null; moderation_status: string; review_status: string; adoption_status: string; note?: string | null; checked_at?: string | null; fishing_spot_detail_value_sources?: SpotDetailValueSourceJoinRow[] | null };
+export type SpotDetailValueRow = { id: string; spot_id: string; item_key: string; information_state: string; value_text?: string | null; value_text_list?: unknown; value_number?: number | string | null; value_boolean?: boolean | null; value_json?: unknown | null; unit?: string | null; confidence?: string | null; contribution_origin?: string | null; contributor_id?: string | null; submitted_at?: string | null; moderation_status: string; review_status: string; adoption_status: string; note?: string | null; checked_at?: string | null; fishing_spot_detail_value_sources?: SpotDetailValueSourceJoinRow[] | null };
 export type SpotDetailValueSourceJoinRow = { relation: string; note?: string | null; fishing_spot_detail_sources?: { id: string; source_type: string; source_name: string; source_url?: string | null; checked_on?: string | null; note?: string | null } | null };
 
 const categories = new Set<SpotDetailCategory>(["basic", "facility", "access", "restriction", "terrain", "hydrology", "safety"]);
@@ -15,8 +15,9 @@ const adoptionStatuses = new Set<SpotDetailAdoptionStatus>(["adopted", "candidat
 const sourceTypes = new Set<SpotDetailSourceType>(["official", "shop", "portal", "map", "field_research", "user_report", "other"]);
 const relations = new Set<SpotDetailSourceRelation>(["supporting", "checked", "contradicting"]);
 
-function stringArray(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+function stringArray(value: unknown): string[] | null {
+  if (!Array.isArray(value)) return [];
+  return value.every((item): item is string => typeof item === "string") ? value : null;
 }
 
 function enumOrNull<T extends string>(value: string | null | undefined, allowed: Set<T>): T | null {
@@ -33,24 +34,37 @@ export function mapSpotDetailItemDefinitionRow(row: SpotDetailItemDefinitionRow)
 
 export function mapSpotDetailValueRow(row: SpotDetailValueRow): SpotDetailValue | null {
   const informationState = enumOrNull(row.information_state, informationStates);
-  const contributionOrigin = enumOrNull(row.contribution_origin, origins);
+  const contributionOrigin = enumOrNull(row.contribution_origin ?? "curated_research", origins);
   const moderationStatus = enumOrNull(row.moderation_status, moderationStatuses);
   const reviewStatus = enumOrNull(row.review_status, reviewStatuses);
   const adoptionStatus = enumOrNull(row.adoption_status, adoptionStatuses);
   if (!informationState || !contributionOrigin || !moderationStatus || !reviewStatus || !adoptionStatus) return null;
+
+  const valueTextList = stringArray(row.value_text_list);
+  const valueNumber = row.value_number === null || row.value_number === undefined ? null : Number(row.value_number);
+  if (valueTextList === null || !Number.isFinite(valueNumber ?? 0)) return null;
+
+  const valueText = row.value_text ?? null;
+  const valueBoolean = row.value_boolean ?? null;
+  const valueJson = row.value_json ?? null;
+  const concreteValueCount = [valueText !== null, valueTextList.length > 0, valueNumber !== null, valueBoolean !== null, valueJson !== null].filter(Boolean).length;
+  const confidence = enumOrNull(row.confidence, confidences);
+  const hasConcreteInformation = informationState === "has_evidence" || informationState === "weak_evidence";
+  if (hasConcreteInformation && (concreteValueCount !== 1 || confidence === null)) return null;
+  if (!hasConcreteInformation && (concreteValueCount !== 0 || row.confidence !== null && row.confidence !== undefined)) return null;
 
   return {
     id: row.id,
     spotId: row.spot_id,
     itemKey: row.item_key,
     informationState,
-    valueText: row.value_text ?? null,
-    valueTextList: stringArray(row.value_text_list),
-    valueNumber: row.value_number === null || row.value_number === undefined ? null : Number(row.value_number),
-    valueBoolean: row.value_boolean ?? null,
-    valueJson: row.value_json ?? null,
+    valueText,
+    valueTextList,
+    valueNumber,
+    valueBoolean,
+    valueJson,
     unit: row.unit ?? null,
-    confidence: enumOrNull(row.confidence, confidences),
+    confidence,
     contributionOrigin,
     contributorId: row.contributor_id ?? null,
     submittedAt: row.submitted_at ?? null,
