@@ -42,7 +42,9 @@ assert(!mapper.includes('信憑性') && !mapper.includes('情報なし'), 'mappe
 assert(mapper.includes('note: row.note ?? null'), 'mapper must preserve notes without UI display side effects');
 
 assert(!migration.includes('using (true)'), 'source and join-table public RLS must not use using (true)');
-assert(migration.includes("contribution_origin = 'curated_research'"), 'public values must be limited to curated research');
+assert(migration.includes("contribution_origin = 'user_contribution' and moderation_status = 'approved'"), 'public values must allow approved user contributions after review and adoption');
+assert(migration.includes("or (adoption_status = 'adopted' and moderation_status = 'approved' and review_status = 'reviewed')"), 'user contributions must only become adopted after approval and review');
+assert(migration.includes("moderation_status <> 'not_required'"), 'user contributions must not allow not_required moderation');
 assert(migration.includes("review_status = 'reviewed'"), 'public values and related sources must be review-gated');
 assert(!migration.includes('grant select on table public.fishing_spot_detail_values to anon'), 'anon must not receive table-wide select on detail values');
 assert(!/grant select \([^)]*contribution_origin[^)]*\) on table public\.fishing_spot_detail_values to anon/.test(migration), 'anon column grants must not expose contribution_origin');
