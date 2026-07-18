@@ -1,0 +1,307 @@
+{
+  "schemaVersion": "1.0.0",
+  "speciesId": "aji",
+  "identity": {
+    "displayNameJa": "アジ",
+    "canonicalNameJa": {
+      "value": "マアジ",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "tokyo_maaji"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "アジ表示とcanonical候補を分離。通称から自動確定せずsourceで確認した範囲。"
+    },
+    "scientificName": {
+      "value": "Trachurus japonicus",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "tokyo_maaji"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "学名はsourceで直接確認できる場合のみ採用。"
+    },
+    "aliases": [
+      "マアジ"
+    ],
+    "entityType": "species_group",
+    "note": "表示魚種、生物学的canonical名、alias、entityTypeを分離した調査記録。"
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。ただし本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-18",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "waterTemperature": {
+        "value": {
+          "min": 16,
+          "max": 22
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "tokyo_maaji"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "産卵水温であり釣れやすい水温ではない。",
+        "unit": "celsius",
+        "regionScope": "日本周辺一般"
+      },
+      "depthRange": {
+        "value": {
+          "min": 0,
+          "max": 200
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "tokyo_maaji"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "成魚の一般的な生息水深で、岸釣り可能水深ではない。",
+        "unit": "m",
+        "regionScope": "日本周辺一般"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "spawningOrConfusableInfo": {
+        "value": {
+          "months": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "tokyo_maaji"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "九州沿岸の産卵期情報。釣期とは同一視しない。",
+        "regionScope": "九州沿岸"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "tokyo_maaji",
+      "title": "マアジ",
+      "url": "https://www.ifarc.metro.tokyo.lg.jp/archive/27%2C1085%2C55%2C227.html",
+      "publisher": "東京都島しょ農林水産総合センター",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-18",
+      "regionScope": "東京都島しょ・日本周辺の一般解説",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "tokyo-ifarc-maaji",
+      "supports": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/waterTemperature",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "標準和名・学名・一般生態の確認に限定し、防波堤で釣れる時期の根拠へ転用しない。"
+    }
+  ],
+  "review": {
+    "officialResearch": "公的または研究機関sourceを優先。原典派生ページはderivationGroupで重複管理。",
+    "secondaryResearch": "民間釣りサイト、SNS、動画、ブログ単独ではmedium以上にしない。",
+    "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
+    "comparisonWithCurrentImplementation": {
+      "currentFishSpeciesNameJa": "アジ",
+      "currentSeasonMonths": "比較対象のみ。sourceまたは正解として不使用。",
+      "currentMethodAffinity": "比較対象のみ。sourceまたは正解として不使用。"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt_with_warning",
+        "reason": "sourceで確認したcanonical候補。ただし表示名から単一種を推測確定しない。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "対象地域の遊漁釣れやすさを直接支えるsource未確認。unknown維持。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt_with_warning",
+        "reason": "生態情報として採用候補。釣期やSCORE入力値へ転用しない。"
+      }
+    ],
+    "reviewStatus": "ready_for_review"
+  }
+}

@@ -45,3 +45,7 @@
 AI原文は修正せず保存し、JSON構文、Schema適合、source品質、`unknown`の扱いを分けて評価します。Schema適合は内容の事実確認完了を意味しないため、sourceの直接性・独立性・更新日も人間が確認します。
 
 調査JSONは根拠付きの調査記録であり、そのまま本番地点マスター、SCORE、安全判断へ使用しません。一般立入・釣り可否・施設利用は最新の管理者情報と現地表示を確認してください。
+
+## Fish species ecology pilot
+
+- `FISH_SPECIES_ECOLOGY_3_PILOT_REVIEW.md`: Issue #177の3表示魚種パイロットレビュー。

@@ -1,0 +1,397 @@
+{
+  "schemaVersion": "1.0.0",
+  "speciesId": "chinu",
+  "identity": {
+    "displayNameJa": "チヌ",
+    "canonicalNameJa": {
+      "value": "クロダイ",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "mlit_ootagawa_kurodai"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "表示名「チヌ」は通称として残し、canonical候補は資料上のクロダイに限定する。キチヌ等との地域的混同は後続確認。"
+    },
+    "scientificName": {
+      "value": "Acanthopagrus schlegelii",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bisma_kurodai"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "BISMaLでクロダイの採用学名Acanthopagrus schlegeliiを直接確認。FishBase等ではSparus schlegelii表記も見られるため、分類・同物異名の表記揺れは保留注記付きで扱う。"
+    },
+    "aliases": [
+      "クロダイ",
+      "チヌ"
+    ],
+    "entityType": "exact_species",
+    "note": "チヌは九州で一般的な通称として残し、クロダイ確認値と近縁種混同リスクを別管理する。"
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。ただし本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-18",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "depthRange": {
+        "value": {
+          "max": 50
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mlit_ootagawa_kurodai"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "越冬移動先の内湾等の「50m以浅」。根拠にない下限値を補完せず、岸から釣れる水深ではない。",
+        "unit": "m",
+        "regionScope": "内湾等",
+        "rangeType": "maximum_only"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "salinityAndWaterBody": {
+        "value": [
+          "内湾",
+          "沿岸域",
+          "汽水域",
+          "河口域"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mlit_ootagawa_kurodai"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "稚魚・幼魚期の河口域利用を含む。",
+        "regionScope": "太田川・内湾沿岸域"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "spawningOrConfusableInfo": {
+        "value": {
+          "months": [
+            4,
+            5,
+            6
+          ]
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mlit_ootagawa_kurodai"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "産卵期であり釣れやすい時期ではない。",
+        "regionScope": "太田川資料の一般解説"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "waterTemperature": {
+        "value": {
+          "point": 13.8,
+          "observedCatch": true
+        },
+        "status": "inferred",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "marukyu_oita_low_temp_chinu"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "九州内の釣行記録で水温13.8℃時の釣果。適水温の範囲ではなく単発実績。",
+        "rangeType": "point",
+        "unit": "celsius",
+        "regionScope": "大分県乙津港"
+      },
+      "depthRange": {
+        "value": {
+          "min": 5,
+          "max": 10
+        },
+        "status": "inferred",
+        "confidence": "low",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "tsurinews_nagasaki_autumn_chinu"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "特定地点・季節の釣り解説。一般化しない。",
+        "rangeType": "bounded_range",
+        "unit": "m",
+        "regionScope": "長崎県潮の浦港の秋〜初冬解説"
+      },
+      "substrateHabitat": {
+        "value": [
+          "浅場",
+          "流れ込み",
+          "ゴロタ",
+          "砂地",
+          "沈瀬",
+          "障害物"
+        ],
+        "status": "inferred",
+        "confidence": "low",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "tsurinews_nagasaki_autumn_chinu"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "低信頼候補として残し、対象地域へ直結しない。",
+        "regionScope": "長崎県潮の浦港の秋〜初冬解説"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "dayNightTiming": {
+        "value": [
+          "昼"
+        ],
+        "status": "inferred",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "marukyu_oita_low_temp_chinu"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "昼の釣行記録。一般的な昼夜傾向とはしない。",
+        "regionScope": "大分県乙津港"
+      },
+      "fishingMethods": {
+        "value": [
+          "フカセ",
+          "コマセ"
+        ],
+        "status": "inferred",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "marukyu_oita_low_temp_chinu",
+            "tsurinews_nagasaki_autumn_chinu"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "フカセ系の実釣・解説由来。コマセ利用は候補に留め、本番補正へ自動反映しない。",
+        "regionScope": "九州の堤防・港湾例"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "mlit_ootagawa_kurodai",
+      "title": "クロダイ",
+      "url": "https://www.cgr.mlit.go.jp/ootagawa/Bio/fishes/index264.htm",
+      "publisher": "国土交通省中国地方整備局 太田川河川事務所",
+      "publisherType": "government",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-18",
+      "regionScope": "太田川・内湾沿岸域",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "mlit-ootagawa-kurodai",
+      "supports": [
+        "/identity/canonicalNameJa",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "河川・汽水域利用と産卵の確認に限定。遊漁釣期へ直結しない。"
+    },
+    {
+      "id": "bisma_kurodai",
+      "title": "クロダイ Acanthopagrus schlegelii",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9023172",
+      "publisher": "BISMaL / JAMSTEC",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-18",
+      "regionScope": "分類情報",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "bisma-kurodai",
+      "supports": [
+        "/identity/scientificName"
+      ],
+      "usageNote": "学名表記の直接確認に限定。釣れやすさへ使わない。"
+    },
+    {
+      "id": "marukyu_oita_low_temp_chinu",
+      "title": "低水温でのチヌ釣り〜大分県乙津港",
+      "url": "https://marukyu-fishing-news-kyushu.com/archives/12755",
+      "publisher": "マルキユー九州 フカセ釣り情報",
+      "publisherType": "private_fishing",
+      "publishedOrUpdatedAt": "2025-01-14",
+      "checkedAt": "2026-07-18",
+      "regionScope": "大分県大分市乙津港",
+      "sourceType": "supporting",
+      "directness": "indirect",
+      "derivationGroup": "marukyu-oita-low-temp-chinu",
+      "supports": [
+        "/ecology/regionalCatchability/waterTemperature",
+        "/ecology/regionalCatchability/dayNightTiming",
+        "/ecology/regionalCatchability/fishingMethods"
+      ],
+      "usageNote": "九州内の釣具関連釣行記録としてmedium候補。水温範囲にはしない。"
+    },
+    {
+      "id": "tsurinews_nagasaki_autumn_chinu",
+      "title": "チヌが好む水深は？九州エリアの秋チヌを攻略！【長崎県・潮の浦港】",
+      "url": "https://tsurinews.jp/26316/2/",
+      "publisher": "TSURINEWS",
+      "publisherType": "secondary",
+      "publishedOrUpdatedAt": "2018-11-28",
+      "checkedAt": "2026-07-18",
+      "regionScope": "長崎県潮の浦港",
+      "sourceType": "supporting",
+      "directness": "indirect",
+      "derivationGroup": "tsurinews-nagasaki-autumn-chinu",
+      "supports": [
+        "/ecology/regionalCatchability/depthRange",
+        "/ecology/regionalCatchability/substrateHabitat",
+        "/ecology/regionalCatchability/fishingMethods"
+      ],
+      "usageNote": "古めの釣りメディア記事としてlow候補。"
+    }
+  ],
+  "review": {
+    "officialResearch": "公的または研究機関sourceを優先。原典派生ページはderivationGroupで重複管理。",
+    "secondaryResearch": "民間釣りサイト、SNS、動画、ブログ単独ではmedium以上にしない。",
+    "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
+    "comparisonWithCurrentImplementation": {
+      "currentFishSpeciesNameJa": "チヌ",
+      "currentSeasonMonths": [],
+      "currentMethodAffinity": [
+        "コマセ"
+      ],
+      "currentCategory": "fish",
+      "comparisonPolicy": "現行値は比較対象に限定し、sourceまたは正解として不使用。"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt_with_warning",
+        "reason": "sourceで確認したcanonical候補。ただし表示名から単一種を推測確定しない。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "対象地域の遊漁釣れやすさを直接支えるsource未確認。unknown維持。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt_with_warning",
+        "reason": "生態情報として採用候補。釣期やSCORE入力値へ転用しない。"
+      }
+    ],
+    "reviewStatus": "ready_for_review"
+  }
+}

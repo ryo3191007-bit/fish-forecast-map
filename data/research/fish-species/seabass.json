@@ -1,0 +1,331 @@
+{
+  "schemaVersion": "1.0.0",
+  "speciesId": "seabass",
+  "identity": {
+    "displayNameJa": "シーバス",
+    "canonicalNameJa": {
+      "value": "スズキ",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "tokyo_suzuki"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "表示名「シーバス」は遊漁上の呼称で、ここでは資料で確認したスズキをcanonical候補に置く。ヒラスズキ等を含む可能性は後続精査。"
+    },
+    "scientificName": {
+      "value": "Lateolabrax japonicus",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "tokyo_suzuki"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "学名はsourceで直接確認できる場合のみ採用。"
+    },
+    "aliases": [
+      "スズキ",
+      "セイゴ",
+      "フッコ",
+      "ハネ"
+    ],
+    "entityType": "exact_species",
+    "note": "シーバスは釣り用語として扱い、スズキ確認値と別種混入リスクを同時に管理する。"
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。ただし本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-18",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "salinityAndWaterBody": {
+        "value": [
+          "沿岸",
+          "河川下流域"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "tokyo_suzuki"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "東京湾から河川下流域への遡上記述。全国共通の釣れやすさ条件ではない。",
+        "regionScope": "東京湾・関東河川下流域"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "spawningOrConfusableInfo": {
+        "value": {
+          "season": "winter"
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "tokyo_suzuki"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "東京湾の産卵期。釣期ではない。",
+        "regionScope": "東京湾"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": {
+          "season": "秋",
+          "basis": "中国・九州の秋シーバス有望ポイント紹介"
+        },
+        "status": "inferred",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "tsuribito_kyushu_autumn_seabass"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "釣具店直伝の釣り媒体記事。対象地域そのものではないため自動採用しない。",
+        "regionScope": "中国・九州の複数河川・河口"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "substrateHabitat": {
+        "value": [
+          "河口",
+          "河川下流",
+          "サーフ"
+        ],
+        "status": "inferred",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "tsuribito_kyushu_autumn_seabass"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "広域候補。",
+        "regionScope": "中国・九州の複数河川・河口"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      },
+      "fishingMethods": {
+        "value": [
+          "ルアー",
+          "キャスティング"
+        ],
+        "status": "inferred",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "tsuribito_kyushu_autumn_seabass"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "秋の河口・サーフ攻略でルアーを投げる文脈を記録。現行のキャスティング補正を正当化する根拠にはしない。",
+        "regionScope": "中国・九州の複数河川・河口"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": ""
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "tokyo_suzuki",
+      "title": "スズキ",
+      "url": "https://www.ifarc.metro.tokyo.lg.jp/archive/27%2C948%2C55%2C226.html",
+      "publisher": "東京都島しょ農林水産総合センター",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-18",
+      "regionScope": "東京湾・日本各地沿岸の一般解説",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "tokyo-ifarc-suzuki",
+      "supports": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "シーバス表示のcanonical候補確認に使うが、ヒラスズキ等との混同に注意。"
+    },
+    {
+      "id": "tsuribito_kyushu_autumn_seabass",
+      "title": "【中国・九州】釣具店直伝！秋のシーバス有望ポイント＆ルアーガイド",
+      "url": "https://web.tsuribito.co.jp/suburb/seabass-kyusyu",
+      "publisher": "つり人オンライン",
+      "publisherType": "secondary",
+      "publishedOrUpdatedAt": "2025-12-06",
+      "checkedAt": "2026-07-18",
+      "regionScope": "中国・九州地方の河川・河口・サーフ例",
+      "sourceType": "supporting",
+      "directness": "indirect",
+      "derivationGroup": "tsuribito-kyushu-autumn-seabass",
+      "supports": [
+        "/ecology/regionalCatchability/seasonality",
+        "/ecology/regionalCatchability/substrateHabitat",
+        "/ecology/regionalCatchability/fishingMethods"
+      ],
+      "usageNote": "釣具店コメントを含む釣り媒体記事としてmedium候補。対象地域直接根拠ではない。"
+    }
+  ],
+  "review": {
+    "officialResearch": "公的または研究機関sourceを優先。原典派生ページはderivationGroupで重複管理。",
+    "secondaryResearch": "民間釣りサイト、SNS、動画、ブログ単独ではmedium以上にしない。",
+    "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
+    "comparisonWithCurrentImplementation": {
+      "currentFishSpeciesNameJa": "シーバス",
+      "currentSeasonMonths": [],
+      "currentMethodAffinity": [
+        "キャスティング"
+      ],
+      "currentCategory": "fish",
+      "comparisonPolicy": "現行値は比較対象に限定し、sourceまたは正解として不使用。"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt_with_warning",
+        "reason": "sourceで確認したcanonical候補。ただし表示名から単一種を推測確定しない。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "対象地域の遊漁釣れやすさを直接支えるsource未確認。unknown維持。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt_with_warning",
+        "reason": "生態情報として採用候補。釣期やSCORE入力値へ転用しない。"
+      }
+    ],
+    "reviewStatus": "ready_for_review"
+  }
+}
