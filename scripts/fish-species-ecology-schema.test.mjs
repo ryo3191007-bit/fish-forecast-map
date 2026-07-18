@@ -53,7 +53,7 @@ function validateResearchDoc(id, doc) {
   const sourceById = new Map(doc.sources.map((source) => [source.id, source]));
   const derivations = new Set();
   for (const source of doc.sources) {
-    const duplicateKey = `${source.derivationGroup}:${source.sourceType}`;
+    const duplicateKey = source.derivationGroup;
     assert(!derivations.has(duplicateKey), `${id}: duplicated derivation group counted as independent evidence`);
     derivations.add(duplicateKey);
     for (const supportedPath of source.supports) assert(supportedPath.startsWith('/'), `${id}: support path must be JSON pointer`);
@@ -70,11 +70,19 @@ function validateResearchDoc(id, doc) {
     const flat = lists.flat();
     assert.equal(new Set(flat).size, flat.length, `${id}:${pointer}: evidence lists overlap or duplicate`);
     for (const sourceId of flat) assert(sourceIds.has(sourceId), `${id}:${pointer}: missing source ${sourceId}`);
-    for (const sourceId of claim.evidenceSources.supportingSourceIds) assert(sourceById.get(sourceId).supports.includes(pointer), `${id}:${pointer}: supporting source ${sourceId} does not support claim path`);
+    for (const listKey of ['supportingSourceIds', 'checkedSourceIds', 'contradictingSourceIds']) {
+      for (const sourceId of claim.evidenceSources[listKey]) {
+        assert(sourceById.get(sourceId).supports.includes(pointer), `${id}:${pointer}: ${listKey} source ${sourceId} does not reference claim path`);
+      }
+    }
     if (['confirmed', 'inferred'].includes(claim.status)) assert(claim.evidenceSources.supportingSourceIds.length > 0, `${id}:${pointer}: confirmed/inferred requires support`);
     if (claim.status === 'unknown') assert.equal(claim.value, null, `${id}:${pointer}: unknown must not contain concrete value`);
     if (pointer.includes('regionalCatchability') && claim.status !== 'unknown') assert(claim.regionScope, `${id}:${pointer}: regional value requires regionScope`);
-    if (claim.unit === 'celsius' && claim.value?.min !== undefined) assert(claim.value.min >= -2 && claim.value.max <= 35, `${id}:${pointer}: invalid celsius range`);
+    if (claim.unit === 'celsius' && claim.value) {
+      for (const key of ['min', 'max', 'point']) {
+        if (claim.value[key] !== undefined) assert(claim.value[key] >= -2 && claim.value[key] <= 35, `${id}:${pointer}: invalid celsius ${key}`);
+      }
+    }
     if (claim.unit === 'm' && claim.value) {
       if (claim.rangeType === 'maximum_only') assert(claim.value.min === undefined && claim.value.max >= 0 && claim.value.max <= 1000, `${id}:${pointer}: maximum_only depth must not invent min`);
       if (claim.rangeType === 'bounded_range') assert(claim.value.min >= 0 && claim.value.max <= 1000, `${id}:${pointer}: invalid depth range`);
@@ -108,6 +116,39 @@ assert.throws(() => assertNoOverSimilarCopies({ aji: docs.aji, copiedFixture }),
 
 const oneWayFixture = structuredClone(docs.chinu);
 oneWayFixture.sources.find((source) => source.id === oneWayFixture.identity.scientificName.evidenceSources.supportingSourceIds[0]).supports = [];
-assert.throws(() => validateResearchDoc('chinu', oneWayFixture), /does not support claim path/);
+assert.throws(() => validateResearchDoc('chinu', oneWayFixture), /supportingSourceIds source .* does not reference claim path/);
+
+
+const checkedFixture = structuredClone(docs.aji);
+const checkedClaim = checkedFixture.ecology.stableGeneral.depthRange;
+checkedClaim.evidenceSources.checkedSourceIds = ['tsuriking_fukuoka_aji'];
+assert.throws(() => validateResearchDoc('aji', checkedFixture), /checkedSourceIds source .* does not reference claim path/);
+
+const contradictingFixture = structuredClone(docs.chinu);
+const contradictingClaim = contradictingFixture.ecology.regionalCatchability.waterTemperature;
+contradictingClaim.evidenceSources.contradictingSourceIds = ['bisma_kurodai'];
+assert.throws(() => validateResearchDoc('chinu', contradictingFixture), /contradictingSourceIds source .* does not reference claim path/);
+
+const duplicateDerivationFixture = structuredClone(docs.chinu);
+duplicateDerivationFixture.sources.push({
+  ...structuredClone(duplicateDerivationFixture.sources[0]),
+  id: 'duplicate_derivation_checked_source',
+  sourceType: 'checked',
+});
+assert.throws(() => validateResearchDoc('chinu', duplicateDerivationFixture), /duplicated derivation group/);
+
+const invalidPointCelsiusFixture = structuredClone(docs.chinu);
+invalidPointCelsiusFixture.ecology.regionalCatchability.waterTemperature.value.point = 60;
+assert.throws(() => validateResearchDoc('chinu', invalidPointCelsiusFixture), /invalid celsius point/);
+
+const invalidMinimumOnlyCelsiusFixture = structuredClone(docs.chinu);
+invalidMinimumOnlyCelsiusFixture.ecology.regionalCatchability.waterTemperature.rangeType = 'minimum_only';
+invalidMinimumOnlyCelsiusFixture.ecology.regionalCatchability.waterTemperature.value = { min: -5 };
+assert.throws(() => validateResearchDoc('chinu', invalidMinimumOnlyCelsiusFixture), /invalid celsius min/);
+
+const invalidMaximumOnlyCelsiusFixture = structuredClone(docs.chinu);
+invalidMaximumOnlyCelsiusFixture.ecology.regionalCatchability.waterTemperature.rangeType = 'maximum_only';
+invalidMaximumOnlyCelsiusFixture.ecology.regionalCatchability.waterTemperature.value = { max: 40 };
+assert.throws(() => validateResearchDoc('chinu', invalidMaximumOnlyCelsiusFixture), /invalid celsius max/);
 
 console.log('fish species ecology schema tests passed');
