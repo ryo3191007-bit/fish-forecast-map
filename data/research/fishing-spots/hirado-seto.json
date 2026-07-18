@@ -1,0 +1,389 @@
+{
+  "schemaVersion": "1.1.0",
+  "spotId": "hirado-seto",
+  "scopeType": "district",
+  "identity": {
+    "spotName": "平戸瀬戸周辺",
+    "aliases": [
+      "平戸瀬戸",
+      "平戸瀬戸航路"
+    ],
+    "prefecture": "長崎県",
+    "municipality": "平戸市",
+    "coordinates": {
+      "latitude": 33.354,
+      "longitude": 129.579,
+      "coordinateMethod": "map_measurement",
+      "coordinateScope": "district",
+      "status": "inferred",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "src-hirado-seto-gsi-map"
+        ],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "九州本土と平戸島の間の水道・航路を安全に丸めた広域districtとして地理院地図で机上測定。港、橋、橋脚、灯台、磯入口、堤防先端、駐車位置、実釣ピン、危険箇所ではない。公式座標データではないためlow。 独立再計測（2026-07-18）は、現行地点マスター値を見ずに地理院地図の標準地図で九州本土と平戸島間の水道中央付近を再選定し、小数第4位を確認後に公開用へ小数第3位で四捨五入した。再計測結果は33.354, 129.579となり、現行地点マスター33.354, 129.579と偶然同値。URL入力ではなく地理院地図上の水道・航路表示を再確認し、港・橋・橋脚・実釣ピン・危険箇所を選んでいないことを確認した。現状は釣り属性がunknown/lowかつfishSpecies空配列のため、本番地点マスター採用判断はhold。"
+    }
+  },
+  "researchedAt": "2026-07-18T00:00:00.000Z",
+  "reviewStatus": "draft",
+  "researchStages": {
+    "officialResearch": "completed",
+    "secondaryResearch": "incomplete",
+    "schemaValidation": "passed"
+  },
+  "researchNotes": "Issue #175としてhirado-seto（平戸瀬戸周辺）を個別調査。公式候補ページと地理院地図を確認し、内部canonical表示名と公式確認表記を分離した。現行地点マスター、既存district JSON、漁業・養殖・水揚げ・店舗魚種は遊漁属性へ転用せず、直接根拠がない釣り属性、施設、規制、魚種、釣法はunknownまたは空配列で維持する。 独立再計測（2026-07-18）は、現行地点マスター値を見ずに地理院地図の標準地図で九州本土と平戸島間の水道中央付近を再選定し、小数第4位を確認後に公開用へ小数第3位で四捨五入した。再計測結果は33.354, 129.579となり、現行地点マスター33.354, 129.579と偶然同値。URL入力ではなく地理院地図上の水道・航路表示を再確認し、港・橋・橋脚・実釣ピン・危険箇所を選んでいないことを確認した。現状は釣り属性がunknown/lowかつfishSpecies空配列のため、本番地点マスター採用判断はhold。",
+  "sources": [
+    {
+      "id": "src-hirado-seto-mlit-route",
+      "url": "https://www.pa.qsr.mlit.go.jp/nagasaki/port/route/hirado/",
+      "title": "平戸瀬戸航路",
+      "publisher": "国土交通省 九州地方整備局",
+      "sourceType": "government",
+      "checkedAt": "2026-07-18",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "group-hirado-seto-mlit-route",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.aliases",
+        "identity.prefecture"
+      ]
+    },
+    {
+      "id": "src-hirado-seto-city-gallery",
+      "url": "https://www.city.hirado.nagasaki.jp/kurashi/gyosei/photogallery/tabira/setoichiba.html",
+      "title": "平戸瀬戸市場フォトギャラリー",
+      "publisher": "平戸市",
+      "sourceType": "government",
+      "checkedAt": "2026-07-18",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "group-hirado-seto-city-gallery",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.aliases",
+        "identity.municipality"
+      ]
+    },
+    {
+      "id": "src-hirado-seto-chart-archive",
+      "url": "https://www1.kaiho.mlit.go.jp/kaizuArchive/kaizu/kaizu.cgi?id=JLAA00501&p=954",
+      "title": "海図アーカイブ 平戸瀬戸",
+      "publisher": "海上保安庁",
+      "sourceType": "government",
+      "checkedAt": "2026-07-18",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "group-hirado-seto-chart-archive",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.aliases"
+      ]
+    },
+    {
+      "id": "src-hirado-seto-gsi-map",
+      "url": "https://maps.gsi.go.jp/#13/33.354000/129.579000/&base=std&ls=std&disp=1&vs=c1j0l0u0t0z0r0s0m0f1",
+      "title": "国土地理院地理院地図 平戸瀬戸周辺",
+      "publisher": "国土地理院",
+      "sourceType": "public_map",
+      "checkedAt": "2026-07-18",
+      "publishedAt": null,
+      "lastUpdatedAt": null,
+      "sourceGroup": "group-hirado-seto-gsi-map",
+      "originalSourceId": null,
+      "independenceStatus": "independent",
+      "supports": [
+        "identity.coordinates.latitude",
+        "identity.coordinates.longitude"
+      ]
+    }
+  ],
+  "attributes": {
+    "spotType": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。"
+    },
+    "seabed": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからseabedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。"
+    },
+    "waterDepth": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからwaterDepthを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。"
+    },
+    "riverInfluence": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからriverInfluenceを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。"
+    },
+    "tidalFlow": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからtidalFlowを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。"
+    },
+    "streetLights": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからstreetLightsを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。"
+    },
+    "obstacles": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからobstaclesを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。"
+    },
+    "openSeaExposure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからopenSeaExposureを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。"
+    },
+    "fishingRange": {
+      "value": [
+        "unknown"
+      ],
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからfishingRangeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。"
+    }
+  },
+  "facilities": {
+    "parking": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからparkingを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "toilet": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからtoiletを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    }
+  },
+  "restrictions": {
+    "fishingProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからfishingProhibitedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "entryProhibited": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからentryProhibitedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "constructionOrClosure": {
+      "value": "unknown",
+      "status": "unknown",
+      "confidence": "low",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [
+          "src-hirado-seto-mlit-route",
+          "src-hirado-seto-city-gallery",
+          "src-hirado-seto-chart-archive",
+          "src-hirado-seto-gsi-map"
+        ],
+        "contradictingSourceIds": []
+      },
+      "checkedAt": "2026-07-18",
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからconstructionOrClosureを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null
+    },
+    "officialContact": {
+      "name": null,
+      "url": null,
+      "checkedAt": "2026-07-18",
+      "validFrom": null,
+      "validUntil": null,
+      "officiallyConfirmed": null,
+      "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからofficialContactを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。"
+    }
+  },
+  "fishSpecies": []
+}

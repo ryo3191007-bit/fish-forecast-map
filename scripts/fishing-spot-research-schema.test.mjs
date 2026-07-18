@@ -375,6 +375,48 @@ const issue165DistrictFixture = issue165Records.filter((record) => record.scopeT
 assert.throws(() => assertIssue165NotMechanicalCopy(issue165FacilityFixture, "Issue #165 facility negative fixture"), /share too many normalized sections/, "facility copy fixture must fail");
 assert.throws(() => assertIssue165NotMechanicalCopy(issue165DistrictFixture, "Issue #165 district negative fixture"), /share too many normalized sections/, "district copy fixture must fail");
 
+
+const issue175SpotPaths = ["fukushima-area", "hirado-seto", "ikitsuki-area"].map((spotId) => path.join(ROOT, `data/research/fishing-spots/${spotId}.json`));
+const issue175Expected = new Map([
+  ["fukushima-area", { spotName: "福島周辺", municipality: "松浦市", coordinateText: "33.332, 129.773", reviewPath: "docs/research/FUKUSHIMA_AREA_RESEARCH_REVIEW.md" }],
+  ["hirado-seto", { spotName: "平戸瀬戸周辺", municipality: "平戸市", coordinateText: "33.354, 129.579", reviewPath: "docs/research/HIRADO_SETO_RESEARCH_REVIEW.md" }],
+  ["ikitsuki-area", { spotName: "生月島方面", municipality: "平戸市", coordinateText: "33.390, 129.564", reviewPath: "docs/research/IKITSUKI_AREA_RESEARCH_REVIEW.md" }],
+]);
+const issue175Records = issue175SpotPaths.map(readJson);
+for (const record of issue175Records) {
+  const expected = issue175Expected.get(record.spotId);
+  assert.equal(record.schemaVersion, "1.1.0", `${record.spotId} must use Schema v1.1.0`);
+  assert.equal(record.identity.spotName, expected.spotName);
+  assert.equal(record.identity.prefecture, "長崎県");
+  assert.equal(record.identity.municipality, expected.municipality);
+  assert.equal(record.scopeType, "district");
+  assert.deepEqual(validateRecord(record), [], `${record.spotId} must satisfy Schema v1.1.0 and source references`);
+  assert.ok(record.sources.every((source) => !source.supports.includes("identity.spotName")), `${record.spotId} sources must not support internal canonical spotName`);
+  assert.deepEqual(record.fishSpecies, [], `${record.spotId} must not add fish species without direct recreational evidence`);
+  assert.ok(Object.values(record.attributes).every((attribute) => attribute.status === "unknown" && attribute.confidence === "low" && attribute.evidenceSources.supportingSourceIds.length === 0), `${record.spotId} must keep fishing attributes unknown/low without support`);
+  assert.ok(Object.values(record.facilities).every((facility) => facility.status === "unknown" && facility.evidenceSources.supportingSourceIds.length === 0), `${record.spotId} must not infer district facilities`);
+  assert.ok(record.identity.coordinates.note.includes("実釣ピン") && record.identity.coordinates.note.includes("危険箇所"), `${record.spotId} coordinate note must reject fishing and danger pins`);
+  assert.ok(record.identity.coordinates.note.includes("独立再計測") && record.identity.coordinates.note.includes("偶然同値"), `${record.spotId} coordinate note must document independent remeasurement and same-value confirmation`);
+  assert.ok(record.researchNotes.includes("本番地点マスター採用判断はhold"), `${record.spotId} research notes must separate repository storage from production adoption`);
+  const review = fs.readFileSync(path.join(ROOT, expected.reviewPath), "utf8");
+  assert.ok(review.includes("本番採用判断: `hold`"), `${record.spotId} review must mark production adoption as hold`);
+  assert.ok(review.includes("### 独立再計測証跡") && review.includes(expected.coordinateText), `${record.spotId} review must document independent coordinate remeasurement`);
+  assert.ok(review.includes("偶然同じ丸め値") && review.includes("現行地点マスター座標"), `${record.spotId} review must compare remeasurement with current master coordinates`);
+}
+assertIssue165NotMechanicalCopy([...issue175Records, issue172Record, ...issue165Records.filter((record) => ["imari-inner-bay", "takashima-area", "yobuko-area"].includes(record.spotId))], "Issue #175 district records");
+const issue175CopiedDistrictFixture = issue175Records.map((record, index) => {
+  const copy = structuredClone(issue165Records.find((candidate) => candidate.spotId === "takashima-area"));
+  copy.spotId = record.spotId;
+  copy.identity.spotName = record.identity.spotName;
+  copy.identity.aliases = record.identity.aliases;
+  copy.identity.municipality = record.identity.municipality;
+  copy.identity.coordinates.latitude = record.identity.coordinates.latitude;
+  copy.identity.coordinates.longitude = record.identity.coordinates.longitude;
+  if (index === 1) copy.attributes.openSeaExposure.value = "bay";
+  return copy;
+});
+assert.throws(() => assertIssue165NotMechanicalCopy(issue175CopiedDistrictFixture, "Issue #175 cloned district negative fixture"), /share too many normalized sections/, "Issue #175 copy detection must fail a fixture cloned from an existing district even when one attribute changes");
+
 assert.deepEqual(validateRecord(readJson(claudePath)), [], "Claude raw JSON must remain valid against Schema v1.0.0");
 assert.ok(validateRecord(readJson(geminiPath)).length > 0, "Gemini raw JSON must remain intentionally non-compliant");
 

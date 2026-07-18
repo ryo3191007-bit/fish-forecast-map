@@ -8,6 +8,11 @@
 
 公式・公的情報で不足する項目について民間情報を補助利用する場合も、スクレイピング、自動巡回、定期実行は行いません。文章、写真、地図画像、コメント、プロフィール、掲載魚種一覧は保存しません。
 
+## Issue #175 残り3地点小バッチ調査
+
+- レビュー文書: `FUKUSHIMA_AREA_RESEARCH_REVIEW.md` / `HIRADO_SETO_RESEARCH_REVIEW.md` / `IKITSUKI_AREA_RESEARCH_REVIEW.md`
+- 対象JSON: `../../data/research/fishing-spots/fukushima-area.json` / `../../data/research/fishing-spots/hirado-seto.json` / `../../data/research/fishing-spots/ikitsuki-area.json`
+
 ## Issue #172 芥屋大門周辺単独調査
 
 - レビュー文書: `KEYA_GATE_RESEARCH_REVIEW.md`

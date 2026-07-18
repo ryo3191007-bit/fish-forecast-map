@@ -29,6 +29,14 @@ Issue #165の地域別10地点Schema v1.1.0調査:
 - `takashima-area.json`: 鷹島周辺
 - `tabira-port.json`: 田平港
 
+Issue #175の残り3地点小バッチ調査:
+
+- `fukushima-area.json`: 福島周辺
+- `hirado-seto.json`: 平戸瀬戸周辺
+- `ikitsuki-area.json`: 生月島方面
+
+Issue #175のレビューは `docs/research/FUKUSHIMA_AREA_RESEARCH_REVIEW.md`、`docs/research/HIRADO_SETO_RESEARCH_REVIEW.md`、`docs/research/IKITSUKI_AREA_RESEARCH_REVIEW.md` を参照してください。
+
 Issue #172のレビューは `docs/research/KEYA_GATE_RESEARCH_REVIEW.md` を参照してください。
 
 Issue #165の10地点レビューは `docs/research/REGIONAL_10_SPOTS_RESEARCH_REVIEW.md` を参照してください。
