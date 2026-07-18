@@ -14,7 +14,7 @@
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "note": "シーバス表示とcanonical候補を分離。通称から自動確定せずsourceで確認した範囲。"
+      "note": "表示名「シーバス」は遊漁上の呼称で、ここでは資料で確認したスズキをcanonical候補に置く。ヒラスズキ等を含む可能性は後続精査。"
     },
     "scientificName": {
       "value": "Lateolabrax japonicus",
@@ -36,7 +36,7 @@
       "ハネ"
     ],
     "entityType": "exact_species",
-    "note": "表示魚種、生物学的canonical名、alias、entityTypeを分離した調査記録。"
+    "note": "シーバスは釣り用語として扱い、スズキ確認値と別種混入リスクを同時に管理する。"
   },
   "researchScope": {
     "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。ただし本JSONは本番SCOREへ自動採用しない。",
@@ -147,15 +147,21 @@
     },
     "regionalCatchability": {
       "seasonality": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": {
+          "season": "秋",
+          "basis": "中国・九州の秋シーバス有望ポイント紹介"
+        },
+        "status": "inferred",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "tsuribito_kyushu_autumn_seabass"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "釣具店直伝の釣り媒体記事。対象地域そのものではないため自動採用しない。",
+        "regionScope": "中国・九州の複数河川・河口"
       },
       "waterTemperature": {
         "value": null,
@@ -180,15 +186,22 @@
         "note": ""
       },
       "substrateHabitat": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": [
+          "河口",
+          "河川下流",
+          "サーフ"
+        ],
+        "status": "inferred",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "tsuribito_kyushu_autumn_seabass"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "広域候補。",
+        "regionScope": "中国・九州の複数河川・河口"
       },
       "salinityAndWaterBody": {
         "value": null,
@@ -213,15 +226,21 @@
         "note": ""
       },
       "fishingMethods": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": [
+          "ルアー",
+          "キャスティング"
+        ],
+        "status": "inferred",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "tsuribito_kyushu_autumn_seabass"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "秋の河口・サーフ攻略でルアーを投げる文脈を記録。現行のキャスティング補正を正当化する根拠にはしない。",
+        "regionScope": "中国・九州の複数河川・河口"
       },
       "spawningOrConfusableInfo": {
         "value": null,
@@ -256,6 +275,25 @@
         "/ecology/stableGeneral/spawningOrConfusableInfo"
       ],
       "usageNote": "シーバス表示のcanonical候補確認に使うが、ヒラスズキ等との混同に注意。"
+    },
+    {
+      "id": "tsuribito_kyushu_autumn_seabass",
+      "title": "【中国・九州】釣具店直伝！秋のシーバス有望ポイント＆ルアーガイド",
+      "url": "https://web.tsuribito.co.jp/suburb/seabass-kyusyu",
+      "publisher": "つり人オンライン",
+      "publisherType": "secondary",
+      "publishedOrUpdatedAt": "2025-12-06",
+      "checkedAt": "2026-07-18",
+      "regionScope": "中国・九州地方の河川・河口・サーフ例",
+      "sourceType": "supporting",
+      "directness": "indirect",
+      "derivationGroup": "tsuribito-kyushu-autumn-seabass",
+      "supports": [
+        "/ecology/regionalCatchability/seasonality",
+        "/ecology/regionalCatchability/substrateHabitat",
+        "/ecology/regionalCatchability/fishingMethods"
+      ],
+      "usageNote": "釣具店コメントを含む釣り媒体記事としてmedium候補。対象地域直接根拠ではない。"
     }
   ],
   "review": {
@@ -264,8 +302,12 @@
     "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
     "comparisonWithCurrentImplementation": {
       "currentFishSpeciesNameJa": "シーバス",
-      "currentSeasonMonths": "比較対象のみ。sourceまたは正解として不使用。",
-      "currentMethodAffinity": "比較対象のみ。sourceまたは正解として不使用。"
+      "currentSeasonMonths": [],
+      "currentMethodAffinity": [
+        "キャスティング"
+      ],
+      "currentCategory": "fish",
+      "comparisonPolicy": "現行値は比較対象に限定し、sourceまたは正解として不使用。"
     },
     "attributeDecisions": [
       {

@@ -14,7 +14,7 @@
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "note": "アジ表示とcanonical候補を分離。通称から自動確定せずsourceで確認した範囲。"
+      "note": "表示名「アジ」は複数種・サイズ呼称を含み得るため、今回のcanonical候補は資料で確認したマアジに限定し、本番表示名の同義語とは扱わない。"
     },
     "scientificName": {
       "value": "Trachurus japonicus",
@@ -33,7 +33,7 @@
       "マアジ"
     ],
     "entityType": "species_group",
-    "note": "表示魚種、生物学的canonical名、alias、entityTypeを分離した調査記録。"
+    "note": "アジは表示上の総称性が高いため、マアジ調査値を表示魚種全体へ拡張しない前提で記録する。"
   },
   "researchScope": {
     "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。ただし本JSONは本番SCOREへ自動採用しない。",
@@ -54,26 +54,21 @@
         "note": ""
       },
       "waterTemperature": {
-        "value": {
-          "min": 16,
-          "max": 22
-        },
-        "status": "confirmed",
-        "confidence": "medium",
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
         "evidenceSources": {
-          "supportingSourceIds": [
+          "supportingSourceIds": [],
+          "checkedSourceIds": [
             "tokyo_maaji"
           ],
-          "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "産卵水温であり釣れやすい水温ではない。",
-        "unit": "celsius",
-        "regionScope": "日本周辺一般"
+        "note": "東京資料の16〜22℃は産卵水温であり、一般的な適水温・釣れやすい水温としては採用しない。将来のSCORE入力候補から除外する。",
+        "temperatureContext": "unknown"
       },
       "depthRange": {
         "value": {
-          "min": 0,
           "max": 200
         },
         "status": "confirmed",
@@ -85,9 +80,10 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "成魚の一般的な生息水深で、岸釣り可能水深ではない。",
+        "note": "成魚の一般的な「200m以浅」生息水深。根拠にない下限値を補完せず、岸釣り可能水深として扱わない。",
         "unit": "m",
-        "regionScope": "日本周辺一般"
+        "regionScope": "日本周辺一般",
+        "rangeType": "maximum_only"
       },
       "substrateHabitat": {
         "value": null,
@@ -147,7 +143,12 @@
             9,
             10,
             11
-          ]
+          ],
+          "temperatureCelsius": {
+            "min": 16,
+            "max": 22
+          },
+          "temperatureContext": "spawning"
         },
         "status": "confirmed",
         "confidence": "medium",
@@ -158,21 +159,33 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "九州沿岸の産卵期情報。釣期とは同一視しない。",
+        "note": "九州沿岸の産卵期および産卵水温。釣期・釣れやすい水温・SCORE入力値へ転用しない。",
         "regionScope": "九州沿岸"
       }
     },
     "regionalCatchability": {
       "seasonality": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": {
+          "months": [
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "basis": "福岡のアジング時期として紹介されるが、広域二次情報のため低信頼候補。"
+        },
+        "status": "inferred",
+        "confidence": "low",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "tsuriking_fukuoka_aji"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "対象地域に近いが釣りメディアの一般記事。SCORE自動採用は保留。",
+        "regionScope": "福岡県内の複数ポイント紹介"
       },
       "waterTemperature": {
         "value": null,
@@ -186,15 +199,25 @@
         "note": ""
       },
       "depthRange": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": {
+          "qualitative": [
+            "水深がある岸壁",
+            "ボトム",
+            "水面付近"
+          ]
+        },
+        "status": "inferred",
+        "confidence": "low",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "tsuriking_fukuoka_aji"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "地点依存の釣り方記述。定量水深ではない。",
+        "rangeType": "qualitative",
+        "regionScope": "福岡市内・博多湾の紹介地点"
       },
       "substrateHabitat": {
         "value": null,
@@ -230,15 +253,21 @@
         "note": ""
       },
       "fishingMethods": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": [
+          "アジング",
+          "サビキ"
+        ],
+        "status": "inferred",
+        "confidence": "low",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "tsuriking_fukuoka_aji"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "福岡ポイント紹介に出るアジング・サビキを低信頼の釣法候補として控える。現行補正値の裏取りには使わない。",
+        "regionScope": "福岡県内の複数ポイント紹介"
       },
       "spawningOrConfusableInfo": {
         "value": null,
@@ -274,6 +303,25 @@
         "/ecology/stableGeneral/spawningOrConfusableInfo"
       ],
       "usageNote": "標準和名・学名・一般生態の確認に限定し、防波堤で釣れる時期の根拠へ転用しない。"
+    },
+    {
+      "id": "tsuriking_fukuoka_aji",
+      "title": "福岡のよく釣れるアジ釣りポイント10ヶ所とアジングに最適な時期",
+      "url": "https://tsuriking.jp/fishing/9008",
+      "publisher": "ツリキング",
+      "publisherType": "secondary",
+      "publishedOrUpdatedAt": "2022-07-20",
+      "checkedAt": "2026-07-18",
+      "regionScope": "福岡県内の複数釣りポイント",
+      "sourceType": "supporting",
+      "directness": "indirect",
+      "derivationGroup": "tsuriking-fukuoka-aji",
+      "supports": [
+        "/ecology/regionalCatchability/seasonality",
+        "/ecology/regionalCatchability/depthRange",
+        "/ecology/regionalCatchability/fishingMethods"
+      ],
+      "usageNote": "釣りメディアの広域記事としてlow候補に限定。自動採用しない。"
     }
   ],
   "review": {
@@ -282,8 +330,13 @@
     "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
     "comparisonWithCurrentImplementation": {
       "currentFishSpeciesNameJa": "アジ",
-      "currentSeasonMonths": "比較対象のみ。sourceまたは正解として不使用。",
-      "currentMethodAffinity": "比較対象のみ。sourceまたは正解として不使用。"
+      "currentSeasonMonths": [],
+      "currentMethodAffinity": [
+        "サビキ",
+        "コマセ"
+      ],
+      "currentCategory": "fish",
+      "comparisonPolicy": "現行値は比較対象に限定し、sourceまたは正解として不使用。"
     },
     "attributeDecisions": [
       {
