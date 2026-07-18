@@ -1,4 +1,3 @@
-import type { EnvironmentForecastRow } from "@/domain/environment";
 import { fishSpeciesNames, type FishSpeciesName, type FishingMethod } from "@/domain/fishing";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import type { FishingSpotDetailSet, SpotDetailConfidence } from "@/domain/fishingSpotDetail";
@@ -52,7 +51,6 @@ export type ScoreV2SpeciesInput = {
   spot: FishingSpot;
   details?: FishingSpotDetailSet | null;
   selectedDateTime: string;
-  environmentRow?: EnvironmentForecastRow | null;
   spotEvidence?: Partial<Record<ScoreV2SpotEvidenceKey, ScoreEvidence | null>>;
   environmentEvidence?: Partial<Record<ScoreV2EnvironmentEvidenceKey, ScoreEvidence | null>>;
 };
