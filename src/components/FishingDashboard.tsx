@@ -32,6 +32,7 @@ import type { JmaWarningDecision } from "@/domain/jmaWarning";
 import { fetchJmaWarningDecision } from "@/services/jmaWarnings";
 import { getEvaluationReferenceTime, isValidAllSpeciesHistoryState, resolveAllSpeciesReturnState, resolveInitialAllSpeciesHash, scopeSpotDetails, type AllSpeciesHistoryState } from "@/domain/spotEvaluationPresentation";
 import { filterByFishSpecies } from "@/lib/fishSpeciesResolver";
+import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
@@ -143,14 +144,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     const countByName = new Map(speciesCounts.map((item) => [item.species, item.count]));
     const activeSpecies = masterData.fishSpecies.filter((item) => fishSpeciesFilterNames.includes(item.nameJa));
     const toCount = (items: typeof activeSpecies) => items.map((item) => ({ species: item.nameJa, count: countByName.get(item.nameJa) ?? 0 }));
-    return [
-      { label: "グループ", items: toCount(activeSpecies.filter((item) => item.entityType === "species_group")) },
-      { label: "青物系", items: toCount(activeSpecies.filter((item) => item.isSelectable && item.parentGroupId === "aomono")) },
-      { label: "根魚 > ハタ類", items: toCount(activeSpecies.filter((item) => item.isSelectable && item.uiSubgroup === "ハタ類")) },
-      { label: "根魚（その他）", items: toCount(activeSpecies.filter((item) => item.isSelectable && item.parentGroupId === "rockfish" && item.uiSubgroup !== "ハタ類")) },
-      { label: "イカ・頭足類", items: toCount(activeSpecies.filter((item) => item.isSelectable && ["squid_species", "cephalopod_species"].includes(item.entityType))) },
-      { label: "その他", items: toCount(activeSpecies.filter((item) => item.isSelectable && !item.parentGroupId && !["squid_species", "cephalopod_species"].includes(item.entityType))) },
-    ].filter((group) => group.items.length > 0);
+    return groupSelectableFishSpecies(activeSpecies, { includeLegacyAggregates: true })
+      .map((group) => ({ ...group, items: toCount(group.items) }));
   }, [fishSpeciesFilterNames, masterData.fishSpecies, speciesCounts]);
   const areaCounts = useMemo(() => {
     const counts = new Map<string, number>();

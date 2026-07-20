@@ -58,7 +58,7 @@ export type ScoreV2SpeciesInput = {
   environmentEvidence?: Partial<Record<ScoreV2EnvironmentEvidenceKey, ScoreEvidence | null>>;
 };
 
-export const SCORE_V2_SUPPORTED_SPECIES = ["アジ", "シーバス", "チヌ"] as const satisfies readonly FishSpeciesName[];
+export const SCORE_V2_SUPPORTED_SPECIES = ["マアジ", "シーバス", "チヌ"] as const satisfies readonly FishSpeciesName[];
 export const SCORE_V2_UNRESEARCHED_SPECIES = fishSpeciesNames.filter(
   (species) => !SCORE_V2_SUPPORTED_SPECIES.includes(species as (typeof SCORE_V2_SUPPORTED_SPECIES)[number]),
 );

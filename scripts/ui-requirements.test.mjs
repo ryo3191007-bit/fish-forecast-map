@@ -212,7 +212,7 @@ assert.match(
   /aria-label=\{`\$\{memo\.caughtDate\} \$\{legacySpeciesLabel\(memo\.species as FishSpeciesName\)\} \$\{memo\.areaName\}の釣果を編集`\}/,
   "catch edit button accessibility labels use the legacy species display rule",
 );
-assert.match(dashboard, /\{ label: "青物系"/, "the aomono filter group is labelled 青物系");
+assert.match(dashboard, /groupSelectableFishSpecies\(activeSpecies, \{ includeLegacyAggregates: true \}\)/, "the dashboard uses shared species UI grouping with legacy aggregate filters");
 assert.match(dashboard, /species === "青物" \|\| species === "根魚" \? `\$\{species\}系` : species/, "aggregate filters use group labels rather than legacy-record labels");
 assert.doesNotMatch(dashboard, /legacySpeciesLabel/, "group filters must not reuse legacy record labels");
 

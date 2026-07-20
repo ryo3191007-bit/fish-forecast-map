@@ -60,8 +60,18 @@ export function fishSpeciesNamesMatch(left: string, right: string, species: read
 export function filterByFishSpecies<T>(items: readonly T[], selectedName: string, getName: (item: T) => string, species: readonly FishSpecies[], aliases: readonly FishSpeciesAlias[]) {
   const selectedId = resolveFishSpeciesId(selectedName, species, aliases);
   const selected = species.find((item) => item.id === selectedId);
+  const isDescendantOf = (candidateId: FishSpeciesId, ancestorId: FishSpeciesId) => {
+    const visited = new Set<FishSpeciesId>();
+    let current = species.find((entry) => entry.id === candidateId);
+    while (current?.parentGroupId && !visited.has(current.id)) {
+      if (current.parentGroupId === ancestorId) return true;
+      visited.add(current.id);
+      current = species.find((entry) => entry.id === current?.parentGroupId);
+    }
+    return false;
+  };
   return items.filter((item) => {
     const itemId = resolveFishSpeciesId(getName(item), species, aliases);
-    return itemId !== null && (itemId === selectedId || (selected?.entityType === "species_group" && species.find((entry) => entry.id === itemId)?.parentGroupId === selectedId));
+    return itemId !== null && selectedId !== null && (itemId === selectedId || (selected?.entityType === "species_group" && isDescendantOf(itemId, selectedId)));
   });
 }
