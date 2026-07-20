@@ -28,6 +28,8 @@ import { fetchFishingSpotDetails } from "@/lib/fishingSpotDetailRepository";
 import type { FishingSpotDetailSet } from "@/domain/fishingSpotDetail";
 import { AllSpeciesEvaluation } from "./AllSpeciesEvaluation";
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
+import type { JmaWarningDecision } from "@/domain/jmaWarning";
+import { fetchJmaWarningDecision } from "@/services/jmaWarnings";
 import { getEvaluationReferenceTime, isValidAllSpeciesHistoryState, resolveAllSpeciesReturnState, resolveInitialAllSpeciesHash, scopeSpotDetails, type AllSpeciesHistoryState } from "@/domain/spotEvaluationPresentation";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
@@ -93,6 +95,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     null,
   );
   const [environmentError, setEnvironmentError] = useState<string | null>(null);
+  const [jmaWarning, setJmaWarning] = useState<JmaWarningDecision | null>(null);
   const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(false);
   const [environmentRequestSpotId, setEnvironmentRequestSpotId] = useState<string | null>(null);
   const [spotDetails, setSpotDetails] = useState<FishingSpotDetailSet | null>(null);
@@ -334,6 +337,16 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   }, [environmentSpot]);
 
   useEffect(() => {
+    setJmaWarning(null);
+    if (!environmentSpot || !selectedEnvironmentTime) return;
+    const controller = new AbortController();
+    fetchJmaWarningDecision(environmentSpot.id, selectedEnvironmentTime, controller.signal)
+      .then(setJmaWarning)
+      .catch(() => setJmaWarning({ state: "unknown", reason: "client-request-failed", phenomena: [], areaName: environmentSpot.name, reportDateTime: null, targetStart: null, targetEnd: null, fetchedAt: new Date().toISOString(), bulletinType: null, lastSuccessfulFetchAt: null }));
+    return () => controller.abort();
+  }, [environmentSpot, selectedEnvironmentTime]);
+
+  useEffect(() => {
     let active = true;
     setSpotDetails(null);
     if (!environmentSpot) { setSpotDetailStatus("idle"); return; }
@@ -379,6 +392,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     details: spotDetailStatus === "ready" ? scopeSpotDetails(spotDetails, environmentSpot.id) : null,
     catches: externalMemos,
     environment,
+    jmaWarning,
     selectedDateTime: getEvaluationReferenceTime(selectedEnvironmentTime),
   }) : null;
 
@@ -633,6 +647,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           selectedSpotId={environmentSpotId}
           onSelectedSpotIdChange={setEnvironmentSpotId}
           environment={environment}
+          jmaWarning={jmaWarning}
           selectedTime={selectedEnvironmentTime}
           onSelectedTimeChange={changeSelectedEnvironmentTime}
           activeTab={spotEvaluationTab}

@@ -3,6 +3,7 @@ import type { ExternalCatchRecord } from "@/domain/externalCatch";
 import { fishSpeciesNames, type FishSpeciesName, type FishingMethod } from "@/domain/fishing";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import type { FishingSpotDetailSet, SpotDetailConfidence, SpotDetailValue } from "@/domain/fishingSpotDetail";
+import { combineSafetyGate, type JmaWarningDecision } from "@/domain/jmaWarning";
 import {
   calculateScoreV2ForMethod,
   calculateScoreV2ForSpecies,
@@ -144,12 +145,20 @@ export function buildScoreV2SpeciesInput(args:{species:FishSpeciesName;spot:Fish
   return {species,spot:args.spot,selectedDateTime:args.selectedDateTime,spotEvidence:{directSpecies:directSpecies(details,supported),habitat:habitat(details,supported),catchHistory:catchHistory(args.catches??[],args.spot.id,supported,args.selectedDateTime),methodAffinity:methodAffinity(details,supported)},environmentEvidence:environmentEvidence(args.environment??null,args.selectedDateTime,supported).evidence};
 }
 
-export function calculateProductionScoreV2(args:{spot:FishingSpot;details?:FishingSpotDetailSet|null;catches?:ExternalCatchRecord[];environment?:FishingEnvironment|null;selectedDateTime:string}):ScoreV2ProductionResult {
+export function calculateProductionScoreV2(args:{spot:FishingSpot;details?:FishingSpotDetailSet|null;catches?:ExternalCatchRecord[];environment?:FishingEnvironment|null;selectedDateTime:string;jmaWarning?:JmaWarningDecision|null}):ScoreV2ProductionResult {
   const details=args.details?{...args.details,values:args.details.values.filter((value)=>value.spotId===args.spot.id)}:null;
   const speciesResults=fishSpeciesNames.map((species)=>calculateScoreV2ForSpecies(buildScoreV2SpeciesInput({...args,details,species})));
   const selected=args.environment?.cacheStatus!=="cache-stale"?args.environment?.hourly.find((r)=>r.forecastTime===args.selectedDateTime):undefined; const unsafe=selected?unsafeReasons(selected):[];
   const methodResults=methods.map((method)=>calculateScoreV2ForMethod(method,speciesResults,SCORE_V2_METHOD_COMPATIBILITY,buildMethodSpotSuitability(details,method)));
   const withoutScores=()=>({speciesResults:speciesResults.map((r)=>({...r,overallScore:null})),methodResults:methodResults.map((r)=>({...r,overallScore:null}))});
+  const openMeteoState = unsafe.length ? "blocked" : !selected || !hasCompleteSafetyData(selected) ? "unknown" : "clear";
+  if(args.jmaWarning !== undefined){
+    const gate=combineSafetyGate(args.jmaWarning,openMeteoState);
+    if(!gate.displayOverallScore){
+      if(gate.state==="blocked-jma"||gate.state==="blocked-open-meteo")return {status:"unsafe",safetyStatus:"unsafe",unsafeReasons:unsafe,displayMessage:"危険な可能性があるため評価対象外",...withoutScores()};
+      return {status:"safety_unknown",safetyStatus:"unknown",unsafeReasons:[],displayMessage:"安全情報を確認できないため評価対象外",...withoutScores()};
+    }
+  }
   if(unsafe.length)return {status:"unsafe",safetyStatus:"unsafe",unsafeReasons:unsafe,displayMessage:"危険な可能性があるため評価対象外",...withoutScores()};
   if(!selected||!hasCompleteSafetyData(selected))return {status:"safety_unknown",safetyStatus:"unknown",unsafeReasons:[],displayMessage:"安全情報を確認できないため評価対象外",...withoutScores()};
   return {status:"available",safetyStatus:"safe",unsafeReasons:[],speciesResults,methodResults};
