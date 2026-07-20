@@ -1,4 +1,4 @@
-import { fishSpeciesIdByName, fishSpeciesNames, type FishSpecies, type FishSpeciesAlias } from "@/domain/fishing";
+import { createStaticFishSpecies, type FishSpecies, type FishSpeciesAlias } from "@/domain/fishing";
 import { fishingSpots } from "@/data/fishingSpots";
 import { externalSources } from "@/data/externalSources";
 import type { FishingSpot } from "@/domain/fishingSpot";
@@ -13,7 +13,7 @@ export type MasterDataMeta = { source: MasterDataSource; fallbackReason?: Master
 export type MasterDataResult<T> = { data: T; meta: MasterDataMeta };
 export type MasterDataSet = { fishSpecies: FishSpecies[]; fishSpeciesAliases: FishSpeciesAlias[]; fishingSpots: FishingSpot[]; externalSources: ExternalSource[] };
 
-const staticFishSpecies: FishSpecies[] = fishSpeciesNames.map((nameJa) => ({ id: fishSpeciesIdByName[nameJa], nameJa, category: nameJa === "青物" || nameJa === "根魚" ? "category" : nameJa.includes("イカ") ? "squid" : "fish", seasonMonths: [], }));
+const staticFishSpecies: FishSpecies[] = createStaticFishSpecies();
 const staticMasterData: MasterDataSet = { fishSpecies: staticFishSpecies, fishSpeciesAliases: [...staticFishSpeciesAliases], fishingSpots, externalSources };
 
 function fallback<T>(data: T, fallbackReason: MasterDataFallbackReason, message?: string): MasterDataResult<T> {
@@ -37,7 +37,7 @@ export function mapSuccessfulFishSpeciesAliasRows(rows: readonly FishSpeciesAlia
 }
 
 export async function fetchFishSpeciesMaster(): Promise<MasterDataResult<FishSpecies[]>> {
-  const result = await selectRows<FishSpeciesRow>("fish_species", "id,name_ja,category,season_months,display_order,is_active");
+  const result = await selectRows<FishSpeciesRow>("fish_species", "id,name_ja,category,entity_type,is_selectable,parent_group_id,ui_subgroup,season_months,display_order,is_active");
   if (result.meta.source !== "supabase") return fallback(staticFishSpecies, result.meta.fallbackReason ?? "supabase-error", result.meta.message);
   const mapped = result.data.map(mapFishSpeciesRow).filter((row): row is FishSpecies => row !== null);
   return mapped.length > 0 ? { data: mapped, meta: result.meta } : fallback(staticFishSpecies, "empty-supabase-result");

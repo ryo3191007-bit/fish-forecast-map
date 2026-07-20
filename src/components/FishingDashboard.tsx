@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import {
   fishSpeciesNames,
+  legacySpeciesLabel,
   type FishSpeciesName,
 } from "@/domain/fishing";
 import type { FishingEnvironment } from "@/domain/environment";
@@ -31,7 +32,7 @@ import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
 import type { JmaWarningDecision } from "@/domain/jmaWarning";
 import { fetchJmaWarningDecision } from "@/services/jmaWarnings";
 import { getEvaluationReferenceTime, isValidAllSpeciesHistoryState, resolveAllSpeciesReturnState, resolveInitialAllSpeciesHash, scopeSpotDetails, type AllSpeciesHistoryState } from "@/domain/spotEvaluationPresentation";
-import { fishSpeciesNamesMatch } from "@/lib/fishSpeciesResolver";
+import { filterByFishSpecies } from "@/lib/fishSpeciesResolver";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
@@ -50,7 +51,7 @@ function getFishSpeciesFilterNames(
 }
 
 export function memoMatchesFishSpecies(memoSpecies: string, selectedSpecies: FishSpeciesName | "all", masterData: MasterDataSet) {
-  return selectedSpecies === "all" || fishSpeciesNamesMatch(memoSpecies, selectedSpecies, masterData.fishSpecies, masterData.fishSpeciesAliases);
+  return selectedSpecies === "all" || filterByFishSpecies([memoSpecies], selectedSpecies, (value) => value, masterData.fishSpecies, masterData.fishSpeciesAliases).length === 1;
 }
 
 type FishingDashboardProps = { auth: ReturnType<typeof useSupabaseAuth> };
@@ -502,7 +503,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                   key={species}
                   onClick={() => setSelectedSpecies(species)}
                 >
-                  <span>{species}</span>
+                  <span>{legacySpeciesLabel(species)}</span>
                   <strong>{count}</strong>
                 </button>
               ))}
@@ -645,6 +646,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             storageError={storageError}
             storageStatus={memoStorageStatus}
             spots={fishingSpots}
+            fishSpecies={masterData.fishSpecies}
           />
         </div>
       ) : (

@@ -77,7 +77,8 @@ Post-MVP-018時点では、このドキュメントは設計のみを扱い、SQ
 
 - `name_en`。
 - `aliases` または `fish_species_aliases`。
-- `parent_species_id`。`青物` や `根魚` をカテゴリとして細分化する場合に使います。
+- Issue #215では `entity_type`、`is_selectable`、`parent_group_id`、`ui_subgroup` をadditiveに追加します。第1バッチは各個別魚種が最大1つの表示・フィルタグループに属するため単一親を採用し、複数所属が必要になるまではmembership tableを導入しません。
+- `aomono` / `rockfish` は `species_group` かつ選択不可として残し、既存記録は推測変換せずlegacy aggregate表示にします。ハタ類は個別IDのまま `rockfish` 配下のUI小分類として扱います。
 - `default_methods`。
 - `description`。
 

@@ -16,6 +16,7 @@ function loadTsModule(relativePath) {
 }
 function assert(condition, message) { if (!condition) { console.error(message); process.exit(1); } }
 const scoreV2 = loadTsModule('src/domain/scoreV2.ts');
+const fishing = loadTsModule('src/domain/fishing.ts');
 const source = readFileSync(join(process.cwd(), 'src/domain/scoreV2.ts'), 'utf8');
 const spot = { id:'s', name:'港', areaName:'唐津湾', latitude:0, longitude:0, spotType:'漁港', shoreAccess:'足場良い', targetSpecies:['アジ'], recommendedMethods:['サビキ'], coordinatePrecision:'exact' };
 const evidence = { directSpecies:{ score:100, confidence:'high', displayReason:'対象魚の承認済み実績', internalNote:'directSpecies implementation note https://internal.example/spot' }, habitat:{ score:100, confidence:'medium', internalNote:'habitat implementation note' }, catchHistory:{ score:100, confidence:'low', sourceUrl:'https://source.example/catches' }, methodAffinity:{ score:100, confidence:'high', displayReason:'釣法との承認済み相性' } };
@@ -44,7 +45,7 @@ for (const species of scoreV2.SCORE_V2_UNRESEARCHED_SPECIES) {
   const result = scoreV2.calculateScoreV2ForSpecies({ species, spot, selectedDateTime:'2026-07-18T06:00', spotEvidence:evidence, environmentEvidence:approvedEnvironment });
   assert(result.informationStatus === 'no_information' && result.overallScore === null, `${species} should remain no_information`);
 }
-assert(scoreV2.SCORE_V2_UNRESEARCHED_SPECIES.length === 12, 'remaining 12 species should be no_information');
+assert(scoreV2.SCORE_V2_UNRESEARCHED_SPECIES.length === fishing.fishSpeciesNames.length - 3, 'every species except the three researched species should be no_information');
 const speciesResults = [90,80,70,60].map((overallScore, i) => ({ species:['アジ','シーバス','チヌ','サバ'][i], overallScore }));
 const suitability = { score:100, confidence:'high', displayReason:'承認済みの集約済み釣り場適性', internalNote:'approved aggregate spot suitability https://internal.example/method' };
 const methodZero = scoreV2.calculateScoreV2ForMethod('サビキ', speciesResults, { 'サビキ':[] }, suitability);

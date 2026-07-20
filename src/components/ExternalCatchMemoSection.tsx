@@ -8,6 +8,8 @@ import type {
 import type { FishingSpot } from "@/domain/fishingSpot";
 import {
   fishSpeciesNames,
+  legacySpeciesLabel,
+  type FishSpecies,
   type FishSpeciesName,
   type FishingMethod,
 } from "@/domain/fishing";
@@ -135,6 +137,7 @@ type ExternalCatchMemoSectionProps = {
   storageError: string | null;
   storageStatus: ExternalCatchMemoStorageStatus;
   spots: FishingSpot[];
+  fishSpecies: FishSpecies[];
 };
 
 export function ExternalCatchMemoSection({
@@ -147,6 +150,7 @@ export function ExternalCatchMemoSection({
   storageError,
   storageStatus,
   spots,
+  fishSpecies,
 }: ExternalCatchMemoSectionProps) {
   const [form, setForm] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -334,11 +338,14 @@ export function ExternalCatchMemoSection({
                     onChange={(e) => updateForm("species", e.target.value)}
                   >
                     <option value="">選択してください</option>
-                    {fishSpeciesNames.map((species) => (
-                      <option key={species} value={species}>
-                        {species}
-                      </option>
-                    ))}
+                    {editingMemo && !fishSpecies.find((item) => item.nameJa === editingMemo.species)?.isSelectable ? <option value={editingMemo.species}>{legacySpeciesLabel(editingMemo.species as FishSpeciesName)}</option> : null}
+                    {[
+                      ["青物系", fishSpecies.filter((item) => item.isSelectable && item.parentGroupId === "aomono")],
+                      ["根魚 > ハタ類", fishSpecies.filter((item) => item.isSelectable && item.uiSubgroup === "ハタ類")],
+                      ["根魚（その他）", fishSpecies.filter((item) => item.isSelectable && item.parentGroupId === "rockfish" && item.uiSubgroup !== "ハタ類")],
+                      ["イカ・頭足類", fishSpecies.filter((item) => item.isSelectable && ["squid_species", "cephalopod_species"].includes(item.entityType))],
+                      ["その他", fishSpecies.filter((item) => item.isSelectable && !item.parentGroupId && !["squid_species", "cephalopod_species"].includes(item.entityType))],
+                    ].map(([label, options]) => <optgroup key={label as string} label={label as string}>{(options as FishSpecies[]).map((item) => <option key={item.id} value={item.nameJa}>{item.nameJa}</option>)}</optgroup>)}
                   </select>
                 </label>
                 <label>
