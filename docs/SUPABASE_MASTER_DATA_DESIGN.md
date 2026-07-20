@@ -81,6 +81,17 @@ Post-MVP-018時点では、このドキュメントは設計のみを扱い、SQ
 - `default_methods`。
 - `description`。
 
+## `fish_species_aliases`（Issue #196で実装）
+
+魚種本体は既存の人が読める `text` ID（`aji`、`chinu` など）を維持し、別名行だけをUUIDで識別します。正式表示名も承認済み別名として登録するため、正式名と別名は同じ完全一致経路と一意性制約を通ります。
+
+- 照合キーは **NFKC → 前後空白除去 → 小文字化** のみで生成します。内部文字・記号の削除、部分一致、読み仮名・AI推測は行いません。
+- resolverが参照するのは `approved` かつ `is_active = true` の行だけです。この状態の `match_key` はDBで全魚種を通じて一意です。
+- `approved_by` はAuth管理者基盤に依存しない監査文字列、`approved_at` は承認日時として保持します。今回のseedは `migration:issue-196` を記録します。
+- 公開クライアントの `anon` / `authenticated` は承認済み・有効行をselectできるだけで、書き込み権限を持ちません。
+- 初期追加別名は `チヌ`、`黒鯛`、`クロダイ` → `chinu` に限定します（ほかの14正式名はcanonical照合行として登録）。
+- 未登録値は `unresolved`、不整合による複数候補は `conflict` としてfail-closedに扱い、既存の入力文字列を一括更新・削除しません。
+
 ### 既存静的データとの対応
 
 既存の `fishSpeciesNames` の15件を初期候補にします。`青物` と `根魚` は魚種ではなくカテゴリとして扱う現行方針を維持し、`category = 'category'` とする案を第一候補にします。

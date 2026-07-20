@@ -1,19 +1,20 @@
-import { fishSpeciesNames, type FishSpecies } from "@/domain/fishing";
+import { fishSpeciesIdByName, fishSpeciesNames, type FishSpecies, type FishSpeciesAlias } from "@/domain/fishing";
 import { fishingSpots } from "@/data/fishingSpots";
 import { externalSources } from "@/data/externalSources";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import type { ExternalSource } from "@/domain/externalSource";
 import { getSupabaseClient } from "@/lib/supabaseClient";
-import { mapFishSpeciesRow, mapFishingSpotRow, mapSourceRegistryRow, type FishSpeciesRow, type FishingSpotRow, type SourceRegistryRow } from "@/lib/masterDataMapper";
+import { mapFishSpeciesAliasRow, mapFishSpeciesRow, mapFishingSpotRow, mapSourceRegistryRow, type FishSpeciesAliasRow, type FishSpeciesRow, type FishingSpotRow, type SourceRegistryRow } from "@/lib/masterDataMapper";
+import { staticFishSpeciesAliases } from "@/lib/fishSpeciesResolver";
 
 export type MasterDataSource = "supabase" | "static-fallback";
 export type MasterDataFallbackReason = "supabase-not-configured" | "supabase-error" | "empty-supabase-result";
 export type MasterDataMeta = { source: MasterDataSource; fallbackReason?: MasterDataFallbackReason; message?: string };
 export type MasterDataResult<T> = { data: T; meta: MasterDataMeta };
-export type MasterDataSet = { fishSpecies: FishSpecies[]; fishingSpots: FishingSpot[]; externalSources: ExternalSource[] };
+export type MasterDataSet = { fishSpecies: FishSpecies[]; fishSpeciesAliases: FishSpeciesAlias[]; fishingSpots: FishingSpot[]; externalSources: ExternalSource[] };
 
-const staticFishSpecies: FishSpecies[] = fishSpeciesNames.map((nameJa) => ({ id: nameJa, nameJa, category: nameJa === "青物" || nameJa === "根魚" ? "category" : nameJa.includes("イカ") ? "squid" : "fish", seasonMonths: [], }));
-const staticMasterData: MasterDataSet = { fishSpecies: staticFishSpecies, fishingSpots, externalSources };
+const staticFishSpecies: FishSpecies[] = fishSpeciesNames.map((nameJa) => ({ id: fishSpeciesIdByName[nameJa], nameJa, category: nameJa === "青物" || nameJa === "根魚" ? "category" : nameJa.includes("イカ") ? "squid" : "fish", seasonMonths: [], }));
+const staticMasterData: MasterDataSet = { fishSpecies: staticFishSpecies, fishSpeciesAliases: [...staticFishSpeciesAliases], fishingSpots, externalSources };
 
 function fallback<T>(data: T, fallbackReason: MasterDataFallbackReason, message?: string): MasterDataResult<T> {
   return { data, meta: { source: "static-fallback", fallbackReason, message } };
@@ -38,6 +39,13 @@ export async function fetchFishSpeciesMaster(): Promise<MasterDataResult<FishSpe
   return mapped.length > 0 ? { data: mapped, meta: result.meta } : fallback(staticFishSpecies, "empty-supabase-result");
 }
 
+export async function fetchFishSpeciesAliases(): Promise<MasterDataResult<FishSpeciesAlias[]>> {
+  const result = await selectRows<FishSpeciesAliasRow>("fish_species_aliases", "id,fish_species_id,alias_name,match_key,approval_status,is_active");
+  if (result.meta.source !== "supabase") return fallback([...staticFishSpeciesAliases], result.meta.fallbackReason ?? "supabase-error", result.meta.message);
+  const mapped = result.data.map(mapFishSpeciesAliasRow).filter((row): row is FishSpeciesAlias => row !== null);
+  return mapped.length > 0 ? { data: mapped, meta: result.meta } : fallback([...staticFishSpeciesAliases], "empty-supabase-result");
+}
+
 export async function fetchFishingSpotsMaster(): Promise<MasterDataResult<FishingSpot[]>> {
   const result = await selectRows<FishingSpotRow>("fishing_spots", "id,name,area_name,latitude,longitude,spot_type,shore_access,target_species,recommended_methods,notes,coordinate_precision,is_active");
   if (result.meta.source !== "supabase") return fallback(fishingSpots, result.meta.fallbackReason ?? "supabase-error", result.meta.message);
@@ -53,12 +61,12 @@ export async function fetchSourceRegistryMaster(): Promise<MasterDataResult<Exte
 }
 
 export async function fetchMasterData(): Promise<MasterDataResult<MasterDataSet>> {
-  const [fishSpeciesResult, fishingSpotsResult, sourceRegistryResult] = await Promise.all([fetchFishSpeciesMaster(), fetchFishingSpotsMaster(), fetchSourceRegistryMaster()]);
-  const results = [fishSpeciesResult, fishingSpotsResult, sourceRegistryResult];
+  const [fishSpeciesResult, fishSpeciesAliasesResult, fishingSpotsResult, sourceRegistryResult] = await Promise.all([fetchFishSpeciesMaster(), fetchFishSpeciesAliases(), fetchFishingSpotsMaster(), fetchSourceRegistryMaster()]);
+  const results = [fishSpeciesResult, fishSpeciesAliasesResult, fishingSpotsResult, sourceRegistryResult];
   const fallbackResult = results.find((result) => result.meta.source === "static-fallback");
 
   return {
-    data: { fishSpecies: fishSpeciesResult.data, fishingSpots: fishingSpotsResult.data, externalSources: sourceRegistryResult.data },
+    data: { fishSpecies: fishSpeciesResult.data, fishSpeciesAliases: fishSpeciesAliasesResult.data, fishingSpots: fishingSpotsResult.data, externalSources: sourceRegistryResult.data },
     meta: fallbackResult ? { source: "static-fallback", fallbackReason: fallbackResult.meta.fallbackReason, message: fallbackResult.meta.message } : { source: "supabase" },
   };
 }
