@@ -45,6 +45,12 @@ export type AllSpeciesReturnState = {
   query: "";
 };
 
+export type InitialAllSpeciesHashResolution =
+  | { kind: "switch-spot"; spotId: string }
+  | { kind: "waiting" }
+  | { kind: "restore"; state: AllSpeciesHistoryState }
+  | { kind: "fallback"; state: AllSpeciesReturnState; removeHash: true };
+
 export function resolveAllSpeciesReturnState(
   historyState: unknown,
   spotIds: readonly string[],
@@ -69,6 +75,46 @@ export function resolveAllSpeciesReturnState(
       : fallbackSelectedTime && fallbackTimes.includes(fallbackSelectedTime) ? fallbackSelectedTime : fallbackTimes[0] ?? null,
     query: "",
   };
+}
+
+export function resolveInitialAllSpeciesHash(
+  historyState: unknown,
+  spotIds: readonly string[],
+  currentSpotId: string,
+  environmentRequestSpotId: string | null,
+  environmentSpotId: string | null,
+  forecastTimes: readonly string[],
+  isEnvironmentLoading: boolean,
+  environmentError: string | null,
+): InitialAllSpeciesHashResolution {
+  const candidate = historyState && typeof historyState === "object" ? historyState as Partial<AllSpeciesHistoryState> : null;
+  const validSpotId = typeof candidate?.spotId === "string" && spotIds.includes(candidate.spotId)
+    ? candidate.spotId
+    : null;
+
+  if (validSpotId && validSpotId !== currentSpotId) {
+    return { kind: "switch-spot", spotId: validSpotId };
+  }
+
+  const matchingForecastTimes = validSpotId && environmentSpotId === validSpotId ? forecastTimes : [];
+  if (isValidAllSpeciesHistoryState(historyState, spotIds, matchingForecastTimes)) {
+    return { kind: "restore", state: historyState };
+  }
+
+  const needsForecastRow = validSpotId && candidate?.selectedTime !== null;
+  const targetRequestPending = validSpotId && environmentRequestSpotId !== validSpotId;
+  if (needsForecastRow && !environmentError && (targetRequestPending || isEnvironmentLoading)) {
+    return { kind: "waiting" };
+  }
+
+  const fallback = resolveAllSpeciesReturnState(
+    null,
+    spotIds,
+    environmentSpotId && spotIds.includes(environmentSpotId) ? { [environmentSpotId]: forecastTimes } : {},
+    currentSpotId,
+    null,
+  );
+  return { kind: "fallback", state: fallback, removeHash: true };
 }
 
 export function getAllSpeciesStatusMessage(result: Pick<ScoreV2ProductionResult, "status" | "safetyStatus"> & { displayMessage?: string }) {

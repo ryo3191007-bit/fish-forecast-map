@@ -29,7 +29,7 @@ import { fetchFishingSpotDetails } from "@/lib/fishingSpotDetailRepository";
 import type { FishingSpotDetailSet } from "@/domain/fishingSpotDetail";
 import { AllSpeciesEvaluation } from "./AllSpeciesEvaluation";
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
-import { getEvaluationReferenceTime, isValidAllSpeciesHistoryState, resolveAllSpeciesReturnState, scopeSpotDetails, type AllSpeciesHistoryState } from "@/domain/spotEvaluationPresentation";
+import { getEvaluationReferenceTime, isValidAllSpeciesHistoryState, resolveAllSpeciesReturnState, resolveInitialAllSpeciesHash, scopeSpotDetails, type AllSpeciesHistoryState } from "@/domain/spotEvaluationPresentation";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
@@ -95,6 +95,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   );
   const [environmentError, setEnvironmentError] = useState<string | null>(null);
   const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(false);
+  const [environmentRequestSpotId, setEnvironmentRequestSpotId] = useState<string | null>(null);
   const [spotDetails, setSpotDetails] = useState<FishingSpotDetailSet | null>(null);
   const [spotDetailStatus, setSpotDetailStatus] = useState<SpotDetailLoadStatus>("idle");
   const changeSelectedEnvironmentTime = useCallback((time: string | null) => setSelectedEnvironmentTime(time), []);
@@ -278,36 +279,53 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   useEffect(() => {
     if (handledInitialHash.current || window.location.hash !== "#all-species" || fishingSpots.length === 0) return;
     const state = window.history.state;
-    const stateSpot = typeof state?.spotId === "string" ? fishingSpots.find((spot) => spot.id === state.spotId) : null;
-    if (stateSpot && stateSpot.id !== environmentSpot?.id) {
-      setEnvironmentSpotId(stateSpot.id);
+    const environmentMatchesSelection = environment?.point.spotId === environmentSpot?.id;
+    const resolution = resolveInitialAllSpeciesHash(
+      state,
+      fishingSpots.map((spot) => spot.id),
+      environmentSpot?.id ?? "",
+      environmentRequestSpotId,
+      environmentMatchesSelection ? environment.point.spotId : null,
+      environmentMatchesSelection ? environment.hourly.map((row) => row.forecastTime) : [],
+      isEnvironmentLoading,
+      environmentError,
+    );
+    if (resolution.kind === "switch-spot") {
+      setEnvironmentSpotId(resolution.spotId);
       setDashboardMode("spotEvaluation");
       setSpotEvaluationTab("評価");
       return;
     }
-    const forecastTimes = stateSpot && environment?.point.spotId === stateSpot.id ? environment.hourly.map((row) => row.forecastTime) : [];
-    if (stateSpot && state?.selectedTime !== null && forecastTimes.length === 0) return;
+    if (resolution.kind === "waiting") return;
     handledInitialHash.current = true;
-    if (isValidAllSpeciesHistoryState(state, fishingSpots.map((spot) => spot.id), forecastTimes)) {
-      allSpeciesOrigin.current = state;
-      setEnvironmentSpotId(state.spotId);
-      setSelectedEnvironmentTime(state.selectedTime);
+    if (resolution.kind === "restore") {
+      allSpeciesOrigin.current = resolution.state;
+      setEnvironmentSpotId(resolution.state.spotId);
+      setSelectedEnvironmentTime(resolution.state.selectedTime);
       setDashboardMode("spotEvaluation");
       setSpotEvaluationTab("評価");
       setShowAllSpecies(true);
       return;
     }
-    closeAllSpecies(null);
+    setEnvironmentSpotId(resolution.state.spotId);
+    setSelectedEnvironmentTime(resolution.state.selectedTime);
+    setDashboardMode(resolution.state.dashboardMode);
+    setSpotEvaluationTab(resolution.state.spotEvaluationTab);
+    setShowAllSpecies(resolution.state.showAllSpecies);
+    allSpeciesOrigin.current = null;
     window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
-  }, [closeAllSpecies, environment, environmentSpot?.id, fishingSpots]);
+  }, [environment, environmentError, environmentRequestSpotId, environmentSpot?.id, fishingSpots, isEnvironmentLoading]);
 
   useEffect(() => {
     if (!environmentSpot) {
+      setEnvironmentRequestSpotId(null);
       setEnvironment(null);
       setEnvironmentError(null);
       setIsEnvironmentLoading(false);
       return;
     }
+
+    setEnvironmentRequestSpotId(environmentSpot.id);
 
     const point = {
       spotId: environmentSpot.id,

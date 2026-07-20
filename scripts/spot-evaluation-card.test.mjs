@@ -97,6 +97,27 @@ assert.equal(invalidTimeReturn.selectedTime, "2026-07-20T09:00", "an out-of-scop
 const noRowsReturn = presentation.resolveAllSpeciesReturnState(null, ["spot-2"], timesBySpot, "spot-2", "invalid");
 assert.equal(noRowsReturn.selectedTime, null, "a fallback spot without forecast rows uses null");
 assert.equal(noRowsReturn.query, "", "return state resets search before the full-screen view is mounted again");
+
+const hashState = { view: "all-species", spotId: "spot-1", selectedTime: "2026-07-20T12:00" };
+const resolveHash = ({ requestSpotId = "spot-1", environmentSpotId = "spot-1", forecastTimes = [], loading = false, error = null } = {}) =>
+  presentation.resolveInitialAllSpeciesHash(hashState, ["spot-1", "spot-2"], "spot-1", requestSpotId, environmentSpotId, forecastTimes, loading, error);
+assert.deepEqual(resolveHash({ loading: true }), { kind: "waiting" }, "a matching spot with no rows waits only while its environment request is active");
+assert.deepEqual(resolveHash({ forecastTimes: timesBySpot["spot-1"] }), { kind: "restore", state: hashState }, "a successful request with the selected row restores the full-screen view");
+const failedHash = resolveHash({ error: "Open-Meteo failed" });
+assert.equal(failedHash.kind, "fallback");
+assert.deepEqual(failedHash.state, { dashboardMode: "spotEvaluation", spotEvaluationTab: "評価", showAllSpecies: false, spotId: "spot-1", selectedTime: null, query: "" }, "a failed request without cached rows reaches the safe evaluation fallback");
+assert.equal(failedHash.removeHash, true, "the fallback explicitly requires removal of #all-species");
+const emptyHash = resolveHash();
+assert.equal(emptyHash.kind, "fallback", "a completed request without forecast rows does not wait indefinitely");
+assert.equal(emptyHash.state.selectedTime, null);
+assert.deepEqual(
+  presentation.resolveInitialAllSpeciesHash(hashState, ["spot-1", "spot-2"], "spot-2", "spot-2", "spot-2", [], false, null),
+  { kind: "switch-spot", spotId: "spot-1" },
+  "reload restoration switches to the validated history spot before requesting its environment",
+);
+const browserBack = presentation.resolveAllSpeciesReturnState(hashState, ["spot-1", "spot-2"], timesBySpot, "spot-2", null);
+assert.equal(browserBack.spotId, "spot-1");
+assert.equal(browserBack.selectedTime, "2026-07-20T12:00", "normal browser back retains the origin spot and time");
 assert.ok(card.includes("onShowAllSpecies"), "the all-species button opens the full-screen view through dashboard state");
 assert.ok(dashboard.includes('window.addEventListener("popstate"') && dashboard.includes("resolveAllSpeciesReturnState"), "the tested transition function handles browser history events");
 assert.ok(dashboard.includes("isValidAllSpeciesHistoryState"), "runtime history reads use the tested validator");
