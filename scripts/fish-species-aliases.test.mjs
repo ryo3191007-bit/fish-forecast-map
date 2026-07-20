@@ -3,8 +3,10 @@ import { readFileSync } from "node:fs";
 
 const baselinePath = "supabase/migrations/20260720150000_add_fish_species_aliases.sql";
 const expansionPath = "supabase/migrations/20260720190000_expand_fish_species_master.sql";
+const batch1Path = "supabase/migrations/20260720210000_seed_fish_species_aliases_batch_1.sql";
 const baseline = readFileSync(baselinePath, "utf8");
 const expansion = readFileSync(expansionPath, "utf8");
+const batch1 = readFileSync(batch1Path, "utf8");
 
 const baselineSeeds = [...baseline.matchAll(/\('([0-9a-f-]{36})',\s*'([^']+)',\s*'([^']+)'\)/g)]
   .map((match) => ({ id: match[1], speciesId: match[2], alias: match[3] }));
@@ -14,10 +16,13 @@ const insertedSpecies = new Map(
 );
 const expansionSpecies = [...expansion.matchAll(/\('([0-9a-f-]{36})'::uuid,'([^']+)'\)/g)]
   .map((match) => ({ id: match[1], speciesId: match[2], alias: insertedSpecies.get(match[2]) }));
-const seeds = [...baselineSeeds, ...expansionSpecies];
+const batch1Seeds = [...batch1.matchAll(/\('([0-9a-f-]{36})',\s*'([^']+)',\s*'([^']+)'\)/g)]
+  .map((match) => ({ id: match[1], speciesId: match[2], alias: match[3] }));
+const seeds = [...baselineSeeds, ...expansionSpecies, ...batch1Seeds];
 
 assert.equal(baselineSeeds.length, 17, "all baseline alias seeds must be inspected");
 assert.equal(expansionSpecies.length, 28, "all expansion alias seeds must be inspected");
+assert.equal(batch1Seeds.length, 5, "Issue #211 batch 1 must contain exactly five approved aliases");
 assert.match(expansion, /drop constraint if exists fish_species_category_check;[\s\S]*?check \(category in \('fish', 'squid', 'category', 'cephalopod'\)\)[\s\S]*?validate constraint fish_species_category_check;[\s\S]*?insert into public\.fish_species/, "the category constraint must allow cephalopod before species are seeded");
 assert.equal(new Set(seeds.map((seed) => seed.id)).size, seeds.length, "alias seed UUIDs must be unique across migrations");
 assert.equal(new Set(seeds.map((seed) => seed.alias.normalize("NFKC").trim().toLowerCase())).size, seeds.length, "approved active match_key values must be unique across migrations");
@@ -34,5 +39,11 @@ assert.ok(!expansionSpecies.some((seed) => seed.id.endsWith("000000000016") || s
 for (const alias of ["チヌ", "黒鯛", "クロダイ"]) {
   assert.equal(seeds.find((seed) => seed.alias === alias)?.speciesId, "chinu", `${alias} must continue to resolve to chinu`);
 }
+
+assert.deepEqual(batch1Seeds.map(({ speciesId, alias }) => [speciesId, alias]), [
+  ["aoriika", "ミズイカ"], ["aoriika", "モイカ"], ["kisu", "シロギス"], ["kisu", "キスゴ"], ["seabass", "スズキ"],
+]);
+assert.ok(batch1Seeds.every((seed) => /^00000000-0000-4000-8000-00000000020[0-4]$/.test(seed.id)), "batch 1 uses its deterministic UUID range");
+assert.doesNotMatch(batch1, /'(?:セイゴ|フッコ|ハネ|ササイカ|ハマチ|ヤズコ|ヤズ|ワラサ|マアジ|マサバ)'/, "deferred names must not be seeded in batch 1");
 
 console.log(`fish species alias seed tests passed (${seeds.length} seeds)`);

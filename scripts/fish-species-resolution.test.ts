@@ -8,6 +8,18 @@ import { filterByFishSpecies, resolveFishSpeciesName, staticFishSpecies, staticF
 import { mapSuccessfulFishSpeciesAliasRows } from "@/lib/masterDataRepository";
 
 const resolve = (name: string, aliases = staticFishSpeciesAliases) => resolveFishSpeciesName(name, staticFishSpecies, aliases);
+const batch1Aliases = new Map([
+  ["ミズイカ", "aoriika"], ["モイカ", "aoriika"], ["シロギス", "kisu"], ["キスゴ", "kisu"], ["スズキ", "seabass"],
+] as const);
+
+for (const [name, speciesId] of batch1Aliases) {
+  const result = resolve(name);
+  assert.equal(result.status, "resolved");
+  if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
+}
+for (const name of ["セイゴ", "フッコ", "ハネ", "ササイカ", "ハマチ", "ヤズコ", "ヤズ", "ワラサ", "マアジ", "マサバ", "マイワシ"]) {
+  assert.equal(resolve(name).status, "unresolved", `${name} remains outside Issue #211 batch 1`);
+}
 for (const name of ["チヌ", "黒鯛", "クロダイ"]) {
   const result = resolve(name);
   assert.equal(result.status, "resolved");
@@ -29,6 +41,13 @@ assert.equal(resolve("黒鯛", conflictAliases).status, "conflict");
 const list = [{ species: "黒鯛" }, { species: "チヌ" }, { species: "アジ" }, { species: "未登録魚" }];
 assert.deepEqual(filterByFishSpecies(list, "クロダイ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), list.slice(0, 2));
 assert.deepEqual(filterByFishSpecies(list, "アジ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), [list[2]]);
+
+for (const [aliasName, speciesId] of batch1Aliases) {
+  const canonicalName = staticFishSpecies.find((species) => species.id === speciesId)?.nameJa;
+  assert.ok(canonicalName);
+  const aliasList = [{ species: aliasName }, { species: canonicalName }, { species: "未登録魚" }];
+  assert.deepEqual(filterByFishSpecies(aliasList, canonicalName, (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), aliasList.slice(0, 2), `${aliasName} is included in canonical search and aggregation`);
+}
 
 const chinuReport = mockFishingReports.find((report) => report.species === "チヌ");
 assert.ok(chinuReport);
