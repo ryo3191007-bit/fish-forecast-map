@@ -34,14 +34,18 @@ export function parseAtomFeed(xml: string): AtomEntry[] {
 }
 
 export type ParsedBulletin = { type: JmaBulletinType; reportDateTime: string; status: string; areaName: string; periods: { start: string; end: string; state: "blocked" | "clear" | "unknown"; phenomena: string[] }[] };
+// JMA code.Significancy (2026-07-07) and the VPWP50 R06 manual/sample set
+// (2026-03-26 samples); verified 2026-07-20. Only values explicitly allowed by
+// those official materials are accepted. 00 is validly encoded but indeterminate.
 const SIGNIFICANCY = {
-  "風危険度": { base: "風", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級", "20": "警報級" } },
-  "波危険度": { base: "波", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級", "20": "警報級" } },
-  "雷危険度": { base: "雷", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級" } },
-  "大雨浸水危険度": { base: "大雨", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級", "20": "警報級" } },
-  "土砂災害危険度": { base: "大雨", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級", "20": "警報級" } },
-  "高潮危険度": { base: "高潮", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級", "20": "警報級" } },
+  "風危険度": { clear: { "01": "注意報級未満" }, blocked: { "20": "注意報級", "30": "警報級", "50": "特別警報級" }, local: true },
+  "波危険度": { clear: { "01": "注意報級未満" }, blocked: { "20": "注意報級", "30": "警報級", "50": "特別警報級" }, local: false },
+  "雷危険度": { clear: { "01": "注意報級未満" }, blocked: { "20": "注意報級" }, local: false },
+  "大雨浸水危険度": { clear: { "11": "警戒レベル２未満" }, blocked: { "21": "警戒レベル２", "31": "警戒レベル３相当", "41": "警戒レベル４相当", "51": "警戒レベル５相当" }, local: false },
+  "土砂災害危険度": { clear: { "11": "警戒レベル２未満" }, blocked: { "22": "警戒レベル２相当", "31": "警戒レベル３相当", "41": "警戒レベル４相当", "51": "警戒レベル５相当" }, local: false },
+  "高潮危険度": { clear: { "11": "警戒レベル２未満" }, blocked: { "21": "警戒レベル２", "31": "警戒レベル３相当", "41": "警戒レベル４相当", "51": "警戒レベル５相当" }, local: true },
 } as const;
+const REQUIRED_VPWP_TYPES = Object.keys(SIGNIFICANCY) as (keyof typeof SIGNIFICANCY)[];
 const ACTIVE_STATUSES = new Set(["発表", "継続"]);
 const CLEAR_STATUSES = new Set(["解除"]);
 const UNKNOWN_STATUSES = new Set(["取消", "訂正", "訓練"]);
@@ -73,23 +77,50 @@ export function parseBulletin(xml: string, expectedType: JmaBulletinType, area: 
     const active = relevant.filter(({ status: infoStatus }) => ACTIVE_STATUSES.has(infoStatus));
     return { type: expectedType, reportDateTime, status, areaName: area.areaName, periods: [{ start: reportDateTime, end: reportDateTime, state: unknown ? "unknown" : active.length ? "blocked" : "clear", phenomena: active.map(({ name }) => name) }] };
   }
-  const defines = new Map(descendants(report, "TimeDefine").map((item) => [attr(item, "timeId"), { start: valueAt(item, "DateTime"), duration: valueAt(item, "Duration") }]));
-  if (!defines.size) throw new Error("time-defines-missing");
+  const timeDefineNodes = descendants(report, "TimeDefine");
+  const defines = new Map<string, { start: string; duration: string }>();
+  let invalidDefines = false;
+  for (const item of timeDefineNodes) {
+    const id = attr(item, "timeId");
+    const definition = { start: valueAt(item, "DateTime"), duration: valueAt(item, "Duration") };
+    if (!id || defines.has(id)) invalidDefines = true;
+    else defines.set(id, definition);
+  }
+  if (!defines.size || invalidDefines) throw new Error("invalid-time-defines");
+  const properties = items.flatMap((item) => children(item, "Kind")).flatMap((kindNode) => children(kindNode, "Property"));
   const periods = [...defines].map(([id, definition]) => {
     const duration = /^PT(?:(\d+)H)?(?:(\d+)M)?$/.exec(definition.duration);
     const startMs = Date.parse(definition.start);
-    if (!id || !duration || !Number.isFinite(startMs)) throw new Error("invalid-time-define");
-    const properties = items.flatMap((item) => descendants(item, "Property"));
-    const values = properties.flatMap((property) => descendants(property, "Significancy").filter((s) => attr(s, "refID") === id).map((s) => ({ type: valueAt(property, "Type"), base: attr(s, "base") || valueAt(s, "Base"), code: valueAt(s, "Code"), name: valueAt(s, "Name") })));
-    const allRefs = properties.flatMap((property) => descendants(property, "Significancy")).map((s) => attr(s, "refID"));
-    const inconsistent = !values.length || allRefs.some((ref) => !defines.has(ref)) || values.some(({ type, base, code, name }) => {
-      const rule = SIGNIFICANCY[type as keyof typeof SIGNIFICANCY];
-      return !rule || base !== rule.base || !(code in rule.codes) || rule.codes[code as keyof typeof rule.codes] !== name || code === "00";
-    });
+    if (!duration || !Number.isFinite(startMs)) throw new Error("invalid-time-define");
+    let blocked = false;
+    let unknown = false;
+    const phenomena: string[] = [];
+    for (const type of REQUIRED_VPWP_TYPES) {
+      const matching = properties.filter((property) => valueAt(property, "Type") === type);
+      if (matching.length !== 1) { unknown = true; continue; }
+      const part = children(matching[0], "SignificancyPart");
+      const bases = part.length === 1 ? children(part[0], "Base") : [];
+      if (bases.length !== 1) { unknown = true; continue; }
+      const rule = SIGNIFICANCY[type];
+      const locals = children(bases[0], "Local");
+      const groups = locals.length ? locals : [bases[0]];
+      if (!rule.local && locals.length) { unknown = true; continue; }
+      for (const group of groups) {
+        if (locals.length && !valueAt(group, "AreaName")) { unknown = true; continue; }
+        const values = children(group, "Significancy").filter((value) => attr(value, "refID") === id);
+        const allValues = children(group, "Significancy");
+        if (values.length !== 1 || allValues.some((value) => !defines.has(attr(value, "refID")))) { unknown = true; continue; }
+        const value = values[0];
+        const code = valueAt(value, "Code"), name = valueAt(value, "Name");
+        if (attr(value, "type") !== type || code === "00") { unknown = true; continue; }
+        const clearName = (rule.clear as Record<string, string>)[code];
+        const blockedName = (rule.blocked as Record<string, string>)[code];
+        if (blockedName === name) { blocked = true; phenomena.push(`${type}: ${name}`); }
+        else if (clearName !== name) unknown = true;
+      }
+    }
     const end = new Date(startMs + (+duration[1] || 0) * 3600000 + (+duration[2] || 0) * 60000).toISOString();
-    if (inconsistent) return { start: definition.start, end, state: "unknown" as const, phenomena: values.map(({ type }) => type) };
-    const blocked = values.some(({ code }) => code !== "01");
-    return { start: definition.start, end, state: blocked ? "blocked" as const : "clear" as const, phenomena: values.filter(({ code }) => code !== "01").map(({ type, name }) => `${type}: ${name}`) };
+    return { start: definition.start, end, state: blocked ? "blocked" as const : unknown ? "unknown" as const : "clear" as const, phenomena };
   });
   return { type: expectedType, reportDateTime, status, areaName: area.areaName, periods };
 }

@@ -100,36 +100,51 @@ for (const xml of [
   assert.equal(parser.parseBulletin(xml, "VPWS50", area).periods[0].state, "unknown", "unsupported VPWS50 data fails closed");
 }
 
-const typeRules = {
-  "風危険度": { base: "風", blockedCode: "10", blockedName: "注意報級" },
-  "波危険度": { base: "波", blockedCode: "10", blockedName: "注意報級" },
-  "雷危険度": { base: "雷", blockedCode: "10", blockedName: "注意報級" },
-  "大雨浸水危険度": { base: "大雨", blockedCode: "20", blockedName: "警報級" },
-  "土砂災害危険度": { base: "大雨", blockedCode: "20", blockedName: "警報級" },
-  "高潮危険度": { base: "高潮", blockedCode: "20", blockedName: "警報級" },
-};
-
-function vpwpBulletin({ type = "波危険度", base = typeRules[type]?.base, code = "01", name = "注意報級未満", refID = "1", timeId = "1", omitBase = false } = {}) {
-  const baseAttribute = omitBase ? "" : ` base="${base ?? ""}"`;
-  return `<Report>${bulletinHead("気象警報・注意報時系列情報（Ｒ０６）", "気象警報・注意報時系列")}<Body><TimeSeriesInfo><TimeDefines><TimeDefine timeId="${timeId}"><DateTime>2026-07-20T13:00:00+09:00</DateTime><Duration>PT3H</Duration></TimeDefine></TimeDefines><Item><Kind><Property><Type>${type}</Type><Significancy refID="${refID}"${baseAttribute}><Name>${name}</Name><Code>${code}</Code></Significancy></Property></Kind><Area><Name>唐津市</Name><Code>4120200</Code></Area></Item></TimeSeriesInfo></Body></Report>`;
+// Fixed expectations below come from JMA code.Significancy (2026-07-07), not
+// from the production mapping. The fixture preserves the official Base/Local hierarchy.
+const officialVpwpFixture = fs.readFileSync("scripts/fixtures/jma/vpwp50-official-excerpt.xml", "utf8");
+function vpwpBulletin() { return officialVpwpFixture; }
+function replaceOnce(xml, from, to) {
+  assert.ok(xml.includes(from), `fixture token exists: ${from}`);
+  return xml.replace(from, to);
 }
-
-for (const [type, rule] of Object.entries(typeRules)) {
-  assert.equal(parser.parseBulletin(vpwpBulletin({ type, base: rule.base }), "VPWP50", area).periods[0].state, "clear", `${type} clear`);
-  assert.equal(parser.parseBulletin(vpwpBulletin({ type, base: rule.base, code: rule.blockedCode, name: rule.blockedName }), "VPWP50", area).periods[0].state, "blocked", `${type} blocked`);
-  for (const invalid of [
-    { type, base: rule.base, name: "不一致" },
-    { type, base: "不一致" },
-    { type, omitBase: true },
-    { type, base: rule.base, refID: "999" },
-    { type, base: rule.base, refID: "" },
-    { type, base: rule.base, code: "99", name: "未知" },
-    { type, base: rule.base, code: "", name: "" },
-  ]) {
-    assert.equal(parser.parseBulletin(vpwpBulletin(invalid), "VPWP50", area).periods[0].state, "unknown", `${type} invalid metadata`);
-  }
+assert.equal(parser.parseBulletin(officialVpwpFixture, "VPWP50", area).periods[0].state, "clear", "all six official properties clear");
+const fixedBlockedCases = [
+  ["風危険度", "<Name>注意報級未満</Name><Code>01</Code>", "<Name>注意報級</Name><Code>20</Code>"],
+  ["波危険度", "<Name>注意報級未満</Name><Code>01</Code>", "<Name>警報級</Name><Code>30</Code>"],
+  ["雷危険度", "<Name>注意報級未満</Name><Code>01</Code>", "<Name>注意報級</Name><Code>20</Code>"],
+  ["大雨浸水危険度", "<Name>警戒レベル２未満</Name><Code>11</Code>", "<Name>警戒レベル３相当</Name><Code>31</Code>"],
+  ["土砂災害危険度", "<Name>警戒レベル２未満</Name><Code>11</Code>", "<Name>警戒レベル４相当</Name><Code>41</Code>"],
+  ["高潮危険度", "<Name>警戒レベル２未満</Name><Code>11</Code>", "<Name>警戒レベル２</Name><Code>21</Code>"],
+];
+for (const [type, clearValue, blockedValue] of fixedBlockedCases) {
+  const marker = `<Significancy refID="1" type="${type}">${clearValue}`;
+  const changed = `<Significancy refID="1" type="${type}">${blockedValue}`;
+  assert.equal(parser.parseBulletin(replaceOnce(officialVpwpFixture, marker, changed), "VPWP50", area).periods[0].state, "blocked", `${type} official blocked code/name`);
 }
-assert.equal(parser.parseBulletin(vpwpBulletin({ type: "未知危険度", base: "風" }), "VPWP50", area).periods[0].state, "unknown");
+const unknownFixtures = [
+  replaceOnce(officialVpwpFixture, '<Code>01</Code>', '<Code>00</Code>'),
+  replaceOnce(officialVpwpFixture, '<Code>01</Code>', '<Code>99</Code>'),
+  replaceOnce(officialVpwpFixture, '<Code>01</Code>', ''),
+  replaceOnce(officialVpwpFixture, '<Name>注意報級未満</Name>', '<Name>不一致</Name>'),
+  replaceOnce(officialVpwpFixture, 'refID="1" type="波危険度"', 'refID="missing" type="波危険度"'),
+  replaceOnce(officialVpwpFixture, 'type="雷危険度"><Name>', 'type="未知危険度"><Name>'),
+  replaceOnce(officialVpwpFixture, '<Kind><Status>発表</Status><Property><Type>波危険度</Type>', '<Kind><Status>発表</Status><Property><Type>未知危険度</Type>'),
+  replaceOnce(officialVpwpFixture, '<Kind><Status>発表</Status><Property><Type>波危険度</Type><SignificancyPart>', '<Kind><Status>発表</Status><Property><Type>波危険度</Type>'),
+  replaceOnce(officialVpwpFixture, '<Local><AreaName>海上</AreaName>', '<Local><AreaName></AreaName>'),
+  replaceOnce(officialVpwpFixture, '<TimeDefine timeId="1">', '<TimeDefine timeId="1"></TimeDefine><TimeDefine timeId="1">'),
+];
+for (const xml of unknownFixtures) {
+  let state = "unknown";
+  try { state = parser.parseBulletin(xml, "VPWP50", area).periods[0].state; } catch { /* malformed required structure is unknown to the service */ }
+  assert.equal(state, "unknown", "missing or inconsistent official VPWP50 data fails closed");
+}
+const waveProperty = /<Kind><Status>発表<\/Status><Property><Type>波危険度<\/Type>[\s\S]*?<\/Property><\/Kind>/;
+assert.equal(parser.parseBulletin(officialVpwpFixture.replace(waveProperty, ""), "VPWP50", area).periods[0].state, "unknown", "wind clear plus missing wave is unknown");
+const oneLocalMissing = replaceOnce(officialVpwpFixture, '<Local><AreaName>海上</AreaName><Significancy refID="1" type="風危険度"><Name>注意報級未満</Name><Code>01</Code></Significancy></Local>', '<Local><AreaName>海上</AreaName></Local>');
+assert.equal(parser.parseBulletin(oneLocalMissing, "VPWP50", area).periods[0].state, "unknown", "one of multiple Local bases missing is unknown");
+const blockedAndMalformed = replaceOnce(replaceOnce(officialVpwpFixture, '<Significancy refID="1" type="波危険度"><Name>注意報級未満</Name><Code>01</Code>', '<Significancy refID="1" type="波危険度"><Name>警報級</Name><Code>30</Code>'), '<Code>11</Code>', '<Code>99</Code>');
+assert.equal(parser.parseBulletin(blockedAndMalformed, "VPWP50", area).periods[0].state, "blocked", "blocked takes priority while another property remains inconsistent");
 
 function response(body, { status = 200, contentLength, contentType = "application/xml" } = {}) {
   return new Response(body, {
