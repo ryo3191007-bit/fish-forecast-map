@@ -6,11 +6,11 @@ export function createFishSpeciesMatchKey(input: string): string {
 
 export const staticFishSpeciesAliases: readonly FishSpeciesAlias[] = [
   ...Object.entries(fishSpeciesIdByName).map(([aliasName, fishSpeciesId], index) => ({
-    id: `00000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
+    id: `00000000-0000-4000-8000-${String(index < 15 ? index + 1 : index + 85).padStart(12, "0")}`,
     fishSpeciesId, aliasName, matchKey: createFishSpeciesMatchKey(aliasName), approvalStatus: "approved" as const, isActive: true,
   })),
-  { id: "00000000-0000-4000-8000-000000000100", fishSpeciesId: "chinu", aliasName: "黒鯛", matchKey: "黒鯛", approvalStatus: "approved", isActive: true },
-  { id: "00000000-0000-4000-8000-000000000101", fishSpeciesId: "chinu", aliasName: "クロダイ", matchKey: "クロダイ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000016", fishSpeciesId: "chinu", aliasName: "黒鯛", matchKey: "黒鯛", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000017", fishSpeciesId: "chinu", aliasName: "クロダイ", matchKey: "クロダイ", approvalStatus: "approved", isActive: true },
 ];
 
 export const staticFishSpecies: readonly FishSpecies[] = createStaticFishSpecies();

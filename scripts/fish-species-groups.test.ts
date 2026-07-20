@@ -10,6 +10,7 @@ for (const aggregate of ["aomono", "rockfish"]) assert.equal(species.find((item)
 const hatas = species.filter((item) => item.uiSubgroup === "ハタ類");
 assert.deepEqual(hatas.map((item) => item.id), ["kijihata", "oomonhata", "akahata", "mahata", "aohata", "kue"]);
 assert.ok(hatas.every((item) => item.parentGroupId === "rockfish" && item.isSelectable));
+assert.equal(species.find((item) => item.id === "madako")?.category, "cephalopod");
 const records = [{ species: "ブリ" }, { species: "青物" }, { species: "カサゴ" }];
 assert.deepEqual(filterByFishSpecies(records, "青物", (item) => item.species, species, staticFishSpeciesAliases), records.slice(0, 2));
 assert.deepEqual(filterByFishSpecies(records, "根魚", (item) => item.species, species, staticFishSpeciesAliases), records.slice(2));

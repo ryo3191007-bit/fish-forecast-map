@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import {
   fishSpeciesNames,
-  legacySpeciesLabel,
   type FishSpeciesName,
 } from "@/domain/fishing";
 import type { FishingEnvironment } from "@/domain/environment";
@@ -140,6 +139,19 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
       count: manualCatchMemos.filter((memo) => memoMatchesFishSpecies(String(memo.species), species, masterData)).length,
     }));
   }, [fishSpeciesFilterNames, manualCatchMemos, masterData]);
+  const groupedSpeciesCounts = useMemo(() => {
+    const countByName = new Map(speciesCounts.map((item) => [item.species, item.count]));
+    const activeSpecies = masterData.fishSpecies.filter((item) => fishSpeciesFilterNames.includes(item.nameJa));
+    const toCount = (items: typeof activeSpecies) => items.map((item) => ({ species: item.nameJa, count: countByName.get(item.nameJa) ?? 0 }));
+    return [
+      { label: "グループ", items: toCount(activeSpecies.filter((item) => item.entityType === "species_group")) },
+      { label: "青物系", items: toCount(activeSpecies.filter((item) => item.isSelectable && item.parentGroupId === "aomono")) },
+      { label: "根魚 > ハタ類", items: toCount(activeSpecies.filter((item) => item.isSelectable && item.uiSubgroup === "ハタ類")) },
+      { label: "根魚（その他）", items: toCount(activeSpecies.filter((item) => item.isSelectable && item.parentGroupId === "rockfish" && item.uiSubgroup !== "ハタ類")) },
+      { label: "イカ・頭足類", items: toCount(activeSpecies.filter((item) => item.isSelectable && ["squid_species", "cephalopod_species"].includes(item.entityType))) },
+      { label: "その他", items: toCount(activeSpecies.filter((item) => item.isSelectable && !item.parentGroupId && !["squid_species", "cephalopod_species"].includes(item.entityType))) },
+    ].filter((group) => group.items.length > 0);
+  }, [fishSpeciesFilterNames, masterData.fishSpecies, speciesCounts]);
   const areaCounts = useMemo(() => {
     const counts = new Map<string, number>();
     manualCatchMemos.forEach((memo) => {
@@ -491,21 +503,24 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                 <span>すべて</span>
                 <strong>{manualCatchMemos.length}</strong>
               </button>
-              {speciesCounts.map(({ species, count }) => (
-                <button
-                  type="button"
-                  className={
-                    selectedSpecies === species
-                      ? "speciesChip active"
-                      : "speciesChip"
-                  }
-                  aria-pressed={selectedSpecies === species}
-                  key={species}
-                  onClick={() => setSelectedSpecies(species)}
-                >
-                  <span>{legacySpeciesLabel(species)}</span>
-                  <strong>{count}</strong>
-                </button>
+              {groupedSpeciesCounts.map((group) => (
+                <div className="speciesFilterGroup" key={group.label}>
+                  <span className="speciesFilterGroupLabel">{group.label}</span>
+                  <div className="speciesFilterGroupChips">
+                    {group.items.map(({ species, count }) => (
+                      <button
+                        type="button"
+                        className={selectedSpecies === species ? "speciesChip active" : "speciesChip"}
+                        aria-pressed={selectedSpecies === species}
+                        key={species}
+                        onClick={() => setSelectedSpecies(species)}
+                      >
+                        <span>{species === "青物" || species === "根魚" ? `${species}系` : species}</span>
+                        <strong>{count}</strong>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
 

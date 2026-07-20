@@ -4,7 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FishingSpot } from "@/domain/fishingSpot";
-import type { FishingReport } from "@/domain/fishing";
+import { legacySpeciesLabel, type FishSpeciesName, type FishingReport } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import {
   GSI_AERIAL_TILE_ATTRIBUTION,
@@ -1040,7 +1040,7 @@ function createPopupContent(report: FishingReport) {
   score.className = "mapPopupScore";
   score.textContent = `SCORE ${report.forecast.score}点`;
   const species = document.createElement("span");
-  species.textContent = report.species;
+  species.textContent = legacySpeciesLabel(report.species);
   const place = document.createElement("span");
   place.textContent = report.areaName;
   summary.append(score, species, place);
@@ -1080,7 +1080,7 @@ function createExternalMemoPopupContent(memo: MappableExternalMemo) {
   badge.className = "mapPopupExternal";
   badge.textContent = "自分の釣果";
   const species = document.createElement("span");
-  species.textContent = String(memo.species);
+  species.textContent = legacySpeciesLabel(memo.species as FishSpeciesName);
   const area = document.createElement("span");
   area.textContent = memo.areaName;
   summary.append(badge, species, area);

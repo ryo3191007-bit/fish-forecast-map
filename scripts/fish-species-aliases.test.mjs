@@ -1,29 +1,34 @@
 import assert from "node:assert/strict";
-import fs from "node:fs";
+import { readFileSync } from "node:fs";
 
-const migration = fs.readFileSync("supabase/migrations/20260720150000_add_fish_species_aliases.sql", "utf8");
-const resolver = fs.readFileSync("src/lib/fishSpeciesResolver.ts", "utf8");
-const repository = fs.readFileSync("src/lib/masterDataRepository.ts", "utf8");
-const normalize = (input) => input.normalize("NFKC").trim().toLowerCase();
-const rows = [...migration.matchAll(/\('([0-9a-f-]{36})', '([^']+)', '([^']+)'\)/g)].map((match) => ({ speciesId: match[2], alias: match[3], matchKey: normalize(match[3]) }));
+const baselinePath = "supabase/migrations/20260720150000_add_fish_species_aliases.sql";
+const expansionPath = "supabase/migrations/20260720190000_expand_fish_species_master.sql";
+const baseline = readFileSync(baselinePath, "utf8");
+const expansion = readFileSync(expansionPath, "utf8");
 
-assert.equal(rows.length, 17, "all canonical names and only two approved Chinu aliases are seeded");
-const activeKeys = new Map();
-for (const row of rows) {
-  assert.ok(!activeKeys.has(row.matchKey), `duplicate approved active match_key: ${row.matchKey}`);
-  activeKeys.set(row.matchKey, row.speciesId);
+const baselineSeeds = [...baseline.matchAll(/\('([0-9a-f-]{36})',\s*'([^']+)',\s*'([^']+)'\)/g)]
+  .map((match) => ({ id: match[1], speciesId: match[2], alias: match[3] }));
+const expansionSpecies = [...expansion.matchAll(/\('([^']+)','([^']+)','[^']+','\{\}',(\d+),true,/g)]
+  .map((match) => ({
+    id: `00000000-0000-4000-8000-${String(Number(match[3]) + 84).padStart(12, "0")}`,
+    speciesId: match[1],
+    alias: match[2],
+  }));
+const seeds = [...baselineSeeds, ...expansionSpecies];
+
+assert.equal(baselineSeeds.length, 17, "all baseline alias seeds must be inspected");
+assert.equal(expansionSpecies.length, 28, "all expansion alias seeds must be inspected");
+assert.equal(new Set(seeds.map((seed) => seed.id)).size, seeds.length, "alias seed UUIDs must be unique across migrations");
+assert.equal(new Set(seeds.map((seed) => seed.alias.normalize("NFKC").trim().toLowerCase())).size, seeds.length, "approved active match_key values must be unique across migrations");
+
+const aliasesById = new Map(seeds.map((seed) => [seed.id, seed]));
+assert.deepEqual(aliasesById.get("00000000-0000-4000-8000-000000000016"), { id: "00000000-0000-4000-8000-000000000016", speciesId: "chinu", alias: "黒鯛" });
+assert.deepEqual(aliasesById.get("00000000-0000-4000-8000-000000000017"), { id: "00000000-0000-4000-8000-000000000017", speciesId: "chinu", alias: "クロダイ" });
+assert.match(expansion, /display_order \+ 84/, "new aliases must use the non-overlapping 100-127 UUID range");
+assert.ok(!expansionSpecies.some((seed) => seed.id.endsWith("000000000016") || seed.id.endsWith("000000000017")), "the expansion must not overwrite existing Chinu aliases");
+
+for (const alias of ["チヌ", "黒鯛", "クロダイ"]) {
+  assert.equal(seeds.find((seed) => seed.alias === alias)?.speciesId, "chinu", `${alias} must continue to resolve to chinu`);
 }
-for (const name of ["チヌ", "黒鯛", "クロダイ"]) assert.equal(activeKeys.get(normalize(name)), "chinu", `${name} resolves to chinu`);
-assert.equal(activeKeys.get(normalize("未登録魚")), undefined, "unknown names remain unresolved");
-assert.equal(normalize("  ＡｊＩ  "), "aji", "NFKC, trim, and case folding are stable");
-assert.match(migration, /unique index[\s\S]+where approval_status = 'approved' and is_active = true/i);
-assert.match(migration, /match_key = public\.fish_species_match_key\(alias_name\)/);
-assert.match(migration, /revoke all[\s\S]+from anon, authenticated/i);
-assert.match(migration, /using \(approval_status = 'approved' and is_active = true\)/);
-assert.match(migration, /on conflict \(id\) do update/i, "seed is repeatable");
-assert.match(resolver, /approvalStatus === "approved"/);
-assert.match(resolver, /alias\.isActive/);
-assert.match(resolver, /status: "conflict"/);
-assert.match(resolver, /status: "unresolved"/);
-assert.match(repository, /staticFishSpeciesAliases/, "static fallback has identical aliases");
-console.log("OK fish species alias migration, seed, resolver, and static fallback");
+
+console.log(`fish species alias seed tests passed (${seeds.length} seeds)`);

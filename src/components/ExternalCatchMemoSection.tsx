@@ -488,7 +488,7 @@ function ExternalMemoCard({
         <div>
           <p className="eyebrow">自分の釣果</p>
           <h3>
-            {memo.species} / {memo.areaName}
+            {legacySpeciesLabel(memo.species as FishSpeciesName)} / {memo.areaName}
           </h3>
           <p className="muted">自分で記録した釣果です。</p>
         </div>
@@ -496,7 +496,7 @@ function ExternalMemoCard({
           type="button"
           className="clearSearchButton"
           onClick={() => onEdit(memo)}
-          aria-label={`${memo.caughtDate} ${memo.species} ${memo.areaName}の釣果を編集`}
+          aria-label={`${memo.caughtDate} ${legacySpeciesLabel(memo.species as FishSpeciesName)} ${memo.areaName}の釣果を編集`}
         >
           編集
         </button>
@@ -513,7 +513,7 @@ function ExternalMemoCard({
       <dl className="facts">
         <div>
           <dt>魚種</dt>
-          <dd>{memo.species}</dd>
+          <dd>{legacySpeciesLabel(memo.species as FishSpeciesName)}</dd>
         </div>
         <div>
           <dt>エリア</dt>
@@ -585,7 +585,7 @@ function LocalMemoMigrationPanel({
                   disabled={status.isMutating}
                 />
                 <span>
-                  {memo.species} / {memo.areaName} / {memo.caughtDate}
+                  {legacySpeciesLabel(memo.species as FishSpeciesName)} / {memo.areaName} / {memo.caughtDate}
                 </span>
               </label>
             ))}
