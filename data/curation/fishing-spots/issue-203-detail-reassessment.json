@@ -1,0 +1,2586 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 203,
+  "reviewedAt": "2026-07-20",
+  "basis": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+  "newWebResearchPerformed": false,
+  "policyDocument": "docs/FISHING_SPOT_DETAIL_EVIDENCE_POLICY.md",
+  "spots": [
+    {
+      "spotId": "nokita-port",
+      "researchSource": "data/research/fishing-spots/nokita-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 1,
+        "medium": 2,
+        "low": 0,
+        "researched_unknown": 11,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "nokita-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "confidence": "high",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "nokita-beach",
+      "researchSource": "data/research/fishing-spots/nokita-beach.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "nokita-beach:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "nokita-beach:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "keya-port",
+      "researchSource": "data/research/fishing-spots/keya-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 1,
+        "medium": 2,
+        "low": 0,
+        "researched_unknown": 11,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "keya-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "confidence": "high",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "keya-gate",
+      "researchSource": "data/research/fishing-spots/keya-gate.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "keya-gate:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "keya-gate:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "funakoshi-port",
+      "researchSource": "data/research/fishing-spots/funakoshi-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 1,
+        "medium": 2,
+        "low": 0,
+        "researched_unknown": 11,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "funakoshi-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "confidence": "high",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "funakoshi-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "kishi-port",
+      "researchSource": "data/research/fishing-spots/kishi-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "kishi-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "kishi-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "fukuyoshi-port",
+      "researchSource": "data/research/fishing-spots/fukuyoshi-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "fukuyoshi-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukuyoshi-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "hamasaki-beach",
+      "researchSource": "data/research/fishing-spots/hamasaki-beach.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "hamasaki-beach:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hamasaki-beach:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "niji-matsubara",
+      "researchSource": "data/research/fishing-spots/niji-matsubara.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "niji-matsubara:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "niji-matsubara:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "karatsu-east-port",
+      "researchSource": "data/research/fishing-spots/karatsu-east-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 1,
+        "medium": 2,
+        "low": 3,
+        "researched_unknown": 8,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "karatsu-east-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "has_evidence",
+          "confidence": "low",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "weak_evidence",
+          "confidence": "low",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "weak_evidence",
+          "confidence": "low",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "confidence": "high",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-east-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "karatsu-west-port",
+      "researchSource": "data/research/fishing-spots/karatsu-west-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "karatsu-west-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "karatsu-west-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "yobuko-area",
+      "researchSource": "data/research/fishing-spots/yobuko-area.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "yobuko-area:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "yobuko-area:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "imari-inner-bay",
+      "researchSource": "data/research/fishing-spots/imari-inner-bay.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 2,
+        "low": 0,
+        "researched_unknown": 12,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "imari-inner-bay:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "imari-inner-bay:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "fukushima-area",
+      "researchSource": "data/research/fishing-spots/fukushima-area.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "fukushima-area:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "fukushima-area:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "takashima-area",
+      "researchSource": "data/research/fishing-spots/takashima-area.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "takashima-area:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "takashima-area:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "tabira-port",
+      "researchSource": "data/research/fishing-spots/tabira-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "tabira-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "confidence": "medium",
+          "decision": "adopted_value_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "tabira-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "hirado-seto",
+      "researchSource": "data/research/fishing-spots/hirado-seto.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "hirado-seto:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "hirado-seto:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    },
+    {
+      "spotId": "ikitsuki-area",
+      "researchSource": "data/research/fishing-spots/ikitsuki-area.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。",
+      "itemResults": [
+        {
+          "valueId": "ikitsuki-area:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        },
+        {
+          "valueId": "ikitsuki-area:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "confidence": null,
+          "decision": "state_maintained",
+          "appliedTo": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+          "reassessedAt": "2026-07-20"
+        }
+      ]
+    }
+  ],
+  "appliedData": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+  "runtimeFallback": "src/data/curation/issue-181-detail-initial-data.json"
+}
