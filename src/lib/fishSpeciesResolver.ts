@@ -11,6 +11,11 @@ export const staticFishSpeciesAliases: readonly FishSpeciesAlias[] = [
   })),
   { id: "00000000-0000-4000-8000-000000000016", fishSpeciesId: "chinu", aliasName: "黒鯛", matchKey: "黒鯛", approvalStatus: "approved", isActive: true },
   { id: "00000000-0000-4000-8000-000000000017", fishSpeciesId: "chinu", aliasName: "クロダイ", matchKey: "クロダイ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000200", fishSpeciesId: "aoriika", aliasName: "ミズイカ", matchKey: "ミズイカ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000201", fishSpeciesId: "aoriika", aliasName: "モイカ", matchKey: "モイカ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000202", fishSpeciesId: "kisu", aliasName: "シロギス", matchKey: "シロギス", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000203", fishSpeciesId: "kisu", aliasName: "キスゴ", matchKey: "キスゴ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000204", fishSpeciesId: "seabass", aliasName: "スズキ", matchKey: "スズキ", approvalStatus: "approved", isActive: true },
 ];
 
 export const staticFishSpecies: readonly FishSpecies[] = createStaticFishSpecies();

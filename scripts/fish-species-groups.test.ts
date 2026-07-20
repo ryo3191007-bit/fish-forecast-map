@@ -15,5 +15,5 @@ const records = [{ species: "ブリ" }, { species: "青物" }, { species: "カ�
 assert.deepEqual(filterByFishSpecies(records, "青物", (item) => item.species, species, staticFishSpeciesAliases), records.slice(0, 2));
 assert.deepEqual(filterByFishSpecies(records, "根魚", (item) => item.species, species, staticFishSpeciesAliases), records.slice(2));
 for (const [, name] of fishSpeciesDefinitions) assert.equal(resolveFishSpeciesName(name, species, staticFishSpeciesAliases).status, "resolved");
-for (const forbidden of ["ハタ", "ハマチ", "ヤズ", "ミズイカ", "スズキ", "ササイカ", "未登録魚"]) assert.equal(resolveFishSpeciesName(forbidden, species, staticFishSpeciesAliases).status, "unresolved");
+for (const forbidden of ["ハタ", "ハマチ", "ヤズ", "ササイカ", "未登録魚"]) assert.equal(resolveFishSpeciesName(forbidden, species, staticFishSpeciesAliases).status, "unresolved");
 console.log("fish species group tests passed");
