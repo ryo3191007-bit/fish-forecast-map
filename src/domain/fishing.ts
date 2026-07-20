@@ -1,6 +1,6 @@
 export const fishSpeciesDefinitions = [
-  ["aji", "アジ", "exact_species", null, null], ["saba", "サバ", "exact_species", null, null],
-  ["iwashi", "イワシ", "exact_species", null, null], ["aomono", "青物", "species_group", null, null],
+  ["aji", "アジ", "species_group", null, null, true], ["saba", "サバ", "species_group", null, null, true],
+  ["iwashi", "イワシ", "species_group", null, null, true], ["aomono", "青物", "species_group", null, null],
   ["shiira", "シイラ", "exact_species", null, null], ["hirame", "ヒラメ", "exact_species", null, null],
   ["magochi", "マゴチ", "exact_species", null, null], ["seabass", "シーバス", "exact_species", null, null],
   ["aoriika", "アオリイカ", "squid_species", null, null], ["yariika", "ヤリイカ", "squid_species", null, null],
@@ -21,6 +21,12 @@ export const fishSpeciesDefinitions = [
   ["bora", "ボラ", "exact_species", null, null], ["maanago", "マアナゴ", "exact_species", null, null],
   ["ishidai", "イシダイ", "exact_species", null, null], ["ishigakidai", "イシガキダイ", "exact_species", null, null],
   ["akakamasu", "アカカマス", "exact_species", null, null], ["yamatokamasu", "ヤマトカマス", "exact_species", null, null],
+  ["maaji", "マアジ", "exact_species", "aji", null], ["maruaji", "マルアジ", "exact_species", "aji", null],
+  ["masaba", "マサバ", "exact_species", "saba", null], ["gomasaba", "ゴマサバ", "exact_species", "saba", null],
+  ["maiwashi", "マイワシ", "exact_species", "iwashi", null], ["katakuchiiwashi", "カタクチイワシ", "exact_species", "iwashi", null],
+  ["urumeiwashi", "ウルメイワシ", "exact_species", "iwashi", null], ["mebaru", "メバル", "species_group", "rockfish", null, true],
+  ["akamebaru", "アカメバル", "exact_species", "mebaru", null], ["kuromebaru", "クロメバル", "exact_species", "mebaru", null],
+  ["shiromebaru", "シロメバル", "exact_species", "mebaru", null],
 ] as const;
 
 export const fishSpeciesIds = fishSpeciesDefinitions.map((row) => row[0]);
@@ -32,7 +38,7 @@ export type SpeciesCategory = "fish" | "category" | "squid" | "cephalopod";
 export const fishSpeciesIdByName = Object.fromEntries(fishSpeciesDefinitions.map(([id, name]) => [name, id])) as Readonly<Record<FishSpeciesName, FishSpeciesId>>;
 
 export type FishSpecies = { id: FishSpeciesId; nameJa: FishSpeciesName; category: SpeciesCategory; entityType: FishSpeciesEntityType; isSelectable: boolean; parentGroupId: FishSpeciesId | null; uiSubgroup: string | null; displayOrder: number; seasonMonths: number[] };
-export const createStaticFishSpecies = (): FishSpecies[] => fishSpeciesDefinitions.map(([id, nameJa, entityType, parentGroupId, uiSubgroup], index) => ({ id, nameJa, entityType, parentGroupId, uiSubgroup, isSelectable: entityType !== "species_group", displayOrder: index + 1, category: entityType === "species_group" ? "category" : entityType === "squid_species" ? "squid" : entityType === "cephalopod_species" ? "cephalopod" : "fish", seasonMonths: [] }));
+export const createStaticFishSpecies = (): FishSpecies[] => fishSpeciesDefinitions.map(([id, nameJa, entityType, parentGroupId, uiSubgroup, isSelectable], index) => ({ id, nameJa, entityType, parentGroupId, uiSubgroup, isSelectable: isSelectable ?? entityType !== "species_group", displayOrder: index + 1, category: entityType === "species_group" ? "category" : entityType === "squid_species" ? "squid" : entityType === "cephalopod_species" ? "cephalopod" : "fish", seasonMonths: [] }));
 export const legacySpeciesLabel = (species: FishSpeciesName) => species === "青物" || species === "根魚" ? `${species}（旧分類）` : species;
 
 export type FishSpeciesAliasApprovalStatus = "pending" | "approved" | "rejected";

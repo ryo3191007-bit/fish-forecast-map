@@ -27,14 +27,14 @@ export type ScoreV2ProductionResult =
 
 const methods: FishingMethod[] = ["ジギング", "キャスティング", "コマセ", "泳がせ", "サビキ", "エギング", "その他"];
 const METHOD_AFFINITY: Record<FishingMethod, Record<SupportedSpecies, number | null>> = {
-  ジギング: { アジ: 60, シーバス: 80, チヌ: null }, キャスティング: { アジ: 80, シーバス: 100, チヌ: 80 },
-  コマセ: { アジ: 100, シーバス: null, チヌ: 100 }, 泳がせ: { アジ: null, シーバス: 100, チヌ: null },
-  サビキ: { アジ: 100, シーバス: null, チヌ: null }, エギング: { アジ: null, シーバス: null, チヌ: null }, その他: { アジ: null, シーバス: null, チヌ: null },
+  ジギング: { マアジ: 60, シーバス: 80, チヌ: null }, キャスティング: { マアジ: 80, シーバス: 100, チヌ: 80 },
+  コマセ: { マアジ: 100, シーバス: null, チヌ: 100 }, 泳がせ: { マアジ: null, シーバス: 100, チヌ: null },
+  サビキ: { マアジ: 100, シーバス: null, チヌ: null }, エギング: { マアジ: null, シーバス: null, チヌ: null }, その他: { マアジ: null, シーバス: null, チヌ: null },
 };
 export const SCORE_V2_METHOD_COMPATIBILITY = Object.fromEntries(methods.map((method) => [method, SCORE_V2_SUPPORTED_SPECIES.filter((species) => METHOD_AFFINITY[method][species] !== null)])) as ScoreV2MethodCompatibility;
 
 const habitatScores: Record<SupportedSpecies, Record<string, number>> = {
-  アジ: { artificial_reef:100, rocky:100, structure:100, open_sea:100, fishing_port:90, breakwater:90, inner_bay:80, good_tidal_flow:80, estuary:60, sand_mud:60, beach:60 },
+  マアジ: { artificial_reef:100, rocky:100, structure:100, open_sea:100, fishing_port:90, breakwater:90, inner_bay:80, good_tidal_flow:80, estuary:60, sand_mud:60, beach:60 },
   シーバス: { estuary:100, brackish:100, river_influence:100, seaweed_bed:100, beach:100, inner_bay:90, fishing_port:90, sand_mud:90, structure:80, open_sea:60, rocky:60 },
   チヌ: { estuary:100, inner_bay:100, tidal_flat:100, sand_mud:100, shell_bottom:100, fishing_port:90, breakwater:90, rocky:80, structure:80, open_sea:60, beach:60 },
 };
@@ -121,11 +121,11 @@ export function buildMethodSpotSuitability(details:FishingSpotDetailSet|null|und
 }
 
 const temperatureScore = (species:SupportedSpecies,t:number) => {
-  if (species==="アジ") return t<9?20:t<15?40:t<18?60:t<22?80:t<=26?100:t<=28?80:t<=30?60:t<=32?40:20;
+  if (species==="マアジ") return t<9?20:t<15?40:t<18?60:t<22?80:t<=26?100:t<=28?80:t<=30?60:t<=32?40:20;
   if (species==="シーバス") return t<6?20:t<12?40:t<17?60:t<21?80:t<=27?100:t<30?80:t<33?40:20;
   return t<10?20:t<15?40:t<20?60:t<23?80:t<=29?100:t<=32?60:t<=35?40:20;
 };
-const tideScores:Record<SupportedSpecies,Record<TideState,number>>={ アジ:{上げ潮:80,満潮前後:70,下げ潮:60,干潮前後:60}, シーバス:{上げ潮:80,満潮前後:70,下げ潮:70,干潮前後:60}, チヌ:{上げ潮:80,満潮前後:80,下げ潮:70,干潮前後:60} };
+const tideScores:Record<SupportedSpecies,Record<TideState,number>>={ マアジ:{上げ潮:80,満潮前後:70,下げ潮:60,干潮前後:60}, シーバス:{上げ潮:80,満潮前後:70,下げ潮:70,干潮前後:60}, チヌ:{上げ潮:80,満潮前後:80,下げ潮:70,干潮前後:60} };
 function tideState(rows:EnvironmentForecastRow[],selected:string):TideState|null { const index=rows.findIndex((r)=>r.forecastTime===selected); if(index<1||index>=rows.length-1)return null; const p=rows[index-1].marine?.seaLevelHeightMslMeters,c=rows[index].marine?.seaLevelHeightMslMeters,n=rows[index+1].marine?.seaLevelHeightMslMeters; if(p==null||c==null||n==null)return null; if(p<c&&n<=c)return "満潮前後"; if(p>c&&n>=c)return "干潮前後"; if(p===n)return null; return n>p?"上げ潮":"下げ潮"; }
 function unsafeReasons(row:EnvironmentForecastRow):ScoreV2UnsafeReason[]{ const reasons:ScoreV2UnsafeReason[]=[]; if(row.weather?.windSpeedKmh!=null&&row.weather.windSpeedKmh>=36)reasons.push("強風"); if(row.weather?.windGustKmh!=null&&row.weather.windGustKmh>=72)reasons.push("突風"); if(row.marine?.waveHeightMeters!=null&&row.marine.waveHeightMeters>=1.25)reasons.push("高波"); if(row.weather?.precipitationMm!=null&&row.weather.precipitationMm>=30)reasons.push("大雨"); if(row.weather?.weatherCode!=null&&[95,96,99].includes(row.weather.weatherCode))reasons.push("雷雨"); return reasons; }
 function hasCompleteSafetyData(row:EnvironmentForecastRow) { return row.weather?.windSpeedKmh != null && row.weather.windGustKmh != null && row.weather.precipitationMm != null && row.weather.weatherCode != null && row.marine?.waveHeightMeters != null; }
@@ -136,8 +136,8 @@ function environmentEvidence(environment:FishingEnvironment|null,selected:string
   const unsafe=unsafeReasons(row); const temp=row.marine?.seaSurfaceTemperatureCelsius; const tide=tideState(environment.hourly,selected);
   const windScores:number[]=[]; const w=row.weather?.windSpeedKmh; if(w!=null)windScores.push(w<10.8?100:w<21.6?90:w<28.8?70:w<36?40:0); const gust=row.weather?.windGustKmh; if(gust!=null)windScores.push(gust<36?100:gust<54?80:gust<72?50:0); const wave=row.marine?.waveHeightMeters; if(wave!=null)windScores.push(wave<=.3?100:wave<=.6?90:wave<=.9?70:wave<1.25?40:0);
   const rain=row.weather?.precipitationMm; const rainScore=rain==null?null:rain===0?100:rain<3?90:rain<10?80:rain<20?60:rain<30?40:null;
-  const date=selected.slice(0,10),sun=environment.dailySun.find((d)=>d.date===date); let timeScore:number|null=null; if(sun){const t=new Date(selected).getTime(),rise=new Date(sun.sunrise).getTime(),set=new Date(sun.sunset).getTime(); const band=3600000; const period=Math.abs(t-rise)<=band?"朝":Math.abs(t-set)<=band?"夕":t>rise&&t<set?"昼":"夜"; timeScore=({アジ:{朝:100,昼:70,夕:100,夜:90},シーバス:{朝:90,昼:70,夕:100,夜:90},チヌ:{朝:90,昼:90,夕:90,夜:70}} as const)[species][period];}
-  return {unsafe,evidence:{ waterTemperature:temp==null?null:evidence(temperatureScore(species,temp),"medium","選択時刻の海面水温を反映しています"), tideCurrent:tide?evidence(tideScores[species][tide],"low",`${tide}の参考値を反映しています`):null, windWave:windScores.length?evidence(Math.min(...windScores),"low",windScores.length<3?"取得済みの風・波を反映しています（一部情報未反映）":"選択時刻の風・波を反映しています"):null, seasonTime:timeScore==null?null:evidence(timeScore,species==="アジ"?"medium":"low","日の出・日の入りに基づく時間帯を反映しています"), weatherRain:rainScore==null?null:evidence(rainScore,"low","選択時刻の1時間降水量を反映しています") }};
+  const date=selected.slice(0,10),sun=environment.dailySun.find((d)=>d.date===date); let timeScore:number|null=null; if(sun){const t=new Date(selected).getTime(),rise=new Date(sun.sunrise).getTime(),set=new Date(sun.sunset).getTime(); const band=3600000; const period=Math.abs(t-rise)<=band?"朝":Math.abs(t-set)<=band?"夕":t>rise&&t<set?"昼":"夜"; timeScore=({マアジ:{朝:100,昼:70,夕:100,夜:90},シーバス:{朝:90,昼:70,夕:100,夜:90},チヌ:{朝:90,昼:90,夕:90,夜:70}} as const)[species][period];}
+  return {unsafe,evidence:{ waterTemperature:temp==null?null:evidence(temperatureScore(species,temp),"medium","選択時刻の海面水温を反映しています"), tideCurrent:tide?evidence(tideScores[species][tide],"low",`${tide}の参考値を反映しています`):null, windWave:windScores.length?evidence(Math.min(...windScores),"low",windScores.length<3?"取得済みの風・波を反映しています（一部情報未反映）":"選択時刻の風・波を反映しています"):null, seasonTime:timeScore==null?null:evidence(timeScore,species==="マアジ"?"medium":"low","日の出・日の入りに基づく時間帯を反映しています"), weatherRain:rainScore==null?null:evidence(rainScore,"low","選択時刻の1時間降水量を反映しています") }};
 }
 
 export function buildScoreV2SpeciesInput(args:{species:FishSpeciesName;spot:FishingSpot;details?:FishingSpotDetailSet|null;catches?:ExternalCatchRecord[];environment?:FishingEnvironment|null;selectedDateTime:string;fishSpecies?:readonly FishSpecies[];fishSpeciesAliases?:readonly FishSpeciesAlias[]}):ScoreV2SpeciesInput {

@@ -26,8 +26,13 @@ for (const [name, speciesId] of batch2Aliases) {
   assert.equal(result.status, "resolved");
   if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
 }
-for (const name of ["セイゴ", "フッコ", "ハネ", "コハダ", "ササイカ", "ヤズコ", "ワラサ", "マアジ", "マサバ", "マイワシ"]) {
+for (const name of ["セイゴ", "フッコ", "ハネ", "コハダ", "ササイカ", "ヤズコ", "ワラサ"]) {
   assert.equal(resolve(name).status, "unresolved", `${name} remains outside Issue #220 batch 2`);
+}
+for (const [name, speciesId] of [["マアジ", "maaji"], ["マサバ", "masaba"], ["マイワシ", "maiwashi"], ["メバル", "mebaru"]] as const) {
+  const result = resolve(name);
+  assert.equal(result.status, "resolved");
+  if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
 }
 for (const name of ["チヌ", "黒鯛", "クロダイ"]) {
   const result = resolve(name);
