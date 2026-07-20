@@ -16,6 +16,16 @@ export const staticFishSpeciesAliases: readonly FishSpeciesAlias[] = [
   { id: "00000000-0000-4000-8000-000000000202", fishSpeciesId: "kisu", aliasName: "シロギス", matchKey: "シロギス", approvalStatus: "approved", isActive: true },
   { id: "00000000-0000-4000-8000-000000000203", fishSpeciesId: "kisu", aliasName: "キスゴ", matchKey: "キスゴ", approvalStatus: "approved", isActive: true },
   { id: "00000000-0000-4000-8000-000000000204", fishSpeciesId: "seabass", aliasName: "スズキ", matchKey: "スズキ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000300", fishSpeciesId: "kasago", aliasName: "アラカブ", matchKey: "アラカブ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000301", fishSpeciesId: "kasago", aliasName: "ガシラ", matchKey: "ガシラ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000302", fishSpeciesId: "isaki", aliasName: "イッサキ", matchKey: "イッサキ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000303", fishSpeciesId: "kijihata", aliasName: "アコウ", matchKey: "アコウ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000304", fishSpeciesId: "oniokoze", aliasName: "オグシ", matchKey: "オグシ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000305", fishSpeciesId: "madai", aliasName: "マチャ", matchKey: "マチャ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000306", fishSpeciesId: "madai", aliasName: "チャンイオ", matchKey: "チャンイオ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000307", fishSpeciesId: "buri", aliasName: "ヤズ", matchKey: "ヤズ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000308", fishSpeciesId: "buri", aliasName: "ハマチ", matchKey: "ハマチ", approvalStatus: "approved", isActive: true },
+  { id: "00000000-0000-4000-8000-000000000309", fishSpeciesId: "sawara", aliasName: "サゴシ", matchKey: "サゴシ", approvalStatus: "approved", isActive: true },
 ];
 
 export const staticFishSpecies: readonly FishSpecies[] = createStaticFishSpecies();
