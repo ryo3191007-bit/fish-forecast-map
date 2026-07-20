@@ -1,6 +1,7 @@
 import type { FishingSpotDetailSet, SpotDetailItemDefinition, SpotDetailSource, SpotDetailSourceRelation, SpotDetailValue } from "@/domain/fishingSpotDetail";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import issue181Details from "../data/curation/issue-181-detail-initial-data.json";
+import issue194Details from "../../data/curation/fishing-spots/issue-194-detail-split.json";
 
 export const staticFishingSpotDetailItemDefinitions: SpotDetailItemDefinition[] = [
   { itemKey: "target_species", category: "basic", valueKind: "text_list", labelJa: "対象魚種", description: "既存釣り場マスターの対象魚種。", displayOrder: 10 },
@@ -16,7 +17,10 @@ export const staticFishingSpotDetailItemDefinitions: SpotDetailItemDefinition[] 
   { itemKey: "coastal_topography", category: "terrain", valueKind: "text_list", labelJa: "海底・沿岸地形", displayOrder: 110 },
   { itemKey: "obstacles", category: "terrain", valueKind: "text_list", labelJa: "テトラ・根・障害物", displayOrder: 120 },
   { itemKey: "spot_features", category: "terrain", valueKind: "text_list", labelJa: "堤防・磯・サーフ等の特徴", displayOrder: 130 },
-  { itemKey: "water_flow_influences", category: "hydrology", valueKind: "text_list", labelJa: "潮通し・河川影響・外海影響", displayOrder: 140 },
+  { itemKey: "fishable_area", category: "access", valueKind: "text_list", labelJa: "釣り可能範囲", description: "釣り可能と確認できた具体的な範囲。利用可否や規制情報とは分けて扱う。", displayOrder: 135 },
+  { itemKey: "tidal_flow", category: "hydrology", valueKind: "enum", labelJa: "潮通し", displayOrder: 140 },
+  { itemKey: "river_influence", category: "hydrology", valueKind: "enum", labelJa: "河川影響", displayOrder: 150 },
+  { itemKey: "open_sea_bay_character", category: "hydrology", valueKind: "enum", labelJa: "外海・湾内特性", displayOrder: 160 },
 ];
 
 export function isNoInformationText(value: string | null): boolean {
@@ -54,13 +58,18 @@ type Issue181Source = SpotDetailSource;
 type Issue181Value = Pick<SpotDetailValue, "id" | "itemKey" | "informationState" | "valueText" | "valueTextList" | "valueNumber" | "valueBoolean" | "valueJson" | "unit" | "confidence" | "note" | "checkedAt"> & { sources: Record<SpotDetailSourceRelation, string[]> };
 type Issue181Spot = { spotId: string; sources: Issue181Source[]; values: Issue181Value[] };
 const issue181DetailSpots = issue181Details.spots as Issue181Spot[];
+const issue194DetailSpots = issue194Details.spots as Issue181Spot[];
 
 function buildIssue181StaticValues(spotIds: Set<string>): SpotDetailValue[] {
   return issue181DetailSpots
     .filter((spot) => spotIds.has(spot.spotId))
     .flatMap((spot) => {
       const sourcesById = new Map(spot.sources.map((source) => [source.id, source]));
-      return spot.values.map((value): SpotDetailValue => ({
+      const splitSpot = issue194DetailSpots.find((candidate) => candidate.spotId === spot.spotId);
+      const activeValues = spot.values.filter((value) => value.itemKey !== "water_flow_influences").concat(splitSpot?.values ?? []);
+      const allSources = spot.sources.concat(splitSpot?.sources ?? []);
+      const activeSourcesById = new Map(allSources.map((source) => [source.id, source]));
+      return activeValues.map((value): SpotDetailValue => ({
         id: value.id,
         spotId: spot.spotId,
         itemKey: value.itemKey,
@@ -82,7 +91,7 @@ function buildIssue181StaticValues(spotIds: Set<string>): SpotDetailValue[] {
         checkedAt: value.checkedAt,
         sources: (["supporting", "checked", "contradicting"] as SpotDetailSourceRelation[]).flatMap((relation) =>
           value.sources[relation].flatMap((sourceId) => {
-            const source = sourcesById.get(sourceId);
+            const source = activeSourcesById.get(sourceId) ?? sourcesById.get(sourceId);
             return source ? [{ source, relation, note: null }] : [];
           }),
         ),
