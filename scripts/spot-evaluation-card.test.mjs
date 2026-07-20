@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, extname, join, normalize } from "node:path";
 import { createRequire } from "node:module";
 import ts from "typescript";
@@ -22,6 +22,11 @@ const card = readFileSync(new URL("../src/components/SpotEvaluationCard.tsx", im
 const dashboard = readFileSync(new URL("../src/components/FishingDashboard.tsx", import.meta.url), "utf8");
 const allSpeciesScreen = readFileSync(new URL("../src/components/AllSpeciesEvaluation.tsx", import.meta.url), "utf8");
 const presentation = load("src/domain/spotEvaluationPresentation.ts");
+
+assert.equal((dashboard.match(/<SpotEvaluationCard\b/g) ?? []).length, 1, "spot evaluation mode renders exactly one integrated card");
+assert.ok(!dashboard.includes("legacySpotEvaluations") && !dashboard.includes("areaEvaluations"), "legacy aggregate evaluation cards and their calculation are removed");
+assert.ok(!dashboard.includes("EnvironmentPanel"), "the standalone environment card is not rendered");
+assert.equal(existsSync(new URL("../src/components/EnvironmentPanel.tsx", import.meta.url)), false, "the unused standalone environment component is removed");
 
 const forecastRows = [
   { forecastTime: "2026-07-20T09:00" },

@@ -7,7 +7,6 @@ const STATIC_PATH = "src/data/fishingSpots.ts";
 const SEED_PATH = "supabase/sql/003_master_data_seed.sql";
 const MIGRATION_PATH = "supabase/migrations/20260717133500_update_karatsu_east_port_master.sql";
 const MAPPER_PATH = "src/lib/masterDataMapper.ts";
-const UI_PATH = "src/components/EnvironmentPanel.tsx";
 
 const expected = {
   id: "karatsu-east-port",
@@ -129,12 +128,4 @@ assert.ok(
   "mapFishingSpotRow must preserve empty methods, notes and the unknown access value",
 );
 
-const uiSource = fs.readFileSync(UI_PATH, "utf8");
-assert.ok(
-  uiSource.includes("selectedSpot.notes") &&
-    uiSource.includes("地点の注意事項") &&
-    uiSource.includes("spotNote"),
-  "EnvironmentPanel must render selected fishing spot notes",
-);
-
-console.log("OK Karatsu East Port production curation, static master, SQL and UI are synchronized");
+console.log("OK Karatsu East Port production curation, static master and SQL are synchronized");
