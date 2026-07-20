@@ -30,9 +30,17 @@ export function parseAtomFeed(xml: string): AtomEntry[] {
 }
 
 export type ParsedBulletin = { type: JmaBulletinType; reportDateTime: string; status: string; areaName: string; periods: { start: string; end: string; state: "blocked" | "clear" | "unknown"; phenomena: string[] }[] };
-const TARGET_TYPES = new Set(["風危険度", "波危険度", "雷危険度", "大雨浸水危険度", "土砂災害危険度", "高潮危険度"]);
-const BLOCKED_CODES = new Set(["10", "20", "30", "40", "50", "60"]);
-const CLEAR_CODES = new Set(["01", "02", "03", "04"]);
+const SIGNIFICANCY = {
+  "風危険度": { base: "風", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級", "20": "警報級" } },
+  "波危険度": { base: "波", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級", "20": "警報級" } },
+  "雷危険度": { base: "雷", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級" } },
+  "大雨浸水危険度": { base: "大雨", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級", "20": "警報級" } },
+  "土砂災害危険度": { base: "大雨", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級", "20": "警報級" } },
+  "高潮危険度": { base: "高潮", codes: { "00": "実況値なし", "01": "注意報級未満", "10": "注意報級", "20": "警報級" } },
+} as const;
+const ACTIVE_STATUSES = new Set(["発表", "継続"]);
+const CLEAR_STATUSES = new Set(["解除"]);
+const UNKNOWN_STATUSES = new Set(["取消", "訂正", "訓練"]);
 const WARNING_NAMES = /強風|暴風|風雪|暴風雪|波浪|雷|大雨|高潮/;
 
 export function parseBulletin(xml: string, expectedType: JmaBulletinType, area: JmaAreaCode): ParsedBulletin {
@@ -50,10 +58,11 @@ export function parseBulletin(xml: string, expectedType: JmaBulletinType, area: 
   const items = descendants(report, "Item").filter((item) => descendants(item, "Code").some((code) => text(code) === area.municipalityCode));
   if (!items.length) throw new Error("area-missing");
   if (expectedType === "VPWS50") {
-    const statuses = items.flatMap((item) => descendants(item, "Kind")).map((kindNode) => ({ name: valueAt(kindNode, "Name"), code: valueAt(kindNode, "Code") }));
+    const statuses = items.flatMap((item) => descendants(item, "Kind")).map((kindNode) => ({ name: valueAt(kindNode, "Name"), code: valueAt(kindNode, "Code"), status: valueAt(kindNode, "Status") || "発表" }));
     const relevant = statuses.filter(({ name }) => WARNING_NAMES.test(name));
-    const unknown = relevant.some(({ code }) => !code || code === "00");
-    return { type: expectedType, reportDateTime, status, areaName: area.areaName, periods: [{ start: reportDateTime, end: reportDateTime, state: unknown ? "unknown" : relevant.length ? "blocked" : "clear", phenomena: relevant.map(({ name }) => name) }] };
+    const unknown = relevant.some(({ code, status: infoStatus }) => !code || code === "00" || UNKNOWN_STATUSES.has(infoStatus) || (!ACTIVE_STATUSES.has(infoStatus) && !CLEAR_STATUSES.has(infoStatus)));
+    const active = relevant.filter(({ status: infoStatus }) => ACTIVE_STATUSES.has(infoStatus));
+    return { type: expectedType, reportDateTime, status, areaName: area.areaName, periods: [{ start: reportDateTime, end: reportDateTime, state: unknown ? "unknown" : active.length ? "blocked" : "clear", phenomena: active.map(({ name }) => name) }] };
   }
   const defines = new Map(descendants(report, "TimeDefine").map((item) => [attr(item, "timeId"), { start: valueAt(item, "DateTime"), duration: valueAt(item, "Duration") }]));
   if (!defines.size) throw new Error("time-defines-missing");
@@ -61,22 +70,31 @@ export function parseBulletin(xml: string, expectedType: JmaBulletinType, area: 
     const duration = /^PT(?:(\d+)H)?(?:(\d+)M)?$/.exec(definition.duration);
     const startMs = Date.parse(definition.start);
     if (!id || !duration || !Number.isFinite(startMs)) throw new Error("invalid-time-define");
-    const values = items.flatMap((item) => descendants(item, "Property")).filter((property) => TARGET_TYPES.has(valueAt(property, "Type"))).flatMap((property) => descendants(property, "Significancy").filter((significancy) => attr(significancy, "refID") === id).map((significancy) => ({ type: valueAt(property, "Type"), code: valueAt(significancy, "Code"), name: valueAt(significancy, "Name") })));
-    if (!values.length || values.some(({ code }) => !BLOCKED_CODES.has(code) && !CLEAR_CODES.has(code))) return { start: definition.start, end: new Date(startMs + (+duration[1] || 0) * 3600000 + (+duration[2] || 0) * 60000).toISOString(), state: "unknown" as const, phenomena: values.map(({ type }) => type) };
-    return { start: definition.start, end: new Date(startMs + (+duration[1] || 0) * 3600000 + (+duration[2] || 0) * 60000).toISOString(), state: values.some(({ code }) => BLOCKED_CODES.has(code)) ? "blocked" as const : "clear" as const, phenomena: values.filter(({ code }) => BLOCKED_CODES.has(code)).map(({ type, name }) => `${type}: ${name}`) };
+    const properties = items.flatMap((item) => descendants(item, "Property")).filter((property) => valueAt(property, "Type") in SIGNIFICANCY);
+    const values = properties.flatMap((property) => descendants(property, "Significancy").filter((s) => attr(s, "refID") === id).map((s) => ({ type: valueAt(property, "Type"), base: attr(s, "base") || valueAt(s, "Base"), code: valueAt(s, "Code"), name: valueAt(s, "Name") })));
+    const allRefs = properties.flatMap((property) => descendants(property, "Significancy")).map((s) => attr(s, "refID"));
+    const inconsistent = !values.length || allRefs.some((ref) => !defines.has(ref)) || values.some(({ type, base, code, name }) => {
+      const rule = SIGNIFICANCY[type as keyof typeof SIGNIFICANCY];
+      return !rule || (base !== "" && base !== rule.base) || !(code in rule.codes) || rule.codes[code as keyof typeof rule.codes] !== name || code === "00";
+    });
+    const end = new Date(startMs + (+duration[1] || 0) * 3600000 + (+duration[2] || 0) * 60000).toISOString();
+    if (inconsistent) return { start: definition.start, end, state: "unknown" as const, phenomena: values.map(({ type }) => type) };
+    const blocked = values.some(({ code }) => code !== "01");
+    return { start: definition.start, end, state: blocked ? "blocked" as const : "clear" as const, phenomena: values.filter(({ code }) => code !== "01").map(({ type, name }) => `${type}: ${name}`) };
   });
   return { type: expectedType, reportDateTime, status, areaName: area.areaName, periods };
 }
 
-export function decideJmaWarning(args: { now: Date; selected: Date; area: JmaAreaCode; fetchedAt: string; vpws?: ParsedBulletin; vpwp?: ParsedBulletin; error?: string }): JmaWarningDecision {
-  const base = { areaName: args.area.areaName, fetchedAt: args.fetchedAt, lastSuccessfulFetchAt: args.vpwp?.reportDateTime ?? args.vpws?.reportDateTime ?? null, phenomena: [] as string[], currentNotice: null as string | null };
+export function decideJmaWarning(args: { now: Date; selected: Date; area: JmaAreaCode; fetchedAt: string; lastSuccessfulFetchAt?: string | null; vpws?: ParsedBulletin; vpwp?: ParsedBulletin; vpwsError?: string; vpwpError?: string }): JmaWarningDecision {
+  const base = { areaName: args.area.areaName, fetchedAt: args.fetchedAt, lastSuccessfulFetchAt: args.lastSuccessfulFetchAt ?? null, phenomena: [] as string[], currentNotice: null as string | null };
   const selectedMs = args.selected.getTime(), nowMs = args.now.getTime();
   if (!Number.isFinite(selectedMs)) return { ...base, state: "unknown", reason: "invalid-selected-time", reportDateTime: null, targetStart: null, targetEnd: null, bulletinType: null };
   if (selectedMs < nowMs - 30 * 60000) return { ...base, state: "unknown", reason: "past-bulletin-not-retained", reportDateTime: null, targetStart: null, targetEnd: null, bulletinType: null };
   const nearNow = Math.abs(selectedMs - nowMs) <= 30 * 60000;
   const source = nearNow ? args.vpws : args.vpwp;
   const freshness = nearNow ? 30 * 60000 : 8 * 3600000;
-  if (!source || args.error || Date.parse(source.reportDateTime) > nowMs + 5 * 60000 || nowMs - Date.parse(source.reportDateTime) > freshness) return { ...base, state: "unknown", reason: args.error ?? "bulletin-missing-or-stale", reportDateTime: source?.reportDateTime ?? null, targetStart: null, targetEnd: null, bulletinType: nearNow ? "VPWS50" : "VPWP50" };
+  const sourceError = nearNow ? args.vpwsError : args.vpwpError;
+  if (!source || sourceError || Date.parse(source.reportDateTime) > nowMs + 5 * 60000 || nowMs - Date.parse(source.reportDateTime) > freshness) return { ...base, state: "unknown", reason: sourceError ?? "bulletin-missing-or-stale", reportDateTime: source?.reportDateTime ?? null, targetStart: null, targetEnd: null, bulletinType: nearNow ? "VPWS50" : "VPWP50" };
   if (nearNow) { const p = source.periods[0]; return { ...base, state: p.state, reason: `VPWS50-${p.state}`, phenomena: p.phenomena, reportDateTime: source.reportDateTime, targetStart: null, targetEnd: null, bulletinType: "VPWS50" }; }
   const period = source.periods.find((item) => selectedMs >= Date.parse(item.start) && selectedMs < Date.parse(item.end));
   if (!period) return { ...base, state: "out-of-range", reason: "vpwp-time-range-not-covered", reportDateTime: source.reportDateTime, targetStart: null, targetEnd: null, bulletinType: "VPWP50" };
@@ -84,4 +102,5 @@ export function decideJmaWarning(args: { now: Date; selected: Date; area: JmaAre
 }
 
 export function validateXml(xml: string) { if (/<!DOCTYPE|<!ENTITY/i.test(xml) || XMLValidator.validate(xml) !== true) throw new Error("invalid-or-unsafe-xml"); }
+export function assertXmlSize(xml: string, maxBytes: number) { if (Buffer.byteLength(xml, "utf8") > maxBytes) throw new Error("jma-response-too-large"); }
 export function isOfficialUrl(raw: string) { try { const url = new URL(raw); return url.protocol === "https:" && ["www.data.jma.go.jp", "xml.kishou.go.jp"].includes(url.hostname); } catch { return false; } }

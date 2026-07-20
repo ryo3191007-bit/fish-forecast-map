@@ -1,14 +1,15 @@
 import "server-only";
 import { JMA_AREA_BY_SPOT, type JmaWarningDecision } from "@/domain/jmaWarning";
-import { decideJmaWarning, isOfficialUrl, parseAtomFeed, parseBulletin, type ParsedBulletin } from "@/server/jmaWarningParser";
+import { decideJmaWarning, isOfficialUrl, parseAtomFeed, parseBulletin, type AtomEntry, type ParsedBulletin } from "@/server/jmaWarningParser";
 
 const FEED_URL = "https://www.data.jma.go.jp/developer/xml/feed/regular.xml";
 const TIMEOUT_MS = 8_000;
-const MAX_BYTES = 2_000_000;
+export const JMA_XML_MAX_BYTES = (() => { const value = Number(process.env.JMA_XML_MAX_BYTES ?? 3_000_000); return Number.isSafeInteger(value) && value >= 2_300_000 ? value : 3_000_000; })();
 const CACHE_TTL_MS = 5 * 60_000;
 type CacheValue = { xml: string; fetchedAt: string; expiresAt: number };
 const cache = new Map<string, CacheValue>();
-const lastSuccessful = new Map<string, { vpws?: ParsedBulletin; vpwp?: ParsedBulletin; fetchedAt: string }>();
+type LastSuccess = { bulletin: ParsedBulletin; fetchedAt: string };
+const lastSuccessful = { vpws: new Map<string, LastSuccess>(), vpwp: new Map<string, LastSuccess>() };
 
 async function fetchXml(url: string): Promise<CacheValue> {
   if (!isOfficialUrl(url)) throw new Error("jma-host-not-allowed");
@@ -22,9 +23,9 @@ async function fetchXml(url: string): Promise<CacheValue> {
     const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
     if (!contentType.includes("xml") && !contentType.includes("octet-stream")) throw new Error("jma-content-type-invalid");
     const length = Number(response.headers.get("content-length") ?? 0);
-    if (length > MAX_BYTES) throw new Error("jma-response-too-large");
+    if (length > JMA_XML_MAX_BYTES) throw new Error("jma-response-too-large");
     const bytes = new Uint8Array(await response.arrayBuffer());
-    if (bytes.byteLength > MAX_BYTES) throw new Error("jma-response-too-large");
+    if (bytes.byteLength > JMA_XML_MAX_BYTES) throw new Error("jma-response-too-large");
     const value = { xml: new TextDecoder().decode(bytes), fetchedAt: new Date().toISOString(), expiresAt: Date.now() + CACHE_TTL_MS };
     cache.set(url, value);
     return value;
@@ -40,18 +41,23 @@ export async function getJmaWarningDecision(spotId: string, selectedIso: string,
     const entries = parseAtomFeed(feed.xml);
     const vpwsEntry = entries.filter((entry) => entry.type === "VPWS50").sort((a, b) => b.updated.localeCompare(a.updated))[0];
     const vpwpEntry = entries.filter((entry) => entry.type === "VPWP50" && entry.prefectureCode === area.prefectureEntryCode).sort((a, b) => b.updated.localeCompare(a.updated))[0];
-    if (!vpwsEntry || !vpwpEntry) throw new Error("required-atom-entry-missing");
-    const [vpwsXml, vpwpXml] = await Promise.all([fetchXml(vpwsEntry.url), fetchXml(vpwpEntry.url)]);
-    const vpws = parseBulletin(vpwsXml.xml, "VPWS50", area);
-    const vpwp = parseBulletin(vpwpXml.xml, "VPWP50", area);
-    lastSuccessful.set(spotId, { vpws, vpwp, fetchedAt: feed.fetchedAt });
+    const load = async (type: "vpws" | "vpwp", entry: AtomEntry | undefined) => {
+      if (!entry) throw new Error("required-atom-entry-missing");
+      const xml = await fetchXml(entry.url); const bulletin = parseBulletin(xml.xml, type === "vpws" ? "VPWS50" : "VPWP50", area);
+      lastSuccessful[type].set(spotId, { bulletin, fetchedAt: xml.fetchedAt }); return { bulletin, fetchedAt: xml.fetchedAt };
+    };
+    const [vpwsResult, vpwpResult] = await Promise.allSettled([load("vpws", vpwsEntry), load("vpwp", vpwpEntry)]);
+    const vpwsSuccess = vpwsResult.status === "fulfilled" ? vpwsResult.value : lastSuccessful.vpws.get(spotId);
+    const vpwpSuccess = vpwpResult.status === "fulfilled" ? vpwpResult.value : lastSuccessful.vpwp.get(spotId);
     const selected = new Date(/[zZ]|[+-]\d\d:\d\d$/.test(selectedIso) ? selectedIso : `${selectedIso}+09:00`);
-    return decideJmaWarning({ now, selected, area, fetchedAt: feed.fetchedAt, vpws, vpwp });
-  } catch (error) {
-    const previous = lastSuccessful.get(spotId);
-    const reason = error instanceof Error ? error.message : "jma-fetch-failed";
-    const previousBlocked = previous && [previous.vpws, previous.vpwp].some((item) => item?.periods.some((period) => period.state === "blocked"));
+    const nearNow = Math.abs(selected.getTime() - now.getTime()) <= 30 * 60000;
+    return decideJmaWarning({ now, selected, area, fetchedAt: feed.fetchedAt, lastSuccessfulFetchAt: (nearNow ? vpwsSuccess : vpwpSuccess)?.fetchedAt ?? null, vpws: vpwsSuccess?.bulletin, vpwp: vpwpSuccess?.bulletin, vpwsError: vpwsResult.status === "rejected" ? "current-bulletin-unavailable" : undefined, vpwpError: vpwpResult.status === "rejected" ? "forecast-bulletin-unavailable" : undefined });
+  } catch {
+    const vpws = lastSuccessful.vpws.get(spotId), vpwp = lastSuccessful.vpwp.get(spotId);
     const selected = new Date(/[zZ]|[+-]\d\d:\d\d$/.test(selectedIso) ? selectedIso : `${selectedIso}+09:00`);
-    return decideJmaWarning({ now, selected, area, fetchedAt, vpws: previous?.vpws, vpwp: previous?.vpwp, error: previousBlocked ? "release-not-confirmed-after-blocked" : reason });
+    const nearNow = Math.abs(selected.getTime() - now.getTime()) <= 30 * 60000;
+    const primary = nearNow ? vpws : vpwp;
+    const previouslyBlocked = primary?.bulletin.periods.some((period) => period.state === "blocked");
+    return decideJmaWarning({ now, selected, area, fetchedAt, lastSuccessfulFetchAt: primary?.fetchedAt ?? null, vpws: vpws?.bulletin, vpwp: vpwp?.bulletin, ...(nearNow ? { vpwsError: previouslyBlocked ? "release-not-confirmed-after-blocked" : "current-bulletin-unavailable" } : { vpwpError: previouslyBlocked ? "release-not-confirmed-after-blocked" : "forecast-bulletin-unavailable" }) });
   }
 }
