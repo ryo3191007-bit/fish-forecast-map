@@ -40,7 +40,7 @@ const marineHourlyFields = [
 const weatherNumberKeys = ["temperatureCelsius", "weatherCode", "precipitationMm", "precipitationProbabilityPercent", "windSpeedKmh", "windDirectionDegrees", "windGustKmh"] as const;
 const marineNumberKeys = ["seaSurfaceTemperatureCelsius", "seaLevelHeightMslMeters", "waveHeightMeters", "waveDirectionDegrees", "wavePeriodSeconds", "oceanCurrentVelocityKmh", "oceanCurrentDirectionDegrees"] as const;
 
-type HourlyResponse = { hourly?: Record<string, unknown> };
+type HourlyResponse = { hourly?: Record<string, unknown>; daily?: Record<string, unknown> };
 type FetchResponse = { ok: boolean; status: number; json: () => Promise<HourlyResponse> };
 type FetchImpl = (input: string, init?: { signal?: AbortSignal }) => Promise<FetchResponse>;
 type StorageLike = Pick<Storage, "getItem" | "setItem">;
@@ -132,13 +132,14 @@ export async function fetchLatestFishingEnvironment(point: EnvironmentPoint, sig
   const options = signalOrOptions instanceof AbortSignal ? { signal: signalOrOptions } : (signalOrOptions ?? {});
   const now = options.now ?? (() => new Date());
   const [weatherResult, marineResult] = await Promise.allSettled([
-    fetchOpenMeteoWeatherRows(point, options),
+    fetchOpenMeteoWeather(point, options),
     fetchOpenMeteoMarineRows(point, options),
   ]);
 
   if (options.signal?.aborted) throw new DOMException("Open-Meteo request was aborted.", "AbortError");
 
-  const weatherRows = weatherResult.status === "fulfilled" ? weatherResult.value : [];
+  const weatherRows = weatherResult.status === "fulfilled" ? weatherResult.value.rows : [];
+  const dailySun = weatherResult.status === "fulfilled" ? weatherResult.value.dailySun : [];
   const marineRows = marineResult.status === "fulfilled" ? marineResult.value : [];
   const hourly = mergeHourlyRows(weatherRows, marineRows);
   const weatherAvailable = hourly.some((row) => row.weather !== null);
@@ -149,6 +150,7 @@ export async function fetchLatestFishingEnvironment(point: EnvironmentPoint, sig
   return {
     point,
     hourly,
+    dailySun,
     weatherAvailable,
     marineAvailable,
     fetchedAt: now().toISOString(),
@@ -162,11 +164,24 @@ export async function fetchLatestFishingEnvironment(point: EnvironmentPoint, sig
 }
 
 export async function fetchOpenMeteoWeatherRows(point: EnvironmentPoint, signalOrOptions?: AbortSignal | FetchOptions): Promise<EnvironmentForecastRow[]> {
+  return (await fetchOpenMeteoWeather(point, signalOrOptions)).rows;
+}
+
+async function fetchOpenMeteoWeather(point: EnvironmentPoint, signalOrOptions?: AbortSignal | FetchOptions) {
   const options = signalOrOptions instanceof AbortSignal ? { signal: signalOrOptions } : (signalOrOptions ?? {});
-  const data = await fetchJson(buildOpenMeteoUrl(WEATHER_ENDPOINT, point, weatherHourlyFields), options);
-  return normalizeTimes(data.hourly?.time)
+  const data = await fetchJson(buildOpenMeteoUrl(WEATHER_ENDPOINT, point, weatherHourlyFields, { daily: true }), options);
+  const rows = normalizeTimes(data.hourly?.time)
     .map(({ forecastTime, originalIndex }) => buildWeatherRow(data.hourly, forecastTime, originalIndex))
     .filter((row): row is EnvironmentForecastRow => row !== null);
+  const dates = Array.isArray(data.daily?.time) ? data.daily.time : [];
+  const sunrises = Array.isArray(data.daily?.sunrise) ? data.daily.sunrise : [];
+  const sunsets = Array.isArray(data.daily?.sunset) ? data.daily.sunset : [];
+  const dailySun = dates.flatMap((date, index) =>
+    typeof date === "string" && typeof sunrises[index] === "string" && typeof sunsets[index] === "string"
+      ? [{ date, sunrise: sunrises[index] as string, sunset: sunsets[index] as string }]
+      : [],
+  );
+  return { rows, dailySun };
 }
 
 export async function fetchOpenMeteoMarineRows(point: EnvironmentPoint, signalOrOptions?: AbortSignal | FetchOptions): Promise<EnvironmentForecastRow[]> {
@@ -234,7 +249,7 @@ function buildOpenMeteoUrl(
   endpoint: string,
   point: EnvironmentPoint,
   hourlyFields: string[],
-  options: { cellSelection?: "sea" | "nearest" } = {},
+  options: { cellSelection?: "sea" | "nearest"; daily?: boolean } = {},
 ) {
   const params = new URLSearchParams({
     latitude: point.latitude.toString(),
@@ -245,6 +260,7 @@ function buildOpenMeteoUrl(
   });
 
   if (options.cellSelection) params.set("cell_selection", options.cellSelection);
+  if (options.daily) params.set("daily", "sunrise,sunset");
   return `${endpoint}?${params.toString()}`;
 }
 
@@ -317,6 +333,7 @@ function isCallerAbort(error: unknown, signal: AbortSignal | undefined) {
 export function isFishingEnvironmentLike(value: unknown): value is FishingEnvironment {
   if (!isRecord(value)) return false;
   if (!isPoint(value.point) || !Array.isArray(value.hourly) || value.hourly.length === 0) return false;
+  if (!Array.isArray(value.dailySun) || !value.dailySun.every(isDailySunLike)) return false;
   if (typeof value.weatherAvailable !== "boolean" || typeof value.marineAvailable !== "boolean") return false;
   if (!isValidDate(value.fetchedAt) || typeof value.sourceName !== "string" || typeof value.sourceUrl !== "string") return false;
   if (!["fresh", "cache-fresh", "cache-stale", "none"].includes(String(value.cacheStatus))) return false;
@@ -330,6 +347,10 @@ export function isFishingEnvironmentLike(value: unknown): value is FishingEnviro
   if (!value.weatherAvailable && !value.hourly.every((row) => row.weather === null)) return false;
   if (!value.marineAvailable && !value.hourly.every((row) => row.marine === null)) return false;
   return true;
+}
+
+function isDailySunLike(value: unknown) {
+  return isRecord(value) && typeof value.date === "string" && isValidDate(value.sunrise) && isValidDate(value.sunset);
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

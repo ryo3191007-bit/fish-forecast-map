@@ -37,6 +37,8 @@ export type EnvironmentForecastRow = {
   marine: MarineEnvironment | null;
 };
 
+export type EnvironmentDailySun = { date: string; sunrise: string; sunset: string };
+
 export type EnvironmentDataAvailability = "full" | "weather-only" | "marine-only" | "none";
 export type EnvironmentCacheStatus = "fresh" | "cache-fresh" | "cache-stale" | "none";
 export type EnvironmentFetchStatus = "success" | "partial" | "failed";
@@ -58,6 +60,7 @@ export type TideEvent = {
 export type FishingEnvironment = {
   point: EnvironmentPoint;
   hourly: EnvironmentForecastRow[];
+  dailySun: EnvironmentDailySun[];
   weatherAvailable: boolean;
   marineAvailable: boolean;
   fetchedAt: string;
