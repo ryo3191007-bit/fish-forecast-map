@@ -184,15 +184,10 @@ assert.match(
   /自分の釣果期間フィルタ/,
   "catch date filter is labelled as self catch records",
 );
-assert.match(
-  dashboard,
-  /本人の釣果は、平均SCOREに使う既存地点SCOREへ参考反映しています。/,
-  "area evaluation score note refers to self catch records without filter-linked wording",
-);
 assert.doesNotMatch(
   dashboard,
-  /条件に合う本人の釣果/,
-  "area evaluation score note does not describe filter-linked self catch records",
+  /平均SCOREに使う既存地点SCORE|legacySpotEvaluations/,
+  "legacy area evaluation UI is not rendered",
 );
 assert.doesNotMatch(
   hookSource,

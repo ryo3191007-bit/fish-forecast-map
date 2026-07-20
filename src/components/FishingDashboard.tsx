@@ -5,7 +5,6 @@ import { mockFishingReports } from "@/data/mockFishingReports";
 import {
   fishSpeciesNames,
   type FishSpeciesName,
-  type FishingReport,
 } from "@/domain/fishing";
 import type { FishingEnvironment } from "@/domain/environment";
 import {
@@ -193,47 +192,6 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     selectedSpecies,
     startDate,
   ]);
-
-  const areaEvaluations = useMemo(() => {
-    const groupedReports = new Map<string, FishingReport[]>();
-    adjustedMockFishingReports.forEach((report) => {
-      const key = report.spotName || report.areaName;
-      groupedReports.set(key, [...(groupedReports.get(key) ?? []), report]);
-    });
-
-    return Array.from(groupedReports, ([placeName, placeReports]) => {
-      const averageScore = Math.round(
-        placeReports.reduce(
-          (total, report) => total + report.forecast.score,
-          0,
-        ) / placeReports.length,
-      );
-      const latestReport = [...placeReports].sort(
-        (a, b) => Date.parse(b.reportDate) - Date.parse(a.reportDate),
-      )[0];
-      const representativeSpecies = Array.from(
-        new Set(placeReports.map((report) => report.species)),
-      ).slice(0, 3);
-      const bestReason =
-        [...placeReports].sort((a, b) => b.forecast.score - a.forecast.score)[0]
-          ?.forecast.reasons[0] ?? "既存のモック釣果から簡易集計しています。";
-
-      return {
-        placeName,
-        areaName: latestReport.areaName,
-        averageScore,
-        representativeSpecies,
-        latestReportDate: latestReport.reportDate,
-        reportCount: placeReports.length,
-        memo: bestReason,
-        externalMemoCount: externalMemos.filter(
-          (memo) =>
-            memo.spotId &&
-            placeReports.some((report) => report.spotId === memo.spotId),
-        ).length,
-      };
-    }).sort((a, b) => b.averageScore - a.averageScore);
-  }, [adjustedMockFishingReports, externalMemos]);
 
   const environmentSpot = useMemo(() => {
     return (
@@ -669,95 +627,23 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           />
         </div>
       ) : (
-        <div className="spotEvaluationMode">
-          <SpotEvaluationCard
-            selectedSpot={environmentSpot}
-            spots={fishingSpots}
-            selectedSpotId={environmentSpotId}
-            onSelectedSpotIdChange={setEnvironmentSpotId}
-            environment={environment}
-            selectedTime={selectedEnvironmentTime}
-            onSelectedTimeChange={changeSelectedEnvironmentTime}
-            activeTab={spotEvaluationTab}
-            onActiveTabChange={setSpotEvaluationTab}
-            isLoading={isEnvironmentLoading}
-            error={environmentError}
-            details={spotDetails}
-            detailStatus={spotDetailStatus}
-            catches={externalMemos}
-            onShowAllSpecies={openAllSpecies}
-          />
-          {/* Legacy aggregate cards are replaced by the selected spot's SCORE v2 card. */}
-          <div className="cards legacySpotEvaluations" id="reports" hidden>
-            {areaEvaluations.length === 0 ? (
-              <div className="emptyState" role="status">
-                <p className="eyebrow">No areas</p>
-                <h3>該当する地点評価がありません</h3>
-                <p>地点評価に利用できる参考データがありません。</p>
-              </div>
-            ) : (
-              areaEvaluations.map((evaluation) => (
-                <article
-                  className="card"
-                  key={`${evaluation.placeName}-${evaluation.areaName}`}
-                >
-                  <div className="cardHeader">
-                    <div>
-                      <p className="eyebrow">{evaluation.areaName}</p>
-                      <h3>{evaluation.placeName}</h3>
-                    </div>
-                    <div
-                      className="scoreBox"
-                      aria-label={`平均SCORE ${evaluation.averageScore}点`}
-                    >
-                      <span>平均SCORE</span>
-                      <strong className="score">
-                        {evaluation.averageScore}
-                        <span>点</span>
-                      </strong>
-                    </div>
-                  </div>
-                  <div className="cardSummary">
-                    <span>
-                      代表魚種: {evaluation.representativeSpecies.join(" / ")}
-                    </span>
-                    <span>直近釣果日: {evaluation.latestReportDate}</span>
-                    <span>釣果件数: {evaluation.reportCount}</span>
-                    <span>
-                      本人の釣果件数: {evaluation.externalMemoCount}（参考 /
-                      SCORE反映候補）
-                    </span>
-                  </div>
-                  <dl className="facts">
-                    <div>
-                      <dt>地点/エリア</dt>
-                      <dd>{evaluation.placeName}</dd>
-                    </div>
-                    <div>
-                      <dt>評価値</dt>
-                      <dd>平均SCORE {evaluation.averageScore}点</dd>
-                    </div>
-                    <div>
-                      <dt>代表魚種</dt>
-                      <dd>{evaluation.representativeSpecies.join("、")}</dd>
-                    </div>
-                    <div>
-                      <dt>直近釣果日</dt>
-                      <dd>{evaluation.latestReportDate}</dd>
-                    </div>
-                  </dl>
-                  <div className="reasonBlock">
-                    <p>簡易メモ</p>
-                    <p className="muted">{evaluation.memo}</p>
-                    <p className="muted">
-                      本人の釣果は、平均SCOREに使う既存地点SCOREへ参考反映しています。
-                    </p>
-                  </div>
-                </article>
-              ))
-            )}
-          </div>
-        </div>
+        <SpotEvaluationCard
+          selectedSpot={environmentSpot}
+          spots={fishingSpots}
+          selectedSpotId={environmentSpotId}
+          onSelectedSpotIdChange={setEnvironmentSpotId}
+          environment={environment}
+          selectedTime={selectedEnvironmentTime}
+          onSelectedTimeChange={changeSelectedEnvironmentTime}
+          activeTab={spotEvaluationTab}
+          onActiveTabChange={setSpotEvaluationTab}
+          isLoading={isEnvironmentLoading}
+          error={environmentError}
+          details={spotDetails}
+          detailStatus={spotDetailStatus}
+          catches={externalMemos}
+          onShowAllSpecies={openAllSpecies}
+        />
       )}
     </section>
   );
