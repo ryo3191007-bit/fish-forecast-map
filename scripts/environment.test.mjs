@@ -21,12 +21,12 @@ const point = { spotId: 'karatsu-east-port', spotName: '唐津東港', latitude:
 const baseTime = '2026-07-11T00:00';
 const now = () => new Date('2026-07-10T15:10:00.000Z');
 function memoryStorage() { const m = new Map(); return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => m.set(k, v), map: m }; }
-function response(hourly, ok = true, status = 200) { return { ok, status, json: async () => ({ hourly }) }; }
+function response(hourly, ok = true, status = 200, daily) { return { ok, status, json: async () => ({ hourly, daily }) }; }
 function fetcher(weatherHourly, marineHourly, opts = {}) { return async (url, init) => {
   if (opts.abortAware && init?.signal) await new Promise((_, reject) => init.signal.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError')), { once: true }));
   if (opts.fail) throw new Error('fail');
   if (opts.httpFail) return response({}, false, 500);
-  return url.includes('marine-api') ? response(marineHourly) : response(weatherHourly);
+  return url.includes('marine-api') ? response(marineHourly) : response(weatherHourly, true, 200, opts.daily);
 }; }
 const weatherHourly = { time: [baseTime, '2026-07-11T01:00'], temperature_2m: [20, 21], weather_code: [0, 1], precipitation: [0, 1], precipitation_probability: [10, 20], wind_speed_10m: [5, 6], wind_direction_10m: [90, 180], wind_gusts_10m: [8, 9] };
 const marineHourly = { time: [baseTime, '2026-07-11T01:00'], sea_surface_temperature: [22, 23], sea_level_height_msl: [0.1, 0.2], wave_height: [0.5, 0.6], wave_direction: [180, 270], wave_period: [5, 6], ocean_current_velocity: [1, 2], ocean_current_direction: [45, 90] };
@@ -40,6 +40,7 @@ async function seedStaleCache(fetchImpl = fetcher(weatherHourly, marineHourly)) 
   return { st, key, payload };
 }
 
+await test('日の出・日の入りを日付単位で正規化', async () => { const daily={time:['2026-07-11','invalid',null],sunrise:['2026-07-11T05:18','2026-07-12T05:19','x'],sunset:['2026-07-11T19:30',null,'x']};const result=await svc.fetchFishingEnvironment(point,{fetchImpl:fetcher(weatherHourly,marineHourly,{daily}),storage:memoryStorage(),now});assert.deepEqual(result.dailySun,[{date:'2026-07-11',sunrise:'2026-07-11T05:18',sunset:'2026-07-11T19:30'}]);});
 await test('Weather/Marine同時成功と時刻統合', async () => {
   const result = await svc.fetchFishingEnvironment(point, { fetchImpl: fetcher(weatherHourly, marineHourly), storage: memoryStorage(), now });
   assert.equal(result.weatherAvailable, true); assert.equal(result.marineAvailable, true); assert.equal(result.hourly.length, 2);
