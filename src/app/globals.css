@@ -215,6 +215,26 @@ p {
   overflow-y: auto;
   padding: 2px 2px 4px;
 }
+.speciesFilterGroup {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid rgba(125, 211, 252, 0.16);
+  border-radius: 12px;
+  background: rgba(8, 47, 73, 0.28);
+}
+.speciesFilterGroupLabel {
+  display: block;
+  margin: 0 2px 7px;
+  color: #bae6fd;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+.speciesFilterGroupChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
 .areaChips {
   max-height: 104px;
 }
@@ -634,6 +654,10 @@ dd {
   .speciesChip {
     flex: 0 0 auto;
     scroll-snap-align: start;
+  }
+  .speciesFilterGroup {
+    flex: 0 0 auto;
+    min-width: max-content;
   }
   .cards {
     grid-template-columns: 1fr;

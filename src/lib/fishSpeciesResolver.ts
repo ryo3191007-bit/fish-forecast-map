@@ -1,4 +1,4 @@
-import { fishSpeciesIdByName, type FishSpecies, type FishSpeciesAlias, type FishSpeciesId, type FishSpeciesResolution } from "@/domain/fishing";
+import { createStaticFishSpecies, fishSpeciesIdByName, type FishSpecies, type FishSpeciesAlias, type FishSpeciesId, type FishSpeciesResolution } from "@/domain/fishing";
 
 export function createFishSpeciesMatchKey(input: string): string {
   return input.normalize("NFKC").trim().toLowerCase();
@@ -6,19 +6,14 @@ export function createFishSpeciesMatchKey(input: string): string {
 
 export const staticFishSpeciesAliases: readonly FishSpeciesAlias[] = [
   ...Object.entries(fishSpeciesIdByName).map(([aliasName, fishSpeciesId], index) => ({
-    id: `00000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
+    id: `00000000-0000-4000-8000-${String(index < 15 ? index + 1 : index + 85).padStart(12, "0")}`,
     fishSpeciesId, aliasName, matchKey: createFishSpeciesMatchKey(aliasName), approvalStatus: "approved" as const, isActive: true,
   })),
   { id: "00000000-0000-4000-8000-000000000016", fishSpeciesId: "chinu", aliasName: "黒鯛", matchKey: "黒鯛", approvalStatus: "approved", isActive: true },
   { id: "00000000-0000-4000-8000-000000000017", fishSpeciesId: "chinu", aliasName: "クロダイ", matchKey: "クロダイ", approvalStatus: "approved", isActive: true },
 ];
 
-export const staticFishSpecies: readonly FishSpecies[] = Object.entries(fishSpeciesIdByName).map(([nameJa, id]) => ({
-  id,
-  nameJa,
-  category: nameJa === "青物" || nameJa === "根魚" ? "category" : nameJa.includes("イカ") ? "squid" : "fish",
-  seasonMonths: [],
-})) as FishSpecies[];
+export const staticFishSpecies: readonly FishSpecies[] = createStaticFishSpecies();
 
 export function resolveFishSpeciesName(input: string, species: readonly FishSpecies[], aliases: readonly FishSpeciesAlias[]): FishSpeciesResolution {
   const matchKey = createFishSpeciesMatchKey(input);
@@ -48,5 +43,10 @@ export function fishSpeciesNamesMatch(left: string, right: string, species: read
 }
 
 export function filterByFishSpecies<T>(items: readonly T[], selectedName: string, getName: (item: T) => string, species: readonly FishSpecies[], aliases: readonly FishSpeciesAlias[]) {
-  return items.filter((item) => fishSpeciesNamesMatch(getName(item), selectedName, species, aliases));
+  const selectedId = resolveFishSpeciesId(selectedName, species, aliases);
+  const selected = species.find((item) => item.id === selectedId);
+  return items.filter((item) => {
+    const itemId = resolveFishSpeciesId(getName(item), species, aliases);
+    return itemId !== null && (itemId === selectedId || (selected?.entityType === "species_group" && species.find((entry) => entry.id === itemId)?.parentGroupId === selectedId));
+  });
 }

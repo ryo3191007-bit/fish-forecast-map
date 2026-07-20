@@ -1,14 +1,8 @@
-import { fishSpeciesIdByName, type FishSpecies, type FishingReport } from "@/domain/fishing";
+import { createStaticFishSpecies, type FishSpecies, type FishingReport } from "@/domain/fishing";
 import { attachCalculatedForecasts } from "@/domain/forecastScore";
-import { fishSpeciesNames } from "@/domain/fishing";
 import { fishingSpotById } from "@/data/fishingSpots";
 
-export const fishSpecies: FishSpecies[] = fishSpeciesNames.map((nameJa) => ({
-  id: fishSpeciesIdByName[nameJa],
-  nameJa,
-  category: nameJa.includes("イカ") ? "squid" : nameJa === "青物" || nameJa === "根魚" ? "category" : "fish",
-  seasonMonths: [5, 6, 7, 8, 9, 10],
-}));
+export const fishSpecies: FishSpecies[] = createStaticFishSpecies().map((species) => ({ ...species, seasonMonths: [5, 6, 7, 8, 9, 10] }));
 
 const mockSource = {
   sourceName: "MVPモックデータ",
