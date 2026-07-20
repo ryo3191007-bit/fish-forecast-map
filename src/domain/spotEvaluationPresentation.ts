@@ -1,5 +1,39 @@
 import { getNearestForecastTime, type EnvironmentForecastRow, type FishingEnvironment } from "@/domain/environment";
 import type { FishingSpotDetailSet, SpotDetailValue } from "@/domain/fishingSpotDetail";
+import type { ScoreV2SpeciesResult } from "@/domain/scoreV2";
+
+export type AllSpeciesHistoryState = {
+  view: "all-species";
+  spotId: string;
+  selectedTime: string | null;
+};
+
+export function sortAllSpeciesResults(results: readonly ScoreV2SpeciesResult[]) {
+  const group = (item: ScoreV2SpeciesResult) => item.informationStatus === "no_information" ? 2 : item.overallScore === null ? 1 : 0;
+  return [...results].sort((a, b) => {
+    const groupDifference = group(a) - group(b);
+    if (groupDifference) return groupDifference;
+    if (group(a) === 0) return (b.overallScore ?? -1) - (a.overallScore ?? -1);
+    if (group(a) === 1) return (b.spotCompatibilityScore ?? -1) - (a.spotCompatibilityScore ?? -1);
+    return 0;
+  });
+}
+
+export function filterSpeciesResults(results: readonly ScoreV2SpeciesResult[], query: string) {
+  const normalized = query.trim().toLocaleLowerCase("ja");
+  return normalized ? results.filter((item) => item.species.toLocaleLowerCase("ja").includes(normalized)) : [...results];
+}
+
+export function isValidAllSpeciesHistoryState(
+  value: unknown,
+  spotIds: readonly string[],
+  forecastTimes: readonly string[],
+): value is AllSpeciesHistoryState {
+  if (!value || typeof value !== "object") return false;
+  const state = value as Partial<AllSpeciesHistoryState>;
+  return state.view === "all-species" && typeof state.spotId === "string" && spotIds.includes(state.spotId)
+    && (state.selectedTime === null || (typeof state.selectedTime === "string" && forecastTimes.includes(state.selectedTime)));
+}
 
 export type SpotDetailLoadStatus = "idle" | "loading" | "ready" | "failed";
 

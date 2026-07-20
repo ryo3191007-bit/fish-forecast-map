@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import {
   fishSpeciesNames,
@@ -27,6 +27,9 @@ import {
 } from "@/lib/masterDataRepository";
 import { fetchFishingSpotDetails } from "@/lib/fishingSpotDetailRepository";
 import type { FishingSpotDetailSet } from "@/domain/fishingSpotDetail";
+import { AllSpeciesEvaluation } from "./AllSpeciesEvaluation";
+import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
+import { getEvaluationReferenceTime, scopeSpotDetails, type AllSpeciesHistoryState } from "@/domain/spotEvaluationPresentation";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
@@ -58,6 +61,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [spotEvaluationTab, setSpotEvaluationTab] = useState<SpotEvaluationTab>("評価");
+  const [showAllSpecies, setShowAllSpecies] = useState(false);
+  const allSpeciesOrigin = useRef<AllSpeciesHistoryState | null>(null);
   const [selectedEnvironmentTime, setSelectedEnvironmentTime] = useState<
     string | null
   >(null);
@@ -93,6 +98,23 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [spotDetails, setSpotDetails] = useState<FishingSpotDetailSet | null>(null);
   const [spotDetailStatus, setSpotDetailStatus] = useState<SpotDetailLoadStatus>("idle");
   const changeSelectedEnvironmentTime = useCallback((time: string | null) => setSelectedEnvironmentTime(time), []);
+  const closeAllSpecies = useCallback(() => {
+    const origin = allSpeciesOrigin.current;
+    if (origin) {
+      setEnvironmentSpotId(origin.spotId);
+      setSelectedEnvironmentTime(origin.selectedTime);
+    }
+    setDashboardMode("spotEvaluation");
+    setSpotEvaluationTab("評価");
+    setShowAllSpecies(false);
+    allSpeciesOrigin.current = null;
+  }, []);
+  useEffect(() => {
+    const onPopState = () => { if (allSpeciesOrigin.current) closeAllSpecies(); };
+    window.addEventListener("popstate", onPopState);
+    if (window.location.hash === "#all-species") window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [closeAllSpecies]);
   useEffect(() => {
     let isActive = true;
     fetchMasterData()
@@ -319,6 +341,33 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     setStartDate("");
     setEndDate("");
   };
+
+  const openAllSpecies = () => {
+    if (!environmentSpot) return;
+    const origin: AllSpeciesHistoryState = { view: "all-species", spotId: environmentSpot.id, selectedTime: selectedEnvironmentTime };
+    allSpeciesOrigin.current = origin;
+    setSpotEvaluationTab("評価");
+    setShowAllSpecies(true);
+    window.history.pushState(origin, "", "#all-species");
+  };
+  const requestCloseAllSpecies = () => {
+    if (window.history.state?.view === "all-species") window.history.back();
+    else closeAllSpecies();
+  };
+  const allSpeciesResults = environmentSpot ? calculateProductionScoreV2({
+    spot: environmentSpot,
+    details: spotDetailStatus === "ready" ? scopeSpotDetails(spotDetails, environmentSpot.id) : null,
+    catches: externalMemos,
+    environment,
+    selectedDateTime: getEvaluationReferenceTime(selectedEnvironmentTime),
+  }).speciesResults : [];
+
+  if (showAllSpecies && environmentSpot) return <AllSpeciesEvaluation
+    spotName={environmentSpot.name}
+    selectedTime={selectedEnvironmentTime}
+    results={allSpeciesResults}
+    onBack={requestCloseAllSpecies}
+  />;
 
   return (
     <section className="dashboard" id="map">
@@ -574,6 +623,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             details={spotDetails}
             detailStatus={spotDetailStatus}
             catches={externalMemos}
+            onShowAllSpecies={openAllSpecies}
           />
           {/* Legacy aggregate cards are replaced by the selected spot's SCORE v2 card. */}
           <div className="cards legacySpotEvaluations" id="reports" hidden>
