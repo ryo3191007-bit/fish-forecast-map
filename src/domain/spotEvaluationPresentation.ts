@@ -172,11 +172,11 @@ export function formatSpotDetailValue(item: SpotDetailValue | undefined) {
 }
 
 export function findDisplayableSpotDetail(details: FishingSpotDetailSet | null, itemKey: string) {
-  const matchingValues = details?.values.filter((value) => value.itemKey === itemKey) ?? [];
-  return matchingValues.find((value) =>
-    value.adoptionStatus === "adopted"
+  return details?.values.find((value) =>
+    value.itemKey === itemKey
     && value.informationState !== "rejected"
-  ) ?? matchingValues.find((value) => value.informationState === "rejected");
+    && value.adoptionStatus === "adopted"
+  );
 }
 
 export function scopeSpotDetails(details: FishingSpotDetailSet | null, selectedSpotId: string) {

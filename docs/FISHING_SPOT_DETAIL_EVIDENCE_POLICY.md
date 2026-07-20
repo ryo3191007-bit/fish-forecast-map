@@ -25,13 +25,13 @@
 - `low`: 地点への直接性はあるが、民間単独、古い資料、推定を含む。参考値として採用でき、UIに「信憑性: 低」を併記する。
 - `researched_unknown`: 調査対象資料を確認したが値を確定できない。
 - `unresearched`: 対象項目の調査記録がない。
-- `rejected`: 矛盾、地点不一致、直接性不足等により不採用。値は表示せず、調査済みの状態だけを表示する。
+- `rejected`: 矛盾、地点不一致、直接性不足等により不採用。監査記録では `unresearched` に変換せず区別して保持するが、通常UIには項目行も値も表示しない。
 
 `has_evidence` / `weak_evidence` の採用値だけが confidence を持つ。unknown/rejected は値と confidence を持たない。安全・利用可否の肯定は `low` の根拠だけでは採用しない。
 
 ## 4. 表示とレビュー
 
-採用済みの `high` / `medium` / `low` は値と信憑性を表示する。`researched_unknown` は「調査済み・未確定」、`unresearched` または行欠落は「未調査」と表示する。`rejected` は値を伏せて「調査済み・不採用」と表示し、行欠落と混同しない。「不明」を設備の「なし」へ置換しない。
+採用済みかつ `rejected` ではない `high` / `medium` / `low` は値と信憑性を表示する。`researched_unknown` は「調査済み・未確定」、`unresearched` は「未調査」と表示する。`rejected` しかない項目と行欠落は通常UIで行自体を表示しない。一方、監査データ上の `rejected` は `unresearched` へ変換せず、調査して不採用にした記録として維持する。「不明」を設備の「なし」へ置換しない。
 
 判断が分かれる項目は候補値を断定せず、`candidate` または `needs_recheck` としてレビューへ回す。利用可否・閉鎖情報は更新され得るため、利用者は現地掲示と管理者の最新情報を優先する。
 
