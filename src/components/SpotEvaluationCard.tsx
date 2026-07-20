@@ -15,7 +15,7 @@ import type {
   SpotDetailConfidence,
 } from "@/domain/fishingSpotDetail";
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
-import { formatSpotDetailValue, getEnvironmentStatusLabel, getEvaluationReferenceTime, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
+import { findDisplayableSpotDetail, formatSpotDetailValue, getEnvironmentStatusLabel, getEvaluationReferenceTime, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形";
 
@@ -155,7 +155,7 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
 
 function DetailTab({ details, status, items }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[] }) {
   if (status === "loading") return <StateMessage>地点詳細を取得中です…</StateMessage>;
-  if (status === "failed") return <StateMessage>地点詳細を取得できませんでした。情報なしとして扱います。</StateMessage>;
-  return <dl className="detailGrid">{items.map(([key, label]) => { const item = details?.values.find((value) => value.itemKey === key && value.adoptionStatus === "adopted"); return <div key={key}><dt>{label}</dt><dd>{formatSpotDetailValue(item)}{item && item.confidence ? <span className={`confidence ${item.confidence}`}>信憑性: {confidenceLabel[item.confidence]}</span> : null}</dd></div>; })}</dl>;
+  if (status === "failed") return <StateMessage>地点詳細を取得できませんでした。状態を表示できません。</StateMessage>;
+  return <dl className="detailGrid">{items.map(([key, label]) => { const item = findDisplayableSpotDetail(details, key); return <div key={key}><dt>{label}</dt><dd>{formatSpotDetailValue(item)}{item?.confidence ? <span className={`confidence ${item.confidence}`}>信憑性: {confidenceLabel[item.confidence]}</span> : null}</dd></div>; })}</dl>;
 }
 function StateMessage({ children }: { children: React.ReactNode }) { return <p className="spotEvaluationState" role="status">{children}</p>; }

@@ -1,0 +1,280 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 203,
+  "reviewedAt": "2026-07-20",
+  "basis": "data/curation/fishing-spots/issue-181-detail-initial-data.json",
+  "newWebResearchPerformed": false,
+  "policyDocument": "docs/FISHING_SPOT_DETAIL_EVIDENCE_POLICY.md",
+  "spots": [
+    {
+      "spotId": "nokita-port",
+      "researchSource": "data/research/fishing-spots/nokita-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 1,
+        "medium": 2,
+        "low": 0,
+        "researched_unknown": 11,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "nokita-beach",
+      "researchSource": "data/research/fishing-spots/nokita-beach.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "keya-port",
+      "researchSource": "data/research/fishing-spots/keya-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 1,
+        "medium": 2,
+        "low": 0,
+        "researched_unknown": 11,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "keya-gate",
+      "researchSource": "data/research/fishing-spots/keya-gate.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "funakoshi-port",
+      "researchSource": "data/research/fishing-spots/funakoshi-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 1,
+        "medium": 2,
+        "low": 0,
+        "researched_unknown": 11,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "kishi-port",
+      "researchSource": "data/research/fishing-spots/kishi-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "fukuyoshi-port",
+      "researchSource": "data/research/fishing-spots/fukuyoshi-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "hamasaki-beach",
+      "researchSource": "data/research/fishing-spots/hamasaki-beach.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "niji-matsubara",
+      "researchSource": "data/research/fishing-spots/niji-matsubara.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "karatsu-east-port",
+      "researchSource": "data/research/fishing-spots/karatsu-east-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 1,
+        "medium": 2,
+        "low": 3,
+        "researched_unknown": 8,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "karatsu-west-port",
+      "researchSource": "data/research/fishing-spots/karatsu-west-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "yobuko-area",
+      "researchSource": "data/research/fishing-spots/yobuko-area.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "imari-inner-bay",
+      "researchSource": "data/research/fishing-spots/imari-inner-bay.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 2,
+        "low": 0,
+        "researched_unknown": 12,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "fukushima-area",
+      "researchSource": "data/research/fishing-spots/fukushima-area.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "takashima-area",
+      "researchSource": "data/research/fishing-spots/takashima-area.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "tabira-port",
+      "researchSource": "data/research/fishing-spots/tabira-port.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "researched_unknown": 13,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "hirado-seto",
+      "researchSource": "data/research/fishing-spots/hirado-seto.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    },
+    {
+      "spotId": "ikitsuki-area",
+      "researchSource": "data/research/fishing-spots/ikitsuki-area.json",
+      "reviewSources": [],
+      "resultCounts": {
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "researched_unknown": 14,
+        "unresearched": 0,
+        "rejected": 0
+      },
+      "decision": "existing_evidence_reclassified",
+      "reviewNote": "既存の調査JSON・レビュー資料・sourceのみを項目別基準で再判定。採用値は維持し、根拠不足の値は推測採用せず調査済み未確定として維持した。"
+    }
+  ]
+}

@@ -159,13 +159,24 @@ const detailLabels: Record<string, string> = {
 };
 
 export function formatSpotDetailValue(item: SpotDetailValue | undefined) {
-  if (!item || !["has_evidence", "weak_evidence"].includes(item.informationState)) return "情報なし";
+  if (!item) return "未調査";
+  if (item.informationState === "researched_unknown") return "調査済み・未確定";
+  if (item.informationState === "unresearched") return "未調査";
+  if (item.informationState === "rejected") return "";
   const label = (value: string) => detailLabels[value] ?? (/^[a-z0-9_.:-]+$/i.test(value) ? "その他の確認済み情報" : value);
   if (item.valueTextList.length) return item.valueTextList.map(label).join("、");
   if (item.valueText) return label(item.valueText);
   if (item.valueNumber !== null) return `${item.valueNumber}${item.unit ?? ""}`;
   if (item.valueBoolean !== null) return item.valueBoolean ? "あり" : "なし";
-  return "情報なし";
+  return "調査済み・未確定";
+}
+
+export function findDisplayableSpotDetail(details: FishingSpotDetailSet | null, itemKey: string) {
+  return details?.values.find((value) =>
+    value.itemKey === itemKey
+    && value.adoptionStatus === "adopted"
+    && value.informationState !== "rejected"
+  );
 }
 
 export function scopeSpotDetails(details: FishingSpotDetailSet | null, selectedSpotId: string) {
