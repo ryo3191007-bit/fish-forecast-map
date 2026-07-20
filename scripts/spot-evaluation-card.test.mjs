@@ -48,7 +48,12 @@ assert.equal(presentation.scopeSpotDetails(mixedDetails, "new").values[0].valueT
 assert.equal(presentation.scopeSpotDetails(mixedDetails, "missing"), null, "loading or failed selection cannot retain old details");
 assert.equal(presentation.formatSpotDetailValue(value("new", "open_sea")), "外海");
 assert.equal(presentation.formatSpotDetailValue(value("new", "fishing_port")), "漁港");
-assert.equal(presentation.formatSpotDetailValue(value("new", "river_influence:none")), "河川の影響なし");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "none"), itemKey: "river_influence" }), "河川の影響なし");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "weak"), itemKey: "river_influence" }), "河川の影響が弱い");
+for (const [enumValue, label] of Object.entries({ open_sea: "外海", bay_mouth: "湾口", bay: "湾内", inner_bay: "内湾" })) {
+  assert.equal(presentation.formatSpotDetailValue({ ...value("new", enumValue), itemKey: "open_sea_bay_character" }), label);
+}
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "none"), itemKey: "open_sea_bay_character" }), "その他の確認済み情報", "enum labels are selected by item key and value together");
 assert.equal(presentation.formatSpotDetailValue(value("new", "unknown_internal_code")), "その他の確認済み情報");
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), informationState: "researched_unknown" }), "調査済み・未確定");
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), informationState: "unresearched" }), "未調査");
@@ -62,6 +67,9 @@ assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "target_s
 assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "parking"), undefined, "rejected evidence is excluded from the normal UI");
 assert.notEqual(presentation.formatSpotDetailValue(visibilityDetails.values[1]), "未調査", "rejected evidence retains its state instead of being converted to unresearched");
 assert.ok(card.includes("items.flatMap") && card.includes("return item ?"), "detail rows without displayable adopted evidence are omitted");
+assert.ok(card.includes('["fishable_area", "釣り可能範囲"]') && !card.includes('["fishing_range", "釣り可能範囲"]'), "the fishing tab uses the split fishable-area key");
+for (const key of ["tidal_flow", "river_influence", "open_sea_bay_character"]) assert.ok(card.includes(`["${key}",`), `the terrain tab displays ${key} independently`);
+assert.ok(!card.includes('["water_flow_influences",'), "the legacy composite is absent from the normal UI");
 
 const environment = (cacheStatus, fetchStatus, warning = null) => ({ cacheStatus, fetchStatus, warning });
 assert.equal(presentation.getEnvironmentStatusLabel(environment("fresh", "success"), null), "最新データ");

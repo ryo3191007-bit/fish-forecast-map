@@ -30,6 +30,14 @@ for (const spot of curation.spots) {
     }
   }
 }
+const curatedEnumValues = new Map(expectedKeys.map((key) => [key, new Set()]));
+for (const spot of curation.spots) for (const value of spot.values) if (value.valueText) curatedEnumValues.get(value.itemKey).add(value.valueText);
+assert.deepEqual([...curatedEnumValues.get("river_influence")].sort(), ["weak"]);
+assert.deepEqual([...curatedEnumValues.get("open_sea_bay_character")].sort(), ["bay", "bay_mouth", "inner_bay", "open_sea"]);
+for (const spot of curation.spots) {
+  const river = spot.values.find((value) => value.itemKey === "river_influence");
+  assert.notEqual(river.valueText, "none", `${spot.spotId} must not infer no river influence solely from an absent mapped large river`);
+}
 assert.doesNotMatch(JSON.stringify(curation.spots.flatMap((spot) => spot.values)), /water_flow_influences/);
 for (const key of expectedKeys) {
   assert.match(migration, new RegExp(`'${key}'`));

@@ -87,12 +87,12 @@ function buildIssue181StaticValues(spotIds: Set<string>): SpotDetailValue[] {
         moderationStatus: "not_required",
         reviewStatus: "reviewed",
         adoptionStatus: "adopted",
-        note: value.note,
+        note: null,
         checkedAt: value.checkedAt,
         sources: (["supporting", "checked", "contradicting"] as SpotDetailSourceRelation[]).flatMap((relation) =>
           value.sources[relation].flatMap((sourceId) => {
             const source = activeSourcesById.get(sourceId) ?? sourcesById.get(sourceId);
-            return source ? [{ source, relation, note: null }] : [];
+            return source ? [{ source: { ...source, sourceUrl: null, note: null }, relation, note: null }] : [];
           }),
         ),
       }));

@@ -74,23 +74,23 @@
         {
           "id": "nokita-port:river_influence",
           "itemKey": "river_influence",
-          "informationState": "has_evidence",
-          "valueText": "none",
+          "informationState": "researched_unknown",
+          "valueText": null,
           "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "medium",
-          "note": "地理院地図で代表点周辺に大河川流入口は見えずnoneと推定。ただし机上判読で排水路等の現地状況は未確認。",
+          "confidence": null,
+          "note": "地理院地図で大河川流入口が見えないことだけでは河川影響なしを直接確認できないため、調査済み・未確定とした。小水路・排水、降雨後や季節による影響は追加確認が必要。",
           "checkedAt": "2026-07-17",
           "reviewStatus": "reviewed",
           "adoptionStatus": "adopted",
           "sources": {
-            "supporting": [
+            "supporting": [],
+            "checked": [
               "nokita-port-src-nokita-gsi-map"
             ],
-            "checked": [],
             "contradicting": []
           }
         },
@@ -299,23 +299,23 @@
         {
           "id": "keya-port:river_influence",
           "itemKey": "river_influence",
-          "informationState": "has_evidence",
-          "valueText": "none",
+          "informationState": "researched_unknown",
+          "valueText": null,
           "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "medium",
-          "note": "地理院地図で代表点近傍に大河川流入口は見えない範囲からnoneと推定。小水路・排水や季節変化は未確認。",
+          "confidence": null,
+          "note": "地理院地図で大河川流入口が見えないことだけでは河川影響なしを直接確認できないため、調査済み・未確定とした。小水路・排水、降雨後や季節による影響は追加確認が必要。",
           "checkedAt": "2026-07-17",
           "reviewStatus": "reviewed",
           "adoptionStatus": "adopted",
           "sources": {
-            "supporting": [
+            "supporting": [],
+            "checked": [
               "keya-port-src-keya-gsi-map"
             ],
-            "checked": [],
             "contradicting": []
           }
         },
@@ -539,23 +539,23 @@
         {
           "id": "funakoshi-port:river_influence",
           "itemKey": "river_influence",
-          "informationState": "has_evidence",
-          "valueText": "none",
+          "informationState": "researched_unknown",
+          "valueText": null,
           "valueTextList": [],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "medium",
-          "note": "地理院地図で船越湾内の代表点近傍に大河川流入口は見えないためnoneと推定。ただし小水路・排水、降雨後の濁りや季節変化は未確認。",
+          "confidence": null,
+          "note": "地理院地図で大河川流入口が見えないことだけでは河川影響なしを直接確認できないため、調査済み・未確定とした。小水路・排水、降雨後や季節による影響は追加確認が必要。",
           "checkedAt": "2026-07-17",
           "reviewStatus": "reviewed",
           "adoptionStatus": "adopted",
           "sources": {
-            "supporting": [
+            "supporting": [],
+            "checked": [
               "funakoshi-port-src-funakoshi-gsi-map"
             ],
-            "checked": [],
             "contradicting": []
           }
         },
