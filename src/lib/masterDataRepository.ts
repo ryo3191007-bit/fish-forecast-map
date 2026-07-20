@@ -32,6 +32,10 @@ async function selectRows<T>(tableName: string, columns = "*"): Promise<MasterDa
   return { data: (data ?? []) as T[], meta: { source: "supabase" } };
 }
 
+export function mapSuccessfulFishSpeciesAliasRows(rows: readonly FishSpeciesAliasRow[]): FishSpeciesAlias[] {
+  return rows.map(mapFishSpeciesAliasRow).filter((row): row is FishSpeciesAlias => row !== null);
+}
+
 export async function fetchFishSpeciesMaster(): Promise<MasterDataResult<FishSpecies[]>> {
   const result = await selectRows<FishSpeciesRow>("fish_species", "id,name_ja,category,season_months,display_order,is_active");
   if (result.meta.source !== "supabase") return fallback(staticFishSpecies, result.meta.fallbackReason ?? "supabase-error", result.meta.message);
@@ -42,8 +46,8 @@ export async function fetchFishSpeciesMaster(): Promise<MasterDataResult<FishSpe
 export async function fetchFishSpeciesAliases(): Promise<MasterDataResult<FishSpeciesAlias[]>> {
   const result = await selectRows<FishSpeciesAliasRow>("fish_species_aliases", "id,fish_species_id,alias_name,match_key,approval_status,is_active");
   if (result.meta.source !== "supabase") return fallback([...staticFishSpeciesAliases], result.meta.fallbackReason ?? "supabase-error", result.meta.message);
-  const mapped = result.data.map(mapFishSpeciesAliasRow).filter((row): row is FishSpeciesAlias => row !== null);
-  return mapped.length > 0 ? { data: mapped, meta: result.meta } : fallback([...staticFishSpeciesAliases], "empty-supabase-result");
+  const mapped = mapSuccessfulFishSpeciesAliasRows(result.data);
+  return { data: mapped, meta: result.meta };
 }
 
 export async function fetchFishingSpotsMaster(): Promise<MasterDataResult<FishingSpot[]>> {

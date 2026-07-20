@@ -46,6 +46,20 @@ create policy "Public reads approved active fish species aliases"
   to anon, authenticated
   using (approval_status = 'approved' and is_active = true);
 
+-- A baseline-only database has the table definition but no seed rows. Guarantee only
+-- missing parents; existing production master rows remain untouched.
+insert into public.fish_species (id, name_ja, category, season_months, display_order, is_active)
+values
+  ('aji', 'アジ', 'fish', '{}', 1, true), ('saba', 'サバ', 'fish', '{}', 2, true),
+  ('iwashi', 'イワシ', 'fish', '{}', 3, true), ('aomono', '青物', 'category', '{}', 4, true),
+  ('shiira', 'シイラ', 'fish', '{}', 5, true), ('hirame', 'ヒラメ', 'fish', '{}', 6, true),
+  ('magochi', 'マゴチ', 'fish', '{}', 7, true), ('seabass', 'シーバス', 'fish', '{}', 8, true),
+  ('aoriika', 'アオリイカ', 'squid', '{}', 9, true), ('yariika', 'ヤリイカ', 'squid', '{}', 10, true),
+  ('kouika', 'コウイカ', 'squid', '{}', 11, true), ('chinu', 'チヌ', 'fish', '{}', 12, true),
+  ('madai', '真鯛', 'fish', '{}', 13, true), ('kisu', 'キス', 'fish', '{}', 14, true),
+  ('rockfish', '根魚', 'category', '{}', 15, true)
+on conflict (id) do nothing;
+
 insert into public.fish_species_aliases
   (id, fish_species_id, alias_name, match_key, approval_status, is_active, approved_by, approved_at)
 select

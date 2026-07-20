@@ -31,6 +31,7 @@ import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
 import type { JmaWarningDecision } from "@/domain/jmaWarning";
 import { fetchJmaWarningDecision } from "@/services/jmaWarnings";
 import { getEvaluationReferenceTime, isValidAllSpeciesHistoryState, resolveAllSpeciesReturnState, resolveInitialAllSpeciesHash, scopeSpotDetails, type AllSpeciesHistoryState } from "@/domain/spotEvaluationPresentation";
+import { fishSpeciesNamesMatch } from "@/lib/fishSpeciesResolver";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
@@ -46,6 +47,10 @@ function getFishSpeciesFilterNames(
     .map((species) => species.nameJa)
     .filter((name): name is FishSpeciesName => fishSpeciesNames.includes(name));
   return names.length > 0 ? names : [...fishSpeciesNames];
+}
+
+export function memoMatchesFishSpecies(memoSpecies: string, selectedSpecies: FishSpeciesName | "all", masterData: MasterDataSet) {
+  return selectedSpecies === "all" || fishSpeciesNamesMatch(memoSpecies, selectedSpecies, masterData.fishSpecies, masterData.fishSpeciesAliases);
 }
 
 type FishingDashboardProps = { auth: ReturnType<typeof useSupabaseAuth> };
@@ -131,9 +136,9 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const speciesCounts = useMemo(() => {
     return fishSpeciesFilterNames.map((species) => ({
       species,
-      count: manualCatchMemos.filter((memo) => memo.species === species).length,
+      count: manualCatchMemos.filter((memo) => memoMatchesFishSpecies(String(memo.species), species, masterData)).length,
     }));
-  }, [fishSpeciesFilterNames, manualCatchMemos]);
+  }, [fishSpeciesFilterNames, manualCatchMemos, masterData]);
   const areaCounts = useMemo(() => {
     const counts = new Map<string, number>();
     manualCatchMemos.forEach((memo) => {
@@ -152,13 +157,12 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const normalizedKeyword = searchKeyword.trim().toLowerCase();
 
   const adjustedMockFishingReports = useMemo(() => {
-    return applyExternalMemoScoreAdjustments(mockFishingReports, externalMemos);
-  }, [externalMemos]);
+    return applyExternalMemoScoreAdjustments(mockFishingReports, externalMemos, undefined, masterData);
+  }, [externalMemos, masterData]);
 
   const filteredManualCatchMemos = useMemo(() => {
     const filteredMemos = manualCatchMemos.filter((memo) => {
-      const matchesSpecies =
-        selectedSpecies === "all" || memo.species === selectedSpecies;
+      const matchesSpecies = memoMatchesFishSpecies(String(memo.species), selectedSpecies, masterData);
       const matchesArea =
         selectedArea === "all" || memo.areaName === selectedArea;
       const matchesDate =
@@ -189,6 +193,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   }, [
     endDate,
     manualCatchMemos,
+    masterData,
     normalizedKeyword,
     selectedArea,
     selectedSort,
@@ -393,6 +398,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     catches: externalMemos,
     environment,
     jmaWarning,
+    fishSpecies: masterData.fishSpecies,
+    fishSpeciesAliases: masterData.fishSpeciesAliases,
     selectedDateTime: getEvaluationReferenceTime(selectedEnvironmentTime),
   }) : null;
 
