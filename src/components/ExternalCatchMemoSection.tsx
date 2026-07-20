@@ -14,6 +14,7 @@ import {
   type FishingMethod,
 } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
+import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
 
 const methodOptions: FishingMethod[] = [
   "ジギング",
@@ -339,13 +340,7 @@ export function ExternalCatchMemoSection({
                   >
                     <option value="">選択してください</option>
                     {editingMemo && !fishSpecies.find((item) => item.nameJa === editingMemo.species)?.isSelectable ? <option value={editingMemo.species}>{legacySpeciesLabel(editingMemo.species as FishSpeciesName)}</option> : null}
-                    {[
-                      ["青物系", fishSpecies.filter((item) => item.isSelectable && item.parentGroupId === "aomono")],
-                      ["根魚 > ハタ類", fishSpecies.filter((item) => item.isSelectable && item.uiSubgroup === "ハタ類")],
-                      ["根魚（その他）", fishSpecies.filter((item) => item.isSelectable && item.parentGroupId === "rockfish" && item.uiSubgroup !== "ハタ類")],
-                      ["イカ・頭足類", fishSpecies.filter((item) => item.isSelectable && ["squid_species", "cephalopod_species"].includes(item.entityType))],
-                      ["その他", fishSpecies.filter((item) => item.isSelectable && !item.parentGroupId && !["squid_species", "cephalopod_species"].includes(item.entityType))],
-                    ].map(([label, options]) => <optgroup key={label as string} label={label as string}>{(options as FishSpecies[]).map((item) => <option key={item.id} value={item.nameJa}>{item.nameJa}</option>)}</optgroup>)}
+                    {groupSelectableFishSpecies(fishSpecies).map(({ label, items }) => <optgroup key={label} label={label}>{items.map((item) => <option key={item.id} value={item.nameJa}>{item.nameJa}</option>)}</optgroup>)}
                   </select>
                 </label>
                 <label>
