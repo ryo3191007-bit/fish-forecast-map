@@ -140,13 +140,15 @@ function environmentEvidence(environment:FishingEnvironment|null,selected:string
 
 export function buildScoreV2SpeciesInput(args:{species:FishSpeciesName;spot:FishingSpot;details?:FishingSpotDetailSet|null;catches?:ExternalCatchRecord[];environment?:FishingEnvironment|null;selectedDateTime:string}):ScoreV2SpeciesInput {
   const {species}=args; if(!SCORE_V2_SUPPORTED_SPECIES.includes(species as SupportedSpecies))return {species,spot:args.spot,selectedDateTime:args.selectedDateTime}; const supported=species as SupportedSpecies;
-  return {species,spot:args.spot,selectedDateTime:args.selectedDateTime,spotEvidence:{directSpecies:directSpecies(args.details,supported),habitat:habitat(args.details,supported),catchHistory:catchHistory(args.catches??[],args.spot.id,supported,args.selectedDateTime),methodAffinity:methodAffinity(args.details,supported)},environmentEvidence:environmentEvidence(args.environment??null,args.selectedDateTime,supported).evidence};
+  const details=args.details?{...args.details,values:args.details.values.filter((value)=>value.spotId===args.spot.id)}:null;
+  return {species,spot:args.spot,selectedDateTime:args.selectedDateTime,spotEvidence:{directSpecies:directSpecies(details,supported),habitat:habitat(details,supported),catchHistory:catchHistory(args.catches??[],args.spot.id,supported,args.selectedDateTime),methodAffinity:methodAffinity(details,supported)},environmentEvidence:environmentEvidence(args.environment??null,args.selectedDateTime,supported).evidence};
 }
 
 export function calculateProductionScoreV2(args:{spot:FishingSpot;details?:FishingSpotDetailSet|null;catches?:ExternalCatchRecord[];environment?:FishingEnvironment|null;selectedDateTime:string}):ScoreV2ProductionResult {
-  const speciesResults=fishSpeciesNames.map((species)=>calculateScoreV2ForSpecies(buildScoreV2SpeciesInput({...args,species})));
+  const details=args.details?{...args.details,values:args.details.values.filter((value)=>value.spotId===args.spot.id)}:null;
+  const speciesResults=fishSpeciesNames.map((species)=>calculateScoreV2ForSpecies(buildScoreV2SpeciesInput({...args,details,species})));
   const selected=args.environment?.cacheStatus!=="cache-stale"?args.environment?.hourly.find((r)=>r.forecastTime===args.selectedDateTime):undefined; const unsafe=selected?unsafeReasons(selected):[];
-  const methodResults=methods.map((method)=>calculateScoreV2ForMethod(method,speciesResults,SCORE_V2_METHOD_COMPATIBILITY,buildMethodSpotSuitability(args.details,method)));
+  const methodResults=methods.map((method)=>calculateScoreV2ForMethod(method,speciesResults,SCORE_V2_METHOD_COMPATIBILITY,buildMethodSpotSuitability(details,method)));
   const withoutScores=()=>({speciesResults:speciesResults.map((r)=>({...r,overallScore:null})),methodResults:methodResults.map((r)=>({...r,overallScore:null}))});
   if(unsafe.length)return {status:"unsafe",safetyStatus:"unsafe",unsafeReasons:unsafe,displayMessage:"危険な可能性があるため評価対象外",...withoutScores()};
   if(!selected||!hasCompleteSafetyData(selected))return {status:"safety_unknown",safetyStatus:"unknown",unsafeReasons:[],displayMessage:"安全情報を確認できないため評価対象外",...withoutScores()};

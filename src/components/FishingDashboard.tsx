@@ -13,6 +13,7 @@ import {
   readCachedFishingEnvironment,
 } from "@/services/openMeteo";
 import { SpotEvaluationCard, type SpotEvaluationTab } from "./SpotEvaluationCard";
+import type { SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
 import { FishingMap } from "./FishingMap";
 import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
@@ -90,6 +91,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [environmentError, setEnvironmentError] = useState<string | null>(null);
   const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(false);
   const [spotDetails, setSpotDetails] = useState<FishingSpotDetailSet | null>(null);
+  const [spotDetailStatus, setSpotDetailStatus] = useState<SpotDetailLoadStatus>("idle");
   const changeSelectedEnvironmentTime = useCallback((time: string | null) => setSelectedEnvironmentTime(time), []);
   useEffect(() => {
     let isActive = true;
@@ -275,7 +277,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
         setEnvironment(cachedEnvironment);
         setEnvironmentError(
           cachedEnvironment
-            ? null
+            ? "API更新に失敗したためキャッシュを表示しています。"
             : "Open-Meteoから環境データを取得できませんでした。",
         );
       })
@@ -292,8 +294,12 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
 
   useEffect(() => {
     let active = true;
-    if (!environmentSpot) { setSpotDetails(null); return; }
-    fetchFishingSpotDetails(environmentSpot.id).then((result) => { if (active) setSpotDetails(result.data); });
+    setSpotDetails(null);
+    if (!environmentSpot) { setSpotDetailStatus("idle"); return; }
+    setSpotDetailStatus("loading");
+    fetchFishingSpotDetails(environmentSpot.id)
+      .then((result) => { if (active) { setSpotDetails(result.data); setSpotDetailStatus("ready"); } })
+      .catch(() => { if (active) { setSpotDetails(null); setSpotDetailStatus("failed"); } });
     return () => { active = false; };
   }, [environmentSpot]);
 
@@ -566,6 +572,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             isLoading={isEnvironmentLoading}
             error={environmentError}
             details={spotDetails}
+            detailStatus={spotDetailStatus}
             catches={externalMemos}
           />
           {/* Legacy aggregate cards are replaced by the selected spot's SCORE v2 card. */}

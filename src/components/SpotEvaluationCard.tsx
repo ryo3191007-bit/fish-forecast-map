@@ -13,9 +13,9 @@ import type { FishingSpot } from "@/domain/fishingSpot";
 import type {
   FishingSpotDetailSet,
   SpotDetailConfidence,
-  SpotDetailValue,
 } from "@/domain/fishingSpotDetail";
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
+import { formatSpotDetailValue, getEnvironmentStatusLabel, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形";
 
@@ -30,6 +30,7 @@ type Props = {
   onActiveTabChange: (tab: SpotEvaluationTab) => void;
   environment: FishingEnvironment | null;
   details: FishingSpotDetailSet | null;
+  detailStatus: SpotDetailLoadStatus;
   catches: ExternalCatchRecord[];
   isLoading: boolean;
   error: string | null;
@@ -54,17 +55,11 @@ export function SpotEvaluationCard(props: Props) {
   const rows = useMemo(() => props.environment?.hourly ?? [], [props.environment]);
   const selectedRow = rows.find((row) => row.forecastTime === props.selectedTime) ?? null;
   const selectedIndex = selectedRow ? rows.indexOf(selectedRow) : -1;
-  const selectedDate = selectedRow?.forecastTime.slice(0, 10) ?? "";
+  const selectedDate = (selectedRow?.forecastTime ?? selectedTime ?? "").slice(0, 10);
   const dayRows = rows.filter((row) => row.forecastTime.startsWith(selectedDate));
 
   useEffect(() => {
-    if (!rows.length) {
-      if (selectedTime !== null) onSelectedTimeChange(null);
-      return;
-    }
-    if (!selectedTime || !rows.some((row) => row.forecastTime === selectedTime)) {
-      onSelectedTimeChange(getNearestForecastTime(rows));
-    }
+    if (!selectedTime) onSelectedTimeChange(getNearestForecastTime(rows) ?? currentTokyoHour());
   }, [rows, selectedTime, onSelectedTimeChange]);
 
   return (
@@ -76,7 +71,7 @@ export function SpotEvaluationCard(props: Props) {
       <SpotCombobox spots={props.spots} selected={props.selectedSpot} onSelect={props.onSelectedSpotIdChange} />
 
       <div className="sharedTimeControls" aria-label="評価・環境の共通日時">
-        <label>日付<input type="date" value={selectedDate} disabled={!selectedRow} onChange={(event) => props.onSelectedTimeChange(rows.find((row) => row.forecastTime.startsWith(event.target.value))?.forecastTime ?? props.selectedTime)} /></label>
+        <label>日付<input type="date" value={selectedDate} onChange={(event) => props.onSelectedTimeChange(rows.find((row) => row.forecastTime.startsWith(event.target.value))?.forecastTime ?? `${event.target.value}T${(props.selectedTime ?? currentTokyoHour()).slice(11, 16)}`)} /></label>
         <label>時刻<select value={selectedRow?.forecastTime ?? ""} disabled={!selectedRow} onChange={(event) => props.onSelectedTimeChange(event.target.value)}>{dayRows.map((row) => <option key={row.forecastTime} value={row.forecastTime}>{row.forecastTime.slice(11, 16)}</option>)}</select></label>
         <button type="button" disabled={selectedIndex <= 0} onClick={() => props.onSelectedTimeChange(rows[selectedIndex - 1]?.forecastTime ?? props.selectedTime)}>前の1時間</button>
         <button type="button" disabled={!rows.length} onClick={() => props.onSelectedTimeChange(getNearestForecastTime(rows))}>現在時刻へ戻る</button>
@@ -87,10 +82,10 @@ export function SpotEvaluationCard(props: Props) {
         {tabs.map((tab) => <button type="button" role="tab" id={`spot-tab-${tab}`} aria-selected={props.activeTab === tab} aria-controls={`spot-panel-${tab}`} tabIndex={props.activeTab === tab ? 0 : -1} key={tab} onClick={() => props.onActiveTabChange(tab)}>{tab}</button>)}
       </div>
       <div role="tabpanel" id={`spot-panel-${props.activeTab}`} aria-labelledby={`spot-tab-${props.activeTab}`}>
-        {props.activeTab === "評価" && <EvaluationTab {...props} selectedTime={selectedRow?.forecastTime ?? null} />}
+        {props.activeTab === "評価" && <EvaluationTab {...props} selectedTime={props.selectedTime} />}
         {props.activeTab === "環境" && <EnvironmentTab environment={props.environment} row={selectedRow} loading={props.isLoading} error={props.error} />}
-        {props.activeTab === "釣場" && <DetailTab details={props.details} items={fishingItems} />}
-        {props.activeTab === "地形" && <DetailTab details={props.details} items={terrainItems} />}
+        {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingItems} />}
+        {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainItems} />}
       </div>
     </section>
   );
@@ -120,8 +115,9 @@ function SpotCombobox({ spots, selected, onSelect }: { spots: FishingSpot[]; sel
 }
 
 function EvaluationTab(props: Props & { selectedTime: string | null }) {
-  if (!props.selectedSpot || !props.selectedTime) return <StateMessage>環境データの対象行がないため、総合評価未算出です。</StateMessage>;
-  const result = calculateProductionScoreV2({ spot: props.selectedSpot, details: props.details, catches: props.catches, environment: props.environment, selectedDateTime: props.selectedTime });
+  if (!props.selectedSpot || !props.selectedTime) return <StateMessage>選択日時がないため、総合評価未算出です。</StateMessage>;
+  const details = props.detailStatus === "ready" ? scopeSpotDetails(props.details, props.selectedSpot.id) : null;
+  const result = calculateProductionScoreV2({ spot: props.selectedSpot, details, catches: props.catches, environment: props.environment, selectedDateTime: props.selectedTime });
   const species = result.speciesResults.filter((item) => item.informationStatus !== "no_information").sort((a, b) => (b.overallScore ?? b.spotCompatibilityScore ?? -1) - (a.overallScore ?? a.spotCompatibilityScore ?? -1)).slice(0, 5);
   const methods = result.methodResults.filter((item) => item.informationStatus !== "no_information").sort((a, b) => (b.overallScore ?? -1) - (a.overallScore ?? -1) || (b.spotSuitabilityScore ?? -1) - (a.spotSuitabilityScore ?? -1));
   return <div className="evaluationContent">
@@ -140,7 +136,7 @@ function ConfidenceSummary({ spot, environment }: { spot: { high: number; medium
 
 function EnvironmentTab({ environment, row, loading, error }: { environment: FishingEnvironment | null; row: FishingEnvironment["hourly"][number] | null; loading: boolean; error: string | null }) {
   if (loading && !environment) return <StateMessage>環境データを取得中です…</StateMessage>;
-  if (error) return <StateMessage>APIエラー: 環境データを取得できませんでした。</StateMessage>;
+  if (error && !environment) return <StateMessage>APIエラー: 環境データを取得できませんでした。</StateMessage>;
   if (!environment) return <StateMessage>予報対象外: この地点で表示できる予報がありません。</StateMessage>;
   if (!row) return <StateMessage>対象行欠落: 選択日時の予報行がありません。</StateMessage>;
   const date = row.forecastTime.slice(0, 10); const events = getTideEventsForDate(environment.hourly, date); const badge = getTideEventBadgeForForecastTime(events, row.forecastTime, date);
@@ -150,13 +146,20 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
     ["風", `${value(row.weather?.windSpeedKmh, "km/h")} ${row.weather?.windDirectionLabel ?? "情報なし"} / 突風 ${value(row.weather?.windGustKmh, "km/h")}`], ["海面水温", value(row.marine?.seaSurfaceTemperatureCelsius, "℃")],
     ["波", `${value(row.marine?.waveHeightMeters, "m")} ${row.marine?.waveDirectionLabel ?? "情報なし"} / ${value(row.marine?.wavePeriodSeconds, "秒")}`], ["潮位参考", value(row.marine?.seaLevelHeightMslMeters, "m")],
     ["潮汐参考", `${getTidePhaseName(date)}${badge ? ` / ${badge.label}` : ""}`], ["海流", `${value(row.marine?.oceanCurrentVelocityKmh, "km/h")} ${row.marine?.oceanCurrentDirectionLabel ?? "情報なし"}`],
-    ["データ状態", environment.fetchStatus === "success" ? "取得済み" : environment.fetchStatus === "partial" ? "一部データのみ" : "取得失敗"],
+    ["データ状態", getEnvironmentStatusLabel(environment, error)],
   ];
   return <dl className="detailGrid">{fields.map(([label, text]) => <div key={label}><dt>{label}</dt><dd>{text || "情報なし"}</dd></div>)}</dl>;
 }
 
-function DetailTab({ details, items }: { details: FishingSpotDetailSet | null; items: readonly (readonly [string, string])[] }) {
-  return <dl className="detailGrid">{items.map(([key, label]) => { const item = details?.values.find((value) => value.itemKey === key && value.adoptionStatus === "adopted"); return <div key={key}><dt>{label}</dt><dd>{formatDetail(item)}{item && item.confidence ? <span className={`confidence ${item.confidence}`}>信憑性: {confidenceLabel[item.confidence]}</span> : null}</dd></div>; })}</dl>;
+function DetailTab({ details, status, items }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[] }) {
+  if (status === "loading") return <StateMessage>地点詳細を取得中です…</StateMessage>;
+  if (status === "failed") return <StateMessage>地点詳細を取得できませんでした。情報なしとして扱います。</StateMessage>;
+  return <dl className="detailGrid">{items.map(([key, label]) => { const item = details?.values.find((value) => value.itemKey === key && value.adoptionStatus === "adopted"); return <div key={key}><dt>{label}</dt><dd>{formatSpotDetailValue(item)}{item && item.confidence ? <span className={`confidence ${item.confidence}`}>信憑性: {confidenceLabel[item.confidence]}</span> : null}</dd></div>; })}</dl>;
 }
-function formatDetail(item: SpotDetailValue | undefined) { if (!item || !["has_evidence", "weak_evidence"].includes(item.informationState)) return "情報なし"; if (item.valueTextList.length) return item.valueTextList.join("、"); if (item.valueText) return item.valueText; if (item.valueNumber !== null) return `${item.valueNumber}${item.unit ?? ""}`; if (item.valueBoolean !== null) return item.valueBoolean ? "あり" : "なし"; return "情報なし"; }
 function StateMessage({ children }: { children: React.ReactNode }) { return <p className="spotEvaluationState" role="status">{children}</p>; }
+
+function currentTokyoHour() {
+  const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tokyo", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" }).formatToParts(new Date());
+  const part = (type: string) => parts.find((item) => item.type === type)?.value ?? "";
+  return `${part("year")}-${part("month")}-${part("day")}T${part("hour")}:00`;
+}
