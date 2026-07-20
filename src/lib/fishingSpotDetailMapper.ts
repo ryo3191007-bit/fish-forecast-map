@@ -60,7 +60,7 @@ export function mapSpotDetailValueRow(row: SpotDetailValueRow, itemDefinition?: 
     const relation = enumOrNull(join.relation, relations);
     const sourceType = enumOrNull(source?.source_type, sourceTypes);
     if (!source || !relation || !sourceType) return [];
-    return [{ relation, note: join.note ?? null, source: { id: source.id, sourceType, sourceName: source.source_name, sourceUrl: source.source_url ?? null, checkedOn: source.checked_on ?? null, note: source.note ?? null } }];
+    return [{ relation, note: null, source: { id: source.id, sourceType, sourceName: source.source_name, sourceUrl: null, checkedOn: source.checked_on ?? null, note: null } }];
   });
   if (hasConcreteInformation && !sources.some((source) => source.relation === "supporting")) return null;
 
@@ -82,7 +82,7 @@ export function mapSpotDetailValueRow(row: SpotDetailValueRow, itemDefinition?: 
     moderationStatus,
     reviewStatus,
     adoptionStatus,
-    note: row.note ?? null,
+    note: null,
     checkedAt: row.checked_at ?? null,
     sources,
   };

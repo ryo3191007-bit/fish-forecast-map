@@ -41,13 +41,14 @@ const tabs: SpotEvaluationTab[] = ["評価", "環境", "釣場", "地形"];
 const fishingItems = [
   ["target_species", "対象魚種"], ["recommended_methods", "推奨釣法"],
   ["shore_access", "足場"], ["toilet", "トイレ"], ["lighting", "常夜灯・照明"],
-  ["parking", "駐車場"], ["access", "アクセス情報"], ["fishing_range", "釣り可能範囲"],
+  ["parking", "駐車場"], ["access", "アクセス情報"], ["fishable_area", "釣り可能範囲"],
   ["restriction_status", "釣り禁止・立入禁止・工事・閉鎖等"],
 ] as const;
 const terrainItems = [
   ["depth", "水深"], ["bottom_material", "底質"], ["coastal_topography", "海底・沿岸地形"],
   ["obstacles", "テトラ・根・障害物"], ["spot_features", "堤防・磯・サーフ等の特徴"],
-  ["water_flow_influences", "潮通し・河川影響・外海影響"],
+  ["tidal_flow", "潮通し"], ["river_influence", "河川影響"],
+  ["open_sea_bay_character", "外海・湾内特性"],
 ] as const;
 const confidenceLabel: Record<SpotDetailConfidence, string> = { high: "高", medium: "中", low: "低" };
 

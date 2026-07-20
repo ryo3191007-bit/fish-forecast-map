@@ -158,12 +158,17 @@ const detailLabels: Record<string, string> = {
   "tidal_flow:good": "潮通しが良い", stable: "安定した足場", port: "港", harbor: "港",
 };
 
+const detailEnumLabels: Record<string, Record<string, string>> = {
+  river_influence: { none: "河川の影響なし", weak: "河川の影響が弱い" },
+  open_sea_bay_character: { open_sea: "外海", bay_mouth: "湾口", bay: "湾内", inner_bay: "内湾" },
+};
+
 export function formatSpotDetailValue(item: SpotDetailValue | undefined) {
   if (!item) return "未調査";
   if (item.informationState === "researched_unknown") return "調査済み・未確定";
   if (item.informationState === "unresearched") return "未調査";
   if (item.informationState === "rejected") return "調査済み・不採用";
-  const label = (value: string) => detailLabels[value] ?? (/^[a-z0-9_.:-]+$/i.test(value) ? "その他の確認済み情報" : value);
+  const label = (value: string) => detailEnumLabels[item.itemKey]?.[value] ?? detailLabels[value] ?? (/^[a-z0-9_.:-]+$/i.test(value) ? "その他の確認済み情報" : value);
   if (item.valueTextList.length) return item.valueTextList.map(label).join("、");
   if (item.valueText) return label(item.valueText);
   if (item.valueNumber !== null) return `${item.valueNumber}${item.unit ?? ""}`;
