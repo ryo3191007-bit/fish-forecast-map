@@ -4,14 +4,18 @@ import { decideJmaWarning, isOfficialUrl, parseAtomFeed, parseBulletin, type Ato
 
 const FEED_URL = "https://www.data.jma.go.jp/developer/xml/feed/regular.xml";
 const TIMEOUT_MS = 8_000;
-export const JMA_XML_MAX_BYTES = (() => { const value = Number(process.env.JMA_XML_MAX_BYTES ?? 3_000_000); return Number.isSafeInteger(value) && value >= 2_300_000 ? value : 3_000_000; })();
+export const DEFAULT_JMA_XML_MAX_BYTES = 3_000_000;
+export function resolveJmaXmlMaxBytes(value = process.env.JMA_XML_MAX_BYTES) {
+  const parsed = Number(value ?? DEFAULT_JMA_XML_MAX_BYTES);
+  return Number.isSafeInteger(parsed) && parsed >= 2_300_000 ? parsed : DEFAULT_JMA_XML_MAX_BYTES;
+}
 const CACHE_TTL_MS = 5 * 60_000;
 type CacheValue = { xml: string; fetchedAt: string; expiresAt: number };
 const cache = new Map<string, CacheValue>();
 type LastSuccess = { bulletin: ParsedBulletin; fetchedAt: string };
 const lastSuccessful = { vpws: new Map<string, LastSuccess>(), vpwp: new Map<string, LastSuccess>() };
 
-async function fetchXml(url: string): Promise<CacheValue> {
+export async function fetchJmaXml(url: string): Promise<CacheValue> {
   if (!isOfficialUrl(url)) throw new Error("jma-host-not-allowed");
   const cached = cache.get(url);
   if (cached && cached.expiresAt > Date.now()) return cached;
@@ -23,9 +27,10 @@ async function fetchXml(url: string): Promise<CacheValue> {
     const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
     if (!contentType.includes("xml") && !contentType.includes("octet-stream")) throw new Error("jma-content-type-invalid");
     const length = Number(response.headers.get("content-length") ?? 0);
-    if (length > JMA_XML_MAX_BYTES) throw new Error("jma-response-too-large");
+    const maxBytes = resolveJmaXmlMaxBytes();
+    if (length > maxBytes) throw new Error("jma-response-too-large");
     const bytes = new Uint8Array(await response.arrayBuffer());
-    if (bytes.byteLength > JMA_XML_MAX_BYTES) throw new Error("jma-response-too-large");
+    if (bytes.byteLength > maxBytes) throw new Error("jma-response-too-large");
     const value = { xml: new TextDecoder().decode(bytes), fetchedAt: new Date().toISOString(), expiresAt: Date.now() + CACHE_TTL_MS };
     cache.set(url, value);
     return value;
@@ -37,13 +42,13 @@ export async function getJmaWarningDecision(spotId: string, selectedIso: string,
   const fetchedAt = new Date().toISOString();
   if (!area) return { state: "unknown", reason: "spot-area-not-mapped", phenomena: [], areaName: "区域不明", reportDateTime: null, targetStart: null, targetEnd: null, fetchedAt, bulletinType: null, lastSuccessfulFetchAt: null };
   try {
-    const feed = await fetchXml(FEED_URL);
+    const feed = await fetchJmaXml(FEED_URL);
     const entries = parseAtomFeed(feed.xml);
     const vpwsEntry = entries.filter((entry) => entry.type === "VPWS50").sort((a, b) => b.updated.localeCompare(a.updated))[0];
     const vpwpEntry = entries.filter((entry) => entry.type === "VPWP50" && entry.prefectureCode === area.prefectureEntryCode).sort((a, b) => b.updated.localeCompare(a.updated))[0];
     const load = async (type: "vpws" | "vpwp", entry: AtomEntry | undefined) => {
       if (!entry) throw new Error("required-atom-entry-missing");
-      const xml = await fetchXml(entry.url); const bulletin = parseBulletin(xml.xml, type === "vpws" ? "VPWS50" : "VPWP50", area);
+      const xml = await fetchJmaXml(entry.url); const bulletin = parseBulletin(xml.xml, type === "vpws" ? "VPWS50" : "VPWP50", area);
       lastSuccessful[type].set(spotId, { bulletin, fetchedAt: xml.fetchedAt }); return { bulletin, fetchedAt: xml.fetchedAt };
     };
     const [vpwsResult, vpwpResult] = await Promise.allSettled([load("vpws", vpwsEntry), load("vpwp", vpwpEntry)]);
@@ -60,4 +65,11 @@ export async function getJmaWarningDecision(spotId: string, selectedIso: string,
     const previouslyBlocked = primary?.bulletin.periods.some((period) => period.state === "blocked");
     return decideJmaWarning({ now, selected, area, fetchedAt, lastSuccessfulFetchAt: primary?.fetchedAt ?? null, vpws: vpws?.bulletin, vpwp: vpwp?.bulletin, ...(nearNow ? { vpwsError: previouslyBlocked ? "release-not-confirmed-after-blocked" : "current-bulletin-unavailable" } : { vpwpError: previouslyBlocked ? "release-not-confirmed-after-blocked" : "forecast-bulletin-unavailable" }) });
   }
+}
+
+/** Test isolation for the stateful server cache. */
+export function resetJmaWarningServiceState() {
+  cache.clear();
+  lastSuccessful.vpws.clear();
+  lastSuccessful.vpwp.clear();
 }

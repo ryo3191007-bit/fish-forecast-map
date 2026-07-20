@@ -21,11 +21,15 @@ export function parseAtomFeed(xml: string): AtomEntry[] {
     const links = children(entry, "link");
     const link = links.find((item) => attr(item, "type") === "application/xml");
     const url = attr(link, "href");
-    const match = url.match(/_(VPWS50|VPWP50)_(\d{6})?[^/]*\.xml$/);
-    const type = match?.[1] as JmaBulletinType | undefined;
+    const id = valueAt(entry, "id");
+    const updated = valueAt(entry, "updated");
+    const match = url.match(/\/(\d{14})_\d+_(VPWS50|VPWP50)_(\d{6})?[^/]*\.xml$/);
+    const type = match?.[2] as JmaBulletinType | undefined;
     const expected = type === "VPWS50" ? "気象警報・注意報（Ｒ０６）（集約通報）" : "気象警報・注意報時系列情報（Ｒ０６）";
-    if (!type || title !== expected || !isOfficialUrl(url)) return [];
-    return [{ type, prefectureCode: type === "VPWP50" ? match?.[2] ?? null : null, url, updated: valueAt(entry, "updated") }];
+    const published = Date.parse(updated);
+    const fileTime = match ? Date.parse(`${match[1].slice(0, 4)}-${match[1].slice(4, 6)}-${match[1].slice(6, 8)}T${match[1].slice(8, 10)}:${match[1].slice(10, 12)}:${match[1].slice(12, 14)}Z`) : NaN;
+    if (!type || title !== expected || id !== url || !isOfficialUrl(url) || !Number.isFinite(published) || !Number.isFinite(fileTime) || Math.abs(published - fileTime) > 86_400_000) return [];
+    return [{ type, prefectureCode: type === "VPWP50" ? match?.[3] ?? null : null, url, updated }];
   });
 }
 
@@ -42,6 +46,10 @@ const ACTIVE_STATUSES = new Set(["発表", "継続"]);
 const CLEAR_STATUSES = new Set(["解除"]);
 const UNKNOWN_STATUSES = new Set(["取消", "訂正", "訓練"]);
 const WARNING_NAMES = /強風|暴風|風雪|暴風雪|波浪|雷|大雨|高潮/;
+const VPWS_CODES: Record<string, RegExp> = {
+  "02": /暴風雪/, "03": /大雨/, "04": /暴風/, "06": /波浪/, "07": /高潮/,
+  "10": /大雨/, "13": /風雪/, "14": /雷/, "15": /強風/, "16": /波浪/, "19": /高潮/,
+};
 
 export function parseBulletin(xml: string, expectedType: JmaBulletinType, area: JmaAreaCode): ParsedBulletin {
   validateXml(xml);
@@ -58,9 +66,10 @@ export function parseBulletin(xml: string, expectedType: JmaBulletinType, area: 
   const items = descendants(report, "Item").filter((item) => descendants(item, "Code").some((code) => text(code) === area.municipalityCode));
   if (!items.length) throw new Error("area-missing");
   if (expectedType === "VPWS50") {
-    const statuses = items.flatMap((item) => descendants(item, "Kind")).map((kindNode) => ({ name: valueAt(kindNode, "Name"), code: valueAt(kindNode, "Code"), status: valueAt(kindNode, "Status") || "発表" }));
+    const statuses = items.flatMap((item) => descendants(item, "Kind")).map((kindNode) => ({ name: valueAt(kindNode, "Name"), code: valueAt(kindNode, "Code"), status: valueAt(kindNode, "Status") }));
     const relevant = statuses.filter(({ name }) => WARNING_NAMES.test(name));
-    const unknown = relevant.some(({ code, status: infoStatus }) => !code || code === "00" || UNKNOWN_STATUSES.has(infoStatus) || (!ACTIVE_STATUSES.has(infoStatus) && !CLEAR_STATUSES.has(infoStatus)));
+    const unsupported = statuses.some(({ name }) => name && !WARNING_NAMES.test(name));
+    const unknown = !statuses.length || unsupported || relevant.some(({ name, code, status: infoStatus }) => !VPWS_CODES[code]?.test(name) || UNKNOWN_STATUSES.has(infoStatus) || (!ACTIVE_STATUSES.has(infoStatus) && !CLEAR_STATUSES.has(infoStatus)));
     const active = relevant.filter(({ status: infoStatus }) => ACTIVE_STATUSES.has(infoStatus));
     return { type: expectedType, reportDateTime, status, areaName: area.areaName, periods: [{ start: reportDateTime, end: reportDateTime, state: unknown ? "unknown" : active.length ? "blocked" : "clear", phenomena: active.map(({ name }) => name) }] };
   }
@@ -70,12 +79,12 @@ export function parseBulletin(xml: string, expectedType: JmaBulletinType, area: 
     const duration = /^PT(?:(\d+)H)?(?:(\d+)M)?$/.exec(definition.duration);
     const startMs = Date.parse(definition.start);
     if (!id || !duration || !Number.isFinite(startMs)) throw new Error("invalid-time-define");
-    const properties = items.flatMap((item) => descendants(item, "Property")).filter((property) => valueAt(property, "Type") in SIGNIFICANCY);
+    const properties = items.flatMap((item) => descendants(item, "Property"));
     const values = properties.flatMap((property) => descendants(property, "Significancy").filter((s) => attr(s, "refID") === id).map((s) => ({ type: valueAt(property, "Type"), base: attr(s, "base") || valueAt(s, "Base"), code: valueAt(s, "Code"), name: valueAt(s, "Name") })));
     const allRefs = properties.flatMap((property) => descendants(property, "Significancy")).map((s) => attr(s, "refID"));
     const inconsistent = !values.length || allRefs.some((ref) => !defines.has(ref)) || values.some(({ type, base, code, name }) => {
       const rule = SIGNIFICANCY[type as keyof typeof SIGNIFICANCY];
-      return !rule || (base !== "" && base !== rule.base) || !(code in rule.codes) || rule.codes[code as keyof typeof rule.codes] !== name || code === "00";
+      return !rule || base !== rule.base || !(code in rule.codes) || rule.codes[code as keyof typeof rule.codes] !== name || code === "00";
     });
     const end = new Date(startMs + (+duration[1] || 0) * 3600000 + (+duration[2] || 0) * 60000).toISOString();
     if (inconsistent) return { start: definition.start, end, state: "unknown" as const, phenomena: values.map(({ type }) => type) };
