@@ -11,14 +11,23 @@ const resolve = (name: string, aliases = staticFishSpeciesAliases) => resolveFis
 const batch1Aliases = new Map([
   ["ミズイカ", "aoriika"], ["モイカ", "aoriika"], ["シロギス", "kisu"], ["キスゴ", "kisu"], ["スズキ", "seabass"],
 ] as const);
+const batch2Aliases = new Map([
+  ["アラカブ", "kasago"], ["ガシラ", "kasago"], ["イッサキ", "isaki"], ["アコウ", "kijihata"], ["オグシ", "oniokoze"],
+  ["マチャ", "madai"], ["チャンイオ", "madai"], ["ヤズ", "buri"], ["ハマチ", "buri"], ["サゴシ", "sawara"],
+] as const);
 
 for (const [name, speciesId] of batch1Aliases) {
   const result = resolve(name);
   assert.equal(result.status, "resolved");
   if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
 }
-for (const name of ["セイゴ", "フッコ", "ハネ", "ササイカ", "ハマチ", "ヤズコ", "ヤズ", "ワラサ", "マアジ", "マサバ", "マイワシ"]) {
-  assert.equal(resolve(name).status, "unresolved", `${name} remains outside Issue #211 batch 1`);
+for (const [name, speciesId] of batch2Aliases) {
+  const result = resolve(name);
+  assert.equal(result.status, "resolved");
+  if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
+}
+for (const name of ["セイゴ", "フッコ", "ハネ", "コハダ", "ササイカ", "ヤズコ", "ワラサ", "マアジ", "マサバ", "マイワシ"]) {
+  assert.equal(resolve(name).status, "unresolved", `${name} remains outside Issue #220 batch 2`);
 }
 for (const name of ["チヌ", "黒鯛", "クロダイ"]) {
   const result = resolve(name);
@@ -43,6 +52,12 @@ assert.deepEqual(filterByFishSpecies(list, "クロダイ", (item) => item.specie
 assert.deepEqual(filterByFishSpecies(list, "アジ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), [list[2]]);
 
 for (const [aliasName, speciesId] of batch1Aliases) {
+  const canonicalName = staticFishSpecies.find((species) => species.id === speciesId)?.nameJa;
+  assert.ok(canonicalName);
+  const aliasList = [{ species: aliasName }, { species: canonicalName }, { species: "未登録魚" }];
+  assert.deepEqual(filterByFishSpecies(aliasList, canonicalName, (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), aliasList.slice(0, 2), `${aliasName} is included in canonical search and aggregation`);
+}
+for (const [aliasName, speciesId] of batch2Aliases) {
   const canonicalName = staticFishSpecies.find((species) => species.id === speciesId)?.nameJa;
   assert.ok(canonicalName);
   const aliasList = [{ species: aliasName }, { species: canonicalName }, { species: "未登録魚" }];
