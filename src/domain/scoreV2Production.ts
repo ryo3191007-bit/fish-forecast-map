@@ -17,9 +17,11 @@ import {
 type SupportedSpecies = (typeof SCORE_V2_SUPPORTED_SPECIES)[number];
 type TideState = "上げ潮" | "満潮前後" | "下げ潮" | "干潮前後";
 export type ScoreV2UnsafeReason = "強風" | "突風" | "高波" | "大雨" | "雷雨";
+export type ScoreV2SafetyStatus = "safe" | "unsafe" | "unknown";
 export type ScoreV2ProductionResult =
-  | { status: "available"; unsafeReasons: []; speciesResults: ScoreV2SpeciesResult[]; methodResults: ScoreV2MethodResult[] }
-  | { status: "unsafe"; unsafeReasons: ScoreV2UnsafeReason[]; displayMessage: "危険な可能性があるため評価対象外"; speciesResults: ScoreV2SpeciesResult[]; methodResults: ScoreV2MethodResult[] };
+  | { status: "available"; safetyStatus: "safe"; unsafeReasons: []; speciesResults: ScoreV2SpeciesResult[]; methodResults: ScoreV2MethodResult[] }
+  | { status: "unsafe"; safetyStatus: "unsafe"; unsafeReasons: ScoreV2UnsafeReason[]; displayMessage: "危険な可能性があるため評価対象外"; speciesResults: ScoreV2SpeciesResult[]; methodResults: ScoreV2MethodResult[] }
+  | { status: "safety_unknown"; safetyStatus: "unknown"; unsafeReasons: []; displayMessage: "安全情報を確認できないため評価対象外"; speciesResults: ScoreV2SpeciesResult[]; methodResults: ScoreV2MethodResult[] };
 
 const methods: FishingMethod[] = ["ジギング", "キャスティング", "コマセ", "泳がせ", "サビキ", "エギング", "その他"];
 const METHOD_AFFINITY: Record<FishingMethod, Record<SupportedSpecies, number | null>> = {
@@ -105,8 +107,6 @@ function methodAffinity(details:FishingSpotDetailSet|null|undefined,species:Supp
 export function buildMethodSpotSuitability(details:FishingSpotDetailSet|null|undefined, method:FishingMethod):ScoreEvidence|null {
   const unavailable=[...valuesFor(details,"restriction_status"),...valuesFor(details,"shore_access")].some((v)=>tokens(v).some((t)=>["fishing_prohibited","entry_prohibited","closed","shore_inaccessible","unsafe_unavailable"].includes(t)));
   if(unavailable)return null;
-  const recommended=valuesFor(details,"recommended_methods");
-  if(recommended.length===1&&tokens(recommended[0]).includes(method))return evidence(100,recommended[0].confidence!,"承認済みの推奨釣法に一致します");
   if(method==="その他")return null;
   const groups:{weight:number;values:SpotDetailValue[];scores:Record<string,number>|undefined}[]=[
     {weight:55,values:valuesFor(details,"spot_features"),scores:shapeScores[method]},
@@ -124,8 +124,9 @@ const temperatureScore = (species:SupportedSpecies,t:number) => {
   return t<10?20:t<15?40:t<20?60:t<23?80:t<=29?100:t<=32?60:t<=35?40:20;
 };
 const tideScores:Record<SupportedSpecies,Record<TideState,number>>={ アジ:{上げ潮:80,満潮前後:70,下げ潮:60,干潮前後:60}, シーバス:{上げ潮:80,満潮前後:70,下げ潮:70,干潮前後:60}, チヌ:{上げ潮:80,満潮前後:80,下げ潮:70,干潮前後:60} };
-function tideState(rows:EnvironmentForecastRow[],selected:string):TideState|null { const index=rows.findIndex((r)=>r.forecastTime===selected); if(index<1||index>=rows.length-1)return null; const p=rows[index-1].marine?.seaLevelHeightMslMeters,c=rows[index].marine?.seaLevelHeightMslMeters,n=rows[index+1].marine?.seaLevelHeightMslMeters; if(p==null||c==null||n==null||p===n)return null; if(p<c&&n<=c)return "満潮前後"; if(p>c&&n>=c)return "干潮前後"; return n>p?"上げ潮":"下げ潮"; }
+function tideState(rows:EnvironmentForecastRow[],selected:string):TideState|null { const index=rows.findIndex((r)=>r.forecastTime===selected); if(index<1||index>=rows.length-1)return null; const p=rows[index-1].marine?.seaLevelHeightMslMeters,c=rows[index].marine?.seaLevelHeightMslMeters,n=rows[index+1].marine?.seaLevelHeightMslMeters; if(p==null||c==null||n==null)return null; if(p<c&&n<=c)return "満潮前後"; if(p>c&&n>=c)return "干潮前後"; if(p===n)return null; return n>p?"上げ潮":"下げ潮"; }
 function unsafeReasons(row:EnvironmentForecastRow):ScoreV2UnsafeReason[]{ const reasons:ScoreV2UnsafeReason[]=[]; if(row.weather?.windSpeedKmh!=null&&row.weather.windSpeedKmh>=36)reasons.push("強風"); if(row.weather?.windGustKmh!=null&&row.weather.windGustKmh>=72)reasons.push("突風"); if(row.marine?.waveHeightMeters!=null&&row.marine.waveHeightMeters>=1.25)reasons.push("高波"); if(row.weather?.precipitationMm!=null&&row.weather.precipitationMm>=30)reasons.push("大雨"); if(row.weather?.weatherCode!=null&&[95,96,99].includes(row.weather.weatherCode))reasons.push("雷雨"); return reasons; }
+function hasCompleteSafetyData(row:EnvironmentForecastRow) { return row.weather?.windSpeedKmh != null && row.weather.windGustKmh != null && row.weather.precipitationMm != null && row.weather.weatherCode != null && row.marine?.waveHeightMeters != null; }
 function environmentEvidence(environment:FishingEnvironment|null,selected:string,species:SupportedSpecies) {
   const empty={waterTemperature:null,tideCurrent:null,windWave:null,seasonTime:null,weatherRain:null};
   if(!environment||environment.cacheStatus==="cache-stale")return { evidence:empty,unsafe:[] as ScoreV2UnsafeReason[] };
@@ -146,6 +147,8 @@ export function calculateProductionScoreV2(args:{spot:FishingSpot;details?:Fishi
   const speciesResults=fishSpeciesNames.map((species)=>calculateScoreV2ForSpecies(buildScoreV2SpeciesInput({...args,species})));
   const selected=args.environment?.cacheStatus!=="cache-stale"?args.environment?.hourly.find((r)=>r.forecastTime===args.selectedDateTime):undefined; const unsafe=selected?unsafeReasons(selected):[];
   const methodResults=methods.map((method)=>calculateScoreV2ForMethod(method,speciesResults,SCORE_V2_METHOD_COMPATIBILITY,buildMethodSpotSuitability(args.details,method)));
-  if(unsafe.length)return {status:"unsafe",unsafeReasons:unsafe,displayMessage:"危険な可能性があるため評価対象外",speciesResults:speciesResults.map((r)=>({...r,overallScore:null})),methodResults:methodResults.map((r)=>({...r,overallScore:null})),};
-  return {status:"available",unsafeReasons:[],speciesResults,methodResults};
+  const withoutScores=()=>({speciesResults:speciesResults.map((r)=>({...r,overallScore:null})),methodResults:methodResults.map((r)=>({...r,overallScore:null}))});
+  if(unsafe.length)return {status:"unsafe",safetyStatus:"unsafe",unsafeReasons:unsafe,displayMessage:"危険な可能性があるため評価対象外",...withoutScores()};
+  if(!selected||!hasCompleteSafetyData(selected))return {status:"safety_unknown",safetyStatus:"unknown",unsafeReasons:[],displayMessage:"安全情報を確認できないため評価対象外",...withoutScores()};
+  return {status:"available",safetyStatus:"safe",unsafeReasons:[],speciesResults,methodResults};
 }
