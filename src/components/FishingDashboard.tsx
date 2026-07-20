@@ -29,7 +29,7 @@ import { fetchFishingSpotDetails } from "@/lib/fishingSpotDetailRepository";
 import type { FishingSpotDetailSet } from "@/domain/fishingSpotDetail";
 import { AllSpeciesEvaluation } from "./AllSpeciesEvaluation";
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
-import { getEvaluationReferenceTime, scopeSpotDetails, type AllSpeciesHistoryState } from "@/domain/spotEvaluationPresentation";
+import { getEvaluationReferenceTime, isValidAllSpeciesHistoryState, resolveAllSpeciesReturnState, scopeSpotDetails, type AllSpeciesHistoryState } from "@/domain/spotEvaluationPresentation";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
@@ -98,23 +98,6 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [spotDetails, setSpotDetails] = useState<FishingSpotDetailSet | null>(null);
   const [spotDetailStatus, setSpotDetailStatus] = useState<SpotDetailLoadStatus>("idle");
   const changeSelectedEnvironmentTime = useCallback((time: string | null) => setSelectedEnvironmentTime(time), []);
-  const closeAllSpecies = useCallback(() => {
-    const origin = allSpeciesOrigin.current;
-    if (origin) {
-      setEnvironmentSpotId(origin.spotId);
-      setSelectedEnvironmentTime(origin.selectedTime);
-    }
-    setDashboardMode("spotEvaluation");
-    setSpotEvaluationTab("評価");
-    setShowAllSpecies(false);
-    allSpeciesOrigin.current = null;
-  }, []);
-  useEffect(() => {
-    const onPopState = () => { if (allSpeciesOrigin.current) closeAllSpecies(); };
-    window.addEventListener("popstate", onPopState);
-    if (window.location.hash === "#all-species") window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
-    return () => window.removeEventListener("popstate", onPopState);
-  }, [closeAllSpecies]);
   useEffect(() => {
     let isActive = true;
     fetchMasterData()
@@ -258,6 +241,66 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     );
   }, [environmentSpotId, fishingSpots]);
 
+  const getForecastTimesBySpot = useCallback(() => ({
+    ...(environmentSpot && environment?.point.spotId === environmentSpot.id
+      ? { [environmentSpot.id]: environment.hourly.map((row) => row.forecastTime) }
+      : {}),
+  }), [environment, environmentSpot]);
+  const closeAllSpecies = useCallback((historyState: unknown = allSpeciesOrigin.current) => {
+    const next = resolveAllSpeciesReturnState(
+      historyState,
+      fishingSpots.map((spot) => spot.id),
+      getForecastTimesBySpot(),
+      environmentSpot?.id ?? "",
+      selectedEnvironmentTime,
+    );
+    setEnvironmentSpotId(next.spotId);
+    setSelectedEnvironmentTime(next.selectedTime);
+    setDashboardMode(next.dashboardMode);
+    setSpotEvaluationTab(next.spotEvaluationTab);
+    setShowAllSpecies(next.showAllSpecies);
+    allSpeciesOrigin.current = null;
+  }, [environmentSpot?.id, fishingSpots, getForecastTimesBySpot, selectedEnvironmentTime]);
+  useEffect(() => {
+    const onPopState = (event: PopStateEvent) => {
+      if (!showAllSpecies) return;
+      const candidate = isValidAllSpeciesHistoryState(
+        event.state,
+        fishingSpots.map((spot) => spot.id),
+        typeof event.state?.spotId === "string" ? getForecastTimesBySpot()[event.state.spotId] ?? [] : [],
+      ) ? event.state : allSpeciesOrigin.current;
+      closeAllSpecies(candidate);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [closeAllSpecies, fishingSpots, getForecastTimesBySpot, showAllSpecies]);
+  const handledInitialHash = useRef(false);
+  useEffect(() => {
+    if (handledInitialHash.current || window.location.hash !== "#all-species" || fishingSpots.length === 0) return;
+    const state = window.history.state;
+    const stateSpot = typeof state?.spotId === "string" ? fishingSpots.find((spot) => spot.id === state.spotId) : null;
+    if (stateSpot && stateSpot.id !== environmentSpot?.id) {
+      setEnvironmentSpotId(stateSpot.id);
+      setDashboardMode("spotEvaluation");
+      setSpotEvaluationTab("評価");
+      return;
+    }
+    const forecastTimes = stateSpot && environment?.point.spotId === stateSpot.id ? environment.hourly.map((row) => row.forecastTime) : [];
+    if (stateSpot && state?.selectedTime !== null && forecastTimes.length === 0) return;
+    handledInitialHash.current = true;
+    if (isValidAllSpeciesHistoryState(state, fishingSpots.map((spot) => spot.id), forecastTimes)) {
+      allSpeciesOrigin.current = state;
+      setEnvironmentSpotId(state.spotId);
+      setSelectedEnvironmentTime(state.selectedTime);
+      setDashboardMode("spotEvaluation");
+      setSpotEvaluationTab("評価");
+      setShowAllSpecies(true);
+      return;
+    }
+    closeAllSpecies(null);
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+  }, [closeAllSpecies, environment, environmentSpot?.id, fishingSpots]);
+
   useEffect(() => {
     if (!environmentSpot) {
       setEnvironment(null);
@@ -348,24 +391,25 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     allSpeciesOrigin.current = origin;
     setSpotEvaluationTab("評価");
     setShowAllSpecies(true);
+    window.history.replaceState(origin, "", `${window.location.pathname}${window.location.search}`);
     window.history.pushState(origin, "", "#all-species");
   };
   const requestCloseAllSpecies = () => {
     if (window.history.state?.view === "all-species") window.history.back();
-    else closeAllSpecies();
+    else closeAllSpecies(window.history.state);
   };
-  const allSpeciesResults = environmentSpot ? calculateProductionScoreV2({
+  const allSpeciesScore = environmentSpot ? calculateProductionScoreV2({
     spot: environmentSpot,
     details: spotDetailStatus === "ready" ? scopeSpotDetails(spotDetails, environmentSpot.id) : null,
     catches: externalMemos,
     environment,
     selectedDateTime: getEvaluationReferenceTime(selectedEnvironmentTime),
-  }).speciesResults : [];
+  }) : null;
 
-  if (showAllSpecies && environmentSpot) return <AllSpeciesEvaluation
+  if (showAllSpecies && environmentSpot && allSpeciesScore) return <AllSpeciesEvaluation
     spotName={environmentSpot.name}
     selectedTime={selectedEnvironmentTime}
-    results={allSpeciesResults}
+    score={allSpeciesScore}
     onBack={requestCloseAllSpecies}
   />;
 

@@ -1,6 +1,7 @@
 import { getNearestForecastTime, type EnvironmentForecastRow, type FishingEnvironment } from "@/domain/environment";
 import type { FishingSpotDetailSet, SpotDetailValue } from "@/domain/fishingSpotDetail";
 import type { ScoreV2SpeciesResult } from "@/domain/scoreV2";
+import type { ScoreV2ProductionResult } from "@/domain/scoreV2Production";
 
 export type AllSpeciesHistoryState = {
   view: "all-species";
@@ -33,6 +34,49 @@ export function isValidAllSpeciesHistoryState(
   const state = value as Partial<AllSpeciesHistoryState>;
   return state.view === "all-species" && typeof state.spotId === "string" && spotIds.includes(state.spotId)
     && (state.selectedTime === null || (typeof state.selectedTime === "string" && forecastTimes.includes(state.selectedTime)));
+}
+
+export type AllSpeciesReturnState = {
+  dashboardMode: "spotEvaluation";
+  spotEvaluationTab: "評価";
+  showAllSpecies: false;
+  spotId: string;
+  selectedTime: string | null;
+  query: "";
+};
+
+export function resolveAllSpeciesReturnState(
+  historyState: unknown,
+  spotIds: readonly string[],
+  forecastTimesBySpot: Readonly<Record<string, readonly string[]>>,
+  fallbackSpotId: string,
+  fallbackSelectedTime: string | null,
+): AllSpeciesReturnState {
+  const candidate = historyState && typeof historyState === "object" && "spotId" in historyState
+    ? historyState as { spotId?: unknown }
+    : null;
+  const candidateTimes = typeof candidate?.spotId === "string" ? forecastTimesBySpot[candidate.spotId] ?? [] : [];
+  const validHistory = isValidAllSpeciesHistoryState(historyState, spotIds, candidateTimes);
+  const safeFallbackSpotId = spotIds.includes(fallbackSpotId) ? fallbackSpotId : spotIds[0] ?? "";
+  const fallbackTimes = forecastTimesBySpot[safeFallbackSpotId] ?? [];
+  return {
+    dashboardMode: "spotEvaluation",
+    spotEvaluationTab: "評価",
+    showAllSpecies: false,
+    spotId: validHistory ? historyState.spotId : safeFallbackSpotId,
+    selectedTime: validHistory
+      ? historyState.selectedTime
+      : fallbackSelectedTime && fallbackTimes.includes(fallbackSelectedTime) ? fallbackSelectedTime : fallbackTimes[0] ?? null,
+    query: "",
+  };
+}
+
+export function getAllSpeciesStatusMessage(result: Pick<ScoreV2ProductionResult, "status" | "safetyStatus"> & { displayMessage?: string }) {
+  if (result.status === "available") return null;
+  if (result.status === "unsafe" || result.safetyStatus === "unsafe") {
+    return "危険な可能性があるため、総合点を表示していません。地点相性のみ参考点として表示します。";
+  }
+  return "安全情報を確認できないため、総合評価は未算出です。地点相性のみ参考点として表示します。";
 }
 
 export type SpotDetailLoadStatus = "idle" | "loading" | "ready" | "failed";

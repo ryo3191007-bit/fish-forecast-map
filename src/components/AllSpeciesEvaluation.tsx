@@ -2,21 +2,23 @@
 
 import { useMemo, useState } from "react";
 import type { ScoreV2SpeciesResult } from "@/domain/scoreV2";
-import { filterSpeciesResults, sortAllSpeciesResults } from "@/domain/spotEvaluationPresentation";
+import type { ScoreV2ProductionResult } from "@/domain/scoreV2Production";
+import { filterSpeciesResults, getAllSpeciesStatusMessage, sortAllSpeciesResults } from "@/domain/spotEvaluationPresentation";
 
 const confidenceLabel = { high: "高", medium: "中", low: "低" } as const;
 
 type Props = {
   spotName: string;
   selectedTime: string | null;
-  results: ScoreV2SpeciesResult[];
+  score: ScoreV2ProductionResult;
   onBack: () => void;
 };
 
-export function AllSpeciesEvaluation({ spotName, selectedTime, results, onBack }: Props) {
+export function AllSpeciesEvaluation({ spotName, selectedTime, score, onBack }: Props) {
   const [query, setQuery] = useState("");
-  const sorted = useMemo(() => sortAllSpeciesResults(results), [results]);
+  const sorted = useMemo(() => sortAllSpeciesResults(score.speciesResults), [score.speciesResults]);
   const displayed = useMemo(() => filterSpeciesResults(sorted, query), [sorted, query]);
+  const statusMessage = getAllSpeciesStatusMessage(score);
   return <main className="allSpeciesScreen">
     <header className="allSpeciesHeader">
       <div className="allSpeciesHeaderTop">
@@ -26,6 +28,7 @@ export function AllSpeciesEvaluation({ spotName, selectedTime, results, onBack }
       <label htmlFor="all-species-search">魚種名検索</label>
       <input id="all-species-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="例: イカ" autoComplete="off" />
     </header>
+    {statusMessage && <p className="allSpeciesStatus" role="status">{statusMessage}</p>}
     <section className="allSpeciesList" aria-label="魚種評価一覧">
       {displayed.map((item) => <SpeciesEvaluation key={item.species} item={item} />)}
       {!displayed.length && <p className="allSpeciesEmpty" role="status">検索条件に一致する魚種はありません。</p>}

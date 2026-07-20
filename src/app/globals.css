@@ -2030,6 +2030,7 @@ dd {
 .allSpeciesBack { flex:none; min-height:44px; padding:.65rem .85rem; border:1px solid #38bdf8; border-radius:10px; background:#0c4a6e; color:#f0fbff; font:inherit; font-weight:900; cursor:pointer; }
 .allSpeciesHeader label { display:block; margin:.75rem 0 .3rem; color:#bae6fd; font-size:.78rem; font-weight:900; }
 .allSpeciesHeader input { box-sizing:border-box; width:100%; min-width:0; min-height:44px; padding:.7rem .8rem; border:1px solid rgba(125,211,252,.4); border-radius:12px; background:#071426; color:#fff; font:inherit; }
+.allSpeciesStatus { margin:0 0 .9rem; padding:.8rem 1rem; border:1px solid #f59e0b; border-radius:12px; background:rgba(120,53,15,.42); color:#fef3c7; font-weight:700; line-height:1.6; }
 .allSpeciesList { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr)); gap:.8rem; }
 .allSpeciesCard { min-width:0; padding:1rem; border:1px solid rgba(125,211,252,.24); border-radius:14px; background:rgba(8,47,73,.4); overflow-wrap:anywhere; }
 .allSpeciesCard header { display:flex; align-items:center; justify-content:space-between; gap:.75rem; }
