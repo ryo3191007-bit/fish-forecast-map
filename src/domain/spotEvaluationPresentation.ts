@@ -1,5 +1,129 @@
 import { getNearestForecastTime, type EnvironmentForecastRow, type FishingEnvironment } from "@/domain/environment";
 import type { FishingSpotDetailSet, SpotDetailValue } from "@/domain/fishingSpotDetail";
+import type { ScoreV2SpeciesResult } from "@/domain/scoreV2";
+import type { ScoreV2ProductionResult } from "@/domain/scoreV2Production";
+
+export type AllSpeciesHistoryState = {
+  view: "all-species";
+  spotId: string;
+  selectedTime: string | null;
+};
+
+export function sortAllSpeciesResults(results: readonly ScoreV2SpeciesResult[]) {
+  const group = (item: ScoreV2SpeciesResult) => item.informationStatus === "no_information" ? 2 : item.overallScore === null ? 1 : 0;
+  return [...results].sort((a, b) => {
+    const groupDifference = group(a) - group(b);
+    if (groupDifference) return groupDifference;
+    if (group(a) === 0) return (b.overallScore ?? -1) - (a.overallScore ?? -1);
+    if (group(a) === 1) return (b.spotCompatibilityScore ?? -1) - (a.spotCompatibilityScore ?? -1);
+    return 0;
+  });
+}
+
+export function filterSpeciesResults(results: readonly ScoreV2SpeciesResult[], query: string) {
+  const normalized = query.trim().toLocaleLowerCase("ja");
+  return normalized ? results.filter((item) => item.species.toLocaleLowerCase("ja").includes(normalized)) : [...results];
+}
+
+export function isValidAllSpeciesHistoryState(
+  value: unknown,
+  spotIds: readonly string[],
+  forecastTimes: readonly string[],
+): value is AllSpeciesHistoryState {
+  if (!value || typeof value !== "object") return false;
+  const state = value as Partial<AllSpeciesHistoryState>;
+  return state.view === "all-species" && typeof state.spotId === "string" && spotIds.includes(state.spotId)
+    && (state.selectedTime === null || (typeof state.selectedTime === "string" && forecastTimes.includes(state.selectedTime)));
+}
+
+export type AllSpeciesReturnState = {
+  dashboardMode: "spotEvaluation";
+  spotEvaluationTab: "評価";
+  showAllSpecies: false;
+  spotId: string;
+  selectedTime: string | null;
+  query: "";
+};
+
+export type InitialAllSpeciesHashResolution =
+  | { kind: "switch-spot"; spotId: string }
+  | { kind: "waiting" }
+  | { kind: "restore"; state: AllSpeciesHistoryState }
+  | { kind: "fallback"; state: AllSpeciesReturnState; removeHash: true };
+
+export function resolveAllSpeciesReturnState(
+  historyState: unknown,
+  spotIds: readonly string[],
+  forecastTimesBySpot: Readonly<Record<string, readonly string[]>>,
+  fallbackSpotId: string,
+  fallbackSelectedTime: string | null,
+): AllSpeciesReturnState {
+  const candidate = historyState && typeof historyState === "object" && "spotId" in historyState
+    ? historyState as { spotId?: unknown }
+    : null;
+  const candidateTimes = typeof candidate?.spotId === "string" ? forecastTimesBySpot[candidate.spotId] ?? [] : [];
+  const validHistory = isValidAllSpeciesHistoryState(historyState, spotIds, candidateTimes);
+  const safeFallbackSpotId = spotIds.includes(fallbackSpotId) ? fallbackSpotId : spotIds[0] ?? "";
+  const fallbackTimes = forecastTimesBySpot[safeFallbackSpotId] ?? [];
+  return {
+    dashboardMode: "spotEvaluation",
+    spotEvaluationTab: "評価",
+    showAllSpecies: false,
+    spotId: validHistory ? historyState.spotId : safeFallbackSpotId,
+    selectedTime: validHistory
+      ? historyState.selectedTime
+      : fallbackSelectedTime && fallbackTimes.includes(fallbackSelectedTime) ? fallbackSelectedTime : fallbackTimes[0] ?? null,
+    query: "",
+  };
+}
+
+export function resolveInitialAllSpeciesHash(
+  historyState: unknown,
+  spotIds: readonly string[],
+  currentSpotId: string,
+  environmentRequestSpotId: string | null,
+  environmentSpotId: string | null,
+  forecastTimes: readonly string[],
+  isEnvironmentLoading: boolean,
+  environmentError: string | null,
+): InitialAllSpeciesHashResolution {
+  const candidate = historyState && typeof historyState === "object" ? historyState as Partial<AllSpeciesHistoryState> : null;
+  const validSpotId = typeof candidate?.spotId === "string" && spotIds.includes(candidate.spotId)
+    ? candidate.spotId
+    : null;
+
+  if (validSpotId && validSpotId !== currentSpotId) {
+    return { kind: "switch-spot", spotId: validSpotId };
+  }
+
+  const matchingForecastTimes = validSpotId && environmentSpotId === validSpotId ? forecastTimes : [];
+  if (isValidAllSpeciesHistoryState(historyState, spotIds, matchingForecastTimes)) {
+    return { kind: "restore", state: historyState };
+  }
+
+  const needsForecastRow = validSpotId && candidate?.selectedTime !== null;
+  const targetRequestPending = validSpotId && environmentRequestSpotId !== validSpotId;
+  if (needsForecastRow && !environmentError && (targetRequestPending || isEnvironmentLoading)) {
+    return { kind: "waiting" };
+  }
+
+  const fallback = resolveAllSpeciesReturnState(
+    null,
+    spotIds,
+    environmentSpotId && spotIds.includes(environmentSpotId) ? { [environmentSpotId]: forecastTimes } : {},
+    currentSpotId,
+    null,
+  );
+  return { kind: "fallback", state: fallback, removeHash: true };
+}
+
+export function getAllSpeciesStatusMessage(result: Pick<ScoreV2ProductionResult, "status" | "safetyStatus"> & { displayMessage?: string }) {
+  if (result.status === "available") return null;
+  if (result.status === "unsafe" || result.safetyStatus === "unsafe") {
+    return "危険な可能性があるため、総合点を表示していません。地点相性のみ参考点として表示します。";
+  }
+  return "安全情報を確認できないため、総合評価は未算出です。地点相性のみ参考点として表示します。";
+}
 
 export type SpotDetailLoadStatus = "idle" | "loading" | "ready" | "failed";
 

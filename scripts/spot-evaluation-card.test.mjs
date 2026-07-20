@@ -20,6 +20,7 @@ function load(path) {
 
 const card = readFileSync(new URL("../src/components/SpotEvaluationCard.tsx", import.meta.url), "utf8");
 const dashboard = readFileSync(new URL("../src/components/FishingDashboard.tsx", import.meta.url), "utf8");
+const allSpeciesScreen = readFileSync(new URL("../src/components/AllSpeciesEvaluation.tsx", import.meta.url), "utf8");
 const presentation = load("src/domain/spotEvaluationPresentation.ts");
 
 const forecastRows = [
@@ -59,4 +60,68 @@ assert.ok(dashboard.includes("setSpotDetails(null)"), "spot changes clear previo
 assert.ok(dashboard.includes('setSpotDetailStatus("loading")') && dashboard.includes('setSpotDetailStatus("failed")'), "detail loading and failure are explicit");
 assert.ok(card.includes("getEvaluationReferenceTime(props.selectedTime)"), "spot scoring remains available without a UI forecast selection");
 assert.ok(card.includes('props.detailStatus === "ready" ? scopeSpotDetails'), "only ready, matching details enter scoring");
+
+const result = (species, informationStatus, overallScore, spotCompatibilityScore) => ({ species, informationStatus, overallScore, spotCompatibilityScore });
+const original = [
+  result("根魚", "no_information", null, null),
+  result("シーバス", "reference_only", null, 55),
+  result("アジ", "available", 72, 70),
+  result("チヌ", "partial", 81, 65),
+  result("サバ", "reference_only", null, 68),
+  ...["イワシ", "青物", "シイラ", "ヒラメ", "マゴチ", "アオリイカ", "ヤリイカ", "コウイカ", "真鯛", "キス"].map((name) => result(name, "no_information", null, null)),
+];
+const sorted = presentation.sortAllSpeciesResults(original);
+assert.equal(sorted.length, 15, "all 15 SCORE v2 species are retained");
+assert.deepEqual(sorted.slice(0, 4).map((item) => item.species), ["チヌ", "アジ", "サバ", "シーバス"], "scored then unscored groups each use their specified descending score");
+assert.ok(sorted.slice(4).every((item) => item.informationStatus === "no_information"), "no-information entries follow scored and unscored entries instead of being treated as zero");
+assert.deepEqual(presentation.filterSpeciesResults(sorted, "イカ").map((item) => item.species), ["アオリイカ", "ヤリイカ", "コウイカ"], "Japanese display names support partial matching");
+assert.equal(presentation.filterSpeciesResults(sorted, "存在しない魚").length, 0, "a no-match search returns an empty result");
+presentation.filterSpeciesResults(sorted, "アジ");
+assert.deepEqual(original.map((item) => item.species), ["根魚", "シーバス", "アジ", "チヌ", "サバ", "イワシ", "青物", "シイラ", "ヒラメ", "マゴチ", "アオリイカ", "ヤリイカ", "コウイカ", "真鯛", "キス"], "sorting and searching do not mutate source data");
+assert.equal(presentation.isValidAllSpeciesHistoryState({ view: "all-species", spotId: "spot-1", selectedTime: "2026-07-20T09:00" }, ["spot-1"], ["2026-07-20T09:00"]), true);
+assert.equal(presentation.isValidAllSpeciesHistoryState({ view: "all-species", spotId: "invalid", selectedTime: "2026-07-20T09:00" }, ["spot-1"], ["2026-07-20T09:00"]), false, "an invalid spot id is rejected");
+assert.equal(presentation.isValidAllSpeciesHistoryState({ view: "all-species", spotId: "spot-1", selectedTime: "invalid" }, ["spot-1"], ["2026-07-20T09:00"]), false, "an invalid forecast time is rejected");
+assert.equal(presentation.getAllSpeciesStatusMessage({ status: "available", safetyStatus: "safe" }), null, "available scores do not show an unscored warning");
+assert.equal(presentation.getAllSpeciesStatusMessage({ status: "safety_unknown", safetyStatus: "unknown", displayMessage: "internal", sourceName: "hidden", note: "hidden" }), "安全情報を確認できないため、総合評価は未算出です。地点相性のみ参考点として表示します。", "missing safety data has a user-facing reason without metadata");
+assert.equal(presentation.getAllSpeciesStatusMessage({ status: "unsafe", safetyStatus: "unsafe", displayMessage: "internal", sourceUrl: "https://hidden.test" }), "危険な可能性があるため、総合点を表示していません。地点相性のみ参考点として表示します。", "unsafe scores are hidden with a user-facing reason");
+
+const timesBySpot = { "spot-1": ["2026-07-20T09:00", "2026-07-20T12:00"], "spot-2": [] };
+const validReturn = presentation.resolveAllSpeciesReturnState({ view: "all-species", spotId: "spot-1", selectedTime: "2026-07-20T12:00" }, ["spot-1", "spot-2"], timesBySpot, "spot-2", null);
+assert.deepEqual(validReturn, { dashboardMode: "spotEvaluation", spotEvaluationTab: "評価", showAllSpecies: false, spotId: "spot-1", selectedTime: "2026-07-20T12:00", query: "" }, "browser back restores the validated origin and resets search");
+const invalidSpotReturn = presentation.resolveAllSpeciesReturnState({ view: "all-species", spotId: "invalid", selectedTime: null }, ["spot-1", "spot-2"], timesBySpot, "spot-1", "2026-07-20T12:00");
+assert.equal(invalidSpotReturn.spotId, "spot-1", "an invalid history spot falls back to the current valid evaluation spot");
+assert.equal(invalidSpotReturn.dashboardMode, "spotEvaluation", "direct reload never falls through to catch reports");
+assert.equal(invalidSpotReturn.spotEvaluationTab, "評価");
+const invalidTimeReturn = presentation.resolveAllSpeciesReturnState({ view: "all-species", spotId: "spot-1", selectedTime: "invalid" }, ["spot-1", "spot-2"], timesBySpot, "spot-1", "invalid");
+assert.equal(invalidTimeReturn.selectedTime, "2026-07-20T09:00", "an out-of-scope time is corrected to a valid forecast row");
+const noRowsReturn = presentation.resolveAllSpeciesReturnState(null, ["spot-2"], timesBySpot, "spot-2", "invalid");
+assert.equal(noRowsReturn.selectedTime, null, "a fallback spot without forecast rows uses null");
+assert.equal(noRowsReturn.query, "", "return state resets search before the full-screen view is mounted again");
+
+const hashState = { view: "all-species", spotId: "spot-1", selectedTime: "2026-07-20T12:00" };
+const resolveHash = ({ requestSpotId = "spot-1", environmentSpotId = "spot-1", forecastTimes = [], loading = false, error = null } = {}) =>
+  presentation.resolveInitialAllSpeciesHash(hashState, ["spot-1", "spot-2"], "spot-1", requestSpotId, environmentSpotId, forecastTimes, loading, error);
+assert.deepEqual(resolveHash({ loading: true }), { kind: "waiting" }, "a matching spot with no rows waits only while its environment request is active");
+assert.deepEqual(resolveHash({ forecastTimes: timesBySpot["spot-1"] }), { kind: "restore", state: hashState }, "a successful request with the selected row restores the full-screen view");
+const failedHash = resolveHash({ error: "Open-Meteo failed" });
+assert.equal(failedHash.kind, "fallback");
+assert.deepEqual(failedHash.state, { dashboardMode: "spotEvaluation", spotEvaluationTab: "評価", showAllSpecies: false, spotId: "spot-1", selectedTime: null, query: "" }, "a failed request without cached rows reaches the safe evaluation fallback");
+assert.equal(failedHash.removeHash, true, "the fallback explicitly requires removal of #all-species");
+const emptyHash = resolveHash();
+assert.equal(emptyHash.kind, "fallback", "a completed request without forecast rows does not wait indefinitely");
+assert.equal(emptyHash.state.selectedTime, null);
+assert.deepEqual(
+  presentation.resolveInitialAllSpeciesHash(hashState, ["spot-1", "spot-2"], "spot-2", "spot-2", "spot-2", [], false, null),
+  { kind: "switch-spot", spotId: "spot-1" },
+  "reload restoration switches to the validated history spot before requesting its environment",
+);
+const browserBack = presentation.resolveAllSpeciesReturnState(hashState, ["spot-1", "spot-2"], timesBySpot, "spot-2", null);
+assert.equal(browserBack.spotId, "spot-1");
+assert.equal(browserBack.selectedTime, "2026-07-20T12:00", "normal browser back retains the origin spot and time");
+assert.ok(card.includes("onShowAllSpecies"), "the all-species button opens the full-screen view through dashboard state");
+assert.ok(dashboard.includes('window.addEventListener("popstate"') && dashboard.includes("resolveAllSpeciesReturnState"), "the tested transition function handles browser history events");
+assert.ok(dashboard.includes("isValidAllSpeciesHistoryState"), "runtime history reads use the tested validator");
+assert.ok(allSpeciesScreen.includes('useState("")') && !dashboard.includes("setAllSpeciesQuery"), "search state is new and empty for every mounted full-screen view");
+assert.ok(allSpeciesScreen.includes("検索条件に一致する魚種はありません"), "the zero-result state is visible");
+assert.ok(!allSpeciesScreen.includes("sourceUrl") && !allSpeciesScreen.includes("internalNote") && !allSpeciesScreen.includes("sourceName") && !presentation.getAllSpeciesStatusMessage({ status: "available", safetyStatus: "safe", sourceName: "secret", note: "internal" })?.includes("secret"), "source metadata and internal notes cannot enter status or card rendering");
 console.log("spot evaluation behavior checks passed");

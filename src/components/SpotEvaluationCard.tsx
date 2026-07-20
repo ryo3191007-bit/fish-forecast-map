@@ -34,6 +34,7 @@ type Props = {
   catches: ExternalCatchRecord[];
   isLoading: boolean;
   error: string | null;
+  onShowAllSpecies: () => void;
 };
 
 const tabs: SpotEvaluationTab[] = ["評価", "環境", "釣場", "地形"];
@@ -123,7 +124,7 @@ function EvaluationTab(props: Props & { selectedTime: string | null }) {
   const methods = result.methodResults.filter((item) => item.informationStatus !== "no_information").sort((a, b) => (b.overallScore ?? -1) - (a.overallScore ?? -1) || (b.spotSuitabilityScore ?? -1) - (a.spotSuitabilityScore ?? -1));
   return <div className="evaluationContent">
     {result.status !== "available" && <StateMessage>{result.displayMessage}。地点相性のみ参考点として表示します。</StateMessage>}
-    <div className="evaluationTitle"><h3>魚種評価</h3><button type="button" onClick={() => window.history.pushState({ spotId: props.selectedSpotId, selectedTime: props.selectedTime }, "", "#all-species")}>すべて表示</button></div>
+    <div className="evaluationTitle"><h3>魚種評価</h3><button type="button" onClick={props.onShowAllSpecies}>すべて表示</button></div>
     <div className="scoreCards">{species.map((item) => <article key={item.species} className="scoreCard"><header><h4>{item.species}</h4><strong>{item.overallScore === null ? "総合点未算出" : `総合点 ${item.overallScore}点`}</strong></header><p>地点相性 参考点: {item.spotCompatibilityScore === null ? "情報なし" : `${item.spotCompatibilityScore}点`}</p><ConfidenceSummary spot={item.confidence.spot} environment={item.confidence.environment} /><p>{item.partialData ? "一部情報未反映" : "必要情報を反映"}</p><ul>{item.reasons.slice(0, 2).map((reason, index) => <li key={`${reason.label}-${index}`}>{reason.label}{reason.confidence ? `（信憑性: ${confidenceLabel[reason.confidence]}）` : ""}: {reason.displayNote}</li>)}</ul></article>)}</div>
     {!species.length && <StateMessage>魚種評価に利用できる情報がありません。</StateMessage>}
     <h3>釣法評価</h3><div className="methodScores">{methods.map((item) => <article key={item.method}><h4>{item.method}</h4><strong>{item.overallScore === null ? "総合点未算出" : `総合点 ${item.overallScore}点`}</strong><span>釣り場適性 参考点: {item.spotSuitabilityScore === null ? "情報なし" : `${item.spotSuitabilityScore}点`}</span><span>対応魚種数: {item.contributingSpeciesCount}</span></article>)}</div>

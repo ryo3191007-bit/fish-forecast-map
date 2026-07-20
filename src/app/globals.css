@@ -2020,3 +2020,20 @@ dd {
 .confidence.high { background:#166534; } .confidence.medium { background:#9a3412; } .confidence.low { background:#991b1b; }
 .spotEvaluationState { padding:.8rem; border-left:3px solid #f59e0b; background:rgba(120,53,15,.2); line-height:1.6; }
 @media (max-width:760px) { .sharedTimeControls { grid-template-columns:repeat(2,minmax(0,1fr)); } .sharedTimeControls button { min-width:0; padding:.5rem .3rem; font-size:.72rem; } .spotCombobox, .spotEvaluationCard { max-width:100%; } }
+
+.allSpeciesScreen { box-sizing:border-box; width:min(100%,1180px); min-width:0; margin:0 auto; padding:0 clamp(.75rem,3vw,1.5rem) 2rem; color:#e0faff; overflow-x:hidden; }
+.allSpeciesHeader { position:sticky; z-index:20; top:0; box-sizing:border-box; padding:max(.75rem,env(safe-area-inset-top)) 0 .9rem; background:linear-gradient(#020817 82%,rgba(2,8,23,0)); }
+.allSpeciesHeaderTop { display:flex; align-items:center; gap:clamp(.75rem,3vw,1.5rem); min-width:0; }
+.allSpeciesHeaderTop div { min-width:0; }
+.allSpeciesHeader h1 { margin:.15rem 0; overflow-wrap:anywhere; font-size:clamp(1.25rem,4vw,2rem); }
+.allSpeciesHeader p { margin:.15rem 0; }
+.allSpeciesBack { flex:none; min-height:44px; padding:.65rem .85rem; border:1px solid #38bdf8; border-radius:10px; background:#0c4a6e; color:#f0fbff; font:inherit; font-weight:900; cursor:pointer; }
+.allSpeciesHeader label { display:block; margin:.75rem 0 .3rem; color:#bae6fd; font-size:.78rem; font-weight:900; }
+.allSpeciesHeader input { box-sizing:border-box; width:100%; min-width:0; min-height:44px; padding:.7rem .8rem; border:1px solid rgba(125,211,252,.4); border-radius:12px; background:#071426; color:#fff; font:inherit; }
+.allSpeciesStatus { margin:0 0 .9rem; padding:.8rem 1rem; border:1px solid #f59e0b; border-radius:12px; background:rgba(120,53,15,.42); color:#fef3c7; font-weight:700; line-height:1.6; }
+.allSpeciesList { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr)); gap:.8rem; }
+.allSpeciesCard { min-width:0; padding:1rem; border:1px solid rgba(125,211,252,.24); border-radius:14px; background:rgba(8,47,73,.4); overflow-wrap:anywhere; }
+.allSpeciesCard header { display:flex; align-items:center; justify-content:space-between; gap:.75rem; }
+.allSpeciesCard h2 { margin:0; font-size:1.1rem; }.allSpeciesCard p,.allSpeciesCard ul { font-size:.84rem; line-height:1.6; }
+.allSpeciesEmpty { grid-column:1/-1; padding:2rem 1rem; border:1px dashed rgba(125,211,252,.4); border-radius:14px; text-align:center; }
+@media (max-width:520px) { .allSpeciesHeaderTop { align-items:flex-start; flex-direction:column; }.allSpeciesBack { width:100%; }.allSpeciesCard header { align-items:flex-start; flex-direction:column; } }

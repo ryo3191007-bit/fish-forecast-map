@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import {
   fishSpeciesNames,
@@ -27,6 +27,9 @@ import {
 } from "@/lib/masterDataRepository";
 import { fetchFishingSpotDetails } from "@/lib/fishingSpotDetailRepository";
 import type { FishingSpotDetailSet } from "@/domain/fishingSpotDetail";
+import { AllSpeciesEvaluation } from "./AllSpeciesEvaluation";
+import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
+import { getEvaluationReferenceTime, isValidAllSpeciesHistoryState, resolveAllSpeciesReturnState, resolveInitialAllSpeciesHash, scopeSpotDetails, type AllSpeciesHistoryState } from "@/domain/spotEvaluationPresentation";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
@@ -58,6 +61,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [spotEvaluationTab, setSpotEvaluationTab] = useState<SpotEvaluationTab>("評価");
+  const [showAllSpecies, setShowAllSpecies] = useState(false);
+  const allSpeciesOrigin = useRef<AllSpeciesHistoryState | null>(null);
   const [selectedEnvironmentTime, setSelectedEnvironmentTime] = useState<
     string | null
   >(null);
@@ -90,6 +95,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   );
   const [environmentError, setEnvironmentError] = useState<string | null>(null);
   const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(false);
+  const [environmentRequestSpotId, setEnvironmentRequestSpotId] = useState<string | null>(null);
   const [spotDetails, setSpotDetails] = useState<FishingSpotDetailSet | null>(null);
   const [spotDetailStatus, setSpotDetailStatus] = useState<SpotDetailLoadStatus>("idle");
   const changeSelectedEnvironmentTime = useCallback((time: string | null) => setSelectedEnvironmentTime(time), []);
@@ -236,13 +242,90 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     );
   }, [environmentSpotId, fishingSpots]);
 
+  const getForecastTimesBySpot = useCallback(() => ({
+    ...(environmentSpot && environment?.point.spotId === environmentSpot.id
+      ? { [environmentSpot.id]: environment.hourly.map((row) => row.forecastTime) }
+      : {}),
+  }), [environment, environmentSpot]);
+  const closeAllSpecies = useCallback((historyState: unknown = allSpeciesOrigin.current) => {
+    const next = resolveAllSpeciesReturnState(
+      historyState,
+      fishingSpots.map((spot) => spot.id),
+      getForecastTimesBySpot(),
+      environmentSpot?.id ?? "",
+      selectedEnvironmentTime,
+    );
+    setEnvironmentSpotId(next.spotId);
+    setSelectedEnvironmentTime(next.selectedTime);
+    setDashboardMode(next.dashboardMode);
+    setSpotEvaluationTab(next.spotEvaluationTab);
+    setShowAllSpecies(next.showAllSpecies);
+    allSpeciesOrigin.current = null;
+  }, [environmentSpot?.id, fishingSpots, getForecastTimesBySpot, selectedEnvironmentTime]);
+  useEffect(() => {
+    const onPopState = (event: PopStateEvent) => {
+      if (!showAllSpecies) return;
+      const candidate = isValidAllSpeciesHistoryState(
+        event.state,
+        fishingSpots.map((spot) => spot.id),
+        typeof event.state?.spotId === "string" ? getForecastTimesBySpot()[event.state.spotId] ?? [] : [],
+      ) ? event.state : allSpeciesOrigin.current;
+      closeAllSpecies(candidate);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [closeAllSpecies, fishingSpots, getForecastTimesBySpot, showAllSpecies]);
+  const handledInitialHash = useRef(false);
+  useEffect(() => {
+    if (handledInitialHash.current || window.location.hash !== "#all-species" || fishingSpots.length === 0) return;
+    const state = window.history.state;
+    const environmentMatchesSelection = environment?.point.spotId === environmentSpot?.id;
+    const resolution = resolveInitialAllSpeciesHash(
+      state,
+      fishingSpots.map((spot) => spot.id),
+      environmentSpot?.id ?? "",
+      environmentRequestSpotId,
+      environmentMatchesSelection ? environment.point.spotId : null,
+      environmentMatchesSelection ? environment.hourly.map((row) => row.forecastTime) : [],
+      isEnvironmentLoading,
+      environmentError,
+    );
+    if (resolution.kind === "switch-spot") {
+      setEnvironmentSpotId(resolution.spotId);
+      setDashboardMode("spotEvaluation");
+      setSpotEvaluationTab("評価");
+      return;
+    }
+    if (resolution.kind === "waiting") return;
+    handledInitialHash.current = true;
+    if (resolution.kind === "restore") {
+      allSpeciesOrigin.current = resolution.state;
+      setEnvironmentSpotId(resolution.state.spotId);
+      setSelectedEnvironmentTime(resolution.state.selectedTime);
+      setDashboardMode("spotEvaluation");
+      setSpotEvaluationTab("評価");
+      setShowAllSpecies(true);
+      return;
+    }
+    setEnvironmentSpotId(resolution.state.spotId);
+    setSelectedEnvironmentTime(resolution.state.selectedTime);
+    setDashboardMode(resolution.state.dashboardMode);
+    setSpotEvaluationTab(resolution.state.spotEvaluationTab);
+    setShowAllSpecies(resolution.state.showAllSpecies);
+    allSpeciesOrigin.current = null;
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+  }, [environment, environmentError, environmentRequestSpotId, environmentSpot?.id, fishingSpots, isEnvironmentLoading]);
+
   useEffect(() => {
     if (!environmentSpot) {
+      setEnvironmentRequestSpotId(null);
       setEnvironment(null);
       setEnvironmentError(null);
       setIsEnvironmentLoading(false);
       return;
     }
+
+    setEnvironmentRequestSpotId(environmentSpot.id);
 
     const point = {
       spotId: environmentSpot.id,
@@ -319,6 +402,34 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     setStartDate("");
     setEndDate("");
   };
+
+  const openAllSpecies = () => {
+    if (!environmentSpot) return;
+    const origin: AllSpeciesHistoryState = { view: "all-species", spotId: environmentSpot.id, selectedTime: selectedEnvironmentTime };
+    allSpeciesOrigin.current = origin;
+    setSpotEvaluationTab("評価");
+    setShowAllSpecies(true);
+    window.history.replaceState(origin, "", `${window.location.pathname}${window.location.search}`);
+    window.history.pushState(origin, "", "#all-species");
+  };
+  const requestCloseAllSpecies = () => {
+    if (window.history.state?.view === "all-species") window.history.back();
+    else closeAllSpecies(window.history.state);
+  };
+  const allSpeciesScore = environmentSpot ? calculateProductionScoreV2({
+    spot: environmentSpot,
+    details: spotDetailStatus === "ready" ? scopeSpotDetails(spotDetails, environmentSpot.id) : null,
+    catches: externalMemos,
+    environment,
+    selectedDateTime: getEvaluationReferenceTime(selectedEnvironmentTime),
+  }) : null;
+
+  if (showAllSpecies && environmentSpot && allSpeciesScore) return <AllSpeciesEvaluation
+    spotName={environmentSpot.name}
+    selectedTime={selectedEnvironmentTime}
+    score={allSpeciesScore}
+    onBack={requestCloseAllSpecies}
+  />;
 
   return (
     <section className="dashboard" id="map">
@@ -574,6 +685,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             details={spotDetails}
             detailStatus={spotDetailStatus}
             catches={externalMemos}
+            onShowAllSpecies={openAllSpecies}
           />
           {/* Legacy aggregate cards are replaced by the selected spot's SCORE v2 card. */}
           <div className="cards legacySpotEvaluations" id="reports" hidden>
