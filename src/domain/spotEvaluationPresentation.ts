@@ -1,7 +1,28 @@
-import type { FishingEnvironment } from "@/domain/environment";
+import { getNearestForecastTime, type EnvironmentForecastRow, type FishingEnvironment } from "@/domain/environment";
 import type { FishingSpotDetailSet, SpotDetailValue } from "@/domain/fishingSpotDetail";
 
 export type SpotDetailLoadStatus = "idle" | "loading" | "ready" | "failed";
+
+export function resolveSelectedForecastTime(
+  rows: EnvironmentForecastRow[],
+  selectedTime: string | null,
+  now = new Date(),
+) {
+  if (selectedTime && rows.some((row) => row.forecastTime === selectedTime)) {
+    return selectedTime;
+  }
+  return getNearestForecastTime(rows, now);
+}
+
+export function getEvaluationReferenceTime(selectedTime: string | null, now = new Date()) {
+  if (selectedTime) return selectedTime;
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Tokyo", year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", hourCycle: "h23",
+  }).formatToParts(now);
+  const part = (type: string) => parts.find((item) => item.type === type)?.value ?? "";
+  return `${part("year")}-${part("month")}-${part("day")}T${part("hour")}:00`;
+}
 
 const detailLabels: Record<string, string> = {
   open_sea: "外海", fishing_port: "漁港", breakwater: "堤防", inner_bay: "内湾",

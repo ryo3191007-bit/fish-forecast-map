@@ -15,7 +15,7 @@ import type {
   SpotDetailConfidence,
 } from "@/domain/fishingSpotDetail";
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
-import { formatSpotDetailValue, getEnvironmentStatusLabel, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
+import { formatSpotDetailValue, getEnvironmentStatusLabel, getEvaluationReferenceTime, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形";
 
@@ -55,11 +55,12 @@ export function SpotEvaluationCard(props: Props) {
   const rows = useMemo(() => props.environment?.hourly ?? [], [props.environment]);
   const selectedRow = rows.find((row) => row.forecastTime === props.selectedTime) ?? null;
   const selectedIndex = selectedRow ? rows.indexOf(selectedRow) : -1;
-  const selectedDate = (selectedRow?.forecastTime ?? selectedTime ?? "").slice(0, 10);
+  const selectedDate = (selectedRow?.forecastTime ?? "").slice(0, 10);
   const dayRows = rows.filter((row) => row.forecastTime.startsWith(selectedDate));
 
   useEffect(() => {
-    if (!selectedTime) onSelectedTimeChange(getNearestForecastTime(rows) ?? currentTokyoHour());
+    const resolvedTime = resolveSelectedForecastTime(rows, selectedTime);
+    if (resolvedTime !== selectedTime) onSelectedTimeChange(resolvedTime);
   }, [rows, selectedTime, onSelectedTimeChange]);
 
   return (
@@ -71,7 +72,7 @@ export function SpotEvaluationCard(props: Props) {
       <SpotCombobox spots={props.spots} selected={props.selectedSpot} onSelect={props.onSelectedSpotIdChange} />
 
       <div className="sharedTimeControls" aria-label="評価・環境の共通日時">
-        <label>日付<input type="date" value={selectedDate} onChange={(event) => props.onSelectedTimeChange(rows.find((row) => row.forecastTime.startsWith(event.target.value))?.forecastTime ?? `${event.target.value}T${(props.selectedTime ?? currentTokyoHour()).slice(11, 16)}`)} /></label>
+        <label>日付<input type="date" value={selectedDate} disabled={!rows.length} onChange={(event) => props.onSelectedTimeChange(rows.find((row) => row.forecastTime.startsWith(event.target.value))?.forecastTime ?? resolveSelectedForecastTime(rows, null))} /></label>
         <label>時刻<select value={selectedRow?.forecastTime ?? ""} disabled={!selectedRow} onChange={(event) => props.onSelectedTimeChange(event.target.value)}>{dayRows.map((row) => <option key={row.forecastTime} value={row.forecastTime}>{row.forecastTime.slice(11, 16)}</option>)}</select></label>
         <button type="button" disabled={selectedIndex <= 0} onClick={() => props.onSelectedTimeChange(rows[selectedIndex - 1]?.forecastTime ?? props.selectedTime)}>前の1時間</button>
         <button type="button" disabled={!rows.length} onClick={() => props.onSelectedTimeChange(getNearestForecastTime(rows))}>現在時刻へ戻る</button>
@@ -115,9 +116,9 @@ function SpotCombobox({ spots, selected, onSelect }: { spots: FishingSpot[]; sel
 }
 
 function EvaluationTab(props: Props & { selectedTime: string | null }) {
-  if (!props.selectedSpot || !props.selectedTime) return <StateMessage>選択日時がないため、総合評価未算出です。</StateMessage>;
+  if (!props.selectedSpot) return <StateMessage>地点が未選択のため、総合評価未算出です。</StateMessage>;
   const details = props.detailStatus === "ready" ? scopeSpotDetails(props.details, props.selectedSpot.id) : null;
-  const result = calculateProductionScoreV2({ spot: props.selectedSpot, details, catches: props.catches, environment: props.environment, selectedDateTime: props.selectedTime });
+  const result = calculateProductionScoreV2({ spot: props.selectedSpot, details, catches: props.catches, environment: props.environment, selectedDateTime: getEvaluationReferenceTime(props.selectedTime) });
   const species = result.speciesResults.filter((item) => item.informationStatus !== "no_information").sort((a, b) => (b.overallScore ?? b.spotCompatibilityScore ?? -1) - (a.overallScore ?? a.spotCompatibilityScore ?? -1)).slice(0, 5);
   const methods = result.methodResults.filter((item) => item.informationStatus !== "no_information").sort((a, b) => (b.overallScore ?? -1) - (a.overallScore ?? -1) || (b.spotSuitabilityScore ?? -1) - (a.spotSuitabilityScore ?? -1));
   return <div className="evaluationContent">
@@ -157,9 +158,3 @@ function DetailTab({ details, status, items }: { details: FishingSpotDetailSet |
   return <dl className="detailGrid">{items.map(([key, label]) => { const item = details?.values.find((value) => value.itemKey === key && value.adoptionStatus === "adopted"); return <div key={key}><dt>{label}</dt><dd>{formatSpotDetailValue(item)}{item && item.confidence ? <span className={`confidence ${item.confidence}`}>信憑性: {confidenceLabel[item.confidence]}</span> : null}</dd></div>; })}</dl>;
 }
 function StateMessage({ children }: { children: React.ReactNode }) { return <p className="spotEvaluationState" role="status">{children}</p>; }
-
-function currentTokyoHour() {
-  const parts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tokyo", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" }).formatToParts(new Date());
-  const part = (type: string) => parts.find((item) => item.type === type)?.value ?? "";
-  return `${part("year")}-${part("month")}-${part("day")}T${part("hour")}:00`;
-}

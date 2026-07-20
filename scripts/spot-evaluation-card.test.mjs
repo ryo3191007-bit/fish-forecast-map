@@ -22,6 +22,19 @@ const card = readFileSync(new URL("../src/components/SpotEvaluationCard.tsx", im
 const dashboard = readFileSync(new URL("../src/components/FishingDashboard.tsx", import.meta.url), "utf8");
 const presentation = load("src/domain/spotEvaluationPresentation.ts");
 
+const forecastRows = [
+  { forecastTime: "2026-07-20T09:00" },
+  { forecastTime: "2026-07-20T12:00" },
+  { forecastTime: "2026-07-21T09:00" },
+];
+const now = new Date("2026-07-20T02:20:00Z"); // 11:20 JST
+assert.equal(presentation.resolveSelectedForecastTime(forecastRows, "2026-07-20T09:00", now), "2026-07-20T09:00", "a valid selection is retained");
+assert.equal(presentation.resolveSelectedForecastTime(forecastRows, null, now), "2026-07-20T12:00", "an unset selection uses the nearest valid row");
+assert.equal(presentation.resolveSelectedForecastTime(forecastRows, "2026-07-19T09:00", now), "2026-07-20T12:00", "a time missing after a spot change is corrected");
+assert.equal(presentation.resolveSelectedForecastTime(forecastRows, "2026-08-01T09:00", now), "2026-07-20T12:00", "an out-of-range date is corrected");
+assert.equal(presentation.resolveSelectedForecastTime([], "2026-07-20T12:00", now), null, "no rows produce no UI selection");
+assert.equal(presentation.getEvaluationReferenceTime(null, now), "2026-07-20T11:00", "scoring has an internal reference time independent of the UI selection");
+
 const value = (spotId, valueText) => ({ spotId, informationState: "has_evidence", valueText, valueTextList: [], valueNumber: null, valueBoolean: null });
 const mixedDetails = { itemDefinitions: [], values: [value("old", "open_sea"), value("new", "fishing_port")] };
 assert.equal(presentation.scopeSpotDetails(mixedDetails, "new").values.length, 1);
@@ -44,6 +57,6 @@ const renderedValues = [presentation.formatSpotDetailValue({ ...value("new", "op
 assert.ok(!JSON.stringify(renderedValues).includes("secret") && !JSON.stringify(renderedValues).includes("internal"), "source URL and internal note are excluded from display values");
 assert.ok(dashboard.includes("setSpotDetails(null)"), "spot changes clear previous details immediately");
 assert.ok(dashboard.includes('setSpotDetailStatus("loading")') && dashboard.includes('setSpotDetailStatus("failed")'), "detail loading and failure are explicit");
-assert.ok(card.includes('selectedTime={props.selectedTime}'), "datetime remains available without a matching environment row");
+assert.ok(card.includes("getEvaluationReferenceTime(props.selectedTime)"), "spot scoring remains available without a UI forecast selection");
 assert.ok(card.includes('props.detailStatus === "ready" ? scopeSpotDetails'), "only ready, matching details enter scoring");
 console.log("spot evaluation behavior checks passed");
