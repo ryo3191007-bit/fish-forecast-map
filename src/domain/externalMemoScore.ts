@@ -1,12 +1,11 @@
-import { fishSpeciesNames, type FishingReport } from "@/domain/fishing";
+import type { FishSpecies, FishSpeciesAlias, FishingReport } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
+import { fishSpeciesNamesMatch, staticFishSpecies, staticFishSpeciesAliases } from "@/lib/fishSpeciesResolver";
 
 const EXTERNAL_MEMO_SCORE_CAP = 12;
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-const isKnownSpecies = (species: string): species is FishingReport["species"] => {
-  return fishSpeciesNames.includes(species as FishingReport["species"]);
-};
+type SpeciesResolutionContext = { fishSpecies: readonly FishSpecies[]; fishSpeciesAliases: readonly FishSpeciesAlias[] };
 
 const toDateOnlyString = (date = new Date()) => date.toISOString().slice(0, 10);
 
@@ -26,10 +25,10 @@ const getFreshnessPoints = (caughtDate: string, referenceDate: string) => {
   return { points: 0, label: "30日超" };
 };
 
-const getMemoContribution = (report: FishingReport, memo: ExternalCatchMemo, referenceDate: string) => {
+const getMemoContribution = (report: FishingReport, memo: ExternalCatchMemo, referenceDate: string, context: SpeciesResolutionContext) => {
   if (memo.acquisitionMethod !== "manual") return 0;
   if (memo.confidence === "low") return 0;
-  if (!memo.caughtDate || !isKnownSpecies(String(memo.species)) || memo.species !== report.species) return 0;
+  if (!memo.caughtDate || !fishSpeciesNamesMatch(String(memo.species), report.species, context.fishSpecies, context.fishSpeciesAliases)) return 0;
 
   const spotMatches = memo.spotId === report.spotId;
   const areaMatches = memo.areaName === report.areaName;
@@ -50,13 +49,14 @@ export function applyExternalMemoScoreAdjustments(
   reports: FishingReport[],
   memos: ExternalCatchMemo[],
   referenceDate = toDateOnlyString(),
+  context: SpeciesResolutionContext = { fishSpecies: staticFishSpecies, fishSpeciesAliases: staticFishSpeciesAliases },
 ): FishingReport[] {
   return reports.map((report) => {
-    const rawAdjustment = memos.reduce((total, memo) => total + getMemoContribution(report, memo, referenceDate), 0);
+    const rawAdjustment = memos.reduce((total, memo) => total + getMemoContribution(report, memo, referenceDate, context), 0);
     const adjustment = Math.min(rawAdjustment, EXTERNAL_MEMO_SCORE_CAP);
     if (adjustment <= 0) return report;
 
-    const matchingMemos = memos.filter((memo) => getMemoContribution(report, memo, referenceDate) > 0);
+    const matchingMemos = memos.filter((memo) => getMemoContribution(report, memo, referenceDate, context) > 0);
     const hasSpotMatch = matchingMemos.some((memo) => memo.spotId === report.spotId);
     const hasMethodMatch = matchingMemos.some((memo) => memo.method === report.method);
     const strongestConfidence = matchingMemos.some((memo) => memo.confidence === "high") ? "high" : "medium";
