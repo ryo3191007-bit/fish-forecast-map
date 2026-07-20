@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 
 const appShell = readFileSync("src/components/AppShell.tsx", "utf8");
 const dashboard = readFileSync("src/components/FishingDashboard.tsx", "utf8");
+const externalCatchMemoSection = readFileSync("src/components/ExternalCatchMemoSection.tsx", "utf8");
+const fishingDomain = readFileSync("src/domain/fishing.ts", "utf8");
 const page = readFileSync("src/app/page.tsx", "utf8");
 
 const hookSource = readFileSync("src/hooks/useExternalCatchMemos.ts", "utf8");
@@ -195,6 +197,25 @@ assert.doesNotMatch(
   "save and migration errors shown in the catch record UI do not mention external catch memos",
 );
 
+assert.match(
+  fishingDomain,
+  /species === "青物" \|\| species === "根魚" \? `\$\{species\}（旧分類）` : species/,
+  "legacy 青物 and 根魚 records are labelled as old classifications while normal species remain unchanged",
+);
+assert.match(
+  externalCatchMemoSection,
+  /<h3>[\s\S]*?legacySpeciesLabel\(memo\.species as FishSpeciesName\)[\s\S]*?<\/h3>/,
+  "catch cards use the legacy species display rule",
+);
+assert.match(
+  externalCatchMemoSection,
+  /aria-label=\{`\$\{memo\.caughtDate\} \$\{legacySpeciesLabel\(memo\.species as FishSpeciesName\)\} \$\{memo\.areaName\}の釣果を編集`\}/,
+  "catch edit button accessibility labels use the legacy species display rule",
+);
+assert.match(dashboard, /\{ label: "青物系"/, "the aomono filter group is labelled 青物系");
+assert.match(dashboard, /species === "青物" \|\| species === "根魚" \? `\$\{species\}系` : species/, "aggregate filters use group labels rather than legacy-record labels");
+assert.doesNotMatch(dashboard, /legacySpeciesLabel/, "group filters must not reuse legacy record labels");
+
 const staticUserSelfReportReviewedAt = externalSources.match(
   /sourceId: "user-self-report"[\s\S]*?reviewedAt: "(\d{4}-\d{2}-\d{2})"/,
 )?.[1];
@@ -322,8 +343,8 @@ assert.match(
 );
 assert.match(
   memoSection,
-  /aria-label=\{`\$\{memo\.caughtDate\} \$\{memo\.species\} \$\{memo\.areaName\}の釣果を編集`\}/,
-  "each catch card has an accessible edit button",
+  /aria-label=\{`\$\{memo\.caughtDate\} \$\{legacySpeciesLabel\(memo\.species as FishSpeciesName\)\} \$\{memo\.areaName\}の釣果を編集`\}/,
+  "each catch card has an accessible edit button using the legacy display rule",
 );
 
 console.log("UI requirement static checks passed");

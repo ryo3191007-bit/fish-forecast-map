@@ -6,6 +6,13 @@ alter table public.fish_species add column if not exists is_selectable boolean n
 alter table public.fish_species add column if not exists parent_group_id text references public.fish_species(id);
 alter table public.fish_species add column if not exists ui_subgroup text;
 
+-- Expand the existing category constraint before seeding the first non-squid
+-- cephalopod. Existing rows remain valid and are not reclassified.
+alter table public.fish_species drop constraint if exists fish_species_category_check;
+alter table public.fish_species add constraint fish_species_category_check
+  check (category in ('fish', 'squid', 'category', 'cephalopod')) not valid;
+alter table public.fish_species validate constraint fish_species_category_check;
+
 alter table public.fish_species drop constraint if exists fish_species_entity_type_check;
 alter table public.fish_species add constraint fish_species_entity_type_check check (entity_type in ('exact_species', 'species_group', 'squid_species', 'cephalopod_species'));
 create index if not exists fish_species_parent_group_id_idx on public.fish_species(parent_group_id);
@@ -30,7 +37,23 @@ insert into public.fish_species (id,name_ja,category,season_months,display_order
 ('akakamasu','アカカマス','fish','{}',42,true,'exact_species',true,null,null),('yamatokamasu','ヤマトカマス','fish','{}',43,true,'exact_species',true,null,null)
 on conflict(id) do update set name_ja=excluded.name_ja, category=excluded.category, display_order=excluded.display_order, is_active=excluded.is_active, entity_type=excluded.entity_type, is_selectable=excluded.is_selectable, parent_group_id=excluded.parent_group_id, ui_subgroup=excluded.ui_subgroup, updated_at=now();
 
+with alias_seeds(alias_id, fish_species_id) as (values
+('00000000-0000-4000-8000-000000000100'::uuid,'buri'),('00000000-0000-4000-8000-000000000101'::uuid,'hiramasa'),
+('00000000-0000-4000-8000-000000000102'::uuid,'kanpachi'),('00000000-0000-4000-8000-000000000103'::uuid,'sawara'),
+('00000000-0000-4000-8000-000000000104'::uuid,'kasago'),('00000000-0000-4000-8000-000000000105'::uuid,'oniokoze'),
+('00000000-0000-4000-8000-000000000106'::uuid,'kijihata'),('00000000-0000-4000-8000-000000000107'::uuid,'oomonhata'),
+('00000000-0000-4000-8000-000000000108'::uuid,'akahata'),('00000000-0000-4000-8000-000000000109'::uuid,'mahata'),
+('00000000-0000-4000-8000-000000000110'::uuid,'aohata'),('00000000-0000-4000-8000-000000000111'::uuid,'kue'),
+('00000000-0000-4000-8000-000000000112'::uuid,'kensakiika'),('00000000-0000-4000-8000-000000000113'::uuid,'surumeika'),
+('00000000-0000-4000-8000-000000000114'::uuid,'madako'),('00000000-0000-4000-8000-000000000115'::uuid,'isaki'),
+('00000000-0000-4000-8000-000000000116'::uuid,'mejina'),('00000000-0000-4000-8000-000000000117'::uuid,'tachiuo'),
+('00000000-0000-4000-8000-000000000118'::uuid,'kawahagi'),('00000000-0000-4000-8000-000000000119'::uuid,'umazurahagi'),
+('00000000-0000-4000-8000-000000000120'::uuid,'konoshiro'),('00000000-0000-4000-8000-000000000121'::uuid,'sayori'),
+('00000000-0000-4000-8000-000000000122'::uuid,'bora'),('00000000-0000-4000-8000-000000000123'::uuid,'maanago'),
+('00000000-0000-4000-8000-000000000124'::uuid,'ishidai'),('00000000-0000-4000-8000-000000000125'::uuid,'ishigakidai'),
+('00000000-0000-4000-8000-000000000126'::uuid,'akakamasu'),('00000000-0000-4000-8000-000000000127'::uuid,'yamatokamasu')
+)
 insert into public.fish_species_aliases(id,fish_species_id,alias_name,match_key,approval_status,is_active,approved_by,approved_at)
-select ('00000000-0000-4000-8000-' || lpad((display_order + 84)::text,12,'0'))::uuid,id,name_ja,public.fish_species_match_key(name_ja),'approved',true,'migration:issue-215',now()
-from public.fish_species where display_order between 16 and 43
+select seed.alias_id,species.id,species.name_ja,public.fish_species_match_key(species.name_ja),'approved',true,'migration:issue-215',now()
+from alias_seeds seed join public.fish_species species on species.id = seed.fish_species_id
 on conflict(id) do update set fish_species_id=excluded.fish_species_id,alias_name=excluded.alias_name,match_key=excluded.match_key,approval_status='approved',is_active=true,updated_at=now();
