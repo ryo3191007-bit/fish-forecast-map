@@ -1753,6 +1753,10 @@ dd {
 .confidence { display:inline-block; margin-left:.55rem; padding:.1rem .4rem; border-radius:999px; font-size:.7rem; font-weight:900; }
 .confidence.high { background:#166534; } .confidence.medium { background:#9a3412; } .confidence.low { background:#991b1b; }
 .spotEvaluationState { padding:.8rem; border-left:3px solid #f59e0b; background:rgba(120,53,15,.2); line-height:1.6; }
+.jmaWarningPanel { margin-bottom:1rem; padding:1rem; border:1px solid #38bdf8; border-radius:14px; background:rgba(8,47,73,.45); line-height:1.55; }
+.jmaWarningPanel.blocked { border-color:#fb7185; background:rgba(127,29,29,.32); } .jmaWarningPanel.unknown { border-color:#f59e0b; background:rgba(120,53,15,.28); } .jmaWarningPanel.out-of-range { border-color:#a78bfa; }
+.jmaWarningPanel h3 { margin:0 0 .65rem; } .jmaWarningPanel dl { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:.5rem; margin:0; }
+.jmaWarningPanel dl div { padding:.55rem; border-radius:8px; background:rgba(2,8,23,.35); } .jmaWarningPanel dt { color:#bae6fd; font-size:.72rem; font-weight:900; } .jmaWarningPanel dd { margin:.2rem 0 0; } .jmaWarningPanel a { color:#7dd3fc; }
 @media (max-width:760px) { .sharedTimeControls { grid-template-columns:repeat(2,minmax(0,1fr)); } .sharedTimeControls button { min-width:0; padding:.5rem .3rem; font-size:.72rem; } .spotCombobox, .spotEvaluationCard { max-width:100%; } }
 
 .allSpeciesScreen { box-sizing:border-box; width:min(100%,1180px); min-width:0; margin:0 auto; padding:0 clamp(.75rem,3vw,1.5rem) 2rem; color:#e0faff; overflow-x:hidden; }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Source: JMA 気象警報・注意報時系列情報（Ｒ０６）_解説資料 (2026-07-07 set),
+  81_01_01_260129_VPWP50.xml official sample, and code.Significancy (2026-07-07).
+  Verified: 2026-07-20. Extracted, reduced to one anonymized coastal municipality and
+  one TimeDefine; quantitative/non-target properties and repeated periods are omitted.
+-->
+<Report><Control><Title>気象警報・注意報時系列情報（Ｒ０６）</Title><Status>通常</Status></Control>
+<Head><ReportDateTime>2026-07-20T12:00:00+09:00</ReportDateTime><InfoKind>気象警報・注意報時系列</InfoKind><InfoKindVersion>1.5_0</InfoKindVersion></Head>
+<Body><MeteorologicalInfos type="量的予想時系列（市町村等）"><TimeSeriesInfo>
+<TimeDefines><TimeDefine timeId="1"><DateTime>2026-07-20T13:00:00+09:00</DateTime><Duration>PT3H</Duration><Name>２０日昼過ぎ</Name></TimeDefine></TimeDefines>
+<Item>
+<Kind><Status>発表</Status><Property><Type>大雨浸水危険度</Type><SignificancyPart><Base><Significancy refID="1" type="大雨浸水危険度"><Name>警戒レベル２未満</Name><Code>11</Code></Significancy></Base></SignificancyPart></Property></Kind>
+<Kind><Status>発表</Status><Property><Type>土砂災害危険度</Type><SignificancyPart><Base><Significancy refID="1" type="土砂災害危険度"><Name>警戒レベル２未満</Name><Code>11</Code></Significancy></Base></SignificancyPart></Property></Kind>
+<Kind><Status>発表</Status><Property><Type>風危険度</Type><SignificancyPart><Base><Local><AreaName>陸上</AreaName><Significancy refID="1" type="風危険度"><Name>注意報級未満</Name><Code>01</Code></Significancy></Local><Local><AreaName>海上</AreaName><Significancy refID="1" type="風危険度"><Name>注意報級未満</Name><Code>01</Code></Significancy></Local></Base></SignificancyPart></Property></Kind>
+<Kind><Status>発表</Status><Property><Type>波危険度</Type><SignificancyPart><Base><Significancy refID="1" type="波危険度"><Name>注意報級未満</Name><Code>01</Code></Significancy></Base></SignificancyPart></Property></Kind>
+<Kind><Status>発表</Status><Property><Type>高潮危険度</Type><SignificancyPart><Base><Significancy refID="1" type="高潮危険度"><Name>警戒レベル２未満</Name><Code>11</Code></Significancy></Base></SignificancyPart></Property></Kind>
+<Kind><Status>発表</Status><Property><Type>雷危険度</Type><SignificancyPart><Base><Significancy refID="1" type="雷危険度"><Name>注意報級未満</Name><Code>01</Code></Significancy></Base></SignificancyPart></Property></Kind>
+<Area><Name>唐津市</Name><Code>4120200</Code></Area></Item>
+</TimeSeriesInfo></MeteorologicalInfos></Body></Report>
