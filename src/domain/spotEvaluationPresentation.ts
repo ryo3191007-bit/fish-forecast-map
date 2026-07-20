@@ -162,7 +162,7 @@ export function formatSpotDetailValue(item: SpotDetailValue | undefined) {
   if (!item) return "未調査";
   if (item.informationState === "researched_unknown") return "調査済み・未確定";
   if (item.informationState === "unresearched") return "未調査";
-  if (item.informationState === "rejected") return "";
+  if (item.informationState === "rejected") return "調査済み・不採用";
   const label = (value: string) => detailLabels[value] ?? (/^[a-z0-9_.:-]+$/i.test(value) ? "その他の確認済み情報" : value);
   if (item.valueTextList.length) return item.valueTextList.map(label).join("、");
   if (item.valueText) return label(item.valueText);
@@ -172,11 +172,11 @@ export function formatSpotDetailValue(item: SpotDetailValue | undefined) {
 }
 
 export function findDisplayableSpotDetail(details: FishingSpotDetailSet | null, itemKey: string) {
-  return details?.values.find((value) =>
-    value.itemKey === itemKey
-    && value.adoptionStatus === "adopted"
+  const matchingValues = details?.values.filter((value) => value.itemKey === itemKey) ?? [];
+  return matchingValues.find((value) =>
+    value.adoptionStatus === "adopted"
     && value.informationState !== "rejected"
-  );
+  ) ?? matchingValues.find((value) => value.informationState === "rejected");
 }
 
 export function scopeSpotDetails(details: FishingSpotDetailSet | null, selectedSpotId: string) {

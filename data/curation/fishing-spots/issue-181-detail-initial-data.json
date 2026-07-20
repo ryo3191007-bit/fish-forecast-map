@@ -1,6 +1,8 @@
 {
   "schemaVersion": "1.0.0",
   "issue": 181,
+  "lastReassessedAt": "2026-07-20",
+  "lastReassessmentIssue": 203,
   "generatedAt": "2026-07-18T00:00:00.000Z",
   "classificationPolicy": [
     "high",
@@ -70,6 +72,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -89,6 +93,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -108,6 +114,8 @@
           "confidence": null,
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -129,6 +137,8 @@
           "confidence": null,
           "note": "野北漁港の一次・限定二次調査ではfacilities.toiletを一般利用可能なトイレを直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -150,6 +160,8 @@
           "confidence": null,
           "note": "野北漁港の一次・限定二次調査ではattributes.streetLightsを夜間常夜灯の点灯状況を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -171,6 +183,8 @@
           "confidence": null,
           "note": "野北漁港の一次・限定二次調査ではfacilities.parkingを一般釣り利用可能な駐車場を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -192,6 +206,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -211,6 +227,8 @@
           "confidence": null,
           "note": "野北漁港の一次・限定二次調査ではrestrictions.fishingProhibitedを釣り禁止有無を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -232,6 +250,8 @@
           "confidence": null,
           "note": "野北漁港の一次・限定二次調査ではattributes.waterDepthを水深数値を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -253,6 +273,8 @@
           "confidence": null,
           "note": "野北漁港の一次・限定二次調査ではattributes.seabedを底質（砂泥・岩礁等）を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -276,6 +298,8 @@
           "confidence": "medium",
           "note": "地理院地図で外海側の防波堤を持つ港湾形状を確認しopen_seaと推定。ただし波浪条件の実測ではない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "nokita-port-src-nokita-gsi-map"
@@ -297,6 +321,8 @@
           "confidence": null,
           "note": "野北漁港の一次・限定二次調査ではattributes.obstaclesを根・テトラ等の障害物を直接示す根拠を確認できなかったためunknown（外海側防波堤周辺として追加確認が必要）。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -320,6 +346,8 @@
           "confidence": "high",
           "note": "C09実データで対象漁港featureの種別を確認。福岡県計画PDFは補助確認に留める。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "nokita-port-src-nokita-ksj-fishing-port"
@@ -344,6 +372,8 @@
           "confidence": "medium",
           "note": "確認済み要素を保持し、不明要素はnoteへ分離: tidal_flow:unknown",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "nokita-port-src-nokita-gsi-map"
@@ -390,6 +420,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -409,6 +441,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -428,6 +462,8 @@
           "confidence": null,
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -450,6 +486,8 @@
           "confidence": null,
           "note": "野北海岸（district）で一般利用できるトイレの現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -472,6 +510,8 @@
           "confidence": null,
           "note": "野北海岸（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -494,6 +534,8 @@
           "confidence": null,
           "note": "野北海岸districtで一般釣り利用できる駐車場の現行根拠がないためunknown。校区紹介は海岸の存在と砂浜を示すが、駐車利用条件は示さない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -516,6 +558,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -535,6 +579,8 @@
           "confidence": null,
           "note": "野北海岸（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -557,6 +603,8 @@
           "confidence": null,
           "note": "野北海岸（district）の水深を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -578,6 +626,8 @@
           "confidence": null,
           "note": "野北海岸（district）の底質を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -599,6 +649,8 @@
           "confidence": null,
           "note": "野北海岸（district）の外海露出度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -620,6 +672,8 @@
           "confidence": null,
           "note": "野北海岸（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -643,6 +697,8 @@
           "confidence": "medium",
           "note": "糸島市の桜野校区紹介が野北海岸を明記し、砂浜の海岸線として説明しているためsandy_beachをconfirmed/mediumとした。海岸全域の釣り可否や立入可否は示さない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "nokita-beach-src-nokita-itoshima-sakurano"
@@ -666,6 +722,8 @@
           "confidence": null,
           "note": "野北海岸（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -728,6 +786,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -747,6 +807,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -766,6 +828,8 @@
           "confidence": null,
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -788,6 +852,8 @@
           "confidence": null,
           "note": "芥屋漁港の一次・限定二次調査ではfacilities.toiletを一般利用可能なトイレを直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -807,6 +873,8 @@
           "confidence": null,
           "note": "芥屋漁港の一次・限定二次調査ではattributes.streetLightsを夜間常夜灯の点灯状況を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -826,6 +894,8 @@
           "confidence": null,
           "note": "芥屋漁港の一次・限定二次調査ではfacilities.parkingを一般釣り利用可能な駐車場を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -845,6 +915,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -864,6 +936,8 @@
           "confidence": null,
           "note": "芥屋漁港の一次・限定二次調査ではrestrictions.fishingProhibitedを釣り禁止有無を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。二次sourceは個別ページを採用できず、トップページ等もcheckedSourceIdsへ登録しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -883,6 +957,8 @@
           "confidence": null,
           "note": "芥屋漁港の一次・限定二次調査ではattributes.waterDepthを水深数値を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -904,6 +980,8 @@
           "confidence": null,
           "note": "芥屋漁港の一次・限定二次調査ではattributes.seabedを底質（砂泥・岩礁等）を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -927,6 +1005,8 @@
           "confidence": "medium",
           "note": "地理院地図で湾口側に面した港湾形状を確認しbay_mouthと推定。潮流・波浪実測ではない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "keya-port-src-keya-gsi-map"
@@ -948,6 +1028,8 @@
           "confidence": null,
           "note": "芥屋漁港の一次・限定二次調査ではattributes.obstaclesを根・テトラ等の障害物を直接示す根拠を確認できなかったためunknown（芥屋大門側の湾口周辺として追加確認が必要）。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -971,6 +1053,8 @@
           "confidence": "high",
           "note": "C09実データで芥屋featureの種別を確認。福岡県計画PDFは再確認したが芥屋漁港の直接記載を確認できず、直接根拠から除外。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "keya-port-src-keya-ksj-fishing-port"
@@ -997,6 +1081,8 @@
           "confidence": "medium",
           "note": "確認済み要素を保持し、不明要素はnoteへ分離: tidal_flow:unknown",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "keya-port-src-keya-gsi-map"
@@ -1059,6 +1145,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -1078,6 +1166,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -1097,6 +1187,8 @@
           "confidence": null,
           "note": "芥屋大門周辺districtのspotTypeを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1120,6 +1212,8 @@
           "confidence": null,
           "note": "糸島市公園案内で芥屋の大門公園のトイレは確認したが、公園施設であり釣り場施設として扱える直接根拠ではないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1144,6 +1238,8 @@
           "confidence": null,
           "note": "芥屋大門周辺districtのstreetLightsを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1167,6 +1263,8 @@
           "confidence": null,
           "note": "糸島市公園案内で芥屋の大門公園の駐車場は確認したが、公園施設であり釣り場・岩場・海岸の駐車施設や利用条件として転用しないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1191,6 +1289,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -1210,6 +1310,8 @@
           "confidence": null,
           "note": "芥屋大門周辺districtの釣り禁止・許可状況を確認できる管理者の現行公式情報がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1234,6 +1336,8 @@
           "confidence": null,
           "note": "芥屋大門周辺districtのwaterDepthを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1257,6 +1361,8 @@
           "confidence": null,
           "note": "芥屋大門周辺districtのseabedを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1280,6 +1386,8 @@
           "confidence": null,
           "note": "芥屋大門周辺districtのopenSeaExposureを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1303,6 +1411,8 @@
           "confidence": null,
           "note": "芥屋大門周辺districtのobstaclesを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1326,6 +1436,8 @@
           "confidence": null,
           "note": "芥屋大門周辺districtのspotTypeを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1349,6 +1461,8 @@
           "confidence": null,
           "note": "芥屋大門周辺districtのtidalFlowを釣り場属性として直接確認できる公式・公的根拠がないためunknown。観光・地形・地名情報や地理院地図から釣り可否、足場、安全性、魚種、釣法へ推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1421,6 +1535,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -1440,6 +1556,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -1459,6 +1577,8 @@
           "confidence": null,
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1480,6 +1600,8 @@
           "confidence": null,
           "note": "船越漁港の一次・限定二次調査ではfacilities.toiletを一般利用可能なトイレを直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1501,6 +1623,8 @@
           "confidence": null,
           "note": "船越漁港の一次・限定二次調査ではattributes.streetLightsを夜間常夜灯の点灯状況を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1522,6 +1646,8 @@
           "confidence": null,
           "note": "船越漁港の一次・限定二次調査ではfacilities.parkingを一般釣り利用可能な駐車場を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1543,6 +1669,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -1562,6 +1690,8 @@
           "confidence": null,
           "note": "船越漁港の一次・限定二次調査ではrestrictions.fishingProhibitedを釣り禁止有無を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。地点個別記事は確認したが、私的な体験記事で恒常的な施設・規制・常夜灯情報の現行性と管理者独立性が不足するため採用しない。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1583,6 +1713,8 @@
           "confidence": null,
           "note": "船越漁港の一次・限定二次調査ではattributes.waterDepthを水深数値を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1604,6 +1736,8 @@
           "confidence": null,
           "note": "船越漁港の一次・限定二次調査ではattributes.seabedを底質（砂泥・岩礁等）を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1627,6 +1761,8 @@
           "confidence": "medium",
           "note": "地理院地図で船越湾内の奥まった港湾形状を確認しshelteredと推定。風向・潮汐による変化は未評価。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "funakoshi-port-src-funakoshi-gsi-map"
@@ -1648,6 +1784,8 @@
           "confidence": null,
           "note": "船越漁港の一次・限定二次調査ではattributes.obstaclesを根・テトラ等の障害物を直接示す根拠を確認できなかったためunknown（船越湾内の奥まった港湾周辺として追加確認が必要）。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1671,6 +1809,8 @@
           "confidence": "high",
           "note": "C09実データで対象漁港featureの種別を確認。福岡県計画PDFは補助確認に留める。",
           "checkedAt": "2026-07-17",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "funakoshi-port-src-funakoshi-ksj-fishing-port"
@@ -1695,6 +1835,8 @@
           "confidence": "medium",
           "note": "確認済み要素を保持し、不明要素はnoteへ分離: tidal_flow:unknown",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "funakoshi-port-src-funakoshi-gsi-map"
@@ -1749,6 +1891,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -1768,6 +1912,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -1787,6 +1933,8 @@
           "confidence": null,
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1809,6 +1957,8 @@
           "confidence": null,
           "note": "岐志漁港（facility）で一般利用できるトイレの現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1832,6 +1982,8 @@
           "confidence": null,
           "note": "岐志漁港（facility）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1855,6 +2007,8 @@
           "confidence": null,
           "note": "糸島市ページで市営渡船利用者向けの無料駐車場を確認したが、一般の釣り利用者が利用可能とは確認できないためunknown。渡船利用条件を釣り場施設へ転用しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1876,6 +2030,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -1895,6 +2051,8 @@
           "confidence": null,
           "note": "岐志漁港（facility）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1918,6 +2076,8 @@
           "confidence": null,
           "note": "岐志漁港（facility）の水深を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1939,6 +2099,8 @@
           "confidence": null,
           "note": "岐志漁港（facility）の底質を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1960,6 +2122,8 @@
           "confidence": null,
           "note": "岐志漁港（facility）の外海露出度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -1981,6 +2145,8 @@
           "confidence": null,
           "note": "岐志漁港（facility）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2004,6 +2170,8 @@
           "confidence": "medium",
           "note": "福岡県Data Webの「筑前海区の漁港」に岐志が掲載されているためfishing_portをconfirmed/mediumとした。釣り可能範囲や一般利用可否は示さない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "kishi-port-src-kishi-fukuoka-port-list"
@@ -2027,6 +2195,8 @@
           "confidence": null,
           "note": "岐志漁港（facility）の潮流強度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2081,6 +2251,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -2100,6 +2272,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -2119,6 +2293,8 @@
           "confidence": null,
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2141,6 +2317,8 @@
           "confidence": null,
           "note": "福吉漁港（facility）で一般利用できるトイレの現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2164,6 +2342,8 @@
           "confidence": null,
           "note": "福吉漁港（facility）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2187,6 +2367,8 @@
           "confidence": null,
           "note": "福吉漁港facilityで一般釣り利用できる駐車場の現行根拠がないためunknown。地域紹介や水揚げ・カキ小屋情報を一般駐車可の根拠へ転用しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2210,6 +2392,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -2229,6 +2413,8 @@
           "confidence": null,
           "note": "福吉漁港（facility）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2252,6 +2438,8 @@
           "confidence": null,
           "note": "福吉漁港（facility）の水深を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2273,6 +2461,8 @@
           "confidence": null,
           "note": "福吉漁港（facility）の底質を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2294,6 +2484,8 @@
           "confidence": null,
           "note": "福吉漁港（facility）の外海露出度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2315,6 +2507,8 @@
           "confidence": null,
           "note": "福吉漁港（facility）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2338,6 +2532,8 @@
           "confidence": "medium",
           "note": "福岡県Data Webの「筑前海区の漁港」に福吉が掲載されているためfishing_portをconfirmed/mediumとした。釣り可能範囲や一般利用可否は示さない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "fukuyoshi-port-src-fukuyoshi-fukuoka-port-list"
@@ -2361,6 +2557,8 @@
           "confidence": null,
           "note": "福吉漁港（facility）の潮流強度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2415,6 +2613,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -2434,6 +2634,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -2453,6 +2655,8 @@
           "confidence": null,
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2476,6 +2680,8 @@
           "confidence": null,
           "note": "浜崎海岸（district）で一般利用できるトイレの現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2499,6 +2705,8 @@
           "confidence": null,
           "note": "浜崎海岸（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2522,6 +2730,8 @@
           "confidence": null,
           "note": "浜崎海岸（district）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2545,6 +2755,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -2564,6 +2776,8 @@
           "confidence": null,
           "note": "浜崎海岸（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2587,6 +2801,8 @@
           "confidence": null,
           "note": "浜崎海岸（district）の水深を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2608,6 +2824,8 @@
           "confidence": null,
           "note": "浜崎海岸（district）の底質を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2629,6 +2847,8 @@
           "confidence": null,
           "note": "浜崎海岸（district）の外海露出度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2650,6 +2870,8 @@
           "confidence": null,
           "note": "浜崎海岸（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2673,6 +2895,8 @@
           "confidence": "medium",
           "note": "佐賀県資料が浜崎海岸を砂浜として明記するためsandy_beachをconfirmed/mediumとした。浜崎海水浴場の季節運用、立入・釣り可否はこの分類から推定しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "hamasaki-beach-src-hamasaki-saga-coast"
@@ -2697,6 +2921,8 @@
           "confidence": null,
           "note": "浜崎海岸（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2751,6 +2977,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -2770,6 +2998,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -2789,6 +3019,8 @@
           "confidence": null,
           "note": "虹の松原周辺は松原と隣接海岸を含む広域districtで、Schemaの単一spotTypeへ直接分類できる公式根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2812,6 +3044,8 @@
           "confidence": null,
           "note": "虹の松原周辺（district）で一般利用できるトイレの現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2835,6 +3069,8 @@
           "confidence": null,
           "note": "虹の松原周辺（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2858,6 +3094,8 @@
           "confidence": null,
           "note": "虹の松原周辺（district）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2881,6 +3119,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -2900,6 +3140,8 @@
           "confidence": null,
           "note": "虹の松原周辺（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2923,6 +3165,8 @@
           "confidence": null,
           "note": "虹の松原周辺（district）の水深を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2944,6 +3188,8 @@
           "confidence": null,
           "note": "虹の松原周辺（district）の底質を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2965,6 +3211,8 @@
           "confidence": null,
           "note": "虹の松原周辺（district）の外海露出度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -2986,6 +3234,8 @@
           "confidence": null,
           "note": "虹の松原周辺（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3007,6 +3257,8 @@
           "confidence": null,
           "note": "虹の松原周辺は松原と隣接海岸を含む広域districtで、Schemaの単一spotTypeへ直接分類できる公式根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3030,6 +3282,8 @@
           "confidence": null,
           "note": "虹の松原周辺（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3123,6 +3377,8 @@
           "confidence": "low",
           "note": null,
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "karatsu-east-port-src-uosoku-karatsu-east-port"
@@ -3144,6 +3400,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3163,6 +3421,8 @@
           "confidence": null,
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3182,6 +3442,8 @@
           "confidence": null,
           "note": "一般利用可能なトイレの公式案内を確認できず、民間釣り情報でも不明とされる。",
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3201,6 +3463,8 @@
           "confidence": null,
           "note": "夜間釣行への言及はあるが、港湾照明、航路標識灯、街路灯と釣り場を照らす常夜灯を区別できないため判定しない。",
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3220,6 +3484,8 @@
           "confidence": null,
           "note": "公式港湾施設資料に壱岐フェリー駐車場は記載されるが、釣り目的の利用可否を確認できない。民間釣り情報でも駐車場は不明とされる。",
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3239,6 +3505,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3258,6 +3526,8 @@
           "confidence": "low",
           "note": "民間釣り情報が『釣り禁止の部分あり』と明記する。ただし禁止範囲・根拠・現行性を公式確認できていないため、現地表示と管理者情報を必ず優先する。",
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "karatsu-east-port-src-uosoku-karatsu-east-port",
@@ -3280,6 +3550,8 @@
           "confidence": null,
           "note": "公式施設値はおおむね0mから-9mまで幅があり、民間情報は港内の足元から比較的水深があるとする。一般に釣り可能な位置との対応は未確認のため、5m超〜15mのmoderateを暫定推定とする。",
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3302,6 +3574,8 @@
           "confidence": "low",
           "note": "民間釣り情報1件が砂地・砂泥地中心とする。公的な底質資料では未確認のため低確度の推定。",
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "karatsu-east-port-src-uosoku-karatsu-east-port"
@@ -3325,6 +3599,8 @@
           "confidence": "medium",
           "note": "唐津港の東港地区として唐津湾側の港湾区域内に位置することから湾内と推定。風波や安全性の評価ではない。",
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "karatsu-east-port-src-gsi-karatsu-east-port",
@@ -3347,6 +3623,8 @@
           "confidence": null,
           "note": "防波堤・護岸の存在とコンクリート波止での釣行例は確認できるが、釣り位置周辺の消波ブロック、岩、海藻等を地点全体として分類できない。",
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3370,6 +3648,8 @@
           "confidence": "high",
           "note": "佐賀県の港湾施設資料で東港地区の岸壁、防波堤、護岸を確認。地区全体の構成であり、各施設への一般立入可否は別途確認が必要。",
           "checkedAt": "2026-07-12",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "karatsu-east-port-src-saga-port-facilities",
@@ -3396,6 +3676,8 @@
           "confidence": "medium",
           "note": "確認済み要素を保持し、不明要素はnoteへ分離: tidal_flow:unknown",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "karatsu-east-port-src-gsi-karatsu-east-port",
@@ -3443,6 +3725,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3462,6 +3746,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3481,6 +3767,8 @@
           "confidence": null,
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3503,6 +3791,8 @@
           "confidence": null,
           "note": "唐津西港（facility）で一般利用できるトイレの現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3525,6 +3815,8 @@
           "confidence": null,
           "note": "唐津西港（facility）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3547,6 +3839,8 @@
           "confidence": null,
           "note": "唐津西港（facility）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3569,6 +3863,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3588,6 +3884,8 @@
           "confidence": null,
           "note": "唐津西港（facility）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3610,6 +3908,8 @@
           "confidence": null,
           "note": "唐津西港（facility）の水深を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3631,6 +3931,8 @@
           "confidence": null,
           "note": "唐津西港（facility）の底質を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3652,6 +3954,8 @@
           "confidence": null,
           "note": "唐津西港（facility）の外海露出度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3673,6 +3977,8 @@
           "confidence": null,
           "note": "唐津西港（facility）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3696,6 +4002,8 @@
           "confidence": "medium",
           "note": "国の資料で「唐津港西港」という港区名を確認したためportをconfirmed/mediumとした。港湾管理区域の一般立入・釣り可否は示さない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "karatsu-west-port-src-karatsu-jtsb-west-port"
@@ -3719,6 +4027,8 @@
           "confidence": null,
           "note": "唐津西港（facility）の潮流強度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3773,6 +4083,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3792,6 +4104,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3811,6 +4125,8 @@
           "confidence": null,
           "note": "呼子周辺は港、市街地、島、海岸を含む広域districtで、単一の地物種別へ直接分類できないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3834,6 +4150,8 @@
           "confidence": null,
           "note": "呼子周辺（district）で一般利用できるトイレの現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3857,6 +4175,8 @@
           "confidence": null,
           "note": "呼子周辺（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3880,6 +4200,8 @@
           "confidence": null,
           "note": "呼子周辺（district）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3903,6 +4225,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -3922,6 +4246,8 @@
           "confidence": null,
           "note": "呼子周辺（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3945,6 +4271,8 @@
           "confidence": null,
           "note": "呼子周辺（district）の水深を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3966,6 +4294,8 @@
           "confidence": null,
           "note": "呼子周辺（district）の底質を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -3987,6 +4317,8 @@
           "confidence": null,
           "note": "呼子周辺（district）の外海露出度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4008,6 +4340,8 @@
           "confidence": null,
           "note": "呼子周辺（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4029,6 +4363,8 @@
           "confidence": null,
           "note": "呼子周辺は港、市街地、島、海岸を含む広域districtで、単一の地物種別へ直接分類できないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4052,6 +4388,8 @@
           "confidence": null,
           "note": "呼子周辺（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4098,6 +4436,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -4117,6 +4457,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -4136,6 +4478,8 @@
           "confidence": null,
           "note": "伊万里湾奥は港湾、市街地沿岸、河口、干潟等を含み得る広域districtで、単一のspotTypeへ直接分類できる公式根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4158,6 +4502,8 @@
           "confidence": null,
           "note": "伊万里湾奥（district）で一般利用できるトイレの現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4180,6 +4526,8 @@
           "confidence": null,
           "note": "伊万里湾奥（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4202,6 +4550,8 @@
           "confidence": null,
           "note": "伊万里湾奥（district）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4224,6 +4574,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -4243,6 +4595,8 @@
           "confidence": null,
           "note": "伊万里湾奥（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4265,6 +4619,8 @@
           "confidence": null,
           "note": "伊万里湾奥（district）の水深を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4286,6 +4642,8 @@
           "confidence": null,
           "note": "伊万里湾奥（district）の底質を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4309,6 +4667,8 @@
           "confidence": "medium",
           "note": "伊万里市公式ページが伊万里湾を、島々が外海の風や波を遮る「穏やかな内海」と説明しているためinner_bayをconfirmed/mediumとした。リアルタイムの波浪・潮流を示すものではない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "imari-inner-bay-src-imari-city-bay"
@@ -4332,6 +4692,8 @@
           "confidence": null,
           "note": "伊万里湾奥（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4353,6 +4715,8 @@
           "confidence": null,
           "note": "伊万里湾奥は港湾、市街地沿岸、河口、干潟等を含み得る広域districtで、単一のspotTypeへ直接分類できる公式根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4377,6 +4741,8 @@
           "confidence": "medium",
           "note": "確認済み要素を保持し、不明要素はnoteへ分離: tidal_flow:unknown, river_influence:unknown",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "imari-inner-bay-src-imari-city-bay"
@@ -4441,6 +4807,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -4460,6 +4828,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -4479,6 +4849,8 @@
           "confidence": null,
           "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4503,6 +4875,8 @@
           "confidence": null,
           "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからtoiletを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4527,6 +4901,8 @@
           "confidence": null,
           "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからstreetLightsを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4551,6 +4927,8 @@
           "confidence": null,
           "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからparkingを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4575,6 +4953,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -4594,6 +4974,8 @@
           "confidence": null,
           "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからfishingProhibitedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4618,6 +5000,8 @@
           "confidence": null,
           "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからwaterDepthを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4642,6 +5026,8 @@
           "confidence": null,
           "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからseabedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4666,6 +5052,8 @@
           "confidence": null,
           "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからopenSeaExposureを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4690,6 +5078,8 @@
           "confidence": null,
           "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからobstaclesを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4714,6 +5104,8 @@
           "confidence": null,
           "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4738,6 +5130,8 @@
           "confidence": null,
           "note": "福島周辺は伊万里湾に浮かぶ松浦市福島町の島域を安全に丸めた広域districtであり、公式・公的sourceからtidalFlowを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4795,6 +5189,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -4814,6 +5210,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -4833,6 +5231,8 @@
           "confidence": null,
           "note": "鷹島周辺は島内の港、海岸、地磯、市街地、橋周辺等を含む広域districtで、単一のspotTypeへ直接分類できないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4856,6 +5256,8 @@
           "confidence": null,
           "note": "鷹島周辺（district）で一般利用できるトイレの現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4879,6 +5281,8 @@
           "confidence": null,
           "note": "鷹島周辺（district）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4902,6 +5306,8 @@
           "confidence": null,
           "note": "鷹島周辺（district）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4925,6 +5331,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -4944,6 +5352,8 @@
           "confidence": null,
           "note": "鷹島周辺（district）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4967,6 +5377,8 @@
           "confidence": null,
           "note": "鷹島周辺（district）の水深を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -4988,6 +5400,8 @@
           "confidence": null,
           "note": "鷹島周辺（district）の底質を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5009,6 +5423,8 @@
           "confidence": null,
           "note": "鷹島周辺（district）の外海露出度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5030,6 +5446,8 @@
           "confidence": null,
           "note": "鷹島周辺（district）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5051,6 +5469,8 @@
           "confidence": null,
           "note": "鷹島周辺は島内の港、海岸、地磯、市街地、橋周辺等を含む広域districtで、単一のspotTypeへ直接分類できないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5074,6 +5494,8 @@
           "confidence": null,
           "note": "鷹島周辺（district）の潮流強度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5136,6 +5558,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -5155,6 +5579,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -5174,6 +5600,8 @@
           "confidence": null,
           "note": "spotType（漁港・港・サーフ種別）は足場状態ではないためshore_accessへ採用せず、spot_featuresで保持。足場状態は直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5198,6 +5626,8 @@
           "confidence": null,
           "note": "田平港（facility）で一般利用できるトイレの現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5222,6 +5652,8 @@
           "confidence": null,
           "note": "田平港（facility）の常夜灯の有無・点灯状況を確認できる現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5246,6 +5678,8 @@
           "confidence": null,
           "note": "田平港（facility）で一般釣り利用できる駐車場の現行根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5270,6 +5704,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -5289,6 +5725,8 @@
           "confidence": null,
           "note": "田平港（facility）の釣り禁止・許可状況を確認できる管理者の現行情報がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5313,6 +5751,8 @@
           "confidence": null,
           "note": "田平港（facility）の水深を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5334,6 +5774,8 @@
           "confidence": null,
           "note": "田平港（facility）の底質を直接確認できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5355,6 +5797,8 @@
           "confidence": null,
           "note": "田平港（facility）の外海露出度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5376,6 +5820,8 @@
           "confidence": null,
           "note": "田平港（facility）の根・テトラ等の障害物を直接確認できる根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5399,6 +5845,8 @@
           "confidence": "medium",
           "note": "国土交通省が平戸瀬戸航路周辺の港として田平港を明記し、長崎県が田平港を港湾施設として扱っているためportをconfirmed/mediumとした。一般立入・釣り可否は示さない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [
               "tabira-port-src-tabira-mlit-hirado-route",
@@ -5424,6 +5872,8 @@
           "confidence": null,
           "note": "田平港（facility）の潮流強度を直接評価できる一次根拠がないためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5486,6 +5936,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -5505,6 +5957,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -5524,6 +5978,8 @@
           "confidence": null,
           "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5548,6 +6004,8 @@
           "confidence": null,
           "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからtoiletを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5572,6 +6030,8 @@
           "confidence": null,
           "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからstreetLightsを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5596,6 +6056,8 @@
           "confidence": null,
           "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからparkingを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5620,6 +6082,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -5639,6 +6103,8 @@
           "confidence": null,
           "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからfishingProhibitedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5663,6 +6129,8 @@
           "confidence": null,
           "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからwaterDepthを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5687,6 +6155,8 @@
           "confidence": null,
           "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからseabedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5711,6 +6181,8 @@
           "confidence": null,
           "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからopenSeaExposureを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5735,6 +6207,8 @@
           "confidence": null,
           "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからobstaclesを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5759,6 +6233,8 @@
           "confidence": null,
           "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5783,6 +6259,8 @@
           "confidence": null,
           "note": "平戸瀬戸周辺は九州本土と平戸島の間の水道・航路を安全に丸めた広域districtであり、公式・公的sourceからtidalFlowを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5848,6 +6326,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -5867,6 +6347,8 @@
           "confidence": null,
           "note": null,
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -5886,6 +6368,8 @@
           "confidence": null,
           "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5910,6 +6394,8 @@
           "confidence": null,
           "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからtoiletを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5934,6 +6420,8 @@
           "confidence": null,
           "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからstreetLightsを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5958,6 +6446,8 @@
           "confidence": null,
           "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからparkingを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -5982,6 +6472,8 @@
           "confidence": null,
           "note": "一次・限定二次調査ではアクセス補足を地点全体の釣り属性として直接確認できなかったためunknown。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [],
@@ -6001,6 +6493,8 @@
           "confidence": null,
           "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからfishingProhibitedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -6025,6 +6519,8 @@
           "confidence": null,
           "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからwaterDepthを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -6049,6 +6545,8 @@
           "confidence": null,
           "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからseabedを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -6073,6 +6571,8 @@
           "confidence": null,
           "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからopenSeaExposureを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -6097,6 +6597,8 @@
           "confidence": null,
           "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからobstaclesを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -6121,6 +6623,8 @@
           "confidence": null,
           "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからspotTypeを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [
@@ -6145,6 +6649,8 @@
           "confidence": null,
           "note": "生月島方面は平戸島北西の生月島全体を安全に丸めた広域districtであり、公式・公的sourceからtidalFlowを地区全体の釣り属性として直接確認できないためunknown。個別港湾・橋・灯台・観光施設・店舗・漁業情報から推測しない。",
           "checkedAt": "2026-07-18",
+          "reassessedAt": "2026-07-20",
+          "reassessmentIssue": 203,
           "sources": {
             "supporting": [],
             "checked": [

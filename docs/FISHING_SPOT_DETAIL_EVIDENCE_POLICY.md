@@ -5,7 +5,7 @@
 
 ## 1. 共通原則
 
-値、根拠の強さ、採否を別々に記録する。確認できない値を「なし」へ変換せず、調査したが確定できない場合は `researched_unknown`、未着手なら `unresearched` とする。採用しない根拠は `rejected` / `not_adopted` とし、通常UIには出さない。
+値、根拠の強さ、採否を別々に記録する。確認できない値を「なし」へ変換せず、調査したが確定できない場合は `researched_unknown`、未着手なら `unresearched` とする。採用しない根拠は `rejected` / `not_adopted` とし、値そのものは通常UIには出さない。
 
 採用値には `source`、確認日 (`checkedOn` / `checkedAt`)、`confidence`、`informationState`、`adoptionStatus` を揃える。地図や画像から確認できる形状と、釣果・安全への効果の推測は分離する。地点範囲の異なる情報を無条件に転用しない。
 
@@ -25,16 +25,16 @@
 - `low`: 地点への直接性はあるが、民間単独、古い資料、推定を含む。参考値として採用でき、UIに「信憑性: 低」を併記する。
 - `researched_unknown`: 調査対象資料を確認したが値を確定できない。
 - `unresearched`: 対象項目の調査記録がない。
-- `rejected`: 矛盾、地点不一致、直接性不足等により不採用。通常UIには表示しない。
+- `rejected`: 矛盾、地点不一致、直接性不足等により不採用。値は表示せず、調査済みの状態だけを表示する。
 
 `has_evidence` / `weak_evidence` の採用値だけが confidence を持つ。unknown/rejected は値と confidence を持たない。安全・利用可否の肯定は `low` の根拠だけでは採用しない。
 
 ## 4. 表示とレビュー
 
-採用済みの `high` / `medium` / `low` は値と信憑性を表示する。`researched_unknown` は「調査済み・未確定」、`unresearched` または行欠落は「未調査」と表示する。`rejected` は通常UIから除外する。「不明」を設備の「なし」へ置換しない。
+採用済みの `high` / `medium` / `low` は値と信憑性を表示する。`researched_unknown` は「調査済み・未確定」、`unresearched` または行欠落は「未調査」と表示する。`rejected` は値を伏せて「調査済み・不採用」と表示し、行欠落と混同しない。「不明」を設備の「なし」へ置換しない。
 
 判断が分かれる項目は候補値を断定せず、`candidate` または `needs_recheck` としてレビューへ回す。利用可否・閉鎖情報は更新され得るため、利用者は現地掲示と管理者の最新情報を優先する。
 
 ## 5. Issue #203 再判定
 
-既存18地点は `data/curation/fishing-spots/issue-203-detail-reassessment.json` に全件の再判定記録を持つ。新規の大規模Web調査は行わず、Issue #181の調査JSON、レビュー資料、sourceを本方針で再評価した。既存の採用値は種類別基準にも適合したため維持し、根拠不足の項目は推測採用せず `researched_unknown` を維持した。Schema変更は不要である。
+既存18地点は `data/curation/fishing-spots/issue-203-detail-reassessment.json` に地点・項目ごとの全再判定記録を持つ。新規の大規模Web調査は行わず、Issue #181の調査JSON、レビュー資料、sourceを本方針で再評価した。既存の採用値は種類別基準にも適合したため維持し、根拠不足の項目は推測採用せず `researched_unknown` を維持した。再判定日とIssue番号は実データとアプリ同梱fallbackにも反映する。Schema変更は不要である。

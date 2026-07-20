@@ -52,13 +52,14 @@ assert.equal(presentation.formatSpotDetailValue(value("new", "river_influence:no
 assert.equal(presentation.formatSpotDetailValue(value("new", "unknown_internal_code")), "その他の確認済み情報");
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), informationState: "researched_unknown" }), "調査済み・未確定");
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), informationState: "unresearched" }), "未調査");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), informationState: "rejected" }), "調査済み・不採用");
 assert.equal(presentation.formatSpotDetailValue(undefined), "未調査", "a missing row is not presented as a confirmed absence");
 const visibilityDetails = { itemDefinitions: [], values: [
   { ...value("new", "参考値"), itemKey: "target_species", adoptionStatus: "adopted", confidence: "low" },
   { ...value("new", "非表示"), itemKey: "parking", adoptionStatus: "adopted", informationState: "rejected" },
 ] };
 assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "target_species").confidence, "low", "adopted low-confidence evidence remains visible");
-assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "parking"), undefined, "rejected evidence is excluded from the normal UI");
+assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "parking").informationState, "rejected", "a rejected result remains available so it is not mistaken for an unresearched item");
 
 const environment = (cacheStatus, fetchStatus, warning = null) => ({ cacheStatus, fetchStatus, warning });
 assert.equal(presentation.getEnvironmentStatusLabel(environment("fresh", "success"), null), "最新データ");
