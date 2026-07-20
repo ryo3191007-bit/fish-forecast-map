@@ -267,7 +267,7 @@ assert.match(
 );
 assert.match(
   dashboard,
-  /const \[spotEvaluationTab\] = useState<SpotEvaluationTab>\("評価"\)/,
+  /const \[spotEvaluationTab, setSpotEvaluationTab\] = useState<SpotEvaluationTab>\("評価"\)/,
   "spot evaluation internal tab state is owned by FishingDashboard",
 );
 assert.doesNotMatch(
@@ -277,8 +277,8 @@ assert.doesNotMatch(
 );
 assert.match(
   dashboard,
-  /selectedTime=\{selectedEnvironmentTime\}[\s\S]*?onSelectedTimeChange=\{setSelectedEnvironmentTime\}/,
-  "EnvironmentPanel selected time is controlled by FishingDashboard",
+  /selectedTime=\{selectedEnvironmentTime\}[\s\S]*?onSelectedTimeChange=\{changeSelectedEnvironmentTime\}/,
+  "SpotEvaluationCard selected time is controlled by FishingDashboard",
 );
 
 const memoSection = readFileSync(

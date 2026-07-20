@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import {
   fishSpeciesNames,
@@ -12,7 +12,7 @@ import {
   fetchFishingEnvironment,
   readCachedFishingEnvironment,
 } from "@/services/openMeteo";
-import { EnvironmentPanel } from "./EnvironmentPanel";
+import { SpotEvaluationCard, type SpotEvaluationTab } from "./SpotEvaluationCard";
 import { FishingMap } from "./FishingMap";
 import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
@@ -24,10 +24,11 @@ import {
   getStaticMasterData,
   type MasterDataSet,
 } from "@/lib/masterDataRepository";
+import { fetchFishingSpotDetails } from "@/lib/fishingSpotDetailRepository";
+import type { FishingSpotDetailSet } from "@/domain/fishingSpotDetail";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
-type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形";
 const reportSortOptions: { value: SortOption; label: string }[] = [
   { value: "dateDesc", label: "日付が新しい順" },
   { value: "dateAsc", label: "日付が古い順" },
@@ -55,8 +56,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     useState<DashboardMode>("catchReports");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [spotEvaluationTab] = useState<SpotEvaluationTab>("評価");
-  void spotEvaluationTab;
+  const [spotEvaluationTab, setSpotEvaluationTab] = useState<SpotEvaluationTab>("評価");
   const [selectedEnvironmentTime, setSelectedEnvironmentTime] = useState<
     string | null
   >(null);
@@ -89,6 +89,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   );
   const [environmentError, setEnvironmentError] = useState<string | null>(null);
   const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(false);
+  const [spotDetails, setSpotDetails] = useState<FishingSpotDetailSet | null>(null);
+  const changeSelectedEnvironmentTime = useCallback((time: string | null) => setSelectedEnvironmentTime(time), []);
   useEffect(() => {
     let isActive = true;
     fetchMasterData()
@@ -286,6 +288,13 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
       isActive = false;
       abortController.abort();
     };
+  }, [environmentSpot]);
+
+  useEffect(() => {
+    let active = true;
+    if (!environmentSpot) { setSpotDetails(null); return; }
+    fetchFishingSpotDetails(environmentSpot.id).then((result) => { if (active) setSpotDetails(result.data); });
+    return () => { active = false; };
   }, [environmentSpot]);
 
   const activeSortOptions = reportSortOptions;
@@ -544,24 +553,23 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
         </div>
       ) : (
         <div className="spotEvaluationMode">
-          <EnvironmentPanel
+          <SpotEvaluationCard
             selectedSpot={environmentSpot}
             spots={fishingSpots}
             selectedSpotId={environmentSpotId}
             onSelectedSpotIdChange={setEnvironmentSpotId}
             environment={environment}
             selectedTime={selectedEnvironmentTime}
-            onSelectedTimeChange={setSelectedEnvironmentTime}
+            onSelectedTimeChange={changeSelectedEnvironmentTime}
+            activeTab={spotEvaluationTab}
+            onActiveTabChange={setSpotEvaluationTab}
             isLoading={isEnvironmentLoading}
             error={environmentError}
+            details={spotDetails}
+            catches={externalMemos}
           />
-          <div className="sectionHeading">
-            <div>
-              <p className="eyebrow">Spot evaluation</p>
-              <h2>地点評価</h2>
-            </div>
-          </div>
-          <div className="cards" id="reports">
+          {/* Legacy aggregate cards are replaced by the selected spot's SCORE v2 card. */}
+          <div className="cards legacySpotEvaluations" id="reports" hidden>
             {areaEvaluations.length === 0 ? (
               <div className="emptyState" role="status">
                 <p className="eyebrow">No areas</p>
