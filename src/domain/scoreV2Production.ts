@@ -74,9 +74,9 @@ const lowestConfidence = (values: SpotDetailValue[], cap: SpotDetailConfidence):
 };
 const evidence = (score:number, confidence:SpotDetailConfidence, displayReason:string): ScoreEvidence => ({ score, confidence, displayReason });
 
-function directSpecies(details: FishingSpotDetailSet | null | undefined, species: SupportedSpecies) {
+function directSpecies(details: FishingSpotDetailSet | null | undefined, species: SupportedSpecies, fishSpecies: readonly FishSpecies[], aliases: readonly FishSpeciesAlias[]) {
   const candidates = valuesFor(details, "target_species");
-  if (candidates.length !== 1 || !tokens(candidates[0]).includes(species)) return null;
+  if (candidates.length !== 1 || !tokens(candidates[0]).some((candidate) => fishSpeciesNamesMatch(candidate, species, fishSpecies, aliases))) return null;
   return evidence(100, candidates[0].confidence!, `${species}を対象とする承認済み情報があります`);
 }
 function habitat(details: FishingSpotDetailSet | null | undefined, species: SupportedSpecies) {
@@ -143,7 +143,9 @@ function environmentEvidence(environment:FishingEnvironment|null,selected:string
 export function buildScoreV2SpeciesInput(args:{species:FishSpeciesName;spot:FishingSpot;details?:FishingSpotDetailSet|null;catches?:ExternalCatchRecord[];environment?:FishingEnvironment|null;selectedDateTime:string;fishSpecies?:readonly FishSpecies[];fishSpeciesAliases?:readonly FishSpeciesAlias[]}):ScoreV2SpeciesInput {
   const {species}=args; if(!SCORE_V2_SUPPORTED_SPECIES.includes(species as SupportedSpecies))return {species,spot:args.spot,selectedDateTime:args.selectedDateTime}; const supported=species as SupportedSpecies;
   const details=args.details?{...args.details,values:args.details.values.filter((value)=>value.spotId===args.spot.id)}:null;
-  return {species,spot:args.spot,selectedDateTime:args.selectedDateTime,spotEvidence:{directSpecies:directSpecies(details,supported),habitat:habitat(details,supported),catchHistory:catchHistory(args.catches??[],args.spot.id,supported,args.selectedDateTime,args.fishSpecies??staticFishSpecies,args.fishSpeciesAliases??staticFishSpeciesAliases),methodAffinity:methodAffinity(details,supported)},environmentEvidence:environmentEvidence(args.environment??null,args.selectedDateTime,supported).evidence};
+  const fishSpecies = args.fishSpecies ?? staticFishSpecies;
+  const fishSpeciesAliases = args.fishSpeciesAliases ?? staticFishSpeciesAliases;
+  return {species,spot:args.spot,selectedDateTime:args.selectedDateTime,spotEvidence:{directSpecies:directSpecies(details,supported,fishSpecies,fishSpeciesAliases),habitat:habitat(details,supported),catchHistory:catchHistory(args.catches??[],args.spot.id,supported,args.selectedDateTime,fishSpecies,fishSpeciesAliases),methodAffinity:methodAffinity(details,supported)},environmentEvidence:environmentEvidence(args.environment??null,args.selectedDateTime,supported).evidence};
 }
 
 export function calculateProductionScoreV2(args:{spot:FishingSpot;details?:FishingSpotDetailSet|null;catches?:ExternalCatchRecord[];environment?:FishingEnvironment|null;selectedDateTime:string;jmaWarning?:JmaWarningDecision|null;fishSpecies?:readonly FishSpecies[];fishSpeciesAliases?:readonly FishSpeciesAlias[]}):ScoreV2ProductionResult {

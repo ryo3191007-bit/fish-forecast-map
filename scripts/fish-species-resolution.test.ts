@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { mockFishingReports } from "@/data/mockFishingReports";
 import { applyExternalMemoScoreAdjustments } from "@/domain/externalMemoScore";
 import type { ExternalCatchRecord } from "@/domain/externalCatch";
+import type { FishingSpotDetailSet } from "@/domain/fishingSpotDetail";
 import { buildScoreV2SpeciesInput } from "@/domain/scoreV2Production";
 import { filterByFishSpecies, resolveFishSpeciesName, staticFishSpecies, staticFishSpeciesAliases } from "@/lib/fishSpeciesResolver";
 import { mapSuccessfulFishSpeciesAliasRows } from "@/lib/masterDataRepository";
@@ -48,6 +49,31 @@ const canonicalScore = buildScoreV2SpeciesInput({ species: "チヌ", spot, catch
 assert.ok(canonicalScore.spotEvidence?.catchHistory, "canonical SCORE v2 behavior is preserved");
 const unresolvedScore = buildScoreV2SpeciesInput({ species: "チヌ", spot, catches: [{ ...catchRecord, species: "未登録魚" }], selectedDateTime: new Date().toISOString() });
 assert.equal(unresolvedScore.spotEvidence?.catchHistory, null);
+
+const directSpeciesDetails = (candidate: string) => ({
+  itemDefinitions: [],
+  values: [{
+    id: `target-${candidate}`, spotId: spot.id, itemKey: "target_species", informationState: "has_evidence",
+    valueText: null, valueTextList: [candidate], valueNumber: null, valueBoolean: null, valueJson: null, unit: null,
+    confidence: "high", contributionOrigin: "curated_research", contributorId: null, submittedAt: null,
+    moderationStatus: "not_required", reviewStatus: "reviewed", adoptionStatus: "adopted", note: null,
+    checkedAt: "2026-07-20", sources: [{
+      source: { id: "direct-species-test", sourceType: "official", sourceName: "test", sourceUrl: "https://example.test/direct", checkedOn: "2026-07-20", note: null },
+      relation: "supporting", note: null,
+    }],
+  }],
+}) as FishingSpotDetailSet;
+
+for (const candidate of ["黒鯛", "クロダイ", "チヌ"]) {
+  const directScore = buildScoreV2SpeciesInput({ species: "チヌ", spot, details: directSpeciesDetails(candidate), selectedDateTime: new Date().toISOString() });
+  assert.ok(directScore.spotEvidence?.directSpecies, `SCORE v2 direct species resolves ${candidate} to chinu`);
+}
+const unresolvedDirectScore = buildScoreV2SpeciesInput({ species: "チヌ", spot, details: directSpeciesDetails("未登録魚"), selectedDateTime: new Date().toISOString() });
+assert.equal(unresolvedDirectScore.spotEvidence?.directSpecies, null, "unresolved direct species fails closed");
+const conflictedDirectScore = buildScoreV2SpeciesInput({
+  species: "チヌ", spot, details: directSpeciesDetails("黒鯛"), selectedDateTime: new Date().toISOString(), fishSpeciesAliases: conflictAliases,
+});
+assert.equal(conflictedDirectScore.spotEvidence?.directSpecies, null, "conflicted direct species fails closed");
 
 assert.deepEqual(mapSuccessfulFishSpeciesAliasRows([]), [], "a successful empty DB response remains empty and cannot reactivate static aliases");
 
