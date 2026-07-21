@@ -170,6 +170,7 @@ export function FishingMap({ reports, externalMemos, spots, focusRequest }: Fish
   const bathymetryMarkerRef = useRef<maplibregl.Marker | null>(null);
   const spotMarkersRef = useRef(new Map<string, maplibregl.Marker>());
   const activePopupRef = useRef<maplibregl.Popup | null>(null);
+  const activePopupRef = useRef<maplibregl.Popup | null>(null);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
   const [terrainExaggeration, setTerrainExaggeration] = useState(
@@ -219,6 +220,8 @@ export function FishingMap({ reports, externalMemos, spots, focusRequest }: Fish
         ],
       },
       center: [129.95, 33.48],
+      activePopupRef.current?.remove();
+      activePopupRef.current = null;
       zoom: 8.2,
     });
     mapRef.current = map;
@@ -726,16 +729,51 @@ export function FishingMap({ reports, externalMemos, spots, focusRequest }: Fish
       canvas.removeEventListener("pointercancel", suppressGestureClick);
       map.off("dragstart", suppressGestureClick);
       map.off("rotatestart", suppressGestureClick);
-      map.off("pitchstart", suppressGestureClick);
-      map.off("zoomstart", suppressGestureClick);
-      map.off("click", selectPoint);
+    const registerPopup = (popup: maplibregl.Popup) => {
+      popup.on("open", () => {
+        if (activePopupRef.current !== popup) {
+          activePopupRef.current?.remove();
+          activePopupRef.current = popup;
+        }
+      });
+      popup.on("close", () => {
+        if (activePopupRef.current === popup) activePopupRef.current = null;
+      });
+      return popup;
     };
-  }, [bathymetryRuntime.display, mapLayerMode]);
 
+      const popup = registerPopup(
+        new maplibregl.Popup({
+          offset: 18,
+          className: "fishingMapPopup fishingMapSpotPopup",
+        }).setText(spot.name),
+      );
+          registerPopup(
+            new maplibregl.Popup({
+              offset: 16,
+              className: "fishingMapPopup fishingMapReportPopup",
+            }).setDOMContent(createPopupContent(report)),
+          registerPopup(
+            new maplibregl.Popup({
+              offset: 16,
+              className: "fishingMapPopup fishingMapMemoPopup",
+            }).setDOMContent(createExternalMemoPopupContent(memo)),
+
+      const renderedPopups = [...spotMarkers, ...reportMarkers, ...memoMarkers]
+        .map((marker) => marker.getPopup())
+        .filter((popup): popup is maplibregl.Popup => Boolean(popup));
+      if (
+        activePopupRef.current &&
+        renderedPopups.includes(activePopupRef.current)
+      ) {
+        activePopupRef.current.remove();
+        activePopupRef.current = null;
+      }
   useEffect(() => {
     const map = mapRef.current;
-    bathymetryMarkerRef.current?.remove();
-    bathymetryMarkerRef.current = null;
+    const popup = marker.getPopup();
+    if (activePopupRef.current !== popup) activePopupRef.current?.remove();
+    if (!popup?.isOpen()) marker.togglePopup();
     if (!map || !bathymetrySelection) return;
     const element = document.createElement("div");
     element.className = "bathymetryPointMarker";
