@@ -38,6 +38,7 @@ type Props = {
   error: string | null;
   jmaWarning: JmaWarningDecision | null;
   onShowAllSpecies: () => void;
+  onFocusMap: () => void;
 };
 
 const tabs: SpotEvaluationTab[] = ["評価", "環境", "釣場", "地形"];
@@ -75,6 +76,9 @@ export function SpotEvaluationCard(props: Props) {
         <span>{props.selectedSpot?.areaName ?? "対象地点なし"}</span>
       </header>
       <SpotCombobox spots={props.spots} selected={props.selectedSpot} onSelect={props.onSelectedSpotIdChange} />
+      <button type="button" className="focusMapButton" disabled={!props.selectedSpot} onClick={props.onFocusMap}>
+        マップで場所を確認
+      </button>
 
       <div className="sharedTimeControls" aria-label="評価・環境の共通日時">
         <label>日付<input type="date" value={selectedDate} disabled={!rows.length} onChange={(event) => props.onSelectedTimeChange(rows.find((row) => row.forecastTime.startsWith(event.target.value))?.forecastTime ?? resolveSelectedForecastTime(rows, null))} /></label>
