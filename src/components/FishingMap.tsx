@@ -106,6 +106,12 @@ type FishingMapProps = {
   reports: FishingReport[];
   externalMemos: ExternalCatchMemo[];
   spots: FishingSpot[];
+  focusRequest: MapSpotFocusRequest | null;
+};
+
+export type MapSpotFocusRequest = {
+  spotId: string;
+  requestToken: number;
 };
 
 type MappableExternalMemo = ExternalCatchMemo & {
@@ -147,7 +153,7 @@ const FALLBACK_LAYER_IDS = [
   BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
 ] as const;
 
-export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
+export function FishingMap({ reports, externalMemos, spots, focusRequest }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
@@ -162,6 +168,7 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   );
   const bathymetryGestureRef = useRef(createBathymetryPointGestureState());
   const bathymetryMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const spotMarkersRef = useRef(new Map<string, maplibregl.Marker>());
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
   const [terrainExaggeration, setTerrainExaggeration] = useState(
@@ -742,6 +749,21 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
+    const markerRegistry = spotMarkersRef.current;
+
+    const spotMarkers = spots.map((spot) => {
+      const element = document.createElement("button");
+      element.type = "button";
+      element.className = "fishingSpotMarker";
+      element.setAttribute("aria-label", `${spot.name}を地図で表示`);
+      const popup = new maplibregl.Popup({ offset: 18 }).setText(spot.name);
+      const marker = new maplibregl.Marker({ element })
+        .setLngLat([spot.longitude, spot.latitude])
+        .setPopup(popup)
+        .addTo(map);
+      markerRegistry.set(spot.id, marker);
+      return marker;
+    });
 
     const reportMarkers = reports.map((report) =>
       new maplibregl.Marker({ color: scoreColor(report.forecast.score) })
@@ -765,9 +787,32 @@ export function FishingMap({ reports, externalMemos, spots }: FishingMapProps) {
         .addTo(map),
     );
 
-    return () =>
-      [...reportMarkers, ...memoMarkers].forEach((marker) => marker.remove());
-  }, [mappableExternalMemos, reports]);
+    return () => {
+      [...spotMarkers, ...reportMarkers, ...memoMarkers].forEach((marker) => marker.remove());
+      markerRegistry.clear();
+    };
+  }, [mappableExternalMemos, reports, spots]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !focusRequest) return;
+    const spot = spots.find((item) => item.id === focusRequest.spotId);
+    const marker = spotMarkersRef.current.get(focusRequest.spotId);
+    if (!spot || !marker) return;
+
+    spotMarkersRef.current.forEach((item) =>
+      item.getElement().classList.remove("fishingSpotMarkerFocused"),
+    );
+    marker.getElement().classList.add("fishingSpotMarkerFocused");
+    map.flyTo({
+      center: [spot.longitude, spot.latitude],
+      zoom: Math.max(map.getZoom(), 13),
+      duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 700,
+      essential: true,
+    });
+    marker.togglePopup();
+    if (!marker.getPopup()?.isOpen()) marker.togglePopup();
+  }, [focusRequest, spots]);
 
   const handleLayerModeChange = (nextMode: MapLayerMode) => {
     if (nextMode === "bathymetry") {
