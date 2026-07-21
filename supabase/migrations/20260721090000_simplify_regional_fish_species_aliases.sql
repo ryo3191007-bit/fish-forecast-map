@@ -4,6 +4,12 @@ update public.fish_species
 set name_ja = 'スズキ', updated_at = now()
 where id = 'seabass';
 
+-- Free the canonical name before assigning it to kensakiika. The unique
+-- fish_species.name_ja constraint makes this ordering significant on a fresh DB.
+update public.fish_species
+set name_ja = 'ヤリイカ（旧分類）', is_active = false, is_selectable = false, updated_at = now()
+where id = 'yariika';
+
 update public.fish_species
 set name_ja = 'ヤリイカ', is_active = true, is_selectable = true, updated_at = now()
 where id = 'kensakiika';
@@ -25,11 +31,6 @@ on conflict (id) do update set
 update public.fish_species
 set parent_group_id = 'kamasu', is_active = false, is_selectable = false, updated_at = now()
 where id in ('akakamasu', 'yamatokamasu');
-
--- Preserve the old ID for existing foreign keys while preventing new use.
-update public.fish_species
-set is_active = false, is_selectable = false, updated_at = now()
-where id = 'yariika';
 
 -- The original canonical ヤリイカ alias is retained and reassigned rather
 -- than deleted, so existing alias references and deterministic IDs survive.

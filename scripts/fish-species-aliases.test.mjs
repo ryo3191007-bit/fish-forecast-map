@@ -11,6 +11,7 @@ const expansion = readFileSync(expansionPath, "utf8");
 const batch1 = readFileSync(batch1Path, "utf8");
 const batch2 = readFileSync(batch2Path, "utf8");
 const regional = readFileSync(regionalPath, "utf8");
+const staticSpecies = readFileSync("src/domain/fishing.ts", "utf8");
 
 const baselineSeeds = [...baseline.matchAll(/\('([0-9a-f-]{36})',\s*'([^']+)',\s*'([^']+)'\)/g)]
   .map((match) => ({ id: match[1], speciesId: match[2], alias: match[3] }));
@@ -65,8 +66,15 @@ assert.match(batch2, /public\.fish_species_match_key\(seed\.alias_name\)/, "batc
 assert.match(batch2, /'approved',[\s\S]*?'migration:issue-220-batch-2'/, "batch 2 records approval status and audit attribution");
 assert.doesNotMatch(batch2, /'(?:セイゴ|フッコ|ハネ|コハダ|ササイカ|ヤリイカ|マアジ|マサバ|マイワシ)'/, "deferred and excluded names must not be seeded in batch 2");
 
-assert.match(regional, /where id = 'yariika';/, "legacy yariika is updated in place, not deleted");
-assert.match(regional, /set is_active = false, is_selectable = false/, "legacy yariika is inactive and unselectable");
+const legacyYariikaUpdate = /set name_ja = 'ヤリイカ（旧分類）', is_active = false, is_selectable = false, updated_at = now\(\)\s*where id = 'yariika';/;
+const canonicalYariikaUpdate = /set name_ja = 'ヤリイカ', is_active = true, is_selectable = true, updated_at = now\(\)\s*where id = 'kensakiika';/;
+assert.match(regional, legacyYariikaUpdate, "legacy yariika is renamed, inactive, and unselectable in place");
+assert.match(regional, canonicalYariikaUpdate, "the canonical ヤリイカ name is assigned to kensakiika");
+assert.ok(regional.search(legacyYariikaUpdate) < regional.search(canonicalYariikaUpdate), "legacy yariika must release the unique ヤリイカ name before kensakiika claims it");
+const staticNames = [...staticSpecies.slice(0, staticSpecies.indexOf("] as const;")).matchAll(/\["[^"]+", "([^"]+)"/g)].map((match) => match[1]);
+assert.equal(new Set(staticNames).size, staticNames.length, "fish_species.name_ja values must remain unique after the migration");
+assert.match(staticSpecies, /\["yariika", "ヤリイカ（旧分類）"[^\n]*false, false\]/, "static yariika matches the inactive, unselectable database legacy name");
+assert.match(staticSpecies, /\["kensakiika", "ヤリイカ"/, "static kensakiika owns the canonical ヤリイカ name");
 assert.match(regional, /set fish_species_id = 'kensakiika'[\s\S]*?fish_species_match_key\('ヤリイカ'\)/, "the existing ヤリイカ alias is reassigned to kensakiika");
 for (const [alias, speciesId] of [
   ["セイゴ", "seabass"], ["フッコ", "seabass"], ["アカイカ", "kensakiika"], ["ササイカ", "kensakiika"],
