@@ -13,7 +13,7 @@ import {
 } from "@/services/openMeteo";
 import { SpotEvaluationCard, type SpotEvaluationTab } from "./SpotEvaluationCard";
 import type { SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
-import { FishingMap } from "./FishingMap";
+import { FishingMap, type MapFocusRequest } from "./FishingMap";
 import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
 import type { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
@@ -70,6 +70,9 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [spotEvaluationTab, setSpotEvaluationTab] = useState<SpotEvaluationTab>("評価");
   const [showAllSpecies, setShowAllSpecies] = useState(false);
   const allSpeciesOrigin = useRef<AllSpeciesHistoryState | null>(null);
+  const mapSectionRef = useRef<HTMLDivElement | null>(null);
+  const mapFocusRequestIdRef = useRef(0);
+  const [mapFocusRequest, setMapFocusRequest] = useState<MapFocusRequest | null>(null);
   const [selectedEnvironmentTime, setSelectedEnvironmentTime] = useState<
     string | null
   >(null);
@@ -107,6 +110,12 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [spotDetails, setSpotDetails] = useState<FishingSpotDetailSet | null>(null);
   const [spotDetailStatus, setSpotDetailStatus] = useState<SpotDetailLoadStatus>("idle");
   const changeSelectedEnvironmentTime = useCallback((time: string | null) => setSelectedEnvironmentTime(time), []);
+  const focusSelectedSpotOnMap = useCallback(() => {
+    if (!environmentSpotId) return;
+    mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    mapFocusRequestIdRef.current += 1;
+    setMapFocusRequest({ spotId: environmentSpotId, requestId: mapFocusRequestIdRef.current });
+  }, [environmentSpotId]);
   useEffect(() => {
     let isActive = true;
     fetchMasterData()
@@ -421,11 +430,12 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   return (
     <section className="dashboard" id="map">
       <div className="mapEnvironmentGrid">
-        <div className="mapSection">
+        <div className="mapSection" ref={mapSectionRef}>
           <FishingMap
             reports={adjustedMockFishingReports}
             externalMemos={externalMemos}
             spots={fishingSpots}
+            focusRequest={mapFocusRequest}
           />
         </div>
       </div>
@@ -677,6 +687,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           detailStatus={spotDetailStatus}
           catches={externalMemos}
           onShowAllSpecies={openAllSpecies}
+          onFocusMap={focusSelectedSpotOnMap}
         />
       )}
     </section>
