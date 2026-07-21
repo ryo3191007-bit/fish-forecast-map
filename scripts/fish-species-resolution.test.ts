@@ -15,6 +15,17 @@ const batch2Aliases = new Map([
   ["アラカブ", "kasago"], ["ガシラ", "kasago"], ["イッサキ", "isaki"], ["アコウ", "kijihata"], ["オグシ", "oniokoze"],
   ["マチャ", "madai"], ["チャンイオ", "madai"], ["ヤズ", "buri"], ["ハマチ", "buri"], ["サゴシ", "sawara"],
 ] as const);
+const regionalAliases = new Map([
+  ["スズキ", "seabass"], ["シーバス", "seabass"], ["セイゴ", "seabass"], ["フッコ", "seabass"],
+  ["ヤリイカ", "kensakiika"], ["ケンサキイカ", "kensakiika"], ["アカイカ", "kensakiika"], ["ササイカ", "kensakiika"],
+  ["ヒラス", "hiramasa"], ["ネリゴ", "kanpachi"], ["クロ", "mejina"], ["メイタ", "chinu"],
+  ["コハダ", "konoshiro"], ["ツナシ", "konoshiro"], ["イナ", "bora"], ["アラ", "kue"],
+  ["オオクチ", "hirame"], ["豆アジ", "maaji"], ["ゼンゴ", "maaji"], ["ワカナ", "buri"],
+  ["ホンダイ", "madai"], ["ジャミ", "madai"], ["タテコ", "madai"],
+  ["ハゲ", "kawahagi"], ["ハギ", "kawahagi"],
+  ["カマス", "kamasu"], ["アカカマス", "kamasu"], ["ヤマトカマス", "kamasu"],
+  ["モンゴウイカ", "kouika"], ["カミナリイカ", "kouika"], ["コウイカ", "kouika"],
+] as const);
 
 for (const [name, speciesId] of batch1Aliases) {
   const result = resolve(name);
@@ -26,8 +37,13 @@ for (const [name, speciesId] of batch2Aliases) {
   assert.equal(result.status, "resolved");
   if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
 }
-for (const name of ["セイゴ", "フッコ", "ハネ", "コハダ", "ササイカ", "ヤズコ", "ワラサ"]) {
-  assert.equal(resolve(name).status, "unresolved", `${name} remains outside Issue #220 batch 2`);
+for (const [name, speciesId] of regionalAliases) {
+  const result = resolve(name);
+  assert.equal(result.status, "resolved");
+  if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
+}
+for (const name of ["ハネ", "ヤズコ", "ワラサ", "シリヤケイカ"]) {
+  assert.equal(resolve(name).status, "unresolved", `${name} remains intentionally unregistered`);
 }
 for (const [name, speciesId] of [["マアジ", "maaji"], ["マサバ", "masaba"], ["マイワシ", "maiwashi"], ["メバル", "mebaru"]] as const) {
   const result = resolve(name);

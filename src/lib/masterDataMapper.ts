@@ -42,6 +42,7 @@ export function mapFishSpeciesRow(row: FishSpeciesRow): FishSpecies | null {
     category: enumValue(row.category, speciesCategories, "fish"),
     entityType: enumValue(row.entity_type ?? "exact_species", entityTypes, "exact_species"),
     isSelectable: row.is_selectable ?? row.category !== "category",
+    isActive: row.is_active ?? true,
     parentGroupId: row.parent_group_id && speciesIdSet.has(row.parent_group_id) ? row.parent_group_id as FishSpecies["parentGroupId"] : null,
     uiSubgroup: row.ui_subgroup ?? null,
     displayOrder: row.display_order ?? 0,

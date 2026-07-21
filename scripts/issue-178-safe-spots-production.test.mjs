@@ -62,7 +62,7 @@ const karatsuEastExpected = {
   longitude: 129.993,
   spotType: "その他",
   shoreAccess: "不明",
-  targetSpecies: ["アジ", "シーバス", "チヌ"],
+  targetSpecies: ["アジ", "スズキ", "チヌ"],
   recommendedMethods: [],
   coordinatePrecision: "approximate",
 };
@@ -215,7 +215,7 @@ for (const [id, [latitude, longitude, spotType]] of issue165CoordinateHolds) {
 assert.deepEqual(
   (({ id, latitude, longitude, spotType, shoreAccess, targetSpecies, recommendedMethods, coordinatePrecision }) => ({ id, latitude, longitude, spotType, shoreAccess, targetSpecies, recommendedMethods, coordinatePrecision }))(staticById.get("karatsu-east-port")),
   karatsuEastExpected,
-  "karatsu-east-port must remain unchanged",
+  "karatsu-east-port must retain its data with the current canonical species label",
 );
 
 const curation = JSON.parse(fs.readFileSync(CURATION_PATH, "utf8"));

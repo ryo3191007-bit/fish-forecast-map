@@ -162,7 +162,7 @@ export const fishingSpots: FishingSpot[] = [
     longitude: 129.993,
     spotType: "その他",
     shoreAccess: "不明",
-    targetSpecies: ["アジ", "シーバス", "チヌ"],
+    targetSpecies: ["アジ", "スズキ", "チヌ"],
     recommendedMethods: [],
     notes: [
       "唐津港東港地区の代表点です。一般利用可能な釣り位置や入口を示すものではありません。",

@@ -10,6 +10,7 @@ const parentGroupLabels: Partial<Record<FishSpeciesId, string>> = {
   saba: "サバ",
   iwashi: "イワシ",
   mebaru: "メバル",
+  kamasu: "カマス",
 };
 
 const legacyAggregateIds = new Set<FishSpeciesId>(["aomono", "rockfish"]);
@@ -27,7 +28,7 @@ export function groupSelectableFishSpecies(
   };
 
   for (const item of species) {
-    if (!item.isSelectable) {
+    if (!item.isActive || !item.isSelectable) {
       if (options.includeLegacyAggregates && legacyAggregateIds.has(item.id)) add("グループ", item);
       continue;
     }

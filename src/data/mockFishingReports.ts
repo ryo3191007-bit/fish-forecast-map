@@ -30,7 +30,7 @@ const reportAtSpot = (
 const mockFishingReportInputs: Omit<FishingReport, "forecast">[] = [
   reportAtSpot("nokita-port", { id: "nokita-aj", reportDate: "2026-06-22", species: "アジ", catchCount: 18, sizeCm: 24, method: "サビキ", ...mockSource }),
   reportAtSpot("keya-gate", { id: "keya-aori", reportDate: "2026-06-20", species: "アオリイカ", catchCount: 2, sizeCm: 28, method: "エギング", ...mockSource }),
-  reportAtSpot("nokita-beach", { id: "shimano-seabass", reportDate: "2026-06-18", species: "シーバス", catchCount: 1, sizeCm: 62, method: "キャスティング", ...mockSource }),
+  reportAtSpot("nokita-beach", { id: "shimano-seabass", reportDate: "2026-06-18", species: "スズキ", catchCount: 1, sizeCm: 62, method: "キャスティング", ...mockSource }),
   reportAtSpot("funakoshi-port", { id: "futamigaura-chinu", reportDate: "2026-06-19", species: "チヌ", catchCount: 2, sizeCm: 42, method: "コマセ", ...mockSource }),
   reportAtSpot("keya-port", { id: "keya-kouika", reportDate: "2026-06-25", species: "コウイカ", catchCount: 3, sizeCm: 18, method: "エギング", ...mockSource }),
   reportAtSpot("nokita-port", { id: "nogita-iwashi", reportDate: "2026-06-26", species: "イワシ", catchCount: 35, sizeCm: 14, method: "サビキ", ...mockSource }),
@@ -45,7 +45,7 @@ const mockFishingReportInputs: Omit<FishingReport, "forecast">[] = [
   reportAtSpot("imari-inner-bay", { id: "imari-flat", reportDate: "2026-06-17", species: "ヒラメ", catchCount: 1, sizeCm: 52, method: "泳がせ", ...mockSource }),
   reportAtSpot("imari-inner-bay", { id: "imari-aj", reportDate: "2026-06-24", species: "アジ", catchCount: 22, sizeCm: 21, method: "サビキ", ...mockSource }),
   reportAtSpot("fukushima-area", { id: "imari-aori", reportDate: "2026-06-11", species: "アオリイカ", catchCount: 1, sizeCm: 30, method: "エギング", ...mockSource }),
-  reportAtSpot("imari-inner-bay", { id: "imari-seabass", reportDate: "2026-06-13", species: "シーバス", catchCount: 2, sizeCm: 58, method: "キャスティング", ...mockSource }),
+  reportAtSpot("imari-inner-bay", { id: "imari-seabass", reportDate: "2026-06-13", species: "スズキ", catchCount: 2, sizeCm: 58, method: "キャスティング", ...mockSource }),
   reportAtSpot("imari-inner-bay", { id: "imari-chinu", reportDate: "2026-06-18", species: "チヌ", catchCount: 3, sizeCm: 36, method: "コマセ", ...mockSource }),
   reportAtSpot("tabira-port", { id: "hirado-madai", reportDate: "2026-06-15", species: "真鯛", catchCount: 2, sizeCm: 40, method: "コマセ", ...mockSource }),
   reportAtSpot("ikitsuki-area", { id: "hirado-shiira", reportDate: "2026-06-29", species: "シイラ", catchCount: 1, sizeCm: 70, method: "キャスティング", ...mockSource }),
