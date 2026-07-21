@@ -10,6 +10,7 @@ const parentGroupLabels: Partial<Record<FishSpeciesId, string>> = {
   saba: "サバ",
   iwashi: "イワシ",
   mebaru: "メバル",
+  kamasu: "カマス",
 };
 
 const legacyAggregateIds = new Set<FishSpeciesId>(["aomono", "rockfish"]);

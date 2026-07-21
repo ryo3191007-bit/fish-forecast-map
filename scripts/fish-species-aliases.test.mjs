@@ -32,7 +32,7 @@ assert.equal(baselineSeeds.length, 17, "all baseline alias seeds must be inspect
 assert.equal(expansionSpecies.length, 28, "all expansion alias seeds must be inspected");
 assert.equal(batch1Seeds.length, 5, "Issue #211 batch 1 must contain exactly five approved aliases");
 assert.equal(batch2Seeds.length, 10, "Issue #220 batch 2 must contain exactly ten approved aliases");
-assert.equal(regionalSeeds.length, 19, "regional simplification must add exactly the remaining unambiguous aliases");
+assert.equal(regionalSeeds.length, 24, "regional simplification must add all aliases approved by the latest specification");
 assert.match(expansion, /drop constraint if exists fish_species_category_check;[\s\S]*?check \(category in \('fish', 'squid', 'category', 'cephalopod'\)\)[\s\S]*?validate constraint fish_species_category_check;[\s\S]*?insert into public\.fish_species/, "the category constraint must allow cephalopod before species are seeded");
 assert.equal(new Set(seeds.map((seed) => seed.id)).size, seeds.length, "alias seed UUIDs must be unique across migrations");
 assert.equal(new Set(seeds.map((seed) => seed.alias.normalize("NFKC").trim().toLowerCase())).size, seeds.length, "approved active match_key values must be unique across migrations");
@@ -74,7 +74,11 @@ for (const [alias, speciesId] of [
   ["コハダ", "konoshiro"], ["ツナシ", "konoshiro"], ["イナ", "bora"], ["アラ", "kue"],
   ["オオクチ", "hirame"], ["豆アジ", "maaji"], ["ゼンゴ", "maaji"], ["ワカナ", "buri"],
   ["ホンダイ", "madai"], ["ジャミ", "madai"], ["タテコ", "madai"],
+  ["ハゲ", "kawahagi"], ["ハギ", "kawahagi"], ["カマス", "kamasu"],
+  ["モンゴウイカ", "kouika"], ["カミナリイカ", "kouika"],
 ]) assert.equal(regionalSeeds.find((seed) => seed.alias === alias)?.speciesId, speciesId, `${alias} has the approved regional target`);
-assert.doesNotMatch(regional, /'(?:ハゲ|ハギ|カマス)'/, "ambiguous aliases are not added");
+assert.match(regional, /where id in \('akakamasu', 'yamatokamasu'\)/, "legacy kamasu IDs are updated in place");
+assert.match(regional, /set fish_species_id = 'kamasu'[\s\S]*?fish_species_match_key\('アカカマス'\)[\s\S]*?fish_species_match_key\('ヤマトカマス'\)/, "existing individual kamasu aliases are reassigned to the group");
+assert.doesNotMatch(regional, /'シリヤケイカ'/, "unspecified cuttlefish names are not added");
 
 console.log(`fish species alias seed tests passed (${seeds.length} seeds)`);

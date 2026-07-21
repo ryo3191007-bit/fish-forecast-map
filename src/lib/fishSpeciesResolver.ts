@@ -8,7 +8,7 @@ export const staticFishSpeciesAliases: readonly FishSpeciesAlias[] = [
   ...Object.entries(fishSpeciesIdByName).map(([aliasName, fishSpeciesId], index) => ({
     id: `00000000-0000-4000-8000-${String(index < 15 ? index + 1 : index + 85).padStart(12, "0")}`,
     fishSpeciesId, aliasName, matchKey: createFishSpeciesMatchKey(aliasName), approvalStatus: "approved" as const, isActive: true,
-  })).filter((alias) => alias.fishSpeciesId !== "yariika"),
+  })).filter((alias) => !new Set(["yariika", "akakamasu", "yamatokamasu", "kamasu"]).has(alias.fishSpeciesId)),
   { id: "00000000-0000-4000-8000-000000000016", fishSpeciesId: "chinu", aliasName: "黒鯛", matchKey: "黒鯛", approvalStatus: "approved", isActive: true },
   { id: "00000000-0000-4000-8000-000000000017", fishSpeciesId: "chinu", aliasName: "クロダイ", matchKey: "クロダイ", approvalStatus: "approved", isActive: true },
   { id: "00000000-0000-4000-8000-000000000200", fishSpeciesId: "aoriika", aliasName: "ミズイカ", matchKey: "ミズイカ", approvalStatus: "approved", isActive: true },
@@ -34,6 +34,9 @@ export const staticFishSpeciesAliases: readonly FishSpeciesAlias[] = [
     ["322", "bora", "イナ"], ["323", "kue", "アラ"], ["324", "hirame", "オオクチ"],
     ["325", "maaji", "豆アジ"], ["326", "maaji", "ゼンゴ"], ["327", "buri", "ワカナ"],
     ["328", "madai", "ホンダイ"], ["329", "madai", "ジャミ"], ["330", "madai", "タテコ"],
+    ["331", "kawahagi", "ハゲ"], ["332", "kawahagi", "ハギ"],
+    ["126", "kamasu", "アカカマス"], ["127", "kamasu", "ヤマトカマス"], ["333", "kamasu", "カマス"],
+    ["335", "kouika", "モンゴウイカ"], ["336", "kouika", "カミナリイカ"],
   ] as const).map(([suffix, fishSpeciesId, aliasName]) => ({ id: `00000000-0000-4000-8000-000000000${suffix}`, fishSpeciesId, aliasName, matchKey: createFishSpeciesMatchKey(aliasName), approvalStatus: "approved" as const, isActive: true })),
 ];
 

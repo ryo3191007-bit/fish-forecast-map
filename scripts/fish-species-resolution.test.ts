@@ -22,6 +22,9 @@ const regionalAliases = new Map([
   ["コハダ", "konoshiro"], ["ツナシ", "konoshiro"], ["イナ", "bora"], ["アラ", "kue"],
   ["オオクチ", "hirame"], ["豆アジ", "maaji"], ["ゼンゴ", "maaji"], ["ワカナ", "buri"],
   ["ホンダイ", "madai"], ["ジャミ", "madai"], ["タテコ", "madai"],
+  ["ハゲ", "kawahagi"], ["ハギ", "kawahagi"],
+  ["カマス", "kamasu"], ["アカカマス", "kamasu"], ["ヤマトカマス", "kamasu"],
+  ["モンゴウイカ", "kouika"], ["カミナリイカ", "kouika"], ["コウイカ", "kouika"],
 ] as const);
 
 for (const [name, speciesId] of batch1Aliases) {
@@ -39,7 +42,7 @@ for (const [name, speciesId] of regionalAliases) {
   assert.equal(result.status, "resolved");
   if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
 }
-for (const name of ["ハネ", "ヤズコ", "ワラサ", "ハゲ", "ハギ", "カマス"]) {
+for (const name of ["ハネ", "ヤズコ", "ワラサ", "シリヤケイカ"]) {
   assert.equal(resolve(name).status, "unresolved", `${name} remains intentionally unregistered`);
 }
 for (const [name, speciesId] of [["マアジ", "maaji"], ["マサバ", "masaba"], ["マイワシ", "maiwashi"], ["メバル", "mebaru"]] as const) {
