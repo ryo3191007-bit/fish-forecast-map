@@ -2,8 +2,8 @@ export const fishSpeciesDefinitions = [
   ["aji", "アジ", "species_group", null, null, true], ["saba", "サバ", "species_group", null, null, true],
   ["iwashi", "イワシ", "species_group", null, null, true], ["aomono", "青物", "species_group", null, null],
   ["shiira", "シイラ", "exact_species", null, null], ["hirame", "ヒラメ", "exact_species", null, null],
-  ["magochi", "マゴチ", "exact_species", null, null], ["seabass", "シーバス", "exact_species", null, null],
-  ["aoriika", "アオリイカ", "squid_species", null, null], ["yariika", "ヤリイカ", "squid_species", null, null],
+  ["magochi", "マゴチ", "exact_species", null, null], ["seabass", "スズキ", "exact_species", null, null],
+  ["aoriika", "アオリイカ", "squid_species", null, null], ["yariika", "ヤリイカ（旧分類）", "squid_species", null, null, false, false],
   ["kouika", "コウイカ", "squid_species", null, null], ["chinu", "チヌ", "exact_species", null, null],
   ["madai", "真鯛", "exact_species", null, null], ["kisu", "キス", "exact_species", null, null],
   ["rockfish", "根魚", "species_group", null, null],
@@ -13,7 +13,7 @@ export const fishSpeciesDefinitions = [
   ["kijihata", "キジハタ", "exact_species", "rockfish", "ハタ類"], ["oomonhata", "オオモンハタ", "exact_species", "rockfish", "ハタ類"],
   ["akahata", "アカハタ", "exact_species", "rockfish", "ハタ類"], ["mahata", "マハタ", "exact_species", "rockfish", "ハタ類"],
   ["aohata", "アオハタ", "exact_species", "rockfish", "ハタ類"], ["kue", "クエ", "exact_species", "rockfish", "ハタ類"],
-  ["kensakiika", "ケンサキイカ", "squid_species", null, null], ["surumeika", "スルメイカ", "squid_species", null, null],
+  ["kensakiika", "ヤリイカ", "squid_species", null, null], ["surumeika", "スルメイカ", "squid_species", null, null],
   ["madako", "マダコ", "cephalopod_species", null, null], ["isaki", "イサキ", "exact_species", null, null],
   ["mejina", "メジナ", "exact_species", null, null], ["tachiuo", "タチウオ", "exact_species", null, null],
   ["kawahagi", "カワハギ", "exact_species", null, null], ["umazurahagi", "ウマヅラハギ", "exact_species", null, null],
@@ -37,8 +37,8 @@ export type FishSpeciesEntityType = "exact_species" | "species_group" | "squid_s
 export type SpeciesCategory = "fish" | "category" | "squid" | "cephalopod";
 export const fishSpeciesIdByName = Object.fromEntries(fishSpeciesDefinitions.map(([id, name]) => [name, id])) as Readonly<Record<FishSpeciesName, FishSpeciesId>>;
 
-export type FishSpecies = { id: FishSpeciesId; nameJa: FishSpeciesName; category: SpeciesCategory; entityType: FishSpeciesEntityType; isSelectable: boolean; parentGroupId: FishSpeciesId | null; uiSubgroup: string | null; displayOrder: number; seasonMonths: number[] };
-export const createStaticFishSpecies = (): FishSpecies[] => fishSpeciesDefinitions.map(([id, nameJa, entityType, parentGroupId, uiSubgroup, isSelectable], index) => ({ id, nameJa, entityType, parentGroupId, uiSubgroup, isSelectable: isSelectable ?? entityType !== "species_group", displayOrder: index + 1, category: entityType === "species_group" ? "category" : entityType === "squid_species" ? "squid" : entityType === "cephalopod_species" ? "cephalopod" : "fish", seasonMonths: [] }));
+export type FishSpecies = { id: FishSpeciesId; nameJa: FishSpeciesName; category: SpeciesCategory; entityType: FishSpeciesEntityType; isSelectable: boolean; isActive: boolean; parentGroupId: FishSpeciesId | null; uiSubgroup: string | null; displayOrder: number; seasonMonths: number[] };
+export const createStaticFishSpecies = (): FishSpecies[] => fishSpeciesDefinitions.map(([id, nameJa, entityType, parentGroupId, uiSubgroup, isSelectable, isActive], index) => ({ id, nameJa, entityType, parentGroupId, uiSubgroup, isSelectable: isSelectable ?? entityType !== "species_group", isActive: isActive ?? true, displayOrder: index + 1, category: entityType === "species_group" ? "category" : entityType === "squid_species" ? "squid" : entityType === "cephalopod_species" ? "cephalopod" : "fish", seasonMonths: [] }));
 export const legacySpeciesLabel = (species: FishSpeciesName) => species === "青物" || species === "根魚" ? `${species}（旧分類）` : species;
 
 export type FishSpeciesAliasApprovalStatus = "pending" | "approved" | "rejected";

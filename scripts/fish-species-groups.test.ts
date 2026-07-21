@@ -16,12 +16,18 @@ const hatas = species.filter((item) => item.uiSubgroup === "ハタ類");
 assert.deepEqual(hatas.map((item) => item.id), ["kijihata", "oomonhata", "akahata", "mahata", "aohata", "kue"]);
 assert.ok(hatas.every((item) => item.parentGroupId === "rockfish" && item.isSelectable));
 assert.equal(species.find((item) => item.id === "madako")?.category, "cephalopod");
+assert.deepEqual(species.find((item) => item.id === "yariika"), {
+  ...species.find((item) => item.id === "yariika"), isSelectable: false, isActive: false,
+}, "the legacy yariika ID remains in static data but cannot be selected");
 const selectableIds = species.filter((item) => item.isSelectable).map((item) => item.id).sort();
 for (const includeLegacyAggregates of [false, true]) {
   const groupedIds = groupSelectableFishSpecies(species, { includeLegacyAggregates }).flatMap((group) => group.items.map((item) => item.id));
   const groupedSelectableIds = groupedIds.filter((id) => species.find((item) => item.id === id)?.isSelectable).sort();
   assert.deepEqual(groupedSelectableIds, selectableIds, "every selectable species appears in UI groups exactly once");
   assert.equal(new Set(groupedIds).size, groupedIds.length, "UI groups do not contain duplicate species");
+  assert.ok(!groupedIds.includes("yariika"), "legacy yariika never appears in normal UI groups");
+  const displayedNames = groupedIds.map((id) => species.find((item) => item.id === id)?.nameJa);
+  assert.equal(new Set(displayedNames).size, displayedNames.length, "selectable UI names are unique");
 }
 const uiGroups = groupSelectableFishSpecies(species);
 for (const [label, expectedIds] of [
@@ -36,6 +42,8 @@ assert.deepEqual(filterByFishSpecies(records, "根魚", (item) => item.species, 
 const splitRecords = [{ species: "アジ" }, { species: "マアジ" }, { species: "マルアジ" }, { species: "メバル" }, { species: "アカメバル" }];
 assert.deepEqual(filterByFishSpecies(splitRecords, "アジ", (item) => item.species, species, staticFishSpeciesAliases), splitRecords.slice(0, 3));
 assert.deepEqual(filterByFishSpecies(splitRecords, "根魚", (item) => item.species, species, staticFishSpeciesAliases), splitRecords.slice(3), "nested group filtering includes descendants");
-for (const [, name] of fishSpeciesDefinitions) assert.equal(resolveFishSpeciesName(name, species, staticFishSpeciesAliases).status, "resolved");
-for (const forbidden of ["ハタ", "ササイカ", "未登録魚"]) assert.equal(resolveFishSpeciesName(forbidden, species, staticFishSpeciesAliases).status, "unresolved");
+for (const definition of fishSpeciesDefinitions) {
+  if (definition[0] !== "yariika") assert.equal(resolveFishSpeciesName(definition[1], species, staticFishSpeciesAliases).status, "resolved");
+}
+for (const forbidden of ["ハタ", "ハゲ", "ハギ", "カマス", "ヤリイカ（旧分類）", "未登録魚"]) assert.equal(resolveFishSpeciesName(forbidden, species, staticFishSpeciesAliases).status, "unresolved");
 console.log("fish species group tests passed");
