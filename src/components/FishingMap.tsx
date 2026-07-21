@@ -4,7 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FishingSpot } from "@/domain/fishingSpot";
-import { legacySpeciesLabel, type FishSpeciesName, type FishingReport } from "@/domain/fishing";
+import { legacySpeciesLabel, type FishSpeciesName } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import {
   GSI_AERIAL_TILE_ATTRIBUTION,
@@ -103,7 +103,6 @@ import {
 import { MapLayerToggle } from "./MapLayerToggle";
 
 type FishingMapProps = {
-  reports: FishingReport[];
   externalMemos: ExternalCatchMemo[];
   spots: FishingSpot[];
   focusRequest: MapFocusRequest | null;
@@ -150,7 +149,7 @@ const FALLBACK_LAYER_IDS = [
   BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
 ] as const;
 
-export function FishingMap({ reports, externalMemos, spots, focusRequest }: FishingMapProps) {
+export function FishingMap({ externalMemos, spots, focusRequest }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
@@ -343,7 +342,7 @@ export function FishingMap({ reports, externalMemos, spots, focusRequest }: Fish
 
   useEffect(() => {
     const map = mapRef.current;
-    const markerPoints = [...reports, ...mappableExternalMemos];
+    const markerPoints = [...spots, ...mappableExternalMemos];
     if (!map || markerPoints.length === 0) return;
 
     const adjustMapBounds = () => {
@@ -357,7 +356,7 @@ export function FishingMap({ reports, externalMemos, spots, focusRequest }: Fish
     return () => {
       map.off("load", adjustMapBounds);
     };
-  }, [mappableExternalMemos, reports]);
+  }, [mappableExternalMemos, spots]);
 
   useEffect(() => {
     const supportsWebGl =
@@ -780,17 +779,6 @@ export function FishingMap({ reports, externalMemos, spots, focusRequest }: Fish
       return marker;
     });
 
-    const reportMarkers = reports.map((report) =>
-      new maplibregl.Marker({ color: scoreColor(report.forecast.score) })
-        .setLngLat([report.longitude, report.latitude])
-        .setPopup(
-          registerPopup(new maplibregl.Popup({ offset: 16, maxWidth: "min(300px, calc(100vw - 32px))" }).setDOMContent(
-            createPopupContent(report),
-          )),
-        )
-        .addTo(map),
-    );
-
     const memoMarkers = mappableExternalMemos.map((memo) =>
       new maplibregl.Marker({ color: "#a855f7" })
         .setLngLat([memo.longitude, memo.latitude])
@@ -807,9 +795,9 @@ export function FishingMap({ reports, externalMemos, spots, focusRequest }: Fish
       activePopupRef.current = null;
       focusedSpotIdRef.current = null;
       spotMarkerRegistry.clear();
-      [...spotMarkers, ...reportMarkers, ...memoMarkers].forEach((marker) => marker.remove());
+      [...spotMarkers, ...memoMarkers].forEach((marker) => marker.remove());
     };
-  }, [mappableExternalMemos, reports, spots]);
+  }, [mappableExternalMemos, spots]);
 
   useEffect(() => {
     if (!focusRequest) return;
@@ -1078,7 +1066,7 @@ export function FishingMap({ reports, externalMemos, spots, focusRequest }: Fish
           <span>{GSI_AERIAL_TILE_NOTE}</span>
         </div>
       ) : null}
-      {reports.length === 0 && mappableExternalMemos.length === 0 ? (
+      {spots.length === 0 && mappableExternalMemos.length === 0 ? (
         <div className="mapEmpty" aria-hidden="true">
           <strong>表示できるマーカーはありません</strong>
           <span>条件を変更するか、フィルタをリセットしてください。</span>
@@ -1086,31 +1074,6 @@ export function FishingMap({ reports, externalMemos, spots, focusRequest }: Fish
       ) : null}
     </div>
   );
-}
-
-function createPopupContent(report: FishingReport) {
-  const popup = document.createElement("div");
-  popup.className = "mapPopup";
-  const spotName = document.createElement("strong");
-  spotName.className = "mapPopupTitle";
-  spotName.textContent = report.spotName;
-  const summary = document.createElement("div");
-  summary.className = "mapPopupSummary";
-  const score = document.createElement("span");
-  score.className = "mapPopupScore";
-  score.textContent = `SCORE ${report.forecast.score}点`;
-  const species = document.createElement("span");
-  species.textContent = legacySpeciesLabel(report.species);
-  const place = document.createElement("span");
-  place.textContent = report.areaName;
-  summary.append(score, species, place);
-  const method = document.createElement("p");
-  method.className = "mapPopupMeta";
-  method.textContent = `${report.method} / ${report.reportDate}`;
-  const reason = document.createElement("p");
-  reason.textContent = report.forecast.reasons[0] ?? "";
-  popup.append(spotName, summary, method, reason);
-  return popup;
 }
 
 function createSpotPopupContent(spot: FishingSpot) {
@@ -1379,21 +1342,15 @@ function removeBathymetryRuntimeLayers(map: maplibregl.Map) {
   }
 }
 
-function scoreColor(score: number) {
-  if (score >= 70) return "#f97316";
-  if (score >= 60) return "#0ea5e9";
-  return "#64748b";
-}
-
 function fitMapToPoints(
   map: maplibregl.Map,
-  reports: { latitude: number; longitude: number }[],
+  points: { latitude: number; longitude: number }[],
   hasAdjustedBounds: boolean,
 ) {
-  if (reports.length === 1) {
-    const [report] = reports;
+  if (points.length === 1) {
+    const [point] = points;
     map.easeTo({
-      center: [report.longitude, report.latitude],
+      center: [point.longitude, point.latitude],
       zoom: Math.min(Math.max(map.getZoom(), 12.5), 13),
       duration: hasAdjustedBounds ? 700 : 0,
       essential: true,
@@ -1401,12 +1358,12 @@ function fitMapToPoints(
     return;
   }
 
-  const bounds = reports.reduce(
-    (nextBounds, report) =>
-      nextBounds.extend([report.longitude, report.latitude]),
+  const bounds = points.reduce(
+    (nextBounds, point) =>
+      nextBounds.extend([point.longitude, point.latitude]),
     new maplibregl.LngLatBounds(
-      [reports[0].longitude, reports[0].latitude],
-      [reports[0].longitude, reports[0].latitude],
+      [points[0].longitude, points[0].latitude],
+      [points[0].longitude, points[0].latitude],
     ),
   );
   const containerWidth = map.getContainer().clientWidth;

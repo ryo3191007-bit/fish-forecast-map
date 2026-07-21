@@ -1,6 +1,4 @@
 import assert from "node:assert/strict";
-import { mockFishingReports } from "@/data/mockFishingReports";
-import { applyExternalMemoScoreAdjustments } from "@/domain/externalMemoScore";
 import type { ExternalCatchRecord } from "@/domain/externalCatch";
 import type { FishingSpotDetailSet } from "@/domain/fishingSpotDetail";
 import { buildScoreV2SpeciesInput } from "@/domain/scoreV2Production";
@@ -85,19 +83,14 @@ for (const [aliasName, speciesId] of batch2Aliases) {
   assert.deepEqual(filterByFishSpecies(aliasList, canonicalName, (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), aliasList.slice(0, 2), `${aliasName} is included in canonical search and aggregation`);
 }
 
-const chinuReport = mockFishingReports.find((report) => report.species === "チヌ");
-assert.ok(chinuReport);
 const memo = {
-  id: "alias-memo", species: "黒鯛", caughtDate: new Date().toISOString().slice(0, 10), areaName: chinuReport.areaName,
-  spotId: chinuReport.spotId, coordinatePrecision: "approximate" as const, method: chinuReport.method, sourceId: "manual",
+  id: "alias-memo", species: "黒鯛", caughtDate: new Date().toISOString().slice(0, 10), areaName: "テストエリア",
+  spotId: "test-spot", coordinatePrecision: "approximate" as const, method: "コマセ" as const, sourceId: "manual",
   sourceName: "manual", sourceUrl: "https://example.test/alias", acquisitionMethod: "manual" as const, confidence: "high" as const,
   createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
 };
-assert.ok(applyExternalMemoScoreAdjustments([chinuReport], [memo])[0].forecast.score > chinuReport.forecast.score);
-assert.equal(applyExternalMemoScoreAdjustments([chinuReport], [{ ...memo, species: "未登録魚" }])[0].forecast.score, chinuReport.forecast.score);
-
 const catchRecord: ExternalCatchRecord = { ...memo, species: "クロダイ" };
-const spot = { id: chinuReport.spotId, name: chinuReport.spotName, areaName: chinuReport.areaName, latitude: 0, longitude: 0, spotType: "漁港" as const, shoreAccess: "足場良い" as const, targetSpecies: ["チヌ" as const], recommendedMethods: [chinuReport.method], notes: [], coordinatePrecision: "approximate" as const };
+const spot = { id: "test-spot", name: "テスト地点", areaName: "テストエリア", latitude: 0, longitude: 0, spotType: "漁港" as const, shoreAccess: "足場良い" as const, targetSpecies: ["チヌ" as const], recommendedMethods: ["コマセ" as const], notes: [], coordinatePrecision: "approximate" as const };
 const aliasScore = buildScoreV2SpeciesInput({ species: "チヌ", spot, catches: [catchRecord], selectedDateTime: new Date().toISOString() });
 assert.ok(aliasScore.spotEvidence?.catchHistory, "SCORE v2 uses alias catch history");
 const canonicalScore = buildScoreV2SpeciesInput({ species: "チヌ", spot, catches: [{ ...catchRecord, species: "チヌ" }], selectedDateTime: new Date().toISOString() });

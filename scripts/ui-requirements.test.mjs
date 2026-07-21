@@ -162,11 +162,6 @@ assert.match(
 );
 assert.doesNotMatch(
   dashboard,
-  /mockFishingReports\.map\(\(report\) => <ExternalMemoCard/,
-  "mock reports must not be rendered as catch list cards",
-);
-assert.doesNotMatch(
-  dashboard,
   /reports\.map\(\(report\) => <ExternalMemoCard/,
   "filtered mock reports must not be rendered as catch list cards",
 );
@@ -268,8 +263,8 @@ assert.doesNotMatch(
 );
 assert.match(
   dashboard,
-  /<FishingMap[\s\S]*?reports=\{adjustedMockFishingReports\}[\s\S]*?externalMemos=\{externalMemos\}[\s\S]*?spots=\{fishingSpots\}/,
-  "map receives unfiltered reports, memos, and spots",
+  /<FishingMap[\s\S]*?externalMemos=\{externalMemos\}[\s\S]*?spots=\{fishingSpots\}/,
+  "map receives unfiltered memos and spots",
 );
 assert.doesNotMatch(
   dashboard,

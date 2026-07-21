@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { mockFishingReports } from "@/data/mockFishingReports";
 import {
   fishSpeciesNames,
   type FishSpeciesName,
@@ -17,7 +16,6 @@ import { FishingMap, type MapFocusRequest } from "./FishingMap";
 import { ExternalCatchMemoSection } from "./ExternalCatchMemoSection";
 import { useExternalCatchMemos } from "@/hooks/useExternalCatchMemos";
 import type { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
-import { applyExternalMemoScoreAdjustments } from "@/domain/externalMemoScore";
 import { getManualCatchMemos } from "@/domain/manualCatchMemos";
 import {
   fetchMasterData,
@@ -172,10 +170,6 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   }, [fishingSpots, manualCatchMemos]);
 
   const normalizedKeyword = searchKeyword.trim().toLowerCase();
-
-  const adjustedMockFishingReports = useMemo(() => {
-    return applyExternalMemoScoreAdjustments(mockFishingReports, externalMemos, undefined, masterData);
-  }, [externalMemos, masterData]);
 
   const filteredManualCatchMemos = useMemo(() => {
     const filteredMemos = manualCatchMemos.filter((memo) => {
@@ -432,7 +426,6 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
       <div className="mapEnvironmentGrid">
         <div className="mapSection" ref={mapSectionRef}>
           <FishingMap
-            reports={adjustedMockFishingReports}
             externalMemos={externalMemos}
             spots={fishingSpots}
             focusRequest={mapFocusRequest}
