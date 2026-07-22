@@ -1,31 +1,32 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import vm from "node:vm";
+import { fishingSpots } from "../src/data/fishingSpots";
+import { buildCatchRegistrationSpotOptions, buildFishingSpotMapEntries, filterFishingSpotOptions, selectFishingSpot, toEnvironmentPoint } from "../src/domain/fishingSpotPresentation";
+import { JMA_AREA_BY_SPOT } from "../src/domain/jmaWarning";
+import { fetchFishingEnvironment } from "../src/services/openMeteo";
 
 const EXPECTED = new Map([
   ["hatazu-fishing-port", { name: "波多津漁港", area: "伊万里湾東岸", type: "漁港", lat: 33.3908, lon: 129.8723 }],
   ["imarin-beach", { name: "イマリンビーチ", area: "伊万里湾東岸", type: "サーフ", lat: 33.353857, lon: 129.846813 }],
 ]);
 const UNKNOWN_KEYS = ["restriction_status", "fishable_area", "access", "parking", "toilet", "lighting"];
-const audit = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-248-imari-implementation-input.json", "utf8"));
-const details = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-248-detail-curation.json", "utf8"));
-const masterSource = fs.readFileSync("src/data/fishingSpots.ts", "utf8");
-const masterLiteral = masterSource.match(/export const fishingSpots[^=]*= ([\s\S]*?);\n/);
-assert.ok(masterLiteral, "static master must be parseable");
-const master = JSON.parse(JSON.stringify(vm.runInNewContext(masterLiteral[1])));
+type SourceRefs = { supporting: string[]; checked: string[] };
+type DetailValue = { itemKey: string; informationState: string; confidence: string | null; sources: SourceRefs };
+type DetailSpot = { spotId: string; values: DetailValue[] };
+type Candidate = { spotId: string; name: string; areaName: string; spotType: string; latitude: number; longitude: number; relationToExisting: { existingSpotId: string } };
+type Audit = { activeCandidates: Candidate[]; heldOrExcluded: { decision: string }[]; researchStatePolicy: { unresearched: string; researched_unknown: string }; sources: Record<string, { sourceUrl: string; note: string }> };
+type Details = { spots: DetailSpot[] };
+const audit = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-248-imari-implementation-input.json", "utf8")) as Audit;
+const details = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-248-detail-curation.json", "utf8")) as Details;
+const master = fishingSpots;
 const seed = fs.readFileSync("supabase/sql/003_master_data_seed.sql", "utf8");
 const migration = fs.readFileSync("supabase/migrations/20260722230000_add_issue_248_imari_spots.sql", "utf8");
 const payloadMatch = migration.match(/declare payload jsonb := '([^']+)'::jsonb;/);
 assert.ok(payloadMatch, "forward migration must include the detail payload");
 const migrationDetails = JSON.parse(payloadMatch[1]);
-const jma = fs.readFileSync("src/domain/jmaWarning.ts", "utf8");
 const fallback = fs.readFileSync("src/lib/fishingSpotDetailFallback.ts", "utf8");
-const dashboard = fs.readFileSync("src/components/FishingDashboard.tsx", "utf8");
-const map = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
-const evaluation = fs.readFileSync("src/components/SpotEvaluationCard.tsx", "utf8");
-const catchRegistration = fs.readFileSync("src/components/ExternalCatchMemoSection.tsx", "utf8");
 
-function sqlSpot(sql, id) {
+function sqlSpot(sql: string, id: string) {
   const escaped = id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const match = sql.match(new RegExp(`\\('${escaped}', '([^']+)', '([^']+)', ([0-9.]+), ([0-9.]+), '([^']+)'`));
   assert.ok(match, `${id} must have a complete SQL master row`);
@@ -52,7 +53,7 @@ for (const candidate of audit.activeCandidates) {
   assert.deepEqual(staticSpot.targetSpecies, []);
   assert.deepEqual(staticSpot.recommendedMethods, []);
   assert.equal(candidate.relationToExisting.existingSpotId, "imari-inner-bay");
-  assert.match(jma, new RegExp(`"${candidate.spotId}": IMARI`));
+  assert.deepEqual(JMA_AREA_BY_SPOT[candidate.spotId], { prefectureEntryCode: "410000", municipalityCode: "4120500", areaName: "佐賀県伊万里市" });
 
   const detail = details.spots.find(({ spotId }) => spotId === candidate.spotId);
   assert.ok(detail, `${candidate.spotId} requires curated unknown-state records`);
@@ -79,13 +80,35 @@ assert.doesNotMatch(migration, /delete\s+from|drop\s+(table|column)|update\s+pub
 assert.match(migration, /on conflict \(id\) do nothing/, "migration must preserve existing records and catches");
 assert.ok(fallback.includes("issue-248-detail-curation.json"), "runtime fallback must load Issue #248 details generically");
 for (const id of EXPECTED.keys()) {
-  assert.ok(!dashboard.includes(id) && !map.includes(id) && !evaluation.includes(id) && !catchRegistration.includes(id), "UI must not hard-code Issue #248 IDs");
+  const spot = selectFishingSpot(master, id);
+  assert.equal(spot?.id, id);
+  assert.equal(filterFishingSpotOptions(master, spot!.name)[0]?.id, id, `${id} must pass through the evaluation selector`);
+  const mapEntry = buildFishingSpotMapEntries(master).find((entry) => entry.spot.id === id);
+  assert.deepEqual(mapEntry?.coordinates, [spot!.longitude, spot!.latitude], `${id} must pass through the map conversion`);
+  assert.equal(mapEntry?.spot.spotType, spot!.spotType);
+  assert.deepEqual(
+    buildCatchRegistrationSpotOptions(master).find((option) => option.id === id),
+    { id, label: `${spot!.name} / ${spot!.areaName}`, spotType: spot!.spotType },
+    `${id} must pass through catch registration options`,
+  );
+
+  const point = toEnvironmentPoint(spot!);
+  const requestedUrls: string[] = [];
+  const fetchImpl = async (input: string) => {
+    requestedUrls.push(input);
+    const hourly = input.includes("marine-api")
+      ? { time: ["2026-07-22T00:00"], wave_height: [0.5] }
+      : { time: ["2026-07-22T00:00"], temperature_2m: [25] };
+    return { ok: true, status: 200, json: async () => ({ hourly }) };
+  };
+  const environment = await fetchFishingEnvironment(point, { fetchImpl, storage: null, now: () => new Date("2026-07-22T00:00:00Z") });
+  assert.deepEqual(environment.point, point);
+  assert.equal(requestedUrls.length, 2);
+  for (const requestUrl of requestedUrls) {
+    const url = new URL(requestUrl);
+    assert.equal(url.searchParams.get("latitude"), String(spot!.latitude));
+    assert.equal(url.searchParams.get("longitude"), String(spot!.longitude));
+  }
 }
-assert.match(dashboard, /spots=\{fishingSpots\}/, "map, evaluation, and registration receive repository master spots");
-assert.match(map, /spots\.map\(/, "map markers must be derived from supplied master spots");
-assert.match(evaluation, /SpotCombobox spots=\{props\.spots\}/, "spot evaluation must use supplied master spots");
-assert.match(catchRegistration, /spots=\{spots\}/, "catch registration must use supplied master spots");
-assert.match(dashboard, /fetchFishingEnvironment\(point/, "environment lookup must use the selected master spot point");
-assert.match(dashboard, /fetchJmaWarningDecision\(environmentSpot\.id/, "JMA lookup must use the selected master spot ID");
 for (const excluded of ["福島", "鷹島", "平戸", "田平", "生月島", "糸島"]) assert.ok(!audit.activeCandidates.some(({ name }) => name.includes(excluded)));
 console.log("Issue #248 Imari spot tests passed");

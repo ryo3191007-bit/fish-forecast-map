@@ -54,7 +54,7 @@
     "test:issue-205-karatsu-spots": "node scripts/issue-205-karatsu-spots.test.mjs",
     "test:issue-237-terrain-presentation": "tsx scripts/issue-237-terrain-presentation.test.ts",
     "test:issue-238-compact-map-ui": "node scripts/issue-238-compact-map-ui.test.mjs",
-    "test:issue-248-imari-spots": "node scripts/issue-248-imari-spots.test.mjs"
+    "test:issue-248-imari-spots": "tsx scripts/issue-248-imari-spots.test.mts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",

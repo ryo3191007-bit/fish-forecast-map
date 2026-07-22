@@ -4,6 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FishingSpot } from "@/domain/fishingSpot";
+import { toFishingSpotMapEntry } from "@/domain/fishingSpotPresentation";
 import { legacySpeciesLabel, type FishSpeciesName } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import {
@@ -762,7 +763,8 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       return popup;
     };
 
-    const spotMarkers = spots.map((spot) => {
+    const spotMarkers = spots.map((sourceSpot) => {
+      const { spot, coordinates } = toFishingSpotMapEntry(sourceSpot);
       const element = document.createElement("button");
       element.type = "button";
       element.className = "fishingSpotMarker";
@@ -775,7 +777,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
         popup.remove();
       }));
       const marker = new maplibregl.Marker({ element })
-        .setLngLat([spot.longitude, spot.latitude])
+        .setLngLat(coordinates)
         .setPopup(popup)
         .addTo(map);
       spotMarkerRegistry.set(spot.id, marker);

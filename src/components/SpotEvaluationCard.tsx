@@ -10,6 +10,7 @@ import {
 } from "@/domain/environment";
 import type { ExternalCatchRecord } from "@/domain/externalCatch";
 import type { FishingSpot } from "@/domain/fishingSpot";
+import { filterFishingSpotOptions } from "@/domain/fishingSpotPresentation";
 import type {
   FishingSpotDetailSet,
   SpotDetailConfidence,
@@ -121,8 +122,7 @@ function SpotCombobox({ spots, selected, onSelect }: { spots: FishingSpot[]; sel
   const root = useRef<HTMLDivElement>(null);
   useEffect(() => setQuery(selected?.name ?? ""), [selected]);
   useEffect(() => { const close = (event: PointerEvent) => { if (!root.current?.contains(event.target as Node)) setOpen(false); }; document.addEventListener("pointerdown", close); return () => document.removeEventListener("pointerdown", close); }, []);
-  const normalized = query.trim().toLocaleLowerCase("ja");
-  const matches = spots.filter((spot) => !normalized || `${spot.name} ${spot.areaName}`.toLocaleLowerCase("ja").includes(normalized));
+  const matches = filterFishingSpotOptions(spots, query);
   const choose = (spot: FishingSpot) => { onSelect(spot.id); setQuery(spot.name); setOpen(false); };
   return <div className="spotCombobox" ref={root}>
     <label htmlFor="spot-search">地点名・エリア名で検索</label>

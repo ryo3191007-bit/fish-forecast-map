@@ -31,6 +31,7 @@ import { fetchJmaWarningDecision } from "@/services/jmaWarnings";
 import { getEvaluationReferenceTime, isValidAllSpeciesHistoryState, resolveAllSpeciesReturnState, resolveInitialAllSpeciesHash, scopeSpotDetails, type AllSpeciesHistoryState } from "@/domain/spotEvaluationPresentation";
 import { filterByFishSpecies } from "@/lib/fishSpeciesResolver";
 import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
+import { selectFishingSpot, toEnvironmentPoint } from "@/domain/fishingSpotPresentation";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
@@ -225,10 +226,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   ]);
 
   const environmentSpot = useMemo(() => {
-    return (
-      fishingSpots.find((spot) => spot.id === environmentSpotId) ??
-      fishingSpots[0]
-    );
+    return selectFishingSpot(fishingSpots, environmentSpotId);
   }, [environmentSpotId, fishingSpots]);
 
   const getForecastTimesBySpot = useCallback(() => ({
@@ -316,12 +314,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
 
     setEnvironmentRequestSpotId(environmentSpot.id);
 
-    const point = {
-      spotId: environmentSpot.id,
-      spotName: environmentSpot.name,
-      latitude: environmentSpot.latitude,
-      longitude: environmentSpot.longitude,
-    };
+    const point = toEnvironmentPoint(environmentSpot);
     const cachedEnvironment = readCachedFishingEnvironment(point);
     if (cachedEnvironment) {
       setEnvironment(cachedEnvironment);
