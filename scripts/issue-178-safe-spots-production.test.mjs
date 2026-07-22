@@ -266,7 +266,7 @@ for (const id of targetIds) {
 }
 
 assert.equal(spots.filter((spot) => targetIdSet.has(spot.id)).length, targetIds.length, "static target rows must remain available for marker rendering");
-assert.equal(new Set(spots.map((spot) => spot.areaName)).size, 8, "area filter option derivation must still include areas from empty-array target rows");
+assert.equal(new Set(spots.map((spot) => spot.areaName)).size, 9, "area filter option derivation must still include areas from empty-array target rows");
 for (const id of targetIds) {
   const spot = staticById.get(id);
   assert.ok(Number.isFinite(spot.latitude) && Number.isFinite(spot.longitude), `${id} marker coordinates must remain finite`);

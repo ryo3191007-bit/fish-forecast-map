@@ -31,7 +31,7 @@ const areaNames = Array.from(
 );
 assert.deepEqual(
   areaNames,
-  ["糸島西岸", "唐津湾", "唐津湾北部", "伊万里湾", "唐津湾沿岸", "呼子・鎮西", "肥前・玄海沿岸", "平戸"],
+  ["糸島西岸", "唐津湾", "唐津湾北部", "伊万里湾", "伊万里湾東岸", "唐津湾沿岸", "呼子・鎮西", "肥前・玄海沿岸", "平戸"],
   "area filter candidates must follow the fishing spot master order",
 );
 
