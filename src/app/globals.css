@@ -459,7 +459,7 @@ p {
 .map .maplibregl-popup { max-width: calc(100vw - 32px) !important; }
 .map .maplibregl-popup-content {
   min-width: 0;
-  padding: 10px 38px 10px 12px;
+  padding: 10px 42px 10px 12px;
   border: 2px solid #0e7490;
   border-radius: 12px;
   background: #fff;
@@ -469,13 +469,13 @@ p {
 .map .maplibregl-popup-close-button {
   top: 5px;
   right: 5px;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border-radius: 8px;
   background: #0f172a;
   color: #fff;
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 18px;
+  line-height: 26px;
 }
 .fishingSpotMarker {
   width: 20px;
@@ -1818,7 +1818,7 @@ dd {
 .jmaWarningPanel h3 { margin:0 0 .65rem; } .jmaWarningPanel dl { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:.5rem; margin:0; }
 .jmaWarningPanel dl div { padding:.55rem; border-radius:8px; background:rgba(2,8,23,.35); } .jmaWarningPanel dt { color:#bae6fd; font-size:.72rem; font-weight:900; } .jmaWarningPanel dd { margin:.2rem 0 0; } .jmaWarningPanel a { color:#7dd3fc; }
 @media (max-width:760px) { .sharedTimeControls { grid-template-columns:repeat(2,minmax(0,1fr)); } .sharedTimeControls button { min-width:0; padding:.5rem .3rem; font-size:.72rem; } .spotCombobox, .spotEvaluationCard { max-width:100%; } }
-@media (max-width:480px) { .map .maplibregl-popup-content { min-width:0; padding:9px 36px 9px 10px; } .mapPopup { max-width:calc(100vw - 72px); gap:0; font-size:.88rem; line-height:1.35; } }
+@media (max-width:480px) { .map .maplibregl-popup-content { min-width:0; padding:9px 40px 9px 10px; } .mapPopup { max-width:calc(100vw - 72px); gap:0; font-size:.88rem; line-height:1.35; } }
 
 .allSpeciesScreen { box-sizing:border-box; width:min(100%,1180px); min-width:0; margin:0 auto; padding:0 clamp(.75rem,3vw,1.5rem) 2rem; color:#e0faff; overflow-x:hidden; }
 .allSpeciesHeader { position:sticky; z-index:20; top:0; box-sizing:border-box; padding:max(.75rem,env(safe-area-inset-top)) 0 .9rem; background:linear-gradient(#020817 82%,rgba(2,8,23,0)); }

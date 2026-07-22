@@ -21,4 +21,5 @@ assert.ok(map.includes('popup.on("open"') && map.includes("activePopupRef.curren
 assert.ok(map.includes("spotMarkerRegistry.clear()") && map.includes("activePopupRef.current = null"), "marker cleanup clears stale marker and popup references");
 assert.equal((css.match(/\.map \.maplibregl-popup-content\s*\{/g) ?? []).length, 2, "popup styling has one base rule and one mobile override");
 assert.ok(css.includes("maplibregl-popup-close-button") && css.includes("max-width:calc(100vw - 72px)"), "popup close affordance and compact mobile width are explicit");
+assert.match(css, /\.map \.maplibregl-popup-close-button[\s\S]*?width: 28px;[\s\S]*?height: 28px;[\s\S]*?font-size: 18px;/, "popup close affordance remains compact");
 console.log("map focus and single-popup checks passed");

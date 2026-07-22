@@ -14,7 +14,15 @@ const spotPopup = map.slice(map.indexOf("function createSpotPopupContent"), map.
 assert.match(spotPopup, /title\.textContent = spot\.name/);
 assert.doesNotMatch(spotPopup, /areaName|spotType|createElement\("p"\)/, "spot popup contains only its name");
 assert.match(map, /maxWidth: "min\(220px, calc\(100vw - 24px\)\)"/);
-assert.match(css, /\.map \.maplibregl-popup-content[\s\S]*?padding: 10px 38px 10px 12px/);
+const popupContentRule = css.match(/\.map \.maplibregl-popup-content\s*\{([^}]*)\}/)?.[1] ?? "";
+const popupCloseRule = css.match(/\.map \.maplibregl-popup-close-button\s*\{([^}]*)\}/)?.[1] ?? "";
+const closeWidth = Number(popupCloseRule.match(/width:\s*(\d+)px/)?.[1]);
+const closeFontSize = Number(popupCloseRule.match(/font-size:\s*(\d+)px/)?.[1]);
+const closeRight = Number(popupCloseRule.match(/right:\s*(\d+)px/)?.[1]);
+const contentRightPadding = Number(popupContentRule.match(/padding:\s*\d+px\s+(\d+)px/)?.[1]);
+assert.ok(closeWidth >= 26 && closeWidth <= 28 && closeWidth < 34, "popup close button is smaller than the former 34px size");
+assert.ok(closeFontSize < 24, "popup close glyph is smaller than the former 24px size");
+assert.ok(contentRightPadding > closeWidth + closeRight, "popup content reserves space to the right of a name such as 伊万里湾奥");
 
 assert.match(map, /<div className="mapFrame">\s*<MapLayerToggle[\s\S]*?<div className="mapShell">\s*<div ref=\{containerRef\} className="map"/, "toggle precedes and is adjacent to the map viewport");
 assert.doesNotMatch(map, /className="mapAttribution/, "large custom attribution cards are not rendered");
@@ -50,6 +58,14 @@ assert.match(card, /className="detailIcon" aria-hidden="true"/);
 assert.match(card, /信憑性: \{confidenceLabel\[confidence\]\}/, "confidence remains beside compact values");
 assert.match(card, /status === "loading"[\s\S]*?status === "failed"[\s\S]*?cards\.length \? [\s\S]*?<EmptyState \/>/, "loading, error, and empty states remain distinct");
 assert.match(card, /function EmptyState\(\) \{ return <p className="spotEvaluationState empty" role="status">情報なし<\/p>; \}/);
+const evaluationTab = card.slice(card.indexOf("function EvaluationTab"), card.indexOf("function JmaWarningPanel"));
+assert.match(evaluationTab, /className="scoreCards"[\s\S]*?\{!species\.length && <EmptyState \/>\}[\s\S]*?<h3>釣法評価<\/h3>/, "the species section owns its empty state");
+assert.match(evaluationTab, /className="methodScores"[\s\S]*?\{!methods\.length && <EmptyState \/>\}/, "the method section owns its empty state");
+assert.doesNotMatch(evaluationTab, /!species\.length && !methods\.length/, "empty sections are not coupled");
+const emptyStateCount = ({ species, methods }) => Number(species === 0) + Number(methods === 0);
+assert.equal(emptyStateCount({ species: 0, methods: 0 }), 2, "both empty sections render an empty state");
+assert.equal(emptyStateCount({ species: 1, methods: 0 }), 1, "only an empty method section renders an empty state");
+assert.equal(emptyStateCount({ species: 0, methods: 1 }), 1, "only an empty species section renders an empty state");
 assert.match(css, /\.spotEvaluationState\.empty[\s\S]*?display:inline-block/);
 
 console.log("Issue 238 compact map UI checks passed");
