@@ -176,8 +176,12 @@ const negativeFacilityValues: Readonly<Record<string, string>> = {
   not_available: "利用不可",
 };
 
-function removeLegacyUnverifiedCandidateSuffix(value: string) {
-  return value.replace(/候補\s*[（(]\s*現行\s*未確認\s*[）)]\s*$/, "").trim();
+export function sanitizeSpotDetailDisplayValue(value: string) {
+  return value
+    .trim()
+    .replace(/\s*[（(]\s*(?:現行\s*未確認|low|medium|high)\s*[）)]\s*$/i, "")
+    .replace(/\s*候補\s*$/, "")
+    .trim();
 }
 
 const NATURAL_TERRAIN_LABELS = [
@@ -204,11 +208,16 @@ export function formatTerrainDetailForPresentation(details: FishingSpotDetailSet
     && value.adoptionStatus === "adopted"
   );
   const evidence = candidates.filter((value) => value.informationState === "has_evidence" || value.informationState === "weak_evidence");
-  const rawValues = evidence.flatMap((value) => value.valueTextList.length ? value.valueTextList : value.valueText ? [value.valueText] : []);
+  const rawValues = evidence
+    .flatMap((value) => value.valueTextList.length ? value.valueTextList : value.valueText ? [value.valueText] : [])
+    .map(sanitizeSpotDetailDisplayValue)
+    .filter(Boolean);
   const labels = classifiedLabels(rawValues, itemKey === "coastal_topography" ? NATURAL_TERRAIN_LABELS : FISHING_STRUCTURE_LABELS);
   if (!labels.length) return null;
   const contributing = evidence.filter((value) => {
-    const values = value.valueTextList.length ? value.valueTextList : value.valueText ? [value.valueText] : [];
+    const values = (value.valueTextList.length ? value.valueTextList : value.valueText ? [value.valueText] : [])
+      .map(sanitizeSpotDetailDisplayValue)
+      .filter(Boolean);
     return classifiedLabels(values, itemKey === "coastal_topography" ? NATURAL_TERRAIN_LABELS : FISHING_STRUCTURE_LABELS).length > 0;
   });
   const confidenceRank: Record<NonNullable<SpotDetailValue["confidence"]>, number> = { low: 0, medium: 1, high: 2 };
@@ -226,7 +235,7 @@ export function formatSpotDetailValue(item: SpotDetailValue | undefined) {
   if (facility && item.valueBoolean !== null) return item.valueBoolean ? facility.label : "なし";
   if (facility && item.valueText && negativeFacilityValues[item.valueText]) return negativeFacilityValues[item.valueText];
   const label = (value: string) => {
-    const displayValue = removeLegacyUnverifiedCandidateSuffix(value);
+    const displayValue = sanitizeSpotDetailDisplayValue(value);
     if (!displayValue) return "調査済み・未確定";
     if (facility?.affirmativeValues.includes(displayValue)) return facility.label;
     return detailEnumLabels[item.itemKey]?.[displayValue] ?? detailLabels[displayValue]

@@ -77,6 +77,26 @@ const legacyLightingDisplays = [
 assert.deepEqual(legacyLightingDisplays, ["照明", "照明", "照明", "照明、常夜灯"]);
 assert.ok(legacyLightingDisplays.every((display) => !display.includes("現行未確認") && !display.includes("候補（現行未確認）") && !display.includes("候補(現行未確認)")), "legacy candidate qualifiers are removed from scalar and list display values");
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", "候補（現行未確認）"), itemKey: "lighting" }), "調査済み・未確定", "an empty normalized value falls back without inventing an affirmative value");
+const candidateConfidenceDisplays = [
+  presentation.formatSpotDetailValue({ ...value("new", "頭上電線注意候補（low）"), itemKey: "obstacles" }),
+  presentation.formatSpotDetailValue({ ...value("new", "手すり候補(low)"), itemKey: "shore_access" }),
+  presentation.formatSpotDetailValue({ ...value("new", "消波ブロック候補（ medium ）"), itemKey: "obstacles" }),
+  presentation.formatSpotDetailValue({ ...value("new", "岩礁候補( HIGH )"), itemKey: "obstacles" }),
+  presentation.formatSpotDetailValue({ ...value("new", "照明（LoW）"), itemKey: "lighting" }),
+  presentation.formatSpotDetailValue({ ...value("new", "駐車場候補"), itemKey: "parking" }),
+  presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "access", valueTextList: ["階段候補（medium）", "手すり候補(high)"] }),
+];
+assert.deepEqual(candidateConfidenceDisplays, ["頭上電線注意", "手すり", "消波ブロック", "岩礁", "照明", "駐車", "階段、手すり"]);
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "候補（low）"), itemKey: "obstacles" }), "調査済み・未確定", "a qualifier-only terrain value falls back without inventing an obstacle");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "none"), itemKey: "toilet" }), "なし");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "unavailable"), itemKey: "parking" }), "利用不可");
+const formattedSpotDetailDisplays = [...legacyLightingDisplays, ...candidateConfidenceDisplays];
+assert.ok(formattedSpotDetailDisplays.every((display) => !/現行\s*未確認|候補\s*$|[（(]\s*(?:low|medium|high)\s*[）)]\s*$/i.test(display)), "formatted spot detail strings do not expose temporary candidate or confidence suffixes");
+const terrainSuffixDetails = { itemDefinitions: [], values: [{
+  ...value("new", null), itemKey: "spot_features", valueTextList: ["テトラ候補（low）", "砂浜候補(high)"],
+  adoptionStatus: "adopted", confidence: "low",
+}] };
+assert.equal(presentation.formatTerrainDetailForPresentation(terrainSuffixDetails, "spot_features")?.text, "テトラ、砂浜", "terrain taxonomy receives sanitized raw values");
 const visibilityDetails = { itemDefinitions: [], values: [
   { ...value("new", "参考値"), itemKey: "target_species", adoptionStatus: "adopted", confidence: "low" },
   { ...value("new", "非表示"), itemKey: "parking", adoptionStatus: "adopted", informationState: "rejected" },
