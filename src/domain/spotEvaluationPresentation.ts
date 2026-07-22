@@ -164,8 +164,8 @@ const detailEnumLabels: Record<string, Record<string, string>> = {
 };
 
 const compactFacilityLabels: Record<"toilet" | "parking", { label: string; affirmativeValues: readonly string[] }> = {
-  toilet: { label: "トイレ", affirmativeValues: ["トイレ候補（現行未確認）", "トイレ候補", "トイレあり"] },
-  parking: { label: "駐車", affirmativeValues: ["駐車場候補（現行未確認）", "駐車場候補", "駐車場あり"] },
+  toilet: { label: "トイレ", affirmativeValues: ["トイレ", "トイレ候補", "トイレあり"] },
+  parking: { label: "駐車", affirmativeValues: ["駐車場", "駐車場候補", "駐車場あり"] },
 };
 
 const negativeFacilityValues: Readonly<Record<string, string>> = {
@@ -175,6 +175,10 @@ const negativeFacilityValues: Readonly<Record<string, string>> = {
   unavailable: "利用不可",
   not_available: "利用不可",
 };
+
+function removeLegacyUnverifiedCandidateSuffix(value: string) {
+  return value.replace(/候補\s*[（(]\s*現行\s*未確認\s*[）)]\s*$/, "").trim();
+}
 
 const NATURAL_TERRAIN_LABELS = [
   [/(砂泥)/, "砂泥底"], [/(砂地)/, "砂地"], [/(岩礁|岩場)/, "岩礁"], [/(藻場)/, "藻場"],
@@ -220,9 +224,14 @@ export function formatSpotDetailValue(item: SpotDetailValue | undefined) {
   if (item.informationState === "rejected") return "調査済み・不採用";
   const facility = item.itemKey === "toilet" || item.itemKey === "parking" ? compactFacilityLabels[item.itemKey] : null;
   if (facility && item.valueBoolean !== null) return item.valueBoolean ? facility.label : "なし";
-  if (facility && item.valueText && facility.affirmativeValues.includes(item.valueText)) return facility.label;
   if (facility && item.valueText && negativeFacilityValues[item.valueText]) return negativeFacilityValues[item.valueText];
-  const label = (value: string) => detailEnumLabels[item.itemKey]?.[value] ?? detailLabels[value] ?? (/^[a-z0-9_.:-]+$/i.test(value) ? "その他の確認済み情報" : value);
+  const label = (value: string) => {
+    const displayValue = removeLegacyUnverifiedCandidateSuffix(value);
+    if (!displayValue) return "調査済み・未確定";
+    if (facility?.affirmativeValues.includes(displayValue)) return facility.label;
+    return detailEnumLabels[item.itemKey]?.[displayValue] ?? detailLabels[displayValue]
+      ?? (/^[a-z0-9_.:-]+$/i.test(displayValue) ? "その他の確認済み情報" : displayValue);
+  };
   if (item.valueTextList.length) return item.valueTextList.map(label).join("、");
   if (item.valueText) return label(item.valueText);
   if (item.valueNumber !== null) return `${item.valueNumber}${item.unit ?? ""}`;

@@ -67,6 +67,16 @@ assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), itemKey
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "toilet", valueBoolean: false }), "なし");
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "parking", valueBoolean: false }), "なし");
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", "none"), itemKey: "toilet" }), "なし", "a negative facility enum is not converted into an affirmative label");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "unavailable"), itemKey: "parking" }), "利用不可", "an unavailable facility remains negative");
+const legacyLightingDisplays = [
+  presentation.formatSpotDetailValue({ ...value("new", "照明候補（現行未確認）"), itemKey: "lighting" }),
+  presentation.formatSpotDetailValue({ ...value("new", "照明候補(現行未確認)"), itemKey: "lighting" }),
+  presentation.formatSpotDetailValue({ ...value("new", "照明候補 （ 現行 未確認 ）  "), itemKey: "lighting" }),
+  presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "lighting", valueTextList: ["照明候補（現行未確認）", "常夜灯"] }),
+];
+assert.deepEqual(legacyLightingDisplays, ["照明", "照明", "照明", "照明、常夜灯"]);
+assert.ok(legacyLightingDisplays.every((display) => !display.includes("現行未確認") && !display.includes("候補（現行未確認）") && !display.includes("候補(現行未確認)")), "legacy candidate qualifiers are removed from scalar and list display values");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "候補（現行未確認）"), itemKey: "lighting" }), "調査済み・未確定", "an empty normalized value falls back without inventing an affirmative value");
 const visibilityDetails = { itemDefinitions: [], values: [
   { ...value("new", "参考値"), itemKey: "target_species", adoptionStatus: "adopted", confidence: "low" },
   { ...value("new", "非表示"), itemKey: "parking", adoptionStatus: "adopted", informationState: "rejected" },
@@ -76,6 +86,7 @@ assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "target_s
 assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "parking"), undefined, "rejected evidence is excluded from the normal UI");
 assert.notEqual(presentation.formatSpotDetailValue(visibilityDetails.values[1]), "未調査", "rejected evidence retains its state instead of being converted to unresearched");
 assert.ok(card.includes("items.flatMap") && card.includes("if (!item && !terrainPresentation) return []"), "detail rows without displayable adopted evidence are omitted");
+assert.ok(card.includes("候補がありません"), "the unrelated empty search result message is preserved");
 assert.ok(card.includes('["fishable_area", "釣り可能範囲"]') && !card.includes('["fishing_range", "釣り可能範囲"]'), "the fishing tab uses the split fishable-area key");
 for (const key of ["tidal_flow", "river_influence", "open_sea_bay_character"]) assert.ok(card.includes(`["${key}",`), `the terrain tab displays ${key} independently`);
 assert.ok(!card.includes('["water_flow_influences",'), "the legacy composite is absent from the normal UI");
