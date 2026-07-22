@@ -41,7 +41,7 @@ type Props = {
   onFocusMap: () => void;
 };
 
-const tabs: SpotEvaluationTab[] = ["評価", "環境", "釣場", "地形"];
+const tabs: SpotEvaluationTab[] = ["環境", "釣場", "地形", "評価"];
 const fishingItems = [
   ["target_species", "対象魚種"], ["recommended_methods", "推奨釣法"],
   ["shore_access", "足場"], ["toilet", "トイレ"], ["lighting", "常夜灯・照明"],
@@ -81,19 +81,24 @@ export function SpotEvaluationCard(props: Props) {
     <section className="spotEvaluationCard" aria-live="polite">
       <header className="spotEvaluationHeader">
         <div><p className="eyebrow">Spot evaluation</p><h2>地点評価</h2></div>
-        <span>{props.selectedSpot?.areaName ?? "対象地点なし"}</span>
       </header>
-      <SpotCombobox spots={props.spots} selected={props.selectedSpot} onSelect={props.onSelectedSpotIdChange} />
-      <button type="button" className="focusMapButton" disabled={!props.selectedSpot} onClick={props.onFocusMap}>
-        マップで場所を確認
-      </button>
+      <div className="spotSelectionRow">
+        <SpotCombobox spots={props.spots} selected={props.selectedSpot} onSelect={props.onSelectedSpotIdChange} />
+        <button type="button" className="focusMapButton" aria-label="選択地点をマップで確認" disabled={!props.selectedSpot} onClick={props.onFocusMap}>
+          Map
+        </button>
+      </div>
 
       <div className="sharedTimeControls" aria-label="評価・環境の共通日時">
-        <label>日付<input type="date" value={selectedDate} disabled={!rows.length} onChange={(event) => props.onSelectedTimeChange(rows.find((row) => row.forecastTime.startsWith(event.target.value))?.forecastTime ?? resolveSelectedForecastTime(rows, null))} /></label>
-        <label>時刻<select value={selectedRow?.forecastTime ?? ""} disabled={!selectedRow} onChange={(event) => props.onSelectedTimeChange(event.target.value)}>{dayRows.map((row) => <option key={row.forecastTime} value={row.forecastTime}>{row.forecastTime.slice(11, 16)}</option>)}</select></label>
-        <button type="button" disabled={selectedIndex <= 0} onClick={() => props.onSelectedTimeChange(rows[selectedIndex - 1]?.forecastTime ?? props.selectedTime)}>前の1時間</button>
-        <button type="button" disabled={!rows.length} onClick={() => props.onSelectedTimeChange(getNearestForecastTime(rows))}>現在時刻へ戻る</button>
-        <button type="button" disabled={selectedIndex < 0 || selectedIndex >= rows.length - 1} onClick={() => props.onSelectedTimeChange(rows[selectedIndex + 1]?.forecastTime ?? props.selectedTime)}>次の1時間</button>
+        <div className="sharedTimeInputs">
+          <label>日付<input type="date" value={selectedDate} disabled={!rows.length} onChange={(event) => props.onSelectedTimeChange(rows.find((row) => row.forecastTime.startsWith(event.target.value))?.forecastTime ?? resolveSelectedForecastTime(rows, null))} /></label>
+          <label>時刻<select value={selectedRow?.forecastTime ?? ""} disabled={!selectedRow} onChange={(event) => props.onSelectedTimeChange(event.target.value)}>{dayRows.map((row) => <option key={row.forecastTime} value={row.forecastTime}>{row.forecastTime.slice(11, 16)}</option>)}</select></label>
+        </div>
+        <div className="sharedTimeNavigation">
+          <button type="button" aria-label="前の1時間" disabled={selectedIndex <= 0} onClick={() => props.onSelectedTimeChange(rows[selectedIndex - 1]?.forecastTime ?? props.selectedTime)}>{"<"}</button>
+          <button type="button" aria-label="現在時刻へ戻る" disabled={!rows.length} onClick={() => props.onSelectedTimeChange(getNearestForecastTime(rows))}>現在時刻</button>
+          <button type="button" aria-label="次の1時間" disabled={selectedIndex < 0 || selectedIndex >= rows.length - 1} onClick={() => props.onSelectedTimeChange(rows[selectedIndex + 1]?.forecastTime ?? props.selectedTime)}>{">"}</button>
+        </div>
       </div>
 
       <div className="spotInternalTabs" role="tablist" aria-label="地点評価の表示内容">
