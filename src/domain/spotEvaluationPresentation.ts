@@ -163,6 +163,19 @@ const detailEnumLabels: Record<string, Record<string, string>> = {
   open_sea_bay_character: { open_sea: "外海", bay_mouth: "湾口", bay: "湾内", inner_bay: "内湾" },
 };
 
+const compactFacilityLabels: Record<"toilet" | "parking", { label: string; affirmativeValues: readonly string[] }> = {
+  toilet: { label: "トイレ", affirmativeValues: ["トイレ候補（現行未確認）", "トイレ候補", "トイレあり"] },
+  parking: { label: "駐車", affirmativeValues: ["駐車場候補（現行未確認）", "駐車場候補", "駐車場あり"] },
+};
+
+const negativeFacilityValues: Readonly<Record<string, string>> = {
+  none: "なし",
+  no: "なし",
+  absent: "なし",
+  unavailable: "利用不可",
+  not_available: "利用不可",
+};
+
 const NATURAL_TERRAIN_LABELS = [
   [/(砂泥)/, "砂泥底"], [/(砂地)/, "砂地"], [/(岩礁|岩場)/, "岩礁"], [/(藻場)/, "藻場"],
   [/(かけ上がり)/, "かけ上がり"], [/(浅場)/, "浅場"], [/(深場)/, "深場"], [/(河口)/, "河口"],
@@ -205,8 +218,10 @@ export function formatSpotDetailValue(item: SpotDetailValue | undefined) {
   if (item.informationState === "researched_unknown") return "調査済み・未確定";
   if (item.informationState === "unresearched") return "未調査";
   if (item.informationState === "rejected") return "調査済み・不採用";
-  if (item.itemKey === "toilet") return "トイレ";
-  if (item.itemKey === "parking") return "駐車";
+  const facility = item.itemKey === "toilet" || item.itemKey === "parking" ? compactFacilityLabels[item.itemKey] : null;
+  if (facility && item.valueBoolean !== null) return item.valueBoolean ? facility.label : "なし";
+  if (facility && item.valueText && facility.affirmativeValues.includes(item.valueText)) return facility.label;
+  if (facility && item.valueText && negativeFacilityValues[item.valueText]) return negativeFacilityValues[item.valueText];
   const label = (value: string) => detailEnumLabels[item.itemKey]?.[value] ?? detailLabels[value] ?? (/^[a-z0-9_.:-]+$/i.test(value) ? "その他の確認済み情報" : value);
   if (item.valueTextList.length) return item.valueTextList.map(label).join("、");
   if (item.valueText) return label(item.valueText);

@@ -31,8 +31,9 @@ assert.match(css, /\.mapLayerToggle[\s\S]*?position: relative[\s\S]*?grid-templa
 assert.match(css, /@media \(max-width: 620px\)[\s\S]*?\.mapLayerButton[\s\S]*?white-space: nowrap/);
 assert.doesNotMatch(css, /\.mapLayerToggle \{\s*position: absolute/);
 
-assert.match(presentation, /item\.itemKey === "toilet"\) return "トイレ"/);
-assert.match(presentation, /item\.itemKey === "parking"\) return "駐車"/);
+assert.match(presentation, /toilet: \{ label: "トイレ", affirmativeValues:/);
+assert.match(presentation, /parking: \{ label: "駐車", affirmativeValues:/);
+assert.doesNotMatch(presentation, /item\.itemKey === "(?:toilet|parking)"\) return/, "facility keys alone never imply that a facility exists");
 assert.match(card, /toilet: "🚻"/);
 assert.match(card, /parking: "🚗"/);
 assert.match(card, /className="detailIcon" aria-hidden="true"/);
