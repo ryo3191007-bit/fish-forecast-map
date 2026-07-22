@@ -186,7 +186,7 @@ function loadMapFishingSpotRow() {
 }
 
 const spots = loadFishingSpots();
-assert.equal(spots.length, 18, "No fishing spots should be added or removed");
+for (const legacyId of ["nokita-port", "nokita-beach", "keya-port", "keya-gate", "funakoshi-port", "kishi-port", "fukuyoshi-port", "hamasaki-beach", "niji-matsubara", "karatsu-east-port", "karatsu-west-port", "yobuko-area", "imari-inner-bay", "fukushima-area", "takashima-area", "tabira-port", "hirado-seto", "ikitsuki-area"]) assert.ok(spots.some((spot) => spot.id === legacyId), `${legacyId} legacy spot must be preserved`);
 const staticById = new Map(spots.map((spot) => [spot.id, normalizeSpot(spot)]));
 
 for (const id of targetIds) {
@@ -266,7 +266,7 @@ for (const id of targetIds) {
 }
 
 assert.equal(spots.filter((spot) => targetIdSet.has(spot.id)).length, targetIds.length, "static target rows must remain available for marker rendering");
-assert.equal(new Set(spots.map((spot) => spot.areaName)).size, 5, "area filter option derivation must still include areas from empty-array target rows");
+assert.equal(new Set(spots.map((spot) => spot.areaName)).size, 8, "area filter option derivation must still include areas from empty-array target rows");
 for (const id of targetIds) {
   const spot = staticById.get(id);
   assert.ok(Number.isFinite(spot.latitude) && Number.isFinite(spot.longitude), `${id} marker coordinates must remain finite`);

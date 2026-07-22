@@ -27,7 +27,10 @@ export const JMA_AREA_BY_SPOT: Record<string, JmaAreaCode> = {
   "nokita-port": ITOSHIMA, "nokita-beach": ITOSHIMA, "keya-port": ITOSHIMA, "keya-gate": ITOSHIMA,
   "funakoshi-port": ITOSHIMA, "kishi-port": ITOSHIMA, "fukuyoshi-port": ITOSHIMA,
   "hamasaki-beach": KARATSU, "niji-matsubara": KARATSU, "karatsu-east-port": KARATSU,
-  "karatsu-west-port": KARATSU, "yobuko-area": KARATSU, "imari-inner-bay": IMARI,
+  "karatsu-west-port": KARATSU, "yobuko-area": KARATSU,
+  "ouka-port": KARATSU, "kodomo-port": KARATSU, "kabeshima-port": KARATSU, "hado-port": KARATSU, "haregi-port": KARATSU,
+  "tobo-port": KARATSU, "minatohama-port": KARATSU, "nagoya-port": KARATSU, "yobuko-port": KARATSU, "takakushi-port": KARATSU,
+  "imari-inner-bay": IMARI,
   "fukushima-area": MATSUURA, "takashima-area": MATSUURA, "tabira-port": HIRADO,
   "hirado-seto": HIRADO, "ikitsuki-area": HIRADO,
 };
