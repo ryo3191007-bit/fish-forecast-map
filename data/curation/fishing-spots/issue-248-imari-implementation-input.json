@@ -1,0 +1,97 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 248,
+  "researchedAt": "2026-07-22",
+  "scope": {
+    "prefecture": "佐賀県",
+    "municipality": "伊万里市",
+    "area": "伊万里湾奥・伊万里市側"
+  },
+  "activeCandidates": [
+    {
+      "spotId": "hatazu-fishing-port",
+      "name": "波多津漁港",
+      "spotType": "漁港",
+      "municipality": "伊万里市",
+      "latitude": 33.3908,
+      "longitude": 129.8723,
+      "coordinatePrecision": "approximate",
+      "areaName": "伊万里湾東岸",
+      "decision": "adopt",
+      "reason": "公的資料で名称・地点種別・伊万里市所在を確認し、公的地図から港域または海岸区間の概略代表点を設定。一般利用・釣り可否は未確認。",
+      "relationToExisting": {
+        "existingSpotId": "imari-inner-bay",
+        "relation": "specific_spot_within_broad_context",
+        "migrationPolicy": "既存広域地点を維持し、既存釣果を推測で再割当しない。"
+      }
+    },
+    {
+      "spotId": "imarin-beach",
+      "name": "イマリンビーチ",
+      "spotType": "サーフ",
+      "municipality": "伊万里市",
+      "latitude": 33.353857,
+      "longitude": 129.846813,
+      "coordinatePrecision": "approximate",
+      "areaName": "伊万里湾東岸",
+      "decision": "adopt",
+      "reason": "公的資料で名称・地点種別・伊万里市所在を確認し、公的地図から港域または海岸区間の概略代表点を設定。一般利用・釣り可否は未確認。",
+      "relationToExisting": {
+        "existingSpotId": "imari-inner-bay",
+        "relation": "specific_spot_within_broad_context",
+        "migrationPolicy": "既存広域地点を維持し、既存釣果を推測で再割当しない。"
+      }
+    }
+  ],
+  "heldOrExcluded": [
+    {
+      "proposedId": "imari-port-wharf",
+      "name": "伊万里港の個別岸壁",
+      "decision": "hold",
+      "reason": "港域は確認できるが、一般利用できる岸壁範囲と代表点を公的資料から確定できない。"
+    },
+    {
+      "proposedId": "imari-river-mouth",
+      "name": "伊万里川河口",
+      "decision": "hold",
+      "reason": "河口は確認できるが、公開地点として案内できる範囲と利用条件を確定できない。"
+    },
+    {
+      "name": "久原・七ツ島等の港湾地区",
+      "decision": "exclude",
+      "reason": "物流・産業港湾地区であり、一般の行き先として案内できる根拠を確認できない。"
+    }
+  ],
+  "sources": {
+    "src-jfa-saga-fishing-ports": {
+      "sourceType": "official",
+      "sourceName": "佐賀県 漁港一覧",
+      "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
+      "checkedOn": "2026-07-22",
+      "note": "水産庁。波多津漁港の名称、第2種漁港の種別、伊万里市の所在地、管理者を確認。構造・足場や釣り可否は裏付けない。"
+    },
+    "src-gsi-address-search": {
+      "sourceType": "map",
+      "sourceName": "地理院地図・地名検索",
+      "sourceUrl": "https://maps.gsi.go.jp/",
+      "checkedOn": "2026-07-22",
+      "note": "国土地理院。地点と概略代表座標の確認に使用。地点種別、構造・足場、釣り可否は裏付けない。"
+    },
+    "src-imari-imarin-beach": {
+      "sourceType": "official",
+      "sourceName": "伊万里市「海」",
+      "sourceUrl": "https://www.city.imari.lg.jp/9622.htm",
+      "checkedOn": "2026-07-22",
+      "note": "伊万里市の地点個別案内。イマリンビーチの名称、人工海浜・海水浴場としての施設概要を確認。一般の釣り可否、遊泳区域外での利用可否、釣りの足場は裏付けない。"
+    }
+  },
+  "migrationPolicy": [
+    "imari-inner-bayを削除・改名・非active化しない。",
+    "既存釣果、地点詳細、環境キャッシュを新規地点へ自動再割当しない。",
+    "repository migrationはforward-onlyで、remote Supabaseには本Issueで適用しない。"
+  ],
+  "researchStatePolicy": {
+    "unresearched": "調査未実施",
+    "researched_unknown": "列挙したsourceを確認したが確定できない。0点や安全扱いへ変換しない。"
+  }
+}

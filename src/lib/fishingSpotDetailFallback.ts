@@ -3,6 +3,7 @@ import type { FishingSpot } from "@/domain/fishingSpot";
 import issue181Details from "../data/curation/issue-181-detail-initial-data.json";
 import issue194Details from "../../data/curation/fishing-spots/issue-194-detail-split.json";
 import issue205Details from "../../data/curation/fishing-spots/issue-205-detail-curation.json";
+import issue248Details from "../../data/curation/fishing-spots/issue-248-detail-curation.json";
 
 export const staticFishingSpotDetailItemDefinitions: SpotDetailItemDefinition[] = [
   { itemKey: "target_species", category: "basic", valueKind: "text_list", labelJa: "対象魚種", description: "既存釣り場マスターの対象魚種。", displayOrder: 10 },
@@ -62,9 +63,10 @@ type Issue181Spot = { spotId: string; sources: Issue181Source[]; values: Issue18
 const issue181DetailSpots = issue181Details.spots as Issue181Spot[];
 const issue194DetailSpots = issue194Details.spots as Issue181Spot[];
 const issue205DetailSpots = issue205Details.spots as Issue181Spot[];
+const issue248DetailSpots = issue248Details.spots as Issue181Spot[];
 
 function buildCuratedStaticValues(spotIds: Set<string>): SpotDetailValue[] {
-  return issue181DetailSpots.concat(issue205DetailSpots)
+  return issue181DetailSpots.concat(issue205DetailSpots, issue248DetailSpots)
     .filter((spot) => spotIds.has(spot.spotId))
     .flatMap((spot) => {
       const sourcesById = new Map(spot.sources.map((source) => [source.id, source]));

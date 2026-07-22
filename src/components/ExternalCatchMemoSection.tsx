@@ -6,6 +6,7 @@ import type {
   ExternalCatchMemoStorageStatus,
 } from "@/hooks/useExternalCatchMemos";
 import type { FishingSpot } from "@/domain/fishingSpot";
+import { buildCatchRegistrationSpotOptions } from "@/domain/fishingSpotPresentation";
 import {
   fishSpeciesNames,
   legacySpeciesLabel,
@@ -408,9 +409,9 @@ export function ExternalCatchMemoSection({
                     onChange={(e) => updateForm("spotId", e.target.value)}
                   >
                     <option value="">紐づけなし</option>
-                    {spots.map((spot) => (
+                    {buildCatchRegistrationSpotOptions(spots).map((spot) => (
                       <option key={spot.id} value={spot.id}>
-                        {spot.name} / {spot.areaName}
+                        {spot.label}
                       </option>
                     ))}
                   </select>
