@@ -17,7 +17,7 @@ import type {
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
 import type { JmaWarningDecision } from "@/domain/jmaWarning";
 import { getJmaWarningPresentation } from "@/domain/jmaWarningPresentation";
-import { findDisplayableSpotDetail, formatSpotDetailValue, getEnvironmentStatusLabel, getEvaluationReferenceTime, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
+import { findDisplayableSpotDetail, formatSpotDetailValue, formatTerrainDetailForPresentation, getEnvironmentStatusLabel, getEvaluationReferenceTime, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形";
 
@@ -50,7 +50,7 @@ const fishingItems = [
 ] as const;
 const terrainItems = [
   ["depth", "水深"], ["bottom_material", "底質"], ["coastal_topography", "海底・沿岸地形"],
-  ["obstacles", "テトラ・根・障害物"], ["spot_features", "堤防・磯・サーフ等の特徴"],
+  ["obstacles", "テトラ・根・障害物"], ["spot_features", "釣り場の構造・足場"],
   ["tidal_flow", "潮通し"], ["river_influence", "河川影響"],
   ["open_sea_bay_character", "外海・湾内特性"],
 ] as const;
@@ -180,6 +180,13 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
 function DetailTab({ details, status, items }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[] }) {
   if (status === "loading") return <StateMessage>地点詳細を取得中です…</StateMessage>;
   if (status === "failed") return <StateMessage>地点詳細を取得できませんでした。状態を表示できません。</StateMessage>;
-  return <dl className="detailGrid">{items.flatMap(([key, label]) => { const item = findDisplayableSpotDetail(details, key); return item ? [<div key={key}><dt>{label}</dt><dd>{formatSpotDetailValue(item)}{item.confidence ? <span className={`confidence ${item.confidence}`}>信憑性: {confidenceLabel[item.confidence]}</span> : null}</dd></div>] : []; })}</dl>;
+  return <dl className="detailGrid">{items.flatMap(([key, label]) => {
+    const terrainPresentation = key === "coastal_topography" || key === "spot_features" ? formatTerrainDetailForPresentation(details, key) : null;
+    const item = findDisplayableSpotDetail(details, key);
+    if ((key === "coastal_topography" || key === "spot_features") && !terrainPresentation) return [];
+    if (!item && !terrainPresentation) return [];
+    const confidence = terrainPresentation?.confidence ?? item?.confidence ?? null;
+    return [<div key={key}><dt>{label}</dt><dd>{terrainPresentation?.text ?? formatSpotDetailValue(item)}{confidence ? <span className={`confidence ${confidence}`}>信憑性: {confidenceLabel[confidence]}</span> : null}</dd></div>];
+  })}</dl>;
 }
 function StateMessage({ children }: { children: React.ReactNode }) { return <p className="spotEvaluationState" role="status">{children}</p>; }

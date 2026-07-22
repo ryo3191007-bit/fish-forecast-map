@@ -66,7 +66,7 @@ const visibilityDetails = { itemDefinitions: [], values: [
 assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "target_species").confidence, "low", "adopted low-confidence evidence remains visible");
 assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "parking"), undefined, "rejected evidence is excluded from the normal UI");
 assert.notEqual(presentation.formatSpotDetailValue(visibilityDetails.values[1]), "未調査", "rejected evidence retains its state instead of being converted to unresearched");
-assert.ok(card.includes("items.flatMap") && card.includes("return item ?"), "detail rows without displayable adopted evidence are omitted");
+assert.ok(card.includes("items.flatMap") && card.includes("if (!item && !terrainPresentation) return []"), "detail rows without displayable adopted evidence are omitted");
 assert.ok(card.includes('["fishable_area", "釣り可能範囲"]') && !card.includes('["fishing_range", "釣り可能範囲"]'), "the fishing tab uses the split fishable-area key");
 for (const key of ["tidal_flow", "river_influence", "open_sea_bay_character"]) assert.ok(card.includes(`["${key}",`), `the terrain tab displays ${key} independently`);
 assert.ok(!card.includes('["water_flow_influences",'), "the legacy composite is absent from the normal UI");

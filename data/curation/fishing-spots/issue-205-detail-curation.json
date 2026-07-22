@@ -65,37 +65,13 @@
           }
         },
         {
-          "id": "ouka-port:spot_features",
-          "itemKey": "spot_features",
-          "informationState": "has_evidence",
-          "valueText": null,
-          "valueTextList": [
-            "漁港"
-          ],
-          "valueNumber": null,
-          "valueBoolean": null,
-          "valueJson": null,
-          "unit": null,
-          "confidence": "high",
-          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
-          "checkedAt": "2026-07-22",
-          "sources": {
-            "supporting": [
-              "src-jfa-saga-fishing-ports"
-            ],
-            "checked": [],
-            "contradicting": []
-          }
-        },
-        {
           "id": "ouka-port:coastal_topography",
-          "itemKey": "coastal_topography",
+          "itemKey": "spot_features",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
             "波止",
-            "小型テトラ",
-            "内港・外向きの区別"
+            "小型テトラ"
           ],
           "valueNumber": null,
           "valueBoolean": null,
@@ -299,36 +275,12 @@
           }
         },
         {
-          "id": "kodomo-port:spot_features",
-          "itemKey": "spot_features",
-          "informationState": "has_evidence",
-          "valueText": null,
-          "valueTextList": [
-            "漁港"
-          ],
-          "valueNumber": null,
-          "valueBoolean": null,
-          "valueJson": null,
-          "unit": null,
-          "confidence": "high",
-          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
-          "checkedAt": "2026-07-22",
-          "sources": {
-            "supporting": [
-              "src-jfa-saga-fishing-ports",
-              "src-nl-location-kodomo"
-            ],
-            "checked": [],
-            "contradicting": []
-          }
-        },
-        {
           "id": "kodomo-port:coastal_topography",
-          "itemKey": "coastal_topography",
+          "itemKey": "spot_features",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "漁港と砂浜・海水浴場が隣接（政府系ロケDB・medium）",
+            "砂浜",
             "波止"
           ],
           "valueNumber": null,
@@ -523,37 +475,12 @@
           }
         },
         {
-          "id": "kabeshima-port:spot_features",
-          "itemKey": "spot_features",
-          "informationState": "has_evidence",
-          "valueText": null,
-          "valueTextList": [
-            "漁港"
-          ],
-          "valueNumber": null,
-          "valueBoolean": null,
-          "valueJson": null,
-          "unit": null,
-          "confidence": "high",
-          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
-          "checkedAt": "2026-07-22",
-          "sources": {
-            "supporting": [
-              "src-jfa-saga-fishing-ports",
-              "src-nl-location-kabeshima"
-            ],
-            "checked": [],
-            "contradicting": []
-          }
-        },
-        {
           "id": "kabeshima-port:coastal_topography",
-          "itemKey": "coastal_topography",
+          "itemKey": "spot_features",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "島の漁港",
-            "呼子大橋経由で陸路接続する地域文脈"
+            "島の漁港"
           ],
           "valueNumber": null,
           "valueBoolean": null,
@@ -734,31 +661,8 @@
           }
         },
         {
-          "id": "hado-port:spot_features",
-          "itemKey": "spot_features",
-          "informationState": "has_evidence",
-          "valueText": null,
-          "valueTextList": [
-            "漁港"
-          ],
-          "valueNumber": null,
-          "valueBoolean": null,
-          "valueJson": null,
-          "unit": null,
-          "confidence": "high",
-          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
-          "checkedAt": "2026-07-22",
-          "sources": {
-            "supporting": [
-              "src-jfa-saga-fishing-ports"
-            ],
-            "checked": [],
-            "contradicting": []
-          }
-        },
-        {
           "id": "hado-port:coastal_topography",
-          "itemKey": "coastal_topography",
+          "itemKey": "spot_features",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
@@ -940,31 +844,8 @@
           }
         },
         {
-          "id": "haregi-port:spot_features",
-          "itemKey": "spot_features",
-          "informationState": "has_evidence",
-          "valueText": null,
-          "valueTextList": [
-            "漁港"
-          ],
-          "valueNumber": null,
-          "valueBoolean": null,
-          "valueJson": null,
-          "unit": null,
-          "confidence": "high",
-          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
-          "checkedAt": "2026-07-22",
-          "sources": {
-            "supporting": [
-              "src-jfa-saga-fishing-ports"
-            ],
-            "checked": [],
-            "contradicting": []
-          }
-        },
-        {
           "id": "haregi-port:coastal_topography",
-          "itemKey": "coastal_topography",
+          "itemKey": "spot_features",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
@@ -1162,38 +1043,37 @@
           }
         },
         {
-          "id": "tobo-port:spot_features",
+          "id": "tobo-port:coastal_topography",
           "itemKey": "spot_features",
-          "informationState": "has_evidence",
+          "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "漁港"
+            "波止",
+            "テトラ"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
-          "confidence": "high",
-          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
+          "confidence": "low",
+          "note": "民間参考情報に基づく具体的な地形・港内構造。SCOREへ入力しない。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
-              "src-jfa-saga-fishing-ports"
+              "src-coordinate-tobo",
+              "src-private-tobo-port"
             ],
             "checked": [],
             "contradicting": []
           }
         },
         {
-          "id": "tobo-port:coastal_topography",
+          "id": "tobo-port:issue-237-coastal_topography",
           "itemKey": "coastal_topography",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "東西2地区との民間情報",
-            "浦川河口",
-            "波止",
-            "テトラ"
+            "浦川河口"
           ],
           "valueNumber": null,
           "valueBoolean": null,
@@ -1389,31 +1269,8 @@
           }
         },
         {
-          "id": "minatohama-port:spot_features",
-          "itemKey": "spot_features",
-          "informationState": "has_evidence",
-          "valueText": null,
-          "valueTextList": [
-            "漁港"
-          ],
-          "valueNumber": null,
-          "valueBoolean": null,
-          "valueJson": null,
-          "unit": null,
-          "confidence": "high",
-          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
-          "checkedAt": "2026-07-22",
-          "sources": {
-            "supporting": [
-              "src-jfa-saga-fishing-ports"
-            ],
-            "checked": [],
-            "contradicting": []
-          }
-        },
-        {
           "id": "minatohama-port:coastal_topography",
-          "itemKey": "coastal_topography",
+          "itemKey": "spot_features",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
@@ -1612,31 +1469,8 @@
           }
         },
         {
-          "id": "nagoya-port:spot_features",
-          "itemKey": "spot_features",
-          "informationState": "has_evidence",
-          "valueText": null,
-          "valueTextList": [
-            "漁港"
-          ],
-          "valueNumber": null,
-          "valueBoolean": null,
-          "valueJson": null,
-          "unit": null,
-          "confidence": "high",
-          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
-          "checkedAt": "2026-07-22",
-          "sources": {
-            "supporting": [
-              "src-jfa-saga-fishing-ports"
-            ],
-            "checked": [],
-            "contradicting": []
-          }
-        },
-        {
           "id": "nagoya-port:coastal_topography",
-          "itemKey": "coastal_topography",
+          "itemKey": "spot_features",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
@@ -1839,36 +1673,12 @@
           }
         },
         {
-          "id": "yobuko-port:spot_features",
-          "itemKey": "spot_features",
-          "informationState": "has_evidence",
-          "valueText": null,
-          "valueTextList": [
-            "第3種漁港"
-          ],
-          "valueNumber": null,
-          "valueBoolean": null,
-          "valueJson": null,
-          "unit": null,
-          "confidence": "high",
-          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
-          "checkedAt": "2026-07-22",
-          "sources": {
-            "supporting": [
-              "src-jfa-saga-fishing-ports"
-            ],
-            "checked": [],
-            "contradicting": []
-          }
-        },
-        {
           "id": "yobuko-port:coastal_topography",
-          "itemKey": "coastal_topography",
+          "itemKey": "spot_features",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "第3種漁港（公式・high）",
-            "複数の波止・岸壁を含む港域"
+            "複数の波止・岸壁"
           ],
           "valueNumber": null,
           "valueBoolean": null,
@@ -2050,35 +1860,12 @@
           }
         },
         {
-          "id": "takakushi-port:spot_features",
-          "itemKey": "spot_features",
-          "informationState": "has_evidence",
-          "valueText": null,
-          "valueTextList": [
-            "漁港"
-          ],
-          "valueNumber": null,
-          "valueBoolean": null,
-          "valueJson": null,
-          "unit": null,
-          "confidence": "high",
-          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
-          "checkedAt": "2026-07-22",
-          "sources": {
-            "supporting": [
-              "src-jfa-saga-fishing-ports"
-            ],
-            "checked": [],
-            "contradicting": []
-          }
-        },
-        {
           "id": "takakushi-port:coastal_topography",
-          "itemKey": "coastal_topography",
+          "itemKey": "spot_features",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "北側3本・内側2本の波止との民間情報"
+            "波止"
           ],
           "valueNumber": null,
           "valueBoolean": null,
@@ -2227,6 +2014,18 @@
             "contradicting": []
           }
         }
+      ]
+    }
+  ],
+  "auditEvidence": [
+    {
+      "spotId": "kabeshima-port",
+      "itemKey": "access_context",
+      "rawValueTextList": [
+        "呼子大橋経由で陸路接続する地域文脈"
+      ],
+      "sourceIds": [
+        "src-private-kabeshima-port"
       ]
     }
   ]

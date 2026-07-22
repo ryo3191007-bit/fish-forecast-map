@@ -18,7 +18,7 @@ export const staticFishingSpotDetailItemDefinitions: SpotDetailItemDefinition[] 
   { itemKey: "bottom_material", category: "terrain", valueKind: "text_list", labelJa: "底質", displayOrder: 100 },
   { itemKey: "coastal_topography", category: "terrain", valueKind: "text_list", labelJa: "海底・沿岸地形", displayOrder: 110 },
   { itemKey: "obstacles", category: "terrain", valueKind: "text_list", labelJa: "テトラ・根・障害物", displayOrder: 120 },
-  { itemKey: "spot_features", category: "terrain", valueKind: "text_list", labelJa: "堤防・磯・サーフ等の特徴", displayOrder: 130 },
+  { itemKey: "spot_features", category: "terrain", valueKind: "text_list", labelJa: "釣り場の構造・足場", description: "釣り人が立つ場所、または釣り場を構成する人工・自然構造。漁港・第3種漁港等の単独の地点種別は含めない。島の漁港のように立地特性を含む短い複合句は例外として扱える。長い経路説明は含めない。", displayOrder: 130 },
   { itemKey: "fishable_area", category: "access", valueKind: "text_list", labelJa: "釣り可能範囲", description: "釣り可能と確認できた具体的な範囲。利用可否や規制情報とは分けて扱う。", displayOrder: 135 },
   { itemKey: "tidal_flow", category: "hydrology", valueKind: "enum", labelJa: "潮通し", displayOrder: 140 },
   { itemKey: "river_influence", category: "hydrology", valueKind: "enum", labelJa: "河川影響", displayOrder: 150 },
