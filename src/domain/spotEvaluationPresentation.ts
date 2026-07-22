@@ -205,6 +205,8 @@ export function formatSpotDetailValue(item: SpotDetailValue | undefined) {
   if (item.informationState === "researched_unknown") return "調査済み・未確定";
   if (item.informationState === "unresearched") return "未調査";
   if (item.informationState === "rejected") return "調査済み・不採用";
+  if (item.itemKey === "toilet") return "トイレ";
+  if (item.itemKey === "parking") return "駐車";
   const label = (value: string) => detailEnumLabels[item.itemKey]?.[value] ?? detailLabels[value] ?? (/^[a-z0-9_.:-]+$/i.test(value) ? "その他の確認済み情報" : value);
   if (item.valueTextList.length) return item.valueTextList.map(label).join("、");
   if (item.valueText) return label(item.valueText);

@@ -55,6 +55,14 @@ const terrainItems = [
   ["open_sea_bay_character", "外海・湾内特性"],
 ] as const;
 const confidenceLabel: Record<SpotDetailConfidence, string> = { high: "高", medium: "中", low: "低" };
+const detailIcons: Record<string, string> = {
+  target_species: "🐟", recommended_methods: "⌁", shore_access: "↝",
+  toilet: "🚻", lighting: "☀", parking: "🚗", access: "↝",
+  fishable_area: "⌖", restriction_status: "!", depth: "↧",
+  bottom_material: "≋", coastal_topography: "≋", obstacles: "◆",
+  spot_features: "▦", tidal_flow: "≈", river_influence: "↝",
+  open_sea_bay_character: "≈",
+};
 
 export function SpotEvaluationCard(props: Props) {
   const { selectedTime, onSelectedTimeChange } = props;
@@ -135,9 +143,8 @@ function EvaluationTab(props: Props & { selectedTime: string | null }) {
     {result.status !== "available" && <StateMessage>{result.displayMessage}。地点相性のみ参考点として表示します。</StateMessage>}
     <div className="evaluationTitle"><h3>魚種評価</h3><button type="button" onClick={props.onShowAllSpecies}>すべて表示</button></div>
     <div className="scoreCards">{species.map((item) => <article key={item.species} className="scoreCard"><header><h4>{item.species}</h4><strong>{item.overallScore === null ? "総合点未算出" : `総合点 ${item.overallScore}点`}</strong></header><p>地点相性 参考点: {item.spotCompatibilityScore === null ? "情報なし" : `${item.spotCompatibilityScore}点`}</p><ConfidenceSummary spot={item.confidence.spot} environment={item.confidence.environment} /><p>{item.partialData ? "一部情報未反映" : "必要情報を反映"}</p><ul>{item.reasons.slice(0, 2).map((reason, index) => <li key={`${reason.label}-${index}`}>{reason.label}{reason.confidence ? `（信憑性: ${confidenceLabel[reason.confidence]}）` : ""}: {reason.displayNote}</li>)}</ul></article>)}</div>
-    {!species.length && <StateMessage>魚種評価に利用できる情報がありません。</StateMessage>}
+    {!species.length && !methods.length && <EmptyState />}
     <h3>釣法評価</h3><div className="methodScores">{methods.map((item) => <article key={item.method}><h4>{item.method}</h4><strong>{item.overallScore === null ? "総合点未算出" : `総合点 ${item.overallScore}点`}</strong><span>釣り場適性 参考点: {item.spotSuitabilityScore === null ? "情報なし" : `${item.spotSuitabilityScore}点`}</span><span>対応魚種数: {item.contributingSpeciesCount}</span></article>)}</div>
-    {!methods.length && <StateMessage>情報のある釣法はありません。</StateMessage>}
   </div>;
 }
 
@@ -163,7 +170,7 @@ function ConfidenceSummary({ spot, environment }: { spot: { high: number; medium
 function EnvironmentTab({ environment, row, loading, error }: { environment: FishingEnvironment | null; row: FishingEnvironment["hourly"][number] | null; loading: boolean; error: string | null }) {
   if (loading && !environment) return <StateMessage>環境データを取得中です…</StateMessage>;
   if (error && !environment) return <StateMessage>APIエラー: 環境データを取得できませんでした。</StateMessage>;
-  if (!environment) return <StateMessage>予報対象外: この地点で表示できる予報がありません。</StateMessage>;
+  if (!environment) return <EmptyState />;
   if (!row) return <StateMessage>対象行欠落: 選択日時の予報行がありません。</StateMessage>;
   const date = row.forecastTime.slice(0, 10); const events = getTideEventsForDate(environment.hourly, date); const badge = getTideEventBadgeForForecastTime(events, row.forecastTime, date);
   const value = (v: number | null | undefined, unit: string) => v == null ? "情報なし" : `${v}${unit}`;
@@ -180,13 +187,15 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
 function DetailTab({ details, status, items }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[] }) {
   if (status === "loading") return <StateMessage>地点詳細を取得中です…</StateMessage>;
   if (status === "failed") return <StateMessage>地点詳細を取得できませんでした。状態を表示できません。</StateMessage>;
-  return <dl className="detailGrid">{items.flatMap(([key, label]) => {
+  const cards = items.flatMap(([key, label]) => {
     const terrainPresentation = key === "coastal_topography" || key === "spot_features" ? formatTerrainDetailForPresentation(details, key) : null;
     const item = findDisplayableSpotDetail(details, key);
     if ((key === "coastal_topography" || key === "spot_features") && !terrainPresentation) return [];
     if (!item && !terrainPresentation) return [];
     const confidence = terrainPresentation?.confidence ?? item?.confidence ?? null;
-    return [<div key={key}><dt>{label}</dt><dd>{terrainPresentation?.text ?? formatSpotDetailValue(item)}{confidence ? <span className={`confidence ${confidence}`}>信憑性: {confidenceLabel[confidence]}</span> : null}</dd></div>];
-  })}</dl>;
+    return [<div key={key}><dt><span className="detailIcon" aria-hidden="true">{detailIcons[key] ?? "•"}</span>{label}</dt><dd>{terrainPresentation?.text ?? formatSpotDetailValue(item)}{confidence ? <span className={`confidence ${confidence}`}>信憑性: {confidenceLabel[confidence]}</span> : null}</dd></div>];
+  });
+  return cards.length ? <dl className="detailGrid">{cards}</dl> : <EmptyState />;
 }
 function StateMessage({ children }: { children: React.ReactNode }) { return <p className="spotEvaluationState" role="status">{children}</p>; }
+function EmptyState() { return <p className="spotEvaluationState empty" role="status">情報なし</p>; }
