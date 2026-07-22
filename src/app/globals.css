@@ -1792,8 +1792,11 @@ dd {
 .spotCombobox ul { position:absolute; z-index:12; box-sizing:border-box; width:100%; max-height:250px; overflow:auto; margin:.3rem 0 0; padding:.35rem; border:1px solid #38bdf8; border-radius:12px; background:#071426; box-shadow:0 18px 35px rgba(0,0,0,.45); list-style:none; }
 .spotCombobox li { display:flex; justify-content:space-between; gap:1rem; padding:.7rem; border-radius:8px; cursor:pointer; }
 .spotCombobox li[aria-selected="true"] { background:#164e63; } .spotCombobox li span { color:#bae6fd; }
-.sharedTimeControls { display:grid; grid-template-columns:repeat(2,minmax(130px,1fr)) repeat(3,auto); gap:.55rem; align-items:end; margin:1rem 0; }
-.sharedTimeControls button, .spotInternalTabs button, .evaluationTitle button { min-height:40px; padding:.55rem .8rem; border:1px solid rgba(125,211,252,.32); border-radius:10px; background:#0c4a6e; color:#e0faff; font:inherit; font-weight:800; cursor:pointer; }
+.sharedTimeControls { display:grid; gap:.55rem; width:100%; min-width:0; margin:1rem 0; }
+.sharedTimeInputs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.55rem; min-width:0; }
+.sharedTimeNavigation { display:grid; grid-template-columns:minmax(44px,auto) minmax(0,1fr) minmax(44px,auto); gap:.55rem; width:100%; min-width:0; }
+.sharedTimeNavigation button, .spotInternalTabs button, .evaluationTitle button { min-height:44px; padding:.55rem .8rem; border:1px solid rgba(125,211,252,.32); border-radius:10px; background:#0c4a6e; color:#e0faff; font:inherit; font-weight:800; cursor:pointer; }
+.sharedTimeNavigation button:first-child, .sharedTimeNavigation button:last-child { box-sizing:border-box; width:44px; min-width:44px; padding:.55rem .3rem; }
 .sharedTimeControls button:disabled { opacity:.45; cursor:not-allowed; }
 .spotInternalTabs { display:flex; gap:.35rem; padding:.3rem; margin:1rem 0; border-radius:12px; background:rgba(8,47,73,.42); overflow-x:auto; }
 .spotInternalTabs button { min-height:34px; padding:.4rem .8rem; border-color:transparent; background:transparent; font-size:.78rem; white-space:nowrap; }
@@ -1818,7 +1821,7 @@ dd {
 .jmaWarningPanel h3 { margin:0 0 .65rem; } .jmaWarningPanel dl { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:.5rem; margin:0; }
 .jmaWarningPanel dl div { padding:.55rem; border-radius:8px; background:rgba(2,8,23,.35); } .jmaWarningPanel dt { color:#bae6fd; font-size:.72rem; font-weight:900; } .jmaWarningPanel dd { margin:.2rem 0 0; } .jmaWarningPanel a { color:#7dd3fc; }
 .jmaWarningUnavailable { margin:0 0 .65rem; padding:.35rem 0; color:#fcd34d; font-size:.82rem; line-height:1.4; }
-@media (max-width:760px) { .sharedTimeControls { grid-template-columns:repeat(2,minmax(0,1fr)); } .sharedTimeControls button { min-width:0; padding:.5rem .3rem; font-size:.72rem; } .spotCombobox, .spotEvaluationCard { max-width:100%; } }
+@media (max-width:760px) { .sharedTimeNavigation button { min-width:0; padding:.5rem .3rem; font-size:.78rem; } .spotCombobox, .spotEvaluationCard { max-width:100%; } }
 @media (max-width:480px) { .map .maplibregl-popup-content { min-width:0; padding:9px 40px 9px 10px; } .mapPopup { max-width:calc(100vw - 72px); gap:0; font-size:.88rem; line-height:1.35; } }
 
 .allSpeciesScreen { box-sizing:border-box; width:min(100%,1180px); min-width:0; margin:0 auto; padding:0 clamp(.75rem,3vw,1.5rem) 2rem; color:#e0faff; overflow-x:hidden; }

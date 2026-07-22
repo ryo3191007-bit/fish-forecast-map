@@ -39,6 +39,22 @@ const internalTabsRule = css.match(/\.spotInternalTabs\s*\{[^}]+\}/)?.[0] ?? "";
 assert.match(internalTabsRule, /display:flex/, "the four compact tabs remain in one flex row on mobile");
 assert.doesNotMatch(internalTabsRule, /flex-wrap\s*:\s*wrap/, "the mobile tab row does not wrap");
 
+assert.match(card, /className="sharedTimeNavigation"[\s\S]*?aria-label="前の1時間"[\s\S]*?\{"<"\}[\s\S]*?aria-label="現在時刻へ戻る"[\s\S]*?>現在時刻<[\s\S]*?aria-label="次の1時間"[\s\S]*?\{">"\}/, "time navigation uses compact visible labels and descriptive accessible names");
+assert.match(card, /aria-label="前の1時間" disabled=\{selectedIndex <= 0\}[\s\S]*?rows\[selectedIndex - 1\]/, "previous-hour behavior and disabled boundary are retained");
+assert.match(card, /aria-label="現在時刻へ戻る" disabled=\{!rows\.length\}[\s\S]*?getNearestForecastTime\(rows\)/, "current-time behavior and disabled condition are retained");
+assert.match(card, /aria-label="次の1時間" disabled=\{selectedIndex < 0 \|\| selectedIndex >= rows\.length - 1\}[\s\S]*?rows\[selectedIndex \+ 1\]/, "next-hour behavior and disabled boundary are retained");
+const timeInputsRule = css.match(/\.sharedTimeInputs\s*\{[^}]+\}/)?.[0] ?? "";
+assert.match(timeInputsRule, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/, "date and time inputs remain a two-column grid");
+const timeNavigationRule = css.match(/\.sharedTimeNavigation\s*\{[^}]+\}/)?.[0] ?? "";
+assert.match(timeNavigationRule, /display:grid/);
+assert.match(timeNavigationRule, /grid-template-columns:minmax\(44px,auto\) minmax\(0,1fr\) minmax\(44px,auto\)/, "three navigation buttons stay in one row with a flexible center");
+assert.match(timeNavigationRule, /width:100%/);
+assert.match(timeNavigationRule, /min-width:0/, "the navigation row can shrink without horizontal overflow near 360px");
+assert.doesNotMatch(timeNavigationRule, /flex-wrap|overflow-x/, "the navigation row neither wraps nor introduces horizontal scrolling");
+const compactTimeButtonsRule = css.match(/\.sharedTimeNavigation button:first-child,[^}]+\}/)?.[0] ?? "";
+assert.match(compactTimeButtonsRule, /width:44px/);
+assert.match(compactTimeButtonsRule, /min-width:44px/, "compact controls retain an approximately 44px tap target");
+
 const forecastRows = [
   { forecastTime: "2026-07-20T09:00" },
   { forecastTime: "2026-07-20T12:00" },

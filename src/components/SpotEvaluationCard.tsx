@@ -89,11 +89,15 @@ export function SpotEvaluationCard(props: Props) {
       </button>
 
       <div className="sharedTimeControls" aria-label="評価・環境の共通日時">
-        <label>日付<input type="date" value={selectedDate} disabled={!rows.length} onChange={(event) => props.onSelectedTimeChange(rows.find((row) => row.forecastTime.startsWith(event.target.value))?.forecastTime ?? resolveSelectedForecastTime(rows, null))} /></label>
-        <label>時刻<select value={selectedRow?.forecastTime ?? ""} disabled={!selectedRow} onChange={(event) => props.onSelectedTimeChange(event.target.value)}>{dayRows.map((row) => <option key={row.forecastTime} value={row.forecastTime}>{row.forecastTime.slice(11, 16)}</option>)}</select></label>
-        <button type="button" disabled={selectedIndex <= 0} onClick={() => props.onSelectedTimeChange(rows[selectedIndex - 1]?.forecastTime ?? props.selectedTime)}>前の1時間</button>
-        <button type="button" disabled={!rows.length} onClick={() => props.onSelectedTimeChange(getNearestForecastTime(rows))}>現在時刻へ戻る</button>
-        <button type="button" disabled={selectedIndex < 0 || selectedIndex >= rows.length - 1} onClick={() => props.onSelectedTimeChange(rows[selectedIndex + 1]?.forecastTime ?? props.selectedTime)}>次の1時間</button>
+        <div className="sharedTimeInputs">
+          <label>日付<input type="date" value={selectedDate} disabled={!rows.length} onChange={(event) => props.onSelectedTimeChange(rows.find((row) => row.forecastTime.startsWith(event.target.value))?.forecastTime ?? resolveSelectedForecastTime(rows, null))} /></label>
+          <label>時刻<select value={selectedRow?.forecastTime ?? ""} disabled={!selectedRow} onChange={(event) => props.onSelectedTimeChange(event.target.value)}>{dayRows.map((row) => <option key={row.forecastTime} value={row.forecastTime}>{row.forecastTime.slice(11, 16)}</option>)}</select></label>
+        </div>
+        <div className="sharedTimeNavigation">
+          <button type="button" aria-label="前の1時間" disabled={selectedIndex <= 0} onClick={() => props.onSelectedTimeChange(rows[selectedIndex - 1]?.forecastTime ?? props.selectedTime)}>{"<"}</button>
+          <button type="button" aria-label="現在時刻へ戻る" disabled={!rows.length} onClick={() => props.onSelectedTimeChange(getNearestForecastTime(rows))}>現在時刻</button>
+          <button type="button" aria-label="次の1時間" disabled={selectedIndex < 0 || selectedIndex >= rows.length - 1} onClick={() => props.onSelectedTimeChange(rows[selectedIndex + 1]?.forecastTime ?? props.selectedTime)}>{">"}</button>
+        </div>
       </div>
 
       <div className="spotInternalTabs" role="tablist" aria-label="地点評価の表示内容">
