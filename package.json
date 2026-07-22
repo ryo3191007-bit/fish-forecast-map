@@ -18,7 +18,7 @@
     "check:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.mjs",
     "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs",
     "test:environment": "node scripts/environment.test.mjs",
-    "test": "npm run test:mock-report-removal && npm run test:map-focus-popup && npm run test:fish-species-groups && npm run test:fish-species-resolution && npm run test:jma-warnings && npm run test:environment && npm run test:spot-evaluation-card && npm run test:issue-203-spot-detail-curation && npm run test:issue-194-spot-detail-split && npm run test:score-v2-production && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:area-filter && npm run test:migration-safety && npm run test:bootstrap-schema-diff && npm run test:bathymetry-ui && npm run test:bathymetry-view && npm run test:bathymetry-point && npm run test:fishing-spot-research && npm run test:issue-165-source-quality && npm run test:karatsu-east-port-research && npm run test:karatsu-east-port-gemini-output && npm run test:karatsu-east-port-claude-output && npm run test:karatsu-east-port-production && npm run test:issue-178-safe-spots-production && npm run test:fish-species-ecology && npm run test:fishing-spot-detail-foundation && npm run test:fishing-spot-detail-runtime && npm run test:issue-181-fishing-spot-details && npm run test:score-v2",
+    "test": "npm run test:mock-report-removal && npm run test:map-focus-popup && npm run test:fish-species-groups && npm run test:fish-species-resolution && npm run test:jma-warnings && npm run test:environment && npm run test:spot-evaluation-card && npm run test:issue-203-spot-detail-curation && npm run test:issue-194-spot-detail-split && npm run test:score-v2-production && npm run test:manual-catch-memos && npm run test:ui-requirements && npm run test:area-filter && npm run test:migration-safety && npm run test:bootstrap-schema-diff && npm run test:bathymetry-ui && npm run test:bathymetry-view && npm run test:bathymetry-point && npm run test:fishing-spot-research && npm run test:issue-165-source-quality && npm run test:karatsu-east-port-research && npm run test:karatsu-east-port-gemini-output && npm run test:karatsu-east-port-claude-output && npm run test:karatsu-east-port-production && npm run test:issue-178-safe-spots-production && npm run test:fish-species-ecology && npm run test:fishing-spot-detail-foundation && npm run test:fishing-spot-detail-runtime && npm run test:issue-181-fishing-spot-details && npm run test:score-v2 && npm run test:issue-205-karatsu-spots",
     "test:manual-catch-memos": "node scripts/manual-catch-memos.test.mjs",
     "test:ui-requirements": "node scripts/ui-requirements.test.mjs",
     "test:area-filter": "node scripts/area-filter.test.mjs",
@@ -50,7 +50,8 @@
     "test:fish-species-resolution": "tsx scripts/fish-species-resolution.test.ts && node scripts/fish-species-aliases.test.mjs",
     "test:fish-species-groups": "tsx scripts/fish-species-groups.test.ts",
     "test:map-focus-popup": "node scripts/map-focus-popup.test.mjs",
-    "test:mock-report-removal": "node scripts/mock-fishing-reports-removal.test.mjs"
+    "test:mock-report-removal": "node scripts/mock-fishing-reports-removal.test.mjs",
+    "test:issue-205-karatsu-spots": "node scripts/issue-205-karatsu-spots.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",

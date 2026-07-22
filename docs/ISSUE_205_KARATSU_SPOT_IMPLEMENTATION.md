@@ -97,3 +97,12 @@ UIへ地点を個別ハードコードしない。既存の地点マスター／
 - SCORE v2配点変更
 - remote Supabaseへのmigration適用
 - Issueクローズ、PRマージ
+
+## 今後の地域追加手順とsource管理
+
+1. 調査仕様とevidence policyに従い、候補を `activeCandidates`、座標・規制確認待ち、離島等の後続候補へ分離する。active化するIDは既存masterと重複しないことを確認する。
+2. 採用候補だけを静的master、bootstrap seed、forward-only migrationへ同じID・座標・安全な最小値で追加する。既存IDの置換や既存釣果の再割当は行わない。
+3. source metadataは候補監査JSONを正本とし、出典ごとに一意なsource ID、種別、確認日、信頼度を保持する。公的根拠と民間参考情報を混在させず、民間情報は `weak_evidence / low` としてSCOREへ入力しない。
+4. 地点詳細curationをアプリ同梱fallbackとmigrationへ同期し、現行利用可否を確定できなければ値を空にした `researched_unknown` とする。未調査の `unresearched` と区別する。
+5. 地域に対応するJMA自治体コードを明示し、地点masterを受け取る地図、地点評価、環境、釣果登録へ動的に反映されることを専用テストで確認する。
+6. migrationはremoteへ直接適用せず、migration safety、bootstrap schema diff、lint、typecheck、test、buildをPR上で検証する。復旧時は新規地点を非active化する後続migrationを作り、既存レコードを削除しない。

@@ -2,11 +2,14 @@ import type { FishingSpotDetailSet, SpotDetailItemDefinition, SpotDetailSource, 
 import type { FishingSpot } from "@/domain/fishingSpot";
 import issue181Details from "../data/curation/issue-181-detail-initial-data.json";
 import issue194Details from "../../data/curation/fishing-spots/issue-194-detail-split.json";
+import issue205Details from "../../data/curation/fishing-spots/issue-205-detail-curation.json";
 
 export const staticFishingSpotDetailItemDefinitions: SpotDetailItemDefinition[] = [
   { itemKey: "target_species", category: "basic", valueKind: "text_list", labelJa: "対象魚種", description: "既存釣り場マスターの対象魚種。", displayOrder: 10 },
+  { itemKey: "historical_target_species", category: "basic", valueKind: "text_list", labelJa: "過去の対象魚種（参考）", description: "弱い参考情報でありSCOREへ入力しない。", displayOrder: 15 },
   { itemKey: "recommended_methods", category: "basic", valueKind: "text_list", labelJa: "推奨釣法", description: "既存釣り場マスターの推奨釣法。", displayOrder: 20 },
   { itemKey: "shore_access", category: "access", valueKind: "status", labelJa: "足場", description: "既存釣り場マスターの足場情報。", displayOrder: 30 },
+  { itemKey: "facilities", category: "facility", valueKind: "text_list", labelJa: "設備（参考）", description: "現行性未確認の参考情報。", displayOrder: 35 },
   { itemKey: "toilet", category: "facility", valueKind: "status", labelJa: "トイレ", displayOrder: 40 },
   { itemKey: "lighting", category: "facility", valueKind: "status", labelJa: "常夜灯・照明", displayOrder: 50 },
   { itemKey: "parking", category: "facility", valueKind: "status", labelJa: "駐車場", displayOrder: 60 },
@@ -59,9 +62,10 @@ type Issue181Value = Pick<SpotDetailValue, "id" | "itemKey" | "informationState"
 type Issue181Spot = { spotId: string; sources: Issue181Source[]; values: Issue181Value[] };
 const issue181DetailSpots = issue181Details.spots as Issue181Spot[];
 const issue194DetailSpots = issue194Details.spots as Issue181Spot[];
+const issue205DetailSpots = issue205Details.spots as Issue181Spot[];
 
-function buildIssue181StaticValues(spotIds: Set<string>): SpotDetailValue[] {
-  return issue181DetailSpots
+function buildCuratedStaticValues(spotIds: Set<string>): SpotDetailValue[] {
+  return issue181DetailSpots.concat(issue205DetailSpots)
     .filter((spot) => spotIds.has(spot.spotId))
     .flatMap((spot) => {
       const sourcesById = new Map(spot.sources.map((source) => [source.id, source]));
@@ -100,17 +104,13 @@ function buildIssue181StaticValues(spotIds: Set<string>): SpotDetailValue[] {
 }
 
 export function buildStaticFishingSpotDetailsFromSpots(spots: FishingSpot[]): FishingSpotDetailSet {
-  const issue181Values = buildIssue181StaticValues(new Set(spots.map((spot) => spot.id)));
-  if (issue181Values.length > 0) {
-    return { itemDefinitions: staticFishingSpotDetailItemDefinitions, values: issue181Values };
-  }
+  const curatedValues = buildCuratedStaticValues(new Set(spots.map((spot) => spot.id)));
+  const existingKeys = new Set(curatedValues.map((value) => `${value.spotId}:${value.itemKey}`));
+  const fallbackValues = spots.flatMap((spot) => [
+    fallbackValue(`${spot.id}:target_species`, spot.id, "target_species", null, spot.targetSpecies),
+    fallbackValue(`${spot.id}:recommended_methods`, spot.id, "recommended_methods", null, spot.recommendedMethods),
+    fallbackValue(`${spot.id}:shore_access`, spot.id, "shore_access", spot.shoreAccess, []),
+  ]).filter((value) => !existingKeys.has(`${value.spotId}:${value.itemKey}`));
 
-  return {
-    itemDefinitions: staticFishingSpotDetailItemDefinitions,
-    values: spots.flatMap((spot) => [
-      fallbackValue(`${spot.id}:target_species`, spot.id, "target_species", null, spot.targetSpecies),
-      fallbackValue(`${spot.id}:recommended_methods`, spot.id, "recommended_methods", null, spot.recommendedMethods),
-      fallbackValue(`${spot.id}:shore_access`, spot.id, "shore_access", spot.shoreAccess, []),
-    ]),
-  };
+  return { itemDefinitions: staticFishingSpotDetailItemDefinitions, values: curatedValues.concat(fallbackValues) };
 }

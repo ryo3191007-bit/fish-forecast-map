@@ -186,7 +186,7 @@ function loadMapFishingSpotRow() {
 }
 
 const spots = loadFishingSpots();
-assert.equal(spots.length, 18, "No fishing spots should be added or removed");
+assert.ok(spots.length >= 18, "The 18 legacy fishing spots must be preserved");
 const staticById = new Map(spots.map((spot) => [spot.id, normalizeSpot(spot)]));
 
 for (const id of targetIds) {

@@ -1,0 +1,1328 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 205,
+  "generatedAt": "2026-07-22T00:00:00.000Z",
+  "spots": [
+    {
+      "spotId": "ouka-port",
+      "sources": [
+        {
+          "id": "src-jfa-saga-fishing-ports",
+          "sourceType": "official",
+          "sourceName": "佐賀県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁"
+        },
+        {
+          "id": "src-coordinate-ouka",
+          "sourceType": "map",
+          "sourceName": "相賀漁港 地図",
+          "sourceUrl": "https://www.turiba-spot-ichiran.com/okagyoko/",
+          "checkedOn": "2026-07-22",
+          "note": "釣り場情報データベース"
+        },
+        {
+          "id": "src-private-ouka-port",
+          "sourceType": "portal",
+          "sourceName": "相賀漁港の釣り場ポイント情報",
+          "sourceUrl": "https://k.turihiroba.com/turiba2/sagaoukagyokou.html",
+          "checkedOn": "2026-07-22",
+          "note": "釣り広場.com"
+        }
+      ],
+      "values": [
+        {
+          "id": "ouka-port:historical_target_species",
+          "itemKey": "historical_target_species",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "キス",
+            "カレイ",
+            "アジ",
+            "メバル",
+            "チヌ",
+            "スズキ",
+            "サゴシ",
+            "コウイカ",
+            "アオリイカ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく過去の魚種。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-ouka",
+              "src-private-ouka-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ouka-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "波止",
+            "小型テトラ",
+            "内港・外向きの区別"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-jfa-saga-fishing-ports"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ouka-port:facilities",
+          "itemKey": "facilities",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "現行設備は未確認。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-ouka",
+              "src-private-ouka-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ouka-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "現在の一般利用可否を確定できない。参考: 係留船のある内向きは釣り禁止との民間情報。現行確認が必要。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-ouka",
+              "src-private-ouka-port"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "kodomo-port",
+      "sources": [
+        {
+          "id": "src-jfa-saga-fishing-ports",
+          "sourceType": "official",
+          "sourceName": "佐賀県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁"
+        },
+        {
+          "id": "src-coordinate-kodomo",
+          "sourceType": "map",
+          "sourceName": "小友漁港／キャランコビーチ 地図",
+          "sourceUrl": "https://www.turiba-spot-ichiran.com/kodomogyoko/",
+          "checkedOn": "2026-07-22",
+          "note": "釣り場情報データベース"
+        },
+        {
+          "id": "src-private-kodomo-port",
+          "sourceType": "portal",
+          "sourceName": "小友漁港の釣り場ポイント情報",
+          "sourceUrl": "https://k.turihiroba.com/turiba2/sagakodomogyokou.html",
+          "checkedOn": "2026-07-22",
+          "note": "釣り広場.com"
+        },
+        {
+          "id": "src-nl-location-kodomo",
+          "sourceType": "official",
+          "sourceName": "小友漁港",
+          "sourceUrl": "https://jl-db.nfaj.go.jp/location/410200401/",
+          "checkedOn": "2026-07-22",
+          "note": "全国ロケーションデータベース／佐賀県フィルムコミッション"
+        }
+      ],
+      "values": [
+        {
+          "id": "kodomo-port:historical_target_species",
+          "itemKey": "historical_target_species",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "アジ",
+            "カマス",
+            "メバル",
+            "ムツ",
+            "チヌ",
+            "クロ",
+            "アオリイカ",
+            "ササイカ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく過去の魚種。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-kodomo",
+              "src-private-kodomo-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kodomo-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "漁港と砂浜・海水浴場が隣接（政府系ロケDB・medium）",
+            "波止"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-jfa-saga-fishing-ports",
+              "src-nl-location-kodomo"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kodomo-port:facilities",
+          "itemKey": "facilities",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "駐車場候補（low）",
+            "トイレ候補（low）",
+            "手すり候補（low）",
+            "照明候補（low）"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報。現行性を保証しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-kodomo",
+              "src-private-kodomo-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kodomo-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現在の一般利用可否を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-nl-location-kodomo",
+              "src-coordinate-kodomo",
+              "src-private-kodomo-port"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "kabeshima-port",
+      "sources": [
+        {
+          "id": "src-jfa-saga-fishing-ports",
+          "sourceType": "official",
+          "sourceName": "佐賀県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁"
+        },
+        {
+          "id": "src-private-kabeshima-port",
+          "sourceType": "portal",
+          "sourceName": "加部島漁港の釣り場ポイント情報",
+          "sourceUrl": "https://k.turihiroba.com/turiba2/sagakabejimagyokou.html",
+          "checkedOn": "2026-07-22",
+          "note": "釣り広場.com"
+        },
+        {
+          "id": "src-nl-location-kabeshima",
+          "sourceType": "official",
+          "sourceName": "加部島漁港",
+          "sourceUrl": "https://jl-db.nfaj.go.jp/location/410200402/",
+          "checkedOn": "2026-07-22",
+          "note": "全国ロケーションデータベース／佐賀県フィルムコミッション"
+        }
+      ],
+      "values": [
+        {
+          "id": "kabeshima-port:historical_target_species",
+          "itemKey": "historical_target_species",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "アジ",
+            "カマス",
+            "メバル",
+            "チヌ",
+            "クロ",
+            "スズキ",
+            "サゴシ",
+            "ハマチ",
+            "アオリイカ",
+            "ササイカ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく過去の魚種。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-kabeshima-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kabeshima-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "島の漁港",
+            "呼子大橋経由で陸路接続する地域文脈"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-jfa-saga-fishing-ports",
+              "src-nl-location-kabeshima"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kabeshima-port:facilities",
+          "itemKey": "facilities",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "駐車場候補（low）",
+            "トイレ候補（low）",
+            "清掃協力金候補（low・要現行確認）"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報。現行性を保証しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-kabeshima-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kabeshima-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "現在の一般利用可否を確定できない。参考: 清掃協力金・駐車料金との民間情報があるが、現行料金・対象範囲は未確認。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-nl-location-kabeshima",
+              "src-private-kabeshima-port"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "hado-port",
+      "sources": [
+        {
+          "id": "src-jfa-saga-fishing-ports",
+          "sourceType": "official",
+          "sourceName": "佐賀県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁"
+        },
+        {
+          "id": "src-private-hado-port",
+          "sourceType": "portal",
+          "sourceName": "波戸漁港の釣り場ポイント情報",
+          "sourceUrl": "https://k.turihiroba.com/turiba2/sagahadogyokou.html",
+          "checkedOn": "2026-07-22",
+          "note": "釣り広場.com"
+        }
+      ],
+      "values": [
+        {
+          "id": "hado-port:historical_target_species",
+          "itemKey": "historical_target_species",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "アジ",
+            "カマス",
+            "メバル",
+            "チヌ",
+            "クロ",
+            "アオリイカ",
+            "ササイカ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく過去の魚種。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-hado-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hado-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "波止",
+            "沖向きテトラ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-jfa-saga-fishing-ports"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hado-port:facilities",
+          "itemKey": "facilities",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "トイレ候補（low）",
+            "照明候補（low）"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報。現行性を保証しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-hado-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hado-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "現在の一般利用可否を確定できない。参考: 波止中程にフェンス・立入制限、桟橋付近駐車禁止との民間情報。現行確認が必要。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-private-hado-port"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "haregi-port",
+      "sources": [
+        {
+          "id": "src-jfa-saga-fishing-ports",
+          "sourceType": "official",
+          "sourceName": "佐賀県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁"
+        },
+        {
+          "id": "src-private-haregi-port",
+          "sourceType": "portal",
+          "sourceName": "晴気漁港の釣り場ポイント情報",
+          "sourceUrl": "https://k.turihiroba.com/turiba3/sagaharukigyokou.html",
+          "checkedOn": "2026-07-22",
+          "note": "釣り広場.com"
+        }
+      ],
+      "values": [
+        {
+          "id": "haregi-port:historical_target_species",
+          "itemKey": "historical_target_species",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "アジ",
+            "サヨリ",
+            "メバル",
+            "チヌ",
+            "コウイカ",
+            "アオリイカ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく過去の魚種。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-haregi-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "haregi-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "波止",
+            "岸壁",
+            "小型テトラ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-jfa-saga-fishing-ports"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "haregi-port:facilities",
+          "itemKey": "facilities",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "照明候補（low）"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報。現行性を保証しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-haregi-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "haregi-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現在の一般利用可否を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-private-haregi-port"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "tobo-port",
+      "sources": [
+        {
+          "id": "src-jfa-saga-fishing-ports",
+          "sourceType": "official",
+          "sourceName": "佐賀県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁"
+        },
+        {
+          "id": "src-coordinate-tobo",
+          "sourceType": "map",
+          "sourceName": "唐房漁港 Fishing Forecast",
+          "sourceUrl": "https://windy.app/fishing/spot/7728343/%E5%94%90%E6%88%BF%E6%BC%81%E6%B8%AF",
+          "checkedOn": "2026-07-22",
+          "note": "Windy.app"
+        },
+        {
+          "id": "src-private-tobo-port",
+          "sourceType": "portal",
+          "sourceName": "唐房漁港の釣り場ポイント情報",
+          "sourceUrl": "https://k.turihiroba.com/turiba2/sagatoubougyokou.html",
+          "checkedOn": "2026-07-22",
+          "note": "釣り広場.com"
+        }
+      ],
+      "values": [
+        {
+          "id": "tobo-port:historical_target_species",
+          "itemKey": "historical_target_species",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "アジ",
+            "サヨリ",
+            "カマス",
+            "メバル",
+            "チヌ",
+            "スズキ",
+            "サゴシ",
+            "コウイカ",
+            "アオリイカ",
+            "ハゼ",
+            "キス"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく過去の魚種。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-tobo",
+              "src-private-tobo-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tobo-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "東西2地区との民間情報",
+            "浦川河口",
+            "波止",
+            "テトラ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-jfa-saga-fishing-ports"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tobo-port:facilities",
+          "itemKey": "facilities",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "駐車可能スペース候補（low）",
+            "照明候補（low）"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報。現行性を保証しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-tobo",
+              "src-private-tobo-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tobo-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "現在の一般利用可否を確定できない。参考: 頭上電線等の注意情報。現行の一般立入範囲は未確認。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-tobo",
+              "src-private-tobo-port"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "minatohama-port",
+      "sources": [
+        {
+          "id": "src-jfa-saga-fishing-ports",
+          "sourceType": "official",
+          "sourceName": "佐賀県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁"
+        },
+        {
+          "id": "src-coordinate-minatohama",
+          "sourceType": "map",
+          "sourceName": "湊浜漁港／湊漁港 地図",
+          "sourceUrl": "https://www.turiba-spot-ichiran.com/minatohamagyoko/",
+          "checkedOn": "2026-07-22",
+          "note": "釣り場情報データベース"
+        },
+        {
+          "id": "src-private-minatohama-port",
+          "sourceType": "portal",
+          "sourceName": "湊浜漁港の釣り場ポイント情報",
+          "sourceUrl": "https://k.turihiroba.com/turiba2/sagaminatohamagyokou.html",
+          "checkedOn": "2026-07-22",
+          "note": "釣り広場.com"
+        }
+      ],
+      "values": [
+        {
+          "id": "minatohama-port:historical_target_species",
+          "itemKey": "historical_target_species",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "アジ",
+            "キス",
+            "カレイ",
+            "メバル",
+            "チヌ",
+            "クロ",
+            "コウイカ",
+            "アオリイカ",
+            "サゴシ",
+            "ヤズ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく過去の魚種。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-minatohama",
+              "src-private-minatohama-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "minatohama-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "南北の波止",
+            "北側大型テトラ",
+            "南側比較的小型テトラ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-jfa-saga-fishing-ports"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "minatohama-port:facilities",
+          "itemKey": "facilities",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "有料駐車候補（low・料金と現行性要確認）"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報。現行性を保証しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-minatohama",
+              "src-private-minatohama-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "minatohama-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現在の一般利用可否を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-minatohama",
+              "src-private-minatohama-port"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "nagoya-port",
+      "sources": [
+        {
+          "id": "src-jfa-saga-fishing-ports",
+          "sourceType": "official",
+          "sourceName": "佐賀県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁"
+        },
+        {
+          "id": "src-coordinate-nagoya",
+          "sourceType": "map",
+          "sourceName": "名護屋漁港 地図",
+          "sourceUrl": "https://www.turiba-spot-ichiran.com/nagoyagyoko/",
+          "checkedOn": "2026-07-22",
+          "note": "釣り場情報データベース"
+        },
+        {
+          "id": "src-private-nagoya-port",
+          "sourceType": "portal",
+          "sourceName": "名護屋漁港の釣り場ポイント情報",
+          "sourceUrl": "https://k.turihiroba.com/turiba2/saganagoyagyokou.html",
+          "checkedOn": "2026-07-22",
+          "note": "釣り広場.com"
+        }
+      ],
+      "values": [
+        {
+          "id": "nagoya-port:historical_target_species",
+          "itemKey": "historical_target_species",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "アジ",
+            "カワハギ",
+            "メバル",
+            "チヌ",
+            "アオリイカ",
+            "ササイカ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく過去の魚種。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-nagoya",
+              "src-private-nagoya-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nagoya-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "波止",
+            "岸壁"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-jfa-saga-fishing-ports"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nagoya-port:facilities",
+          "itemKey": "facilities",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "照明候補（low）"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報。現行性を保証しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-nagoya",
+              "src-private-nagoya-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nagoya-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "現在の一般利用可否を確定できない。参考: 北側赤灯台波止はフェンス・立入禁止との民間情報。他岸壁を含む現行利用範囲は要確認。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-nagoya",
+              "src-private-nagoya-port"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "yobuko-port",
+      "sources": [
+        {
+          "id": "src-jfa-saga-fishing-ports",
+          "sourceType": "official",
+          "sourceName": "佐賀県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁"
+        },
+        {
+          "id": "src-coordinate-yobuko",
+          "sourceType": "map",
+          "sourceName": "Yobuko Fishery Port",
+          "sourceUrl": "https://mapcarta.com/W1322872525",
+          "checkedOn": "2026-07-22",
+          "note": "OpenStreetMap contributors / Mapcarta"
+        },
+        {
+          "id": "src-private-yobuko-port",
+          "sourceType": "portal",
+          "sourceName": "呼子港の釣り場ポイント情報",
+          "sourceUrl": "https://k.turihiroba.com/turiba2/sagayobukokou.html",
+          "checkedOn": "2026-07-22",
+          "note": "釣り広場.com"
+        }
+      ],
+      "values": [
+        {
+          "id": "yobuko-port:historical_target_species",
+          "itemKey": "historical_target_species",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "アジ",
+            "カマス",
+            "メバル",
+            "チヌ",
+            "クロ",
+            "マダイ",
+            "スズキ",
+            "サゴシ",
+            "ハマチ",
+            "アオリイカ",
+            "ササイカ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく過去の魚種。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-yobuko",
+              "src-private-yobuko-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "第3種漁港（公式・high）",
+            "複数の波止・岸壁を含む港域"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-jfa-saga-fishing-ports"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-port:facilities",
+          "itemKey": "facilities",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "周辺商業・観光施設あり（港内釣り設備とは区別）",
+            "照明候補（low）"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報。現行性を保証しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-yobuko",
+              "src-private-yobuko-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "現在の一般利用可否を確定できない。参考: 港域は広く、岸壁ごとの一般利用可否は未確認。特定岸壁を釣り可能と断定しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-yobuko",
+              "src-private-yobuko-port"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "takakushi-port",
+      "sources": [
+        {
+          "id": "src-jfa-saga-fishing-ports",
+          "sourceType": "official",
+          "sourceName": "佐賀県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁"
+        },
+        {
+          "id": "src-private-takakushi-port",
+          "sourceType": "portal",
+          "sourceName": "高串漁港の釣り場ポイント情報",
+          "sourceUrl": "https://k.turihiroba.com/turiba3/sagatakagusigyokou.html",
+          "checkedOn": "2026-07-22",
+          "note": "釣り広場.com"
+        }
+      ],
+      "values": [
+        {
+          "id": "takakushi-port:historical_target_species",
+          "itemKey": "historical_target_species",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "アジ",
+            "メバル",
+            "チヌ",
+            "コウイカ",
+            "アオリイカ"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく過去の魚種。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-takakushi-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takakushi-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "has_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "北側3本・内側2本の波止との民間情報"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "high",
+          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-jfa-saga-fishing-ports"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takakushi-port:facilities",
+          "itemKey": "facilities",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "照明候補（low）",
+            "頭上電線注意候補（low）"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報。現行性を保証しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-takakushi-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takakushi-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現在の一般利用可否を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-private-takakushi-port"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    }
+  ]
+}
