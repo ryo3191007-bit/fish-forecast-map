@@ -19,6 +19,7 @@ function load(path) {
 }
 
 const card = readFileSync(new URL("../src/components/SpotEvaluationCard.tsx", import.meta.url), "utf8");
+const css = readFileSync(new URL("../src/app/globals.css", import.meta.url), "utf8");
 const dashboard = readFileSync(new URL("../src/components/FishingDashboard.tsx", import.meta.url), "utf8");
 const allSpeciesScreen = readFileSync(new URL("../src/components/AllSpeciesEvaluation.tsx", import.meta.url), "utf8");
 const presentation = load("src/domain/spotEvaluationPresentation.ts");
@@ -66,6 +67,36 @@ assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), itemKey
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "toilet", valueBoolean: false }), "なし");
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "parking", valueBoolean: false }), "なし");
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", "none"), itemKey: "toilet" }), "なし", "a negative facility enum is not converted into an affirmative label");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "unavailable"), itemKey: "parking" }), "利用不可", "an unavailable facility remains negative");
+const legacyLightingDisplays = [
+  presentation.formatSpotDetailValue({ ...value("new", "照明候補（現行未確認）"), itemKey: "lighting" }),
+  presentation.formatSpotDetailValue({ ...value("new", "照明候補(現行未確認)"), itemKey: "lighting" }),
+  presentation.formatSpotDetailValue({ ...value("new", "照明候補 （ 現行 未確認 ）  "), itemKey: "lighting" }),
+  presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "lighting", valueTextList: ["照明候補（現行未確認）", "常夜灯"] }),
+];
+assert.deepEqual(legacyLightingDisplays, ["照明", "照明", "照明", "照明、常夜灯"]);
+assert.ok(legacyLightingDisplays.every((display) => !display.includes("現行未確認") && !display.includes("候補（現行未確認）") && !display.includes("候補(現行未確認)")), "legacy candidate qualifiers are removed from scalar and list display values");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "候補（現行未確認）"), itemKey: "lighting" }), "調査済み・未確定", "an empty normalized value falls back without inventing an affirmative value");
+const candidateConfidenceDisplays = [
+  presentation.formatSpotDetailValue({ ...value("new", "頭上電線注意候補（low）"), itemKey: "obstacles" }),
+  presentation.formatSpotDetailValue({ ...value("new", "手すり候補(low)"), itemKey: "shore_access" }),
+  presentation.formatSpotDetailValue({ ...value("new", "消波ブロック候補（ medium ）"), itemKey: "obstacles" }),
+  presentation.formatSpotDetailValue({ ...value("new", "岩礁候補( HIGH )"), itemKey: "obstacles" }),
+  presentation.formatSpotDetailValue({ ...value("new", "照明（LoW）"), itemKey: "lighting" }),
+  presentation.formatSpotDetailValue({ ...value("new", "駐車場候補"), itemKey: "parking" }),
+  presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "access", valueTextList: ["階段候補（medium）", "手すり候補(high)"] }),
+];
+assert.deepEqual(candidateConfidenceDisplays, ["頭上電線注意", "手すり", "消波ブロック", "岩礁", "照明", "駐車", "階段、手すり"]);
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "候補（low）"), itemKey: "obstacles" }), "調査済み・未確定", "a qualifier-only terrain value falls back without inventing an obstacle");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "none"), itemKey: "toilet" }), "なし");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "unavailable"), itemKey: "parking" }), "利用不可");
+const formattedSpotDetailDisplays = [...legacyLightingDisplays, ...candidateConfidenceDisplays];
+assert.ok(formattedSpotDetailDisplays.every((display) => !/現行\s*未確認|候補\s*$|[（(]\s*(?:low|medium|high)\s*[）)]\s*$/i.test(display)), "formatted spot detail strings do not expose temporary candidate or confidence suffixes");
+const terrainSuffixDetails = { itemDefinitions: [], values: [{
+  ...value("new", null), itemKey: "spot_features", valueTextList: ["テトラ候補（low）", "砂浜候補(high)"],
+  adoptionStatus: "adopted", confidence: "low",
+}] };
+assert.equal(presentation.formatTerrainDetailForPresentation(terrainSuffixDetails, "spot_features")?.text, "テトラ、砂浜", "terrain taxonomy receives sanitized raw values");
 const visibilityDetails = { itemDefinitions: [], values: [
   { ...value("new", "参考値"), itemKey: "target_species", adoptionStatus: "adopted", confidence: "low" },
   { ...value("new", "非表示"), itemKey: "parking", adoptionStatus: "adopted", informationState: "rejected" },
@@ -75,6 +106,7 @@ assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "target_s
 assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "parking"), undefined, "rejected evidence is excluded from the normal UI");
 assert.notEqual(presentation.formatSpotDetailValue(visibilityDetails.values[1]), "未調査", "rejected evidence retains its state instead of being converted to unresearched");
 assert.ok(card.includes("items.flatMap") && card.includes("if (!item && !terrainPresentation) return []"), "detail rows without displayable adopted evidence are omitted");
+assert.ok(card.includes("候補がありません"), "the unrelated empty search result message is preserved");
 assert.ok(card.includes('["fishable_area", "釣り可能範囲"]') && !card.includes('["fishing_range", "釣り可能範囲"]'), "the fishing tab uses the split fishable-area key");
 for (const key of ["tidal_flow", "river_influence", "open_sea_bay_character"]) assert.ok(card.includes(`["${key}",`), `the terrain tab displays ${key} independently`);
 assert.ok(!card.includes('["water_flow_influences",'), "the legacy composite is absent from the normal UI");
@@ -92,6 +124,16 @@ assert.ok(!JSON.stringify(renderedValues).includes("secret") && !JSON.stringify(
 assert.ok(dashboard.includes("setSpotDetails(null)"), "spot changes clear previous details immediately");
 assert.ok(dashboard.includes('setSpotDetailStatus("loading")') && dashboard.includes('setSpotDetailStatus("failed")'), "detail loading and failure are explicit");
 assert.ok(card.includes("getEvaluationReferenceTime(props.selectedTime)"), "spot scoring remains available without a UI forecast selection");
+assert.ok(card.includes('display.kind === "loading" || display.kind === "hidden"'), "loading, clear, and out-of-range do not render a JMA panel");
+assert.ok(card.includes('className="jmaWarningUnavailable"') && card.includes("{display.message}"), "unknown renders only the presentation policy's compact message");
+assert.ok(card.includes('jmaWarningDisplay.kind !== "unknown"'), "JMA unknown suppresses the second score-state safety message");
+assert.ok(card.includes('jmaWarningDisplay.kind !== "loading"'), "JMA loading suppresses score-state failure messages while the overall score remains unavailable");
+assert.ok(!card.includes("unknownReason") && !card.includes("lastSuccessfulFetchAt"), "internal unknown details are absent from the normal UI");
+for (const label of ["対象区域", "現象", "電文", "発表時刻", "対象時間帯", "出典:"]) assert.ok(card.includes(label), `blocked detail retains ${label}`);
+const unavailableRule = css.match(/\.jmaWarningUnavailable\s*\{[^}]+\}/)?.[0] ?? "";
+assert.match(unavailableRule, /padding:\.35rem 0/);
+assert.match(unavailableRule, /line-height:1\.4/);
+assert.ok(!/min-height|(?:^|[;{])\s*height:/.test(unavailableRule), "the mobile unknown message has no forced excessive height");
 assert.ok(card.includes('props.detailStatus === "ready" ? scopeSpotDetails'), "only ready, matching details enter scoring");
 
 const result = (species, informationStatus, overallScore, spotCompatibilityScore) => ({ species, informationStatus, overallScore, spotCompatibilityScore });

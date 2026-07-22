@@ -16,7 +16,7 @@ import type {
 } from "@/domain/fishingSpotDetail";
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
 import type { JmaWarningDecision } from "@/domain/jmaWarning";
-import { getJmaWarningPresentation } from "@/domain/jmaWarningPresentation";
+import { getJmaWarningDisplay } from "@/domain/jmaWarningPresentation";
 import { findDisplayableSpotDetail, formatSpotDetailValue, formatTerrainDetailForPresentation, getEnvironmentStatusLabel, getEvaluationReferenceTime, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形";
@@ -136,11 +136,12 @@ function EvaluationTab(props: Props & { selectedTime: string | null }) {
   if (!props.selectedSpot) return <StateMessage>地点が未選択のため、総合評価未算出です。</StateMessage>;
   const details = props.detailStatus === "ready" ? scopeSpotDetails(props.details, props.selectedSpot.id) : null;
   const result = calculateProductionScoreV2({ spot: props.selectedSpot, details, catches: props.catches, environment: props.environment, selectedDateTime: getEvaluationReferenceTime(props.selectedTime), jmaWarning: props.jmaWarning });
+  const jmaWarningDisplay = getJmaWarningDisplay(props.jmaWarning);
   const species = result.speciesResults.filter((item) => item.informationStatus !== "no_information").sort((a, b) => (b.overallScore ?? b.spotCompatibilityScore ?? -1) - (a.overallScore ?? a.spotCompatibilityScore ?? -1)).slice(0, 5);
   const methods = result.methodResults.filter((item) => item.informationStatus !== "no_information").sort((a, b) => (b.overallScore ?? -1) - (a.overallScore ?? -1) || (b.spotSuitabilityScore ?? -1) - (a.spotSuitabilityScore ?? -1));
   return <div className="evaluationContent">
-    <JmaWarningPanel decision={props.jmaWarning} />
-    {result.status !== "available" && <StateMessage>{result.displayMessage}。地点相性のみ参考点として表示します。</StateMessage>}
+    <JmaWarningPanel decision={props.jmaWarning} display={jmaWarningDisplay} />
+    {result.status !== "available" && jmaWarningDisplay.kind !== "unknown" && jmaWarningDisplay.kind !== "loading" && <StateMessage>{result.displayMessage}。地点相性のみ参考点として表示します。</StateMessage>}
     <div className="evaluationTitle"><h3>魚種評価</h3><button type="button" onClick={props.onShowAllSpecies}>すべて表示</button></div>
     <div className="scoreCards">{species.map((item) => <article key={item.species} className="scoreCard"><header><h4>{item.species}</h4><strong>{item.overallScore === null ? "総合点未算出" : `総合点 ${item.overallScore}点`}</strong></header><p>地点相性 参考点: {item.spotCompatibilityScore === null ? "情報なし" : `${item.spotCompatibilityScore}点`}</p><ConfidenceSummary spot={item.confidence.spot} environment={item.confidence.environment} /><p>{item.partialData ? "一部情報未反映" : "必要情報を反映"}</p><ul>{item.reasons.slice(0, 2).map((reason, index) => <li key={`${reason.label}-${index}`}>{reason.label}{reason.confidence ? `（信憑性: ${confidenceLabel[reason.confidence]}）` : ""}: {reason.displayNote}</li>)}</ul></article>)}</div>
     {!species.length && <EmptyState />}
@@ -149,18 +150,17 @@ function EvaluationTab(props: Props & { selectedTime: string | null }) {
   </div>;
 }
 
-function JmaWarningPanel({ decision }: { decision: JmaWarningDecision | null }) {
-  if (!decision) return <StateMessage>気象庁情報を確認中です。確認できるまで総合点を表示しません。</StateMessage>;
-  const { heading, unknownReason } = getJmaWarningPresentation(decision);
+function JmaWarningPanel({ decision, display }: { decision: JmaWarningDecision | null; display: ReturnType<typeof getJmaWarningDisplay> }) {
+  if (display.kind === "loading" || display.kind === "hidden") return null;
+  if (display.kind === "unknown") return <p className="jmaWarningUnavailable" role="status">{display.message}</p>;
+  if (!decision) return null;
   const format = (value: string | null) => value ? new Intl.DateTimeFormat("ja-JP", { dateStyle: "short", timeStyle: "short" }).format(new Date(value)) : "該当なし";
-  return <aside className={`jmaWarningPanel ${decision.state}`} aria-label="気象庁警報・注意報の加工判定">
-    <h3>{heading}</h3>
-    <dl><div><dt>対象区域</dt><dd>{decision.areaName}</dd></div><div><dt>電文</dt><dd>{decision.bulletinType ?? "確認不能"}</dd></div><div><dt>発表時刻</dt><dd>{format(decision.reportDateTime)}</dd></div><div><dt>対象時間帯</dt><dd>{decision.targetStart ? `${format(decision.targetStart)}〜${format(decision.targetEnd)}` : "現在状態または対象外"}</dd></div></dl>
-    {decision.phenomena.length > 0 && <p>対象情報: {decision.phenomena.join("、")}</p>}{decision.currentNotice && <p>{decision.currentNotice}</p>}
-    {unknownReason && <p>{unknownReason} 総合点は表示しません。</p>}
-    {decision.state === "unknown" && <p>最終正常取得時刻: {format(decision.lastSuccessfulFetchAt)}</p>}
+  return <aside className="jmaWarningPanel blocked" aria-label="気象庁警報・注意報の加工判定">
+    <h3>{display.heading}</h3>
+    <dl><div><dt>対象区域</dt><dd>{decision.areaName}</dd></div><div><dt>現象</dt><dd>{decision.phenomena.length > 0 ? decision.phenomena.join("、") : "対象情報あり"}</dd></div><div><dt>電文</dt><dd>{decision.bulletinType ?? "確認不能"}</dd></div><div><dt>発表時刻</dt><dd>{format(decision.reportDateTime)}</dd></div><div><dt>対象時間帯</dt><dd>{decision.targetStart ? `${format(decision.targetStart)}〜${format(decision.targetEnd)}` : "現在状態"}</dd></div></dl>
+    {decision.currentNotice && <p>{decision.currentNotice}</p>}
     <p>出典: <a href="https://www.jma.go.jp/bosai/warning/" target="_blank" rel="noreferrer">気象庁 防災情報</a>（取得・加工日時: {format(decision.fetchedAt)}）</p>
-    <p>この表示は公式XMLを加工した参考判定です。航海・現地の安全判断を代替しません。必ず最新の公式情報と現地状況を確認してください。</p>
+    <p>公式XMLを加工した参考判定であり、航海・現地の安全判断を代替しません。</p>
   </aside>;
 }
 

@@ -238,6 +238,20 @@ assert.equal(decide("2026-07-20T03:15:00Z").state, "blocked");
 assert.equal(decide("2026-07-20T05:00:00Z").state, "clear");
 assert.equal(decide("2026-07-21T07:00:00Z").state, "out-of-range");
 assert.equal(domain.combineSafetyGate({ state: "blocked" }, "clear").displayOverallScore, false);
+
+const decision = (state, overrides = {}) => ({ state, reason: `${state}-fixture`, phenomena: [], areaName: "佐賀県唐津市", reportDateTime: null, targetStart: null, targetEnd: null, fetchedAt: now.toISOString(), bulletinType: null, lastSuccessfulFetchAt: null, ...overrides });
+assert.deepEqual(presentation.getJmaWarningDisplay(null), { kind: "loading" }, "loading does not preemptively show a failure");
+assert.equal(presentation.getJmaWarningDisplay(decision("blocked")).kind, "blocked", "blocked uses the detailed presentation");
+assert.deepEqual(presentation.getJmaWarningDisplay(decision("clear")), { kind: "hidden" }, "clear has no safety-gate UI");
+assert.deepEqual(presentation.getJmaWarningDisplay(decision("out-of-range")), { kind: "hidden" }, "JMA out-of-range has no JMA detail UI");
+assert.deepEqual(presentation.getJmaWarningDisplay(decision("unknown", { reason: "private-exception-text" })), { kind: "unknown", message: "安全情報を取得できませんでした。総合点は表示しません。" }, "unknown exposes only a generic compact message");
+assert.deepEqual(presentation.getJmaWarningDisplay(decision("future-state")), { kind: "unknown", message: "安全情報を取得できませんでした。総合点は表示しません。" }, "an unexpected runtime state fails closed in the safety UI");
+
+assert.equal(domain.combineSafetyGate(decision("blocked"), "clear").displayOverallScore, false, "blocked suppresses overall scores");
+assert.equal(domain.combineSafetyGate(decision("unknown"), "clear").displayOverallScore, false, "unknown suppresses overall scores");
+assert.equal(domain.combineSafetyGate(decision("out-of-range"), "clear").displayOverallScore, true, "out-of-range delegates a clear result to Open-Meteo");
+assert.equal(domain.combineSafetyGate(decision("out-of-range"), "blocked").displayOverallScore, false, "out-of-range plus Open-Meteo danger suppresses scores");
+assert.equal(domain.combineSafetyGate(decision("out-of-range"), "unknown").displayOverallScore, false, "out-of-range plus unknown Open-Meteo data suppresses scores");
 assert.equal(domain.combineSafetyGate({ state: "unknown" }, "clear").displayOverallScore, false);
 const outOfRangeBlocked = domain.combineSafetyGate({ state: "out-of-range" }, "blocked");
 assert.equal(outOfRangeBlocked.state, "blocked-open-meteo");
@@ -270,13 +284,12 @@ const unknownApiResponse = await route.handleJmaWarningsRequest(
 );
 assert.equal((await unknownApiResponse.json()).state, "unknown", "API preserves fail-closed decisions");
 
-const unknownPresentation = presentation.getJmaWarningPresentation({
+const unknownPresentation = presentation.getJmaWarningDisplay({
   ...apiDecision,
   state: "unknown",
   reason: "release-not-confirmed-after-blocked",
 });
-assert.equal(unknownPresentation.unknownReason, "発表済み情報の解除を確認できません。");
-assert.equal(unknownPresentation.lastSuccessfulFetchAt, now.toISOString(), "UI presentation preserves the last successful fetch time");
+assert.deepEqual(unknownPresentation, { kind: "unknown", message: "安全情報を取得できませんでした。総合点は表示しません。" }, "a failed refresh after blocked stays unknown without exposing its internal reason");
 assert.throws(() => parser.validateXml('<!DOCTYPE x [<!ENTITY y SYSTEM "file:///etc/passwd">]><x>&y;</x>'), /unsafe/);
 
 console.log("JMA acquisition, service, parser, Atom, safety-gate tests passed.");
