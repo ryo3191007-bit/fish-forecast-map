@@ -9,13 +9,14 @@ const EXPECTED = new Map([
   ["fukushima-port", { name: "福島港", area: "伊万里湾・福島", type: "その他", lat: 33.3672, lon: 129.8208, broad: "fukushima-area" }],
   ["nabegushi-fishing-port", { name: "鍋串漁港", area: "伊万里湾・福島", type: "漁港", lat: 33.4162, lon: 129.805, broad: "fukushima-area" }],
   ["aonoura-fishing-port", { name: "阿翁浦漁港", area: "伊万里湾・鷹島", type: "漁港", lat: 33.4592, lon: 129.7548, broad: "takashima-area" }],
+  ["tononoura-fishing-port", { name: "殿ノ浦漁港", area: "伊万里湾・鷹島", type: "漁港", lat: 33.4283, lon: 129.7542, broad: "takashima-area" }],
   ["funakaratsu-fishing-port", { name: "船唐津漁港", area: "伊万里湾・鷹島", type: "漁港", lat: 33.4118, lon: 129.7215, broad: "takashima-area" }],
 ]);
 const UNKNOWN_KEYS = ["restriction_status", "fishable_area", "access", "parking", "toilet", "lighting"];
 type SourceRefs = { supporting: string[]; checked: string[] };
 type DetailValue = { itemKey: string; informationState: string; confidence: string | null; sources: SourceRefs };
 type DetailSpot = { spotId: string; values: DetailValue[] };
-type Candidate = { spotId: string; name: string; areaName: string; spotType: string; latitude: number; longitude: number; relationToExisting: { existingSpotId: string } };
+type Candidate = { reading?: string; fishingPortClass?: string; manager?: string; spotId: string; name: string; areaName: string; spotType: string; latitude: number; longitude: number; relationToExisting: { existingSpotId: string } };
 type Audit = { activeCandidates: Candidate[]; heldOrExcluded: { decision: string }[]; researchStatePolicy: { unresearched: string; researched_unknown: string }; sources: Record<string, { sourceUrl: string; note: string }> };
 type Details = { spots: DetailSpot[] };
 const audit = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-250-matsuura-implementation-input.json", "utf8")) as Audit;
@@ -72,6 +73,11 @@ for (const candidate of audit.activeCandidates) {
 }
 
 assert.match(audit.sources["src-jfa-nagasaki-fishing-ports"].note, /釣り可否.*裏付けない/);
+assert.equal(audit.sources["src-jfa-nagasaki-fishing-ports"].sourceUrl, "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-292.pdf");
+const tononoura = audit.activeCandidates.find(({ spotId }) => spotId === "tononoura-fishing-port");
+assert.deepEqual({ reading: tononoura?.reading, fishingPortClass: tononoura?.fishingPortClass, manager: tononoura?.manager }, { reading: "トノノウラ", fishingPortClass: "第1種", manager: "松浦市" });
+assert.ok(!audit.heldOrExcluded.some(({ proposedId }: { proposedId?: string }) => proposedId?.includes("tononoura")));
+
 assert.match(audit.sources["src-gsi-map"].note, /地点種別.*裏付けない/);
 for (const legacyId of ["fukushima-area", "takashima-area"]) {
   assert.ok(master.some(({ id }) => id === legacyId), `${legacyId} must remain active`);

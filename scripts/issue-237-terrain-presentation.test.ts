@@ -10,7 +10,7 @@ const details = buildStaticFishingSpotDetailsFromSpots(fishingSpots);
 const structureTerms = /漁港|港湾|堤防|波止|岸壁|護岸|テトラ|砂浜|海水浴場|サーフ|磯|橋|経由|経路|陸路/;
 const naturalTerms = /砂泥|砂地|岩礁|岩場|藻場|かけ上がり|浅場|深場|河口|湾奥/;
 
-assert.equal(fishingSpots.length, 34);
+assert.equal(fishingSpots.length, 35);
 
 // Exercise the ordinary presentation boundary for every active spot, including
 // legacy unresearched/fallback data as well as the ten Issue #205 spots.

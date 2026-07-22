@@ -63,6 +63,26 @@
       }
     },
     {
+      "spotId": "tononoura-fishing-port",
+      "name": "殿ノ浦漁港",
+      "spotType": "漁港",
+      "latitude": 33.4283,
+      "longitude": 129.7542,
+      "areaName": "伊万里湾・鷹島",
+      "municipality": "松浦市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "水産庁「長崎県 漁港一覧」で正式名称、読み（トノノウラ）、第1種、松浦市（鷹島）所在、松浦市管理を確認し、国土地理院標準地図等で港域の概略代表点を独立確認。一般利用・釣り可否は未確認。",
+      "relationToExisting": {
+        "existingSpotId": "takashima-area",
+        "relation": "specific_spot_within_broad_context",
+        "migrationPolicy": "既存広域地点を維持し、既存釣果を推測で再割当しない。"
+      },
+      "reading": "トノノウラ",
+      "fishingPortClass": "第1種",
+      "manager": "松浦市"
+    },
+    {
       "spotId": "funakaratsu-fishing-port",
       "name": "船唐津漁港",
       "spotType": "漁港",
@@ -88,12 +108,6 @@
       "reason": "前回候補だが、公的資料上の正式名称と港域代表点を独立に確定できないためactive化しない。"
     },
     {
-      "proposedId": "tononoura-port",
-      "name": "殿ノ浦周辺の港・漁港",
-      "decision": "hold",
-      "reason": "地区名と正式な港名・一般向け行き先の範囲の対応を確定できない。"
-    },
-    {
       "name": "鷹島肥前大橋周辺",
       "decision": "exclude",
       "reason": "橋脚・道路管理用地を独立した釣り場として案内できる根拠がない。"
@@ -108,7 +122,7 @@
     "src-jfa-nagasaki-fishing-ports": {
       "sourceType": "official",
       "sourceName": "長崎県 漁港一覧",
-      "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub82-292.pdf",
+      "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-292.pdf",
       "checkedOn": "2026-07-22",
       "note": "水産庁の都道府県別漁港一覧。漁港の正式名称・種別・所在地確認に使用。一般立入、釣り可否、設備、足場は裏付けない。"
     },

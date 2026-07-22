@@ -172,7 +172,7 @@
         {
           "sourceType": "official",
           "sourceName": "長崎県 漁港一覧",
-          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub82-292.pdf",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-292.pdf",
           "checkedOn": "2026-07-22",
           "note": "水産庁の都道府県別漁港一覧。漁港の正式名称・種別・所在地確認に使用。一般立入、釣り可否、設備、足場は裏付けない。",
           "id": "src-jfa-nagasaki-fishing-ports"
@@ -327,7 +327,7 @@
         {
           "sourceType": "official",
           "sourceName": "長崎県 漁港一覧",
-          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub82-292.pdf",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-292.pdf",
           "checkedOn": "2026-07-22",
           "note": "水産庁の都道府県別漁港一覧。漁港の正式名称・種別・所在地確認に使用。一般立入、釣り可否、設備、足場は裏付けない。",
           "id": "src-jfa-nagasaki-fishing-ports"
@@ -469,6 +469,161 @@
       ]
     },
     {
+      "spotId": "tononoura-fishing-port",
+      "sources": [
+        {
+          "sourceType": "map",
+          "sourceName": "地理院地図・地名検索",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-22",
+          "note": "国土地理院標準地図と住所検索で島・地区・港域の位置関係を独立確認し、港域の概略代表座標を設定。地点種別、利用可否、実釣位置は裏付けない。",
+          "id": "src-gsi-map"
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "長崎県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-292.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁の都道府県別漁港一覧で、殿ノ浦（トノノウラ）、第1種、松浦市（鷹島）所在、松浦市管理を確認。一般立入、釣り可否、設備、足場は裏付けない。",
+          "id": "src-jfa-nagasaki-fishing-ports"
+        }
+      ],
+      "values": [
+        {
+          "id": "tononoura-fishing-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tononoura-fishing-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tononoura-fishing-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tononoura-fishing-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tononoura-fishing-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tononoura-fishing-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
       "spotId": "funakaratsu-fishing-port",
       "sources": [
         {
@@ -482,7 +637,7 @@
         {
           "sourceType": "official",
           "sourceName": "長崎県 漁港一覧",
-          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub82-292.pdf",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-292.pdf",
           "checkedOn": "2026-07-22",
           "note": "水産庁の都道府県別漁港一覧。漁港の正式名称・種別・所在地確認に使用。一般立入、釣り可否、設備、足場は裏付けない。",
           "id": "src-jfa-nagasaki-fishing-ports"

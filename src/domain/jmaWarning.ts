@@ -32,7 +32,7 @@ export const JMA_AREA_BY_SPOT: Record<string, JmaAreaCode> = {
   "tobo-port": KARATSU, "minatohama-port": KARATSU, "nagoya-port": KARATSU, "yobuko-port": KARATSU, "takakushi-port": KARATSU,
   "imari-inner-bay": IMARI, "hatazu-fishing-port": IMARI, "imarin-beach": IMARI,
   "fukushima-area": MATSUURA, "fukushima-port": MATSUURA, "nabegushi-fishing-port": MATSUURA,
-  "takashima-area": MATSUURA, "aonoura-fishing-port": MATSUURA, "funakaratsu-fishing-port": MATSUURA, "tabira-port": HIRADO,
+  "takashima-area": MATSUURA, "aonoura-fishing-port": MATSUURA, "tononoura-fishing-port": MATSUURA, "funakaratsu-fishing-port": MATSUURA, "tabira-port": HIRADO,
   "hirado-seto": HIRADO, "ikitsuki-area": HIRADO,
 };
 
