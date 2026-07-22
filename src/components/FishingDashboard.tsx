@@ -69,6 +69,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [showAllSpecies, setShowAllSpecies] = useState(false);
   const allSpeciesOrigin = useRef<AllSpeciesHistoryState | null>(null);
   const mapSectionRef = useRef<HTMLDivElement | null>(null);
+  const spotEvaluationSectionRef = useRef<HTMLDivElement | null>(null);
+  const [spotEvaluationScrollRequest, setSpotEvaluationScrollRequest] = useState(0);
   const mapFocusRequestIdRef = useRef(0);
   const [mapFocusRequest, setMapFocusRequest] = useState<MapFocusRequest | null>(null);
   const [selectedEnvironmentTime, setSelectedEnvironmentTime] = useState<
@@ -114,6 +116,16 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     mapFocusRequestIdRef.current += 1;
     setMapFocusRequest({ spotId: environmentSpotId, requestId: mapFocusRequestIdRef.current });
   }, [environmentSpotId]);
+  const openSpotEvaluationFromMap = useCallback((spotId: string) => {
+    setEnvironmentSpotId(spotId);
+    setDashboardMode("spotEvaluation");
+    setSpotEvaluationTab("環境");
+    setSpotEvaluationScrollRequest((request) => request + 1);
+  }, []);
+  useEffect(() => {
+    if (!spotEvaluationScrollRequest || dashboardMode !== "spotEvaluation") return;
+    spotEvaluationSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [dashboardMode, spotEvaluationScrollRequest]);
   useEffect(() => {
     let isActive = true;
     fetchMasterData()
@@ -429,6 +441,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             externalMemos={externalMemos}
             spots={fishingSpots}
             focusRequest={mapFocusRequest}
+            onOpenSpotEvaluation={openSpotEvaluationFromMap}
           />
         </div>
       </div>
@@ -663,25 +676,27 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           />
         </div>
       ) : (
-        <SpotEvaluationCard
-          selectedSpot={environmentSpot}
-          spots={fishingSpots}
-          selectedSpotId={environmentSpotId}
-          onSelectedSpotIdChange={setEnvironmentSpotId}
-          environment={environment}
-          jmaWarning={jmaWarning}
-          selectedTime={selectedEnvironmentTime}
-          onSelectedTimeChange={changeSelectedEnvironmentTime}
-          activeTab={spotEvaluationTab}
-          onActiveTabChange={setSpotEvaluationTab}
-          isLoading={isEnvironmentLoading}
-          error={environmentError}
-          details={spotDetails}
-          detailStatus={spotDetailStatus}
-          catches={externalMemos}
-          onShowAllSpecies={openAllSpecies}
-          onFocusMap={focusSelectedSpotOnMap}
-        />
+        <div ref={spotEvaluationSectionRef}>
+          <SpotEvaluationCard
+            selectedSpot={environmentSpot}
+            spots={fishingSpots}
+            selectedSpotId={environmentSpotId}
+            onSelectedSpotIdChange={setEnvironmentSpotId}
+            environment={environment}
+            jmaWarning={jmaWarning}
+            selectedTime={selectedEnvironmentTime}
+            onSelectedTimeChange={changeSelectedEnvironmentTime}
+            activeTab={spotEvaluationTab}
+            onActiveTabChange={setSpotEvaluationTab}
+            isLoading={isEnvironmentLoading}
+            error={environmentError}
+            details={spotDetails}
+            detailStatus={spotDetailStatus}
+            catches={externalMemos}
+            onShowAllSpecies={openAllSpecies}
+            onFocusMap={focusSelectedSpotOnMap}
+          />
+        </div>
       )}
     </section>
   );

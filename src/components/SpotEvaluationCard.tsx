@@ -81,12 +81,13 @@ export function SpotEvaluationCard(props: Props) {
     <section className="spotEvaluationCard" aria-live="polite">
       <header className="spotEvaluationHeader">
         <div><p className="eyebrow">Spot evaluation</p><h2>地点評価</h2></div>
-        <span>{props.selectedSpot?.areaName ?? "対象地点なし"}</span>
       </header>
-      <SpotCombobox spots={props.spots} selected={props.selectedSpot} onSelect={props.onSelectedSpotIdChange} />
-      <button type="button" className="focusMapButton" disabled={!props.selectedSpot} onClick={props.onFocusMap}>
-        マップで場所を確認
-      </button>
+      <div className="spotSelectionRow">
+        <SpotCombobox spots={props.spots} selected={props.selectedSpot} onSelect={props.onSelectedSpotIdChange} />
+        <button type="button" className="focusMapButton" aria-label="選択地点をマップで確認" disabled={!props.selectedSpot} onClick={props.onFocusMap}>
+          Map
+        </button>
+      </div>
 
       <div className="sharedTimeControls" aria-label="評価・環境の共通日時">
         <div className="sharedTimeInputs">

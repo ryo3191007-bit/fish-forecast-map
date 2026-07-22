@@ -103,6 +103,7 @@ type FishingMapProps = {
   externalMemos: ExternalCatchMemo[];
   spots: FishingSpot[];
   focusRequest: MapFocusRequest | null;
+  onOpenSpotEvaluation: (spotId: string) => void;
 };
 
 export type MapFocusRequest = { spotId: string; requestId: number };
@@ -146,7 +147,7 @@ const FALLBACK_LAYER_IDS = [
   BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
 ] as const;
 
-export function FishingMap({ externalMemos, spots, focusRequest }: FishingMapProps) {
+export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvaluation }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
@@ -767,9 +768,12 @@ export function FishingMap({ externalMemos, spots, focusRequest }: FishingMapPro
       element.className = "fishingSpotMarker";
       element.setAttribute("aria-label", `${spot.name}の地点`);
       const popup = registerPopup(
-        new maplibregl.Popup({ offset: 18, maxWidth: "min(220px, calc(100vw - 24px))" })
-          .setDOMContent(createSpotPopupContent(spot)),
+        new maplibregl.Popup({ offset: 18, maxWidth: "min(220px, calc(100vw - 24px))" }),
       );
+      popup.setDOMContent(createSpotPopupContent(spot, () => {
+        onOpenSpotEvaluation(spot.id);
+        popup.remove();
+      }));
       const marker = new maplibregl.Marker({ element })
         .setLngLat([spot.longitude, spot.latitude])
         .setPopup(popup)
@@ -796,7 +800,7 @@ export function FishingMap({ externalMemos, spots, focusRequest }: FishingMapPro
       spotMarkerRegistry.clear();
       [...spotMarkers, ...memoMarkers].forEach((marker) => marker.remove());
     };
-  }, [mappableExternalMemos, spots]);
+  }, [mappableExternalMemos, onOpenSpotEvaluation, spots]);
 
   useEffect(() => {
     if (!focusRequest) return;
@@ -1058,13 +1062,18 @@ export function FishingMap({ externalMemos, spots, focusRequest }: FishingMapPro
   );
 }
 
-function createSpotPopupContent(spot: FishingSpot) {
+function createSpotPopupContent(spot: FishingSpot, onOpenSpotEvaluation: () => void) {
   const popup = document.createElement("div");
   popup.className = "mapPopup mapSpotPopup";
   const title = document.createElement("strong");
   title.className = "mapPopupTitle";
   title.textContent = spot.name;
-  popup.append(title);
+  const evaluationButton = document.createElement("button");
+  evaluationButton.type = "button";
+  evaluationButton.className = "mapSpotEvaluationButton";
+  evaluationButton.textContent = "地点評価";
+  evaluationButton.addEventListener("click", onOpenSpotEvaluation);
+  popup.append(title, evaluationButton);
   return popup;
 }
 
