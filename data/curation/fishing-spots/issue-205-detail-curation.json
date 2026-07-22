@@ -70,16 +70,14 @@
           "informationState": "has_evidence",
           "valueText": null,
           "valueTextList": [
-            "波止",
-            "小型テトラ",
-            "内港・外向きの区別"
+            "漁港"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "high",
-          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -90,8 +88,34 @@
           }
         },
         {
-          "id": "ouka-port:facilities",
-          "itemKey": "facilities",
+          "id": "ouka-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "波止",
+            "小型テトラ",
+            "内港・外向きの区別"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく具体的な地形・港内構造。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-ouka",
+              "src-private-ouka-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ouka-port:toilet",
+          "itemKey": "toilet",
           "informationState": "researched_unknown",
           "valueText": null,
           "valueTextList": [],
@@ -100,7 +124,76 @@
           "valueJson": null,
           "unit": null,
           "confidence": null,
-          "note": "現行設備は未確認。",
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-ouka",
+              "src-private-ouka-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ouka-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-ouka",
+              "src-private-ouka-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ouka-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-ouka",
+              "src-private-ouka-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ouka-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [],
@@ -211,15 +304,14 @@
           "informationState": "has_evidence",
           "valueText": null,
           "valueTextList": [
-            "漁港と砂浜・海水浴場が隣接（政府系ロケDB・medium）",
-            "波止"
+            "漁港"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "high",
-          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -231,22 +323,108 @@
           }
         },
         {
-          "id": "kodomo-port:facilities",
-          "itemKey": "facilities",
+          "id": "kodomo-port:coastal_topography",
+          "itemKey": "coastal_topography",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "駐車場候補（low）",
-            "トイレ候補（low）",
-            "手すり候補（low）",
-            "照明候補（low）"
+            "漁港と砂浜・海水浴場が隣接（政府系ロケDB・medium）",
+            "波止"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "low",
-          "note": "民間参考情報。現行性を保証しない。",
+          "note": "民間参考情報に基づく具体的な地形・港内構造。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-kodomo",
+              "src-private-kodomo-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kodomo-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-kodomo",
+              "src-private-kodomo-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kodomo-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-kodomo",
+              "src-private-kodomo-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kodomo-port:parking",
+          "itemKey": "parking",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-kodomo",
+              "src-private-kodomo-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kodomo-port:access",
+          "itemKey": "access",
+          "informationState": "weak_evidence",
+          "valueText": "手すり候補（low）",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -350,15 +528,14 @@
           "informationState": "has_evidence",
           "valueText": null,
           "valueTextList": [
-            "島の漁港",
-            "呼子大橋経由で陸路接続する地域文脈"
+            "漁港"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "high",
-          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -370,27 +547,114 @@
           }
         },
         {
-          "id": "kabeshima-port:facilities",
-          "itemKey": "facilities",
+          "id": "kabeshima-port:coastal_topography",
+          "itemKey": "coastal_topography",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "駐車場候補（low）",
-            "トイレ候補（low）",
-            "清掃協力金候補（low・要現行確認）"
+            "島の漁港",
+            "呼子大橋経由で陸路接続する地域文脈"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "low",
-          "note": "民間参考情報。現行性を保証しない。",
+          "note": "民間参考情報に基づく具体的な地形・港内構造。SCOREへ入力しない。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
               "src-private-kabeshima-port"
             ],
             "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kabeshima-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-kabeshima-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kabeshima-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-nl-location-kabeshima",
+              "src-private-kabeshima-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kabeshima-port:parking",
+          "itemKey": "parking",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-kabeshima-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kabeshima-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-nl-location-kabeshima",
+              "src-private-kabeshima-port"
+            ],
             "contradicting": []
           }
         },
@@ -475,15 +739,14 @@
           "informationState": "has_evidence",
           "valueText": null,
           "valueTextList": [
-            "波止",
-            "沖向きテトラ"
+            "漁港"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "high",
-          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -494,26 +757,112 @@
           }
         },
         {
-          "id": "hado-port:facilities",
-          "itemKey": "facilities",
+          "id": "hado-port:coastal_topography",
+          "itemKey": "coastal_topography",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "トイレ候補（low）",
-            "照明候補（low）"
+            "波止",
+            "沖向きテトラ"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "low",
-          "note": "民間参考情報。現行性を保証しない。",
+          "note": "民間参考情報に基づく具体的な地形・港内構造。SCOREへ入力しない。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
               "src-private-hado-port"
             ],
             "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hado-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-hado-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hado-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-hado-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hado-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-private-hado-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hado-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-private-hado-port"
+            ],
             "contradicting": []
           }
         },
@@ -596,16 +945,14 @@
           "informationState": "has_evidence",
           "valueText": null,
           "valueTextList": [
-            "波止",
-            "岸壁",
-            "小型テトラ"
+            "漁港"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "high",
-          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -616,25 +963,114 @@
           }
         },
         {
-          "id": "haregi-port:facilities",
-          "itemKey": "facilities",
+          "id": "haregi-port:coastal_topography",
+          "itemKey": "coastal_topography",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "照明候補（low）"
+            "波止",
+            "岸壁",
+            "小型テトラ"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "low",
-          "note": "民間参考情報。現行性を保証しない。",
+          "note": "民間参考情報に基づく具体的な地形・港内構造。SCOREへ入力しない。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
               "src-private-haregi-port"
             ],
             "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "haregi-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-private-haregi-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "haregi-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-haregi-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "haregi-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-private-haregi-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "haregi-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-private-haregi-port"
+            ],
             "contradicting": []
           }
         },
@@ -731,17 +1167,14 @@
           "informationState": "has_evidence",
           "valueText": null,
           "valueTextList": [
-            "東西2地区との民間情報",
-            "浦川河口",
-            "波止",
-            "テトラ"
+            "漁港"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "high",
-          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -752,20 +1185,22 @@
           }
         },
         {
-          "id": "tobo-port:facilities",
-          "itemKey": "facilities",
+          "id": "tobo-port:coastal_topography",
+          "itemKey": "coastal_topography",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "駐車可能スペース候補（low）",
-            "照明候補（low）"
+            "東西2地区との民間情報",
+            "浦川河口",
+            "波止",
+            "テトラ"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "low",
-          "note": "民間参考情報。現行性を保証しない。",
+          "note": "民間参考情報に基づく具体的な地形・港内構造。SCOREへ入力しない。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -773,6 +1208,96 @@
               "src-private-tobo-port"
             ],
             "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tobo-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-tobo",
+              "src-private-tobo-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tobo-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-tobo",
+              "src-private-tobo-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tobo-port:parking",
+          "itemKey": "parking",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-tobo",
+              "src-private-tobo-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tobo-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-tobo",
+              "src-private-tobo-port"
+            ],
             "contradicting": []
           }
         },
@@ -869,16 +1394,14 @@
           "informationState": "has_evidence",
           "valueText": null,
           "valueTextList": [
-            "南北の波止",
-            "北側大型テトラ",
-            "南側比較的小型テトラ"
+            "漁港"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "high",
-          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -889,19 +1412,21 @@
           }
         },
         {
-          "id": "minatohama-port:facilities",
-          "itemKey": "facilities",
+          "id": "minatohama-port:coastal_topography",
+          "itemKey": "coastal_topography",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "有料駐車候補（low・料金と現行性要確認）"
+            "南北の波止",
+            "北側大型テトラ",
+            "南側比較的小型テトラ"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "low",
-          "note": "民間参考情報。現行性を保証しない。",
+          "note": "民間参考情報に基づく具体的な地形・港内構造。SCOREへ入力しない。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -909,6 +1434,97 @@
               "src-private-minatohama-port"
             ],
             "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "minatohama-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-minatohama",
+              "src-private-minatohama-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "minatohama-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-minatohama",
+              "src-private-minatohama-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "minatohama-port:parking",
+          "itemKey": "parking",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-minatohama",
+              "src-private-minatohama-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "minatohama-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-minatohama",
+              "src-private-minatohama-port"
+            ],
             "contradicting": []
           }
         },
@@ -1001,15 +1617,14 @@
           "informationState": "has_evidence",
           "valueText": null,
           "valueTextList": [
-            "波止",
-            "岸壁"
+            "漁港"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "high",
-          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -1020,19 +1635,20 @@
           }
         },
         {
-          "id": "nagoya-port:facilities",
-          "itemKey": "facilities",
+          "id": "nagoya-port:coastal_topography",
+          "itemKey": "coastal_topography",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "照明候補（low）"
+            "波止",
+            "岸壁"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "low",
-          "note": "民間参考情報。現行性を保証しない。",
+          "note": "民間参考情報に基づく具体的な地形・港内構造。SCOREへ入力しない。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -1040,6 +1656,97 @@
               "src-private-nagoya-port"
             ],
             "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nagoya-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-nagoya",
+              "src-private-nagoya-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nagoya-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-nagoya",
+              "src-private-nagoya-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nagoya-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-nagoya",
+              "src-private-nagoya-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nagoya-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-nagoya",
+              "src-private-nagoya-port"
+            ],
             "contradicting": []
           }
         },
@@ -1137,15 +1844,14 @@
           "informationState": "has_evidence",
           "valueText": null,
           "valueTextList": [
-            "第3種漁港（公式・high）",
-            "複数の波止・岸壁を含む港域"
+            "第3種漁港"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "high",
-          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -1156,20 +1862,110 @@
           }
         },
         {
-          "id": "yobuko-port:facilities",
-          "itemKey": "facilities",
+          "id": "yobuko-port:coastal_topography",
+          "itemKey": "coastal_topography",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "周辺商業・観光施設あり（港内釣り設備とは区別）",
-            "照明候補（low）"
+            "第3種漁港（公式・high）",
+            "複数の波止・岸壁を含む港域"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "low",
-          "note": "民間参考情報。現行性を保証しない。",
+          "note": "民間参考情報に基づく具体的な地形・港内構造。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-yobuko",
+              "src-private-yobuko-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-yobuko",
+              "src-private-yobuko-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-coordinate-yobuko",
+              "src-private-yobuko-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-coordinate-yobuko",
+              "src-private-yobuko-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "yobuko-port:access",
+          "itemKey": "access",
+          "informationState": "weak_evidence",
+          "valueText": "周辺商業・観光施設あり（港内釣り設備とは区別）",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -1259,14 +2055,14 @@
           "informationState": "has_evidence",
           "valueText": null,
           "valueTextList": [
-            "北側3本・内側2本の波止との民間情報"
+            "漁港"
           ],
           "valueNumber": null,
           "valueBoolean": null,
           "valueJson": null,
           "unit": null,
           "confidence": "high",
-          "note": "港の存在は公的根拠、詳細形状の一部は民間参考情報を含む。",
+          "note": "公的資料が直接裏付ける漁港の存在・種別のみ。具体的な港内構造は別項目で保守的に保持する。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [
@@ -1277,12 +2073,121 @@
           }
         },
         {
-          "id": "takakushi-port:facilities",
-          "itemKey": "facilities",
+          "id": "takakushi-port:coastal_topography",
+          "itemKey": "coastal_topography",
           "informationState": "weak_evidence",
           "valueText": null,
           "valueTextList": [
-            "照明候補（low）",
+            "北側3本・内側2本の波止との民間情報"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報に基づく具体的な地形・港内構造。SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-takakushi-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takakushi-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-private-takakushi-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takakushi-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "民間参考情報による候補。現行性を保証せず、SCOREへ入力しない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [
+              "src-private-takakushi-port"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takakushi-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-private-takakushi-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takakushi-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "調査済みだが現行設備を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-jfa-saga-fishing-ports",
+              "src-private-takakushi-port"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "takakushi-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
             "頭上電線注意候補（low）"
           ],
           "valueNumber": null,
@@ -1290,7 +2195,7 @@
           "valueJson": null,
           "unit": null,
           "confidence": "low",
-          "note": "民間参考情報。現行性を保証しない。",
+          "note": "民間参考情報による頭上障害物候補。現行性を保証せず、SCOREへ入力しない。",
           "checkedAt": "2026-07-22",
           "sources": {
             "supporting": [

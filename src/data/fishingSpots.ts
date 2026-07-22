@@ -259,7 +259,7 @@ export const fishingSpots: FishingSpot[] = [
   {
     id: "ouka-port",
     name: "相賀漁港",
-    areaName: "唐津湾北部",
+    areaName: "唐津湾沿岸",
     latitude: 33.506447,
     longitude: 129.956971,
     spotType: "漁港",
@@ -272,7 +272,7 @@ export const fishingSpots: FishingSpot[] = [
   {
     id: "kodomo-port",
     name: "小友漁港",
-    areaName: "唐津湾北部",
+    areaName: "呼子・鎮西",
     latitude: 33.54684,
     longitude: 129.906629,
     spotType: "漁港",
@@ -285,7 +285,7 @@ export const fishingSpots: FishingSpot[] = [
   {
     id: "kabeshima-port",
     name: "加部島漁港",
-    areaName: "唐津湾北部",
+    areaName: "呼子・鎮西",
     latitude: 33.55655,
     longitude: 129.8894,
     spotType: "漁港",
@@ -298,7 +298,7 @@ export const fishingSpots: FishingSpot[] = [
   {
     id: "hado-port",
     name: "波戸漁港",
-    areaName: "唐津湾北部",
+    areaName: "呼子・鎮西",
     latitude: 33.5463,
     longitude: 129.859,
     spotType: "漁港",
@@ -311,7 +311,7 @@ export const fishingSpots: FishingSpot[] = [
   {
     id: "haregi-port",
     name: "晴気漁港",
-    areaName: "唐津湾北部",
+    areaName: "肥前・玄海沿岸",
     latitude: 33.4351,
     longitude: 129.811,
     spotType: "漁港",
@@ -324,7 +324,7 @@ export const fishingSpots: FishingSpot[] = [
   {
     id: "tobo-port",
     name: "唐房漁港",
-    areaName: "唐津湾北部",
+    areaName: "唐津湾沿岸",
     latitude: 33.482,
     longitude: 129.94,
     spotType: "漁港",
@@ -337,7 +337,7 @@ export const fishingSpots: FishingSpot[] = [
   {
     id: "minatohama-port",
     name: "湊浜漁港",
-    areaName: "唐津湾北部",
+    areaName: "唐津湾沿岸",
     latitude: 33.526093,
     longitude: 129.95497,
     spotType: "漁港",
@@ -350,7 +350,7 @@ export const fishingSpots: FishingSpot[] = [
   {
     id: "nagoya-port",
     name: "名護屋漁港",
-    areaName: "唐津湾北部",
+    areaName: "呼子・鎮西",
     latitude: 33.53261,
     longitude: 129.877582,
     spotType: "漁港",
@@ -363,7 +363,7 @@ export const fishingSpots: FishingSpot[] = [
   {
     id: "yobuko-port",
     name: "呼子漁港",
-    areaName: "唐津湾北部",
+    areaName: "呼子・鎮西",
     latitude: 33.54585,
     longitude: 129.89076,
     spotType: "漁港",
@@ -376,7 +376,7 @@ export const fishingSpots: FishingSpot[] = [
   {
     id: "takakushi-port",
     name: "高串漁港",
-    areaName: "唐津湾北部",
+    areaName: "肥前・玄海沿岸",
     latitude: 33.4225,
     longitude: 129.826,
     spotType: "漁港",

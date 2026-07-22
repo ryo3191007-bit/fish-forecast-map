@@ -73,7 +73,7 @@ const spots = loadFishingSpots();
 const staticSpot = spots.find((spot) => spot.id === expected.id);
 assert.ok(staticSpot, "Karatsu East Port is missing from static master");
 assert.deepEqual(staticSpot, { ...expected, targetSpecies: ["アジ", "スズキ", "チヌ"] }, "static master uses the current canonical display name");
-assert.ok(spots.length >= 18, "The 18 legacy fishing spots must be preserved");
+for (const legacyId of ["nokita-port", "nokita-beach", "keya-port", "keya-gate", "funakoshi-port", "kishi-port", "fukuyoshi-port", "hamasaki-beach", "niji-matsubara", "karatsu-east-port", "karatsu-west-port", "yobuko-area", "imari-inner-bay", "fukushima-area", "takashima-area", "tabira-port", "hirado-seto", "ikitsuki-area"]) assert.ok(spots.some((spot) => spot.id === legacyId), `${legacyId} legacy spot must be preserved`);
 
 const seedSql = fs.readFileSync(SEED_PATH, "utf8");
 const seedRow = seedSql.match(

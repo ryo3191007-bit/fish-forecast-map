@@ -9,7 +9,6 @@ export const staticFishingSpotDetailItemDefinitions: SpotDetailItemDefinition[] 
   { itemKey: "historical_target_species", category: "basic", valueKind: "text_list", labelJa: "過去の対象魚種（参考）", description: "弱い参考情報でありSCOREへ入力しない。", displayOrder: 15 },
   { itemKey: "recommended_methods", category: "basic", valueKind: "text_list", labelJa: "推奨釣法", description: "既存釣り場マスターの推奨釣法。", displayOrder: 20 },
   { itemKey: "shore_access", category: "access", valueKind: "status", labelJa: "足場", description: "既存釣り場マスターの足場情報。", displayOrder: 30 },
-  { itemKey: "facilities", category: "facility", valueKind: "text_list", labelJa: "設備（参考）", description: "現行性未確認の参考情報。", displayOrder: 35 },
   { itemKey: "toilet", category: "facility", valueKind: "status", labelJa: "トイレ", displayOrder: 40 },
   { itemKey: "lighting", category: "facility", valueKind: "status", labelJa: "常夜灯・照明", displayOrder: 50 },
   { itemKey: "parking", category: "facility", valueKind: "status", labelJa: "駐車場", displayOrder: 60 },
