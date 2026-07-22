@@ -41,7 +41,7 @@ type Props = {
   onFocusMap: () => void;
 };
 
-const tabs: SpotEvaluationTab[] = ["評価", "環境", "釣場", "地形"];
+const tabs: SpotEvaluationTab[] = ["環境", "釣場", "地形", "評価"];
 const fishingItems = [
   ["target_species", "対象魚種"], ["recommended_methods", "推奨釣法"],
   ["shore_access", "足場"], ["toilet", "トイレ"], ["lighting", "常夜灯・照明"],

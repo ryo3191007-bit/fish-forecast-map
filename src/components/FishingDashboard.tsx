@@ -65,7 +65,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     useState<DashboardMode>("catchReports");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [spotEvaluationTab, setSpotEvaluationTab] = useState<SpotEvaluationTab>("評価");
+  const [spotEvaluationTab, setSpotEvaluationTab] = useState<SpotEvaluationTab>("環境");
   const [showAllSpecies, setShowAllSpecies] = useState(false);
   const allSpeciesOrigin = useRef<AllSpeciesHistoryState | null>(null);
   const mapSectionRef = useRef<HTMLDivElement | null>(null);

@@ -278,8 +278,8 @@ assert.match(
 );
 assert.match(
   dashboard,
-  /const \[spotEvaluationTab, setSpotEvaluationTab\] = useState<SpotEvaluationTab>\("評価"\)/,
-  "spot evaluation internal tab state is owned by FishingDashboard",
+  /const \[spotEvaluationTab, setSpotEvaluationTab\] = useState<SpotEvaluationTab>\("環境"\)/,
+  "spot evaluation internal tab state is owned by FishingDashboard and initially shows environment",
 );
 assert.doesNotMatch(
   dashboard,

@@ -29,6 +29,16 @@ assert.ok(!dashboard.includes("legacySpotEvaluations") && !dashboard.includes("a
 assert.ok(!dashboard.includes("EnvironmentPanel"), "the standalone environment card is not rendered");
 assert.equal(existsSync(new URL("../src/components/EnvironmentPanel.tsx", import.meta.url)), false, "the unused standalone environment component is removed");
 
+assert.match(card, /const tabs: SpotEvaluationTab\[\] = \["環境", "釣場", "地形", "評価"\]/, "tabs are ordered environment, fishing spot, terrain, evaluation");
+assert.match(dashboard, /useState<SpotEvaluationTab>\("環境"\)/, "the first spot evaluation visit starts on the environment tab");
+assert.doesNotMatch(dashboard, /environmentSpot[^\n]*setSpotEvaluationTab\("環境"\)|setSpotEvaluationTab\("環境"\)[^\n]*environmentSpot/, "spot changes do not reset the user's active tab");
+assert.match(card, /role="tablist"[\s\S]*?role="tab"[\s\S]*?aria-selected=\{props\.activeTab === tab\}[\s\S]*?aria-controls=\{`spot-panel-\$\{tab\}`\}[\s\S]*?tabIndex=\{props\.activeTab === tab \? 0 : -1\}/, "the reordered tabs retain tablist, selection, panel-control, and keyboard semantics");
+assert.match(card, /role="tabpanel"[\s\S]*?id=\{`spot-panel-\$\{props\.activeTab\}`\}[\s\S]*?aria-labelledby=\{`spot-tab-\$\{props\.activeTab\}`\}/, "the active panel remains labelled by its corresponding tab");
+for (const tab of ["評価", "環境", "釣場", "地形"]) assert.ok(card.includes(`props.activeTab === "${tab}"`), `${tab} retains its conditional panel`);
+const internalTabsRule = css.match(/\.spotInternalTabs\s*\{[^}]+\}/)?.[0] ?? "";
+assert.match(internalTabsRule, /display:flex/, "the four compact tabs remain in one flex row on mobile");
+assert.doesNotMatch(internalTabsRule, /flex-wrap\s*:\s*wrap/, "the mobile tab row does not wrap");
+
 const forecastRows = [
   { forecastTime: "2026-07-20T09:00" },
   { forecastTime: "2026-07-20T12:00" },
