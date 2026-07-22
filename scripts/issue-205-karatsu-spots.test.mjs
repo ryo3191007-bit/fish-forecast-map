@@ -6,6 +6,9 @@ const LEGACY_IDS = ["nokita-port", "nokita-beach", "keya-port", "keya-gate", "fu
 const EXPECTED_AREAS = {"ouka-port":"唐津湾沿岸","tobo-port":"唐津湾沿岸","minatohama-port":"唐津湾沿岸","kodomo-port":"呼子・鎮西","kabeshima-port":"呼子・鎮西","hado-port":"呼子・鎮西","nagoya-port":"呼子・鎮西","yobuko-port":"呼子・鎮西","haregi-port":"肥前・玄海沿岸","takakushi-port":"肥前・玄海沿岸"};
 const input = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-205-karatsu-implementation-input.json", "utf8"));
 const details = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-205-detail-curation.json", "utf8"));
+const VALUE_FIELDS = ["valueText", "valueTextList", "valueNumber", "valueBoolean", "valueJson"];
+const EVIDENCE_STATES = new Set(["has_evidence", "weak_evidence"]);
+const CONFIDENCE_LEVELS = new Set(["high", "medium", "low"]);
 const source = fs.readFileSync("src/data/fishingSpots.ts", "utf8").replace(/^import[^;]+;\n/gm, "");
 const match = source.match(/export const fishingSpots(?:[^=]*) = ([\s\S]*?);\n\nexport const fishingSpotById/);
 assert.ok(match);
@@ -45,9 +48,22 @@ for (const detail of details.spots) {
     assert.equal(value.informationState, "weak_evidence", `${value.id} concrete private structure must be weak evidence`);
     assert.equal(value.confidence, "low", `${value.id} concrete private structure must have low confidence`);
   }
+  for (const value of detail.values) {
+    const populatedValueCount = VALUE_FIELDS.filter((field) => {
+      const fieldValue = value[field];
+      return fieldValue !== null && (!Array.isArray(fieldValue) || fieldValue.length > 0);
+    }).length;
+    const hasEvidence = EVIDENCE_STATES.has(value.informationState);
+    assert.equal(populatedValueCount, hasEvidence ? 1 : 0, `${value.id} value fields must match its information state`);
+    if (hasEvidence) assert.ok(CONFIDENCE_LEVELS.has(value.confidence), `${value.id} requires a valid confidence`);
+    else assert.equal(value.confidence, null, `${value.id} confidence must be null without evidence`);
+  }
 }
 const seed = fs.readFileSync("supabase/sql/003_master_data_seed.sql", "utf8");
 const migration = fs.readFileSync("supabase/migrations/20260722120000_add_issue_205_karatsu_spots.sql", "utf8");
+const migrationPayloadMatch = migration.match(/declare payload jsonb := '([^']+)'::jsonb;/);
+assert.ok(migrationPayloadMatch, "migration must contain the Issue #205 JSON payload");
+assert.deepEqual(JSON.parse(migrationPayloadMatch[1]), details, "curation JSON and migration payload must remain identical");
 const fallback = fs.readFileSync("src/lib/fishingSpotDetailFallback.ts", "utf8");
 const jma = fs.readFileSync("src/domain/jmaWarning.ts", "utf8");
 for (const [id, area] of Object.entries(EXPECTED_AREAS)) {
