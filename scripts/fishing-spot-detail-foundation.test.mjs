@@ -40,8 +40,9 @@ assert(repository.includes('contribution_origin'), 'repository must select contr
 assert(repository.includes('fishingSpots') && repository.includes('buildStaticFishingSpotDetailsFromSpots'), 'repository fallback must derive details from existing fishingSpots');
 assert(!repository.includes('警告') && !repository.includes('warning'), 'fallback must not inject warning notes');
 assert(!mapper.includes('信憑性') && !mapper.includes('情報なし'), 'mapper must not convert unknown/null states into UI labels');
-assert(mapper.includes('note: null'), 'mapper must remove internal notes at the normal-UI data boundary');
-assert(!mapper.includes('sourceUrl: source.source_url'), 'mapper must remove source URLs at the normal-UI data boundary');
+assert(mapper.includes('note: row.note ?? null'), 'mapper must preserve internal notes without rendering them in the normal UI');
+assert(mapper.includes('sourceUrl: source.source_url ?? null'), 'mapper must preserve source metadata for auditability');
+assert(mapper.includes('note: join.note ?? null'), 'mapper must preserve source-relation notes');
 
 assert(!migration.includes('using (true)'), 'source and join-table public RLS must not use using (true)');
 assert(migration.includes("contribution_origin = 'user_contribution' and moderation_status = 'approved'"), 'public values must allow approved user contributions after review and adoption');

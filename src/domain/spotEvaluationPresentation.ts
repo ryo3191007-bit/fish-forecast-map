@@ -163,6 +163,43 @@ const detailEnumLabels: Record<string, Record<string, string>> = {
   open_sea_bay_character: { open_sea: "外海", bay_mouth: "湾口", bay: "湾内", inner_bay: "内湾" },
 };
 
+const NATURAL_TERRAIN_LABELS = [
+  [/(砂泥)/, "砂泥底"], [/(砂地)/, "砂地"], [/(岩礁|岩場)/, "岩礁"], [/(藻場)/, "藻場"],
+  [/(かけ上がり)/, "かけ上がり"], [/(浅場)/, "浅場"], [/(深場)/, "深場"], [/(河口)/, "河口"],
+  [/(湾奥)/, "湾奥"], [/(砂浜|海水浴場|サーフ|beach)/i, "砂浜"], [/(島)/, "島"],
+] as const;
+
+const FISHING_STRUCTURE_LABELS = [
+  [/(堤防|波止)/, "堤防"], [/(岸壁)/, "岸壁"], [/(護岸)/, "護岸"], [/(テトラ)/, "テトラ"],
+  [/(磯)/, "磯"], [/(砂浜|海水浴場|サーフ|beach)/i, "砂浜"],
+] as const;
+
+function classifiedLabels(values: readonly string[], rules: readonly (readonly [RegExp, string])[]) {
+  return [...new Set(rules.filter(([pattern]) => values.some((value) => pattern.test(value))).map(([, label]) => label))];
+}
+
+/** Raw evidence stays untouched; only the ordinary UI is reduced to reusable taxonomy labels. */
+export function formatTerrainDetailForPresentation(details: FishingSpotDetailSet | null, itemKey: "coastal_topography" | "spot_features") {
+  if (!details) return null;
+  const candidates = details.values.filter((value) =>
+    (value.itemKey === "coastal_topography" || value.itemKey === "spot_features")
+    && value.informationState !== "rejected"
+    && value.adoptionStatus === "adopted"
+  );
+  const evidence = candidates.filter((value) => value.informationState === "has_evidence" || value.informationState === "weak_evidence");
+  const rawValues = evidence.flatMap((value) => value.valueTextList.length ? value.valueTextList : value.valueText ? [value.valueText] : []);
+  const labels = classifiedLabels(rawValues, itemKey === "coastal_topography" ? NATURAL_TERRAIN_LABELS : FISHING_STRUCTURE_LABELS);
+  if (!labels.length) return null;
+  const contributing = evidence.filter((value) => {
+    const values = value.valueTextList.length ? value.valueTextList : value.valueText ? [value.valueText] : [];
+    return classifiedLabels(values, itemKey === "coastal_topography" ? NATURAL_TERRAIN_LABELS : FISHING_STRUCTURE_LABELS).length > 0;
+  });
+  const confidenceRank: Record<NonNullable<SpotDetailValue["confidence"]>, number> = { low: 0, medium: 1, high: 2 };
+  const confidence = contributing.map((value) => value.confidence).filter((value): value is NonNullable<SpotDetailValue["confidence"]> => value !== null)
+    .sort((a, b) => confidenceRank[a] - confidenceRank[b])[0] ?? null;
+  return { text: labels.join("、"), confidence };
+}
+
 export function formatSpotDetailValue(item: SpotDetailValue | undefined) {
   if (!item) return "未調査";
   if (item.informationState === "researched_unknown") return "調査済み・未確定";
