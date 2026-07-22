@@ -136,11 +136,12 @@ function EvaluationTab(props: Props & { selectedTime: string | null }) {
   if (!props.selectedSpot) return <StateMessage>地点が未選択のため、総合評価未算出です。</StateMessage>;
   const details = props.detailStatus === "ready" ? scopeSpotDetails(props.details, props.selectedSpot.id) : null;
   const result = calculateProductionScoreV2({ spot: props.selectedSpot, details, catches: props.catches, environment: props.environment, selectedDateTime: getEvaluationReferenceTime(props.selectedTime), jmaWarning: props.jmaWarning });
+  const jmaWarningDisplay = getJmaWarningDisplay(props.jmaWarning);
   const species = result.speciesResults.filter((item) => item.informationStatus !== "no_information").sort((a, b) => (b.overallScore ?? b.spotCompatibilityScore ?? -1) - (a.overallScore ?? a.spotCompatibilityScore ?? -1)).slice(0, 5);
   const methods = result.methodResults.filter((item) => item.informationStatus !== "no_information").sort((a, b) => (b.overallScore ?? -1) - (a.overallScore ?? -1) || (b.spotSuitabilityScore ?? -1) - (a.spotSuitabilityScore ?? -1));
   return <div className="evaluationContent">
-    <JmaWarningPanel decision={props.jmaWarning} />
-    {result.status !== "available" && <StateMessage>{result.displayMessage}。地点相性のみ参考点として表示します。</StateMessage>}
+    <JmaWarningPanel decision={props.jmaWarning} display={jmaWarningDisplay} />
+    {result.status !== "available" && jmaWarningDisplay.kind !== "unknown" && <StateMessage>{result.displayMessage}。地点相性のみ参考点として表示します。</StateMessage>}
     <div className="evaluationTitle"><h3>魚種評価</h3><button type="button" onClick={props.onShowAllSpecies}>すべて表示</button></div>
     <div className="scoreCards">{species.map((item) => <article key={item.species} className="scoreCard"><header><h4>{item.species}</h4><strong>{item.overallScore === null ? "総合点未算出" : `総合点 ${item.overallScore}点`}</strong></header><p>地点相性 参考点: {item.spotCompatibilityScore === null ? "情報なし" : `${item.spotCompatibilityScore}点`}</p><ConfidenceSummary spot={item.confidence.spot} environment={item.confidence.environment} /><p>{item.partialData ? "一部情報未反映" : "必要情報を反映"}</p><ul>{item.reasons.slice(0, 2).map((reason, index) => <li key={`${reason.label}-${index}`}>{reason.label}{reason.confidence ? `（信憑性: ${confidenceLabel[reason.confidence]}）` : ""}: {reason.displayNote}</li>)}</ul></article>)}</div>
     {!species.length && <EmptyState />}
@@ -149,8 +150,7 @@ function EvaluationTab(props: Props & { selectedTime: string | null }) {
   </div>;
 }
 
-function JmaWarningPanel({ decision }: { decision: JmaWarningDecision | null }) {
-  const display = getJmaWarningDisplay(decision);
+function JmaWarningPanel({ decision, display }: { decision: JmaWarningDecision | null; display: ReturnType<typeof getJmaWarningDisplay> }) {
   if (display.kind === "loading" || display.kind === "hidden") return null;
   if (display.kind === "unknown") return <p className="jmaWarningUnavailable" role="status">{display.message}</p>;
   if (!decision) return null;

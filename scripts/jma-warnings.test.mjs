@@ -244,7 +244,8 @@ assert.deepEqual(presentation.getJmaWarningDisplay(null), { kind: "loading" }, "
 assert.equal(presentation.getJmaWarningDisplay(decision("blocked")).kind, "blocked", "blocked uses the detailed presentation");
 assert.deepEqual(presentation.getJmaWarningDisplay(decision("clear")), { kind: "hidden" }, "clear has no safety-gate UI");
 assert.deepEqual(presentation.getJmaWarningDisplay(decision("out-of-range")), { kind: "hidden" }, "JMA out-of-range has no JMA detail UI");
-assert.deepEqual(presentation.getJmaWarningDisplay(decision("unknown", { reason: "private-exception-text" })), { kind: "unknown", message: "安全情報を取得できませんでした" }, "unknown exposes only a generic compact message");
+assert.deepEqual(presentation.getJmaWarningDisplay(decision("unknown", { reason: "private-exception-text" })), { kind: "unknown", message: "安全情報を取得できませんでした。総合点は表示しません。" }, "unknown exposes only a generic compact message");
+assert.deepEqual(presentation.getJmaWarningDisplay(decision("future-state")), { kind: "unknown", message: "安全情報を取得できませんでした。総合点は表示しません。" }, "an unexpected runtime state fails closed in the safety UI");
 
 assert.equal(domain.combineSafetyGate(decision("blocked"), "clear").displayOverallScore, false, "blocked suppresses overall scores");
 assert.equal(domain.combineSafetyGate(decision("unknown"), "clear").displayOverallScore, false, "unknown suppresses overall scores");
@@ -288,7 +289,7 @@ const unknownPresentation = presentation.getJmaWarningDisplay({
   state: "unknown",
   reason: "release-not-confirmed-after-blocked",
 });
-assert.deepEqual(unknownPresentation, { kind: "unknown", message: "安全情報を取得できませんでした" }, "a failed refresh after blocked stays unknown without exposing its internal reason");
+assert.deepEqual(unknownPresentation, { kind: "unknown", message: "安全情報を取得できませんでした。総合点は表示しません。" }, "a failed refresh after blocked stays unknown without exposing its internal reason");
 assert.throws(() => parser.validateXml('<!DOCTYPE x [<!ENTITY y SYSTEM "file:///etc/passwd">]><x>&y;</x>'), /unsafe/);
 
 console.log("JMA acquisition, service, parser, Atom, safety-gate tests passed.");

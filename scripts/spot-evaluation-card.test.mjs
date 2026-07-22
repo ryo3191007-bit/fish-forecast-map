@@ -95,6 +95,7 @@ assert.ok(dashboard.includes('setSpotDetailStatus("loading")') && dashboard.incl
 assert.ok(card.includes("getEvaluationReferenceTime(props.selectedTime)"), "spot scoring remains available without a UI forecast selection");
 assert.ok(card.includes('display.kind === "loading" || display.kind === "hidden"'), "loading, clear, and out-of-range do not render a JMA panel");
 assert.ok(card.includes('className="jmaWarningUnavailable"') && card.includes("{display.message}"), "unknown renders only the presentation policy's compact message");
+assert.ok(card.includes('jmaWarningDisplay.kind !== "unknown"'), "JMA unknown suppresses the second score-state safety message");
 assert.ok(!card.includes("unknownReason") && !card.includes("lastSuccessfulFetchAt"), "internal unknown details are absent from the normal UI");
 for (const label of ["対象区域", "現象", "電文", "発表時刻", "対象時間帯", "出典:"]) assert.ok(card.includes(label), `blocked detail retains ${label}`);
 const unavailableRule = css.match(/\.jmaWarningUnavailable\s*\{[^}]+\}/)?.[0] ?? "";
