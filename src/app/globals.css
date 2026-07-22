@@ -839,10 +839,6 @@ dd {
   font-weight: 700;
 }
 @media (max-width: 520px) {
-  .mapLayerToggle {
-    top: 12px;
-    left: 12px;
-  }
   .mapLayerButton {
     padding: 8px 10px;
     font-size: 0.78rem;

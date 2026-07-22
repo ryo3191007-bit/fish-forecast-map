@@ -30,6 +30,16 @@ assert.match(toggle, /aria-pressed=\{value === option\.id\}/);
 assert.match(css, /\.mapLayerToggle[\s\S]*?position: relative[\s\S]*?grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
 assert.match(css, /@media \(max-width: 620px\)[\s\S]*?\.mapLayerButton[\s\S]*?white-space: nowrap/);
 assert.doesNotMatch(css, /\.mapLayerToggle \{\s*position: absolute/);
+const mapLayerToggleRules = [...css.matchAll(/\.mapLayerToggle\s*\{([^}]*)\}/g)].map((match) => match[1]);
+assert.ok(mapLayerToggleRules.length > 0, "map layer toggle CSS rules exist");
+for (const rule of mapLayerToggleRules) {
+  assert.doesNotMatch(rule, /(?:^|;)\s*(?:top|left)\s*:/, "map layer toggle has no positional offset at any viewport width");
+}
+assert.match(
+  mapLayerToggleRules[0],
+  /box-sizing: border-box[\s\S]*?position: relative[\s\S]*?width: 100%/,
+  "the toggle stays within its normal-flow parent width around 360px",
+);
 
 assert.match(presentation, /toilet: \{ label: "トイレ", affirmativeValues:/);
 assert.match(presentation, /parking: \{ label: "駐車", affirmativeValues:/);
