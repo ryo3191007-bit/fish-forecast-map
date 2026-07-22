@@ -9,7 +9,6 @@ import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import {
   GSI_AERIAL_TILE_ATTRIBUTION,
   GSI_TILE_ATTRIBUTION,
-  GSI_AERIAL_TILE_NOTE,
   type MapLayerMode,
 } from "@/domain/mapLayer";
 import {
@@ -32,13 +31,11 @@ import {
   BATHYMETRY_FALLBACK_CONTOUR_LAYER_ID,
   BATHYMETRY_FALLBACK_CONTOUR_SOURCE_ID,
   BATHYMETRY_FALLBACK_HILLSHADE_LAYER_ID,
-  BATHYMETRY_FALLBACK_LICENSE_NOTE,
   BATHYMETRY_FALLBACK_METADATA_URL,
   BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
   BATHYMETRY_FALLBACK_SOURCE_ID,
   BATHYMETRY_FALLBACK_TILE_URL,
   BATHYMETRY_HILLSHADE_LAYER_ID,
-  BATHYMETRY_LICENSE_NOTE,
   BATHYMETRY_MAX_ZOOM,
   BATHYMETRY_METADATA_URL,
   BATHYMETRY_MIN_ZOOM,
@@ -217,6 +214,7 @@ export function FishingMap({ externalMemos, spots, focusRequest }: FishingMapPro
       },
       center: [129.95, 33.48],
       zoom: 8.2,
+      attributionControl: false,
     });
     mapRef.current = map;
 
@@ -240,6 +238,7 @@ export function FishingMap({ externalMemos, spots, focusRequest }: FishingMapPro
     map.on("load", onLoad);
     map.on("error", onError);
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
+    map.addControl(new maplibregl.AttributionControl({ compact: true }));
 
     return () => {
       map.off("load", onLoad);
@@ -768,7 +767,7 @@ export function FishingMap({ externalMemos, spots, focusRequest }: FishingMapPro
       element.className = "fishingSpotMarker";
       element.setAttribute("aria-label", `${spot.name}の地点`);
       const popup = registerPopup(
-        new maplibregl.Popup({ offset: 18, maxWidth: "min(300px, calc(100vw - 32px))" })
+        new maplibregl.Popup({ offset: 18, maxWidth: "min(220px, calc(100vw - 24px))" })
           .setDOMContent(createSpotPopupContent(spot)),
       );
       const marker = new maplibregl.Marker({ element })
@@ -877,9 +876,10 @@ export function FishingMap({ externalMemos, spots, focusRequest }: FishingMapPro
     : null;
 
   return (
-    <div className="mapShell">
-      <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
+    <div className="mapFrame">
       <MapLayerToggle value={mapLayerMode} onChange={handleLayerModeChange} />
+      <div className="mapShell">
+      <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
       {mapLayerMode === "bathymetry" ? (
         <>
           <div
@@ -1035,19 +1035,6 @@ export function FishingMap({ externalMemos, spots, focusRequest }: FishingMapPro
               </span>
             </div>
           ) : null}
-          <div
-            className="mapAttribution bathymetryAttribution"
-            aria-label="水深・地形データの出典"
-          >
-            {fallbackActive
-              ? BATHYMETRY_FALLBACK_ATTRIBUTION
-              : BATHYMETRY_ATTRIBUTION}
-            <span>
-              {fallbackActive
-                ? BATHYMETRY_FALLBACK_LICENSE_NOTE
-                : BATHYMETRY_LICENSE_NOTE}
-            </span>
-          </div>
         </>
       ) : null}
       {fallbackActive && mapLayerMode === "bathymetry" ? (
@@ -1060,18 +1047,13 @@ export function FishingMap({ externalMemos, spots, focusRequest }: FishingMapPro
           {bathymetryRuntime.notice}
         </div>
       ) : null}
-      {mapLayerMode === "aerial" ? (
-        <div className="mapAttribution" aria-label="航空写真の出典">
-          {GSI_AERIAL_TILE_ATTRIBUTION}
-          <span>{GSI_AERIAL_TILE_NOTE}</span>
-        </div>
-      ) : null}
       {spots.length === 0 && mappableExternalMemos.length === 0 ? (
         <div className="mapEmpty" aria-hidden="true">
           <strong>表示できるマーカーはありません</strong>
           <span>条件を変更するか、フィルタをリセットしてください。</span>
         </div>
       ) : null}
+      </div>
     </div>
   );
 }
@@ -1082,9 +1064,7 @@ function createSpotPopupContent(spot: FishingSpot) {
   const title = document.createElement("strong");
   title.className = "mapPopupTitle";
   title.textContent = spot.name;
-  const area = document.createElement("p");
-  area.textContent = `${spot.areaName}・${spot.spotType}`;
-  popup.append(title, area);
+  popup.append(title);
   return popup;
 }
 

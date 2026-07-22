@@ -405,9 +405,12 @@ p {
 .mapSection {
   margin-bottom: 18px;
 }
+.mapFrame {
+  min-width: 0;
+}
 .mapShell {
   position: relative;
-  border-radius: 30px;
+  border-radius: 0 0 30px 30px;
   background: linear-gradient(
     145deg,
     rgba(14, 165, 233, 0.22),
@@ -422,7 +425,7 @@ p {
 .map {
   height: clamp(390px, 56vw, 560px);
   width: 100%;
-  border-radius: 24px;
+  border-radius: 0 0 24px 24px;
   overflow: hidden;
   border: 1px solid rgba(103, 232, 249, 0.32);
 }
@@ -455,8 +458,8 @@ p {
 }
 .map .maplibregl-popup { max-width: calc(100vw - 32px) !important; }
 .map .maplibregl-popup-content {
-  min-width: 180px;
-  padding: 16px 42px 16px 16px;
+  min-width: 0;
+  padding: 10px 42px 10px 12px;
   border: 2px solid #0e7490;
   border-radius: 12px;
   background: #fff;
@@ -466,13 +469,13 @@ p {
 .map .maplibregl-popup-close-button {
   top: 5px;
   right: 5px;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border-radius: 8px;
   background: #0f172a;
   color: #fff;
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 18px;
+  line-height: 26px;
 }
 .fishingSpotMarker {
   width: 20px;
@@ -738,11 +741,11 @@ dd {
   }
   .mapShell {
     padding: 5px;
-    border-radius: 23px;
+    border-radius: 0 0 23px 23px;
   }
   .map {
     height: 340px;
-    border-radius: 18px;
+    border-radius: 0 0 18px 18px;
   }
   .mapEmpty {
     inset: 18px;
@@ -767,15 +770,18 @@ dd {
   margin-bottom: 0;
 }
 .mapLayerToggle {
-  position: absolute;
-  top: 18px;
-  left: 18px;
-  z-index: 2;
-  display: inline-flex;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
+  width: 100%;
   padding: 5px;
   border: 1px solid rgba(224, 250, 255, 0.44);
-  border-radius: 999px;
+  border-bottom: 0;
+  border-radius: 22px 22px 0 0;
+  margin-bottom: -1px;
   background: rgba(2, 8, 23, 0.74);
   box-shadow:
     0 12px 28px rgba(0, 0, 0, 0.35),
@@ -783,8 +789,9 @@ dd {
   backdrop-filter: blur(12px);
 }
 .mapLayerButton {
+  min-width: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: 16px;
   padding: 9px 12px;
   background: transparent;
   color: #dffbff;
@@ -832,18 +839,9 @@ dd {
   font-weight: 700;
 }
 @media (max-width: 520px) {
-  .mapLayerToggle {
-    top: 12px;
-    left: 12px;
-  }
   .mapLayerButton {
     padding: 8px 10px;
     font-size: 0.78rem;
-  }
-  .mapAttribution {
-    right: 12px;
-    bottom: 12px;
-    font-size: 0.68rem;
   }
 }
 .reportFilters {
@@ -1540,14 +1538,15 @@ dd {
 }
 @media (max-width: 620px) {
   .mapLayerToggle {
-    max-width: calc(100% - 24px);
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-radius: 18px;
+    gap: 3px;
+    padding: 4px;
+    border-radius: 18px 18px 0 0;
   }
   .mapLayerButton {
-    border-radius: 14px;
-    padding-inline: 7px;
+    border-radius: 12px;
+    padding: 8px 4px;
+    font-size: clamp(0.68rem, 3.15vw, 0.78rem);
+    white-space: nowrap;
   }
   .bathymetryPanel {
     left: 12px;
@@ -1556,11 +1555,6 @@ dd {
   }
   .bathymetryLegend {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .bathymetryAttribution {
-    top: 82px;
-    right: 12px;
-    max-width: min(300px, calc(100% - 24px));
   }
 }
 .mapNotice {
@@ -1811,7 +1805,9 @@ dd {
 .methodScores { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr)); gap:.65rem; }
 .detailGrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:.65rem; margin:0; }
 .detailGrid div { padding:.8rem; border:1px solid rgba(125,211,252,.2); border-radius:12px; background:rgba(8,47,73,.3); }
-.detailGrid dt { color:#7dd3fc; font-size:.75rem; font-weight:900; } .detailGrid dd { margin:.35rem 0 0; line-height:1.6; overflow-wrap:anywhere; }
+.detailGrid dt { display:flex; align-items:center; gap:.35rem; color:#7dd3fc; font-size:.75rem; font-weight:900; } .detailGrid dd { margin:.35rem 0 0; line-height:1.6; overflow-wrap:anywhere; }
+.detailIcon { display:inline-grid; width:1.2rem; place-items:center; flex:none; font-size:.9rem; }
+.spotEvaluationState.empty { display:inline-block; margin:.25rem 0 0; padding:.55rem .75rem; border:1px solid rgba(125,211,252,.22); border-left-width:3px; border-radius:10px; background:rgba(8,47,73,.3); color:#bae6fd; font-weight:800; }
 .confidence { display:inline-block; margin-left:.55rem; padding:.1rem .4rem; border-radius:999px; font-size:.7rem; font-weight:900; }
 .confidence.high { background:#166534; } .confidence.medium { background:#9a3412; } .confidence.low { background:#991b1b; }
 .spotEvaluationState { padding:.8rem; border-left:3px solid #f59e0b; background:rgba(120,53,15,.2); line-height:1.6; }
@@ -1822,7 +1818,7 @@ dd {
 .jmaWarningPanel h3 { margin:0 0 .65rem; } .jmaWarningPanel dl { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:.5rem; margin:0; }
 .jmaWarningPanel dl div { padding:.55rem; border-radius:8px; background:rgba(2,8,23,.35); } .jmaWarningPanel dt { color:#bae6fd; font-size:.72rem; font-weight:900; } .jmaWarningPanel dd { margin:.2rem 0 0; } .jmaWarningPanel a { color:#7dd3fc; }
 @media (max-width:760px) { .sharedTimeControls { grid-template-columns:repeat(2,minmax(0,1fr)); } .sharedTimeControls button { min-width:0; padding:.5rem .3rem; font-size:.72rem; } .spotCombobox, .spotEvaluationCard { max-width:100%; } }
-@media (max-width:480px) { .map .maplibregl-popup-content { min-width:0; padding:14px 40px 14px 14px; } .mapPopup { max-width:calc(100vw - 88px); font-size:.94rem; } }
+@media (max-width:480px) { .map .maplibregl-popup-content { min-width:0; padding:9px 40px 9px 10px; } .mapPopup { max-width:calc(100vw - 72px); gap:0; font-size:.88rem; line-height:1.35; } }
 
 .allSpeciesScreen { box-sizing:border-box; width:min(100%,1180px); min-width:0; margin:0 auto; padding:0 clamp(.75rem,3vw,1.5rem) 2rem; color:#e0faff; overflow-x:hidden; }
 .allSpeciesHeader { position:sticky; z-index:20; top:0; box-sizing:border-box; padding:max(.75rem,env(safe-area-inset-top)) 0 .9rem; background:linear-gradient(#020817 82%,rgba(2,8,23,0)); }

@@ -59,11 +59,19 @@ assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), informa
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), informationState: "unresearched" }), "未調査");
 assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), informationState: "rejected" }), "調査済み・不採用");
 assert.equal(presentation.formatSpotDetailValue(undefined), "未調査", "a missing row is not presented as a confirmed absence");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "トイレ候補（現行未確認）"), itemKey: "toilet", informationState: "weak_evidence", confidence: "low" }), "トイレ");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "駐車場候補（現行未確認）"), itemKey: "parking", informationState: "weak_evidence", confidence: "low" }), "駐車");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "toilet", valueBoolean: true }), "トイレ");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "parking", valueBoolean: true }), "駐車");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "toilet", valueBoolean: false }), "なし");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", null), itemKey: "parking", valueBoolean: false }), "なし");
+assert.equal(presentation.formatSpotDetailValue({ ...value("new", "none"), itemKey: "toilet" }), "なし", "a negative facility enum is not converted into an affirmative label");
 const visibilityDetails = { itemDefinitions: [], values: [
   { ...value("new", "参考値"), itemKey: "target_species", adoptionStatus: "adopted", confidence: "low" },
   { ...value("new", "非表示"), itemKey: "parking", adoptionStatus: "adopted", informationState: "rejected" },
 ] };
 assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "target_species").confidence, "low", "adopted low-confidence evidence remains visible");
+assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "target_species").informationState, "has_evidence", "display lookup does not promote low-confidence evidence or rewrite its state");
 assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "parking"), undefined, "rejected evidence is excluded from the normal UI");
 assert.notEqual(presentation.formatSpotDetailValue(visibilityDetails.values[1]), "未調査", "rejected evidence retains its state instead of being converted to unresearched");
 assert.ok(card.includes("items.flatMap") && card.includes("if (!item && !terrainPresentation) return []"), "detail rows without displayable adopted evidence are omitted");
