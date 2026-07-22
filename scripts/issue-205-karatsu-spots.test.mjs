@@ -63,7 +63,8 @@ const seed = fs.readFileSync("supabase/sql/003_master_data_seed.sql", "utf8");
 const migration = fs.readFileSync("supabase/migrations/20260722120000_add_issue_205_karatsu_spots.sql", "utf8");
 const migrationPayloadMatch = migration.match(/declare payload jsonb := '([^']+)'::jsonb;/);
 assert.ok(migrationPayloadMatch, "migration must contain the Issue #205 JSON payload");
-assert.deepEqual(JSON.parse(migrationPayloadMatch[1]), details, "curation JSON and migration payload must remain identical");
+assert.equal(JSON.parse(migrationPayloadMatch[1]).issue, 205, "base migration must retain the original Issue #205 audit payload");
+assert.ok(fs.readFileSync("supabase/migrations/20260722180000_refine_terrain_structure_presentation.sql", "utf8").includes("set item_key = 'spot_features'"), "Issue #237 must correct existing DB classifications forward-only");
 const fallback = fs.readFileSync("src/lib/fishingSpotDetailFallback.ts", "utf8");
 const jma = fs.readFileSync("src/domain/jmaWarning.ts", "utf8");
 for (const [id, area] of Object.entries(EXPECTED_AREAS)) {

@@ -83,8 +83,8 @@ const baseValue = {
 
 const mappedBase = mapper.mapFishingSpotDetailRows(definitions, [baseValue]);
 assert(mappedBase.values.length === 1, 'mapper should accept valid rows with a matching item definition');
-assert(mappedBase.values[0].note === 'internal research note' && mappedBase.values[0].sources[0].note === 'internal relation note', 'Supabase mapper should preserve internal value and relation notes for auditing');
-assert(mappedBase.values[0].sources[0].source.sourceUrl === 'https://internal.example/source' && mappedBase.values[0].sources[0].source.note === 'internal source note', 'Supabase mapper should preserve source metadata for auditing');
+assert(mappedBase.values[0].note === null && mappedBase.values[0].sources[0].note === null, 'Supabase mapper should remove internal value and relation notes at the return boundary');
+assert(mappedBase.values[0].sources[0].source.sourceUrl === null && mappedBase.values[0].sources[0].source.note === null, 'Supabase mapper should remove source URLs and source notes at the return boundary');
 const mappedUserContribution = mapper.mapFishingSpotDetailRows(definitions, [{ ...baseValue, contribution_origin: 'user_contribution', moderation_status: 'approved', review_status: 'reviewed', adoption_status: 'adopted' }]);
 assert(mappedUserContribution.values[0]?.contributionOrigin === 'user_contribution', 'mapper should preserve adopted user_contribution origins');
 assert(mapper.mapFishingSpotDetailRows(definitions, [{ ...baseValue, contribution_origin: undefined }]).values.length === 0, 'mapper should reject rows missing contribution_origin');
@@ -111,7 +111,7 @@ assert(knownShoreAccess?.adoptionStatus === 'candidate', 'fallback initial adopt
 
 const curatedFallback = fallback.buildStaticFishingSpotDetailsFromSpots([{ id: 'nokita-port', targetSpecies: [], recommendedMethods: [], shoreAccess: '不明' }]);
 assert(curatedFallback.values.length > 0, 'curated fallback fixture should return details');
-assert(curatedFallback.values.some((value) => value.note !== null) && curatedFallback.values.some((value) => value.sources.some((entry) => entry.source.sourceUrl !== null)), 'fallback should preserve available curated notes and source metadata for auditing');
+assert(curatedFallback.values.every((value) => value.note === null && value.sources.every((entry) => entry.note === null && entry.source.sourceUrl === null && entry.source.note === null)), 'fallback should remove source URLs and internal notes at the return boundary');
 
 const supabaseFallback = await repository.fetchFishingSpotDetails('known');
 assert(supabaseFallback.meta.source === 'static-fallback', 'repository should fallback to static data when Supabase fetch is unavailable');
