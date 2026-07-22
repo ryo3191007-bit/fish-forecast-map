@@ -1,0 +1,627 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 250,
+  "generatedAt": "2026-07-22T00:00:00.000Z",
+  "spots": [
+    {
+      "spotId": "fukushima-port",
+      "sources": [
+        {
+          "sourceType": "map",
+          "sourceName": "地理院地図・地名検索",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-22",
+          "note": "国土地理院標準地図と住所検索で島・地区・港域の位置関係を独立確認し、港域の概略代表座標を設定。地点種別、利用可否、実釣位置は裏付けない。",
+          "id": "src-gsi-map"
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "長崎県の港湾",
+          "sourceUrl": "https://www.pref.nagasaki.jp/bunrui/machidukuri/kowan-kuko/kowan/",
+          "checkedOn": "2026-07-22",
+          "note": "長崎県の港湾情報。福島港の名称と港湾としての地理的文脈確認に使用。一般立入、釣り可否、設備、足場は裏付けない。",
+          "id": "src-nagasaki-port-list"
+        }
+      ],
+      "values": [
+        {
+          "id": "fukushima-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-nagasaki-port-list"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-nagasaki-port-list"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-nagasaki-port-list"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-nagasaki-port-list"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-nagasaki-port-list"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukushima-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-nagasaki-port-list"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "nabegushi-fishing-port",
+      "sources": [
+        {
+          "sourceType": "map",
+          "sourceName": "地理院地図・地名検索",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-22",
+          "note": "国土地理院標準地図と住所検索で島・地区・港域の位置関係を独立確認し、港域の概略代表座標を設定。地点種別、利用可否、実釣位置は裏付けない。",
+          "id": "src-gsi-map"
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "長崎県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub82-292.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁の都道府県別漁港一覧。漁港の正式名称・種別・所在地確認に使用。一般立入、釣り可否、設備、足場は裏付けない。",
+          "id": "src-jfa-nagasaki-fishing-ports"
+        }
+      ],
+      "values": [
+        {
+          "id": "nabegushi-fishing-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nabegushi-fishing-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nabegushi-fishing-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nabegushi-fishing-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nabegushi-fishing-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "nabegushi-fishing-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "aonoura-fishing-port",
+      "sources": [
+        {
+          "sourceType": "map",
+          "sourceName": "地理院地図・地名検索",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-22",
+          "note": "国土地理院標準地図と住所検索で島・地区・港域の位置関係を独立確認し、港域の概略代表座標を設定。地点種別、利用可否、実釣位置は裏付けない。",
+          "id": "src-gsi-map"
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "長崎県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub82-292.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁の都道府県別漁港一覧。漁港の正式名称・種別・所在地確認に使用。一般立入、釣り可否、設備、足場は裏付けない。",
+          "id": "src-jfa-nagasaki-fishing-ports"
+        }
+      ],
+      "values": [
+        {
+          "id": "aonoura-fishing-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "aonoura-fishing-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "aonoura-fishing-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "aonoura-fishing-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "aonoura-fishing-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "aonoura-fishing-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "funakaratsu-fishing-port",
+      "sources": [
+        {
+          "sourceType": "map",
+          "sourceName": "地理院地図・地名検索",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-22",
+          "note": "国土地理院標準地図と住所検索で島・地区・港域の位置関係を独立確認し、港域の概略代表座標を設定。地点種別、利用可否、実釣位置は裏付けない。",
+          "id": "src-gsi-map"
+        },
+        {
+          "sourceType": "official",
+          "sourceName": "長崎県 漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub82-292.pdf",
+          "checkedOn": "2026-07-22",
+          "note": "水産庁の都道府県別漁港一覧。漁港の正式名称・種別・所在地確認に使用。一般立入、釣り可否、設備、足場は裏付けない。",
+          "id": "src-jfa-nagasaki-fishing-ports"
+        }
+      ],
+      "values": [
+        {
+          "id": "funakaratsu-fishing-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakaratsu-fishing-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakaratsu-fishing-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakaratsu-fishing-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakaratsu-fishing-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "funakaratsu-fishing-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-22",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-map",
+              "src-jfa-nagasaki-fishing-ports"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    }
+  ]
+}

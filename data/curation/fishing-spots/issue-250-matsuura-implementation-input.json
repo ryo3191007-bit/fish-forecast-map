@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 250,
+  "researchedAt": "2026-07-22",
+  "scope": {
+    "prefecture": "長崎県",
+    "municipality": "松浦市",
+    "areas": [
+      "福島",
+      "鷹島"
+    ]
+  },
+  "activeCandidates": [
+    {
+      "spotId": "fukushima-port",
+      "name": "福島港",
+      "spotType": "その他",
+      "latitude": 33.3672,
+      "longitude": 129.8208,
+      "areaName": "伊万里湾・福島",
+      "municipality": "松浦市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公的資料で名称・種別・松浦市所在を確認し、国土地理院標準地図等で港域の概略代表点を独立確認。一般利用・釣り可否は未確認。",
+      "relationToExisting": {
+        "existingSpotId": "fukushima-area",
+        "relation": "specific_spot_within_broad_context",
+        "migrationPolicy": "既存広域地点を維持し、既存釣果を推測で再割当しない。"
+      }
+    },
+    {
+      "spotId": "nabegushi-fishing-port",
+      "name": "鍋串漁港",
+      "spotType": "漁港",
+      "latitude": 33.4162,
+      "longitude": 129.805,
+      "areaName": "伊万里湾・福島",
+      "municipality": "松浦市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公的資料で名称・種別・松浦市所在を確認し、国土地理院標準地図等で港域の概略代表点を独立確認。一般利用・釣り可否は未確認。",
+      "relationToExisting": {
+        "existingSpotId": "fukushima-area",
+        "relation": "specific_spot_within_broad_context",
+        "migrationPolicy": "既存広域地点を維持し、既存釣果を推測で再割当しない。"
+      }
+    },
+    {
+      "spotId": "aonoura-fishing-port",
+      "name": "阿翁浦漁港",
+      "spotType": "漁港",
+      "latitude": 33.4592,
+      "longitude": 129.7548,
+      "areaName": "伊万里湾・鷹島",
+      "municipality": "松浦市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公的資料で名称・種別・松浦市所在を確認し、国土地理院標準地図等で港域の概略代表点を独立確認。一般利用・釣り可否は未確認。",
+      "relationToExisting": {
+        "existingSpotId": "takashima-area",
+        "relation": "specific_spot_within_broad_context",
+        "migrationPolicy": "既存広域地点を維持し、既存釣果を推測で再割当しない。"
+      }
+    },
+    {
+      "spotId": "funakaratsu-fishing-port",
+      "name": "船唐津漁港",
+      "spotType": "漁港",
+      "latitude": 33.4118,
+      "longitude": 129.7215,
+      "areaName": "伊万里湾・鷹島",
+      "municipality": "松浦市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公的資料で名称・種別・松浦市所在を確認し、国土地理院標準地図等で港域の概略代表点を独立確認。一般利用・釣り可否は未確認。",
+      "relationToExisting": {
+        "existingSpotId": "takashima-area",
+        "relation": "specific_spot_within_broad_context",
+        "migrationPolicy": "既存広域地点を維持し、既存釣果を推測で再割当しない。"
+      }
+    }
+  ],
+  "heldOrExcluded": [
+    {
+      "proposedId": "hibi-fishing-port",
+      "name": "日比漁港",
+      "decision": "hold",
+      "reason": "前回候補だが、公的資料上の正式名称と港域代表点を独立に確定できないためactive化しない。"
+    },
+    {
+      "proposedId": "tononoura-port",
+      "name": "殿ノ浦周辺の港・漁港",
+      "decision": "hold",
+      "reason": "地区名と正式な港名・一般向け行き先の範囲の対応を確定できない。"
+    },
+    {
+      "name": "鷹島肥前大橋周辺",
+      "decision": "exclude",
+      "reason": "橋脚・道路管理用地を独立した釣り場として案内できる根拠がない。"
+    },
+    {
+      "name": "無名の地磯・堤防先端・私有地入口",
+      "decision": "exclude",
+      "reason": "名称、公開範囲、利用条件を公的資料から確定できない。"
+    }
+  ],
+  "sources": {
+    "src-jfa-nagasaki-fishing-ports": {
+      "sourceType": "official",
+      "sourceName": "長崎県 漁港一覧",
+      "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub82-292.pdf",
+      "checkedOn": "2026-07-22",
+      "note": "水産庁の都道府県別漁港一覧。漁港の正式名称・種別・所在地確認に使用。一般立入、釣り可否、設備、足場は裏付けない。"
+    },
+    "src-nagasaki-port-list": {
+      "sourceType": "official",
+      "sourceName": "長崎県の港湾",
+      "sourceUrl": "https://www.pref.nagasaki.jp/bunrui/machidukuri/kowan-kuko/kowan/",
+      "checkedOn": "2026-07-22",
+      "note": "長崎県の港湾情報。福島港の名称と港湾としての地理的文脈確認に使用。一般立入、釣り可否、設備、足場は裏付けない。"
+    },
+    "src-gsi-map": {
+      "sourceType": "map",
+      "sourceName": "地理院地図・地名検索",
+      "sourceUrl": "https://maps.gsi.go.jp/",
+      "checkedOn": "2026-07-22",
+      "note": "国土地理院標準地図と住所検索で島・地区・港域の位置関係を独立確認し、港域の概略代表座標を設定。地点種別、利用可否、実釣位置は裏付けない。"
+    }
+  },
+  "migrationPolicy": [
+    "fukushima-areaとtakashima-areaを削除・改名・非active化しない。",
+    "既存釣果、地点詳細、環境キャッシュ、履歴状態を新規地点へ自動再割当しない。",
+    "repository migrationはforward-onlyで、remote Supabaseには本Issueで適用しない。"
+  ],
+  "researchStatePolicy": {
+    "unresearched": "調査未実施",
+    "researched_unknown": "列挙したsourceを確認したが確定できない。0点や安全扱いへ変換しない。"
+  }
+}
