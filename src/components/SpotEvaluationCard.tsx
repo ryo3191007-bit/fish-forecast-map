@@ -16,7 +16,7 @@ import type {
 } from "@/domain/fishingSpotDetail";
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
 import type { JmaWarningDecision } from "@/domain/jmaWarning";
-import { getJmaWarningPresentation } from "@/domain/jmaWarningPresentation";
+import { getJmaWarningDisplay } from "@/domain/jmaWarningPresentation";
 import { findDisplayableSpotDetail, formatSpotDetailValue, formatTerrainDetailForPresentation, getEnvironmentStatusLabel, getEvaluationReferenceTime, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形";
@@ -150,17 +150,17 @@ function EvaluationTab(props: Props & { selectedTime: string | null }) {
 }
 
 function JmaWarningPanel({ decision }: { decision: JmaWarningDecision | null }) {
-  if (!decision) return <StateMessage>気象庁情報を確認中です。確認できるまで総合点を表示しません。</StateMessage>;
-  const { heading, unknownReason } = getJmaWarningPresentation(decision);
+  const display = getJmaWarningDisplay(decision);
+  if (display.kind === "loading" || display.kind === "hidden") return null;
+  if (display.kind === "unknown") return <p className="jmaWarningUnavailable" role="status">{display.message}</p>;
+  if (!decision) return null;
   const format = (value: string | null) => value ? new Intl.DateTimeFormat("ja-JP", { dateStyle: "short", timeStyle: "short" }).format(new Date(value)) : "該当なし";
-  return <aside className={`jmaWarningPanel ${decision.state}`} aria-label="気象庁警報・注意報の加工判定">
-    <h3>{heading}</h3>
-    <dl><div><dt>対象区域</dt><dd>{decision.areaName}</dd></div><div><dt>電文</dt><dd>{decision.bulletinType ?? "確認不能"}</dd></div><div><dt>発表時刻</dt><dd>{format(decision.reportDateTime)}</dd></div><div><dt>対象時間帯</dt><dd>{decision.targetStart ? `${format(decision.targetStart)}〜${format(decision.targetEnd)}` : "現在状態または対象外"}</dd></div></dl>
-    {decision.phenomena.length > 0 && <p>対象情報: {decision.phenomena.join("、")}</p>}{decision.currentNotice && <p>{decision.currentNotice}</p>}
-    {unknownReason && <p>{unknownReason} 総合点は表示しません。</p>}
-    {decision.state === "unknown" && <p>最終正常取得時刻: {format(decision.lastSuccessfulFetchAt)}</p>}
+  return <aside className="jmaWarningPanel blocked" aria-label="気象庁警報・注意報の加工判定">
+    <h3>{display.heading}</h3>
+    <dl><div><dt>対象区域</dt><dd>{decision.areaName}</dd></div><div><dt>現象</dt><dd>{decision.phenomena.length > 0 ? decision.phenomena.join("、") : "対象情報あり"}</dd></div><div><dt>電文</dt><dd>{decision.bulletinType ?? "確認不能"}</dd></div><div><dt>発表時刻</dt><dd>{format(decision.reportDateTime)}</dd></div><div><dt>対象時間帯</dt><dd>{decision.targetStart ? `${format(decision.targetStart)}〜${format(decision.targetEnd)}` : "現在状態"}</dd></div></dl>
+    {decision.currentNotice && <p>{decision.currentNotice}</p>}
     <p>出典: <a href="https://www.jma.go.jp/bosai/warning/" target="_blank" rel="noreferrer">気象庁 防災情報</a>（取得・加工日時: {format(decision.fetchedAt)}）</p>
-    <p>この表示は公式XMLを加工した参考判定です。航海・現地の安全判断を代替しません。必ず最新の公式情報と現地状況を確認してください。</p>
+    <p>公式XMLを加工した参考判定であり、航海・現地の安全判断を代替しません。</p>
   </aside>;
 }
 

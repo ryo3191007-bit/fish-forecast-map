@@ -19,6 +19,7 @@ function load(path) {
 }
 
 const card = readFileSync(new URL("../src/components/SpotEvaluationCard.tsx", import.meta.url), "utf8");
+const css = readFileSync(new URL("../src/app/globals.css", import.meta.url), "utf8");
 const dashboard = readFileSync(new URL("../src/components/FishingDashboard.tsx", import.meta.url), "utf8");
 const allSpeciesScreen = readFileSync(new URL("../src/components/AllSpeciesEvaluation.tsx", import.meta.url), "utf8");
 const presentation = load("src/domain/spotEvaluationPresentation.ts");
@@ -92,6 +93,14 @@ assert.ok(!JSON.stringify(renderedValues).includes("secret") && !JSON.stringify(
 assert.ok(dashboard.includes("setSpotDetails(null)"), "spot changes clear previous details immediately");
 assert.ok(dashboard.includes('setSpotDetailStatus("loading")') && dashboard.includes('setSpotDetailStatus("failed")'), "detail loading and failure are explicit");
 assert.ok(card.includes("getEvaluationReferenceTime(props.selectedTime)"), "spot scoring remains available without a UI forecast selection");
+assert.ok(card.includes('display.kind === "loading" || display.kind === "hidden"'), "loading, clear, and out-of-range do not render a JMA panel");
+assert.ok(card.includes('className="jmaWarningUnavailable"') && card.includes("{display.message}"), "unknown renders only the presentation policy's compact message");
+assert.ok(!card.includes("unknownReason") && !card.includes("lastSuccessfulFetchAt"), "internal unknown details are absent from the normal UI");
+for (const label of ["対象区域", "現象", "電文", "発表時刻", "対象時間帯", "出典:"]) assert.ok(card.includes(label), `blocked detail retains ${label}`);
+const unavailableRule = css.match(/\.jmaWarningUnavailable\s*\{[^}]+\}/)?.[0] ?? "";
+assert.match(unavailableRule, /padding:\.35rem 0/);
+assert.match(unavailableRule, /line-height:1\.4/);
+assert.ok(!/min-height|(?:^|[;{])\s*height:/.test(unavailableRule), "the mobile unknown message has no forced excessive height");
 assert.ok(card.includes('props.detailStatus === "ready" ? scopeSpotDetails'), "only ready, matching details enter scoring");
 
 const result = (species, informationStatus, overallScore, spotCompatibilityScore) => ({ species, informationStatus, overallScore, spotCompatibilityScore });
