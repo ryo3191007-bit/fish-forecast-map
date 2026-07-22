@@ -68,21 +68,21 @@
       "sourceName": "佐賀県 漁港一覧",
       "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-291.pdf",
       "checkedOn": "2026-07-22",
-      "note": "水産庁。波多津漁港の名称、種別、所在地、管理者を確認。"
+      "note": "水産庁。波多津漁港の名称、第2種漁港の種別、伊万里市の所在地、管理者を確認。構造・足場や釣り可否は裏付けない。"
     },
     "src-gsi-address-search": {
       "sourceType": "map",
       "sourceName": "地理院地図・地名検索",
       "sourceUrl": "https://maps.gsi.go.jp/",
       "checkedOn": "2026-07-22",
-      "note": "国土地理院。代表座標の独立確認に使用。"
+      "note": "国土地理院。地点と概略代表座標の確認に使用。地点種別、構造・足場、釣り可否は裏付けない。"
     },
     "src-imari-imarin-beach": {
       "sourceType": "official",
-      "sourceName": "イマリンビーチ",
-      "sourceUrl": "https://www.city.imari.saga.jp/",
+      "sourceName": "伊万里市「海」",
+      "sourceUrl": "https://www.city.imari.lg.jp/9622.htm",
       "checkedOn": "2026-07-22",
-      "note": "伊万里市公式情報。施設名称と所在地確認の入口。一般の釣り可否は裏付けない。"
+      "note": "伊万里市の地点個別案内。イマリンビーチの名称、人工海浜・海水浴場としての施設概要を確認。一般の釣り可否、遊泳区域外での利用可否、釣りの足場は裏付けない。"
     }
   },
   "migrationPolicy": [
