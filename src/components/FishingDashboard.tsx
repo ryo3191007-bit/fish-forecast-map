@@ -478,7 +478,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           >
             <section className="filterCard">
               <div className="filterTopRow">
-                <span>魚種フィルタ</span>
+                <span className="filterCardTitle">魚種フィルタ</span>
                 <label className="candidateSearchField">
                   <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /></svg>
                   <input
@@ -524,7 +524,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
 
             <section className="filterCard">
               <div className="filterTopRow">
-                <span>地点フィルタ</span>
+                <span className="filterCardTitle">地点フィルタ</span>
                 <label className="candidateSearchField">
                   <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /></svg>
                   <input
@@ -571,7 +571,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             </section>
 
             <section className="filterCard inlineFilterRow keywordFilterRow">
-              <span>キーワード検索</span>
+              <span className="filterCardTitle">キーワード検索</span>
               <input
                 id="report-search"
                 className="searchInput"
@@ -593,7 +593,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             </section>
 
             <section className="filterCard dateFilterCard">
-              <span>釣果期間フィルタ</span>
+              <span className="filterCardTitle">釣果期間フィルタ</span>
               <div className="dateFilterRow">
               <label className={`dateInputLabel${startDate ? " hasValue" : ""}`}>
                 <span className="visuallyHidden">釣果期間の開始日</span>
@@ -624,7 +624,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             </section>
 
             <section className="filterCard inlineFilterRow sortFilterRow">
-              <span>並び替え</span>
+              <span className="filterCardTitle">並び替え</span>
               <select
                 id="report-sort"
                 className="sortSelect"

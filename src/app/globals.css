@@ -201,6 +201,11 @@ p {
   flex: 0 0 auto;
   white-space: nowrap;
 }
+.filterCardTitle {
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
 .filterTopRow .candidateSearchInput {
   flex: 1 1 auto;
   min-width: 0;
@@ -244,6 +249,7 @@ p {
   overflow-x: auto;
   overflow-y: hidden;
   padding: 2px 2px 5px;
+  margin-top: 4px;
   overscroll-behavior-inline: contain;
   scrollbar-width: thin;
 }
@@ -255,10 +261,10 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 42px;
+  min-height: 38px;
   border: 1px solid rgba(125, 211, 252, 0.38);
   border-radius: 999px;
-  padding: 9px 12px;
+  padding: 7px 12px;
   background: rgba(8, 47, 73, 0.68);
   color: #dffbff;
   font: inherit;
@@ -899,13 +905,18 @@ dd {
     padding-bottom: 5px;
   }
   .reportFilters .speciesChip {
-    min-height: 38px;
-    padding: 7px 10px;
+    min-height: 34px;
+    padding: 5px 10px;
     font-size: 0.82rem;
   }
   .reportFilters .filterTopRow,
   .reportFilters .inlineFilterRow {
     font-size: 0.78rem;
+  }
+  .reportFilters .filterCardTitle {
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.2;
   }
 }
 .externalMemoSection {

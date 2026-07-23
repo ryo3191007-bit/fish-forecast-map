@@ -5,7 +5,7 @@ const dashboard = readFileSync("src/components/FishingDashboard.tsx", "utf8");
 const styles = readFileSync("src/app/globals.css", "utf8");
 
 assert.doesNotMatch(dashboard, /エリアフィルタ/, "the legacy area filter is removed");
-assert.match(dashboard, /<span>地点フィルタ<\/span>/, "the spot filter is shown");
+assert.match(dashboard, /<span className="filterCardTitle">地点フィルタ<\/span>/, "the spot filter is shown");
 assert.match(dashboard, /placeholder="魚種名で検索"/, "species candidates are searchable");
 assert.match(dashboard, /placeholder="地点名で検索"/, "spot candidates are searchable");
 assert.match(dashboard, /groupSelectableFishSpecies[\s\S]*?\.flatMap\(\(group\) => group\.items\.map\(\(item\) => item\.nameJa\)\)[\s\S]*?\.filter\(\(species\)/, "species groups are flattened before candidate search filters one chip list");
@@ -15,7 +15,7 @@ assert.match(dashboard, /selectedSpotId === "all" \|\| memo\.spotId === selected
 assert.doesNotMatch(dashboard, /memo\.areaName === selected/, "catch records are not filtered by area name");
 assert.match(dashboard, /selectedSpotId === "all" \|\|/, "unresolved records remain when no spot is selected");
 assert.match(dashboard, /aria-label="キーワード検索をクリア"[\s\S]*?>\s*×\s*<\/button>/, "keyword clear button is an accessible multiplication sign");
-assert.match(dashboard, /<span>釣果期間フィルタ<\/span>/, "catch period heading is updated");
+assert.match(dashboard, /<span className="filterCardTitle">釣果期間フィルタ<\/span>/, "catch period heading shares the filter title styling");
 assert.equal((dashboard.match(/<section className="filterCard/g) ?? []).length, 5, "each filter is rendered as one of five independent cards");
 assert.equal((dashboard.match(/className="candidateSearchField"/g) ?? []).length, 2, "species and spot searches have explicit search icons");
 assert.match(dashboard, /dateFilterCard[\s\S]*?開始日を選択[\s\S]*?calendarIcon[\s\S]*?終了日を選択[\s\S]*?calendarIcon/, "date filter has a titled second row with placeholders and calendar icons");
@@ -32,5 +32,8 @@ assert.match(styles, /\.dateFilterRow\s*\{\s*grid-template-columns: minmax\(0, 1
 assert.match(styles, /\.sortFilterRow\s*\{\s*grid-template-columns: auto minmax\(0, 1fr\) auto;/, "sort label, select, and reset button stay in one row");
 assert.match(styles, /\.speciesChips\s*\{[\s\S]*?flex-wrap: nowrap;[\s\S]*?overflow-x: auto;/, "chip rows alone scroll horizontally");
 assert.match(styles, /\.filterCard\s*\{[\s\S]*?border:[\s\S]*?border-radius:[\s\S]*?background:/, "independent cards share border, radius, and background styling");
+assert.match(styles, /\.filterCardTitle\s*\{[\s\S]*?font-size:[\s\S]*?font-weight:[\s\S]*?line-height:/, "all filter titles share typography");
+assert.match(styles, /\.reportFilters \.speciesChip\s*\{\s*min-height: 34px;\s*padding: 5px 10px;/, "mobile species and spot chips share the compact height and vertical padding");
+assert.match(styles, /\.speciesChips\s*\{[\s\S]*?margin-top: 4px;/, "candidate inputs retain space above their chip rows");
 
 console.log("Spot filter and compact filter UI regression checks passed");
