@@ -1,0 +1,330 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 253,
+  "researchedAt": "2026-07-23",
+  "scope": {
+    "prefecture": "長崎県",
+    "municipality": "平戸市",
+    "area": "平戸島本島"
+  },
+  "activeCandidates": [
+    {
+      "spotId": "tasuke-fishing-port",
+      "name": "田助漁港",
+      "spotType": "漁港",
+      "publicFacilityType": "第2種漁港・長崎県管理",
+      "latitude": 33.3909,
+      "longitude": 129.556,
+      "areaName": "平戸",
+      "municipality": "平戸市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公式資料で存在・正式名称・行政区分を確認し、北部・中部・南部の過密を避けた初回セットとして採用。",
+      "coordinateBasis": "港・湾を識別する概略代表点。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。",
+      "sourceIds": [
+        "src-gsi-hirado-main-issue253",
+        "src-jfa-hirado-ports-issue253",
+        "src-nagasaki-hirado-issue253"
+      ],
+      "relationToExisting": {
+        "existingSpotId": "hirado-seto",
+        "relation": "nearby_or_independent_specific_spot",
+        "migrationPolicy": "既存ID・データを維持し、新規地点へ移動・再割当しない。"
+      }
+    },
+    {
+      "spotId": "usukawan-fishing-port",
+      "name": "薄香湾漁港",
+      "spotType": "漁港",
+      "publicFacilityType": "第2種漁港・長崎県管理",
+      "latitude": 33.3607,
+      "longitude": 129.5268,
+      "areaName": "平戸",
+      "municipality": "平戸市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公式資料で存在・正式名称・行政区分を確認し、北部・中部・南部の過密を避けた初回セットとして採用。",
+      "coordinateBasis": "港・湾を識別する概略代表点。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。",
+      "sourceIds": [
+        "src-gsi-hirado-main-issue253",
+        "src-jfa-hirado-ports-issue253",
+        "src-nagasaki-hirado-issue253"
+      ],
+      "relationToExisting": {
+        "existingSpotId": "hirado-seto",
+        "relation": "nearby_or_independent_specific_spot",
+        "migrationPolicy": "既存ID・データを維持し、新規地点へ移動・再割当しない。"
+      }
+    },
+    {
+      "spotId": "hoki-fishing-port",
+      "name": "宝亀漁港",
+      "spotType": "漁港",
+      "publicFacilityType": "第1種漁港・平戸市管理",
+      "latitude": 33.3077,
+      "longitude": 129.5575,
+      "areaName": "平戸",
+      "municipality": "平戸市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公式資料で存在・正式名称・行政区分を確認し、北部・中部・南部の過密を避けた初回セットとして採用。",
+      "coordinateBasis": "港・湾を識別する概略代表点。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。",
+      "sourceIds": [
+        "src-gsi-hirado-main-issue253",
+        "src-jfa-hirado-ports-issue253",
+        "src-nagasaki-hirado-issue253"
+      ],
+      "relationToExisting": {
+        "existingSpotId": "hirado-seto",
+        "relation": "nearby_or_independent_specific_spot",
+        "migrationPolicy": "既存ID・データを維持し、新規地点へ移動・再割当しない。"
+      }
+    },
+    {
+      "spotId": "shin-shishi-fishing-port",
+      "name": "新獅子漁港",
+      "spotType": "漁港",
+      "publicFacilityType": "第2種漁港・平戸市管理",
+      "latitude": 33.281,
+      "longitude": 129.4408,
+      "areaName": "平戸",
+      "municipality": "平戸市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公式資料で存在・正式名称・行政区分を確認し、北部・中部・南部の過密を避けた初回セットとして採用。",
+      "coordinateBasis": "港・湾を識別する概略代表点。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。",
+      "sourceIds": [
+        "src-gsi-hirado-main-issue253",
+        "src-jfa-hirado-ports-issue253",
+        "src-nagasaki-hirado-issue253"
+      ],
+      "relationToExisting": {
+        "existingSpotId": "hirado-seto",
+        "relation": "nearby_or_independent_specific_spot",
+        "migrationPolicy": "既存ID・データを維持し、新規地点へ移動・再割当しない。"
+      }
+    },
+    {
+      "spotId": "himosashi-port",
+      "name": "紐差港",
+      "spotType": "その他",
+      "publicFacilityType": "港湾",
+      "latitude": 33.257,
+      "longitude": 129.587,
+      "areaName": "平戸",
+      "municipality": "平戸市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公式資料で存在・正式名称・行政区分を確認し、北部・中部・南部の過密を避けた初回セットとして採用。",
+      "coordinateBasis": "港・湾を識別する概略代表点。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。",
+      "sourceIds": [
+        "src-gsi-hirado-main-issue253",
+        "src-jfa-hirado-ports-issue253",
+        "src-nagasaki-hirado-issue253"
+      ],
+      "relationToExisting": {
+        "existingSpotId": "hirado-seto",
+        "relation": "nearby_or_independent_specific_spot",
+        "migrationPolicy": "既存ID・データを維持し、新規地点へ移動・再割当しない。"
+      }
+    },
+    {
+      "spotId": "maetsuyoshi-fishing-port",
+      "name": "前津吉漁港",
+      "spotType": "漁港",
+      "publicFacilityType": "第2種漁港・長崎県管理",
+      "latitude": 33.1858,
+      "longitude": 129.5148,
+      "areaName": "平戸",
+      "municipality": "平戸市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公式資料で存在・正式名称・行政区分を確認し、北部・中部・南部の過密を避けた初回セットとして採用。",
+      "coordinateBasis": "港・湾を識別する概略代表点。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。",
+      "sourceIds": [
+        "src-gsi-hirado-main-issue253",
+        "src-jfa-hirado-ports-issue253",
+        "src-nagasaki-hirado-issue253"
+      ],
+      "relationToExisting": {
+        "existingSpotId": "hirado-seto",
+        "relation": "nearby_or_independent_specific_spot",
+        "migrationPolicy": "既存ID・データを維持し、新規地点へ移動・再割当しない。"
+      }
+    },
+    {
+      "spotId": "shijikiura-fishing-port",
+      "name": "志々伎浦漁港",
+      "spotType": "漁港",
+      "publicFacilityType": "第1種漁港・平戸市管理",
+      "latitude": 33.2016,
+      "longitude": 129.4079,
+      "areaName": "平戸",
+      "municipality": "平戸市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公式資料で存在・正式名称・行政区分を確認し、北部・中部・南部の過密を避けた初回セットとして採用。",
+      "coordinateBasis": "港・湾を識別する概略代表点。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。",
+      "sourceIds": [
+        "src-gsi-hirado-main-issue253",
+        "src-jfa-hirado-ports-issue253",
+        "src-nagasaki-hirado-issue253"
+      ],
+      "relationToExisting": {
+        "existingSpotId": "hirado-seto",
+        "relation": "nearby_or_independent_specific_spot",
+        "migrationPolicy": "既存ID・データを維持し、新規地点へ移動・再割当しない。"
+      }
+    },
+    {
+      "spotId": "miyanoura-fishing-port",
+      "name": "宮ノ浦漁港",
+      "spotType": "漁港",
+      "publicFacilityType": "第2種漁港・長崎県管理",
+      "latitude": 33.1917,
+      "longitude": 129.4025,
+      "areaName": "平戸",
+      "municipality": "平戸市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "公式資料で存在・正式名称・行政区分を確認し、北部・中部・南部の過密を避けた初回セットとして採用。",
+      "coordinateBasis": "港・湾を識別する概略代表点。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。",
+      "sourceIds": [
+        "src-gsi-hirado-main-issue253",
+        "src-jfa-hirado-ports-issue253",
+        "src-nagasaki-hirado-issue253"
+      ],
+      "relationToExisting": {
+        "existingSpotId": "hirado-seto",
+        "relation": "nearby_or_independent_specific_spot",
+        "migrationPolicy": "既存ID・データを維持し、新規地点へ移動・再割当しない。"
+      }
+    }
+  ],
+  "heldOrExcluded": [
+    {
+      "name": "新大久保漁港",
+      "decision": "hold",
+      "reason": "公式な存在は確認したが、初回地点密度または代表位置の確定度から保留。"
+    },
+    {
+      "name": "中野漁港",
+      "decision": "hold",
+      "reason": "公式な存在は確認したが、初回地点密度または代表位置の確定度から保留。"
+    },
+    {
+      "name": "古田漁港",
+      "decision": "hold",
+      "reason": "公式な存在は確認したが、初回地点密度または代表位置の確定度から保留。"
+    },
+    {
+      "name": "新中津良漁港",
+      "decision": "hold",
+      "reason": "公式な存在は確認したが、初回地点密度または代表位置の確定度から保留。"
+    },
+    {
+      "name": "木ヶ津漁港",
+      "decision": "hold",
+      "reason": "公式な存在は確認したが、初回地点密度または代表位置の確定度から保留。"
+    },
+    {
+      "name": "早福漁港",
+      "decision": "hold",
+      "reason": "公式な存在は確認したが、初回地点密度または代表位置の確定度から保留。"
+    },
+    {
+      "name": "福良漁港",
+      "decision": "hold",
+      "reason": "公式な存在は確認したが、初回地点密度または代表位置の確定度から保留。"
+    },
+    {
+      "name": "船越漁港",
+      "decision": "hold",
+      "reason": "公式な存在は確認したが、初回地点密度または代表位置の確定度から保留。"
+    },
+    {
+      "name": "川内港",
+      "decision": "hold",
+      "reason": "公式な存在は確認したが、初回地点密度または代表位置の確定度から保留。"
+    },
+    {
+      "name": "古江港",
+      "decision": "hold",
+      "reason": "公式な存在は確認したが、初回地点密度または代表位置の確定度から保留。"
+    },
+    {
+      "name": "平戸港",
+      "decision": "exclude",
+      "reason": "既存・他Issue対象、対象地域外、または釣り場としての公的根拠不足。"
+    },
+    {
+      "name": "田平港",
+      "decision": "exclude",
+      "reason": "既存・他Issue対象、対象地域外、または釣り場としての公的根拠不足。"
+    },
+    {
+      "name": "平戸瀬戸周辺",
+      "decision": "exclude",
+      "reason": "既存・他Issue対象、対象地域外、または釣り場としての公的根拠不足。"
+    },
+    {
+      "name": "生月島の各漁港",
+      "decision": "exclude",
+      "reason": "既存・他Issue対象、対象地域外、または釣り場としての公的根拠不足。"
+    },
+    {
+      "name": "田平漁港",
+      "decision": "exclude",
+      "reason": "既存・他Issue対象、対象地域外、または釣り場としての公的根拠不足。"
+    },
+    {
+      "name": "度島・的山大島等の漁港",
+      "decision": "exclude",
+      "reason": "既存・他Issue対象、対象地域外、または釣り場としての公的根拠不足。"
+    },
+    {
+      "name": "根獅子海岸・人津久海岸・春日地区海岸",
+      "decision": "exclude",
+      "reason": "既存・他Issue対象、対象地域外、または釣り場としての公的根拠不足。"
+    },
+    {
+      "name": "無名磯・通称磯",
+      "decision": "exclude",
+      "reason": "既存・他Issue対象、対象地域外、または釣り場としての公的根拠不足。"
+    }
+  ],
+  "sources": {
+    "src-gsi-hirado-main-issue253": {
+      "id": "src-gsi-hirado-main-issue253",
+      "sourceType": "map",
+      "sourceName": "国土地理院 地理院地図",
+      "sourceUrl": "https://maps.gsi.go.jp/",
+      "checkedOn": "2026-07-23",
+      "note": "平戸島本島内の港・湾を識別する概略代表点を独立確認。法定区域、入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。"
+    },
+    "src-jfa-hirado-ports-issue253": {
+      "id": "src-jfa-hirado-ports-issue253",
+      "sourceType": "official",
+      "sourceName": "水産庁 長崎県漁港一覧",
+      "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-292.pdf",
+      "checkedOn": "2026-07-23",
+      "note": "法定漁港の正式名称、種別、所在地、管理者を確認。一般立入、釣り可否、設備、地形、魚種、釣法は裏付けない。"
+    },
+    "src-nagasaki-hirado-issue253": {
+      "id": "src-nagasaki-hirado-issue253",
+      "sourceType": "official",
+      "sourceName": "長崎県 所在地別漁港一覧・港湾概要",
+      "sourceUrl": "https://www.pref.nagasaki.lg.jp/doc/45593.html",
+      "checkedOn": "2026-07-23",
+      "note": "漁港情報を相互確認し、紐差港は漁港でなく港湾として確認。利用属性は裏付けない。"
+    }
+  },
+  "migrationPolicy": [
+    "新規8地点だけをINSERTし、on conflict (id) do nothingで既存データを破壊しない。",
+    "hirado-seto、hirado-portその他の既存地点、釣果、詳細、環境キャッシュ、履歴を更新・削除・再割当しない。",
+    "repository migrationはforward-onlyで、remote Supabaseには本Issueで適用しない。"
+  ],
+  "researchStatePolicy": {
+    "researched_unknown": "公的sourceを確認したが確定できない。なし、0点、安全、利用可能、SCORE入力へ変換しない。"
+  }
+}
