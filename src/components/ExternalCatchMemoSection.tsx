@@ -32,9 +32,7 @@ const PUBLIC_APP_URL = "https://fish-forecast-map.vercel.app";
 
 type FormState = {
   species: FishSpeciesName | "";
-  caughtDate: string;
-  areaName: string;
-  estimatedSpotName: string;
+  caughtDateTime: string;
   method: FishingMethod | "";
   catchCount: string;
   sizeCm: string;
@@ -46,9 +44,7 @@ type FormErrors = Partial<Record<keyof FormState, string>>;
 
 const initialFormState: FormState = {
   species: "",
-  caughtDate: "",
-  areaName: "",
-  estimatedSpotName: "",
+  caughtDateTime: "",
   method: "",
   catchCount: "",
   sizeCm: "",
@@ -59,8 +55,8 @@ const initialFormState: FormState = {
 function validateForm(form: FormState): FormErrors {
   const errors: FormErrors = {};
   if (!form.species) errors.species = "魚種を選択してください。";
-  if (!form.caughtDate) errors.caughtDate = "釣果日を入力してください。";
-  if (!form.areaName.trim()) errors.areaName = "エリアを入力してください。";
+  if (!form.spotId) errors.spotId = "地図上の釣り場を選択してください。";
+  if (!form.caughtDateTime) errors.caughtDateTime = "釣果日時を入力してください。";
   if (
     form.catchCount !== "" &&
     (!Number.isFinite(Number(form.catchCount)) || Number(form.catchCount) < 0)
@@ -86,16 +82,21 @@ function getSelfReportSourceUrl() {
 
 function createMemo(
   form: FormState,
+  spots: FishingSpot[],
   editingMemo?: ExternalCatchMemo,
 ): ExternalCatchMemo {
   const now = new Date().toISOString();
+  const selectedSpot = spots.find((spot) => spot.id === form.spotId);
+  if (!selectedSpot) throw new Error("Selected fishing spot was not found.");
+  const [caughtDate, caughtTime] = form.caughtDateTime.split("T");
   return {
     id: editingMemo?.id ?? `external-memo-${Date.now()}`,
     species: form.species,
-    caughtDate: form.caughtDate,
-    areaName: form.areaName.trim(),
-    estimatedSpotName: form.estimatedSpotName.trim() || undefined,
-    spotId: form.spotId || undefined,
+    caughtDate,
+    caughtTime,
+    areaName: selectedSpot.areaName,
+    estimatedSpotName: editingMemo?.estimatedSpotName,
+    spotId: selectedSpot.id,
     coordinatePrecision: editingMemo?.coordinatePrecision ?? "unknown",
     method: form.method || undefined,
     catchCount: toOptionalNumber(form.catchCount),
@@ -116,9 +117,9 @@ function formFromMemo(memo: ExternalCatchMemo): FormState {
     species: fishSpeciesNames.includes(memo.species as FishSpeciesName)
       ? (memo.species as FishSpeciesName)
       : "",
-    caughtDate: memo.caughtDate,
-    areaName: memo.areaName,
-    estimatedSpotName: memo.estimatedSpotName ?? "",
+    caughtDateTime: memo.caughtTime
+      ? `${memo.caughtDate}T${memo.caughtTime.slice(0, 5)}`
+      : "",
     method: (memo.method as FishingMethod) ?? "",
     catchCount: memo.catchCount?.toString() ?? "",
     sizeCm: memo.sizeCm?.toString() ?? "",
@@ -222,7 +223,7 @@ export function ExternalCatchMemoSection({
     const nextErrors = validateForm(form);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
-    const nextMemo = createMemo(form, editingMemo);
+    const nextMemo = createMemo(form, spots, editingMemo);
     if (await onMemoSave(nextMemo)) closeModal();
   };
 
@@ -345,29 +346,23 @@ export function ExternalCatchMemoSection({
                   </select>
                 </label>
                 <label>
-                  釣果日 <span className="requiredBadge">必須</span>
-                  <input
-                    type="date"
-                    value={form.caughtDate}
-                    onChange={(e) => updateForm("caughtDate", e.target.value)}
-                  />
+                  地図上の釣り場 <span className="requiredBadge">必須</span>
+                  <select
+                    value={form.spotId}
+                    onChange={(e) => updateForm("spotId", e.target.value)}
+                  >
+                    <option value="">選択してください</option>
+                    {buildCatchRegistrationSpotOptions(spots).map((spot) => (
+                      <option key={spot.id} value={spot.id}>{spot.label}</option>
+                    ))}
+                  </select>
                 </label>
                 <label>
-                  エリア <span className="requiredBadge">必須</span>
+                  釣果日時 <span className="requiredBadge">必須</span>
                   <input
-                    value={form.areaName}
-                    onChange={(e) => updateForm("areaName", e.target.value)}
-                    placeholder="例: 唐津湾"
-                  />
-                </label>
-                <label>
-                  場所・ポイント名 <span className="optionalBadge">任意</span>
-                  <input
-                    value={form.estimatedSpotName}
-                    onChange={(e) =>
-                      updateForm("estimatedSpotName", e.target.value)
-                    }
-                    placeholder="例: 呼子周辺"
+                    type="datetime-local"
+                    value={form.caughtDateTime}
+                    onChange={(e) => updateForm("caughtDateTime", e.target.value)}
                   />
                 </label>
                 <label>
@@ -385,7 +380,7 @@ export function ExternalCatchMemoSection({
                   </select>
                 </label>
                 <label>
-                  匹数 <span className="optionalBadge">任意</span>
+                  数 <span className="optionalBadge">任意</span>
                   <input
                     type="number"
                     min="0"
@@ -394,27 +389,13 @@ export function ExternalCatchMemoSection({
                   />
                 </label>
                 <label>
-                  サイズcm <span className="optionalBadge">任意</span>
+                  サイズ（cm） <span className="optionalBadge">任意</span>
                   <input
                     type="number"
                     min="0"
                     value={form.sizeCm}
                     onChange={(e) => updateForm("sizeCm", e.target.value)}
                   />
-                </label>
-                <label className="externalMemoWide">
-                  地図上の釣り場 <span className="optionalBadge">任意</span>
-                  <select
-                    value={form.spotId}
-                    onChange={(e) => updateForm("spotId", e.target.value)}
-                  >
-                    <option value="">紐づけなし</option>
-                    {buildCatchRegistrationSpotOptions(spots).map((spot) => (
-                      <option key={spot.id} value={spot.id}>
-                        {spot.label}
-                      </option>
-                    ))}
-                  </select>
                 </label>
                 <label className="externalMemoWide">
                   メモ <span className="optionalBadge">任意</span>
@@ -429,8 +410,8 @@ export function ExternalCatchMemoSection({
               {Object.keys(errors).length > 0 ? (
                 <p className="fieldError" role="alert">
                   {errors.species ??
-                    errors.caughtDate ??
-                    errors.areaName ??
+                    errors.spotId ??
+                    errors.caughtDateTime ??
                     errors.catchCount ??
                     errors.sizeCm}
                 </p>
@@ -498,8 +479,7 @@ function ExternalMemoCard({
         </button>
       </div>
       <div className="cardSummary">
-        <span>釣果日: {memo.caughtDate}</span>
-        <span>場所・ポイント名: {memo.estimatedSpotName ?? "未入力"}</span>
+        <span>釣果日時: {memo.caughtDate}{memo.caughtTime ? ` ${memo.caughtTime.slice(0, 5)}` : ""}</span>
         <span>
           {linkedSpot
             ? `地図上の釣り場: ${linkedSpot.name}`
