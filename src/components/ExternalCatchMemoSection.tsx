@@ -30,47 +30,30 @@ const USER_SELF_REPORT_SOURCE_ID = "user-self-report";
 const USER_SELF_REPORT_SOURCE_NAME = "本人の釣果";
 const PUBLIC_APP_URL = "https://fish-forecast-map.vercel.app";
 
+export type CatchItemFormState = { species: FishSpeciesName | ""; catchCount: string; sizeCm: string };
 export type FormState = {
-  species: FishSpeciesName | "";
+  catchItems: CatchItemFormState[];
   caughtDateTime: string;
   method: FishingMethod | "";
-  catchCount: string;
-  sizeCm: string;
   spotId: string;
   userMemo: string;
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
-const initialFormState: FormState = {
-  species: "",
-  caughtDateTime: "",
-  method: "",
-  catchCount: "",
-  sizeCm: "",
-  spotId: "",
-  userMemo: "",
-};
+const emptyCatchItem = (): CatchItemFormState => ({ species: "", catchCount: "", sizeCm: "" });
+const initialFormState = (): FormState => ({
+  catchItems: [emptyCatchItem()], caughtDateTime: "", method: "", spotId: "", userMemo: "",
+});
 
-export function validateForm(
-  form: FormState,
-  editingMemo?: ExternalCatchMemo,
-): FormErrors {
+export function validateForm(form: FormState, editingMemo?: ExternalCatchMemo): FormErrors {
   const errors: FormErrors = {};
-  if (!form.species) errors.species = "魚種を選択してください。";
+  if (form.catchItems.length === 0 || form.catchItems.some((item) => !item.species)) errors.catchItems = "すべての魚種を選択してください。";
+  const selected = form.catchItems.map((item) => item.species).filter(Boolean);
+  if (new Set(selected).size !== selected.length) errors.catchItems = "同じ魚種は重複して登録できません。";
+  if (form.catchItems.some((item) => [item.catchCount, item.sizeCm].some((value) => value !== "" && (!Number.isFinite(Number(value)) || Number(value) < 0)))) errors.catchItems = "数とサイズは0以上の数値を入力してください。";
   if (!form.spotId) errors.spotId = "地図上の釣り場を選択してください。";
-  if ((!editingMemo || editingMemo.caughtTime) && !form.caughtDateTime)
-    errors.caughtDateTime = "釣果日時を入力してください。";
-  if (
-    form.catchCount !== "" &&
-    (!Number.isFinite(Number(form.catchCount)) || Number(form.catchCount) < 0)
-  )
-    errors.catchCount = "0以上の数値を入力してください。";
-  if (
-    form.sizeCm !== "" &&
-    (!Number.isFinite(Number(form.sizeCm)) || Number(form.sizeCm) < 0)
-  )
-    errors.sizeCm = "0以上の数値を入力してください。";
+  if ((!editingMemo || editingMemo.caughtTime) && !form.caughtDateTime) errors.caughtDateTime = "釣果日時を入力してください。";
   return errors;
 }
 
@@ -99,7 +82,12 @@ export function createMemo(
     throw new Error("Catch date is required when creating a memo.");
   return {
     id: editingMemo?.id ?? `external-memo-${Date.now()}`,
-    species: form.species,
+    species: form.catchItems[0].species,
+    catchItems: form.catchItems.map((item) => ({
+      species: item.species,
+      catchCount: toOptionalNumber(item.catchCount),
+      sizeCm: toOptionalNumber(item.sizeCm),
+    })),
     caughtDate,
     caughtTime,
     areaName: selectedSpot.areaName,
@@ -107,8 +95,8 @@ export function createMemo(
     spotId: selectedSpot.id,
     coordinatePrecision: editingMemo?.coordinatePrecision ?? "unknown",
     method: form.method || undefined,
-    catchCount: toOptionalNumber(form.catchCount),
-    sizeCm: toOptionalNumber(form.sizeCm),
+    catchCount: toOptionalNumber(form.catchItems[0].catchCount),
+    sizeCm: toOptionalNumber(form.catchItems[0].sizeCm),
     sourceId: editingMemo?.sourceId ?? USER_SELF_REPORT_SOURCE_ID,
     sourceName: editingMemo?.sourceName ?? USER_SELF_REPORT_SOURCE_NAME,
     sourceUrl: editingMemo?.sourceUrl ?? getSelfReportSourceUrl(),
@@ -122,17 +110,13 @@ export function createMemo(
 
 export function formFromMemo(memo: ExternalCatchMemo): FormState {
   return {
-    species: fishSpeciesNames.includes(memo.species as FishSpeciesName)
-      ? (memo.species as FishSpeciesName)
-      : "",
-    caughtDateTime: memo.caughtTime
-      ? `${memo.caughtDate}T${memo.caughtTime.slice(0, 5)}`
-      : "",
-    method: (memo.method as FishingMethod) ?? "",
-    catchCount: memo.catchCount?.toString() ?? "",
-    sizeCm: memo.sizeCm?.toString() ?? "",
-    spotId: memo.spotId ?? "",
-    userMemo: memo.userMemo ?? "",
+    catchItems: memo.catchItems.map((item) => ({
+      species: fishSpeciesNames.includes(item.species as FishSpeciesName) ? item.species as FishSpeciesName : "",
+      catchCount: item.catchCount?.toString() ?? "",
+      sizeCm: item.sizeCm?.toString() ?? "",
+    })),
+    caughtDateTime: memo.caughtTime ? `${memo.caughtDate}T${memo.caughtTime.slice(0, 5)}` : "",
+    method: (memo.method as FishingMethod) ?? "", spotId: memo.spotId ?? "", userMemo: memo.userMemo ?? "",
   };
 }
 
@@ -163,7 +147,7 @@ export function ExternalCatchMemoSection({
   spots,
   fishSpecies,
 }: ExternalCatchMemoSectionProps) {
-  const [form, setForm] = useState<FormState>(initialFormState);
+  const [form, setForm] = useState<FormState>(initialFormState());
   const [errors, setErrors] = useState<FormErrors>({});
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -210,11 +194,13 @@ export function ExternalCatchMemoSection({
     );
   }, [migrationCandidates]);
 
-  const updateForm = (key: keyof FormState, value: string) =>
-    setForm((current) => ({ ...current, [key]: value }));
+  const updateForm = (key: Exclude<keyof FormState, "catchItems">, value: string) => setForm((current) => ({ ...current, [key]: value }));
+  const updateCatchItem = (index: number, key: keyof CatchItemFormState, value: string) => setForm((current) => ({ ...current, catchItems: current.catchItems.map((item, itemIndex) => itemIndex === index ? { ...item, [key]: value } : item) }));
+  const addCatchItem = () => setForm((current) => ({ ...current, catchItems: [...current.catchItems, emptyCatchItem()] }));
+  const removeCatchItem = (index: number) => setForm((current) => current.catchItems.length === 1 ? current : ({ ...current, catchItems: current.catchItems.filter((_, itemIndex) => itemIndex !== index) }));
   const openNew = () => {
     setEditingId(null);
-    setForm(initialFormState);
+    setForm(initialFormState());
     setErrors({});
     setIsModalOpen(true);
   };
@@ -318,22 +304,15 @@ export function ExternalCatchMemoSection({
             aria-labelledby="external-memos-heading"
             onMouseDown={(event) => event.stopPropagation()}
           >
+            <button type="button" className="externalMemoClose" onClick={closeModal} aria-label={`${title}を閉じる`}>×</button>
             <div className="externalMemoModalHeader">
               <div>
                 <p className="eyebrow">My catch log</p>
                 <h2 id="external-memos-heading">{title}</h2>
                 <p className="muted">
-                  自分の釣果記録として必要な項目だけを入力します。
+                  1つの釣果に、同じ場所・日時で釣れた魚をまとめて追加できます。
                 </p>
               </div>
-              <button
-                type="button"
-                className="externalMemoClose"
-                onClick={closeModal}
-                aria-label={`${title}を閉じる`}
-              >
-                ×
-              </button>
             </div>
             {storageError ? (
               <p className="externalMemoError" role="alert">
@@ -342,17 +321,27 @@ export function ExternalCatchMemoSection({
             ) : null}
             <form className="externalMemoForm" onSubmit={submitMemo} noValidate>
               <div className="externalMemoGrid">
-                <label>
-                  魚種 <span className="requiredBadge">必須</span>
-                  <select
-                    value={form.species}
-                    onChange={(e) => updateForm("species", e.target.value)}
-                  >
-                    <option value="">選択してください</option>
-                    {editingMemo && !fishSpecies.find((item) => item.nameJa === editingMemo.species)?.isSelectable ? <option value={editingMemo.species}>{legacySpeciesLabel(editingMemo.species as FishSpeciesName)}</option> : null}
-                    {groupSelectableFishSpecies(fishSpecies).map(({ label, items }) => <optgroup key={label} label={label}>{items.map((item) => <option key={item.id} value={item.nameJa}>{item.nameJa}</option>)}</optgroup>)}
-                  </select>
-                </label>
+                <fieldset className="externalMemoFishItems externalMemoWide">
+                  <legend>釣れた魚 <span className="requiredBadge">必須</span></legend>
+                  {form.catchItems.map((item, index) => (
+                    <div className="externalMemoFishItem" key={index}>
+                      <label>魚種
+                        <select value={item.species} onChange={(event) => updateCatchItem(index, "species", event.target.value)}>
+                          <option value="">選択してください</option>
+                          {editingMemo && item.species && !fishSpecies.find((fish) => fish.nameJa === item.species)?.isSelectable ? <option value={item.species}>{legacySpeciesLabel(item.species)}</option> : null}
+                          {groupSelectableFishSpecies(fishSpecies).map(({ label, items }) => <optgroup key={label} label={label}>{items.map((fish) => <option key={fish.id} value={fish.nameJa}>{fish.nameJa}</option>)}</optgroup>)}
+                        </select>
+                      </label>
+                      <div className="externalMemoFishNumbers">
+                        <label>数 <span className="optionalBadge">任意</span><input type="number" min="0" value={item.catchCount} onChange={(event) => updateCatchItem(index, "catchCount", event.target.value)} /></label>
+                        <label>サイズ（cm） <span className="optionalBadge">任意</span><input type="number" min="0" value={item.sizeCm} onChange={(event) => updateCatchItem(index, "sizeCm", event.target.value)} /></label>
+                      </div>
+                      <button type="button" className="externalMemoItemRemove" aria-label={`${index + 1}行目の魚種明細を削除`} disabled={form.catchItems.length === 1} onClick={() => removeCatchItem(index)}>×</button>
+                    </div>
+                  ))}
+                  <button type="button" className="clearSearchButton externalMemoAddFish" onClick={addCatchItem}>＋ 魚種を追加</button>
+                  {errors.catchItems ? <p className="fieldError" role="alert">{errors.catchItems}</p> : null}
+                </fieldset>
                 <label>
                   地図上の釣り場 <span className="requiredBadge">必須</span>
                   <select
@@ -397,24 +386,6 @@ export function ExternalCatchMemoSection({
                     ))}
                   </select>
                 </label>
-                <label>
-                  数 <span className="optionalBadge">任意</span>
-                  <input
-                    type="number"
-                    min="0"
-                    value={form.catchCount}
-                    onChange={(e) => updateForm("catchCount", e.target.value)}
-                  />
-                </label>
-                <label>
-                  サイズ（cm） <span className="optionalBadge">任意</span>
-                  <input
-                    type="number"
-                    min="0"
-                    value={form.sizeCm}
-                    onChange={(e) => updateForm("sizeCm", e.target.value)}
-                  />
-                </label>
                 <label className="externalMemoWide">
                   メモ <span className="optionalBadge">任意</span>
                   <textarea
@@ -427,11 +398,7 @@ export function ExternalCatchMemoSection({
               </div>
               {Object.keys(errors).length > 0 ? (
                 <p className="fieldError" role="alert">
-                  {errors.species ??
-                    errors.spotId ??
-                    errors.caughtDateTime ??
-                    errors.catchCount ??
-                    errors.sizeCm}
+                  {errors.spotId ?? errors.caughtDateTime}
                 </p>
               ) : null}
               <div className="externalMemoActions">
@@ -446,17 +413,9 @@ export function ExternalCatchMemoSection({
                       ? "更新する"
                       : "登録する"}
                 </button>
-                {editingMemo ? (
-                  <button
-                    type="button"
-                    className="dangerButton"
-                    onClick={deleteEditingMemo}
-                    disabled={storageStatus.isMutating}
-                  >
-                    {storageStatus.isMutating ? "削除中..." : "この釣果を削除"}
-                  </button>
-                ) : null}
+                <button type="button" className="clearSearchButton" onClick={closeModal} disabled={storageStatus.isMutating} aria-label="釣果入力をキャンセル">キャンセル</button>
               </div>
+              {editingMemo ? <div className="externalMemoDangerActions"><button type="button" className="dangerButton" onClick={deleteEditingMemo} disabled={storageStatus.isMutating}>{storageStatus.isMutating ? "削除中..." : "この釣果を削除"}</button></div> : null}
             </form>
           </section>
         </div>
@@ -484,7 +443,7 @@ function ExternalMemoCard({
         <div>
           <p className="eyebrow">自分の釣果</p>
           <h3>
-            {legacySpeciesLabel(memo.species as FishSpeciesName)} / {displayLocationName}
+            {memo.catchItems.map((item) => legacySpeciesLabel(item.species as FishSpeciesName)).join("・")} / {displayLocationName}
           </h3>
           <p className="muted">自分で記録した釣果です。</p>
         </div>
@@ -492,7 +451,7 @@ function ExternalMemoCard({
           type="button"
           className="clearSearchButton"
           onClick={() => onEdit(memo)}
-          aria-label={`${memo.caughtDate} ${legacySpeciesLabel(memo.species as FishSpeciesName)} ${displayLocationName}の釣果を編集`}
+          aria-label={`${memo.caughtDate} ${memo.catchItems.map((item) => legacySpeciesLabel(item.species as FishSpeciesName)).join("・")} ${displayLocationName}の釣果を編集`}
         >
           編集
         </button>
@@ -507,8 +466,8 @@ function ExternalMemoCard({
       </div>
       <dl className="facts">
         <div>
-          <dt>魚種</dt>
-          <dd>{legacySpeciesLabel(memo.species as FishSpeciesName)}</dd>
+          <dt>釣れた魚</dt>
+          <dd className="externalMemoCatchItems">{memo.catchItems.map((item) => <span key={item.species}>{legacySpeciesLabel(item.species as FishSpeciesName)}{item.catchCount === undefined ? "" : ` ${item.catchCount}匹`}{item.sizeCm === undefined ? "" : ` / ${item.sizeCm}cm`}</span>)}</dd>
         </div>
         <div>
           <dt>エリア</dt>
@@ -517,14 +476,6 @@ function ExternalMemoCard({
         <div>
           <dt>釣り方</dt>
           <dd>{memo.method ?? "未入力"}</dd>
-        </div>
-        <div>
-          <dt>匹数</dt>
-          <dd>{memo.catchCount ?? "未入力"}</dd>
-        </div>
-        <div>
-          <dt>サイズ</dt>
-          <dd>{memo.sizeCm === undefined ? "未入力" : `${memo.sizeCm}cm`}</dd>
         </div>
         <div>
           <dt>地図上の釣り場</dt>

@@ -1164,6 +1164,7 @@ dd {
   backdrop-filter: blur(8px);
 }
 .externalMemoModal {
+  position: relative;
   width: min(1080px, 100%);
   max-height: min(92vh, 980px);
   overflow: auto;
@@ -1187,13 +1188,17 @@ dd {
   align-items: flex-start;
   gap: 16px;
   margin-bottom: 18px;
+  padding-right: 52px;
 }
 .externalMemoModalHeader h2 {
   margin-bottom: 8px;
   color: #fff;
 }
 .externalMemoClose {
-  flex: 0 0 auto;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1;
   width: 44px;
   height: 44px;
   border: 1px solid rgba(125, 211, 252, 0.38);
@@ -1205,6 +1210,46 @@ dd {
   font-weight: 900;
   cursor: pointer;
 }
+.externalMemoFishItems {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.externalMemoFishItems legend {
+  margin-bottom: 8px;
+  color: #dffbff;
+  font-weight: 900;
+}
+.externalMemoFishItem {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 10px;
+  padding: 12px 48px 12px 0;
+  border-top: 1px solid rgba(125, 211, 252, 0.22);
+}
+.externalMemoFishNumbers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.externalMemoItemRemove {
+  position: absolute;
+  top: 28px;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(251, 146, 60, 0.5);
+  border-radius: 50%;
+  background: transparent;
+  color: #fed7aa;
+  cursor: pointer;
+}
+.externalMemoItemRemove:disabled { opacity: 0.35; cursor: not-allowed; }
+.externalMemoAddFish { margin-top: 8px; }
+.externalMemoDangerActions { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(251, 146, 60, 0.25); }
+.externalMemoCatchItems { display: grid; gap: 4px; }
 .externalMemoClose:hover,
 .externalMemoClose:focus-visible {
   border-color: #67e8f9;
@@ -1242,6 +1287,7 @@ dd {
     max-height: calc(100vh - 16px);
     border-radius: 22px;
   }
+  .externalMemoFishItem { grid-template-columns: 1fr; }
 }
 .advancedFilterGrid {
   display: grid;

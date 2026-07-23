@@ -89,7 +89,7 @@ const memo = {
   sourceName: "manual", sourceUrl: "https://example.test/alias", acquisitionMethod: "manual" as const, confidence: "high" as const,
   createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
 };
-const catchRecord: ExternalCatchRecord = { ...memo, species: "クロダイ" };
+const catchRecord: ExternalCatchRecord = { ...memo, species: "クロダイ", catchItems: [{ species: "クロダイ" }] };
 const spot = { id: "test-spot", name: "テスト地点", areaName: "テストエリア", latitude: 0, longitude: 0, spotType: "漁港" as const, shoreAccess: "足場良い" as const, targetSpecies: ["チヌ" as const], recommendedMethods: ["コマセ" as const], notes: [], coordinatePrecision: "approximate" as const };
 const aliasScore = buildScoreV2SpeciesInput({ species: "チヌ", spot, catches: [catchRecord], selectedDateTime: new Date().toISOString() });
 assert.ok(aliasScore.spotEvidence?.catchHistory, "SCORE v2 uses alias catch history");

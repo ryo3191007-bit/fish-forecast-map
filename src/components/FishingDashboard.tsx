@@ -95,6 +95,15 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     () => getManualCatchMemos(externalMemos),
     [externalMemos],
   );
+  const scoreCatchRecords = useMemo(
+    () => externalMemos.flatMap((memo) => memo.catchItems.map((item) => ({
+      ...memo,
+      species: item.species,
+      catchCount: item.catchCount,
+      sizeCm: item.sizeCm,
+    }))),
+    [externalMemos],
+  );
   const fishingSpots = masterData.fishingSpots;
   const fishSpeciesFilterNames = useMemo(
     () => getFishSpeciesFilterNames(masterData),
@@ -173,7 +182,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
 
   const filteredManualCatchMemos = useMemo(() => {
     const filteredMemos = manualCatchMemos.filter((memo) => {
-      const matchesSpecies = memoMatchesFishSpecies(String(memo.species), selectedSpecies, masterData);
+      const matchesSpecies = memo.catchItems.some((item) => memoMatchesFishSpecies(String(item.species), selectedSpecies, masterData));
       const matchesSpot =
         selectedSpotId === "all" || memo.spotId === selectedSpotId;
       const matchesDate =
@@ -182,7 +191,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
       const searchableText = [
         memo.estimatedSpotName,
         memo.areaName,
-        memo.species,
+        ...memo.catchItems.map((item) => item.species),
         memo.method,
         memo.sourceName,
         memo.userMemo,
@@ -402,7 +411,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const allSpeciesScore = environmentSpot ? calculateProductionScoreV2({
     spot: environmentSpot,
     details: spotDetailStatus === "ready" ? scopeSpotDetails(spotDetails, environmentSpot.id) : null,
-    catches: externalMemos,
+    catches: scoreCatchRecords,
     environment,
     jmaWarning,
     fishSpecies: masterData.fishSpecies,
@@ -683,7 +692,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             error={environmentError}
             details={spotDetails}
             detailStatus={spotDetailStatus}
-            catches={externalMemos}
+            catches={scoreCatchRecords}
             onShowAllSpecies={openAllSpecies}
             onFocusMap={focusSelectedSpotOnMap}
           />
