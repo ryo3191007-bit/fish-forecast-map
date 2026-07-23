@@ -1,0 +1,1066 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 254,
+  "generatedAt": "2026-07-23T00:00:00.000Z",
+  "spots": [
+    {
+      "spotId": "ikitsuki-fishing-port",
+      "sources": [
+        {
+          "id": "src-gsi-ikitsuki-20260723",
+          "sourceType": "map",
+          "sourceName": "地理院地図・地名検索",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-23",
+          "note": "国土地理院の地名代表点で生月島、生月町壱部浦、生月町舘浦、生月町御崎の名称と概略位置を独立確認。各座標は島域・港域の概略代表点であり、入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。"
+        },
+        {
+          "id": "src-nagasaki-fishing-ports-issue254",
+          "sourceType": "official",
+          "sourceName": "長崎県の漁港",
+          "sourceUrl": "https://www.nagasaki-gyokou.jp/fishingport.php",
+          "checkedOn": "2026-07-23",
+          "note": "公的漁港一覧で平戸市の生月（第2種・県管理）、館浦（第3種・県管理）、御崎（第1種・平戸市管理）を確認。一般立入、釣り可否、設備、アクセス、足場、地形、魚種、釣法は裏付けない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "ikitsuki-fishing-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "ikitsuki-fishing-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "tachiura-fishing-port",
+      "sources": [
+        {
+          "id": "src-gsi-ikitsuki-20260723",
+          "sourceType": "map",
+          "sourceName": "地理院地図・地名検索",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-23",
+          "note": "国土地理院の地名代表点で生月島、生月町壱部浦、生月町舘浦、生月町御崎の名称と概略位置を独立確認。各座標は島域・港域の概略代表点であり、入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。"
+        },
+        {
+          "id": "src-nagasaki-fishing-ports-issue254",
+          "sourceType": "official",
+          "sourceName": "長崎県の漁港",
+          "sourceUrl": "https://www.nagasaki-gyokou.jp/fishingport.php",
+          "checkedOn": "2026-07-23",
+          "note": "公的漁港一覧で平戸市の生月（第2種・県管理）、館浦（第3種・県管理）、御崎（第1種・平戸市管理）を確認。一般立入、釣り可否、設備、アクセス、足場、地形、魚種、釣法は裏付けない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "tachiura-fishing-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "tachiura-fishing-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "misaki-fishing-port",
+      "sources": [
+        {
+          "id": "src-gsi-ikitsuki-20260723",
+          "sourceType": "map",
+          "sourceName": "地理院地図・地名検索",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-23",
+          "note": "国土地理院の地名代表点で生月島、生月町壱部浦、生月町舘浦、生月町御崎の名称と概略位置を独立確認。各座標は島域・港域の概略代表点であり、入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。"
+        },
+        {
+          "id": "src-nagasaki-fishing-ports-issue254",
+          "sourceType": "official",
+          "sourceName": "長崎県の漁港",
+          "sourceUrl": "https://www.nagasaki-gyokou.jp/fishingport.php",
+          "checkedOn": "2026-07-23",
+          "note": "公的漁港一覧で平戸市の生月（第2種・県管理）、館浦（第3種・県管理）、御崎（第1種・平戸市管理）を確認。一般立入、釣り可否、設備、アクセス、足場、地形、魚種、釣法は裏付けない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "misaki-fishing-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:water_flow_influences",
+          "itemKey": "water_flow_influences",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "misaki-fishing-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-ikitsuki-20260723",
+              "src-nagasaki-fishing-ports-issue254"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    }
+  ]
+}

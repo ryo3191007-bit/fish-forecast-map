@@ -33,7 +33,7 @@ export const JMA_AREA_BY_SPOT: Record<string, JmaAreaCode> = {
   "imari-inner-bay": IMARI, "hatazu-fishing-port": IMARI, "imarin-beach": IMARI,
   "fukushima-area": MATSUURA, "fukushima-port": MATSUURA, "nabegushi-fishing-port": MATSUURA,
   "takashima-area": MATSUURA, "aonoura-fishing-port": MATSUURA, "tononoura-fishing-port": MATSUURA, "funakaratsu-fishing-port": MATSUURA,
-  "tabira-port": HIRADO, "hirado-port": HIRADO, "hirado-seto": HIRADO, "ikitsuki-area": HIRADO,
+  "tabira-port": HIRADO, "hirado-port": HIRADO, "hirado-seto": HIRADO, "ikitsuki-area": HIRADO, "ikitsuki-fishing-port": HIRADO, "tachiura-fishing-port": HIRADO, "misaki-fishing-port": HIRADO,
 };
 
 export type OpenMeteoGateState = "blocked" | "clear" | "unknown";

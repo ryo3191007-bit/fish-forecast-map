@@ -41,7 +41,7 @@ const expectedOverrides = new Map([
   ["fukushima-area", { latitude: 33.332, longitude: 129.773, spotType: "その他", coordinatePrecision: "approximate" }],
   ["tabira-port", { latitude: 33.362153, longitude: 129.574114, spotType: "その他", coordinatePrecision: "approximate" }],
   ["hirado-seto", { latitude: 33.363946, longitude: 129.569344, spotType: "その他", coordinatePrecision: "approximate" }],
-  ["ikitsuki-area", { latitude: 33.39, longitude: 129.564, spotType: "その他", coordinatePrecision: "approximate" }],
+  ["ikitsuki-area", { latitude: 33.407104, longitude: 129.424733, spotType: "その他", coordinatePrecision: "approximate" }],
 ]);
 
 const issue165CoordinateHolds = new Map([
@@ -238,7 +238,7 @@ const migrationById = byIdFromRows(migrationRows, "migration");
 const curationById = byIdFromRows(curationRows, "curation");
 assert.deepEqual([...migrationById.keys()].sort(), [...targetIds].sort(), "migration must contain each target id exactly once and no non-target id");
 
-const refinedByLaterMigration = new Set(["tabira-port", "hirado-seto"]);
+const refinedByLaterMigration = new Set(["tabira-port", "hirado-seto", "ikitsuki-area"]);
 for (const id of targetIds) {
   assert.deepEqual(seedById.get(id), staticById.get(id), `${id} seed and static master must match across all normalized columns`);
   if (!refinedByLaterMigration.has(id)) {
