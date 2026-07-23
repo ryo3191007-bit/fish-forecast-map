@@ -24,7 +24,7 @@ const outOfRangeDangerous=p.calculateProductionScoreV2({spot,details,environment
 const outOfRangeClear=p.calculateProductionScoreV2({spot,details,environment:env,selectedDateTime:'2026-07-20T06:00',jmaWarning:{state:'out-of-range'}});ok(outOfRangeClear.status==='available','JMA out-of-range defers to clear Open-Meteo');
 const partial=structuredClone(env);partial.hourly[1].marine.waveHeightMeters=null;partial.hourly[1].weather.windGustKmh=null;ok(p.buildScoreV2SpeciesInput({species:'マアジ',spot,details,environment:partial,selectedDateTime:'2026-07-20T06:00'}).environmentEvidence.windWave.score===90,'partial');ok(p.calculateProductionScoreV2({spot,details,environment:partial,selectedDateTime:'2026-07-20T06:00'}).safetyStatus==='unknown','partial safety unknown');ok(!JSON.stringify(input).includes('internal note')&&!JSON.stringify(input).includes('example.test'),'metadata');
 
-ok(fishingSpots.length===35,'35 production spots');
+ok(fishingSpots.length===36,'36 production spots');
 const forbiddenMetadataKeys=new Set(['source','sources','sourceUrl','sourceName','note','internalNote','internal_note']);
 function hasForbiddenMetadata(value){if(Array.isArray(value))return value.some(hasForbiddenMetadata);if(!value||typeof value!=='object')return false;return Object.entries(value).some(([key,nested])=>forbiddenMetadataKeys.has(key)||hasForbiddenMetadata(nested))}
 let spotsWithApprovedScoreEvidence=0;

@@ -41,7 +41,7 @@ const route = await import(path.join(temporaryDirectory, "route.mjs"));
 const area = domain.JMA_AREA_BY_SPOT["karatsu-east-port"];
 const now = new Date("2026-07-20T03:10:00Z");
 
-assert.equal(Object.keys(domain.JMA_AREA_BY_SPOT).length, 35);
+assert.equal(Object.keys(domain.JMA_AREA_BY_SPOT).length, 36);
 assert.equal(area.municipalityCode, "4120200");
 
 const vpwsUrl = "https://www.data.jma.go.jp/developer/xml/data/20260720030000_0_VPWS50_000000.xml";

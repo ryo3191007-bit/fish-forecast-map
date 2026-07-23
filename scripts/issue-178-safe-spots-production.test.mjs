@@ -39,7 +39,8 @@ const expectedOverrides = new Map([
   ["funakoshi-port", { latitude: 33.55389244, longitude: 130.13025931, spotType: "漁港", coordinatePrecision: "exact" }],
   ["keya-gate", { latitude: 33.5967, longitude: 130.1106, spotType: "その他", coordinatePrecision: "approximate" }],
   ["fukushima-area", { latitude: 33.332, longitude: 129.773, spotType: "その他", coordinatePrecision: "approximate" }],
-  ["hirado-seto", { latitude: 33.354, longitude: 129.579, spotType: "その他", coordinatePrecision: "approximate" }],
+  ["tabira-port", { latitude: 33.362153, longitude: 129.574114, spotType: "その他", coordinatePrecision: "approximate" }],
+  ["hirado-seto", { latitude: 33.363946, longitude: 129.569344, spotType: "その他", coordinatePrecision: "approximate" }],
   ["ikitsuki-area", { latitude: 33.39, longitude: 129.564, spotType: "その他", coordinatePrecision: "approximate" }],
 ]);
 
@@ -53,7 +54,6 @@ const issue165CoordinateHolds = new Map([
   ["yobuko-area", [33.543, 129.892, "その他"]],
   ["imari-inner-bay", [33.281, 129.861, "その他"]],
   ["takashima-area", [33.448, 129.844, "その他"]],
-  ["tabira-port", [33.365, 129.553, "その他"]],
 ]);
 
 const karatsuEastExpected = {
@@ -238,10 +238,13 @@ const migrationById = byIdFromRows(migrationRows, "migration");
 const curationById = byIdFromRows(curationRows, "curation");
 assert.deepEqual([...migrationById.keys()].sort(), [...targetIds].sort(), "migration must contain each target id exactly once and no non-target id");
 
+const refinedByLaterMigration = new Set(["tabira-port", "hirado-seto"]);
 for (const id of targetIds) {
   assert.deepEqual(seedById.get(id), staticById.get(id), `${id} seed and static master must match across all normalized columns`);
-  assert.deepEqual(migrationById.get(id), staticById.get(id), `${id} migration and static master must match across all normalized columns`);
-  assert.deepEqual(curationById.get(id), staticById.get(id), `${id} curation and static master must match across all normalized columns`);
+  if (!refinedByLaterMigration.has(id)) {
+    assert.deepEqual(migrationById.get(id), staticById.get(id), `${id} migration and static master must match across all normalized columns`);
+    assert.deepEqual(curationById.get(id), staticById.get(id), `${id} curation and static master must match across all normalized columns`);
+  }
 }
 
 const mapFishingSpotRow = loadMapFishingSpotRow();
@@ -262,7 +265,8 @@ for (const id of targetIds) {
     is_active: true,
   });
   assert.ok(mapped, `${id} mapFishingSpotRow must not drop active rows with empty arrays and unknown shore access`);
-  assert.deepEqual(normalizeSpot(mapped), staticById.get(id), `${id} mapFishingSpotRow output must match static master`);
+  const expectedMapped = refinedByLaterMigration.has(id) ? migrationById.get(id) : staticById.get(id);
+  assert.deepEqual(normalizeSpot(mapped), expectedMapped, `${id} mapFishingSpotRow output must preserve its input row`);
 }
 
 assert.equal(spots.filter((spot) => targetIdSet.has(spot.id)).length, targetIds.length, "static target rows must remain available for marker rendering");

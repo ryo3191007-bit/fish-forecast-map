@@ -5,6 +5,7 @@ import issue194Details from "../../data/curation/fishing-spots/issue-194-detail-
 import issue205Details from "../../data/curation/fishing-spots/issue-205-detail-curation.json";
 import issue248Details from "../../data/curation/fishing-spots/issue-248-detail-curation.json";
 import issue250Details from "../../data/curation/fishing-spots/issue-250-detail-curation.json";
+import issue252Details from "../../data/curation/fishing-spots/issue-252-detail-curation.json";
 
 export const staticFishingSpotDetailItemDefinitions: SpotDetailItemDefinition[] = [
   { itemKey: "target_species", category: "basic", valueKind: "text_list", labelJa: "対象魚種", description: "既存釣り場マスターの対象魚種。", displayOrder: 10 },
@@ -64,7 +65,7 @@ type Issue181Spot = { spotId: string; sources: Issue181Source[]; values: Issue18
 const issue181DetailSpots = issue181Details.spots as Issue181Spot[];
 const issue194DetailSpots = issue194Details.spots as Issue181Spot[];
 const issue205DetailSpots = issue205Details.spots as Issue181Spot[];
-const issue248DetailSpots = [...issue248Details.spots, ...issue250Details.spots] as Issue181Spot[];
+const issue248DetailSpots = [...issue248Details.spots, ...issue250Details.spots, ...issue252Details.spots] as Issue181Spot[];
 
 function buildCuratedStaticValues(spotIds: Set<string>): SpotDetailValue[] {
   return issue181DetailSpots.concat(issue205DetailSpots, issue248DetailSpots)
