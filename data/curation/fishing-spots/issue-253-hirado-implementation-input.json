@@ -314,7 +314,7 @@
       "id": "src-nagasaki-hirado-issue253",
       "sourceType": "official",
       "sourceName": "長崎県 所在地別漁港一覧・港湾概要",
-      "sourceUrl": "https://www.pref.nagasaki.lg.jp/doc/45593.html",
+      "sourceUrl": "https://www.pref.nagasaki.jp/doc/45593.html",
       "checkedOn": "2026-07-23",
       "note": "漁港情報を相互確認し、紐差港は漁港でなく港湾として確認。利用属性は裏付けない。"
     }
