@@ -21,7 +21,7 @@ assert.match(form, /if \(!form\.spotId\)/);
 assert.match(form, /\(!editingMemo \|\| editingMemo\.caughtTime\) && !form\.caughtDateTime/);
 assert.match(form, /areaName: selectedSpot\.areaName/);
 assert.match(form, /estimatedSpotName: editingMemo\?\.estimatedSpotName/);
-assert.match(form, /釣果日時:[\s\S]*memo\.caughtTime/);
+assert.match(form, /<time dateTime=\{memo\.caughtDate\}>\{memo\.caughtDate\}<\/time>/);
 assert.doesNotMatch(form, /場所・ポイント名: \{memo\.estimatedSpotName/);
 assert.match(dashboard, /caughtTime \?\? "00:00:00"/);
 assert.match(migration, /add column if not exists caught_time time without time zone/);
@@ -57,9 +57,9 @@ const datedLegacyMemo = createMemo(
 );
 assert.equal(datedLegacyMemo.caughtDate, "2026-07-23");
 assert.equal(datedLegacyMemo.caughtTime, "19:30");
-assert.match(form, /const displayLocationName = linkedSpot\?\.name \?\? memo\.areaName/);
-assert.match(form, /join\("・"\)\} \/ \{displayLocationName\}/);
-assert.match(form, /aria-label=\{`\$\{memo\.caughtDate}.*\$\{displayLocationName}の釣果を編集`\}/);
+assert.match(form, /const displayLocationName = linkedSpot\?\.name \?\? memo\.estimatedSpotName \?\? memo\.areaName/);
+assert.match(form, /speciesLabels\.join\("・"\)/);
+assert.match(form, /aria-label=\{`\$\{speciesLabels\.join\("・"\)\}の操作メニュー`\}/);
 
 const row: ExternalCatchMemoRow = {
   id: "memo-1", species: "アジ", caught_date: "2026-07-23", caught_time: "18:45:00",
