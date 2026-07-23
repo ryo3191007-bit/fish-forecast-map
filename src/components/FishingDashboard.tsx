@@ -156,31 +156,18 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     }
   }, [environmentSpotId, fishingSpots]);
 
-  const speciesCounts = useMemo(() => {
-    return fishSpeciesFilterNames.map((species) => ({
-      species,
-      count: manualCatchMemos.filter((memo) => memoMatchesFishSpecies(String(memo.species), species, masterData)).length,
-    }));
-  }, [fishSpeciesFilterNames, manualCatchMemos, masterData]);
-  const groupedSpeciesCounts = useMemo(() => {
-    const countByName = new Map(speciesCounts.map((item) => [item.species, item.count]));
+  const speciesFilterOptions = useMemo(() => {
     const activeSpecies = masterData.fishSpecies.filter((item) => fishSpeciesFilterNames.includes(item.nameJa));
-    const toCount = (items: typeof activeSpecies) => items.map((item) => ({ species: item.nameJa, count: countByName.get(item.nameJa) ?? 0 }));
     const normalizedQuery = speciesCandidateQuery.trim().toLowerCase();
     return groupSelectableFishSpecies(activeSpecies, { includeLegacyAggregates: true })
-      .map((group) => ({ ...group, items: toCount(group.items).filter(({ species }) => `${species}${species === "青物" || species === "根魚" ? "系" : ""}`.toLowerCase().includes(normalizedQuery)) }))
-      .filter((group) => group.items.length > 0);
-  }, [fishSpeciesFilterNames, masterData.fishSpecies, speciesCandidateQuery, speciesCounts]);
-  const spotCounts = useMemo(() => {
-    const counts = new Map<string, number>();
-    manualCatchMemos.forEach((memo) => {
-      if (memo.spotId) counts.set(memo.spotId, (counts.get(memo.spotId) ?? 0) + 1);
-    });
+      .flatMap((group) => group.items.map((item) => item.nameJa))
+      .filter((species) => `${species}${species === "青物" || species === "根魚" ? "系" : ""}`.toLowerCase().includes(normalizedQuery));
+  }, [fishSpeciesFilterNames, masterData.fishSpecies, speciesCandidateQuery]);
+  const spotFilterOptions = useMemo(() => {
     const normalizedQuery = spotCandidateQuery.trim().toLowerCase();
     return fishingSpots
-      .filter((spot) => `${spot.name} ${spot.id}`.toLowerCase().includes(normalizedQuery))
-      .map((spot) => ({ spot, count: counts.get(spot.id) ?? 0 }));
-  }, [fishingSpots, manualCatchMemos, spotCandidateQuery]);
+      .filter((spot) => `${spot.name} ${spot.id}`.toLowerCase().includes(normalizedQuery));
+  }, [fishingSpots, spotCandidateQuery]);
 
   const normalizedKeyword = searchKeyword.trim().toLowerCase();
 
@@ -489,18 +476,17 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             className="filterControls reportFilters"
             aria-label="釣果フィルタ"
           >
-            <div className="filterHeader">
+            <div className="filterTopRow">
               <span>魚種フィルタ</span>
-              <span className="filterHint">タップして絞り込み</span>
+              <input
+                className="searchInput candidateSearchInput"
+                type="search"
+                value={speciesCandidateQuery}
+                onChange={(event) => setSpeciesCandidateQuery(event.target.value)}
+                placeholder="魚種名で検索"
+                aria-label="魚種名で検索"
+              />
             </div>
-            <input
-              className="searchInput candidateSearchInput"
-              type="search"
-              value={speciesCandidateQuery}
-              onChange={(event) => setSpeciesCandidateQuery(event.target.value)}
-              placeholder="魚種名で検索"
-              aria-label="魚種名で検索"
-            />
             <div
               className="speciesChips"
               role="group"
@@ -517,41 +503,31 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                 onClick={() => setSelectedSpecies("all")}
               >
                 <span>すべて</span>
-                <strong>{manualCatchMemos.length}</strong>
               </button>
-              {groupedSpeciesCounts.map((group) => (
-                <div className="speciesFilterGroup" key={group.label}>
-                  <span className="speciesFilterGroupLabel">{group.label}</span>
-                  <div className="speciesFilterGroupChips">
-                    {group.items.map(({ species, count }) => (
-                      <button
-                        type="button"
-                        className={selectedSpecies === species ? "speciesChip active" : "speciesChip"}
-                        aria-pressed={selectedSpecies === species}
-                        key={species}
-                        onClick={() => setSelectedSpecies(species)}
-                      >
-                        <span>{species === "青物" || species === "根魚" ? `${species}系` : species}</span>
-                        <strong>{count}</strong>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              {speciesFilterOptions.map((species) => (
+                <button
+                  type="button"
+                  className={selectedSpecies === species ? "speciesChip active" : "speciesChip"}
+                  aria-pressed={selectedSpecies === species}
+                  key={species}
+                  onClick={() => setSelectedSpecies(species)}
+                >
+                  <span>{species === "青物" || species === "根魚" ? `${species}系` : species}</span>
+                </button>
               ))}
             </div>
 
-            <div className="filterHeader areaFilterHeader">
+            <div className="filterTopRow separatedFilterRow">
               <span>地点フィルタ</span>
-              <span className="filterHint">魚種とAND条件</span>
+              <input
+                className="searchInput candidateSearchInput"
+                type="search"
+                value={spotCandidateQuery}
+                onChange={(event) => setSpotCandidateQuery(event.target.value)}
+                placeholder="地点名で検索"
+                aria-label="地点名で検索"
+              />
             </div>
-            <input
-              className="searchInput candidateSearchInput"
-              type="search"
-              value={spotCandidateQuery}
-              onChange={(event) => setSpotCandidateQuery(event.target.value)}
-              placeholder="地点名で検索"
-              aria-label="地点名で検索"
-            />
             <div
               className="speciesChips areaChips"
               role="group"
@@ -566,9 +542,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                 onClick={() => setSelectedSpotId("all")}
               >
                 <span>すべて</span>
-                <strong>{manualCatchMemos.length}</strong>
               </button>
-              {spotCounts.map(({ spot, count }) => (
+              {spotFilterOptions.map((spot) => (
                 <button
                   type="button"
                   className={
@@ -581,45 +556,34 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                   onClick={() => setSelectedSpotId(spot.id)}
                 >
                   <span>{spot.name}</span>
-                  <strong>{count}</strong>
                 </button>
               ))}
             </div>
 
-            <div className="filterHeader keywordFilterHeader">
+            <div className="inlineFilterRow separatedFilterRow keywordFilterRow">
               <span>キーワード検索</span>
-              <span className="filterHint">場所・魚種・釣り方など</span>
-            </div>
-            <div className="searchControl">
-              <label className="sortSelectLabel" htmlFor="report-search">
-                釣果情報を検索
-              </label>
-              <div className="searchInputRow">
-                <input
-                  id="report-search"
-                  className="searchInput"
-                  type="search"
-                  value={searchKeyword}
-                  onChange={(event) => setSearchKeyword(event.target.value)}
-                  placeholder="例: 芥屋、アジ、サビキ"
-                />
-                <button
-                  type="button"
-                  className="clearSearchButton"
-                  onClick={() => setSearchKeyword("")}
-                  disabled={searchKeyword.length === 0}
-                  aria-label="キーワード検索をクリア"
-                >
-                  ×
-                </button>
-              </div>
+              <input
+                id="report-search"
+                className="searchInput"
+                type="search"
+                value={searchKeyword}
+                onChange={(event) => setSearchKeyword(event.target.value)}
+                placeholder="釣果情報を検索"
+                aria-label="釣果情報を検索"
+              />
+              <button
+                type="button"
+                className="clearSearchButton"
+                onClick={() => setSearchKeyword("")}
+                disabled={searchKeyword.length === 0}
+                aria-label="キーワード検索をクリア"
+              >
+                ×
+              </button>
             </div>
 
-            <div className="filterHeader keywordFilterHeader">
+            <div className="inlineFilterRow dateFilterRow separatedFilterRow">
               <span>釣果期間フィルタ</span>
-              <span className="filterHint">開始日と終了日で絞り込み</span>
-            </div>
-            <div className="advancedFilterGrid dateRangeRow">
               <label className="dateInputLabel">
                 <span className="visuallyHidden">釣果期間の開始日</span>
                 <input
@@ -643,30 +607,23 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
               </label>
             </div>
 
-            <div className="filterHeader sortFilterHeader">
+            <div className="inlineFilterRow sortFilterRow separatedFilterRow">
               <span>並び替え</span>
-              <span className="filterHint">絞り込み後に適用</span>
-            </div>
-            <div className="sortResetGrid">
-              <div className="sortControl">
-                <label className="sortSelectLabel" htmlFor="report-sort">
-                  現在の並び順
-                </label>
-                <select
-                  id="report-sort"
-                  className="sortSelect"
-                  value={selectedSort}
-                  onChange={(event) =>
-                    setSelectedSort(event.target.value as SortOption)
-                  }
-                >
-                  {activeSortOptions.map((option) => (
-                    <option value={option.value} key={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <select
+                id="report-sort"
+                className="sortSelect"
+                aria-label="並び替え"
+                value={selectedSort}
+                onChange={(event) =>
+                  setSelectedSort(event.target.value as SortOption)
+                }
+              >
+                {activeSortOptions.map((option) => (
+                  <option value={option.value} key={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
               <button
                 type="button"
                 className="resetFiltersButton"
