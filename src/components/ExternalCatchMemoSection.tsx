@@ -30,7 +30,7 @@ const USER_SELF_REPORT_SOURCE_ID = "user-self-report";
 const USER_SELF_REPORT_SOURCE_NAME = "本人の釣果";
 const PUBLIC_APP_URL = "https://fish-forecast-map.vercel.app";
 
-type FormState = {
+export type FormState = {
   species: FishSpeciesName | "";
   caughtDateTime: string;
   method: FishingMethod | "";
@@ -52,11 +52,15 @@ const initialFormState: FormState = {
   userMemo: "",
 };
 
-function validateForm(form: FormState): FormErrors {
+export function validateForm(
+  form: FormState,
+  editingMemo?: ExternalCatchMemo,
+): FormErrors {
   const errors: FormErrors = {};
   if (!form.species) errors.species = "魚種を選択してください。";
   if (!form.spotId) errors.spotId = "地図上の釣り場を選択してください。";
-  if (!form.caughtDateTime) errors.caughtDateTime = "釣果日時を入力してください。";
+  if ((!editingMemo || editingMemo.caughtTime) && !form.caughtDateTime)
+    errors.caughtDateTime = "釣果日時を入力してください。";
   if (
     form.catchCount !== "" &&
     (!Number.isFinite(Number(form.catchCount)) || Number(form.catchCount) < 0)
@@ -80,7 +84,7 @@ function getSelfReportSourceUrl() {
   return PUBLIC_APP_URL;
 }
 
-function createMemo(
+export function createMemo(
   form: FormState,
   spots: FishingSpot[],
   editingMemo?: ExternalCatchMemo,
@@ -88,7 +92,11 @@ function createMemo(
   const now = new Date().toISOString();
   const selectedSpot = spots.find((spot) => spot.id === form.spotId);
   if (!selectedSpot) throw new Error("Selected fishing spot was not found.");
-  const [caughtDate, caughtTime] = form.caughtDateTime.split("T");
+  const [enteredDate, enteredTime] = form.caughtDateTime.split("T");
+  const caughtDate = enteredDate || editingMemo?.caughtDate;
+  const caughtTime = enteredTime || undefined;
+  if (!caughtDate)
+    throw new Error("Catch date is required when creating a memo.");
   return {
     id: editingMemo?.id ?? `external-memo-${Date.now()}`,
     species: form.species,
@@ -112,7 +120,7 @@ function createMemo(
   };
 }
 
-function formFromMemo(memo: ExternalCatchMemo): FormState {
+export function formFromMemo(memo: ExternalCatchMemo): FormState {
   return {
     species: fishSpeciesNames.includes(memo.species as FishSpeciesName)
       ? (memo.species as FishSpeciesName)
@@ -220,7 +228,7 @@ export function ExternalCatchMemoSection({
   const submitMemo = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (storageStatus.isMutating) return;
-    const nextErrors = validateForm(form);
+    const nextErrors = validateForm(form, editingMemo);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
     const nextMemo = createMemo(form, spots, editingMemo);
@@ -358,12 +366,22 @@ export function ExternalCatchMemoSection({
                   </select>
                 </label>
                 <label>
-                  釣果日時 <span className="requiredBadge">必須</span>
+                  釣果日時{" "}
+                  {!editingMemo || editingMemo.caughtTime ? (
+                    <span className="requiredBadge">必須</span>
+                  ) : (
+                    <span className="optionalBadge">任意</span>
+                  )}
                   <input
                     type="datetime-local"
                     value={form.caughtDateTime}
                     onChange={(e) => updateForm("caughtDateTime", e.target.value)}
                   />
+                  {editingMemo && !editingMemo.caughtTime ? (
+                    <span className="muted">
+                      登録済み日付: {editingMemo.caughtDate}（時刻未登録）。空欄のまま保存すると、この日付と時刻未登録の状態を維持します。
+                    </span>
+                  ) : null}
                 </label>
                 <label>
                   釣り方 <span className="optionalBadge">任意</span>
@@ -459,13 +477,14 @@ function ExternalMemoCard({
   const linkedSpot = memo.spotId
     ? spots.find((spot) => spot.id === memo.spotId)
     : undefined;
+  const displayLocationName = linkedSpot?.name ?? memo.areaName;
   return (
     <article className="card externalMemoCard">
       <div className="cardHeader">
         <div>
           <p className="eyebrow">自分の釣果</p>
           <h3>
-            {legacySpeciesLabel(memo.species as FishSpeciesName)} / {memo.areaName}
+            {legacySpeciesLabel(memo.species as FishSpeciesName)} / {displayLocationName}
           </h3>
           <p className="muted">自分で記録した釣果です。</p>
         </div>
@@ -473,7 +492,7 @@ function ExternalMemoCard({
           type="button"
           className="clearSearchButton"
           onClick={() => onEdit(memo)}
-          aria-label={`${memo.caughtDate} ${legacySpeciesLabel(memo.species as FishSpeciesName)} ${memo.areaName}の釣果を編集`}
+          aria-label={`${memo.caughtDate} ${legacySpeciesLabel(memo.species as FishSpeciesName)} ${displayLocationName}の釣果を編集`}
         >
           編集
         </button>
