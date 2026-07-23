@@ -6,6 +6,7 @@ import issue205Details from "../../data/curation/fishing-spots/issue-205-detail-
 import issue248Details from "../../data/curation/fishing-spots/issue-248-detail-curation.json";
 import issue250Details from "../../data/curation/fishing-spots/issue-250-detail-curation.json";
 import issue252Details from "../../data/curation/fishing-spots/issue-252-detail-curation.json";
+import issue253Details from "../../data/curation/fishing-spots/issue-253-detail-curation.json";
 import issue254Details from "../../data/curation/fishing-spots/issue-254-detail-curation.json";
 
 export const staticFishingSpotDetailItemDefinitions: SpotDetailItemDefinition[] = [
@@ -66,7 +67,7 @@ type Issue181Spot = { spotId: string; sources: Issue181Source[]; values: Issue18
 const issue181DetailSpots = issue181Details.spots as Issue181Spot[];
 const issue194DetailSpots = issue194Details.spots as Issue181Spot[];
 const issue205DetailSpots = issue205Details.spots as Issue181Spot[];
-const issue248DetailSpots = [...issue248Details.spots, ...issue250Details.spots, ...issue252Details.spots, ...issue254Details.spots] as Issue181Spot[];
+const issue248DetailSpots = [...issue248Details.spots, ...issue250Details.spots, ...issue252Details.spots, ...issue253Details.spots, ...issue254Details.spots] as Issue181Spot[];
 
 function buildCuratedStaticValues(spotIds: Set<string>): SpotDetailValue[] {
   return issue181DetailSpots.concat(issue205DetailSpots, issue248DetailSpots)

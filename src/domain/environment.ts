@@ -97,6 +97,15 @@ const tideReferenceBySpotId: Record<string, string> = {
   "ikitsuki-fishing-port": "平戸瀬戸",
   "tachiura-fishing-port": "平戸瀬戸",
   "misaki-fishing-port": "平戸瀬戸",
+  "tasuke-fishing-port": "平戸瀬戸",
+  "usukawan-fishing-port": "平戸瀬戸",
+  "hoki-fishing-port": "平戸瀬戸",
+  "shin-shishi-fishing-port": "平戸瀬戸",
+  "himosashi-port": "平戸瀬戸",
+  "maetsuyoshi-fishing-port": "平戸瀬戸",
+  "shijikiura-fishing-port": "平戸瀬戸",
+  "miyanoura-fishing-port": "平戸瀬戸",
+
 };
 
 export function getTideReferenceForSpot(spotId: string): TideReference {

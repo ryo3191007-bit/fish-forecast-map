@@ -32,7 +32,7 @@ function coordinates(sql: string, id: string) {
   const updated = [...sql.matchAll(/update public\.fishing_spots\s+set latitude = ([0-9.]+),\s+longitude = ([0-9.]+)[\s\S]*?where id = '([^']+)'/g)].find((m) => m[3] === id);
   assert.ok(updated); return { lat: Number(updated[1]), lon: Number(updated[2]) };
 }
-assert.equal(fishingSpots.length, 39, "Issue #254 adds exactly three spots to the 36-spot master");
+assert.equal(fishingSpots.length, 47, "Issue #253 adds eight spots after Issue #254");
 assert.deepEqual(new Set(audit.activeCandidates.map(({ spotId }) => spotId)), new Set(EXPECTED.keys()));
 for (const [id, expected] of EXPECTED) {
   const spot = fishingSpots.find((candidate) => candidate.id === id); assert.ok(spot);
@@ -47,7 +47,7 @@ for (const [id, expected] of EXPECTED) {
   const urls: string[] = []; await fetchFishingEnvironment(toEnvironmentPoint(spot), { storage: null, now: () => new Date("2026-07-23T00:00:00Z"), fetchImpl: async (input: string) => { urls.push(input); return { ok: true, status: 200, json: async () => ({ hourly: input.includes("marine-api") ? { time: ["2026-07-23T00:00"], wave_height: [0.5] } : { time: ["2026-07-23T00:00"], temperature_2m: [25] } }) }; } });
   for (const input of urls) { const url = new URL(input); assert.equal(url.searchParams.get("latitude"), String(expected.lat)); assert.equal(url.searchParams.get("longitude"), String(expected.lon)); }
 }
-assert.equal(fishingSpots.filter(({ id }) => EXPECTED.has(id)).length, 4); assert.equal(new Set(fishingSpots.map(({ id }) => id)).size, 39);
+assert.equal(fishingSpots.filter(({ id }) => EXPECTED.has(id)).length, 4); assert.equal(new Set(fishingSpots.map(({ id }) => id)).size, 47);
 assert.deepEqual(audit.activeCandidates.find(({ spotId }) => spotId === "ikitsuki-area")?.previousCoordinates, { latitude: 33.39, longitude: 129.564 });
 assert.match(migration, /where id = 'ikitsuki-area' and is_active = true/); assert.doesNotMatch(migration, /insert[^;]+\('ikitsuki-area'/is);
 assert.match(migration, /on conflict \(id\) do nothing/); assert.doesNotMatch(migration, /delete\s+from|drop\s+(table|column)|update\s+(?:public\.)?(?:catch|fishing_report|environment|history)/i);
