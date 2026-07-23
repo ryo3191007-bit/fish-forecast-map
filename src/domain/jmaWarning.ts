@@ -26,6 +26,7 @@ const HIRADO = { prefectureEntryCode: "420000", municipalityCode: "4220700", are
 export const JMA_AREA_BY_SPOT: Record<string, JmaAreaCode> = {
   "nokita-port": ITOSHIMA, "nokita-beach": ITOSHIMA, "keya-port": ITOSHIMA, "keya-gate": ITOSHIMA,
   "funakoshi-port": ITOSHIMA, "kishi-port": ITOSHIMA, "fukuyoshi-port": ITOSHIMA,
+  "kafuri-port": ITOSHIMA, "fukae-port": ITOSHIMA, "dainyu-port": ITOSHIMA, "shikaka-port": ITOSHIMA, "fukunoura-port": ITOSHIMA,
   "hamasaki-beach": KARATSU, "niji-matsubara": KARATSU, "karatsu-east-port": KARATSU,
   "karatsu-west-port": KARATSU, "yobuko-area": KARATSU,
   "ouka-port": KARATSU, "kodomo-port": KARATSU, "kabeshima-port": KARATSU, "hado-port": KARATSU, "haregi-port": KARATSU,

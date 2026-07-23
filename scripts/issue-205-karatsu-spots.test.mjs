@@ -17,7 +17,7 @@ const activeIds = input.activeCandidates.map(({ id }) => id);
 const allIds = spots.map(({ id }) => id);
 assert.equal(new Set(allIds).size, allIds.length, "spot IDs must remain unique");
 assert.deepEqual(new Set(activeIds), new Set(Object.keys(EXPECTED_AREAS)), "Issue #205 active IDs must be the exact ten reviewed IDs");
-assert.equal(spots.length, 47, "master must contain 47 spots after Issue #253 adds 8");
+assert.equal(spots.length, 52, "master must contain 52 spots after Issue #258 adds 5");
 for (const id of LEGACY_IDS) assert.ok(allIds.includes(id), `${id} legacy spot must be preserved`);
 for (const candidate of input.activeCandidates) {
   const spot = spots.find(({ id }) => id === candidate.id);
