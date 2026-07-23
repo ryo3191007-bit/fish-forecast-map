@@ -6,6 +6,7 @@ export type ExternalCatchMemoRow = {
   id: string;
   species: string;
   caught_date: string;
+  caught_time: string | null;
   area_name: string;
   estimated_spot_name: string | null;
   spot_id: string | null;
@@ -71,6 +72,7 @@ export function mapExternalCatchMemoRow(row: ExternalCatchMemoRow): ExternalCatc
     id: row.id,
     species: row.species,
     caughtDate: row.caught_date,
+    caughtTime: optionalString(row.caught_time),
     areaName: row.area_name,
     estimatedSpotName: optionalString(row.estimated_spot_name),
     spotId: optionalString(row.spot_id),
@@ -97,6 +99,7 @@ export function mapExternalCatchMemoToUpsertPayload(memo: ExternalCatchMemo): Ex
     id: memo.id,
     species: memo.species,
     caught_date: memo.caughtDate,
+    caught_time: memo.caughtTime ?? null,
     area_name: memo.areaName,
     estimated_spot_name: memo.estimatedSpotName ?? null,
     spot_id: memo.spotId ?? null,

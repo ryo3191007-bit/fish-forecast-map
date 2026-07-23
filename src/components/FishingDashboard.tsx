@@ -211,8 +211,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     });
     return [...filteredMemos].sort((a, b) => {
       if (selectedSort === "dateAsc")
-        return Date.parse(a.caughtDate) - Date.parse(b.caughtDate);
-      return Date.parse(b.caughtDate) - Date.parse(a.caughtDate);
+        return Date.parse(`${a.caughtDate}T${a.caughtTime ?? "00:00:00"}`) - Date.parse(`${b.caughtDate}T${b.caughtTime ?? "00:00:00"}`);
+      return Date.parse(`${b.caughtDate}T${b.caughtTime ?? "00:00:00"}`) - Date.parse(`${a.caughtDate}T${a.caughtTime ?? "00:00:00"}`);
     });
   }, [
     endDate,

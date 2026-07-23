@@ -204,7 +204,7 @@ assert.match(
 );
 assert.match(
   externalCatchMemoSection,
-  /aria-label=\{`\$\{memo\.caughtDate\} \$\{legacySpeciesLabel\(memo\.species as FishSpeciesName\)\} \$\{memo\.areaName\}の釣果を編集`\}/,
+  /aria-label=\{`\$\{memo\.caughtDate\} \$\{legacySpeciesLabel\(memo\.species as FishSpeciesName\)\} \$\{displayLocationName\}の釣果を編集`\}/,
   "catch edit button accessibility labels use the legacy species display rule",
 );
 assert.match(dashboard, /groupSelectableFishSpecies\(activeSpecies, \{ includeLegacyAggregates: true \}\)/, "the dashboard uses shared species UI grouping with legacy aggregate filters");
@@ -338,7 +338,7 @@ assert.match(
 );
 assert.match(
   memoSection,
-  /aria-label=\{`\$\{memo\.caughtDate\} \$\{legacySpeciesLabel\(memo\.species as FishSpeciesName\)\} \$\{memo\.areaName\}の釣果を編集`\}/,
+  /aria-label=\{`\$\{memo\.caughtDate\} \$\{legacySpeciesLabel\(memo\.species as FishSpeciesName\)\} \$\{displayLocationName\}の釣果を編集`\}/,
   "each catch card has an accessible edit button using the legacy display rule",
 );
 

@@ -8,6 +8,7 @@ export type ExternalCatchRecord = {
   id: string;
   species: FishSpeciesName | string;
   caughtDate: string;
+  caughtTime?: string;
   areaName: string;
   estimatedSpotName?: string;
   spotId?: string;
