@@ -16,7 +16,7 @@ const migration = readFileSync("supabase/migrations/20260723160000_add_external_
 
 assert.match(form, /type="datetime-local"/);
 assert.doesNotMatch(form, /updateForm\("areaName"|updateForm\("estimatedSpotName"/);
-assert.match(form, /if \(!form\.species\)/);
+assert.match(form, /form\.catchItems\.some\(\(item\) => !item\.species\)/);
 assert.match(form, /if \(!form\.spotId\)/);
 assert.match(form, /\(!editingMemo \|\| editingMemo\.caughtTime\) && !form\.caughtDateTime/);
 assert.match(form, /areaName: selectedSpot\.areaName/);
@@ -33,11 +33,11 @@ const spot: FishingSpot = {
   recommendedMethods: [], coordinatePrecision: "exact",
 };
 const baseForm: FormState = {
-  species: "アジ", caughtDateTime: "", method: "", catchCount: "2",
-  sizeCm: "21.5", spotId: spot.id, userMemo: "更新後メモ",
+  catchItems: [{ species: "アジ", catchCount: "2", sizeCm: "21.5" }],
+  caughtDateTime: "", method: "", spotId: spot.id, userMemo: "更新後メモ",
 };
 const legacyMemo: ExternalCatchMemo = {
-  id: "legacy-memo", species: "アジ", caughtDate: "2026-07-20",
+  id: "legacy-memo", species: "アジ", catchItems: [{ species: "アジ" }], caughtDate: "2026-07-20",
   areaName: "旧エリア", estimatedSpotName: "以前の自由入力", spotId: spot.id,
   coordinatePrecision: "unknown", sourceId: "user-self-report", sourceName: "本人の釣果",
   sourceUrl: "https://example.com", acquisitionMethod: "manual", confidence: "high",
@@ -58,14 +58,14 @@ const datedLegacyMemo = createMemo(
 assert.equal(datedLegacyMemo.caughtDate, "2026-07-23");
 assert.equal(datedLegacyMemo.caughtTime, "19:30");
 assert.match(form, /const displayLocationName = linkedSpot\?\.name \?\? memo\.areaName/);
-assert.match(form, /FishSpeciesName\)\} \/ \{displayLocationName\}/);
+assert.match(form, /join\("・"\)\} \/ \{displayLocationName\}/);
 assert.match(form, /aria-label=\{`\$\{memo\.caughtDate}.*\$\{displayLocationName}の釣果を編集`\}/);
 
 const row: ExternalCatchMemoRow = {
   id: "memo-1", species: "アジ", caught_date: "2026-07-23", caught_time: "18:45:00",
   area_name: "唐津湾", estimated_spot_name: "以前の自由入力", spot_id: "spot-1",
   latitude: null, longitude: null, coordinate_precision: "unknown", method: null,
-  catch_count: 2, size_cm: "21.5", source_id: "user-self-report", source_name: "本人の釣果",
+  catch_count: 2, size_cm: "21.5", catch_items: null, source_id: "user-self-report", source_name: "本人の釣果",
   source_url: "https://example.com", acquisition_method: "manual", confidence: "high",
   environment_match_notes: [], user_memo: null, owner_id: null,
   created_by: "authenticated_user", is_deleted: false,

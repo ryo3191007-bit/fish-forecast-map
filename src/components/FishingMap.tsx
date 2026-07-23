@@ -1106,13 +1106,13 @@ function createExternalMemoPopupContent(memo: MappableExternalMemo) {
   badge.className = "mapPopupExternal";
   badge.textContent = "自分の釣果";
   const species = document.createElement("span");
-  species.textContent = legacySpeciesLabel(memo.species as FishSpeciesName);
+  species.textContent = memo.catchItems.map((item) => legacySpeciesLabel(item.species as FishSpeciesName)).join("・");
   const area = document.createElement("span");
   area.textContent = memo.areaName;
   summary.append(badge, species, area);
   const meta = document.createElement("p");
   meta.className = "mapPopupMeta";
-  meta.textContent = `${memo.caughtDate} / ${memo.method} / ${memo.catchCount ?? "匹数未入力"}${memo.sizeCm ? ` / ${memo.sizeCm}cm` : ""}`;
+  meta.textContent = `${memo.caughtDate} / ${memo.method ?? "釣り方未入力"} / ${memo.catchItems.map((item) => `${legacySpeciesLabel(item.species as FishSpeciesName)}${item.catchCount === undefined ? "" : ` ${item.catchCount}匹`}${item.sizeCm === undefined ? "" : ` / ${item.sizeCm}cm`}`).join("、")}`;
   const note = document.createElement("p");
   note.textContent = [memo.estimatedSpotName ?? memo.spotName, memo.userMemo]
     .filter(Boolean)

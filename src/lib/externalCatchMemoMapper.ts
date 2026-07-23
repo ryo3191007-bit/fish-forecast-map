@@ -1,6 +1,6 @@
 import type { CoordinatePrecision, ExternalCatchAcquisitionMethod, ExternalCatchConfidence } from "@/domain/externalCatch";
 import type { FishingMethod } from "@/domain/fishing";
-import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
+import { normalizeCatchItems, type ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 
 export type ExternalCatchMemoRow = {
   id: string;
@@ -16,6 +16,7 @@ export type ExternalCatchMemoRow = {
   method: string | null;
   catch_count: number | null;
   size_cm: number | string | null;
+  catch_items: unknown;
   source_id: string;
   source_name: string;
   source_url: string;
@@ -67,10 +68,13 @@ function enumValue<T extends string>(value: string, allowed: Set<T>, fallback: T
 
 export function mapExternalCatchMemoRow(row: ExternalCatchMemoRow): ExternalCatchMemo | null {
   if (row.is_deleted) return null;
+  const catchItems = normalizeCatchItems(row.catch_items, { species: row.species, catchCount: row.catch_count, sizeCm: row.size_cm });
+  if (catchItems.length === 0) return null;
 
   return {
     id: row.id,
     species: row.species,
+    catchItems,
     caughtDate: row.caught_date,
     caughtTime: optionalString(row.caught_time),
     areaName: row.area_name,
@@ -95,9 +99,11 @@ export function mapExternalCatchMemoRow(row: ExternalCatchMemoRow): ExternalCatc
 }
 
 export function mapExternalCatchMemoToUpsertPayload(memo: ExternalCatchMemo): ExternalCatchMemoUpsertPayload {
+  const firstItem = memo.catchItems[0];
   return {
     id: memo.id,
-    species: memo.species,
+    species: firstItem?.species ?? memo.species,
+    catch_items: memo.catchItems,
     caught_date: memo.caughtDate,
     caught_time: memo.caughtTime ?? null,
     area_name: memo.areaName,
@@ -107,8 +113,8 @@ export function mapExternalCatchMemoToUpsertPayload(memo: ExternalCatchMemo): Ex
     longitude: memo.longitude ?? null,
     coordinate_precision: memo.coordinatePrecision,
     method: memo.method ?? null,
-    catch_count: memo.catchCount ?? null,
-    size_cm: memo.sizeCm ?? null,
+    catch_count: firstItem?.catchCount ?? null,
+    size_cm: firstItem?.sizeCm ?? null,
     source_id: memo.sourceId,
     source_name: memo.sourceName,
     source_url: memo.sourceUrl,

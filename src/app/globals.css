@@ -976,6 +976,27 @@ dd {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
+.externalMemoSections {
+  display: grid;
+  gap: 14px;
+}
+.externalMemoFormSection {
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid rgba(125, 211, 252, 0.22);
+  border-radius: 18px;
+  background: rgba(8, 47, 73, 0.22);
+}
+.externalMemoFormSection > legend {
+  padding: 0 6px;
+  color: #dffbff;
+  font-weight: 900;
+}
+.externalMemoBasicInfo {
+  display: grid;
+  gap: 14px;
+}
 .externalMemoWide {
   grid-column: 1 / -1;
 }
@@ -991,11 +1012,12 @@ dd {
   line-height: 1.6;
 }
 .externalMemoActions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   align-items: center;
 }
+.externalMemoActions > button { width: 100%; min-height: 44px; justify-content: center; }
 .externalMemoActions .button {
   border: 0;
   cursor: pointer;
@@ -1164,6 +1186,7 @@ dd {
   backdrop-filter: blur(8px);
 }
 .externalMemoModal {
+  position: relative;
   width: min(1080px, 100%);
   max-height: min(92vh, 980px);
   overflow: auto;
@@ -1187,13 +1210,17 @@ dd {
   align-items: flex-start;
   gap: 16px;
   margin-bottom: 18px;
+  padding-right: 52px;
 }
 .externalMemoModalHeader h2 {
   margin-bottom: 8px;
   color: #fff;
 }
 .externalMemoClose {
-  flex: 0 0 auto;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1;
   width: 44px;
   height: 44px;
   border: 1px solid rgba(125, 211, 252, 0.38);
@@ -1205,6 +1232,49 @@ dd {
   font-weight: 900;
   cursor: pointer;
 }
+.externalMemoFishItems {
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+}
+.externalMemoFishItems legend {
+  margin-bottom: 4px;
+  color: #dffbff;
+  font-weight: 900;
+}
+.externalMemoFishItem {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.28);
+}
+.externalMemoFishItem h3 { margin: 0; color: #dffbff; font-size: 0.88rem; }
+.externalMemoFishNumbers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.externalMemoItemRemove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(251, 146, 60, 0.5);
+  border-radius: 50%;
+  background: transparent;
+  color: #fed7aa;
+  cursor: pointer;
+}
+.externalMemoItemRemove:disabled { opacity: 0.35; cursor: not-allowed; }
+.externalMemoAddFish { width: 100%; min-height: 44px; margin-top: 12px; }
+.externalMemoDangerActions { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(251, 146, 60, 0.25); }
+.externalMemoCatchItems { display: grid; gap: 4px; }
 .externalMemoClose:hover,
 .externalMemoClose:focus-visible {
   border-color: #67e8f9;
@@ -1242,6 +1312,10 @@ dd {
     max-height: calc(100vh - 16px);
     border-radius: 22px;
   }
+  .externalMemoForm { padding: 12px; }
+  .externalMemoFormSection { padding: 12px; }
+  .externalMemoActions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .externalMemoActions > button { min-width: 0; padding-inline: 8px; }
 }
 .advancedFilterGrid {
   display: grid;
