@@ -21,7 +21,7 @@ assert.match(form, /if \(!form\.spotId\)/);
 assert.match(form, /\(!editingMemo \|\| editingMemo\.caughtTime\) && !form\.caughtDateTime/);
 assert.match(form, /areaName: selectedSpot\.areaName/);
 assert.match(form, /estimatedSpotName: editingMemo\?\.estimatedSpotName/);
-assert.match(form, /<time dateTime=\{memo\.caughtDate\}>\{memo\.caughtDate\}<\/time>/);
+assert.match(form, /<time dateTime=\{memo\.caughtTime \? `\$\{memo\.caughtDate\}T\$\{memo\.caughtTime\}` : memo\.caughtDate\}>\{caughtDateTimeLabel\}<\/time>/);
 assert.doesNotMatch(form, /場所・ポイント名: \{memo\.estimatedSpotName/);
 assert.match(dashboard, /caughtTime \?\? "00:00:00"/);
 assert.match(migration, /add column if not exists caught_time time without time zone/);

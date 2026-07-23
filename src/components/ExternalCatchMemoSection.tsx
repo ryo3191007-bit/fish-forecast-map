@@ -460,6 +460,7 @@ function ExternalMemoCard({
   const summaryParts = isMultipleSpecies
     ? buildMultipleCatchSummary(memo)
     : buildCatchMeasurements(memo.catchItems[0]);
+  const caughtDateTimeLabel = formatCaughtDateTime(memo.caughtDate, memo.caughtTime);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -489,7 +490,6 @@ function ExternalMemoCard({
 
   return (
     <article className={`externalMemoCard${isExpanded ? " isExpanded" : ""}`}>
-      <p className="externalMemoCardLabel">自分の釣果</p>
       <div
         className={`externalMemoSummary${isMultipleSpecies ? " isExpandable" : ""}`}
         onClick={handleSummaryClick}
@@ -504,9 +504,9 @@ function ExternalMemoCard({
         aria-expanded={isMultipleSpecies ? isExpanded : undefined}
         aria-controls={isMultipleSpecies ? detailsId : undefined}
       >
-        <div className={`externalMemoFishIcon${isMultipleSpecies ? " isMultiple" : ""}`} aria-hidden="true">
+        <div className={`externalMemoFishIcon ${isMultipleSpecies ? "isMultiple" : "isSingle"}`} aria-hidden="true">
           {speciesLabels.slice(0, 3).map((species, index) => (
-            <FishIcon key={`${species}-${index}`} />
+            <FishSilhouette key={`${species}-${index}`} />
           ))}
         </div>
         <div className="externalMemoCardBody">
@@ -517,7 +517,7 @@ function ExternalMemoCard({
           <p className="externalMemoLocation"><LocationIcon />{locationLabel}</p>
           <p className="externalMemoMeta">
             {summaryParts ? <><span>{summaryParts}</span><span aria-hidden="true">・</span></> : null}
-            <time dateTime={memo.caughtDate}>{memo.caughtDate}</time>
+            <time dateTime={memo.caughtTime ? `${memo.caughtDate}T${memo.caughtTime}` : memo.caughtDate}>{caughtDateTimeLabel}</time>
           </p>
         </div>
         {isMultipleSpecies ? <span className="externalMemoChevron" aria-hidden="true">⌄</span> : null}
@@ -574,8 +574,18 @@ export function buildMultipleCatchSummary(memo: ExternalCatchMemo) {
   ].filter(Boolean).join(" ・ ");
 }
 
-function FishIcon() {
-  return <svg viewBox="0 0 24 16" focusable="false"><path d="M15.8 2.3c-4.7-2-9.3.5-11.6 4.1L.8 3.8v8.4l3.4-2.6c2.3 3.6 6.9 6.1 11.6 4.1 3.1-1.3 5.3-5.7 7.4-5.7-2.1 0-4.3-4.4-7.4-5.7Zm.2 4.4a1.2 1.2 0 1 1 0-2.4 1.2 1.2 0 0 1 0 2.4Z" /></svg>;
+export function formatCaughtDateTime(caughtDate: string, caughtTime?: string) {
+  return caughtTime ? `${caughtDate} ${caughtTime.slice(0, 5)}` : caughtDate;
+}
+
+function FishSilhouette() {
+  return (
+    <svg className="externalMemoFishSilhouette" viewBox="0 0 48 24" focusable="false">
+      <path d="M30.8 3.5c-8.7-3.3-17.7.8-22.4 6L1 4.8v14.4l7.4-4.7c4.7 5.2 13.7 9.3 22.4 6 5.8-2.2 10-6.3 16.2-8.5-6.2-2.2-10.4-6.3-16.2-8.5Z" />
+      <path className="externalMemoFishFin" d="m19 5.1 5.2-4.3 2.6 4.1M18.5 18.6l5.1 4.5 3-4.1" />
+      <circle cx="33.5" cy="9.2" r="1.45" />
+    </svg>
+  );
 }
 
 function LocationIcon() {
