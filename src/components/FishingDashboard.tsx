@@ -59,7 +59,9 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [selectedSpecies, setSelectedSpecies] = useState<
     FishSpeciesName | "all"
   >("all");
-  const [selectedArea, setSelectedArea] = useState<string | "all">("all");
+  const [selectedSpotId, setSelectedSpotId] = useState<string | "all">("all");
+  const [speciesCandidateQuery, setSpeciesCandidateQuery] = useState("");
+  const [spotCandidateQuery, setSpotCandidateQuery] = useState("");
   const [selectedSort, setSelectedSort] = useState<SortOption>("dateDesc");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [dashboardMode, setDashboardMode] =
@@ -164,31 +166,29 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     const countByName = new Map(speciesCounts.map((item) => [item.species, item.count]));
     const activeSpecies = masterData.fishSpecies.filter((item) => fishSpeciesFilterNames.includes(item.nameJa));
     const toCount = (items: typeof activeSpecies) => items.map((item) => ({ species: item.nameJa, count: countByName.get(item.nameJa) ?? 0 }));
+    const normalizedQuery = speciesCandidateQuery.trim().toLowerCase();
     return groupSelectableFishSpecies(activeSpecies, { includeLegacyAggregates: true })
-      .map((group) => ({ ...group, items: toCount(group.items) }));
-  }, [fishSpeciesFilterNames, masterData.fishSpecies, speciesCounts]);
-  const areaCounts = useMemo(() => {
+      .map((group) => ({ ...group, items: toCount(group.items).filter(({ species }) => `${species}${species === "青物" || species === "根魚" ? "系" : ""}`.toLowerCase().includes(normalizedQuery)) }))
+      .filter((group) => group.items.length > 0);
+  }, [fishSpeciesFilterNames, masterData.fishSpecies, speciesCandidateQuery, speciesCounts]);
+  const spotCounts = useMemo(() => {
     const counts = new Map<string, number>();
     manualCatchMemos.forEach((memo) => {
-      counts.set(memo.areaName, (counts.get(memo.areaName) ?? 0) + 1);
+      if (memo.spotId) counts.set(memo.spotId, (counts.get(memo.spotId) ?? 0) + 1);
     });
-    const areaNames = Array.from(
-      new Set(fishingSpots.map((spot) => spot.areaName)),
-    );
-
-    return areaNames.map((areaName) => ({
-      areaName,
-      count: counts.get(areaName) ?? 0,
-    }));
-  }, [fishingSpots, manualCatchMemos]);
+    const normalizedQuery = spotCandidateQuery.trim().toLowerCase();
+    return fishingSpots
+      .filter((spot) => `${spot.name} ${spot.id}`.toLowerCase().includes(normalizedQuery))
+      .map((spot) => ({ spot, count: counts.get(spot.id) ?? 0 }));
+  }, [fishingSpots, manualCatchMemos, spotCandidateQuery]);
 
   const normalizedKeyword = searchKeyword.trim().toLowerCase();
 
   const filteredManualCatchMemos = useMemo(() => {
     const filteredMemos = manualCatchMemos.filter((memo) => {
       const matchesSpecies = memoMatchesFishSpecies(String(memo.species), selectedSpecies, masterData);
-      const matchesArea =
-        selectedArea === "all" || memo.areaName === selectedArea;
+      const matchesSpot =
+        selectedSpotId === "all" || memo.spotId === selectedSpotId;
       const matchesDate =
         (!startDate || memo.caughtDate >= startDate) &&
         (!endDate || memo.caughtDate <= endDate);
@@ -204,7 +204,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
         .toLowerCase();
       return (
         matchesSpecies &&
-        matchesArea &&
+        matchesSpot &&
         matchesDate &&
         (normalizedKeyword === "" || searchableText.includes(normalizedKeyword))
       );
@@ -219,7 +219,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     manualCatchMemos,
     masterData,
     normalizedKeyword,
-    selectedArea,
+    selectedSpotId,
     selectedSort,
     selectedSpecies,
     startDate,
@@ -381,14 +381,18 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const activeSortOptions = reportSortOptions;
   const isInitialState =
     selectedSpecies === "all" &&
-    selectedArea === "all" &&
+    selectedSpotId === "all" &&
+    speciesCandidateQuery === "" &&
+    spotCandidateQuery === "" &&
     selectedSort === "dateDesc" &&
     searchKeyword.length === 0 &&
     startDate === "" &&
     endDate === "";
   const resetFilters = () => {
     setSelectedSpecies("all");
-    setSelectedArea("all");
+    setSelectedSpotId("all");
+    setSpeciesCandidateQuery("");
+    setSpotCandidateQuery("");
     setSearchKeyword("");
     setSelectedSort("dateDesc");
     setStartDate("");
@@ -489,6 +493,14 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
               <span>魚種フィルタ</span>
               <span className="filterHint">タップして絞り込み</span>
             </div>
+            <input
+              className="searchInput candidateSearchInput"
+              type="search"
+              value={speciesCandidateQuery}
+              onChange={(event) => setSpeciesCandidateQuery(event.target.value)}
+              placeholder="魚種名で検索"
+              aria-label="魚種名で検索"
+            />
             <div
               className="speciesChips"
               role="group"
@@ -529,38 +541,46 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             </div>
 
             <div className="filterHeader areaFilterHeader">
-              <span>エリアフィルタ</span>
+              <span>地点フィルタ</span>
               <span className="filterHint">魚種とAND条件</span>
             </div>
+            <input
+              className="searchInput candidateSearchInput"
+              type="search"
+              value={spotCandidateQuery}
+              onChange={(event) => setSpotCandidateQuery(event.target.value)}
+              placeholder="地点名で検索"
+              aria-label="地点名で検索"
+            />
             <div
               className="speciesChips areaChips"
               role="group"
-              aria-label="表示するエリアを選択"
+              aria-label="表示する地点を選択"
             >
               <button
                 type="button"
                 className={
-                  selectedArea === "all" ? "speciesChip active" : "speciesChip"
+                  selectedSpotId === "all" ? "speciesChip active" : "speciesChip"
                 }
-                aria-pressed={selectedArea === "all"}
-                onClick={() => setSelectedArea("all")}
+                aria-pressed={selectedSpotId === "all"}
+                onClick={() => setSelectedSpotId("all")}
               >
-                <span>すべてのエリア</span>
+                <span>すべて</span>
                 <strong>{manualCatchMemos.length}</strong>
               </button>
-              {areaCounts.map(({ areaName, count }) => (
+              {spotCounts.map(({ spot, count }) => (
                 <button
                   type="button"
                   className={
-                    selectedArea === areaName
+                    selectedSpotId === spot.id
                       ? "speciesChip active"
                       : "speciesChip"
                   }
-                  aria-pressed={selectedArea === areaName}
-                  key={areaName}
-                  onClick={() => setSelectedArea(areaName)}
+                  aria-pressed={selectedSpotId === spot.id}
+                  key={spot.id}
+                  onClick={() => setSelectedSpotId(spot.id)}
                 >
-                  <span>{areaName}</span>
+                  <span>{spot.name}</span>
                   <strong>{count}</strong>
                 </button>
               ))}
@@ -588,31 +608,35 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                   className="clearSearchButton"
                   onClick={() => setSearchKeyword("")}
                   disabled={searchKeyword.length === 0}
+                  aria-label="キーワード検索をクリア"
                 >
-                  クリア
+                  ×
                 </button>
               </div>
             </div>
 
             <div className="filterHeader keywordFilterHeader">
-              <span>自分の釣果期間フィルタ</span>
+              <span>釣果期間フィルタ</span>
               <span className="filterHint">開始日と終了日で絞り込み</span>
             </div>
-            <div className="advancedFilterGrid">
-              <label className="sortSelectLabel">
-                釣果期間の開始日
+            <div className="advancedFilterGrid dateRangeRow">
+              <label className="dateInputLabel">
+                <span className="visuallyHidden">釣果期間の開始日</span>
                 <input
                   className="searchInput"
                   type="date"
+                  aria-label="釣果期間の開始日"
                   value={startDate}
                   onChange={(event) => setStartDate(event.target.value)}
                 />
               </label>
-              <label className="sortSelectLabel">
-                釣果期間の終了日
+              <span className="dateRangeSeparator" aria-hidden="true">〜</span>
+              <label className="dateInputLabel">
+                <span className="visuallyHidden">釣果期間の終了日</span>
                 <input
                   className="searchInput"
                   type="date"
+                  aria-label="釣果期間の終了日"
                   value={endDate}
                   onChange={(event) => setEndDate(event.target.value)}
                 />
@@ -620,7 +644,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             </div>
 
             <div className="filterHeader sortFilterHeader">
-              <span>並び替え・リセット</span>
+              <span>並び替え</span>
               <span className="filterHint">絞り込み後に適用</span>
             </div>
             <div className="sortResetGrid">
@@ -650,7 +674,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                 disabled={isInitialState}
                 aria-disabled={isInitialState}
               >
-                条件をリセット
+                リセット
               </button>
             </div>
           </div>
