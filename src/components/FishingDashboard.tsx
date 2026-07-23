@@ -36,7 +36,7 @@ import { selectFishingSpot, toEnvironmentPoint } from "@/domain/fishingSpotPrese
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
 const reportSortOptions: { value: SortOption; label: string }[] = [
-  { value: "dateDesc", label: "日付が新しい順" },
+  { value: "dateDesc", label: "新着順（新しい順）" },
   { value: "dateAsc", label: "日付が古い順" },
 ];
 
@@ -476,17 +476,21 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             className="filterControls reportFilters"
             aria-label="釣果フィルタ"
           >
-            <div className="filterTopRow">
-              <span>魚種フィルタ</span>
-              <input
-                className="searchInput candidateSearchInput"
-                type="search"
-                value={speciesCandidateQuery}
-                onChange={(event) => setSpeciesCandidateQuery(event.target.value)}
-                placeholder="魚種名で検索"
-                aria-label="魚種名で検索"
-              />
-            </div>
+            <section className="filterCard">
+              <div className="filterTopRow">
+                <span>魚種フィルタ</span>
+                <label className="candidateSearchField">
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /></svg>
+                  <input
+                    className="searchInput candidateSearchInput"
+                    type="search"
+                    value={speciesCandidateQuery}
+                    onChange={(event) => setSpeciesCandidateQuery(event.target.value)}
+                    placeholder="魚種名で検索"
+                    aria-label="魚種名で検索"
+                  />
+                </label>
+              </div>
             <div
               className="speciesChips"
               role="group"
@@ -515,19 +519,24 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                   <span>{species === "青物" || species === "根魚" ? `${species}系` : species}</span>
                 </button>
               ))}
-            </div>
+              </div>
+            </section>
 
-            <div className="filterTopRow separatedFilterRow">
-              <span>地点フィルタ</span>
-              <input
-                className="searchInput candidateSearchInput"
-                type="search"
-                value={spotCandidateQuery}
-                onChange={(event) => setSpotCandidateQuery(event.target.value)}
-                placeholder="地点名で検索"
-                aria-label="地点名で検索"
-              />
-            </div>
+            <section className="filterCard">
+              <div className="filterTopRow">
+                <span>地点フィルタ</span>
+                <label className="candidateSearchField">
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /></svg>
+                  <input
+                    className="searchInput candidateSearchInput"
+                    type="search"
+                    value={spotCandidateQuery}
+                    onChange={(event) => setSpotCandidateQuery(event.target.value)}
+                    placeholder="地点名で検索"
+                    aria-label="地点名で検索"
+                  />
+                </label>
+              </div>
             <div
               className="speciesChips areaChips"
               role="group"
@@ -558,9 +567,10 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                   <span>{spot.name}</span>
                 </button>
               ))}
-            </div>
+              </div>
+            </section>
 
-            <div className="inlineFilterRow separatedFilterRow keywordFilterRow">
+            <section className="filterCard inlineFilterRow keywordFilterRow">
               <span>キーワード検索</span>
               <input
                 id="report-search"
@@ -580,12 +590,14 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
               >
                 ×
               </button>
-            </div>
+            </section>
 
-            <div className="inlineFilterRow dateFilterRow separatedFilterRow">
+            <section className="filterCard dateFilterCard">
               <span>釣果期間フィルタ</span>
-              <label className="dateInputLabel">
+              <div className="dateFilterRow">
+              <label className={`dateInputLabel${startDate ? " hasValue" : ""}`}>
                 <span className="visuallyHidden">釣果期間の開始日</span>
+                {!startDate && <span className="datePlaceholder">開始日を選択</span>}
                 <input
                   className="searchInput"
                   type="date"
@@ -593,10 +605,12 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                   value={startDate}
                   onChange={(event) => setStartDate(event.target.value)}
                 />
+                <svg className="calendarIcon" aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M8 3v4M16 3v4M3 10h18" /></svg>
               </label>
               <span className="dateRangeSeparator" aria-hidden="true">〜</span>
-              <label className="dateInputLabel">
+              <label className={`dateInputLabel${endDate ? " hasValue" : ""}`}>
                 <span className="visuallyHidden">釣果期間の終了日</span>
+                {!endDate && <span className="datePlaceholder">終了日を選択</span>}
                 <input
                   className="searchInput"
                   type="date"
@@ -604,10 +618,12 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                   value={endDate}
                   onChange={(event) => setEndDate(event.target.value)}
                 />
+                <svg className="calendarIcon" aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M8 3v4M16 3v4M3 10h18" /></svg>
               </label>
-            </div>
+              </div>
+            </section>
 
-            <div className="inlineFilterRow sortFilterRow separatedFilterRow">
+            <section className="filterCard inlineFilterRow sortFilterRow">
               <span>並び替え</span>
               <select
                 id="report-sort"
@@ -631,9 +647,10 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                 disabled={isInitialState}
                 aria-disabled={isInitialState}
               >
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 11a8 8 0 1 1 2.34 5.66" /><path d="M4 5v6h6" /></svg>
                 リセット
               </button>
-            </div>
+            </section>
           </div>
 
           <ExternalCatchMemoSection
