@@ -309,9 +309,6 @@ export function ExternalCatchMemoSection({
               <div>
                 <p className="eyebrow">My catch log</p>
                 <h2 id="external-memos-heading">{title}</h2>
-                <p className="muted">
-                  1つの釣果に、同じ場所・日時で釣れた魚をまとめて追加できます。
-                </p>
               </div>
             </div>
             {storageError ? (
@@ -320,11 +317,59 @@ export function ExternalCatchMemoSection({
               </p>
             ) : null}
             <form className="externalMemoForm" onSubmit={submitMemo} noValidate>
-              <div className="externalMemoGrid">
-                <fieldset className="externalMemoFishItems externalMemoWide">
+              <div className="externalMemoSections">
+                <fieldset className="externalMemoFormSection externalMemoBasicInfo">
+                  <legend>基本情報</legend>
+                  <label>
+                    地図上の釣り場 <span className="requiredBadge">必須</span>
+                    <select
+                      value={form.spotId}
+                      onChange={(e) => updateForm("spotId", e.target.value)}
+                    >
+                      <option value="">選択してください</option>
+                      {buildCatchRegistrationSpotOptions(spots).map((spot) => (
+                        <option key={spot.id} value={spot.id}>{spot.label}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label>
+                    釣果日時{" "}
+                    {!editingMemo || editingMemo.caughtTime ? (
+                      <span className="requiredBadge">必須</span>
+                    ) : (
+                      <span className="optionalBadge">任意</span>
+                    )}
+                    <input
+                      type="datetime-local"
+                      value={form.caughtDateTime}
+                      onChange={(e) => updateForm("caughtDateTime", e.target.value)}
+                    />
+                    {editingMemo && !editingMemo.caughtTime ? (
+                      <span className="muted">
+                        登録済み日付: {editingMemo.caughtDate}（時刻未登録）。空欄のまま保存すると、この日付と時刻未登録の状態を維持します。
+                      </span>
+                    ) : null}
+                  </label>
+                  <label>
+                    釣り方 <span className="optionalBadge">任意</span>
+                    <select
+                      value={form.method}
+                      onChange={(e) => updateForm("method", e.target.value)}
+                    >
+                      <option value="">未選択</option>
+                      {methodOptions.map((method) => (
+                        <option key={method} value={method}>
+                          {method}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </fieldset>
+                <fieldset className="externalMemoFormSection externalMemoFishItems">
                   <legend>釣れた魚 <span className="requiredBadge">必須</span></legend>
                   {form.catchItems.map((item, index) => (
                     <div className="externalMemoFishItem" key={index}>
+                      <h3>魚種 {index + 1}</h3>
                       <label>魚種
                         <select value={item.species} onChange={(event) => updateCatchItem(index, "species", event.target.value)}>
                           <option value="">選択してください</option>
@@ -342,51 +387,8 @@ export function ExternalCatchMemoSection({
                   <button type="button" className="clearSearchButton externalMemoAddFish" onClick={addCatchItem}>＋ 魚種を追加</button>
                   {errors.catchItems ? <p className="fieldError" role="alert">{errors.catchItems}</p> : null}
                 </fieldset>
-                <label>
-                  地図上の釣り場 <span className="requiredBadge">必須</span>
-                  <select
-                    value={form.spotId}
-                    onChange={(e) => updateForm("spotId", e.target.value)}
-                  >
-                    <option value="">選択してください</option>
-                    {buildCatchRegistrationSpotOptions(spots).map((spot) => (
-                      <option key={spot.id} value={spot.id}>{spot.label}</option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  釣果日時{" "}
-                  {!editingMemo || editingMemo.caughtTime ? (
-                    <span className="requiredBadge">必須</span>
-                  ) : (
-                    <span className="optionalBadge">任意</span>
-                  )}
-                  <input
-                    type="datetime-local"
-                    value={form.caughtDateTime}
-                    onChange={(e) => updateForm("caughtDateTime", e.target.value)}
-                  />
-                  {editingMemo && !editingMemo.caughtTime ? (
-                    <span className="muted">
-                      登録済み日付: {editingMemo.caughtDate}（時刻未登録）。空欄のまま保存すると、この日付と時刻未登録の状態を維持します。
-                    </span>
-                  ) : null}
-                </label>
-                <label>
-                  釣り方 <span className="optionalBadge">任意</span>
-                  <select
-                    value={form.method}
-                    onChange={(e) => updateForm("method", e.target.value)}
-                  >
-                    <option value="">未選択</option>
-                    {methodOptions.map((method) => (
-                      <option key={method} value={method}>
-                        {method}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="externalMemoWide">
+                <section className="externalMemoFormSection externalMemoMemoSection">
+                  <label>
                   メモ <span className="optionalBadge">任意</span>
                   <textarea
                     value={form.userMemo}
@@ -394,7 +396,8 @@ export function ExternalCatchMemoSection({
                     maxLength={240}
                     placeholder="釣れた状況や次回のための短いメモ"
                   />
-                </label>
+                  </label>
+                </section>
               </div>
               {Object.keys(errors).length > 0 ? (
                 <p className="fieldError" role="alert">
