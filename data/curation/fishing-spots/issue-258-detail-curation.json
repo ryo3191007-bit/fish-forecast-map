@@ -1,0 +1,1772 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 258,
+  "generatedAt": "2026-07-23T00:00:00.000Z",
+  "spots": [
+    {
+      "spotId": "kafuri-port",
+      "sources": [
+        {
+          "id": "src-gsi-issue258",
+          "sourceType": "map",
+          "sourceName": "国土地理院 地理院地図",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-23",
+          "note": "代表点が糸島市沿岸の対象施設または地区にあることを確認。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。"
+        },
+        {
+          "id": "src-mlit-c09-issue258",
+          "sourceType": "official",
+          "sourceName": "国土数値情報 漁港データ C09",
+          "sourceUrl": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-C09.html",
+          "checkedOn": "2026-07-23",
+          "note": "加布里、深江、大入、鹿家の名称、法定漁港種別、facility代表点を確認。現在の管理者、一般立入、釣り可否、設備、足場、安全性、魚種、釣法は裏付けない。"
+        },
+        {
+          "id": "src-fukuoka-ports-issue258",
+          "sourceType": "official",
+          "sourceName": "福岡県 筑前海区の漁港",
+          "sourceUrl": "https://www.pref.fukuoka.lg.jp/dataweb/search/1/1233_496.html",
+          "checkedOn": "2026-07-23",
+          "note": "4漁港の独立した名称と漁港種別を相互確認。利用属性は裏付けない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "kafuri-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "kafuri-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "fukae-port",
+      "sources": [
+        {
+          "id": "src-gsi-issue258",
+          "sourceType": "map",
+          "sourceName": "国土地理院 地理院地図",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-23",
+          "note": "代表点が糸島市沿岸の対象施設または地区にあることを確認。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。"
+        },
+        {
+          "id": "src-mlit-c09-issue258",
+          "sourceType": "official",
+          "sourceName": "国土数値情報 漁港データ C09",
+          "sourceUrl": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-C09.html",
+          "checkedOn": "2026-07-23",
+          "note": "加布里、深江、大入、鹿家の名称、法定漁港種別、facility代表点を確認。現在の管理者、一般立入、釣り可否、設備、足場、安全性、魚種、釣法は裏付けない。"
+        },
+        {
+          "id": "src-fukuoka-ports-issue258",
+          "sourceType": "official",
+          "sourceName": "福岡県 筑前海区の漁港",
+          "sourceUrl": "https://www.pref.fukuoka.lg.jp/dataweb/search/1/1233_496.html",
+          "checkedOn": "2026-07-23",
+          "note": "4漁港の独立した名称と漁港種別を相互確認。利用属性は裏付けない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "fukae-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukae-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "dainyu-port",
+      "sources": [
+        {
+          "id": "src-gsi-issue258",
+          "sourceType": "map",
+          "sourceName": "国土地理院 地理院地図",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-23",
+          "note": "代表点が糸島市沿岸の対象施設または地区にあることを確認。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。"
+        },
+        {
+          "id": "src-mlit-c09-issue258",
+          "sourceType": "official",
+          "sourceName": "国土数値情報 漁港データ C09",
+          "sourceUrl": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-C09.html",
+          "checkedOn": "2026-07-23",
+          "note": "加布里、深江、大入、鹿家の名称、法定漁港種別、facility代表点を確認。現在の管理者、一般立入、釣り可否、設備、足場、安全性、魚種、釣法は裏付けない。"
+        },
+        {
+          "id": "src-fukuoka-ports-issue258",
+          "sourceType": "official",
+          "sourceName": "福岡県 筑前海区の漁港",
+          "sourceUrl": "https://www.pref.fukuoka.lg.jp/dataweb/search/1/1233_496.html",
+          "checkedOn": "2026-07-23",
+          "note": "4漁港の独立した名称と漁港種別を相互確認。利用属性は裏付けない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "dainyu-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "dainyu-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "shikaka-port",
+      "sources": [
+        {
+          "id": "src-gsi-issue258",
+          "sourceType": "map",
+          "sourceName": "国土地理院 地理院地図",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-23",
+          "note": "代表点が糸島市沿岸の対象施設または地区にあることを確認。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。"
+        },
+        {
+          "id": "src-mlit-c09-issue258",
+          "sourceType": "official",
+          "sourceName": "国土数値情報 漁港データ C09",
+          "sourceUrl": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-C09.html",
+          "checkedOn": "2026-07-23",
+          "note": "加布里、深江、大入、鹿家の名称、法定漁港種別、facility代表点を確認。現在の管理者、一般立入、釣り可否、設備、足場、安全性、魚種、釣法は裏付けない。"
+        },
+        {
+          "id": "src-fukuoka-ports-issue258",
+          "sourceType": "official",
+          "sourceName": "福岡県 筑前海区の漁港",
+          "sourceUrl": "https://www.pref.fukuoka.lg.jp/dataweb/search/1/1233_496.html",
+          "checkedOn": "2026-07-23",
+          "note": "4漁港の独立した名称と漁港種別を相互確認。利用属性は裏付けない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "shikaka-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shikaka-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-mlit-c09-issue258",
+              "src-fukuoka-ports-issue258"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "fukunoura-port",
+      "sources": [
+        {
+          "id": "src-gsi-issue258",
+          "sourceType": "map",
+          "sourceName": "国土地理院 地理院地図",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-23",
+          "note": "代表点が糸島市沿岸の対象施設または地区にあることを確認。入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さない。"
+        },
+        {
+          "id": "src-itoshima-fukunoura-issue258",
+          "sourceType": "official",
+          "sourceName": "糸島市 令和8年第2回定例会提出議案概要",
+          "sourceUrl": "https://www.city.itoshima.lg.jp/s034/020/999/020/108/0806giangaiyou2.pdf",
+          "checkedOn": "2026-07-23",
+          "note": "「芥屋（福ノ浦）漁港」の公的呼称と施設の存在を確認。独立法定漁港、区域境界、一般立入、釣り可否、駐車場の利用条件は裏付けない。"
+        },
+        {
+          "id": "src-fukuoka-fukunoura-issue258",
+          "sourceType": "official",
+          "sourceName": "福岡県 放射線・放射能情報 測定地点",
+          "sourceUrl": "https://houshasen.pref.fukuoka.lg.jp/TelemeterSystem?page=2",
+          "checkedOn": "2026-07-23",
+          "note": "「福ノ浦漁港」という公的地点呼称を確認。法的区分や利用属性は裏付けない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "fukunoura-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "fukunoura-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-issue258",
+              "src-itoshima-fukunoura-issue258",
+              "src-fukuoka-fukunoura-issue258"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    }
+  ]
+}
