@@ -134,7 +134,8 @@ type ExternalCatchMemoSectionProps = {
   storageStatus: ExternalCatchMemoStorageStatus;
   spots: FishingSpot[];
   fishSpecies: FishSpecies[];
-  openRegistrationRequest: number;
+  isRegistrationRequested: boolean;
+  onRegistrationRequestHandled: () => void;
 };
 
 export function ExternalCatchMemoSection({
@@ -148,7 +149,8 @@ export function ExternalCatchMemoSection({
   storageStatus,
   spots,
   fishSpecies,
-  openRegistrationRequest,
+  isRegistrationRequested,
+  onRegistrationRequestHandled,
 }: ExternalCatchMemoSectionProps) {
   const [form, setForm] = useState<FormState>(initialFormState());
   const [errors, setErrors] = useState<FormErrors>({});
@@ -208,8 +210,10 @@ export function ExternalCatchMemoSection({
     setIsModalOpen(true);
   };
   useEffect(() => {
-    if (openRegistrationRequest > 0) openNew();
-  }, [openRegistrationRequest]);
+    if (!isRegistrationRequested) return;
+    openNew();
+    onRegistrationRequestHandled();
+  }, [isRegistrationRequested, onRegistrationRequestHandled]);
   const openEdit = (memo: ExternalCatchMemo) => {
     setEditingId(memo.id);
     setForm(formFromMemo(memo));

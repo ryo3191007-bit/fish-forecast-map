@@ -64,7 +64,9 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [spotCandidateQuery, setSpotCandidateQuery] = useState("");
   const [selectedSort, setSelectedSort] = useState<SortOption>("dateDesc");
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [openRegistrationRequest, setOpenRegistrationRequest] = useState(0);
+  const [isRegistrationRequested, setIsRegistrationRequested] = useState(false);
+  const handleRegistrationRequest = useCallback(() => setIsRegistrationRequested(true), []);
+  const handleRegistrationRequestHandled = useCallback(() => setIsRegistrationRequested(false), []);
   const [dashboardMode, setDashboardMode] =
     useState<DashboardMode>("catchReports");
   const [startDate, setStartDate] = useState("");
@@ -481,7 +483,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
               <p className="eyebrow">Catch reports</p>
               <h2>釣果情報一覧</h2>
             </div>
-            <button type="button" className="button catchReportRegisterButton" onClick={() => setOpenRegistrationRequest((request) => request + 1)}>釣果を登録</button>
+            <button type="button" className="button catchReportRegisterButton" onClick={handleRegistrationRequest}>釣果を登録</button>
           </div>
 
           <div
@@ -676,7 +678,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             storageStatus={memoStorageStatus}
             spots={fishingSpots}
             fishSpecies={masterData.fishSpecies}
-            openRegistrationRequest={openRegistrationRequest}
+            isRegistrationRequested={isRegistrationRequested}
+            onRegistrationRequestHandled={handleRegistrationRequestHandled}
           />
         </div>
       ) : (
