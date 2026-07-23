@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import { fishingSpots } from "../src/data/fishingSpots";
 import { buildCatchRegistrationSpotOptions, buildFishingSpotMapEntries, filterFishingSpotOptions, selectFishingSpot, toEnvironmentPoint } from "../src/domain/fishingSpotPresentation";
@@ -14,14 +15,23 @@ const EXPECTED = new Map([
 ]);
 const OLD_COORDINATES = ["33.365, 129.553", "33.354, 129.579"];
 const UNKNOWN_KEYS = ["restriction_status", "fishable_area", "access", "parking", "toilet", "lighting", "shore_access", "depth", "bottom_material", "coastal_topography", "obstacles", "spot_features", "target_species", "recommended_methods"];
+const GSI_SOURCE_ID = "src-gsi-hirado-seto-20260723";
+const LEGACY_GSI_SOURCE_ID = "src-gsi-map";
 type Candidate = { spotId: string; name: string; latitude: number; longitude: number; coordinatePrecision: string; publicFacilityType: string; previousCoordinates?: { latitude: number; longitude: number }; relationToExisting: { migrationPolicy: string } };
-type Audit = { activeCandidates: Candidate[]; heldOrExcluded: { decision: string }[]; migrationPolicy: string[] };
-type Details = { spots: { spotId: string; values: { itemKey: string; informationState: string; valueText: string | null; valueTextList: string[]; valueNumber: number | null; valueBoolean: boolean | null; confidence: string | null; sources: { supporting: string[]; checked: string[] } }[] }[] };
+type Source = { id: string };
+type Audit = { activeCandidates: Candidate[]; heldOrExcluded: { decision: string }[]; migrationPolicy: string[]; sources: Record<string, Source> };
+type Details = { spots: { spotId: string; sources: Source[]; values: { itemKey: string; informationState: string; valueText: string | null; valueTextList: string[]; valueNumber: number | null; valueBoolean: boolean | null; confidence: string | null; sources: { supporting: string[]; checked: string[] } }[] }[] };
 const audit = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-252-hirado-seto-implementation-input.json", "utf8")) as Audit;
 const details = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-252-detail-curation.json", "utf8")) as Details;
 const seed = fs.readFileSync("supabase/sql/003_master_data_seed.sql", "utf8");
 const migration = fs.readFileSync("supabase/migrations/20260723010000_add_issue_252_hirado_seto_spots.sql", "utf8");
+const issue250Migration = fs.readFileSync("supabase/migrations/20260722233000_add_issue_250_matsuura_spots.sql", "utf8");
 const fallback = fs.readFileSync("src/lib/fishingSpotDetailFallback.ts", "utf8");
+
+function sourceUuid(id: string) {
+  const hash = createHash("md5").update(id).digest("hex");
+  return `${hash.slice(0, 8)}-${hash.slice(8, 12)}-${hash.slice(12, 16)}-${hash.slice(16, 20)}-${hash.slice(20, 32)}`;
+}
 
 function sqlCoordinates(sql: string, id: string) {
   const insert = sql.match(new RegExp(`\\('${id}', '[^']+', '[^']+', ([0-9.]+), ([0-9.]+),`));
@@ -82,6 +92,14 @@ assert.ok(audit.activeCandidates.every(({ relationToExisting }) => /再割当|�
 assert.ok(fallback.includes("issue-252-detail-curation.json"));
 const hiradoDetails = details.spots.find(({ spotId }) => spotId === "hirado-port");
 assert.ok(hiradoDetails);
+assert.equal(audit.sources[GSI_SOURCE_ID]?.id, GSI_SOURCE_ID);
+assert.equal(hiradoDetails.sources.find(({ id }) => id === GSI_SOURCE_ID)?.id, GSI_SOURCE_ID);
+assert.ok(issue250Migration.includes(LEGACY_GSI_SOURCE_ID));
+assert.notEqual(sourceUuid(GSI_SOURCE_ID), sourceUuid(LEGACY_GSI_SOURCE_ID));
+for (const issue252Artifact of [JSON.stringify(audit), JSON.stringify(details), migration]) {
+  assert.ok(issue252Artifact.includes(GSI_SOURCE_ID));
+  assert.ok(!issue252Artifact.includes(LEGACY_GSI_SOURCE_ID));
+}
 for (const key of UNKNOWN_KEYS) {
   const value = hiradoDetails.values.find(({ itemKey }) => itemKey === key);
   assert.ok(value, `${key} must be explicitly curated`);
@@ -92,7 +110,7 @@ for (const key of UNKNOWN_KEYS) {
   assert.equal(value.valueBoolean, null);
   assert.equal(value.confidence, null);
   assert.deepEqual(value.sources.supporting, []);
-  assert.ok(value.sources.checked.length > 0);
+  assert.ok(value.sources.checked.includes(GSI_SOURCE_ID));
 }
 const runtimeDetails = buildStaticFishingSpotDetailsFromSpots(fishingSpots).values.filter(({ spotId }) => spotId === "hirado-port");
 assert.ok(UNKNOWN_KEYS.every((key) => runtimeDetails.some((value) => value.itemKey === key && value.informationState === "researched_unknown")));

@@ -7,7 +7,7 @@
       "spotId": "hirado-port",
       "sources": [
         {
-          "id": "src-gsi-map",
+          "id": "src-gsi-hirado-seto-20260723",
           "sourceType": "map",
           "sourceName": "地理院地図・地名検索",
           "sourceUrl": "https://maps.gsi.go.jp/",
@@ -40,7 +40,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -62,7 +62,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -84,7 +84,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -106,7 +106,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -128,7 +128,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -150,7 +150,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -172,7 +172,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -194,7 +194,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -216,7 +216,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -238,7 +238,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -260,7 +260,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -282,7 +282,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -304,7 +304,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []
@@ -326,7 +326,7 @@
           "sources": {
             "supporting": [],
             "checked": [
-              "src-gsi-map",
+              "src-gsi-hirado-seto-20260723",
               "src-mlit-hirado-route"
             ],
             "contradicting": []

@@ -87,8 +87,8 @@
     }
   ],
   "sources": {
-    "src-gsi-map": {
-      "id": "src-gsi-map",
+    "src-gsi-hirado-seto-20260723": {
+      "id": "src-gsi-hirado-seto-20260723",
       "sourceType": "map",
       "sourceName": "地理院地図・地名検索",
       "sourceUrl": "https://maps.gsi.go.jp/",
