@@ -199,13 +199,13 @@ assert.match(
 );
 assert.match(
   externalCatchMemoSection,
-  /<h3>[\s\S]*?memo\.catchItems\.map\(\(item\) => legacySpeciesLabel\(item\.species as FishSpeciesName\)\)[\s\S]*?<\/h3>/,
+  /const speciesLabels = memo\.catchItems\.map\(\(item\) =>[\s\S]*?legacySpeciesLabel\(item\.species as FishSpeciesName\)/,
   "catch cards use the legacy species display rule",
 );
 assert.match(
   externalCatchMemoSection,
-  /aria-label=\{`\$\{memo\.caughtDate\} \$\{memo\.catchItems\.map\(\(item\) => legacySpeciesLabel\(item\.species as FishSpeciesName\)\)[\s\S]*?\$\{displayLocationName\}の釣果を編集`\}/,
-  "catch edit button accessibility labels use the legacy species display rule",
+  /aria-label=\{`\$\{speciesLabels\.join\("・"\)\}の操作メニュー`\}/,
+  "catch menu accessibility labels use the legacy species display rule",
 );
 assert.match(dashboard, /groupSelectableFishSpecies\(activeSpecies, \{ includeLegacyAggregates: true \}\)/, "the dashboard uses shared species UI grouping with legacy aggregate filters");
 assert.match(dashboard, /species === "青物" \|\| species === "根魚" \? `\$\{species\}系` : species/, "aggregate filters use group labels rather than legacy-record labels");
@@ -338,8 +338,8 @@ assert.match(
 );
 assert.match(
   memoSection,
-  /aria-label=\{`\$\{memo\.caughtDate\} \$\{memo\.catchItems\.map\(\(item\) => legacySpeciesLabel\(item\.species as FishSpeciesName\)\)[\s\S]*?\$\{displayLocationName\}の釣果を編集`\}/,
-  "each catch card has an accessible edit button using the legacy display rule",
+  /aria-label=\{`\$\{speciesLabels\.join\("・"\)\}の操作メニュー`\}/,
+  "each catch card has an accessible action menu using the legacy display rule",
 );
 
 console.log("UI requirement static checks passed");

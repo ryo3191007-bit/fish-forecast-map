@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type {
   ExternalCatchMemoMigrationResult,
   ExternalCatchMemoStorageStatus,
@@ -286,6 +286,8 @@ export function ExternalCatchMemoSection({
               memo={memo}
               spots={spots}
               onEdit={openEdit}
+              onDelete={onMemoDelete}
+              isMutating={storageStatus.isMutating}
             />
           ))
         )}
@@ -431,69 +433,163 @@ function ExternalMemoCard({
   memo,
   spots,
   onEdit,
+  onDelete,
+  isMutating,
 }: {
   memo: ExternalCatchMemo;
   spots: FishingSpot[];
   onEdit: (memo: ExternalCatchMemo) => void;
+  onDelete: (memoId: string) => Promise<boolean>;
+  isMutating: boolean;
 }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const linkedSpot = memo.spotId
     ? spots.find((spot) => spot.id === memo.spotId)
     : undefined;
-  const displayLocationName = linkedSpot?.name ?? memo.areaName;
+  const displayLocationName = linkedSpot?.name ?? memo.estimatedSpotName ?? memo.areaName;
+  const locationLabel = linkedSpot
+    ? `${displayLocationName}（${linkedSpot.areaName}）`
+    : displayLocationName;
+  const speciesLabels = memo.catchItems.map((item) =>
+    legacySpeciesLabel(item.species as FishSpeciesName),
+  );
+  const isMultipleSpecies = memo.catchItems.length > 1;
+  const detailsId = `catch-details-${memo.id}`;
+  const summaryParts = isMultipleSpecies
+    ? buildMultipleCatchSummary(memo)
+    : buildCatchMeasurements(memo.catchItems[0]);
+  const caughtDateTimeLabel = formatCaughtDateTime(memo.caughtDate, memo.caughtTime);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) setIsMenuOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsMenuOpen(false);
+    };
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("mousedown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [isMenuOpen]);
+
+  const handleDelete = async () => {
+    setIsMenuOpen(false);
+    if (!window.confirm("この釣果を削除します。よろしいですか？")) return;
+    await onDelete(memo.id);
+  };
+
+  const handleSummaryClick = () => {
+    if (isMultipleSpecies) setIsExpanded((current) => !current);
+  };
+
   return (
-    <article className="card externalMemoCard">
-      <div className="cardHeader">
-        <div>
-          <p className="eyebrow">自分の釣果</p>
-          <h3>
-            {memo.catchItems.map((item) => legacySpeciesLabel(item.species as FishSpeciesName)).join("・")} / {displayLocationName}
-          </h3>
-          <p className="muted">自分で記録した釣果です。</p>
+    <article className={`externalMemoCard${isExpanded ? " isExpanded" : ""}`}>
+      <div
+        className={`externalMemoSummary${isMultipleSpecies ? " isExpandable" : ""}`}
+        onClick={handleSummaryClick}
+        onKeyDown={(event) => {
+          if (isMultipleSpecies && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault();
+            handleSummaryClick();
+          }
+        }}
+        role={isMultipleSpecies ? "button" : undefined}
+        tabIndex={isMultipleSpecies ? 0 : undefined}
+        aria-expanded={isMultipleSpecies ? isExpanded : undefined}
+        aria-controls={isMultipleSpecies ? detailsId : undefined}
+      >
+        <div className={`externalMemoFishIcon ${isMultipleSpecies ? "isMultiple" : "isSingle"}`} aria-hidden="true">
+          {speciesLabels.slice(0, 3).map((species, index) => (
+            <FishSilhouette key={`${species}-${index}`} />
+          ))}
         </div>
+        <div className="externalMemoCardBody">
+          <div className="externalMemoTitleRow">
+            <h3>{speciesLabels.join("・")}</h3>
+            {memo.method ? <span className="externalMemoMethod">{memo.method}</span> : null}
+          </div>
+          <p className="externalMemoLocation"><LocationIcon />{locationLabel}</p>
+          <p className="externalMemoMeta">
+            {summaryParts ? <><span>{summaryParts}</span><span aria-hidden="true">・</span></> : null}
+            <time dateTime={memo.caughtTime ? `${memo.caughtDate}T${memo.caughtTime}` : memo.caughtDate}>{caughtDateTimeLabel}</time>
+          </p>
+        </div>
+        {isMultipleSpecies ? <span className="externalMemoChevron" aria-hidden="true">⌄</span> : null}
+      </div>
+      <div className="externalMemoMenu" ref={menuRef} onClick={(event) => event.stopPropagation()}>
         <button
           type="button"
-          className="clearSearchButton"
-          onClick={() => onEdit(memo)}
-          aria-label={`${memo.caughtDate} ${memo.catchItems.map((item) => legacySpeciesLabel(item.species as FishSpeciesName)).join("・")} ${displayLocationName}の釣果を編集`}
-        >
-          編集
-        </button>
+          className="externalMemoMenuButton"
+          aria-label={`${speciesLabels.join("・")}の操作メニュー`}
+          aria-haspopup="menu"
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen((current) => !current)}
+        ><span aria-hidden="true">⋮</span></button>
+        {isMenuOpen ? (
+          <div className="externalMemoMenuPopover" role="menu">
+            <button type="button" role="menuitem" onClick={() => { setIsMenuOpen(false); onEdit(memo); }}>編集</button>
+            <button type="button" role="menuitem" className="isDanger" disabled={isMutating} onClick={handleDelete}>削除</button>
+          </div>
+        ) : null}
       </div>
-      <div className="cardSummary">
-        <span>釣果日時: {memo.caughtDate}{memo.caughtTime ? ` ${memo.caughtTime.slice(0, 5)}` : ""}</span>
-        <span>
-          {linkedSpot
-            ? `地図上の釣り場: ${linkedSpot.name}`
-            : "地図上の釣り場: 未紐づけ"}
-        </span>
-      </div>
-      <dl className="facts">
-        <div>
-          <dt>釣れた魚</dt>
-          <dd className="externalMemoCatchItems">{memo.catchItems.map((item) => <span key={item.species}>{legacySpeciesLabel(item.species as FishSpeciesName)}{item.catchCount === undefined ? "" : ` ${item.catchCount}匹`}{item.sizeCm === undefined ? "" : ` / ${item.sizeCm}cm`}</span>)}</dd>
+      {isMultipleSpecies && isExpanded ? (
+        <div className="externalMemoDetails" id={detailsId}>
+          <p className="externalMemoDetailsLabel">釣れた魚</p>
+          <ul>
+            {memo.catchItems.map((item) => (
+              <li key={item.species}>
+                <strong>{legacySpeciesLabel(item.species as FishSpeciesName)}</strong>
+                {buildCatchMeasurements(item) ? <span>{buildCatchMeasurements(item)}</span> : null}
+              </li>
+            ))}
+          </ul>
         </div>
-        <div>
-          <dt>エリア</dt>
-          <dd>{memo.areaName}</dd>
-        </div>
-        <div>
-          <dt>釣り方</dt>
-          <dd>{memo.method ?? "未入力"}</dd>
-        </div>
-        <div>
-          <dt>地図上の釣り場</dt>
-          <dd>
-            {linkedSpot
-              ? `${linkedSpot.name}に紐づけ`
-              : "未紐づけ / 地図未表示"}
-          </dd>
-        </div>
-      </dl>
-      {memo.userMemo ? (
-        <p className="externalMemoNote">{memo.userMemo}</p>
       ) : null}
     </article>
   );
+}
+
+type CatchMeasurement = ExternalCatchMemo["catchItems"][number];
+
+export function buildCatchMeasurements(item: CatchMeasurement) {
+  const measurements = [];
+  if (item.catchCount !== undefined) measurements.push(`${item.catchCount}匹`);
+  if (item.sizeCm !== undefined) measurements.push(`${item.sizeCm}cm`);
+  return measurements.join(" / ");
+}
+
+export function buildMultipleCatchSummary(memo: ExternalCatchMemo) {
+  const enteredCounts = memo.catchItems
+    .map((item) => item.catchCount)
+    .filter((count): count is number => count !== undefined);
+  return [
+    `${memo.catchItems.length}` + "魚種",
+    enteredCounts.length > 0 ? `${enteredCounts.reduce((sum, count) => sum + count, 0)}匹` : null,
+  ].filter(Boolean).join(" ・ ");
+}
+
+export function formatCaughtDateTime(caughtDate: string, caughtTime?: string) {
+  return caughtTime ? `${caughtDate} ${caughtTime.slice(0, 5)}` : caughtDate;
+}
+
+function FishSilhouette() {
+  return (
+    <svg className="externalMemoFishSilhouette" viewBox="0 0 48 24" focusable="false">
+      <path d="M30.8 3.5c-8.7-3.3-17.7.8-22.4 6L1 4.8v14.4l7.4-4.7c4.7 5.2 13.7 9.3 22.4 6 5.8-2.2 10-6.3 16.2-8.5-6.2-2.2-10.4-6.3-16.2-8.5Z" />
+      <path className="externalMemoFishFin" d="m19 5.1 5.2-4.3 2.6 4.1M18.5 18.6l5.1 4.5 3-4.1" />
+      <circle cx="33.5" cy="9.2" r="1.45" />
+    </svg>
+  );
+}
+
+function LocationIcon() {
+  return <svg viewBox="0 0 16 20" aria-hidden="true"><path d="M8 0a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 10.2A3.2 3.2 0 1 1 8 3.8a3.2 3.2 0 0 1 0 6.4Z" /></svg>;
 }
 
 function LocalMemoMigrationPanel({

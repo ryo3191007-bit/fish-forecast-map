@@ -1395,12 +1395,127 @@ dd {
   border: 0;
 }
 .externalMemoCard {
+  position: relative;
+  min-width: 0;
+  padding: 14px 48px 14px 14px;
+  overflow: visible;
   border-color: rgba(216, 180, 254, 0.42);
+  border: 1px solid rgba(216, 180, 254, 0.42);
+  border-radius: 22px;
   background: linear-gradient(
     145deg,
     rgba(88, 28, 135, 0.46),
     rgba(15, 23, 42, 0.82)
   );
+  color: #e6fbff;
+  box-shadow: 0 15px 38px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 0 20px rgba(168, 85, 247, 0.1);
+}
+.externalMemoSummary {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+  border-radius: 14px;
+}
+.externalMemoSummary.isExpandable { cursor: pointer; }
+.externalMemoSummary.isExpandable:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 4px;
+}
+.externalMemoFishIcon {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 7px;
+  border: 1px solid rgba(103, 232, 249, 0.55);
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 30%, rgba(34, 211, 238, 0.4), rgba(30, 41, 100, 0.8) 58%, rgba(88, 28, 135, 0.78));
+  box-shadow: inset 0 0 12px rgba(103, 232, 249, 0.12), 0 0 20px rgba(34, 211, 238, 0.28);
+}
+.externalMemoFishSilhouette { display: block; width: 100%; color: #22d3ee; fill: currentColor; filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.8)); }
+.externalMemoFishSilhouette .externalMemoFishFin { fill: none; stroke: #67e8f9; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+.externalMemoFishSilhouette circle { fill: #082f49; }
+.externalMemoFishIcon.isSingle .externalMemoFishSilhouette { width: 39px; }
+.externalMemoFishIcon.isMultiple { grid-template-columns: 1fr; grid-auto-rows: 1fr; gap: 0; padding: 6px 8px; }
+.externalMemoFishIcon.isMultiple .externalMemoFishSilhouette { width: 32px; height: 12px; }
+.externalMemoCardBody { min-width: 0; }
+.externalMemoTitleRow { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 8px; min-width: 0; }
+.externalMemoTitleRow h3 {
+  min-width: 0;
+  margin: 0;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+.externalMemoMethod {
+  flex: 0 0 auto;
+  padding: 2px 7px;
+  border: 1px solid rgba(103, 232, 249, 0.32);
+  border-radius: 999px;
+  background: rgba(14, 116, 144, 0.38);
+  color: #cffafe;
+  font-size: 0.68rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.externalMemoLocation,
+.externalMemoMeta { display: flex; align-items: center; min-width: 0; margin: 4px 0 0; color: #bfe8f4; font-size: 0.78rem; line-height: 1.35; }
+.externalMemoLocation { overflow-wrap: anywhere; }
+.externalMemoLocation svg { flex: 0 0 auto; width: 11px; height: 14px; margin-right: 5px; fill: #67e8f9; }
+.externalMemoMeta { flex-wrap: wrap; gap: 4px; color: #ddd6fe; font-weight: 800; }
+.externalMemoMenu { position: absolute; z-index: 4; top: 8px; right: 8px; }
+.externalMemoMenuButton {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #e0faff;
+  font-size: 1.45rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.externalMemoMenuButton:hover,
+.externalMemoMenuButton:focus-visible { outline: none; background: rgba(125, 211, 252, 0.16); box-shadow: 0 0 0 2px rgba(103, 232, 249, 0.5); }
+.externalMemoMenuPopover {
+  position: absolute;
+  top: 38px;
+  right: 0;
+  z-index: 5;
+  display: grid;
+  width: 116px;
+  overflow: hidden;
+  border: 1px solid rgba(216, 180, 254, 0.5);
+  border-radius: 13px;
+  background: rgba(15, 23, 42, 0.98);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+}
+.externalMemoMenuPopover button { min-height: 40px; border: 0; padding: 8px 13px; background: transparent; color: #e0faff; font: inherit; font-size: 0.82rem; font-weight: 800; text-align: left; cursor: pointer; }
+.externalMemoMenuPopover button:hover,
+.externalMemoMenuPopover button:focus-visible { outline: none; background: rgba(14, 116, 144, 0.45); }
+.externalMemoMenuPopover button.isDanger { color: #fda4af; }
+.externalMemoChevron { position: absolute; right: 10px; bottom: 8px; color: #c4b5fd; font-size: 1.1rem; transition: transform 0.18s ease; }
+.externalMemoCard.isExpanded .externalMemoChevron { transform: rotate(180deg); }
+.externalMemoDetails { margin: 12px 0 0 62px; padding-top: 10px; border-top: 1px solid rgba(216, 180, 254, 0.2); }
+.externalMemoDetailsLabel { margin: 0 0 7px; color: #c4b5fd; font-size: 0.7rem; font-weight: 900; }
+.externalMemoDetails ul { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.externalMemoDetails li { display: flex; flex-wrap: wrap; gap: 5px; padding: 5px 8px; border: 1px solid rgba(125, 211, 252, 0.22); border-radius: 10px; background: rgba(15, 23, 42, 0.5); color: #bae6fd; font-size: 0.73rem; }
+.externalMemoDetails li strong { color: #fff; }
+@media (max-width: 420px) {
+  .externalMemoCard { padding: 12px 44px 12px 12px; }
+  .externalMemoSummary { grid-template-columns: 40px minmax(0, 1fr); gap: 10px; }
+  .externalMemoFishIcon { width: 40px; height: 40px; padding: 5px; }
+  .externalMemoFishIcon.isSingle .externalMemoFishSilhouette { width: 32px; }
+  .externalMemoFishIcon.isMultiple { padding: 4px 6px; }
+  .externalMemoFishIcon.isMultiple .externalMemoFishSilhouette { width: 27px; height: 10px; }
+  .externalMemoTitleRow h3 { font-size: 0.92rem; }
+  .externalMemoLocation, .externalMemoMeta { font-size: 0.72rem; }
+  .externalMemoDetails { margin-left: 50px; }
 }
 .externalScoreBox {
   background: rgba(88, 28, 135, 0.38);
