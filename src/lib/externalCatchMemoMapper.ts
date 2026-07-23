@@ -68,7 +68,7 @@ function enumValue<T extends string>(value: string, allowed: Set<T>, fallback: T
 
 export function mapExternalCatchMemoRow(row: ExternalCatchMemoRow): ExternalCatchMemo | null {
   if (row.is_deleted) return null;
-  const catchItems = normalizeCatchItems(row.catch_items, { species: row.species, catchCount: row.catch_count, sizeCm: row.size_cm });
+  const catchItems = normalizeCatchItems(row.catch_items, { species: row.species, method: row.method, catchCount: row.catch_count, sizeCm: row.size_cm });
   if (catchItems.length === 0) return null;
 
   return {
@@ -112,7 +112,7 @@ export function mapExternalCatchMemoToUpsertPayload(memo: ExternalCatchMemo): Ex
     latitude: memo.latitude ?? null,
     longitude: memo.longitude ?? null,
     coordinate_precision: memo.coordinatePrecision,
-    method: memo.method ?? null,
+    method: firstItem?.method ?? memo.method ?? null,
     catch_count: firstItem?.catchCount ?? null,
     size_cm: firstItem?.sizeCm ?? null,
     source_id: memo.sourceId,

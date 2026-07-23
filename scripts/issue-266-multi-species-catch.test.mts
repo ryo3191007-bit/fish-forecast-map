@@ -28,8 +28,8 @@ assert.match(dashboard, /memo\.catchItems\.some/);
 assert.match(map, /externalMemos\.flatMap[\s\S]*?return spot[\s\S]*?\[\s*\{/);
 
 const form: FormState = {
-  catchItems: [{ species: "アジ", catchCount: "5", sizeCm: "18" }, { species: "サバ", catchCount: "2", sizeCm: "25" }],
-  caughtDateTime: "2026-07-23T08:30", method: "サビキ", spotId: "spot-1", userMemo: "朝まずめ",
+  catchItems: [{ species: "アジ", method: "サビキ", catchCount: "5", sizeCm: "18" }, { species: "サバ", method: "ジギング", catchCount: "2", sizeCm: "25" }],
+  caughtDateTime: "2026-07-23T08:30", spotId: "spot-1", userMemo: "朝まずめ",
 };
 const spot = { id: "spot-1", name: "呼子漁港", areaName: "唐津湾", latitude: 33, longitude: 130, spotType: "漁港" as const, shoreAccess: "足場良い" as const, targetSpecies: ["アジ" as const], recommendedMethods: ["サビキ" as const], notes: [], coordinatePrecision: "approximate" as const };
 assert.deepEqual(validateForm(form), {});
@@ -44,7 +44,7 @@ assert.equal(payload.id, memo.id);
 assert.deepEqual(payload.catch_items, memo.catchItems);
 assert.equal(payload.species, "アジ");
 assert.equal(payload.catch_count, 5);
-assert.equal(validateForm({ ...form, catchItems: [...form.catchItems, { species: "アジ", catchCount: "", sizeCm: "" }] }).catchItems, "同じ魚種は重複して登録できません。");
+assert.equal(validateForm({ ...form, catchItems: [...form.catchItems, { species: "アジ", method: "", catchCount: "", sizeCm: "" }] }).catchItems, "同じ魚種は重複して登録できません。");
 
 const row: ExternalCatchMemoRow = {
   id: "legacy", species: "アジ", catch_items: null, caught_date: "2026-01-01", caught_time: null, area_name: "唐津湾", estimated_spot_name: null, spot_id: "spot-1", latitude: null, longitude: null, coordinate_precision: "unknown", method: null, catch_count: 3, size_cm: "20", source_id: "user-self-report", source_name: "本人の釣果", source_url: "https://example.test", acquisition_method: "manual", confidence: "high", environment_match_notes: [], user_memo: null, owner_id: "owner", created_by: "authenticated_user", is_deleted: false, created_at: "2026-01-01T00:00:00Z", updated_at: "2026-01-01T00:00:00Z",

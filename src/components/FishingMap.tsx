@@ -1112,7 +1112,7 @@ function createExternalMemoPopupContent(memo: MappableExternalMemo) {
   summary.append(badge, species, area);
   const meta = document.createElement("p");
   meta.className = "mapPopupMeta";
-  meta.textContent = `${memo.caughtDate} / ${memo.method ?? "釣り方未入力"} / ${memo.catchItems.map((item) => `${legacySpeciesLabel(item.species as FishSpeciesName)}${item.catchCount === undefined ? "" : ` ${item.catchCount}匹`}${item.sizeCm === undefined ? "" : ` / ${item.sizeCm}cm`}`).join("、")}`;
+  meta.textContent = `${memo.caughtDate} / ${memo.catchItems.map((item) => `${legacySpeciesLabel(item.species as FishSpeciesName)}${item.method ? `（${item.method}）` : ""}${item.catchCount === undefined ? "" : ` ${item.catchCount}匹`}${item.sizeCm === undefined ? "" : ` / ${item.sizeCm}cm`}`).join("、")}`;
   const note = document.createElement("p");
   note.textContent = [memo.estimatedSpotName ?? memo.spotName, memo.userMemo]
     .filter(Boolean)

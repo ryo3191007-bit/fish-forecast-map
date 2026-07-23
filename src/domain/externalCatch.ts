@@ -5,6 +5,7 @@ export type ExternalCatchAcquisitionMethod = "manual" | "ai_assisted" | "auto";
 export type ExternalCatchConfidence = "high" | "medium" | "low";
 export type CatchItem = {
   species: FishSpeciesName | string;
+  method?: FishingMethod | string;
   catchCount?: number;
   sizeCm?: number;
 };

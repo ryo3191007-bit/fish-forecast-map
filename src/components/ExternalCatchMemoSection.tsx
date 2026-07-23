@@ -30,20 +30,19 @@ const USER_SELF_REPORT_SOURCE_ID = "user-self-report";
 const USER_SELF_REPORT_SOURCE_NAME = "本人の釣果";
 const PUBLIC_APP_URL = "https://fish-forecast-map.vercel.app";
 
-export type CatchItemFormState = { species: FishSpeciesName | ""; catchCount: string; sizeCm: string };
+export type CatchItemFormState = { species: FishSpeciesName | ""; method: FishingMethod | ""; catchCount: string; sizeCm: string };
 export type FormState = {
   catchItems: CatchItemFormState[];
   caughtDateTime: string;
-  method: FishingMethod | "";
   spotId: string;
   userMemo: string;
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
-const emptyCatchItem = (): CatchItemFormState => ({ species: "", catchCount: "", sizeCm: "" });
+const emptyCatchItem = (): CatchItemFormState => ({ species: "", method: "", catchCount: "", sizeCm: "" });
 const initialFormState = (): FormState => ({
-  catchItems: [emptyCatchItem()], caughtDateTime: "", method: "", spotId: "", userMemo: "",
+  catchItems: [emptyCatchItem()], caughtDateTime: "", spotId: "", userMemo: "",
 });
 
 export function validateForm(form: FormState, editingMemo?: ExternalCatchMemo): FormErrors {
@@ -85,6 +84,7 @@ export function createMemo(
     species: form.catchItems[0].species,
     catchItems: form.catchItems.map((item) => ({
       species: item.species,
+      method: item.method || undefined,
       catchCount: toOptionalNumber(item.catchCount),
       sizeCm: toOptionalNumber(item.sizeCm),
     })),
@@ -94,7 +94,7 @@ export function createMemo(
     estimatedSpotName: editingMemo?.estimatedSpotName,
     spotId: selectedSpot.id,
     coordinatePrecision: editingMemo?.coordinatePrecision ?? "unknown",
-    method: form.method || undefined,
+    method: form.catchItems[0].method || undefined,
     catchCount: toOptionalNumber(form.catchItems[0].catchCount),
     sizeCm: toOptionalNumber(form.catchItems[0].sizeCm),
     sourceId: editingMemo?.sourceId ?? USER_SELF_REPORT_SOURCE_ID,
@@ -112,11 +112,12 @@ export function formFromMemo(memo: ExternalCatchMemo): FormState {
   return {
     catchItems: memo.catchItems.map((item) => ({
       species: fishSpeciesNames.includes(item.species as FishSpeciesName) ? item.species as FishSpeciesName : "",
+      method: methodOptions.includes(item.method as FishingMethod) ? item.method as FishingMethod : "",
       catchCount: item.catchCount?.toString() ?? "",
       sizeCm: item.sizeCm?.toString() ?? "",
     })),
     caughtDateTime: memo.caughtTime ? `${memo.caughtDate}T${memo.caughtTime.slice(0, 5)}` : "",
-    method: (memo.method as FishingMethod) ?? "", spotId: memo.spotId ?? "", userMemo: memo.userMemo ?? "",
+    spotId: memo.spotId ?? "", userMemo: memo.userMemo ?? "",
   };
 }
 
@@ -133,6 +134,7 @@ type ExternalCatchMemoSectionProps = {
   storageStatus: ExternalCatchMemoStorageStatus;
   spots: FishingSpot[];
   fishSpecies: FishSpecies[];
+  openRegistrationRequest: number;
 };
 
 export function ExternalCatchMemoSection({
@@ -146,6 +148,7 @@ export function ExternalCatchMemoSection({
   storageStatus,
   spots,
   fishSpecies,
+  openRegistrationRequest,
 }: ExternalCatchMemoSectionProps) {
   const [form, setForm] = useState<FormState>(initialFormState());
   const [errors, setErrors] = useState<FormErrors>({});
@@ -204,6 +207,9 @@ export function ExternalCatchMemoSection({
     setErrors({});
     setIsModalOpen(true);
   };
+  useEffect(() => {
+    if (openRegistrationRequest > 0) openNew();
+  }, [openRegistrationRequest]);
   const openEdit = (memo: ExternalCatchMemo) => {
     setEditingId(memo.id);
     setForm(formFromMemo(memo));
@@ -247,20 +253,6 @@ export function ExternalCatchMemoSection({
 
   return (
     <>
-      <div
-        className="externalMemoLaunch"
-        aria-labelledby="external-memos-launch-heading"
-      >
-        <div>
-          <p className="eyebrow">My catch log</p>
-          <h3 id="external-memos-launch-heading">自分の釣果を記録</h3>
-          <MemoStorageStatusChip status={storageStatus} />
-        </div>
-        <button type="button" className="button" onClick={openNew}>
-          釣果を登録
-        </button>
-      </div>
-
       <LocalMemoMigrationPanel
         candidates={migrationCandidates}
         selectedIds={selectedMigrationIds}
@@ -352,20 +344,6 @@ export function ExternalCatchMemoSection({
                       </span>
                     ) : null}
                   </label>
-                  <label>
-                    釣り方 <span className="optionalBadge">任意</span>
-                    <select
-                      value={form.method}
-                      onChange={(e) => updateForm("method", e.target.value)}
-                    >
-                      <option value="">未選択</option>
-                      {methodOptions.map((method) => (
-                        <option key={method} value={method}>
-                          {method}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
                 </fieldset>
                 <fieldset className="externalMemoFormSection externalMemoFishItems">
                   <legend>釣れた魚 <span className="requiredBadge">必須</span></legend>
@@ -377,6 +355,12 @@ export function ExternalCatchMemoSection({
                           <option value="">選択してください</option>
                           {editingMemo && item.species && !fishSpecies.find((fish) => fish.nameJa === item.species)?.isSelectable ? <option value={item.species}>{legacySpeciesLabel(item.species)}</option> : null}
                           {groupSelectableFishSpecies(fishSpecies).map(({ label, items }) => <optgroup key={label} label={label}>{items.map((fish) => <option key={fish.id} value={fish.nameJa}>{fish.nameJa}</option>)}</optgroup>)}
+                        </select>
+                      </label>
+                      <label>釣り方 <span className="optionalBadge">任意</span>
+                        <select value={item.method} onChange={(event) => updateCatchItem(index, "method", event.target.value)}>
+                          <option value="">未選択</option>
+                          {methodOptions.map((method) => <option key={method} value={method}>{method}</option>)}
                         </select>
                       </label>
                       <div className="externalMemoFishNumbers">
@@ -512,7 +496,7 @@ function ExternalMemoCard({
         <div className="externalMemoCardBody">
           <div className="externalMemoTitleRow">
             <h3>{speciesLabels.join("・")}</h3>
-            {memo.method ? <span className="externalMemoMethod">{memo.method}</span> : null}
+            {!isMultipleSpecies && memo.catchItems[0].method ? <span className="externalMemoMethod">{memo.catchItems[0].method}</span> : null}
           </div>
           <p className="externalMemoLocation"><LocationIcon />{locationLabel}</p>
           <p className="externalMemoMeta">
@@ -545,6 +529,7 @@ function ExternalMemoCard({
             {memo.catchItems.map((item) => (
               <li key={item.species}>
                 <strong>{legacySpeciesLabel(item.species as FishSpeciesName)}</strong>
+                {item.method ? <span className="externalMemoMethod">{item.method}</span> : null}
                 {buildCatchMeasurements(item) ? <span>{buildCatchMeasurements(item)}</span> : null}
               </li>
             ))}
@@ -657,43 +642,5 @@ function LocalMemoMigrationPanel({
         </p>
       ) : null}
     </details>
-  );
-}
-
-const memoStorageFallbackLabels: Record<
-  NonNullable<ExternalCatchMemoStorageStatus["fallbackReason"]>,
-  string
-> = {
-  "not-authenticated": "未ログインのためブラウザ保存",
-  "supabase-not-configured": "Supabase未設定のためブラウザ保存",
-  "supabase-error": "DBエラーのためブラウザ保存",
-  "local-data-not-migrated":
-    "DB利用可。未移行ローカルデータはブラウザ側に残し、新規登録はSupabaseへ保存",
-};
-
-function MemoStorageStatusChip({
-  status,
-}: {
-  status: ExternalCatchMemoStorageStatus;
-}) {
-  const label = status.isLoading
-    ? "釣果記録読込中..."
-    : status.source === "supabase"
-      ? "釣果記録: Supabase"
-      : status.isDbAvailable &&
-          status.fallbackReason === "local-data-not-migrated"
-        ? "釣果記録: Supabase + localStorage"
-        : status.fallbackReason === "supabase-error"
-          ? "釣果記録: localStorage fallback"
-          : "釣果記録: localStorage";
-  const reason =
-    !status.isLoading && status.fallbackReason
-      ? memoStorageFallbackLabels[status.fallbackReason]
-      : null;
-  return (
-    <p className="dataSourceStatus" aria-live="polite">
-      <span>{label}</span>
-      {reason ? <small>{reason}</small> : null}
-    </p>
   );
 }

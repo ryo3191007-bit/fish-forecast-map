@@ -1,4 +1,5 @@
 import type { CatchItem, ExternalCatchRecord } from "@/domain/externalCatch";
+import type { FishingMethod } from "@/domain/fishing";
 
 export const EXTERNAL_CATCH_MEMO_STORAGE_KEY = "fish-forecast-map.external-catch-memos";
 
@@ -10,16 +11,33 @@ function optionalNonNegativeNumber(value: unknown): number | undefined {
   return Number.isFinite(number) && number >= 0 ? number : undefined;
 }
 
-export function normalizeCatchItems(value: unknown, legacy?: { species?: unknown; catchCount?: unknown; sizeCm?: unknown }): CatchItem[] {
+const fishingMethods = new Set<FishingMethod>(["ジギング", "キャスティング", "コマセ", "泳がせ", "サビキ", "エギング", "その他"]);
+
+function optionalFishingMethod(value: unknown): FishingMethod | undefined {
+  return typeof value === "string" && fishingMethods.has(value as FishingMethod) ? value as FishingMethod : undefined;
+}
+
+function normalizedCatchItem(candidate: Record<string, unknown>, fallbackMethod?: FishingMethod): CatchItem {
+  const method = optionalFishingMethod(candidate.method) ?? fallbackMethod;
+  return {
+    species: candidate.species as string,
+    ...(method ? { method } : {}),
+    catchCount: optionalNonNegativeNumber(candidate.catchCount),
+    sizeCm: optionalNonNegativeNumber(candidate.sizeCm),
+  };
+}
+
+export function normalizeCatchItems(value: unknown, legacy?: { species?: unknown; method?: unknown; catchCount?: unknown; sizeCm?: unknown }): CatchItem[] {
+  const legacyMethod = optionalFishingMethod(legacy?.method);
   const items = Array.isArray(value) ? value.flatMap((item) => {
     if (!item || typeof item !== "object") return [];
     const candidate = item as Record<string, unknown>;
     if (typeof candidate.species !== "string" || candidate.species.trim() === "") return [];
-    return [{ species: candidate.species, catchCount: optionalNonNegativeNumber(candidate.catchCount), sizeCm: optionalNonNegativeNumber(candidate.sizeCm) }];
+    return [normalizedCatchItem(candidate, legacyMethod)];
   }) : [];
   if (items.length > 0) return items;
   return typeof legacy?.species === "string" && legacy.species.trim() !== ""
-    ? [{ species: legacy.species, catchCount: optionalNonNegativeNumber(legacy.catchCount), sizeCm: optionalNonNegativeNumber(legacy.sizeCm) }]
+    ? [normalizedCatchItem(legacy as Record<string, unknown>, legacyMethod)]
     : [];
 }
 

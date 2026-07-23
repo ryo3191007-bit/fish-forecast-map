@@ -64,6 +64,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [spotCandidateQuery, setSpotCandidateQuery] = useState("");
   const [selectedSort, setSelectedSort] = useState<SortOption>("dateDesc");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [openRegistrationRequest, setOpenRegistrationRequest] = useState(0);
   const [dashboardMode, setDashboardMode] =
     useState<DashboardMode>("catchReports");
   const [startDate, setStartDate] = useState("");
@@ -101,6 +102,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
       species: item.species,
       catchCount: item.catchCount,
       sizeCm: item.sizeCm,
+      method: item.method,
     }))),
     [externalMemos],
   );
@@ -192,7 +194,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
         memo.estimatedSpotName,
         memo.areaName,
         ...memo.catchItems.map((item) => item.species),
-        memo.method,
+        ...memo.catchItems.map((item) => item.method),
         memo.sourceName,
         memo.userMemo,
       ]
@@ -479,6 +481,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
               <p className="eyebrow">Catch reports</p>
               <h2>釣果情報一覧</h2>
             </div>
+            <button type="button" className="button catchReportRegisterButton" onClick={() => setOpenRegistrationRequest((request) => request + 1)}>釣果を登録</button>
           </div>
 
           <div
@@ -673,6 +676,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             storageStatus={memoStorageStatus}
             spots={fishingSpots}
             fishSpecies={masterData.fishSpecies}
+            openRegistrationRequest={openRegistrationRequest}
           />
         </div>
       ) : (
