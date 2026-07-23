@@ -178,8 +178,8 @@ assert.doesNotMatch(
 );
 assert.match(
   dashboard,
-  /自分の釣果期間フィルタ/,
-  "catch date filter is labelled as self catch records",
+  /<span className="filterCardTitle">釣果期間フィルタ<\/span>/,
+  "catch date filter uses the compact catch-period label",
 );
 assert.doesNotMatch(
   dashboard,

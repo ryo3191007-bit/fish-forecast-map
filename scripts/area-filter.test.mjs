@@ -1,75 +1,39 @@
 import assert from "node:assert/strict";
-import fs from "node:fs";
-import vm from "node:vm";
+import { readFileSync } from "node:fs";
 
-const dashboard = fs.readFileSync(
-  "src/components/FishingDashboard.tsx",
-  "utf8",
-);
-const layout = fs.readFileSync("src/app/layout.tsx", "utf8");
-const filterCountStyles = fs.readFileSync(
-  "src/app/filter-counts.css",
-  "utf8",
-);
-const fishingSpotsSource = fs
-  .readFileSync("src/data/fishingSpots.ts", "utf8")
-  .replace(/^import[^;]+;\n/gm, "")
-  .replace(/ as const/g, "");
-const fishingSpotsMatch = fishingSpotsSource.match(
-  /export const fishingSpots(?:[^=]*) = ([\s\S]*?);/,
-);
-assert.ok(fishingSpotsMatch, "fishingSpots export must be readable");
-const fishingSpots = JSON.parse(
-  vm.runInNewContext(
-    `const fishingSpots = ${fishingSpotsMatch[1]}; JSON.stringify(fishingSpots)`,
-    {},
-  ),
-);
+const dashboard = readFileSync("src/components/FishingDashboard.tsx", "utf8");
+const styles = readFileSync("src/app/globals.css", "utf8");
 
-const areaNames = Array.from(
-  new Set(fishingSpots.map((spot) => spot.areaName)),
-);
-assert.deepEqual(
-  areaNames,
-  ["糸島西岸", "唐津湾", "唐津湾北部", "伊万里湾", "伊万里湾東岸", "伊万里湾・福島", "伊万里湾・鷹島", "唐津湾沿岸", "呼子・鎮西", "肥前・玄海沿岸", "平戸"],
-  "area filter candidates must follow the fishing spot master order",
-);
+assert.doesNotMatch(dashboard, /エリアフィルタ/, "the legacy area filter is removed");
+assert.match(dashboard, /<span className="filterCardTitle">地点フィルタ<\/span>/, "the spot filter is shown");
+assert.match(dashboard, /placeholder="魚種名で検索"/, "species candidates are searchable");
+assert.match(dashboard, /placeholder="地点名で検索"/, "spot candidates are searchable");
+assert.match(dashboard, /groupSelectableFishSpecies[\s\S]*?\.flatMap\(\(group\) => group\.items\.map\(\(item\) => item\.nameJa\)\)[\s\S]*?\.filter\(\(species\)/, "species groups are flattened before candidate search filters one chip list");
+assert.doesNotMatch(dashboard, /speciesFilterGroup|speciesFilterGroupLabel|speciesFilterGroupChips/, "species chips have no nested group DOM");
+assert.match(dashboard, /fishingSpots[\s\S]*?\.filter\(\(spot\) => `\$\{spot\.name\} \$\{spot\.id\}`/, "spot candidates come from and are searched from the master");
+assert.match(dashboard, /selectedSpotId === "all" \|\| memo\.spotId === selectedSpotId/, "catch records are filtered by spotId");
+assert.doesNotMatch(dashboard, /memo\.areaName === selected/, "catch records are not filtered by area name");
+assert.match(dashboard, /selectedSpotId === "all" \|\|/, "unresolved records remain when no spot is selected");
+assert.match(dashboard, /aria-label="キーワード検索をクリア"[\s\S]*?>\s*×\s*<\/button>/, "keyword clear button is an accessible multiplication sign");
+assert.match(dashboard, /<span className="filterCardTitle">釣果期間フィルタ<\/span>/, "catch period heading shares the filter title styling");
+assert.equal((dashboard.match(/<section className="filterCard/g) ?? []).length, 5, "each filter is rendered as one of five independent cards");
+assert.equal((dashboard.match(/className="candidateSearchField"/g) ?? []).length, 2, "species and spot searches have explicit search icons");
+assert.match(dashboard, /dateFilterCard[\s\S]*?開始日を選択[\s\S]*?calendarIcon[\s\S]*?終了日を選択[\s\S]*?calendarIcon/, "date filter has a titled second row with placeholders and calendar icons");
+assert.match(dashboard, /label: "新着順（新しい順）"/, "newest-first sort wording matches the reference");
+assert.match(dashboard, /className="resetFiltersButton"[\s\S]*?<svg aria-hidden="true"/, "reset button has a decorative reset icon");
+assert.doesNotMatch(dashboard, /<strong>\{(?:manualCatchMemos\.length|count)\}<\/strong>/, "filter chips do not render count badges");
+for (const removedCopy of ["タップして絞り込み", "魚種とAND条件", "場所・魚種・釣り方など", "開始日と終了日で絞り込み", "絞り込み後に適用", "現在の並び順"]) {
+  assert.doesNotMatch(dashboard, new RegExp(removedCopy), `${removedCopy} is not displayed`);
+}
+assert.match(dashboard, /setSpeciesCandidateQuery\(""\)[\s\S]*?setSpotCandidateQuery\(""\)/, "reset clears both candidate searches");
+assert.match(dashboard, /speciesCandidateQuery === ""[\s\S]*?spotCandidateQuery === ""/, "candidate searches participate in initial-state detection");
+assert.match(styles, /\.keywordFilterRow\s*\{\s*grid-template-columns: auto minmax\(0, 1fr\) auto;/, "keyword label, input, and clear button stay in one row");
+assert.match(styles, /\.dateFilterRow\s*\{\s*grid-template-columns: minmax\(0, 1fr\) auto minmax\(0, 1fr\)/, "date inputs stay in one bounded second row");
+assert.match(styles, /\.sortFilterRow\s*\{\s*grid-template-columns: auto minmax\(0, 1fr\) auto;/, "sort label, select, and reset button stay in one row");
+assert.match(styles, /\.speciesChips\s*\{[\s\S]*?flex-wrap: nowrap;[\s\S]*?overflow-x: auto;/, "chip rows alone scroll horizontally");
+assert.match(styles, /\.filterCard\s*\{[\s\S]*?border:[\s\S]*?border-radius:[\s\S]*?background:/, "independent cards share border, radius, and background styling");
+assert.match(styles, /\.filterCardTitle\s*\{[\s\S]*?font-size:[\s\S]*?font-weight:[\s\S]*?line-height:/, "all filter titles share typography");
+assert.match(styles, /\.reportFilters \.speciesChip\s*\{\s*min-height: 34px;\s*padding: 5px 10px;/, "mobile species and spot chips share the compact height and vertical padding");
+assert.match(styles, /\.speciesChips\s*\{[\s\S]*?margin-top: 4px;/, "candidate inputs retain space above their chip rows");
 
-assert.match(
-  dashboard,
-  /new Set\(fishingSpots\.map\(\(spot\) => spot\.areaName\)\)/,
-  "area filter candidates must be generated from the fishing spot master",
-);
-assert.match(
-  dashboard,
-  /return areaNames\.map\(\(areaName\) => \(\{[\s\S]*?count: counts\.get\(areaName\) \?\? 0/,
-  "areas without catch memos must remain available internally",
-);
-assert.match(
-  dashboard,
-  /\}, \[fishingSpots, manualCatchMemos\]\);/,
-  "area filter data must refresh for both master data and catch memos",
-);
-assert.doesNotMatch(
-  dashboard,
-  /return Array\.from\(counts, \(\[areaName, count\]\)/,
-  "area candidates must not be limited to areas appearing in catch memos",
-);
-assert.match(
-  dashboard,
-  /areaCounts\.map\(\(\{ areaName, count \}\) =>/,
-  "all generated area candidates must render as filter buttons",
-);
-
-assert.match(
-  layout,
-  /import "\.\/filter-counts\.css";/,
-  "filter count visibility rules must be loaded globally",
-);
-assert.match(
-  filterCountStyles,
-  /\.reportFilters \.speciesChip strong\s*\{[\s\S]*?display:\s*none;/,
-  "fish and area filter count badges must stay hidden",
-);
-
-console.log("Area filter regression checks passed");
+console.log("Spot filter and compact filter UI regression checks passed");

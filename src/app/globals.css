@@ -185,21 +185,55 @@ p {
 .filterControls {
   flex: 0 1 520px;
   display: grid;
-  gap: 10px;
+  gap: 8px;
   color: #dffbff;
 }
-.filterHeader {
+.filterHeader,
+.filterTopRow,
+.inlineFilterRow {
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
   align-items: center;
+  gap: 8px;
   font-weight: 800;
 }
-.areaFilterHeader,
-.keywordFilterHeader,
-.sortFilterHeader {
+.filterTopRow > span,
+.inlineFilterRow > span {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.filterCardTitle {
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.filterTopRow .candidateSearchInput {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.candidateSearchField {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.candidateSearchField svg {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  z-index: 1;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  fill: none;
+  stroke: #8bb9ca;
+  stroke-width: 2;
+  pointer-events: none;
+}
+.candidateSearchField .candidateSearchInput {
+  padding-left: 38px;
+}
+.separatedFilterRow {
   margin-top: 6px;
-  padding-top: 12px;
+  padding-top: 8px;
   border-top: 1px solid rgba(125, 211, 252, 0.16);
 }
 .filterHint {
@@ -209,49 +243,36 @@ p {
 }
 .speciesChips {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  max-height: 158px;
-  overflow-y: auto;
-  padding: 2px 2px 4px;
-}
-.speciesFilterGroup {
-  flex: 1 1 220px;
-  min-width: 0;
-  padding: 8px;
-  border: 1px solid rgba(125, 211, 252, 0.16);
-  border-radius: 12px;
-  background: rgba(8, 47, 73, 0.28);
-}
-.speciesFilterGroupLabel {
-  display: block;
-  margin: 0 2px 7px;
-  color: #bae6fd;
-  font-size: 0.76rem;
-  font-weight: 800;
-}
-.speciesFilterGroupChips {
-  display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 6px;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 2px 5px;
+  margin-top: 4px;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
 }
-.areaChips {
-  max-height: 104px;
+.candidateSearchInput {
+  min-height: 40px;
+  padding-block: 8px;
 }
 .speciesChip {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 42px;
+  min-height: 38px;
   border: 1px solid rgba(125, 211, 252, 0.38);
   border-radius: 999px;
-  padding: 9px 12px;
+  padding: 7px 12px;
   background: rgba(8, 47, 73, 0.68);
   color: #dffbff;
   font: inherit;
   font-size: 0.9rem;
   font-weight: 800;
   cursor: pointer;
+  flex: 0 0 auto;
+  white-space: nowrap;
   box-shadow:
     0 8px 18px rgba(0, 0, 0, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.07);
@@ -272,16 +293,6 @@ p {
   outline: 3px solid rgba(34, 211, 238, 0.42);
   outline-offset: 2px;
 }
-.speciesChip strong {
-  min-width: 1.75rem;
-  border-radius: 999px;
-  padding: 2px 7px;
-  background: rgba(2, 8, 23, 0.72);
-  color: #67e8f9;
-  text-align: center;
-  font-size: 0.78rem;
-  line-height: 1.45;
-}
 .speciesChip.active {
   border-color: #22d3ee;
   background: linear-gradient(
@@ -293,10 +304,6 @@ p {
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.1) inset,
     0 0 28px rgba(34, 211, 238, 0.3);
-}
-.speciesChip.active strong {
-  background: rgba(224, 250, 255, 0.96);
-  color: #075985;
 }
 .sortControl,
 .searchControl {
@@ -340,6 +347,25 @@ p {
 .sortSelect {
   cursor: pointer;
 }
+.keywordFilterRow {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+.dateFilterRow {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+.sortFilterRow {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+.keywordFilterRow,
+.dateFilterRow,
+.sortFilterRow {
+  display: grid;
+  min-width: 0;
+}
+.inlineFilterRow .searchInput,
+.inlineFilterRow .sortSelect {
+  min-width: 0;
+}
 .sortSelect:focus-visible,
 .searchInput:focus-visible,
 .clearSearchButton:focus-visible,
@@ -351,6 +377,15 @@ p {
   display: flex;
   gap: 8px;
   align-items: center;
+}
+.searchInputRow .searchInput {
+  min-width: 0;
+}
+.searchInputRow .clearSearchButton {
+  flex: 0 0 44px;
+  width: 44px;
+  padding: 8px;
+  font-size: 1.25rem;
 }
 .searchInput::placeholder {
   color: #8bb9ca;
@@ -379,11 +414,24 @@ p {
 }
 .resetFiltersButton {
   min-width: 144px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   background: linear-gradient(
     135deg,
     rgba(14, 116, 144, 0.78),
     rgba(30, 64, 175, 0.72)
   );
+}
+.resetFiltersButton svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .clearSearchButton:hover:not(:disabled),
 .resetFiltersButton:hover:not(:disabled) {
@@ -684,21 +732,10 @@ dd {
   .filterControls {
     flex-basis: auto;
   }
-  .speciesChips {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    max-height: none;
-    padding-bottom: 8px;
-    scroll-snap-type: x proximity;
-  }
+  .speciesChips { scroll-snap-type: x proximity; }
   .speciesChip {
     flex: 0 0 auto;
     scroll-snap-align: start;
-  }
-  .speciesFilterGroup {
-    flex: 0 0 auto;
-    min-width: max-content;
   }
   .cards {
     grid-template-columns: 1fr;
@@ -706,18 +743,20 @@ dd {
 }
 @media (max-width: 620px) {
   .sortResetGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
   .resetFiltersButton {
-    width: 100%;
+    width: auto;
+    min-width: 92px;
+    padding-inline: 10px;
   }
 }
 @media (max-width: 520px) {
   .searchInputRow {
-    display: grid;
+    display: flex;
   }
   .clearSearchButton {
-    width: 100%;
+    width: 44px;
   }
   .resultSummary {
     font-size: 0.92rem;
@@ -845,23 +884,39 @@ dd {
   }
 }
 .reportFilters {
+  box-sizing: border-box;
+  min-width: 0;
   width: 100%;
   margin: 0 0 20px;
-  padding: clamp(16px, 3vw, 22px);
+  gap: 10px;
+}
+.filterCard {
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 12px;
   border: 1px solid rgba(125, 211, 252, 0.25);
-  border-radius: 24px;
-  background: linear-gradient(
-    145deg,
-    rgba(8, 47, 73, 0.62),
-    rgba(15, 23, 42, 0.72)
-  );
-  box-shadow:
-    0 18px 52px rgba(0, 0, 0, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(8, 47, 73, 0.62), rgba(15, 23, 42, 0.72));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 @media (max-width: 760px) {
-  .reportFilters {
-    padding: 16px;
+  .reportFilters .speciesChips {
+    gap: 6px;
+    padding-bottom: 5px;
+  }
+  .reportFilters .speciesChip {
+    min-height: 34px;
+    padding: 5px 10px;
+    font-size: 0.82rem;
+  }
+  .reportFilters .filterTopRow,
+  .reportFilters .inlineFilterRow {
+    font-size: 0.78rem;
+  }
+  .reportFilters .filterCardTitle {
+    font-size: 0.78rem;
+    font-weight: 800;
+    line-height: 1.2;
   }
 }
 .externalMemoSection {
@@ -1201,6 +1256,70 @@ dd {
   display: grid;
   gap: 6px;
 }
+.dateRangeRow {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+}
+.dateInputLabel {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+.dateInputLabel .searchInput {
+  position: relative;
+  z-index: 1;
+  padding-right: 38px;
+  background: transparent;
+}
+.dateInputLabel:not(.hasValue) .searchInput {
+  color: transparent;
+}
+.dateInputLabel input::-webkit-calendar-picker-indicator {
+  width: 20px;
+  opacity: 0;
+  cursor: pointer;
+}
+.datePlaceholder,
+.calendarIcon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.datePlaceholder {
+  left: 12px;
+  color: #8bb9ca;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+.calendarIcon {
+  right: 12px;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: #a5d8e8;
+  stroke-width: 1.8;
+}
+.dateFilterCard {
+  display: grid;
+  gap: 8px;
+  font-weight: 800;
+}
+.dateRangeSeparator {
+  color: #93c5fd;
+  font-weight: 900;
+}
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 .externalMemoCard {
   border-color: rgba(216, 180, 254, 0.42);
   background: linear-gradient(
@@ -1223,8 +1342,61 @@ dd {
   }
 }
 @media (max-width: 620px) {
-  .advancedFilterGrid {
+  .advancedFilterGrid:not(.dateRangeRow) {
     grid-template-columns: 1fr;
+  }
+  .dateRangeRow {
+    gap: 5px;
+    padding: 8px;
+  }
+  .dateRangeRow .searchInput {
+    min-height: 40px;
+    padding: 8px 4px;
+    font-size: clamp(0.7rem, 3.2vw, 0.84rem);
+  }
+  .reportFilters {
+    gap: 10px;
+    overflow: hidden;
+  }
+  .filterCard {
+    padding: 10px;
+    border-radius: 16px;
+  }
+  .reportFilters .searchInput,
+  .reportFilters .sortSelect,
+  .reportFilters .clearSearchButton,
+  .reportFilters .resetFiltersButton {
+    min-height: 38px;
+    border-radius: 10px;
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+  .reportFilters .candidateSearchInput {
+    padding: 6px 28px 6px 34px;
+  }
+  .reportFilters .clearSearchButton {
+    width: 38px;
+    padding: 4px;
+    font-size: 1.1rem;
+  }
+  .reportFilters .resetFiltersButton {
+    min-width: 0;
+  }
+  .dateFilterRow {
+    gap: 4px;
+  }
+  .dateFilterRow .searchInput {
+    padding: 6px 30px 6px 8px;
+    font-size: 0.75rem;
+  }
+  .datePlaceholder {
+    left: 8px;
+    font-size: clamp(0.68rem, 3.1vw, 0.76rem);
+  }
+  .calendarIcon {
+    right: 8px;
+    width: 16px;
+    height: 16px;
   }
 }
 .authStatusPanel {

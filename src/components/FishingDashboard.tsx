@@ -36,7 +36,7 @@ import { selectFishingSpot, toEnvironmentPoint } from "@/domain/fishingSpotPrese
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
 const reportSortOptions: { value: SortOption; label: string }[] = [
-  { value: "dateDesc", label: "日付が新しい順" },
+  { value: "dateDesc", label: "新着順（新しい順）" },
   { value: "dateAsc", label: "日付が古い順" },
 ];
 
@@ -59,7 +59,9 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [selectedSpecies, setSelectedSpecies] = useState<
     FishSpeciesName | "all"
   >("all");
-  const [selectedArea, setSelectedArea] = useState<string | "all">("all");
+  const [selectedSpotId, setSelectedSpotId] = useState<string | "all">("all");
+  const [speciesCandidateQuery, setSpeciesCandidateQuery] = useState("");
+  const [spotCandidateQuery, setSpotCandidateQuery] = useState("");
   const [selectedSort, setSelectedSort] = useState<SortOption>("dateDesc");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [dashboardMode, setDashboardMode] =
@@ -154,41 +156,26 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     }
   }, [environmentSpotId, fishingSpots]);
 
-  const speciesCounts = useMemo(() => {
-    return fishSpeciesFilterNames.map((species) => ({
-      species,
-      count: manualCatchMemos.filter((memo) => memoMatchesFishSpecies(String(memo.species), species, masterData)).length,
-    }));
-  }, [fishSpeciesFilterNames, manualCatchMemos, masterData]);
-  const groupedSpeciesCounts = useMemo(() => {
-    const countByName = new Map(speciesCounts.map((item) => [item.species, item.count]));
+  const speciesFilterOptions = useMemo(() => {
     const activeSpecies = masterData.fishSpecies.filter((item) => fishSpeciesFilterNames.includes(item.nameJa));
-    const toCount = (items: typeof activeSpecies) => items.map((item) => ({ species: item.nameJa, count: countByName.get(item.nameJa) ?? 0 }));
+    const normalizedQuery = speciesCandidateQuery.trim().toLowerCase();
     return groupSelectableFishSpecies(activeSpecies, { includeLegacyAggregates: true })
-      .map((group) => ({ ...group, items: toCount(group.items) }));
-  }, [fishSpeciesFilterNames, masterData.fishSpecies, speciesCounts]);
-  const areaCounts = useMemo(() => {
-    const counts = new Map<string, number>();
-    manualCatchMemos.forEach((memo) => {
-      counts.set(memo.areaName, (counts.get(memo.areaName) ?? 0) + 1);
-    });
-    const areaNames = Array.from(
-      new Set(fishingSpots.map((spot) => spot.areaName)),
-    );
-
-    return areaNames.map((areaName) => ({
-      areaName,
-      count: counts.get(areaName) ?? 0,
-    }));
-  }, [fishingSpots, manualCatchMemos]);
+      .flatMap((group) => group.items.map((item) => item.nameJa))
+      .filter((species) => `${species}${species === "青物" || species === "根魚" ? "系" : ""}`.toLowerCase().includes(normalizedQuery));
+  }, [fishSpeciesFilterNames, masterData.fishSpecies, speciesCandidateQuery]);
+  const spotFilterOptions = useMemo(() => {
+    const normalizedQuery = spotCandidateQuery.trim().toLowerCase();
+    return fishingSpots
+      .filter((spot) => `${spot.name} ${spot.id}`.toLowerCase().includes(normalizedQuery));
+  }, [fishingSpots, spotCandidateQuery]);
 
   const normalizedKeyword = searchKeyword.trim().toLowerCase();
 
   const filteredManualCatchMemos = useMemo(() => {
     const filteredMemos = manualCatchMemos.filter((memo) => {
       const matchesSpecies = memoMatchesFishSpecies(String(memo.species), selectedSpecies, masterData);
-      const matchesArea =
-        selectedArea === "all" || memo.areaName === selectedArea;
+      const matchesSpot =
+        selectedSpotId === "all" || memo.spotId === selectedSpotId;
       const matchesDate =
         (!startDate || memo.caughtDate >= startDate) &&
         (!endDate || memo.caughtDate <= endDate);
@@ -204,7 +191,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
         .toLowerCase();
       return (
         matchesSpecies &&
-        matchesArea &&
+        matchesSpot &&
         matchesDate &&
         (normalizedKeyword === "" || searchableText.includes(normalizedKeyword))
       );
@@ -219,7 +206,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     manualCatchMemos,
     masterData,
     normalizedKeyword,
-    selectedArea,
+    selectedSpotId,
     selectedSort,
     selectedSpecies,
     startDate,
@@ -381,14 +368,18 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const activeSortOptions = reportSortOptions;
   const isInitialState =
     selectedSpecies === "all" &&
-    selectedArea === "all" &&
+    selectedSpotId === "all" &&
+    speciesCandidateQuery === "" &&
+    spotCandidateQuery === "" &&
     selectedSort === "dateDesc" &&
     searchKeyword.length === 0 &&
     startDate === "" &&
     endDate === "";
   const resetFilters = () => {
     setSelectedSpecies("all");
-    setSelectedArea("all");
+    setSelectedSpotId("all");
+    setSpeciesCandidateQuery("");
+    setSpotCandidateQuery("");
     setSearchKeyword("");
     setSelectedSort("dateDesc");
     setStartDate("");
@@ -485,10 +476,21 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             className="filterControls reportFilters"
             aria-label="釣果フィルタ"
           >
-            <div className="filterHeader">
-              <span>魚種フィルタ</span>
-              <span className="filterHint">タップして絞り込み</span>
-            </div>
+            <section className="filterCard">
+              <div className="filterTopRow">
+                <span className="filterCardTitle">魚種フィルタ</span>
+                <label className="candidateSearchField">
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /></svg>
+                  <input
+                    className="searchInput candidateSearchInput"
+                    type="search"
+                    value={speciesCandidateQuery}
+                    onChange={(event) => setSpeciesCandidateQuery(event.target.value)}
+                    placeholder="魚種名で検索"
+                    aria-label="魚種名で検索"
+                  />
+                </label>
+              </div>
             <div
               className="speciesChips"
               role="group"
@@ -505,144 +507,139 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                 onClick={() => setSelectedSpecies("all")}
               >
                 <span>すべて</span>
-                <strong>{manualCatchMemos.length}</strong>
               </button>
-              {groupedSpeciesCounts.map((group) => (
-                <div className="speciesFilterGroup" key={group.label}>
-                  <span className="speciesFilterGroupLabel">{group.label}</span>
-                  <div className="speciesFilterGroupChips">
-                    {group.items.map(({ species, count }) => (
-                      <button
-                        type="button"
-                        className={selectedSpecies === species ? "speciesChip active" : "speciesChip"}
-                        aria-pressed={selectedSpecies === species}
-                        key={species}
-                        onClick={() => setSelectedSpecies(species)}
-                      >
-                        <span>{species === "青物" || species === "根魚" ? `${species}系` : species}</span>
-                        <strong>{count}</strong>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              {speciesFilterOptions.map((species) => (
+                <button
+                  type="button"
+                  className={selectedSpecies === species ? "speciesChip active" : "speciesChip"}
+                  aria-pressed={selectedSpecies === species}
+                  key={species}
+                  onClick={() => setSelectedSpecies(species)}
+                >
+                  <span>{species === "青物" || species === "根魚" ? `${species}系` : species}</span>
+                </button>
               ))}
-            </div>
+              </div>
+            </section>
 
-            <div className="filterHeader areaFilterHeader">
-              <span>エリアフィルタ</span>
-              <span className="filterHint">魚種とAND条件</span>
-            </div>
+            <section className="filterCard">
+              <div className="filterTopRow">
+                <span className="filterCardTitle">地点フィルタ</span>
+                <label className="candidateSearchField">
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6" /><path d="m16 16 4 4" /></svg>
+                  <input
+                    className="searchInput candidateSearchInput"
+                    type="search"
+                    value={spotCandidateQuery}
+                    onChange={(event) => setSpotCandidateQuery(event.target.value)}
+                    placeholder="地点名で検索"
+                    aria-label="地点名で検索"
+                  />
+                </label>
+              </div>
             <div
               className="speciesChips areaChips"
               role="group"
-              aria-label="表示するエリアを選択"
+              aria-label="表示する地点を選択"
             >
               <button
                 type="button"
                 className={
-                  selectedArea === "all" ? "speciesChip active" : "speciesChip"
+                  selectedSpotId === "all" ? "speciesChip active" : "speciesChip"
                 }
-                aria-pressed={selectedArea === "all"}
-                onClick={() => setSelectedArea("all")}
+                aria-pressed={selectedSpotId === "all"}
+                onClick={() => setSelectedSpotId("all")}
               >
-                <span>すべてのエリア</span>
-                <strong>{manualCatchMemos.length}</strong>
+                <span>すべて</span>
               </button>
-              {areaCounts.map(({ areaName, count }) => (
+              {spotFilterOptions.map((spot) => (
                 <button
                   type="button"
                   className={
-                    selectedArea === areaName
+                    selectedSpotId === spot.id
                       ? "speciesChip active"
                       : "speciesChip"
                   }
-                  aria-pressed={selectedArea === areaName}
-                  key={areaName}
-                  onClick={() => setSelectedArea(areaName)}
+                  aria-pressed={selectedSpotId === spot.id}
+                  key={spot.id}
+                  onClick={() => setSelectedSpotId(spot.id)}
                 >
-                  <span>{areaName}</span>
-                  <strong>{count}</strong>
+                  <span>{spot.name}</span>
                 </button>
               ))}
-            </div>
-
-            <div className="filterHeader keywordFilterHeader">
-              <span>キーワード検索</span>
-              <span className="filterHint">場所・魚種・釣り方など</span>
-            </div>
-            <div className="searchControl">
-              <label className="sortSelectLabel" htmlFor="report-search">
-                釣果情報を検索
-              </label>
-              <div className="searchInputRow">
-                <input
-                  id="report-search"
-                  className="searchInput"
-                  type="search"
-                  value={searchKeyword}
-                  onChange={(event) => setSearchKeyword(event.target.value)}
-                  placeholder="例: 芥屋、アジ、サビキ"
-                />
-                <button
-                  type="button"
-                  className="clearSearchButton"
-                  onClick={() => setSearchKeyword("")}
-                  disabled={searchKeyword.length === 0}
-                >
-                  クリア
-                </button>
               </div>
-            </div>
+            </section>
 
-            <div className="filterHeader keywordFilterHeader">
-              <span>自分の釣果期間フィルタ</span>
-              <span className="filterHint">開始日と終了日で絞り込み</span>
-            </div>
-            <div className="advancedFilterGrid">
-              <label className="sortSelectLabel">
-                釣果期間の開始日
+            <section className="filterCard inlineFilterRow keywordFilterRow">
+              <span className="filterCardTitle">キーワード検索</span>
+              <input
+                id="report-search"
+                className="searchInput"
+                type="search"
+                value={searchKeyword}
+                onChange={(event) => setSearchKeyword(event.target.value)}
+                placeholder="釣果情報を検索"
+                aria-label="釣果情報を検索"
+              />
+              <button
+                type="button"
+                className="clearSearchButton"
+                onClick={() => setSearchKeyword("")}
+                disabled={searchKeyword.length === 0}
+                aria-label="キーワード検索をクリア"
+              >
+                ×
+              </button>
+            </section>
+
+            <section className="filterCard dateFilterCard">
+              <span className="filterCardTitle">釣果期間フィルタ</span>
+              <div className="dateFilterRow">
+              <label className={`dateInputLabel${startDate ? " hasValue" : ""}`}>
+                <span className="visuallyHidden">釣果期間の開始日</span>
+                {!startDate && <span className="datePlaceholder">開始日を選択</span>}
                 <input
                   className="searchInput"
                   type="date"
+                  aria-label="釣果期間の開始日"
                   value={startDate}
                   onChange={(event) => setStartDate(event.target.value)}
                 />
+                <svg className="calendarIcon" aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M8 3v4M16 3v4M3 10h18" /></svg>
               </label>
-              <label className="sortSelectLabel">
-                釣果期間の終了日
+              <span className="dateRangeSeparator" aria-hidden="true">〜</span>
+              <label className={`dateInputLabel${endDate ? " hasValue" : ""}`}>
+                <span className="visuallyHidden">釣果期間の終了日</span>
+                {!endDate && <span className="datePlaceholder">終了日を選択</span>}
                 <input
                   className="searchInput"
                   type="date"
+                  aria-label="釣果期間の終了日"
                   value={endDate}
                   onChange={(event) => setEndDate(event.target.value)}
                 />
+                <svg className="calendarIcon" aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M8 3v4M16 3v4M3 10h18" /></svg>
               </label>
-            </div>
-
-            <div className="filterHeader sortFilterHeader">
-              <span>並び替え・リセット</span>
-              <span className="filterHint">絞り込み後に適用</span>
-            </div>
-            <div className="sortResetGrid">
-              <div className="sortControl">
-                <label className="sortSelectLabel" htmlFor="report-sort">
-                  現在の並び順
-                </label>
-                <select
-                  id="report-sort"
-                  className="sortSelect"
-                  value={selectedSort}
-                  onChange={(event) =>
-                    setSelectedSort(event.target.value as SortOption)
-                  }
-                >
-                  {activeSortOptions.map((option) => (
-                    <option value={option.value} key={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
               </div>
+            </section>
+
+            <section className="filterCard inlineFilterRow sortFilterRow">
+              <span className="filterCardTitle">並び替え</span>
+              <select
+                id="report-sort"
+                className="sortSelect"
+                aria-label="並び替え"
+                value={selectedSort}
+                onChange={(event) =>
+                  setSelectedSort(event.target.value as SortOption)
+                }
+              >
+                {activeSortOptions.map((option) => (
+                  <option value={option.value} key={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
               <button
                 type="button"
                 className="resetFiltersButton"
@@ -650,9 +647,10 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
                 disabled={isInitialState}
                 aria-disabled={isInitialState}
               >
-                条件をリセット
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 11a8 8 0 1 1 2.34 5.66" /><path d="M4 5v6h6" /></svg>
+                リセット
               </button>
-            </div>
+            </section>
           </div>
 
           <ExternalCatchMemoSection
