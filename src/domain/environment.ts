@@ -91,6 +91,7 @@ const tideReferenceBySpotId: Record<string, string> = {
   "fukushima-area": "伊万里",
   "takashima-area": "伊万里",
   "tabira-port": "平戸瀬戸",
+  "hirado-port": "平戸瀬戸",
   "hirado-seto": "平戸瀬戸",
   "ikitsuki-area": "平戸瀬戸",
 };

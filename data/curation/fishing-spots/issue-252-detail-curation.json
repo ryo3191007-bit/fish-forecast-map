@@ -1,0 +1,338 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 252,
+  "generatedAt": "2026-07-23T00:00:00.000Z",
+  "spots": [
+    {
+      "spotId": "hirado-port",
+      "sources": [
+        {
+          "id": "src-gsi-hirado-seto-20260723",
+          "sourceType": "map",
+          "sourceName": "地理院地図・地名検索",
+          "sourceUrl": "https://maps.gsi.go.jp/",
+          "checkedOn": "2026-07-23",
+          "note": "国土地理院の地名代表点で田平港、平戸港、平戸瀬戸の名称と概略位置を確認。座標は入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さず、地点種別、一般利用、釣り可否、設備、足場を裏付けない。"
+        },
+        {
+          "id": "src-mlit-hirado-route",
+          "sourceType": "official",
+          "sourceName": "平戸瀬戸航路",
+          "sourceUrl": "https://www.pa.qsr.mlit.go.jp/nagasaki/port/route/hirado/",
+          "checkedOn": "2026-07-23",
+          "note": "国土交通省九州地方整備局の資料。平戸瀬戸と周辺の田平港・平戸港の存在、名称、港湾としての地理関係を確認。一般立入、釣り可否、利用可能岸壁、設備、駐車、足場、常夜灯は裏付けない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "hirado-port:toilet",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:lighting",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:parking",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:access",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:restriction_status",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:fishable_area",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:shore_access",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:depth",
+          "itemKey": "depth",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:bottom_material",
+          "itemKey": "bottom_material",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:coastal_topography",
+          "itemKey": "coastal_topography",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:obstacles",
+          "itemKey": "obstacles",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:spot_features",
+          "itemKey": "spot_features",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:target_species",
+          "itemKey": "target_species",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "hirado-port:recommended_methods",
+          "itemKey": "recommended_methods",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "公的資料を確認したが、現在の一般利用可否または地点固有情報を確定できない。",
+          "checkedAt": "2026-07-23",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-gsi-hirado-seto-20260723",
+              "src-mlit-hirado-route"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    }
+  ]
+}

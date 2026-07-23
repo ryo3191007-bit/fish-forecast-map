@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 252,
+  "researchedAt": "2026-07-23",
+  "scope": {
+    "prefecture": "長崎県",
+    "municipality": "平戸市",
+    "areas": [
+      "田平町",
+      "平戸瀬戸田平側・平戸島側"
+    ]
+  },
+  "activeCandidates": [
+    {
+      "spotId": "tabira-port",
+      "name": "田平港",
+      "spotType": "その他",
+      "publicFacilityType": "港湾",
+      "latitude": 33.362153,
+      "longitude": 129.574114,
+      "previousCoordinates": {
+        "latitude": 33.365,
+        "longitude": 129.553
+      },
+      "areaName": "平戸",
+      "municipality": "平戸市",
+      "coordinatePrecision": "approximate",
+      "decision": "update_existing",
+      "reason": "国土地理院の地名代表点を基準に既存の暫定座標を修正する。港湾であり漁港とは記録しない。",
+      "relationToExisting": {
+        "existingSpotId": "hirado-seto",
+        "relation": "specific_spot_within_broad_context",
+        "migrationPolicy": "IDとactive状態を維持し、既存釣果、地点詳細、環境キャッシュ、履歴を移動・再割当・削除しない。"
+      }
+    },
+    {
+      "spotId": "hirado-port",
+      "name": "平戸港",
+      "spotType": "その他",
+      "publicFacilityType": "港湾",
+      "latitude": 33.37096,
+      "longitude": 129.553782,
+      "areaName": "平戸",
+      "municipality": "平戸市",
+      "coordinatePrecision": "approximate",
+      "decision": "adopt",
+      "reason": "国交省資料で港湾の存在・名称・平戸瀬戸との関係を、国土地理院の地名代表点で概略位置を確認。漁港とは記録しない。",
+      "relationToExisting": {
+        "existingSpotId": "hirado-seto",
+        "relation": "specific_spot_within_broad_context",
+        "migrationPolicy": "一意なIDで追加し、既存釣果を推測で再割当しない。"
+      }
+    },
+    {
+      "spotId": "hirado-seto",
+      "name": "平戸瀬戸周辺",
+      "spotType": "その他",
+      "publicFacilityType": "水道・航路の広域文脈",
+      "latitude": 33.363946,
+      "longitude": 129.569344,
+      "previousCoordinates": {
+        "latitude": 33.354,
+        "longitude": 129.579
+      },
+      "areaName": "平戸",
+      "municipality": "平戸市",
+      "coordinatePrecision": "approximate",
+      "decision": "update_existing",
+      "reason": "国土地理院の地名代表点を基準に広域地点の暫定座標を修正し、田平港と平戸港を包含する水道文脈として維持する。",
+      "relationToExisting": {
+        "existingSpotId": "hirado-seto",
+        "relation": "same_broad_context",
+        "migrationPolicy": "IDとactive状態を維持し、既存釣果を個別港へ自動再割当しない。"
+      }
+    }
+  ],
+  "heldOrExcluded": [
+    {
+      "name": "田平港・平戸港内の個別岸壁、旅客施設、市場周辺",
+      "decision": "hold",
+      "reason": "一般利用可能範囲、釣り可否、管理境界を公的資料から確定できない。"
+    },
+    {
+      "name": "平戸大橋橋脚、道路管理用地、無名の堤防先端・護岸・磯入口",
+      "decision": "exclude",
+      "reason": "入口、管理用地、実釣位置、危険箇所を推測して地点化しない。"
+    }
+  ],
+  "sources": {
+    "src-gsi-hirado-seto-20260723": {
+      "id": "src-gsi-hirado-seto-20260723",
+      "sourceType": "map",
+      "sourceName": "地理院地図・地名検索",
+      "sourceUrl": "https://maps.gsi.go.jp/",
+      "checkedOn": "2026-07-23",
+      "note": "国土地理院の地名代表点で田平港、平戸港、平戸瀬戸の名称と概略位置を確認。座標は入口、岸壁、堤防先端、駐車位置、実釣位置、危険箇所を示さず、地点種別、一般利用、釣り可否、設備、足場を裏付けない。"
+    },
+    "src-mlit-hirado-route": {
+      "id": "src-mlit-hirado-route",
+      "sourceType": "official",
+      "sourceName": "平戸瀬戸航路",
+      "sourceUrl": "https://www.pa.qsr.mlit.go.jp/nagasaki/port/route/hirado/",
+      "checkedOn": "2026-07-23",
+      "note": "国土交通省九州地方整備局の資料。平戸瀬戸と周辺の田平港・平戸港の存在、名称、港湾としての地理関係を確認。一般立入、釣り可否、利用可能岸壁、設備、駐車、足場、常夜灯は裏付けない。"
+    }
+  },
+  "migrationPolicy": [
+    "tabira-portとhirado-setoは削除・再insertせず、同一IDを対象に座標・説明のみ明示更新する。",
+    "hirado-portは一意なinsertとする。",
+    "既存釣果、地点詳細、環境キャッシュ、履歴状態を更新・削除・再割当しない。",
+    "repository migrationはforward-onlyで、remote Supabaseには本Issueで適用しない。"
+  ],
+  "researchStatePolicy": {
+    "unresearched": "調査未実施",
+    "researched_unknown": "列挙した公的sourceを確認したが確定できない。なし、0点、安全、利用可能へ変換しない。"
+  }
+}
