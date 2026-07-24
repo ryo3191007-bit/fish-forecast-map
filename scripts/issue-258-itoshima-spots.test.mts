@@ -18,6 +18,15 @@ const LEGACY = ["nokita-port", "nokita-beach", "keya-port", "keya-gate", "funako
 const UNKNOWN = ["toilet", "lighting", "parking", "access", "restriction_status", "fishable_area", "shore_access", "depth", "bottom_material", "coastal_topography", "obstacles", "spot_features", "target_species", "recommended_methods"];
 const audit = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-258-itoshima-implementation-input.json", "utf8"));
 const details = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-258-detail-curation.json", "utf8"));
+const reResearchFiles = [
+  "data/curation/fishing-spots/issue-278-itoshima-detail-reresearch.json",
+  "data/curation/fishing-spots/issue-278-itoshima-detail-reresearch-central.json",
+  "data/curation/fishing-spots/issue-278-itoshima-detail-reresearch-south.json",
+];
+const reResearchSpots = reResearchFiles.flatMap((path) => JSON.parse(fs.readFileSync(path, "utf8")).spots as Array<{ spotId: string; values: Array<{ itemKey: string; informationState: string }> }>);
+const reResearchStateBySpotItem = new Map(reResearchSpots.flatMap((spot) =>
+  spot.values.map((value) => [`${spot.spotId}:${value.itemKey}`, value.informationState] as const),
+));
 const seed = fs.readFileSync("supabase/sql/003_master_data_seed.sql", "utf8");
 const migration = fs.readFileSync("supabase/migrations/20260723130000_add_issue_258_itoshima_west_spots.sql", "utf8");
 assert.equal(new Set(fishingSpots.map((spot) => spot.id)).size, fishingSpots.length, "all master IDs must remain unique");
@@ -54,7 +63,12 @@ for (const [id, expected] of EXPECTED) {
     assert.ok(value?.sources.checked.length > 0);
   }
   const runtime = buildStaticFishingSpotDetailsFromSpots(fishingSpots).values.filter((value) => value.spotId === id);
-  assert.ok(UNKNOWN.every((key) => runtime.some((value) => value.itemKey === key && value.informationState === "researched_unknown")));
+  for (const key of UNKNOWN) {
+    const reResearchState = reResearchStateBySpotItem.get(`${id}:${key}`);
+    const runtimeValue = runtime.find((value) => value.itemKey === key);
+    assert.equal(runtimeValue?.informationState, reResearchState ?? "researched_unknown", `${id}:${key}: runtime must use the latest curation state`);
+    if (reResearchState) assert.ok(runtimeValue?.id.endsWith(":issue278"), `${id}:${key}: re-research value must override Issue #258 runtime value`);
+  }
   const urls: string[] = [];
   await fetchFishingEnvironment(toEnvironmentPoint(spot), { storage: null, now: () => new Date("2026-07-23T00:00:00Z"), fetchImpl: async (input: string) => { urls.push(input); return { ok: true, status: 200, json: async () => ({ hourly: { time: ["2026-07-23T00:00"], temperature_2m: [25], wave_height: [0.5] } }) }; } });
   assert.equal(urls.length, 2);
