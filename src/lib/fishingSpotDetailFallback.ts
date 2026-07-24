@@ -108,7 +108,7 @@ function mapCuratedSpot(spot: CuratedSpot, supplementalSpot?: CuratedSpot): Spot
     moderationStatus: "not_required",
     reviewStatus: "reviewed",
     adoptionStatus: "adopted",
-    note: value.note,
+    note: null,
     checkedAt: value.checkedAt,
     sources: (["supporting", "checked", "contradicting"] as SpotDetailSourceRelation[]).flatMap((relation) =>
       value.sources[relation].flatMap((sourceId) => {
