@@ -4,11 +4,34 @@ import { fishingSpots } from "../src/data/fishingSpots";
 import { applyFishingSpotCoordinateOverrides } from "../src/data/fishingSpotCoordinateOverrides";
 
 const excluded = new Set(["karatsu-east-port", "maetsuyoshi-fishing-port"]);
+const evidenceRoots = [
+  path.join("data", "research", "fishing-spots"),
+  path.join("data", "curation", "fishing-spots"),
+];
 
-function haversineKm(
-  a: { latitude: number; longitude: number },
-  b: { latitude: number; longitude: number },
-) {
+type Point = { latitude: number; longitude: number };
+type Candidate = Point & {
+  file: string;
+  jsonPath: string;
+  coordinatePrecision: string | null;
+  coordinateMethod: string | null;
+  coordinateScope: string | null;
+  status: string | null;
+  confidence: string | null;
+  checkedAt: string | null;
+  decision: string | null;
+  reason: string | null;
+  note: string | null;
+  sources: Array<{
+    sourceType: string | null;
+    publisher: string | null;
+    title: string | null;
+    url: string | null;
+    checkedAt: string | null;
+  }>;
+};
+
+function haversineKm(a: Point, b: Point) {
   const toRadians = (value: number) => (value * Math.PI) / 180;
   const earthRadiusKm = 6371;
   const dLat = toRadians(b.latitude - a.latitude);
@@ -20,6 +43,120 @@ function haversineKm(
   return 2 * earthRadiusKm * Math.asin(Math.sqrt(h));
 }
 
+function listJsonFiles(root: string): string[] {
+  if (!fs.existsSync(root)) return [];
+  return fs.readdirSync(root, { withFileTypes: true }).flatMap((entry) => {
+    const target = path.join(root, entry.name);
+    if (entry.isDirectory()) return listJsonFiles(target);
+    return entry.isFile() && entry.name.endsWith(".json") ? [target] : [];
+  });
+}
+
+function asFiniteNumber(value: unknown): number | null {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function sourceList(root: any, sourceIds?: string[]) {
+  const sources = Array.isArray(root?.sources)
+    ? root.sources
+    : root?.sources && typeof root.sources === "object"
+      ? Object.entries(root.sources).map(([id, source]) => ({ id, ...(source as object) }))
+      : [];
+  const filtered = sourceIds && sourceIds.length > 0
+    ? sources.filter((source: any) => sourceIds.includes(source.id))
+    : sources;
+  return filtered.map((source: any) => ({
+    sourceType: source.sourceType ?? null,
+    publisher: source.publisher ?? source.sourceName ?? null,
+    title: source.title ?? source.sourceName ?? null,
+    url: source.url ?? source.sourceUrl ?? null,
+    checkedAt: source.checkedAt ?? source.checkedOn ?? null,
+  }));
+}
+
+const candidatesBySpot = new Map<string, Candidate[]>();
+
+function addCandidate(spotId: string, candidate: Candidate) {
+  const candidates = candidatesBySpot.get(spotId) ?? [];
+  const duplicate = candidates.some((existing) =>
+    existing.file === candidate.file
+      && existing.latitude === candidate.latitude
+      && existing.longitude === candidate.longitude
+  );
+  if (!duplicate) candidates.push(candidate);
+  candidatesBySpot.set(spotId, candidates);
+}
+
+function inspectJsonFile(file: string) {
+  const root = JSON.parse(fs.readFileSync(file, "utf8"));
+  const relativeFile = file.replaceAll("\\", "/");
+
+  function walk(value: any, jsonPath: string) {
+    if (!value || typeof value !== "object") return;
+
+    if (typeof value.spotId === "string") {
+      const coordinates = value.identity?.coordinates;
+      const directLatitude = asFiniteNumber(value.latitude);
+      const directLongitude = asFiniteNumber(value.longitude);
+      const nestedLatitude = asFiniteNumber(coordinates?.latitude);
+      const nestedLongitude = asFiniteNumber(coordinates?.longitude);
+
+      if (nestedLatitude !== null && nestedLongitude !== null) {
+        const supportingIds = coordinates?.evidenceSources?.supportingSourceIds ?? [];
+        const checkedIds = coordinates?.evidenceSources?.checkedSourceIds ?? [];
+        addCandidate(value.spotId, {
+          file: relativeFile,
+          jsonPath: `${jsonPath}.identity.coordinates`,
+          latitude: nestedLatitude,
+          longitude: nestedLongitude,
+          coordinatePrecision: coordinates?.coordinatePrecision ?? null,
+          coordinateMethod: coordinates?.coordinateMethod ?? null,
+          coordinateScope: coordinates?.coordinateScope ?? null,
+          status: coordinates?.status ?? null,
+          confidence: coordinates?.confidence ?? null,
+          checkedAt: coordinates?.checkedAt ?? root.researchedAt ?? null,
+          decision: value.decision ?? null,
+          reason: value.reason ?? null,
+          note: coordinates?.note ?? null,
+          sources: sourceList(root, [...new Set([...supportingIds, ...checkedIds])]),
+        });
+      } else if (directLatitude !== null && directLongitude !== null) {
+        addCandidate(value.spotId, {
+          file: relativeFile,
+          jsonPath,
+          latitude: directLatitude,
+          longitude: directLongitude,
+          coordinatePrecision: value.coordinatePrecision ?? null,
+          coordinateMethod: value.coordinateMethod ?? null,
+          coordinateScope: value.coordinateScope ?? null,
+          status: value.status ?? null,
+          confidence: value.confidence ?? null,
+          checkedAt: value.checkedAt ?? root.researchedAt ?? null,
+          decision: value.decision ?? null,
+          reason: value.reason ?? null,
+          note: value.note ?? null,
+          sources: sourceList(root),
+        });
+      }
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach((item, index) => walk(item, `${jsonPath}[${index}]`));
+      return;
+    }
+    for (const [key, child] of Object.entries(value)) {
+      walk(child, `${jsonPath}.${key}`);
+    }
+  }
+
+  walk(root, "$");
+}
+
+for (const file of evidenceRoots.flatMap(listJsonFiles)) {
+  inspectJsonFile(file);
+}
+
 const runtimeById = new Map(
   applyFishingSpotCoordinateOverrides(fishingSpots).map((spot) => [spot.id, spot]),
 );
@@ -27,45 +164,13 @@ const runtimeById = new Map(
 const records = fishingSpots
   .filter((spot) => !excluded.has(spot.id))
   .map((spot) => {
-    const researchPath = path.join("data", "research", "fishing-spots", `${spot.id}.json`);
-    if (!fs.existsSync(researchPath)) {
-      return {
-        spotId: spot.id,
-        name: spot.name,
-        areaName: spot.areaName,
-        current: {
-          latitude: runtimeById.get(spot.id)?.latitude ?? spot.latitude,
-          longitude: runtimeById.get(spot.id)?.longitude ?? spot.longitude,
-          coordinatePrecision: runtimeById.get(spot.id)?.coordinatePrecision ?? spot.coordinatePrecision,
-        },
-        missingResearch: true,
-      };
-    }
-
-    const research = JSON.parse(fs.readFileSync(researchPath, "utf8"));
-    const coordinates = research.identity?.coordinates;
     const current = runtimeById.get(spot.id) ?? spot;
-    const researchPoint = {
-      latitude: Number(coordinates?.latitude),
-      longitude: Number(coordinates?.longitude),
-    };
-    const sourceById = new Map(
-      (research.sources ?? []).map((source: { id: string }) => [source.id, source]),
-    );
-    const supportingIds = coordinates?.evidenceSources?.supportingSourceIds ?? [];
-    const checkedIds = coordinates?.evidenceSources?.checkedSourceIds ?? [];
-    const coordinateSources = [...new Set([...supportingIds, ...checkedIds])]
-      .map((sourceId) => sourceById.get(sourceId))
-      .filter(Boolean)
-      .map((source: any) => ({
-        id: source.id,
-        sourceType: source.sourceType,
-        publisher: source.publisher,
-        title: source.title,
-        url: source.url,
-        checkedAt: source.checkedAt,
-        relation: supportingIds.includes(source.id) ? "supporting" : "checked",
-      }));
+    const candidates = (candidatesBySpot.get(spot.id) ?? [])
+      .map((candidate) => ({
+        ...candidate,
+        distanceKm: Number(haversineKm(current, candidate).toFixed(3)),
+      }))
+      .sort((a, b) => a.file.localeCompare(b.file) || a.distanceKm - b.distanceKm);
 
     return {
       spotId: spot.id,
@@ -76,19 +181,7 @@ const records = fishingSpots
         longitude: current.longitude,
         coordinatePrecision: current.coordinatePrecision,
       },
-      research: {
-        ...researchPoint,
-        coordinateMethod: coordinates?.coordinateMethod ?? null,
-        coordinateScope: coordinates?.coordinateScope ?? null,
-        status: coordinates?.status ?? null,
-        confidence: coordinates?.confidence ?? null,
-        checkedAt: coordinates?.checkedAt ?? null,
-        note: coordinates?.note ?? null,
-      },
-      distanceKm: Number.isFinite(researchPoint.latitude) && Number.isFinite(researchPoint.longitude)
-        ? Number(haversineKm(current, researchPoint).toFixed(3))
-        : null,
-      coordinateSources,
+      candidates,
     };
   });
 
@@ -97,4 +190,4 @@ fs.writeFileSync(
   "artifacts/issue-296-coordinate-export.json",
   `${JSON.stringify({ count: records.length, records }, null, 2)}\n`,
 );
-console.log(`Exported ${records.length} coordinate audit records.`);
+console.log(`Exported ${records.length} coordinate audit records with ${[...candidatesBySpot.values()].flat().length} evidence candidates.`);
