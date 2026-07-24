@@ -138,6 +138,18 @@ export function resolveSelectedForecastTime(
   return getNearestForecastTime(rows, now);
 }
 
+export function getAvailableForecastDates(rows: Array<{ forecastTime: string }>): string[] {
+  return [...new Set(rows.map((row) => row.forecastTime.slice(0, 10)))].sort();
+}
+
+export function getFirstForecastTimeForDate(
+  rows: Array<{ forecastTime: string }>,
+  date: string,
+): string | null {
+  if (!getAvailableForecastDates(rows).includes(date)) return null;
+  return rows.find((row) => row.forecastTime.startsWith(`${date}T`))?.forecastTime ?? null;
+}
+
 export function getEvaluationReferenceTime(selectedTime: string | null, now = new Date()) {
   if (selectedTime) return selectedTime;
   const parts = new Intl.DateTimeFormat("en-CA", {

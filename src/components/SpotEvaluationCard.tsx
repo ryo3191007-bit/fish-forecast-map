@@ -18,7 +18,7 @@ import type {
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
 import type { JmaWarningDecision } from "@/domain/jmaWarning";
 import { getJmaWarningDisplay } from "@/domain/jmaWarningPresentation";
-import { findDisplayableSpotDetail, formatSpotDetailValue, formatTerrainDetailForPresentation, getEnvironmentStatusLabel, getEvaluationReferenceTime, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
+import { findDisplayableSpotDetail, formatSpotDetailValue, formatTerrainDetailForPresentation, getAvailableForecastDates, getEnvironmentStatusLabel, getEvaluationReferenceTime, getFirstForecastTimeForDate, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形";
 
@@ -69,6 +69,7 @@ export function SpotEvaluationCard(props: Props) {
   const { selectedTime, onSelectedTimeChange } = props;
   const selectedEnvironment = props.environment?.point.spotId === props.selectedSpotId ? props.environment : null;
   const rows = useMemo(() => selectedEnvironment?.hourly ?? [], [selectedEnvironment]);
+  const availableDates = useMemo(() => getAvailableForecastDates(rows), [rows]);
   const selectedRow = rows.find((row) => row.forecastTime === props.selectedTime) ?? null;
   const selectedIndex = selectedRow ? rows.indexOf(selectedRow) : -1;
   const selectedDate = (selectedRow?.forecastTime ?? "").slice(0, 10);
@@ -93,7 +94,10 @@ export function SpotEvaluationCard(props: Props) {
 
       <div className="sharedTimeControls" aria-label="評価・環境の共通日時">
         <div className="sharedTimeInputs">
-          <label>日付<input type="date" value={selectedDate} disabled={!rows.length} onChange={(event) => props.onSelectedTimeChange(rows.find((row) => row.forecastTime.startsWith(event.target.value))?.forecastTime ?? resolveSelectedForecastTime(rows, null))} /></label>
+          <label>日付<input type="date" value={selectedDate} min={availableDates[0]} max={availableDates.at(-1)} disabled={!availableDates.length} onChange={(event) => {
+            const forecastTime = getFirstForecastTimeForDate(rows, event.target.value);
+            if (forecastTime) props.onSelectedTimeChange(forecastTime);
+          }} /></label>
           <label>時刻<select value={selectedRow?.forecastTime ?? ""} disabled={!selectedRow} onChange={(event) => props.onSelectedTimeChange(event.target.value)}>{dayRows.map((row) => <option key={row.forecastTime} value={row.forecastTime}>{row.forecastTime.slice(11, 16)}</option>)}</select></label>
         </div>
         <div className="sharedTimeNavigation">
