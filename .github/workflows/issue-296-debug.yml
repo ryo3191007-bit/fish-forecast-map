@@ -21,13 +21,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Capture issue 296 test output
+      - name: Capture full test output
         run: |
           mkdir -p artifacts
           set +e
-          npx tsx scripts/issue-296-remaining-coordinate-audit.test.mts > artifacts/issue-296-debug.log 2>&1
+          npm test > artifacts/issue-296-debug.log 2>&1
           echo $? > artifacts/issue-296-exit-code.txt
-          cat artifacts/issue-296-debug.log
+          tail -200 artifacts/issue-296-debug.log
       - uses: actions/upload-artifact@v4
         with:
           name: issue-296-debug
