@@ -23,8 +23,12 @@ function isApprovedUserValue(value: SpotDetailValue) {
     && value.adoptionStatus === "adopted";
 }
 
+function isStaticReresearchOverride(value: SpotDetailValue) {
+  return /:issue\d+$/.test(value.id);
+}
+
 /**
- * Issue #278 re-research values ship with the application so they can replace older
+ * Static re-research values ship with the application so they can replace older
  * Supabase curated rows immediately after deployment. Approved user contributions keep
  * priority, and the remote database is not modified by this read-time merge.
  */
@@ -32,7 +36,7 @@ export function mergeStaticSpotDetailOverrides(
   databaseDetails: FishingSpotDetailSet,
   staticDetails: FishingSpotDetailSet,
 ): FishingSpotDetailSet {
-  const overrides = staticDetails.values.filter((value) => value.id.endsWith(":issue278"));
+  const overrides = staticDetails.values.filter(isStaticReresearchOverride);
   if (overrides.length === 0) return databaseDetails;
 
   const overrideKeys = new Set(overrides.map(valueKey));
