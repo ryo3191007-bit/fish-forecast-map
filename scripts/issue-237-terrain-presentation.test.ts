@@ -18,6 +18,8 @@ const laterReresearchedIssue205Spots = new Set([
   "kabeshima-port",
   "hado-port",
   "nagoya-port",
+  "haregi-port",
+  "takakushi-port",
 ]);
 
 assert.equal(fishingSpots.length, 52);
