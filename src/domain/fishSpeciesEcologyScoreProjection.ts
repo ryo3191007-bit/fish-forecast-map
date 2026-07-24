@@ -89,7 +89,7 @@ function isClaim(value: unknown): value is EcologyClaim {
 
 /** Strict build-time projection. Invalid accepted data fails generation rather than becoming a fallback. */
 export function projectEcologyForScore(document: EcologyProjectionDocument): EcologyScoreProjection[] {
-  if (!(document.speciesId in SCORE_V2_SPECIES_ID_MAP)) throw new Error(`${document.speciesId}: unknown speciesId`);
+  if (!Object.hasOwn(SCORE_V2_SPECIES_ID_MAP, document.speciesId)) throw new Error(`${document.speciesId}: unknown speciesId`);
   const speciesId = document.speciesId as FishSpeciesEcologyId;
   const scoreSpecies = SCORE_V2_SPECIES_ID_MAP[speciesId];
   const decisions = new Map(document.review.attributeDecisions.map((decision) => [decision.path, decision]));
