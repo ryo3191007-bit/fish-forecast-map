@@ -513,6 +513,10 @@
               "spot_affinity",
               "environment_score",
               "method_affinity",
+              "score_v2_water_temperature",
+              "score_v2_season_time",
+              "score_v2_spot_affinity",
+              "score_v2_method_affinity",
               "score_excluded"
             ]
           },

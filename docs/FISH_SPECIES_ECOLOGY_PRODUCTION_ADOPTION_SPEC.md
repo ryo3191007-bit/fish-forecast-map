@@ -28,3 +28,5 @@
 ## 適用範囲
 
 本仕様は調査・採否と後続出力方針だけを確定する。SCORE v2の計算コード、配点、重み、閾値、本番魚種マスター、UI、DBは変更しない。
+
+SCORE v2へ渡す軸固有purpose、魚種解決、欠損計算、固定値移行分類は`docs/FISH_SPECIES_ECOLOGY_SCORE_V2_CONNECTION_SPEC.md`を正本とする。広い用途値や`acceptedPaths`だけではSCORE利用を許可しない。

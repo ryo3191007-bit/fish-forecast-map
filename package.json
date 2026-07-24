@@ -38,7 +38,7 @@
     "test:bathymetry-point": "node scripts/bathymetry-point.test.mjs",
     "test:issue-163-fishing-spots": "node scripts/fishing-spot-research-schema.test.mjs",
     "test:issue-178-safe-spots-production": "node scripts/issue-178-safe-spots-production.test.mjs",
-    "test:fish-species-ecology": "node scripts/fish-species-ecology-schema.test.mjs",
+    "test:fish-species-ecology": "node scripts/fish-species-ecology-schema.test.mjs && tsx scripts/fish-species-ecology-score-projection.test.mts",
     "test:fishing-spot-detail-foundation": "node scripts/fishing-spot-detail-foundation.test.mjs",
     "test:fishing-spot-detail-runtime": "node scripts/fishing-spot-detail-runtime.test.mjs",
     "test:issue-181-fishing-spot-details": "node scripts/issue-181-fishing-spot-details.test.mjs",
