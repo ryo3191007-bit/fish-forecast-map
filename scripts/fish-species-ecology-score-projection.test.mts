@@ -33,6 +33,11 @@ assert.deepEqual(projectEcologyForScore(valid)[0].value, { min: 18, max: 22 }, "
 
 const unknownSpecies = structuredClone(fixture); unknownSpecies.speciesId = "unknown-fish";
 assert.throws(() => projectEcologyForScore(unknownSpecies), /unknown speciesId/);
+for (const inheritedSpeciesId of ["toString", "constructor"]) {
+  const inheritedSpecies = structuredClone(fixture);
+  inheritedSpecies.speciesId = inheritedSpeciesId;
+  assert.throws(() => projectEcologyForScore(inheritedSpecies), /unknown speciesId/, `${inheritedSpeciesId}: inherited object key must not be accepted as a speciesId`);
+}
 for (const id of ["aji", "maruaji"]) assert.deepEqual(projectEcologyForScore(read(id)), [], `${id} normally has an empty projection`);
 for (const id of ["aji", "maruaji"]) { const unsupported = structuredClone(valid); unsupported.speciesId = id; assert.throws(() => projectEcologyForScore(unsupported), /unsupported species/); }
 assert.throws(() => projectEcologyForScore(withDecision(temperaturePath, "score_v2_water_temperature", { status: "unknown", value: null })), /no usable value/);
