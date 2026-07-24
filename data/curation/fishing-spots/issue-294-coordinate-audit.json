@@ -1,0 +1,134 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 294,
+  "researchedAt": "2026-07-25",
+  "policy": {
+    "meaning": "港または港湾地区を識別する概略代表点",
+    "doesNotMean": [
+      "釣り可能な正確な立ち位置",
+      "一般立入可能な入口",
+      "駐車可能な場所",
+      "堤防先端",
+      "安全な足場"
+    ],
+    "precision": "法定港域や測量成果を示さないため、両地点とも approximate を維持する"
+  },
+  "spots": [
+    {
+      "spotId": "karatsu-east-port",
+      "name": "唐津東港",
+      "previousCoordinates": {
+        "latitude": 33.459,
+        "longitude": 129.993
+      },
+      "adoptedCoordinates": {
+        "latitude": 33.469823,
+        "longitude": 129.963189
+      },
+      "coordinatePrecision": "approximate",
+      "validationBounds": {
+        "minLatitude": 33.4685,
+        "maxLatitude": 33.471,
+        "minLongitude": 129.9615,
+        "maxLongitude": 129.9665
+      },
+      "basis": "国土交通省の唐津港案内で東港地区とフェリー機能を確認し、唐津市の公式施設案内で唐津みなと交流センターの所在地を東大島町2番地52と確認した。地図参照で同施設・東港岸壁周辺の位置を独立確認し、港湾地区を識別する代表点として採用した。",
+      "sources": [
+        {
+          "id": "src-mlit-karatsu-port-issue294",
+          "sourceType": "official",
+          "sourceName": "国土交通省 九州地方整備局 唐津港湾事務所 唐津港",
+          "sourceUrl": "https://www.pa.qsr.mlit.go.jp/karatsu/port/karatsu.html",
+          "checkedOn": "2026-07-25",
+          "relation": "supporting",
+          "note": "唐津港の東港地区にフェリー機能があることを確認。"
+        },
+        {
+          "id": "src-karatsu-city-terminal-issue294",
+          "sourceType": "official",
+          "sourceName": "唐津市 唐津みなと交流センター（唐津フェリーターミナル）",
+          "sourceUrl": "https://www.city.karatsu.lg.jp/page/3663.html",
+          "checkedOn": "2026-07-25",
+          "relation": "supporting",
+          "note": "施設所在地が佐賀県唐津市東大島町2番地52であることを確認。"
+        },
+        {
+          "id": "src-mapfan-karatsu-east-terminal-issue294",
+          "sourceType": "map_reference",
+          "sourceName": "MapFan 唐津東港FT（九州郵船）",
+          "sourceUrl": "https://mapfan.com/spots/SC3IH,J,UE",
+          "checkedOn": "2026-07-25",
+          "relation": "supporting",
+          "note": "公式所在地と一致する東港岸壁・交流センター周辺の地図座標を確認。座標値は概略代表点として丸めて採用。"
+        },
+        {
+          "id": "src-gsi-karatsu-east-issue294",
+          "sourceType": "public_map",
+          "sourceName": "国土地理院 地理院地図 唐津東港周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#17/33.469823/129.963189/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-25",
+          "relation": "checked",
+          "note": "採用点が東大島町の東港岸壁周辺に位置することを目視確認するための地図参照。"
+        }
+      ]
+    },
+    {
+      "spotId": "maetsuyoshi-fishing-port",
+      "name": "前津吉漁港",
+      "previousCoordinates": {
+        "latitude": 33.1858,
+        "longitude": 129.5148
+      },
+      "adoptedCoordinates": {
+        "latitude": 33.21062,
+        "longitude": 129.45292
+      },
+      "coordinatePrecision": "approximate",
+      "validationBounds": {
+        "minLatitude": 33.2085,
+        "maxLatitude": 33.213,
+        "minLongitude": 129.4505,
+        "maxLongitude": 129.456
+      },
+      "basis": "水産庁・長崎県資料で前津吉漁港の正式名称、所在地、管理主体を確認し、地図参照で平戸市前津吉町の港湾位置を独立確認した。港内の特定岸壁や実釣位置ではなく、漁港を識別する概略代表点として採用した。",
+      "sources": [
+        {
+          "id": "src-jfa-nagasaki-ports-issue294",
+          "sourceType": "official",
+          "sourceName": "水産庁 長崎県漁港一覧",
+          "sourceUrl": "https://www.jfa.maff.go.jp/j/gyoko_gyozyo/g_zyoho_bako/gyoko_itiran/attach/pdf/sub81-292.pdf",
+          "checkedOn": "2026-07-25",
+          "relation": "supporting",
+          "note": "前津吉漁港の正式名称と漁港区分を確認。"
+        },
+        {
+          "id": "src-nagasaki-ports-issue294",
+          "sourceType": "official",
+          "sourceName": "長崎県 所在地別漁港一覧・港湾概要",
+          "sourceUrl": "https://www.pref.nagasaki.jp/doc/45593.html",
+          "checkedOn": "2026-07-25",
+          "relation": "supporting",
+          "note": "平戸市前津吉町に所在する県管理漁港であることを確認。"
+        },
+        {
+          "id": "src-mapcarta-maetsuyoshi-issue294",
+          "sourceType": "map_reference",
+          "sourceName": "Mapcarta / GeoNames 前津吉漁港",
+          "sourceUrl": "https://mapcarta.com/16044708",
+          "checkedOn": "2026-07-25",
+          "relation": "supporting",
+          "note": "前津吉町の港湾地点として緯度33.21062、経度129.45292を確認。公式資料による所在地確認と組み合わせて概略代表点に採用。"
+        },
+        {
+          "id": "src-gsi-maetsuyoshi-issue294",
+          "sourceType": "public_map",
+          "sourceName": "国土地理院 地理院地図 前津吉漁港周辺",
+          "sourceUrl": "https://maps.gsi.go.jp/#17/33.210620/129.452920/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-25",
+          "relation": "checked",
+          "note": "採用点が平戸市前津吉町の港湾部に位置することを目視確認するための地図参照。"
+        }
+      ]
+    }
+  ]
+}
