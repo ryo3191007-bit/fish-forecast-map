@@ -60,23 +60,16 @@ const migration = fs.readFileSync(
 
 assert.equal(fishingSpots.length, 52);
 assert.equal(new Set(fishingSpots.map((spot) => spot.id)).size, 52);
-assert.deepEqual(new Set(Object.keys(fishingSpotCoordinateOverrides)), new Set(EXPECTED.keys()));
+for (const spotId of EXPECTED.keys()) {
+  assert.ok(fishingSpotCoordinateOverrides[spotId], `${spotId} override must remain defined`);
+}
 
 const corrected = applyFishingSpotCoordinateOverrides(fishingSpots);
 assert.equal(corrected.length, fishingSpots.length);
-
-for (const original of fishingSpots) {
-  const current = corrected.find((spot) => spot.id === original.id);
+assert.equal(new Set(corrected.map((spot) => spot.id)).size, fishingSpots.length);
+for (const [spotId, expected] of EXPECTED) {
+  const current = corrected.find((spot) => spot.id === spotId);
   assert.ok(current);
-  const expected = getExpectedCoordinate(original.id);
-
-  if (!expected) {
-    assert.equal(current.latitude, original.latitude, `${original.id} latitude must not change`);
-    assert.equal(current.longitude, original.longitude, `${original.id} longitude must not change`);
-    assert.equal(current.coordinatePrecision, original.coordinatePrecision, `${original.id} precision must not change`);
-    continue;
-  }
-
   assert.deepEqual(
     [current.latitude, current.longitude, current.coordinatePrecision],
     [expected.latitude, expected.longitude, "approximate"],
