@@ -33,6 +33,8 @@ export function AppShell() {
           <button
             type="button"
             className="authNavButton"
+            title={loginLabel}
+            aria-label={loginLabel}
             onClick={() => setIsAuthOpen(true)}
           >
             {loginLabel}
@@ -40,9 +42,6 @@ export function AppShell() {
         </nav>
         <div className="heroGrid">
           <div>
-            <p className="eyebrow">
-              福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面まで
-            </p>
             <h1>Fish Forecast Map</h1>
           </div>
         </div>
