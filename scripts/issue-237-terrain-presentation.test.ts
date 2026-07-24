@@ -75,10 +75,10 @@ for (const spot of curation.spots) {
 
 const kodomo = scopeSpotDetails(details, "kodomo-port");
 assert.equal(formatTerrainDetailForPresentation(kodomo, "coastal_topography")?.text, "砂地");
-assert.equal(formatTerrainDetailForPresentation(kodomo, "spot_features")?.text, "砂浜、波止");
+assert.equal(formatTerrainDetailForPresentation(kodomo, "spot_features")?.text, "堤防、砂浜");
 const kabeshima = scopeSpotDetails(details, "kabeshima-port");
 assert.equal(formatTerrainDetailForPresentation(kabeshima, "coastal_topography"), null);
-assert.equal(formatTerrainDetailForPresentation(kabeshima, "spot_features")?.text, "波止、岸壁");
+assert.equal(formatTerrainDetailForPresentation(kabeshima, "spot_features")?.text, "堤防、岸壁");
 assert.doesNotMatch(formatTerrainDetailForPresentation(kabeshima, "spot_features")?.text ?? "", /呼子大橋|経路|陸路/);
 assert.equal(formatTerrainDetailForPresentation(scopeSpotDetails(details, "tobo-port"), "coastal_topography")?.text, "河口");
 
