@@ -24,6 +24,7 @@ const audit = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-254-
 const details = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-254-detail-curation.json", "utf8")) as Details;
 const seed = fs.readFileSync("supabase/sql/003_master_data_seed.sql", "utf8");
 const migration = fs.readFileSync("supabase/migrations/20260723050000_add_issue_254_ikitsuki_spots.sql", "utf8");
+const fallback = fs.readFileSync("src/lib/fishingSpotDetailFallback.ts", "utf8");
 const previousArtifacts = [fs.readFileSync("supabase/migrations/20260722233000_add_issue_250_matsuura_spots.sql", "utf8"), fs.readFileSync("supabase/migrations/20260723010000_add_issue_252_hirado_seto_spots.sql", "utf8")];
 function uuid(id: string) { const h = createHash("md5").update(id).digest("hex"); return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`; }
 function coordinates(sql: string, id: string) {
@@ -56,8 +57,11 @@ for (const id of NEW_IDS) {
   assert.equal(fishingSpots.filter((spot) => spot.id === id).length, 1);
   const curated = details.spots.find((spot) => spot.spotId === id); assert.ok(curated);
   for (const key of UNKNOWN_KEYS) { const value = curated.values.find((entry) => entry.itemKey === key); assert.ok(value); assert.equal(value.informationState, "researched_unknown"); assert.equal(value.valueText, null); assert.deepEqual(value.valueTextList, []); assert.equal(value.valueNumber, null); assert.equal(value.valueBoolean, null); assert.equal(value.confidence, null); assert.deepEqual(value.sources.supporting, []); assert.ok(value.sources.checked.includes(GSI) && value.sources.checked.includes(PORTS)); }
-  const runtime = buildStaticFishingSpotDetailsFromSpots(fishingSpots).values.filter((value) => value.spotId === id); assert.ok(UNKNOWN_KEYS.every((key) => runtime.some((value) => value.itemKey === key && value.informationState === "researched_unknown")));
+  const runtime = buildStaticFishingSpotDetailsFromSpots(fishingSpots).values.filter((value) => value.spotId === id);
+  assert.ok(runtime.some((value) => value.id.endsWith(":issue290") && ["coastal_topography", "spot_features", "shore_access"].includes(value.itemKey)), `${id}: later re-research may update the current display without changing Issue #254 audit data`);
 }
 for (const sourceId of [GSI, PORTS]) { assert.equal(audit.sources[sourceId]?.id, sourceId); assert.ok(details.spots.every((spot) => spot.sources.some(({ id }) => id === sourceId))); assert.ok(previousArtifacts.every((text) => !text.includes(sourceId))); }
 assert.notEqual(uuid(GSI), uuid("src-gsi-hirado-seto-20260723")); assert.notEqual(uuid(GSI), uuid("src-gsi-map"));
+assert.match(fallback, /issue-254-detail-curation\.json/);
+assert.match(fallback, /issue-290-ikitsuki-reresearch\.json/);
 console.log("Issue #254 Ikitsuki spot tests passed");
