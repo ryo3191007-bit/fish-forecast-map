@@ -10,8 +10,19 @@ const ajv = new Ajv2020({ strict: false, allErrors: true });
 addFormats(ajv);
 assert.doesNotThrow(() => ajv.compile(schema), 'schema must be valid JSON Schema');
 const validate = ajv.compile(schema);
-const targets = { aji: 'アジ', seabass: 'シーバス', chinu: 'チヌ' };
+const targets = { aji: 'アジ', maaji: 'マアジ', maruaji: 'マルアジ', seabass: 'シーバス', chinu: 'チヌ' };
+const scoreV2Support = { aji: 'unsupported', maaji: 'supported', maruaji: 'unsupported', seabass: 'supported', chinu: 'supported' };
 const docs = Object.fromEntries(Object.keys(targets).map((id) => [id, JSON.parse(fs.readFileSync(path.join(root, `data/research/fish-species/${id}.json`), 'utf8'))]));
+const ecologyKeys = ['seasonality', 'waterTemperature', 'depthRange', 'substrateHabitat', 'salinityAndWaterBody', 'dayNightTiming', 'fishingMethods', 'spawningOrConfusableInfo'];
+const requiredDecisionPaths = [
+  '/identity/canonicalNameJa', '/identity/scientificName', '/identity/aliases',
+  ...['stableGeneral', 'regionalCatchability'].flatMap((section) => ecologyKeys.map((key) => `/ecology/${section}/${key}`)),
+];
+
+function valueAtPointer(value, pointer) {
+  if (!pointer.startsWith('/')) return undefined;
+  return pointer.slice(1).split('/').reduce((current, token) => current?.[token.replaceAll('~1', '/').replaceAll('~0', '~')], value);
+}
 
 function collectClaims(value, pointer = '', claims = []) {
   if (value && typeof value === 'object') {
@@ -48,6 +59,7 @@ function validateResearchDoc(id, doc) {
   assert.equal(validate(doc), true, `${id}: ${ajv.errorsText(validate.errors)}`);
   assert.equal(doc.speciesId, id);
   assert.equal(doc.identity.displayNameJa, targets[id]);
+  assert.equal(doc.review.comparisonWithCurrentImplementation.scoreV2Status, scoreV2Support[id], `${id}: SCORE v2 support status must match the authoritative comparison`);
   const sourceIds = new Set(doc.sources.map((source) => source.id));
   assert.equal(sourceIds.size, doc.sources.length, `${id}: source ids must be unique`);
   const sourceById = new Map(doc.sources.map((source) => [source.id, source]));
@@ -62,8 +74,7 @@ function validateResearchDoc(id, doc) {
   }
 
   const claims = collectClaims(doc);
-  const allClaimPaths = new Set(claims.map(([pointer]) => pointer));
-  for (const source of doc.sources) for (const supportedPath of source.supports) assert(allClaimPaths.has(supportedPath), `${id}: source.supports points to missing claim ${supportedPath}`);
+  for (const source of doc.sources) for (const supportedPath of source.supports) assert.notEqual(valueAtPointer(doc, supportedPath), undefined, `${id}: source.supports points to missing attribute ${supportedPath}`);
 
   for (const [pointer, claim] of claims) {
     const lists = ['supportingSourceIds', 'checkedSourceIds', 'contradictingSourceIds'].map((key) => claim.evidenceSources[key]);
@@ -90,6 +101,27 @@ function validateResearchDoc(id, doc) {
     if (claim.value?.months) for (const month of claim.value.months) assert(month >= 1 && month <= 12, `${id}:${pointer}: invalid month`);
     if (pointer.endsWith('/waterTemperature') && claim.temperatureContext === 'spawning') assert(!pointer.includes('regionalCatchability'), `${id}:${pointer}: spawning temperature cannot be catchability input`);
   }
+  const decisionPaths = doc.review.attributeDecisions.map(({ path }) => path);
+  assert.equal(new Set(decisionPaths).size, decisionPaths.length, `${id}: decision paths must be unique`);
+  assert.deepEqual([...decisionPaths].sort(), [...requiredDecisionPaths].sort(), `${id}: identity and ecology attributes must each be classified exactly once`);
+  for (const decision of doc.review.attributeDecisions) {
+    assert.notEqual(valueAtPointer(doc, decision.path), undefined, `${id}:${decision.path}: decision points to missing attribute`);
+    for (const sourceId of decision.sourceIds) assert(sourceIds.has(sourceId), `${id}:${decision.path}: decision references missing source ${sourceId}`);
+    if (['adopt', 'adopt_with_warning'].includes(decision.decision)) {
+      assert(decision.sourceIds.length > 0, `${id}:${decision.path}: adopted decision requires source`);
+      for (const sourceId of decision.sourceIds) assert(sourceById.get(sourceId).supports.includes(decision.path), `${id}:${decision.path}: adopted source ${sourceId} does not support decision path`);
+    } else {
+      assert.deepEqual(decision.purposes, ['score_excluded'], `${id}:${decision.path}: hold/reject has no usable purpose`);
+    }
+  }
+  const accepted = doc.review.attributeDecisions
+    .filter(({ decision }) => ['adopt', 'adopt_with_warning'].includes(decision))
+    .map(({ path }) => path);
+  assert.deepEqual(doc.review.productionAdoption.acceptedPaths, accepted, `${id}: acceptedPaths must match decisions`);
+  for (const acceptedPath of doc.review.productionAdoption.acceptedPaths) {
+    const decision = doc.review.attributeDecisions.find(({ path }) => path === acceptedPath);
+    assert(decision && ['adopt', 'adopt_with_warning'].includes(decision.decision), `${id}: acceptedPaths contains unknown or non-adopted path ${acceptedPath}`);
+  }
   assert.notEqual(doc.identity.displayNameJa, doc.identity.scientificName.value, `${id}: display/scientific over-merged`);
   assert(doc.identity.entityType !== 'unknown' || doc.identity.canonicalNameJa.status === 'unknown');
 }
@@ -109,20 +141,39 @@ function assertNoOverSimilarCopies(allDocs) {
 for (const [id, doc] of Object.entries(docs)) validateResearchDoc(id, doc);
 assertNoOverSimilarCopies(docs);
 
-const copiedFixture = structuredClone(docs.aji);
-copiedFixture.speciesId = 'seabass';
-copiedFixture.identity.displayNameJa = 'シーバス';
-assert.throws(() => assertNoOverSimilarCopies({ aji: docs.aji, copiedFixture }), /overly similar copied text/);
+assert.equal(docs.aji.identity.entityType, 'species_group');
+assert.equal(docs.aji.identity.canonicalNameJa.value, null);
+assert.equal(docs.aji.identity.scientificName.value, null);
+assert.deepEqual(docs.aji.identity.memberSpeciesIds, ['maaji', 'maruaji']);
+assert(!docs.maaji.identity.aliases.includes('アジ'), 'unspecified アジ must not resolve to maaji');
+assert(!docs.maaji.identity.aliases.includes('真鯵'), 'unsourced 真鯵 must not be a maaji alias');
+for (const id of ['maaji', 'maruaji']) {
+  assert.equal(docs[id].identity.entityType, 'exact_species');
+  assert.equal(docs[id].identity.parentGroupId, 'aji');
+}
+assert.notDeepEqual(docs.maaji.sources.map(({ id }) => id), docs.maruaji.sources.map(({ id }) => id));
+assert.notDeepEqual(docs.maaji.ecology, docs.maruaji.ecology);
+assert(!docs.aji.review.productionAdoption.acceptedPaths.some((path) => path.startsWith('/ecology/')));
+assert.equal(docs.maruaji.ecology.regionalCatchability.waterTemperature.value, null);
+assert.equal(docs.maaji.ecology.stableGeneral.waterTemperature.value, null);
+assert.equal(
+  docs.maaji.review.attributeDecisions.find(({ path }) => path === '/ecology/stableGeneral/spawningOrConfusableInfo').purposes.includes('score_excluded'),
+  true,
+);
+assert(!docs.maaji.review.productionAdoption.acceptedPaths.includes('/ecology/regionalCatchability/waterTemperature'));
+
+const copiedFixture = structuredClone(docs.maaji);
+assert.throws(() => assertNoOverSimilarCopies({ maaji: docs.maaji, copiedFixture }), /overly similar copied text/);
 
 const oneWayFixture = structuredClone(docs.chinu);
 oneWayFixture.sources.find((source) => source.id === oneWayFixture.identity.scientificName.evidenceSources.supportingSourceIds[0]).supports = [];
 assert.throws(() => validateResearchDoc('chinu', oneWayFixture), /supportingSourceIds source .* does not reference claim path/);
 
 
-const checkedFixture = structuredClone(docs.aji);
+const checkedFixture = structuredClone(docs.maaji);
 const checkedClaim = checkedFixture.ecology.stableGeneral.depthRange;
 checkedClaim.evidenceSources.checkedSourceIds = ['tsuriking_fukuoka_aji'];
-assert.throws(() => validateResearchDoc('aji', checkedFixture), /checkedSourceIds source .* does not reference claim path/);
+assert.throws(() => validateResearchDoc('maaji', checkedFixture), /checkedSourceIds source .* does not reference claim path/);
 
 const contradictingFixture = structuredClone(docs.chinu);
 const contradictingClaim = contradictingFixture.ecology.regionalCatchability.waterTemperature;
@@ -150,5 +201,30 @@ const invalidMaximumOnlyCelsiusFixture = structuredClone(docs.chinu);
 invalidMaximumOnlyCelsiusFixture.ecology.regionalCatchability.waterTemperature.rangeType = 'maximum_only';
 invalidMaximumOnlyCelsiusFixture.ecology.regionalCatchability.waterTemperature.value = { max: 40 };
 assert.throws(() => validateResearchDoc('chinu', invalidMaximumOnlyCelsiusFixture), /invalid celsius max/);
+
+const duplicateDecisionFixture = structuredClone(docs.chinu);
+duplicateDecisionFixture.review.attributeDecisions.push(structuredClone(duplicateDecisionFixture.review.attributeDecisions[0]));
+assert.throws(() => validateResearchDoc('chinu', duplicateDecisionFixture), /decision paths must be unique/);
+
+const missingDecisionFixture = structuredClone(docs.chinu);
+missingDecisionFixture.review.attributeDecisions.pop();
+assert.throws(() => validateResearchDoc('chinu', missingDecisionFixture), /must each be classified exactly once/);
+
+const unsupportedAdoptionFixture = structuredClone(docs.chinu);
+const adoptedAliasDecision = unsupportedAdoptionFixture.review.attributeDecisions.find(({ path }) => path === '/identity/aliases');
+unsupportedAdoptionFixture.sources.find(({ id }) => id === adoptedAliasDecision.sourceIds[0]).supports = unsupportedAdoptionFixture.sources
+  .find(({ id }) => id === adoptedAliasDecision.sourceIds[0]).supports.filter((path) => path !== '/identity/aliases');
+assert.throws(() => validateResearchDoc('chinu', unsupportedAdoptionFixture), /adopted source .* does not support decision path/);
+
+const invalidAcceptedPathFixture = structuredClone(docs.chinu);
+invalidAcceptedPathFixture.review.productionAdoption.acceptedPaths.push('/identity/notKnown');
+assert.throws(() => validateResearchDoc('chinu', invalidAcceptedPathFixture), /acceptedPaths must match decisions/);
+
+const legacyVersionFixture = structuredClone(docs.chinu);
+legacyVersionFixture.schemaVersion = '1.0.0';
+assert.equal(validate(legacyVersionFixture), false, 'v1.0.0 is intentionally rejected after full v1.1.0 migration');
+const currentVersionFixture = structuredClone(docs.chinu);
+currentVersionFixture.schemaVersion = '1.1.0';
+assert.equal(validate(currentVersionFixture), true, 'v1.1.0 fixture must validate');
 
 console.log('fish species ecology schema tests passed');

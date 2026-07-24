@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "speciesId": "seabass",
   "identity": {
     "displayNameJa": "シーバス",
@@ -36,11 +36,13 @@
       "ハネ"
     ],
     "entityType": "exact_species",
-    "note": "シーバスは釣り用語として扱い、スズキ確認値と別種混入リスクを同時に管理する。"
+    "note": "シーバスは釣り用語として扱い、スズキ確認値と別種混入リスクを同時に管理する。",
+    "parentGroupId": null,
+    "memberSpeciesIds": []
   },
   "researchScope": {
     "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。ただし本JSONは本番SCOREへ自動採用しない。",
-    "checkedAt": "2026-07-18",
+    "checkedAt": "2026-07-24",
     "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
   },
   "ecology": {
@@ -272,7 +274,8 @@
         "/identity/canonicalNameJa",
         "/identity/scientificName",
         "/ecology/stableGeneral/salinityAndWaterBody",
-        "/ecology/stableGeneral/spawningOrConfusableInfo"
+        "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "/identity/aliases"
       ],
       "usageNote": "シーバス表示のcanonical候補確認に使うが、ヒラスズキ等との混同に注意。"
     },
@@ -301,31 +304,269 @@
     "secondaryResearch": "民間釣りサイト、SNS、動画、ブログ単独ではmedium以上にしない。",
     "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
     "comparisonWithCurrentImplementation": {
-      "currentFishSpeciesNameJa": "シーバス",
-      "currentSeasonMonths": [],
-      "currentMethodAffinity": [
-        "キャスティング"
-      ],
-      "currentCategory": "fish",
-      "comparisonPolicy": "現行値は比較対象に限定し、sourceまたは正解として不使用。"
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_PRODUCTION_ADOPTION_REVIEW.md",
+      "scoreV2Status": "supported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
     },
     "attributeDecisions": [
       {
         "path": "/identity/canonicalNameJa",
-        "decision": "adopt_with_warning",
-        "reason": "sourceで確認したcanonical候補。ただし表示名から単一種を推測確定しない。"
+        "decision": "adopt",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "tokyo_suzuki"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "medium",
+        "reason": "個別種を直接示す分類sourceがあり、identity表示に限定して採用できる。",
+        "recheckCondition": "source更新または分類変更時に再確認する。"
       },
       {
-        "path": "/ecology/regionalCatchability/seasonality",
+        "path": "/identity/scientificName",
+        "decision": "adopt",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "tokyo_suzuki"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "medium",
+        "reason": "個別種を直接示す分類sourceがあり、identity表示に限定して採用できる。",
+        "recheckCondition": "source更新または分類変更時に再確認する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "adopt",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "tokyo_suzuki"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "medium",
+        "reason": "分類・呼称sourceで確認できた名称だけをidentity表示・検索用aliasとして採用する。",
+        "recheckCondition": "aliasごとの直接source、曖昧性、解決可否を個別審査できる場合に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/seasonality",
         "decision": "hold",
-        "reason": "対象地域の遊漁釣れやすさを直接支えるsource未確認。unknown維持。"
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "adopt_with_warning",
+        "purposes": [
+          "ecology_description",
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "tokyo_suzuki"
+        ],
+        "regionScope": "東京湾・関東河川下流域",
+        "confidence": "medium",
+        "reason": "一般生態として保持するが、対象地域の釣れやすさやSCOREへ転用しない。",
+        "recheckCondition": "source更新または分類変更時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
         "decision": "adopt_with_warning",
-        "reason": "生態情報として採用候補。釣期やSCORE入力値へ転用しない。"
+        "purposes": [
+          "ecology_description",
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "tokyo_suzuki"
+        ],
+        "regionScope": "東京湾",
+        "confidence": "medium",
+        "reason": "産卵等の一般生態としてのみ保持し、釣期・適水温・SCOREへ転用しない。",
+        "recheckCondition": "source更新または分類変更時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "tsuribito_kyushu_autumn_seabass"
+        ],
+        "regionScope": "中国・九州の複数河川・河口",
+        "confidence": "medium",
+        "reason": "地域・遊漁文脈の候補記録に留まり、対象全域のSCORE入力には直接採用しない。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/waterTemperature",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/depthRange",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/substrateHabitat",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "tsuribito_kyushu_autumn_seabass"
+        ],
+        "regionScope": "中国・九州の複数河川・河口",
+        "confidence": "medium",
+        "reason": "地域・遊漁文脈の候補記録に留まり、対象全域のSCORE入力には直接採用しない。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/salinityAndWaterBody",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/dayNightTiming",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/fishingMethods",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "tsuribito_kyushu_autumn_seabass"
+        ],
+        "regionScope": "中国・九州の複数河川・河口",
+        "confidence": "medium",
+        "reason": "地域・遊漁文脈の候補記録に留まり、対象全域のSCORE入力には直接採用しない。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
       }
     ],
-    "reviewStatus": "ready_for_review"
+    "reviewStatus": "ready_for_review",
+    "productionAdoption": {
+      "projectionPolicy": "decisionがadoptまたはadopt_with_warningで、sourceIdsが存在する属性だけをspeciesId単位で明示投影する。親・子・兄弟間の継承、unknownのfallback補完は禁止する。",
+      "acceptedPaths": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/identity/aliases",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "unknownPolicy": "unknownまたはholdは値なしとして扱い、0点・不適・釣れないへ変換しない。"
+    }
   }
 }

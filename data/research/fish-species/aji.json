@@ -1,43 +1,42 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "speciesId": "aji",
   "identity": {
     "displayNameJa": "アジ",
     "canonicalNameJa": {
-      "value": "マアジ",
-      "status": "confirmed",
-      "confidence": "medium",
+      "value": null,
+      "status": "unknown",
+      "confidence": "unknown",
       "evidenceSources": {
-        "supportingSourceIds": [
-          "tokyo_maaji"
-        ],
+        "supportingSourceIds": [],
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "note": "表示名「アジ」は複数種・サイズ呼称を含み得るため、今回のcanonical候補は資料で確認したマアジに限定し、本番表示名の同義語とは扱わない。"
+      "note": "アジは複数の構成種を含むグループであり、単一のcanonical和名を設定しない。"
     },
     "scientificName": {
-      "value": "Trachurus japonicus",
-      "status": "confirmed",
-      "confidence": "medium",
+      "value": null,
+      "status": "unknown",
+      "confidence": "unknown",
       "evidenceSources": {
-        "supportingSourceIds": [
-          "tokyo_maaji"
-        ],
+        "supportingSourceIds": [],
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "note": "学名はsourceで直接確認できる場合のみ採用。"
+      "note": "グループ全体を単一種の学名で表さない。"
     },
-    "aliases": [
-      "マアジ"
-    ],
+    "aliases": [],
     "entityType": "species_group",
-    "note": "アジは表示上の総称性が高いため、マアジ調査値を表示魚種全体へ拡張しない前提で記録する。"
+    "note": "未特定のアジをマアジまたはマルアジへ自動解決しない。個別種の値をグループへ継承しない。",
+    "parentGroupId": null,
+    "memberSpeciesIds": [
+      "maaji",
+      "maruaji"
+    ]
   },
   "researchScope": {
     "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。ただし本JSONは本番SCOREへ自動採用しない。",
-    "checkedAt": "2026-07-18",
+    "checkedAt": "2026-07-24",
     "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
   },
   "ecology": {
@@ -51,7 +50,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "waterTemperature": {
         "value": null,
@@ -59,31 +58,21 @@
         "confidence": "unknown",
         "evidenceSources": {
           "supportingSourceIds": [],
-          "checkedSourceIds": [
-            "tokyo_maaji"
-          ],
-          "contradictingSourceIds": []
-        },
-        "note": "東京資料の16〜22℃は産卵水温であり、一般的な適水温・釣れやすい水温としては採用しない。将来のSCORE入力候補から除外する。",
-        "temperatureContext": "unknown"
-      },
-      "depthRange": {
-        "value": {
-          "max": 200
-        },
-        "status": "confirmed",
-        "confidence": "medium",
-        "evidenceSources": {
-          "supportingSourceIds": [
-            "tokyo_maaji"
-          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "成魚の一般的な「200m以浅」生息水深。根拠にない下限値を補完せず、岸釣り可能水深として扱わない。",
-        "unit": "m",
-        "regionScope": "日本周辺一般",
-        "rangeType": "maximum_only"
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "substrateHabitat": {
         "value": null,
@@ -94,7 +83,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "salinityAndWaterBody": {
         "value": null,
@@ -105,7 +94,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "dayNightTiming": {
         "value": null,
@@ -116,7 +105,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "fishingMethods": {
         "value": null,
@@ -127,65 +116,31 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "spawningOrConfusableInfo": {
-        "value": {
-          "months": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11
-          ],
-          "temperatureCelsius": {
-            "min": 16,
-            "max": 22
-          },
-          "temperatureContext": "spawning"
-        },
-        "status": "confirmed",
-        "confidence": "medium",
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
         "evidenceSources": {
-          "supportingSourceIds": [
-            "tokyo_maaji"
-          ],
+          "supportingSourceIds": [],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "九州沿岸の産卵期および産卵水温。釣期・釣れやすい水温・SCORE入力値へ転用しない。",
-        "regionScope": "九州沿岸"
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       }
     },
     "regionalCatchability": {
       "seasonality": {
-        "value": {
-          "months": [
-            7,
-            8,
-            9,
-            10,
-            11
-          ],
-          "basis": "福岡のアジング時期として紹介されるが、広域二次情報のため低信頼候補。"
-        },
-        "status": "inferred",
-        "confidence": "low",
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
         "evidenceSources": {
-          "supportingSourceIds": [
-            "tsuriking_fukuoka_aji"
-          ],
+          "supportingSourceIds": [],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域に近いが釣りメディアの一般記事。SCORE自動採用は保留。",
-        "regionScope": "福岡県内の複数ポイント紹介"
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "waterTemperature": {
         "value": null,
@@ -196,28 +151,18 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "depthRange": {
-        "value": {
-          "qualitative": [
-            "水深がある岸壁",
-            "ボトム",
-            "水面付近"
-          ]
-        },
-        "status": "inferred",
-        "confidence": "low",
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
         "evidenceSources": {
-          "supportingSourceIds": [
-            "tsuriking_fukuoka_aji"
-          ],
+          "supportingSourceIds": [],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "地点依存の釣り方記述。定量水深ではない。",
-        "rangeType": "qualitative",
-        "regionScope": "福岡市内・博多湾の紹介地点"
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "substrateHabitat": {
         "value": null,
@@ -228,7 +173,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "salinityAndWaterBody": {
         "value": null,
@@ -239,7 +184,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "dayNightTiming": {
         "value": null,
@@ -250,24 +195,18 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "fishingMethods": {
-        "value": [
-          "アジング",
-          "サビキ"
-        ],
-        "status": "inferred",
-        "confidence": "low",
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
         "evidenceSources": {
-          "supportingSourceIds": [
-            "tsuriking_fukuoka_aji"
-          ],
+          "supportingSourceIds": [],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "福岡ポイント紹介に出るアジング・サビキを低信頼の釣法候補として控える。現行補正値の裏取りには使わない。",
-        "regionScope": "福岡県内の複数ポイント紹介"
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       },
       "spawningOrConfusableInfo": {
         "value": null,
@@ -278,83 +217,255 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
       }
     }
   },
-  "sources": [
-    {
-      "id": "tokyo_maaji",
-      "title": "マアジ",
-      "url": "https://www.ifarc.metro.tokyo.lg.jp/archive/27%2C1085%2C55%2C227.html",
-      "publisher": "東京都島しょ農林水産総合センター",
-      "publisherType": "public_research",
-      "publishedOrUpdatedAt": null,
-      "checkedAt": "2026-07-18",
-      "regionScope": "東京都島しょ・日本周辺の一般解説",
-      "sourceType": "supporting",
-      "directness": "direct",
-      "derivationGroup": "tokyo-ifarc-maaji",
-      "supports": [
-        "/identity/canonicalNameJa",
-        "/identity/scientificName",
-        "/ecology/stableGeneral/depthRange",
-        "/ecology/stableGeneral/waterTemperature",
-        "/ecology/stableGeneral/spawningOrConfusableInfo"
-      ],
-      "usageNote": "標準和名・学名・一般生態の確認に限定し、防波堤で釣れる時期の根拠へ転用しない。"
-    },
-    {
-      "id": "tsuriking_fukuoka_aji",
-      "title": "福岡のよく釣れるアジ釣りポイント10ヶ所とアジングに最適な時期",
-      "url": "https://tsuriking.jp/fishing/9008",
-      "publisher": "ツリキング",
-      "publisherType": "secondary",
-      "publishedOrUpdatedAt": "2022-07-20",
-      "checkedAt": "2026-07-18",
-      "regionScope": "福岡県内の複数釣りポイント",
-      "sourceType": "supporting",
-      "directness": "indirect",
-      "derivationGroup": "tsuriking-fukuoka-aji",
-      "supports": [
-        "/ecology/regionalCatchability/seasonality",
-        "/ecology/regionalCatchability/depthRange",
-        "/ecology/regionalCatchability/fishingMethods"
-      ],
-      "usageNote": "釣りメディアの広域記事としてlow候補に限定。自動採用しない。"
-    }
-  ],
+  "sources": [],
   "review": {
     "officialResearch": "公的または研究機関sourceを優先。原典派生ページはderivationGroupで重複管理。",
     "secondaryResearch": "民間釣りサイト、SNS、動画、ブログ単独ではmedium以上にしない。",
     "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
     "comparisonWithCurrentImplementation": {
-      "currentFishSpeciesNameJa": "アジ",
-      "currentSeasonMonths": [],
-      "currentMethodAffinity": [
-        "サビキ",
-        "コマセ"
-      ],
-      "currentCategory": "fish",
-      "comparisonPolicy": "現行値は比較対象に限定し、sourceまたは正解として不使用。"
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_PRODUCTION_ADOPTION_REVIEW.md",
+      "scoreV2Status": "unsupported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
     },
     "attributeDecisions": [
       {
         "path": "/identity/canonicalNameJa",
-        "decision": "adopt_with_warning",
-        "reason": "sourceで確認したcanonical候補。ただし表示名から単一種を推測確定しない。"
+        "decision": "reject",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "ajiは複数の構成種を束ねる表示グループであり、単一taxonのcanonical和名を持たせると誤同定になる。",
+        "recheckCondition": "グループ定義を廃止して単一taxonへ移行する仕様変更時にのみ再検討する。"
+      },
+      {
+        "path": "/identity/scientificName",
+        "decision": "reject",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "ajiは単一taxonではないため、構成種いずれかの学名をグループへ採用しない。",
+        "recheckCondition": "グループ定義を廃止して単一taxonへ移行する仕様変更時にのみ再検討する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "reject",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "reason": "アジのaliasは今回採用しない。",
+        "recheckCondition": "aliasごとの直接source、曖昧性、解決可否を個別審査できる場合に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/seasonality",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "表示グループに共通する一般生態としてseasonalityを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "表示グループに共通する一般生態としてwaterTemperatureを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "表示グループに共通する一般生態としてdepthRangeを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "表示グループに共通する一般生態としてsubstrateHabitatを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "表示グループに共通する一般生態としてsalinityAndWaterBodyを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "表示グループに共通する一般生態としてdayNightTimingを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "表示グループに共通する一般生態としてfishingMethodsを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "表示グループに共通する一般生態としてspawningOrConfusableInfoを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
       },
       {
         "path": "/ecology/regionalCatchability/seasonality",
         "decision": "hold",
-        "reason": "対象地域の遊漁釣れやすさを直接支えるsource未確認。unknown維持。"
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "未特定ajiの対象地域別seasonalityを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
       },
       {
-        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
-        "decision": "adopt_with_warning",
-        "reason": "生態情報として採用候補。釣期やSCORE入力値へ転用しない。"
+        "path": "/ecology/regionalCatchability/waterTemperature",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "未特定ajiの対象地域別waterTemperatureを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/depthRange",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "未特定ajiの対象地域別depthRangeを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/substrateHabitat",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "未特定ajiの対象地域別substrateHabitatを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/salinityAndWaterBody",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "未特定ajiの対象地域別salinityAndWaterBodyを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/dayNightTiming",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "未特定ajiの対象地域別dayNightTimingを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/fishingMethods",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "未特定ajiの対象地域別fishingMethodsを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "未特定ajiの対象地域別spawningOrConfusableInfoを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
       }
     ],
-    "reviewStatus": "ready_for_review"
+    "reviewStatus": "ready_for_review",
+    "productionAdoption": {
+      "projectionPolicy": "decisionがadoptまたはadopt_with_warningで、sourceIdsが存在する属性だけをspeciesId単位で明示投影する。親・子・兄弟間の継承、unknownのfallback補完は禁止する。",
+      "acceptedPaths": [],
+      "unknownPolicy": "unknownまたはholdは値なしとして扱い、0点・不適・釣れないへ変換しない。"
+    }
   }
 }

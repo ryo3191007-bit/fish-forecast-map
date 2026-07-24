@@ -1,37 +1,37 @@
 {
   "schemaVersion": "1.1.0",
-  "speciesId": "maaji",
+  "speciesId": "maruaji",
   "identity": {
-    "displayNameJa": "マアジ",
+    "displayNameJa": "マルアジ",
     "canonicalNameJa": {
-      "value": "マアジ",
+      "value": "マルアジ",
       "status": "confirmed",
-      "confidence": "medium",
+      "confidence": "high",
       "evidenceSources": {
         "supportingSourceIds": [
-          "tokyo_maaji"
+          "bismal_maruaji"
         ],
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "note": "表示名「アジ」は複数種・サイズ呼称を含み得るため、今回のcanonical候補は資料で確認したマアジに限定し、本番表示名の同義語とは扱わない。"
+      "note": "BISMaLのaccepted taxonで直接確認。"
     },
     "scientificName": {
-      "value": "Trachurus japonicus",
+      "value": "Decapterus maruadsi",
       "status": "confirmed",
-      "confidence": "medium",
+      "confidence": "high",
       "evidenceSources": {
         "supportingSourceIds": [
-          "tokyo_maaji"
+          "bismal_maruaji"
         ],
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "note": "学名はsourceで直接確認できる場合のみ採用。"
+      "note": "BISMaLのaccepted taxonで直接確認。"
     },
     "aliases": [],
     "entityType": "exact_species",
-    "note": "マアジ固有の自己完結型記録。親グループやマルアジへの暗黙継承は禁止する。",
+    "note": "マルアジ固有の記録。マアジの値・source・理由を転用しない。",
     "parentGroupId": "aji",
     "memberSpeciesIds": []
   },
@@ -51,7 +51,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "waterTemperature": {
         "value": null,
@@ -59,31 +59,21 @@
         "confidence": "unknown",
         "evidenceSources": {
           "supportingSourceIds": [],
-          "checkedSourceIds": [
-            "tokyo_maaji"
-          ],
-          "contradictingSourceIds": []
-        },
-        "note": "東京資料の16〜22℃は産卵水温であり、一般的な適水温・釣れやすい水温としては採用しない。将来のSCORE入力候補から除外する。",
-        "temperatureContext": "unknown"
-      },
-      "depthRange": {
-        "value": {
-          "max": 200
-        },
-        "status": "confirmed",
-        "confidence": "medium",
-        "evidenceSources": {
-          "supportingSourceIds": [
-            "tokyo_maaji"
-          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "成魚の一般的な「200m以浅」生息水深。根拠にない下限値を補完せず、岸釣り可能水深として扱わない。",
-        "unit": "m",
-        "regionScope": "日本周辺一般",
-        "rangeType": "maximum_only"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "substrateHabitat": {
         "value": null,
@@ -94,7 +84,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "salinityAndWaterBody": {
         "value": null,
@@ -105,7 +95,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "dayNightTiming": {
         "value": null,
@@ -116,7 +106,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "fishingMethods": {
         "value": null,
@@ -127,65 +117,31 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "spawningOrConfusableInfo": {
-        "value": {
-          "months": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11
-          ],
-          "temperatureCelsius": {
-            "min": 16,
-            "max": 22
-          },
-          "temperatureContext": "spawning"
-        },
-        "status": "confirmed",
-        "confidence": "medium",
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
         "evidenceSources": {
-          "supportingSourceIds": [
-            "tokyo_maaji"
-          ],
+          "supportingSourceIds": [],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "九州沿岸の産卵期および産卵水温。釣期・釣れやすい水温・SCORE入力値へ転用しない。",
-        "regionScope": "九州沿岸"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       }
     },
     "regionalCatchability": {
       "seasonality": {
-        "value": {
-          "months": [
-            7,
-            8,
-            9,
-            10,
-            11
-          ],
-          "basis": "福岡のアジング時期として紹介されるが、広域二次情報のため低信頼候補。"
-        },
-        "status": "inferred",
-        "confidence": "low",
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
         "evidenceSources": {
-          "supportingSourceIds": [
-            "tsuriking_fukuoka_aji"
-          ],
+          "supportingSourceIds": [],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域に近いが釣りメディアの一般記事。SCORE自動採用は保留。",
-        "regionScope": "福岡県内の複数ポイント紹介"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "waterTemperature": {
         "value": null,
@@ -196,28 +152,18 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "depthRange": {
-        "value": {
-          "qualitative": [
-            "水深がある岸壁",
-            "ボトム",
-            "水面付近"
-          ]
-        },
-        "status": "inferred",
-        "confidence": "low",
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
         "evidenceSources": {
-          "supportingSourceIds": [
-            "tsuriking_fukuoka_aji"
-          ],
+          "supportingSourceIds": [],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "地点依存の釣り方記述。定量水深ではない。",
-        "rangeType": "qualitative",
-        "regionScope": "福岡市内・博多湾の紹介地点"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "substrateHabitat": {
         "value": null,
@@ -228,7 +174,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "salinityAndWaterBody": {
         "value": null,
@@ -239,7 +185,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "dayNightTiming": {
         "value": null,
@@ -250,24 +196,18 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "fishingMethods": {
-        "value": [
-          "アジング",
-          "サビキ"
-        ],
-        "status": "inferred",
-        "confidence": "low",
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
         "evidenceSources": {
-          "supportingSourceIds": [
-            "tsuriking_fukuoka_aji"
-          ],
+          "supportingSourceIds": [],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "福岡ポイント紹介に出るアジング・サビキを低信頼の釣法候補として控える。現行補正値の裏取りには使わない。",
-        "regionScope": "福岡県内の複数ポイント紹介"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "spawningOrConfusableInfo": {
         "value": null,
@@ -278,50 +218,28 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": ""
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       }
     }
   },
   "sources": [
     {
-      "id": "tokyo_maaji",
-      "title": "マアジ",
-      "url": "https://www.ifarc.metro.tokyo.lg.jp/archive/27%2C1085%2C55%2C227.html",
-      "publisher": "東京都島しょ農林水産総合センター",
+      "id": "bismal_maruaji",
+      "title": "Decapterus maruadsi マルアジ",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9005967",
+      "publisher": "BISMaL / JAMSTEC",
       "publisherType": "public_research",
       "publishedOrUpdatedAt": null,
-      "checkedAt": "2026-07-18",
-      "regionScope": "東京都島しょ・日本周辺の一般解説",
+      "checkedAt": "2026-07-24",
+      "regionScope": "分類情報",
       "sourceType": "supporting",
       "directness": "direct",
-      "derivationGroup": "tokyo-ifarc-maaji",
+      "derivationGroup": "bismal-maruaji",
       "supports": [
         "/identity/canonicalNameJa",
-        "/identity/scientificName",
-        "/ecology/stableGeneral/depthRange",
-        "/ecology/stableGeneral/waterTemperature",
-        "/ecology/stableGeneral/spawningOrConfusableInfo"
+        "/identity/scientificName"
       ],
-      "usageNote": "標準和名・学名・一般生態の確認に限定し、防波堤で釣れる時期の根拠へ転用しない。"
-    },
-    {
-      "id": "tsuriking_fukuoka_aji",
-      "title": "福岡のよく釣れるアジ釣りポイント10ヶ所とアジングに最適な時期",
-      "url": "https://tsuriking.jp/fishing/9008",
-      "publisher": "ツリキング",
-      "publisherType": "secondary",
-      "publishedOrUpdatedAt": "2022-07-20",
-      "checkedAt": "2026-07-18",
-      "regionScope": "福岡県内の複数釣りポイント",
-      "sourceType": "supporting",
-      "directness": "indirect",
-      "derivationGroup": "tsuriking-fukuoka-aji",
-      "supports": [
-        "/ecology/regionalCatchability/seasonality",
-        "/ecology/regionalCatchability/depthRange",
-        "/ecology/regionalCatchability/fishingMethods"
-      ],
-      "usageNote": "釣りメディアの広域記事としてlow候補に限定。自動採用しない。"
+      "usageNote": "標準和名とaccepted taxonの確認だけに使い、生態値や釣れやすさへ転用しない。"
     }
   ],
   "review": {
@@ -330,7 +248,7 @@
     "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
     "comparisonWithCurrentImplementation": {
       "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_PRODUCTION_ADOPTION_REVIEW.md",
-      "scoreV2Status": "supported",
+      "scoreV2Status": "unsupported",
       "inheritancePolicy": "do_not_inherit_between_species_or_group"
     },
     "attributeDecisions": [
@@ -341,10 +259,10 @@
           "identity_display"
         ],
         "sourceIds": [
-          "tokyo_maaji"
+          "bismal_maruaji"
         ],
         "regionScope": "分類情報",
-        "confidence": "medium",
+        "confidence": "high",
         "reason": "個別種を直接示す分類sourceがあり、identity表示に限定して採用できる。",
         "recheckCondition": "source更新または分類変更時に再確認する。"
       },
@@ -355,10 +273,10 @@
           "identity_display"
         ],
         "sourceIds": [
-          "tokyo_maaji"
+          "bismal_maruaji"
         ],
         "regionScope": "分類情報",
-        "confidence": "medium",
+        "confidence": "high",
         "reason": "個別種を直接示す分類sourceがあり、identity表示に限定して採用できる。",
         "recheckCondition": "source更新または分類変更時に再確認する。"
       },
@@ -371,7 +289,7 @@
         "sourceIds": [],
         "regionScope": "分類情報",
         "confidence": "high",
-        "reason": "「アジ」は独立した未特定species_groupであり「真鯵」は採否根拠未確認のため、安全な自動aliasとして登録しない。",
+        "reason": "マルアジのaliasは今回採用しない。",
         "recheckCondition": "aliasごとの直接source、曖昧性、解決可否を個別審査できる場合に再確認する。"
       },
       {
@@ -400,18 +318,15 @@
       },
       {
         "path": "/ecology/stableGeneral/depthRange",
-        "decision": "adopt_with_warning",
+        "decision": "hold",
         "purposes": [
-          "ecology_description",
           "score_excluded"
         ],
-        "sourceIds": [
-          "tokyo_maaji"
-        ],
-        "regionScope": "日本周辺一般",
-        "confidence": "medium",
-        "reason": "一般生態として保持するが、対象地域の釣れやすさやSCOREへ転用しない。",
-        "recheckCondition": "source更新または分類変更時に再確認する。"
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/substrateHabitat",
@@ -463,18 +378,15 @@
       },
       {
         "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
-        "decision": "adopt_with_warning",
+        "decision": "hold",
         "purposes": [
-          "ecology_description",
           "score_excluded"
         ],
-        "sourceIds": [
-          "tokyo_maaji"
-        ],
-        "regionScope": "九州沿岸",
-        "confidence": "medium",
-        "reason": "産卵等の一般生態としてのみ保持し、釣期・適水温・SCOREへ転用しない。",
-        "recheckCondition": "source更新または分類変更時に再確認する。"
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
+        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
       },
       {
         "path": "/ecology/regionalCatchability/seasonality",
@@ -482,12 +394,10 @@
         "purposes": [
           "score_excluded"
         ],
-        "sourceIds": [
-          "tsuriking_fukuoka_aji"
-        ],
-        "regionScope": "福岡県内の複数ポイント紹介",
-        "confidence": "low",
-        "reason": "地域・遊漁文脈の候補記録に留まり、対象全域のSCORE入力には直接採用しない。",
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
         "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
       },
       {
@@ -508,12 +418,10 @@
         "purposes": [
           "score_excluded"
         ],
-        "sourceIds": [
-          "tsuriking_fukuoka_aji"
-        ],
-        "regionScope": "福岡市内・博多湾の紹介地点",
-        "confidence": "low",
-        "reason": "地域・遊漁文脈の候補記録に留まり、対象全域のSCORE入力には直接採用しない。",
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
         "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
       },
       {
@@ -558,12 +466,10 @@
         "purposes": [
           "score_excluded"
         ],
-        "sourceIds": [
-          "tsuriking_fukuoka_aji"
-        ],
-        "regionScope": "福岡県内の複数ポイント紹介",
-        "confidence": "low",
-        "reason": "地域・遊漁文脈の候補記録に留まり、対象全域のSCORE入力には直接採用しない。",
+        "sourceIds": [],
+        "regionScope": "未特定",
+        "confidence": "unknown",
+        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
         "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
       },
       {
@@ -584,9 +490,7 @@
       "projectionPolicy": "decisionがadoptまたはadopt_with_warningで、sourceIdsが存在する属性だけをspeciesId単位で明示投影する。親・子・兄弟間の継承、unknownのfallback補完は禁止する。",
       "acceptedPaths": [
         "/identity/canonicalNameJa",
-        "/identity/scientificName",
-        "/ecology/stableGeneral/depthRange",
-        "/ecology/stableGeneral/spawningOrConfusableInfo"
+        "/identity/scientificName"
       ],
       "unknownPolicy": "unknownまたはholdは値なしとして扱い、0点・不適・釣れないへ変換しない。"
     }
