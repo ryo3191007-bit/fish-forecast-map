@@ -23,8 +23,12 @@ jobs:
       - run: npm ci
       - name: Export remaining coordinate evidence
         run: npx tsx scripts/issue-296-coordinate-export.test.mts
+      - name: Download official MLIT fishing-port data
+        run: curl --fail --location --retry 3 'https://nlftp.mlit.go.jp/ksj/gml/data/C09/C09-06_GML.zip' --output artifacts/C09-06_GML.zip
       - uses: actions/upload-artifact@v4
         with:
           name: issue-296-coordinate-export
-          path: artifacts/issue-296-coordinate-export.json
+          path: |
+            artifacts/issue-296-coordinate-export.json
+            artifacts/C09-06_GML.zip
           if-no-files-found: error
