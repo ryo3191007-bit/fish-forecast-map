@@ -22,7 +22,7 @@ main {
   overflow-x: clip;
 }
 .hero {
-  padding: 24px clamp(16px, 4vw, 56px) 44px;
+  padding: 10px clamp(12px, 4vw, 56px) 12px;
   background:
     linear-gradient(
       135deg,
@@ -45,13 +45,15 @@ main {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 48px;
-  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 6px;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 .nav div {
   display: flex;
-  gap: 16px;
+  gap: 12px;
+  flex: 0 0 auto;
 }
 .nav a,
 .button {
@@ -69,9 +71,9 @@ main {
   align-items: flex-end;
 }
 h1 {
-  font-size: clamp(2.2rem, 6vw, 4.8rem);
-  line-height: 1.04;
-  margin: 8px 0 20px;
+  font-size: clamp(1.45rem, 4vw, 2.2rem);
+  line-height: 1.1;
+  margin: 0;
   max-width: 900px;
   letter-spacing: -0.04em;
 }
@@ -598,6 +600,8 @@ p {
   line-height: 1.7;
 }
 .catchReportRegisterButton {
+  align-items: center;
+  justify-content: center;
   flex: 0 0 auto;
   min-height: 40px;
   padding: 8px 14px;
@@ -778,10 +782,7 @@ dd {
 }
 @media (max-width: 420px) {
   .hero {
-    padding-top: 18px;
-  }
-  .nav div {
-    width: 100%;
+    padding-top: 8px;
   }
   .dashboard {
     padding-inline: 12px;
@@ -1750,6 +1751,13 @@ dd {
   padding: 0.5rem 0.9rem;
   cursor: pointer;
 }
+.authNavButton {
+  min-width: 0;
+  max-width: min(52vw, 24rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .authModalBackdrop {
   position: fixed;
@@ -2184,6 +2192,17 @@ dd {
 .detailGrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:.65rem; margin:0; }
 .detailGrid div { padding:.8rem; border:1px solid rgba(125,211,252,.2); border-radius:12px; background:rgba(8,47,73,.3); }
 .detailGrid dt { display:flex; align-items:center; gap:.35rem; color:#7dd3fc; font-size:.75rem; font-weight:900; } .detailGrid dd { margin:.35rem 0 0; line-height:1.6; overflow-wrap:anywhere; }
+.environmentTabContent { display:grid; gap:.75rem; }
+.dailyTimeSummary { padding:.75rem; border:1px solid rgba(34,211,238,.55); border-radius:14px; background:rgba(2,8,23,.62); }
+.dailyTimeSummary h3 { margin:0 0 .55rem; color:#e0faff; font-size:.92rem; }
+.dailyTimeSummary dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.45rem; margin:0; }
+.dailyTimeItem { min-width:0; padding:.55rem .6rem; border:1px solid rgba(125,211,252,.18); border-radius:10px; background:rgba(8,47,73,.45); }
+.dailyTimeItem dt { display:flex; align-items:center; gap:.35rem; color:#bae6fd; font-size:.7rem; font-weight:900; }
+.dailyTimeItem dt span { color:#67e8f9; font-size:.9rem; }
+.dailyTimeItem.sunset dt span { color:#fb923c; }
+.dailyTimeItem dd { margin:.2rem 0 0; color:#f8fdff; font-size:clamp(.92rem,4vw,1.15rem); font-weight:900; line-height:1.25; overflow-wrap:anywhere; }
+.dailyTimeSummary p { margin:.55rem 0 .1rem; color:#bae6fd; font-size:.7rem; font-weight:800; }
+.dailyTimeSummary small { display:block; color:#94a3b8; font-size:.65rem; line-height:1.4; }
 .detailIcon { display:inline-grid; width:1.2rem; place-items:center; flex:none; font-size:.9rem; }
 .spotEvaluationState.empty { display:inline-block; margin:.25rem 0 0; padding:.55rem .75rem; border:1px solid rgba(125,211,252,.22); border-left-width:3px; border-radius:10px; background:rgba(8,47,73,.3); color:#bae6fd; font-weight:800; }
 .confidence { display:inline-block; margin-left:.55rem; padding:.1rem .4rem; border-radius:999px; font-size:.7rem; font-weight:900; }

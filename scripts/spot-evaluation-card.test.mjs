@@ -63,6 +63,19 @@ const forecastRows = [
   { forecastTime: "2026-07-20T12:00" },
   { forecastTime: "2026-07-21T09:00" },
 ];
+const crossMonthRows = [
+  { forecastTime: "2026-07-31T21:00" },
+  { forecastTime: "2026-07-31T09:00" },
+  { forecastTime: "2026-08-01T00:00" },
+  { forecastTime: "2026-08-01T03:00" },
+];
+assert.deepEqual(presentation.getAvailableForecastDates(crossMonthRows), ["2026-07-31", "2026-08-01"], "available dates are unique, sorted, and may cross a month boundary");
+assert.equal(presentation.getFirstForecastTimeForDate(crossMonthRows, "2026-08-01"), "2026-08-01T00:00", "an available date selects its first forecast row");
+assert.equal(presentation.getFirstForecastTimeForDate(crossMonthRows, "2026-07-30"), null, "a date before the available range is rejected");
+assert.equal(presentation.getFirstForecastTimeForDate(crossMonthRows, "2026-08-02"), null, "a date after the available range is rejected");
+assert.equal(presentation.getFirstForecastTimeForDate([], "2026-08-01"), null, "an empty forecast cannot select a date");
+assert.match(card, /min=\{availableDates\[0\]\} max=\{availableDates\.at\(-1\)\} disabled=\{!availableDates\.length\}/, "date bounds and disabled state come from the dates present in forecast rows");
+assert.match(card, /getFirstForecastTimeForDate\(rows, event\.target\.value\)[\s\S]*?if \(forecastTime\) props\.onSelectedTimeChange\(forecastTime\)/, "date changes only select rows for an available date without a fallback jump");
 const now = new Date("2026-07-20T02:20:00Z"); // 11:20 JST
 assert.equal(presentation.resolveSelectedForecastTime(forecastRows, "2026-07-20T09:00", now), "2026-07-20T09:00", "a valid selection is retained");
 assert.equal(presentation.resolveSelectedForecastTime(forecastRows, null, now), "2026-07-20T12:00", "an unset selection uses the nearest valid row");

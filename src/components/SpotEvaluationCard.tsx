@@ -18,7 +18,7 @@ import type {
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
 import type { JmaWarningDecision } from "@/domain/jmaWarning";
 import { getJmaWarningDisplay } from "@/domain/jmaWarningPresentation";
-import { findDisplayableSpotDetail, formatSpotDetailValue, formatTerrainDetailForPresentation, getEnvironmentStatusLabel, getEvaluationReferenceTime, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
+import { findDisplayableSpotDetail, formatSpotDetailValue, formatTerrainDetailForPresentation, getAvailableForecastDates, getEnvironmentStatusLabel, getEvaluationReferenceTime, getFirstForecastTimeForDate, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形";
 
@@ -67,7 +67,9 @@ const detailIcons: Record<string, string> = {
 
 export function SpotEvaluationCard(props: Props) {
   const { selectedTime, onSelectedTimeChange } = props;
-  const rows = useMemo(() => props.environment?.hourly ?? [], [props.environment]);
+  const selectedEnvironment = props.environment?.point.spotId === props.selectedSpotId ? props.environment : null;
+  const rows = useMemo(() => selectedEnvironment?.hourly ?? [], [selectedEnvironment]);
+  const availableDates = useMemo(() => getAvailableForecastDates(rows), [rows]);
   const selectedRow = rows.find((row) => row.forecastTime === props.selectedTime) ?? null;
   const selectedIndex = selectedRow ? rows.indexOf(selectedRow) : -1;
   const selectedDate = (selectedRow?.forecastTime ?? "").slice(0, 10);
@@ -92,7 +94,10 @@ export function SpotEvaluationCard(props: Props) {
 
       <div className="sharedTimeControls" aria-label="評価・環境の共通日時">
         <div className="sharedTimeInputs">
-          <label>日付<input type="date" value={selectedDate} disabled={!rows.length} onChange={(event) => props.onSelectedTimeChange(rows.find((row) => row.forecastTime.startsWith(event.target.value))?.forecastTime ?? resolveSelectedForecastTime(rows, null))} /></label>
+          <label>日付<input type="date" value={selectedDate} min={availableDates[0]} max={availableDates.at(-1)} disabled={!availableDates.length} onChange={(event) => {
+            const forecastTime = getFirstForecastTimeForDate(rows, event.target.value);
+            if (forecastTime) props.onSelectedTimeChange(forecastTime);
+          }} /></label>
           <label>時刻<select value={selectedRow?.forecastTime ?? ""} disabled={!selectedRow} onChange={(event) => props.onSelectedTimeChange(event.target.value)}>{dayRows.map((row) => <option key={row.forecastTime} value={row.forecastTime}>{row.forecastTime.slice(11, 16)}</option>)}</select></label>
         </div>
         <div className="sharedTimeNavigation">
@@ -107,7 +112,7 @@ export function SpotEvaluationCard(props: Props) {
       </div>
       <div role="tabpanel" id={`spot-panel-${props.activeTab}`} aria-labelledby={`spot-tab-${props.activeTab}`}>
         {props.activeTab === "評価" && <EvaluationTab {...props} selectedTime={props.selectedTime} />}
-        {props.activeTab === "環境" && <EnvironmentTab environment={props.environment} row={selectedRow} loading={props.isLoading} error={props.error} />}
+        {props.activeTab === "環境" && <EnvironmentTab environment={selectedEnvironment} row={selectedRow} loading={props.isLoading} error={props.error} />}
         {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingItems} />}
         {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainItems} />}
       </div>
@@ -179,6 +184,14 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
   if (!environment) return <EmptyState />;
   if (!row) return <StateMessage>対象行欠落: 選択日時の予報行がありません。</StateMessage>;
   const date = row.forecastTime.slice(0, 10); const events = getTideEventsForDate(environment.hourly, date); const badge = getTideEventBadgeForForecastTime(events, row.forecastTime, date);
+  const dailySun = environment.dailySun.find((item) => item.date === date);
+  const eventTimes = (type: "high" | "low") => events.filter((event) => event.type === type).map((event) => event.approximateTime).join(" / ") || "情報なし";
+  const timeItems = [
+    { label: "日の出", value: dailySun?.sunrise.slice(11, 16) || "情報なし", icon: "☀", tone: "sunrise" },
+    { label: "日の入", value: dailySun?.sunset.slice(11, 16) || "情報なし", icon: "☀", tone: "sunset" },
+    { label: "満潮参考", value: eventTimes("high"), icon: "≋", tone: "tide" },
+    { label: "干潮参考", value: eventTimes("low"), icon: "≋", tone: "tide" },
+  ];
   const value = (v: number | null | undefined, unit: string) => v == null ? "情報なし" : `${v}${unit}`;
   const fields = [
     ["天気", row.weather?.weatherLabel], ["気温", value(row.weather?.temperatureCelsius, "℃")], ["雨", `${value(row.weather?.precipitationMm, "mm")} / ${value(row.weather?.precipitationProbabilityPercent, "%")}`],
@@ -187,7 +200,15 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
     ["潮汐参考", `${getTidePhaseName(date)}${badge ? ` / ${badge.label}` : ""}`], ["海流", `${value(row.marine?.oceanCurrentVelocityKmh, "km/h")} ${row.marine?.oceanCurrentDirectionLabel ?? "情報なし"}`],
     ["データ状態", getEnvironmentStatusLabel(environment, error)],
   ];
-  return <dl className="detailGrid">{fields.map(([label, text]) => <div key={label}><dt>{label}</dt><dd>{text || "情報なし"}</dd></div>)}</dl>;
+  return <div className="environmentTabContent">
+    <section className="dailyTimeSummary" aria-labelledby="daily-time-heading">
+      <h3 id="daily-time-heading">選択日の時刻情報</h3>
+      <dl>{timeItems.map((item) => <div className={`dailyTimeItem ${item.tone}`} key={item.label}><dt><span aria-hidden="true">{item.icon}</span>{item.label}</dt><dd>{item.value}</dd></div>)}</dl>
+      <p>※ 潮汐時刻は参考値</p>
+      <small>公式の満潮・干潮時刻ではありません。航海・安全判断には使用しないでください。</small>
+    </section>
+    <dl className="detailGrid">{fields.map(([label, text]) => <div key={label}><dt>{label}</dt><dd>{text || "情報なし"}</dd></div>)}</dl>
+  </div>;
 }
 
 function DetailTab({ details, status, items }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[] }) {
