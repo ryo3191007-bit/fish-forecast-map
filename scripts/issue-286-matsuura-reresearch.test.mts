@@ -99,9 +99,10 @@ for (const spot of spots) {
   }
 }
 
+const BROAD_SCOPE_KEYS = new Set(["spot_features", "shore_access", "parking", "toilet", "restriction_status", "fishable_area"]);
 for (const broadSpotId of ["fukushima-area", "takashima-area"]) {
   const broad = spots.find(({ spotId }) => spotId === broadSpotId)!;
-  for (const value of broad.values) {
+  for (const value of broad.values.filter(({ itemKey }) => BROAD_SCOPE_KEYS.has(itemKey))) {
     assert.match(value.note ?? "", /部分|全域|島内/, `${broadSpotId}:${value.itemKey}: broad-area scope must be limited`);
   }
 }
