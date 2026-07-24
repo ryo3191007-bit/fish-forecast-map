@@ -21,6 +21,8 @@ import issue284HizenDetails from "../../data/curation/fishing-spots/issue-284-hi
 import issue284ImariDetails from "../../data/curation/fishing-spots/issue-284-hizen-imari-east-reresearch-imari.json";
 import issue286FukushimaDetails from "../../data/curation/fishing-spots/issue-286-matsuura-reresearch-fukushima.json";
 import issue286TakashimaDetails from "../../data/curation/fishing-spots/issue-286-matsuura-reresearch-takashima.json";
+import issue288SetoDetails from "../../data/curation/fishing-spots/issue-288-hirado-seto-reresearch.json";
+import issue288NorthDetails from "../../data/curation/fishing-spots/issue-288-hirado-north-reresearch.json";
 
 export const staticFishingSpotDetailItemDefinitions: SpotDetailItemDefinition[] = [
   { itemKey: "target_species", category: "basic", valueKind: "text_list", labelJa: "対象魚種", description: "既存釣り場マスターの対象魚種。", displayOrder: 10 },
@@ -100,6 +102,8 @@ const laterDetailSpots = [
   ...issue284ImariDetails.spots,
   ...issue286FukushimaDetails.spots,
   ...issue286TakashimaDetails.spots,
+  ...issue288SetoDetails.spots,
+  ...issue288NorthDetails.spots,
 ] as CuratedSpot[];
 
 function mapCuratedSpot(spot: CuratedSpot, supplementalSpot?: CuratedSpot): SpotDetailValue[] {
