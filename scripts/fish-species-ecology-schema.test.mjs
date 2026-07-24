@@ -221,10 +221,10 @@ invalidAcceptedPathFixture.review.productionAdoption.acceptedPaths.push('/identi
 assert.throws(() => validateResearchDoc('chinu', invalidAcceptedPathFixture), /acceptedPaths must match decisions/);
 
 const legacyVersionFixture = structuredClone(docs.chinu);
-legacyVersionFixture.schemaVersion = '1.0.0';
-assert.equal(validate(legacyVersionFixture), false, 'v1.0.0 is intentionally rejected after full v1.1.0 migration');
+legacyVersionFixture.schemaVersion = '1.1.0';
+assert.equal(validate(legacyVersionFixture), false, 'v1.1.0 is intentionally rejected after the v1.2.0 purpose migration');
 const currentVersionFixture = structuredClone(docs.chinu);
-currentVersionFixture.schemaVersion = '1.1.0';
-assert.equal(validate(currentVersionFixture), true, 'v1.1.0 fixture must validate');
+currentVersionFixture.schemaVersion = '1.2.0';
+assert.equal(validate(currentVersionFixture), true, 'v1.2.0 fixture must validate');
 
 console.log('fish species ecology schema tests passed');

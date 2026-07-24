@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://fish-forecast-map.local/schemas/fish-species-ecology.v1.1.0.schema.json",
+  "$id": "https://fish-forecast-map.local/schemas/fish-species-ecology.v1.2.0.schema.json",
   "title": "Fish species ecology research record",
   "type": "object",
   "additionalProperties": false,
@@ -15,7 +15,7 @@
   ],
   "properties": {
     "schemaVersion": {
-      "const": "1.1.0"
+      "const": "1.2.0"
     },
     "speciesId": {
       "enum": [
@@ -513,6 +513,10 @@
               "spot_affinity",
               "environment_score",
               "method_affinity",
+              "score_v2_water_temperature",
+              "score_v2_season_time",
+              "score_v2_spot_affinity",
+              "score_v2_method_affinity",
               "score_excluded"
             ]
           },
