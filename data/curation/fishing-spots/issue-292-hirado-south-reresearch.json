@@ -1,0 +1,1177 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 292,
+  "generatedAt": "2026-07-24T00:00:00.000Z",
+  "researchPolicy": {
+    "summary": "公的・団体資料を優先し、地点を直接特定できる弱い民間情報も地形・構造・足場・設備の参考値として low 表示付きで採用する。",
+    "safetyGuard": "一般立入可能、安全、現在も釣り可能という肯定は low 根拠だけで採用しない。",
+    "scoreGuard": "weak_evidence / low は SCORE v2 に入力しない。",
+    "scopeGuard": "地区・個別港・平戸南部の情報を混同せず、部分情報は note で適用範囲を限定する。",
+    "restrictionGuard": "立入禁止・釣り禁止・足場の悪いテトラ・防風フェンスは注意情報として保持し、現地掲示・漁協・管理者の最新案内を優先する。",
+    "unknownGuard": "researched_unknown は確認した資料を checked に記録し、未調査と区別する。"
+  },
+  "regionPart": "hirado-south",
+  "spots": [
+    {
+      "spotId": "shin-shishi-fishing-port",
+      "sources": [
+        {
+          "id": "src-issue292-nagasaki-gyokou-list",
+          "sourceType": "association",
+          "sourceName": "長崎県漁港漁場協会 長崎県の漁港",
+          "sourceUrl": "https://www.nagasaki-gyokou.jp/fishingport.php",
+          "checkedOn": "2026-07-24",
+          "note": "平戸市内の漁港名、種別、管理主体を確認。個別の一般立入・釣り可否・設備は裏付けない。"
+        },
+        {
+          "id": "src-issue292-shinshishi-shishi-navi",
+          "sourceType": "portal",
+          "sourceName": "全国漁港Navi 新獅子漁港（獅子地区）",
+          "sourceUrl": "https://fishing-port.jp/fishingpordetail/shishi/",
+          "checkedOn": "2026-07-24",
+          "note": "新獅子漁港の獅子地区について、波止と関係者以外立入禁止の記載を確認。新獅子漁港の全地区へは広げない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "shin-shishi-fishing-port:spot_features:issue292",
+          "itemKey": "spot_features",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "波止"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "新獅子漁港のうち獅子地区の部分構造に関する民間参考。春日・高越・根獅子・飯良地区を含む港全体の構造を示さない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-shinshishi-shishi-navi"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shin-shishi-fishing-port:shore_access:issue292",
+          "itemKey": "shore_access",
+          "informationState": "weak_evidence",
+          "valueText": "獅子地区の波止周辺（関係者以外立入禁止情報あり）",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "物理的な足場の参考であり、一般利用可能や安全を肯定しない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-shinshishi-shishi-navi"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shin-shishi-fishing-port:restriction_status:issue292",
+          "itemKey": "restriction_status",
+          "informationState": "weak_evidence",
+          "valueText": "獅子地区の波止は関係者以外立入禁止との情報（現地掲示・管理者案内優先）",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "新獅子漁港の獅子地区に限定した禁止方向の注意情報。港の他地区へ一律適用しない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-shinshishi-shishi-navi"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shin-shishi-fishing-port:parking:issue292",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "獅子地区を含む新獅子漁港で、現在一般利用できる駐車場所と釣り目的の利用条件を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-shinshishi-shishi-navi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shin-shishi-fishing-port:toilet:issue292",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "地点固有のトイレ設備と現在の利用条件を確認できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-shinshishi-shishi-navi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shin-shishi-fishing-port:lighting:issue292",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "獅子地区の常設照明・点灯状況を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-shinshishi-shishi-navi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shin-shishi-fishing-port:fishable_area:issue292",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "獅子地区の立入禁止情報は確認したが、新獅子漁港で現在釣り可能な具体的範囲を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-shinshishi-shishi-navi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shin-shishi-fishing-port:access:issue292",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "港の所在地は確認できるが、一般車両・徒歩での個別岸壁への進入条件を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-shinshishi-shishi-navi"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "himosashi-port",
+      "sources": [
+        {
+          "id": "src-issue292-gsi-himosashi",
+          "sourceType": "official",
+          "sourceName": "国土地理院 地理院地図（紐差港周辺）",
+          "sourceUrl": "https://maps.gsi.go.jp/#17/33.257/129.587/&base=std&ls=std&disp=1",
+          "checkedOn": "2026-07-24",
+          "note": "登録座標周辺の海岸線、入り江、岸壁状の人工構造を地図・空中写真で確認。一般立入・釣り可否・施設は裏付けない。"
+        },
+        {
+          "id": "src-issue292-kotobank-himosashi",
+          "sourceType": "reference",
+          "sourceName": "コトバンク 紐差港",
+          "sourceUrl": "https://kotobank.jp/word/%E7%B4%90%E5%B7%AE%E6%B8%AF-2783163",
+          "checkedOn": "2026-07-24",
+          "note": "長崎県の港として紐差港の存在を確認。構造、管理条件、設備は裏付けない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "himosashi-port:coastal_topography:issue292",
+          "itemKey": "coastal_topography",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "入り江沿岸"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "登録座標周辺の地図・空中写真から読み取った地形参考。現地の細かな海底地形は示さない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-gsi-himosashi"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "himosashi-port:spot_features:issue292",
+          "itemKey": "spot_features",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "岸壁"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "登録座標周辺の人工護岸・岸壁状構造を地図・空中写真から読み取った参考。利用可否は示さない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-gsi-himosashi"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "himosashi-port:shore_access:issue292",
+          "itemKey": "shore_access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "岸壁状構造は確認したが、釣り人が利用できる足場と安全性を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-gsi-himosashi",
+              "src-issue292-kotobank-himosashi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "himosashi-port:restriction_status:issue292",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "紐差港の現在の一般立入・釣り禁止範囲を確認できない。現地掲示と管理者案内を優先する。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-gsi-himosashi",
+              "src-issue292-kotobank-himosashi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "himosashi-port:fishable_area:issue292",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "現在釣り可能な具体的範囲を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-gsi-himosashi",
+              "src-issue292-kotobank-himosashi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "himosashi-port:parking:issue292",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "港周辺で一般利用できる駐車場所と釣り目的の利用条件を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-gsi-himosashi",
+              "src-issue292-kotobank-himosashi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "himosashi-port:toilet:issue292",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "地点固有のトイレ設備と利用条件を確認できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-gsi-himosashi",
+              "src-issue292-kotobank-himosashi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "himosashi-port:lighting:issue292",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "常設照明・点灯状況を確認できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-gsi-himosashi",
+              "src-issue292-kotobank-himosashi"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "maetsuyoshi-fishing-port",
+      "sources": [
+        {
+          "id": "src-issue292-nagasaki-gyokou-list",
+          "sourceType": "association",
+          "sourceName": "長崎県漁港漁場協会 長崎県の漁港",
+          "sourceUrl": "https://www.nagasaki-gyokou.jp/fishingport.php",
+          "checkedOn": "2026-07-24",
+          "note": "平戸市内の漁港名、種別、管理主体を確認。個別の一般立入・釣り可否・設備は裏付けない。"
+        },
+        {
+          "id": "src-issue292-maetsuyoshi-turihiroba",
+          "sourceType": "portal",
+          "sourceName": "釣り広場.com 前津吉漁港",
+          "sourceUrl": "https://k.turihiroba.com/turiba5/nagasakimaetuyosigyokou.html",
+          "checkedOn": "2026-07-24",
+          "note": "東西の波止、港内岸壁、東波止の足場の悪いテトラ、西波止外側の防風フェンスを写真付きで確認。現況と管理条件は現地確認が必要。"
+        },
+        {
+          "id": "src-issue292-maetsuyoshi-navi",
+          "sourceType": "portal",
+          "sourceName": "全国漁港Navi 前津吉漁港",
+          "sourceUrl": "https://fishing-port.jp/fishingpordetail/maetuyoshi/",
+          "checkedOn": "2026-07-24",
+          "note": "第2種漁港、長崎県管理、港内と堤防外側を釣り場として紹介。現在の許可・規制を公的に保証する資料ではない。"
+        },
+        {
+          "id": "src-issue292-hirado-port-restriction-summary",
+          "sourceType": "portal",
+          "sourceName": "つりナビ 平戸港・平戸方面の禁止注意まとめ",
+          "sourceUrl": "https://tsuriyoho.com/port/hirado-kou",
+          "checkedOn": "2026-07-24",
+          "note": "平戸方面の釣り禁止・立入禁止地点として前津吉港を挙げる二次情報。具体的範囲、根拠、現況は確認できない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "maetsuyoshi-fishing-port:spot_features:issue292",
+          "itemKey": "spot_features",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "東西の波止",
+            "港内岸壁"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "地点特定民間資料に基づく部分構造。現在の一般利用・釣り可否を示さない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-maetsuyoshi-turihiroba"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "maetsuyoshi-fishing-port:shore_access:issue292",
+          "itemKey": "shore_access",
+          "informationState": "weak_evidence",
+          "valueText": "港内岸壁・東西の波止（テトラ・防風フェンス注意）",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "物理的な足場形状の参考。東波止先端外向きと西波止外側は利用しづらいとの情報がある。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-maetsuyoshi-turihiroba"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "maetsuyoshi-fishing-port:obstacles:issue292",
+          "itemKey": "obstacles",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "東波止先端外向きの足場の悪いテトラ",
+            "西波止外側の防風フェンス"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "写真付き民間資料による危険・利用制約の参考。現況は現地確認が必要。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-maetsuyoshi-turihiroba"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "maetsuyoshi-fishing-port:restriction_status:issue292",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "前津吉港を禁止地点とする二次情報と、釣り場として紹介する地点特定資料が併存し、現在の禁止範囲・管理条件を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-maetsuyoshi-turihiroba",
+              "src-issue292-maetsuyoshi-navi",
+              "src-issue292-hirado-port-restriction-summary"
+            ],
+            "contradicting": [
+              "src-issue292-hirado-port-restriction-summary"
+            ]
+          }
+        },
+        {
+          "id": "maetsuyoshi-fishing-port:fishable_area:issue292",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "波止・岸壁の構造は確認したが、現在釣り可能な具体的範囲を確定できない。現地掲示と管理者案内を優先する。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-maetsuyoshi-turihiroba",
+              "src-issue292-maetsuyoshi-navi",
+              "src-issue292-hirado-port-restriction-summary"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "maetsuyoshi-fishing-port:parking:issue292",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "港周辺の駐車場所と現在の一般利用条件、釣り目的の利用可否を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-maetsuyoshi-turihiroba",
+              "src-issue292-maetsuyoshi-navi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "maetsuyoshi-fishing-port:toilet:issue292",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "地点固有のトイレ設備と現在の利用条件を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-maetsuyoshi-turihiroba",
+              "src-issue292-maetsuyoshi-navi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "maetsuyoshi-fishing-port:lighting:issue292",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "常設照明・点灯状況を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-maetsuyoshi-turihiroba",
+              "src-issue292-maetsuyoshi-navi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "maetsuyoshi-fishing-port:access:issue292",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "所在地と港の存在は確認したが、一般車両・徒歩での個別岸壁への進入条件を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-maetsuyoshi-navi"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "shijikiura-fishing-port",
+      "sources": [
+        {
+          "id": "src-issue292-nagasaki-gyokou-list",
+          "sourceType": "association",
+          "sourceName": "長崎県漁港漁場協会 長崎県の漁港",
+          "sourceUrl": "https://www.nagasaki-gyokou.jp/fishingport.php",
+          "checkedOn": "2026-07-24",
+          "note": "平戸市内の漁港名、種別、管理主体を確認。個別の一般立入・釣り可否・設備は裏付けない。"
+        },
+        {
+          "id": "src-issue292-shijikiura-turihiroba",
+          "sourceType": "portal",
+          "sourceName": "釣り広場.com 志々伎浦漁港",
+          "sourceUrl": "https://k.turihiroba.com/turiba5/nagasakisijikiuragyokou.html",
+          "checkedOn": "2026-07-24",
+          "note": "東西2つの漁港、西波止、港内岸壁、常夜灯、狭い駐車余地を写真付きで確認。現況と管理条件は現地確認が必要。"
+        },
+        {
+          "id": "src-issue292-shijikiura-navi",
+          "sourceType": "portal",
+          "sourceName": "全国漁港Navi 志々伎浦漁港",
+          "sourceUrl": "https://fishing-port.jp/fishingpordetail/shijikiura/",
+          "checkedOn": "2026-07-24",
+          "note": "第1種漁港、平戸市管理、志々伎湾沿岸、複数の堤防、港内常夜灯、公園トイレ記載を確認。公的な利用許可資料ではない。"
+        }
+      ],
+      "values": [
+        {
+          "id": "shijikiura-fishing-port:coastal_topography:issue292",
+          "itemKey": "coastal_topography",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "志々伎湾沿岸"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "地点特定民間資料に基づく沿岸位置の参考。海底地形・水深は示さない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-shijikiura-navi"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shijikiura-fishing-port:spot_features:issue292",
+          "itemKey": "spot_features",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "東西2つの漁港",
+            "西波止",
+            "港内岸壁"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "地点特定民間資料に基づく部分構造。現在の一般利用・釣り可否を示さない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-shijikiura-turihiroba",
+              "src-issue292-shijikiura-navi"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shijikiura-fishing-port:shore_access:issue292",
+          "itemKey": "shore_access",
+          "informationState": "weak_evidence",
+          "valueText": "西波止・港内岸壁（部分情報）",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "物理的な足場形状の参考。一般利用可能や安全を肯定しない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-shijikiura-turihiroba"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shijikiura-fishing-port:lighting:issue292",
+          "itemKey": "lighting",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": true,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "東側漁港の西波止先端や港内に常夜灯があるとの民間参考。点灯状況・現況は現地確認が必要。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-shijikiura-turihiroba",
+              "src-issue292-shijikiura-navi"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shijikiura-fishing-port:toilet:issue292",
+          "itemKey": "toilet",
+          "informationState": "weak_evidence",
+          "valueText": "志々伎浦漁港公園の公衆トイレ（現況未確認）",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "地点特定民間資料の施設記載。開放状況、利用時間、維持状態は確認できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-shijikiura-navi"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shijikiura-fishing-port:parking:issue292",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "波止手前の駐車余地が少ないとの情報はあるが、正式な駐車場と現在の一般利用条件を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-shijikiura-turihiroba",
+              "src-issue292-shijikiura-navi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shijikiura-fishing-port:restriction_status:issue292",
+          "itemKey": "restriction_status",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "志々伎浦漁港の現在の一般立入・釣り禁止範囲を確定できない。現地掲示と管理者案内を優先する。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-shijikiura-turihiroba",
+              "src-issue292-shijikiura-navi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shijikiura-fishing-port:fishable_area:issue292",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "西波止等を釣り場として紹介する資料はあるが、現在釣り可能な具体的範囲を公的に確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-shijikiura-turihiroba",
+              "src-issue292-shijikiura-navi"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "shijikiura-fishing-port:access:issue292",
+          "itemKey": "access",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "港の所在地は確認できるが、一般車両・徒歩での各波止への進入条件を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-shijikiura-turihiroba",
+              "src-issue292-shijikiura-navi"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    },
+    {
+      "spotId": "miyanoura-fishing-port",
+      "sources": [
+        {
+          "id": "src-issue292-nagasaki-gyokou-list",
+          "sourceType": "association",
+          "sourceName": "長崎県漁港漁場協会 長崎県の漁港",
+          "sourceUrl": "https://www.nagasaki-gyokou.jp/fishingport.php",
+          "checkedOn": "2026-07-24",
+          "note": "平戸市内の漁港名、種別、管理主体を確認。個別の一般立入・釣り可否・設備は裏付けない。"
+        },
+        {
+          "id": "src-issue292-nagasaki-mukozuki-road",
+          "sourceType": "official",
+          "sourceName": "長崎県 主要地方道平戸田平線（向月工区）",
+          "sourceUrl": "https://www.pref.nagasaki.jp/doc/page-637097.html",
+          "checkedOn": "2026-07-24",
+          "note": "宮ノ浦漁港へ至る主要道路であること、宮ノ浦漁港が県内有数の水揚げ量を持つことを確認。個別岸壁の一般利用・釣り可否は裏付けない。"
+        },
+        {
+          "id": "src-issue292-miyanoura-turihiroba",
+          "sourceType": "portal",
+          "sourceName": "釣り広場.com 宮ノ浦漁港",
+          "sourceUrl": "https://k.turihiroba.com/turiba5/nagasakimiyanouragyokou.html",
+          "checkedOn": "2026-07-24",
+          "note": "東防波堤進入禁止、港内魚釣り禁止、オイトク島周辺の地磯、巨大テトラ、高潮位時水没を写真付きで確認。現況は現地掲示を優先する。"
+        },
+        {
+          "id": "src-issue292-miyanoura-tsuriba-info",
+          "sourceType": "portal",
+          "sourceName": "海の釣り場情報 宮ノ浦漁港",
+          "sourceUrl": "https://tsuriba.info/spot/1602",
+          "checkedOn": "2026-07-24",
+          "note": "港内岸壁・島から延びる堤防の釣り禁止、南側堤防・地磯、テトラ帯を示す地点特定民間参考。現況と管理条件は現地確認が必要。"
+        }
+      ],
+      "values": [
+        {
+          "id": "miyanoura-fishing-port:coastal_topography:issue292",
+          "itemKey": "coastal_topography",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "志々伎湾外側",
+            "平戸島南西端",
+            "地磯"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "地点特定民間資料に基づく沿岸位置・自然地形の参考。海底地形・水深は示さない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-miyanoura-turihiroba",
+              "src-issue292-miyanoura-tsuriba-info"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "miyanoura-fishing-port:spot_features:issue292",
+          "itemKey": "spot_features",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "東防波堤",
+            "南側の大型堤防",
+            "港内岸壁",
+            "オイトク島周辺の地磯"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "港内・周辺の部分構造。東防波堤と港内には禁止情報があり、利用可能とは示さない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-miyanoura-turihiroba",
+              "src-issue292-miyanoura-tsuriba-info"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "miyanoura-fishing-port:shore_access:issue292",
+          "itemKey": "shore_access",
+          "informationState": "weak_evidence",
+          "valueText": "堤防・港内岸壁・地磯周辺（進入禁止・釣り禁止・高潮位時水没注意）",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "物理的な足場形状と危険注意の参考。一般利用可能や安全を肯定しない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-miyanoura-turihiroba",
+              "src-issue292-miyanoura-tsuriba-info"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "miyanoura-fishing-port:obstacles:issue292",
+          "itemKey": "obstacles",
+          "informationState": "weak_evidence",
+          "valueText": null,
+          "valueTextList": [
+            "巨大テトラ",
+            "西側地磯周辺のテトラ帯"
+          ],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "オイトク島と西防波堤周辺のテトラに関する民間注意情報。渡渉・通行可能とは示さない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-miyanoura-turihiroba",
+              "src-issue292-miyanoura-tsuriba-info"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "miyanoura-fishing-port:access:issue292",
+          "itemKey": "access",
+          "informationState": "has_evidence",
+          "valueText": "主要地方道平戸田平線で宮ノ浦地区・漁港方面へ接続",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "medium",
+          "note": "地域・港方面への道路アクセス。個別岸壁への車両進入・駐車可否を示さない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-nagasaki-mukozuki-road"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "miyanoura-fishing-port:restriction_status:issue292",
+          "itemKey": "restriction_status",
+          "informationState": "weak_evidence",
+          "valueText": "東防波堤は進入禁止、港内は稚魚放流により魚釣り禁止との情報（現地掲示・管理者案内優先）",
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": "low",
+          "note": "禁止方向の地点特定情報として保持する。禁止理由・範囲・現況は管理者に確認する。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [
+              "src-issue292-miyanoura-turihiroba",
+              "src-issue292-miyanoura-tsuriba-info"
+            ],
+            "checked": [],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "miyanoura-fishing-port:fishable_area:issue292",
+          "itemKey": "fishable_area",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "南側堤防や地磯を釣り場として紹介する資料はあるが、現在釣り可能な具体的範囲を公的に確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-nagasaki-mukozuki-road",
+              "src-issue292-miyanoura-turihiroba",
+              "src-issue292-miyanoura-tsuriba-info"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "miyanoura-fishing-port:parking:issue292",
+          "itemKey": "parking",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "オイトク島手前の駐車余地が限られるとの情報はあるが、正式な駐車場と現在の一般利用条件を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-nagasaki-mukozuki-road",
+              "src-issue292-miyanoura-turihiroba",
+              "src-issue292-miyanoura-tsuriba-info"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "miyanoura-fishing-port:toilet:issue292",
+          "itemKey": "toilet",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "地点固有のトイレ設備と現在の利用条件を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-nagasaki-mukozuki-road",
+              "src-issue292-miyanoura-turihiroba",
+              "src-issue292-miyanoura-tsuriba-info"
+            ],
+            "contradicting": []
+          }
+        },
+        {
+          "id": "miyanoura-fishing-port:lighting:issue292",
+          "itemKey": "lighting",
+          "informationState": "researched_unknown",
+          "valueText": null,
+          "valueTextList": [],
+          "valueNumber": null,
+          "valueBoolean": null,
+          "valueJson": null,
+          "unit": null,
+          "confidence": null,
+          "note": "港内・堤防周辺の常設照明と点灯状況を確定できない。",
+          "checkedAt": "2026-07-24",
+          "sources": {
+            "supporting": [],
+            "checked": [
+              "src-issue292-nagasaki-gyokou-list",
+              "src-issue292-nagasaki-mukozuki-road",
+              "src-issue292-miyanoura-turihiroba",
+              "src-issue292-miyanoura-tsuriba-info"
+            ],
+            "contradicting": []
+          }
+        }
+      ]
+    }
+  ]
+}
