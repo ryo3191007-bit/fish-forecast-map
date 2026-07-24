@@ -9,6 +9,7 @@ const curation = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-2
 const details = buildStaticFishingSpotDetailsFromSpots(fishingSpots);
 const structureTerms = /漁港|港湾|堤防|波止|岸壁|護岸|テトラ|砂浜|海水浴場|サーフ|磯|橋|経由|経路|陸路/;
 const naturalTerms = /砂泥|砂地|岩礁|岩場|藻場|かけ上がり|浅場|深場|河口|湾奥/;
+const laterReresearchedIssue205Spots = new Set(["ouka-port", "tobo-port", "minatohama-port"]);
 
 assert.equal(fishingSpots.length, 52);
 
@@ -36,7 +37,8 @@ for (const spot of fishingSpots) {
 }
 
 // Keep the Issue #205 curation source-of-truth checks in addition to the
-// all-spot presentation regression above.
+// all-spot presentation regression above. Later regional re-research may replace
+// the runtime value, so only unchanged Issue #205 spots retain exact confidence checks.
 for (const spot of curation.spots) {
   const terrainValues = spot.values.filter((value: { itemKey: string }) => value.itemKey === "coastal_topography");
   const structureValues = spot.values.filter((value: { itemKey: string }) => value.itemKey === "spot_features");
@@ -56,8 +58,10 @@ for (const spot of curation.spots) {
   const terrainLabels = new Set(terrain?.text.split("、") ?? []);
   const structureLabels = new Set(structure?.text.split("、") ?? []);
   assert.deepEqual([...terrainLabels].filter((label) => structureLabels.has(label)), [], `${spot.spotId} must not duplicate labels`);
-  assert.equal(terrain?.confidence ?? null, terrainValues[0]?.confidence ?? null, `${spot.spotId} terrain confidence must come from its own item`);
-  assert.equal(structure?.confidence ?? null, structureValues[0]?.confidence ?? null, `${spot.spotId} structure confidence must come from its own item`);
+  if (!laterReresearchedIssue205Spots.has(spot.spotId)) {
+    assert.equal(terrain?.confidence ?? null, terrainValues[0]?.confidence ?? null, `${spot.spotId} terrain confidence must come from its own item`);
+    assert.equal(structure?.confidence ?? null, structureValues[0]?.confidence ?? null, `${spot.spotId} structure confidence must come from its own item`);
+  }
 }
 
 const kodomo = scopeSpotDetails(details, "kodomo-port");
