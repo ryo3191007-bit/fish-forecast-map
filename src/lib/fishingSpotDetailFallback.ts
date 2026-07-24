@@ -9,6 +9,9 @@ import issue252Details from "../../data/curation/fishing-spots/issue-252-detail-
 import issue253Details from "../../data/curation/fishing-spots/issue-253-detail-curation.json";
 import issue254Details from "../../data/curation/fishing-spots/issue-254-detail-curation.json";
 import issue258Details from "../../data/curation/fishing-spots/issue-258-detail-curation.json";
+import issue278NorthDetails from "../../data/curation/fishing-spots/issue-278-itoshima-detail-reresearch.json";
+import issue278CentralDetails from "../../data/curation/fishing-spots/issue-278-itoshima-detail-reresearch-central.json";
+import issue278SouthDetails from "../../data/curation/fishing-spots/issue-278-itoshima-detail-reresearch-south.json";
 
 export const staticFishingSpotDetailItemDefinitions: SpotDetailItemDefinition[] = [
   { itemKey: "target_species", category: "basic", valueKind: "text_list", labelJa: "対象魚種", description: "既存釣り場マスターの対象魚種。", displayOrder: 10 },
@@ -62,51 +65,78 @@ function fallbackValue(id: string, spotId: string, itemKey: string, valueText: s
   };
 }
 
-type Issue181Source = SpotDetailSource;
-type Issue181Value = Pick<SpotDetailValue, "id" | "itemKey" | "informationState" | "valueText" | "valueTextList" | "valueNumber" | "valueBoolean" | "valueJson" | "unit" | "confidence" | "note" | "checkedAt"> & { sources: Record<SpotDetailSourceRelation, string[]> };
-type Issue181Spot = { spotId: string; sources: Issue181Source[]; values: Issue181Value[] };
-const issue181DetailSpots = issue181Details.spots as Issue181Spot[];
-const issue194DetailSpots = issue194Details.spots as Issue181Spot[];
-const issue205DetailSpots = issue205Details.spots as Issue181Spot[];
-const issue248DetailSpots = [...issue248Details.spots, ...issue250Details.spots, ...issue252Details.spots, ...issue253Details.spots, ...issue254Details.spots, ...issue258Details.spots] as Issue181Spot[];
+type CuratedSource = SpotDetailSource;
+type CuratedValue = Pick<SpotDetailValue, "id" | "itemKey" | "informationState" | "valueText" | "valueTextList" | "valueNumber" | "valueBoolean" | "valueJson" | "unit" | "confidence" | "note" | "checkedAt"> & { sources: Record<SpotDetailSourceRelation, string[]> };
+type CuratedSpot = { spotId: string; sources: CuratedSource[]; values: CuratedValue[] };
 
+const issue181DetailSpots = issue181Details.spots as CuratedSpot[];
+const issue194DetailSpots = issue194Details.spots as CuratedSpot[];
+const issue205DetailSpots = issue205Details.spots as CuratedSpot[];
+const laterDetailSpots = [
+  ...issue248Details.spots,
+  ...issue250Details.spots,
+  ...issue252Details.spots,
+  ...issue253Details.spots,
+  ...issue254Details.spots,
+  ...issue258Details.spots,
+  ...issue278NorthDetails.spots,
+  ...issue278CentralDetails.spots,
+  ...issue278SouthDetails.spots,
+] as CuratedSpot[];
+
+function mapCuratedSpot(spot: CuratedSpot, supplementalSpot?: CuratedSpot): SpotDetailValue[] {
+  const activeValues = spot.values
+    .filter((value) => value.itemKey !== "water_flow_influences")
+    .concat(supplementalSpot?.values ?? []);
+  const allSources = spot.sources.concat(supplementalSpot?.sources ?? []);
+  const sourcesById = new Map(allSources.map((source) => [source.id, source]));
+  return activeValues.map((value): SpotDetailValue => ({
+    id: value.id,
+    spotId: spot.spotId,
+    itemKey: value.itemKey,
+    informationState: value.informationState,
+    valueText: value.valueText,
+    valueTextList: value.valueTextList,
+    valueNumber: value.valueNumber,
+    valueBoolean: value.valueBoolean,
+    valueJson: value.valueJson,
+    unit: value.unit,
+    confidence: value.confidence,
+    contributionOrigin: "curated_research",
+    contributorId: null,
+    submittedAt: null,
+    moderationStatus: "not_required",
+    reviewStatus: "reviewed",
+    adoptionStatus: "adopted",
+    note: value.note,
+    checkedAt: value.checkedAt,
+    sources: (["supporting", "checked", "contradicting"] as SpotDetailSourceRelation[]).flatMap((relation) =>
+      value.sources[relation].flatMap((sourceId) => {
+        const source = sourcesById.get(sourceId);
+        return source ? [{ source: { ...source, sourceUrl: null, note: null }, relation, note: null }] : [];
+      }),
+    ),
+  }));
+}
+
+/**
+ * Build curated fallback values in chronological import order.
+ * Issue #194 supplements and overrides the original Issue #181 split fields.
+ * Later re-research files then replace older values for the same spot/item key.
+ */
 function buildCuratedStaticValues(spotIds: Set<string>): SpotDetailValue[] {
-  return issue181DetailSpots.concat(issue205DetailSpots, issue248DetailSpots)
+  const issue181Values = issue181DetailSpots
     .filter((spot) => spotIds.has(spot.spotId))
-    .flatMap((spot) => {
-      const sourcesById = new Map(spot.sources.map((source) => [source.id, source]));
-      const splitSpot = issue194DetailSpots.find((candidate) => candidate.spotId === spot.spotId);
-      const activeValues = spot.values.filter((value) => value.itemKey !== "water_flow_influences").concat(splitSpot?.values ?? []);
-      const allSources = spot.sources.concat(splitSpot?.sources ?? []);
-      const activeSourcesById = new Map(allSources.map((source) => [source.id, source]));
-      return activeValues.map((value): SpotDetailValue => ({
-        id: value.id,
-        spotId: spot.spotId,
-        itemKey: value.itemKey,
-        informationState: value.informationState,
-        valueText: value.valueText,
-        valueTextList: value.valueTextList,
-        valueNumber: value.valueNumber,
-        valueBoolean: value.valueBoolean,
-        valueJson: value.valueJson,
-        unit: value.unit,
-        confidence: value.confidence,
-        contributionOrigin: "curated_research",
-        contributorId: null,
-        submittedAt: null,
-        moderationStatus: "not_required",
-        reviewStatus: "reviewed",
-        adoptionStatus: "adopted",
-        note: null,
-        checkedAt: value.checkedAt,
-        sources: (["supporting", "checked", "contradicting"] as SpotDetailSourceRelation[]).flatMap((relation) =>
-          value.sources[relation].flatMap((sourceId) => {
-            const source = activeSourcesById.get(sourceId) ?? sourcesById.get(sourceId);
-            return source ? [{ source: { ...source, sourceUrl: null, note: null }, relation, note: null }] : [];
-          }),
-        ),
-      }));
-    });
+    .flatMap((spot) => mapCuratedSpot(spot, issue194DetailSpots.find((candidate) => candidate.spotId === spot.spotId)));
+  const newerValues = issue205DetailSpots.concat(laterDetailSpots)
+    .filter((spot) => spotIds.has(spot.spotId))
+    .flatMap((spot) => mapCuratedSpot(spot));
+
+  const latestBySpotItem = new Map<string, SpotDetailValue>();
+  for (const value of issue181Values.concat(newerValues)) {
+    latestBySpotItem.set(`${value.spotId}:${value.itemKey}`, value);
+  }
+  return [...latestBySpotItem.values()];
 }
 
 export function buildStaticFishingSpotDetailsFromSpots(spots: FishingSpot[]): FishingSpotDetailSet {
