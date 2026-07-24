@@ -12,10 +12,20 @@ import {
 } from "../src/domain/fishingSpotPresentation";
 import { fetchFishingEnvironment } from "../src/services/openMeteo";
 
-const EXPECTED = new Map([
+const TARGET_SPOT_IDS = ["karatsu-east-port", "maetsuyoshi-fishing-port"] as const;
+type TargetSpotId = (typeof TARGET_SPOT_IDS)[number];
+type ExpectedCoordinate = { latitude: number; longitude: number };
+
+const EXPECTED = new Map<TargetSpotId, ExpectedCoordinate>([
   ["karatsu-east-port", { latitude: 33.469823, longitude: 129.963189 }],
   ["maetsuyoshi-fishing-port", { latitude: 33.21062, longitude: 129.45292 }],
-] as const);
+]);
+
+function getExpectedCoordinate(spotId: string): ExpectedCoordinate | undefined {
+  return TARGET_SPOT_IDS.includes(spotId as TargetSpotId)
+    ? EXPECTED.get(spotId as TargetSpotId)
+    : undefined;
+}
 
 type AuditSpot = {
   spotId: string;
@@ -58,7 +68,7 @@ assert.equal(corrected.length, fishingSpots.length);
 for (const original of fishingSpots) {
   const current = corrected.find((spot) => spot.id === original.id);
   assert.ok(current);
-  const expected = EXPECTED.get(original.id as keyof typeof fishingSpotCoordinateOverrides);
+  const expected = getExpectedCoordinate(original.id);
 
   if (!expected) {
     assert.equal(current.latitude, original.latitude, `${original.id} latitude must not change`);
@@ -127,7 +137,7 @@ assert.match(audit.researchedAt, /^2026-07-25$/);
 assert.deepEqual(new Set(audit.spots.map((spot) => spot.spotId)), new Set(EXPECTED.keys()));
 
 for (const auditSpot of audit.spots) {
-  const expected = EXPECTED.get(auditSpot.spotId as keyof typeof fishingSpotCoordinateOverrides);
+  const expected = getExpectedCoordinate(auditSpot.spotId);
   assert.ok(expected);
   assert.deepEqual(auditSpot.adoptedCoordinates, expected);
   assert.equal(auditSpot.coordinatePrecision, "approximate");
