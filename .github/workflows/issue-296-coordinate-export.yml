@@ -15,14 +15,18 @@ jobs:
   c09:
     runs-on: ubuntu-latest
     steps:
-      - name: Download official MLIT fishing-port data
+      - name: Inspect official MLIT download page
         run: |
           mkdir -p artifacts
-          curl --fail --location --retry 3 'https://nlftp.mlit.go.jp/ksj/gml/data/C09/C09-06_GML.zip' --output artifacts/C09-06_GML.zip
+          curl --fail --location --retry 3 'https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-C09.html' --output artifacts/C09-download-page.html
+          grep -oE '.{0,180}C09-06_GML\.zip.{0,180}' artifacts/C09-download-page.html > artifacts/C09-download-link-context.txt || true
+          cat artifacts/C09-download-link-context.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: issue-296-c09-data
-          path: artifacts/C09-06_GML.zip
+          name: issue-296-c09-page
+          path: |
+            artifacts/C09-download-page.html
+            artifacts/C09-download-link-context.txt
           if-no-files-found: error
 
   export:
