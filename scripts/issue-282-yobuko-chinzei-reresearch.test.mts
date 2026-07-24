@@ -125,7 +125,7 @@ const yobukoArea: FishingSpotDetailSet = {
   itemDefinitions: runtime.itemDefinitions,
   values: runtime.values.filter((value) => value.spotId === "yobuko-area"),
 };
-assert.deepEqual(formatTerrainDetailForPresentation(yobukoArea, "spot_features"), { text: "波止、地磯、遊歩道", confidence: "low" });
+assert.deepEqual(formatTerrainDetailForPresentation(yobukoArea, "spot_features"), { text: "堤防、磯", confidence: "low" });
 assert.deepEqual(formatTerrainDetailForPresentation(yobukoArea, "coastal_topography"), { text: "岩礁", confidence: "low" });
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(yobukoArea, "parking")), "駐車");
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(yobukoArea, "restriction_status")), "調査済み・未確定");
@@ -134,7 +134,7 @@ const kodomo: FishingSpotDetailSet = {
   itemDefinitions: runtime.itemDefinitions,
   values: runtime.values.filter((value) => value.spotId === "kodomo-port"),
 };
-assert.deepEqual(formatTerrainDetailForPresentation(kodomo, "spot_features"), { text: "砂浜、波止", confidence: "low" });
+assert.deepEqual(formatTerrainDetailForPresentation(kodomo, "spot_features"), { text: "堤防、砂浜", confidence: "low" });
 assert.deepEqual(formatTerrainDetailForPresentation(kodomo, "coastal_topography"), { text: "砂地", confidence: "medium" });
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(kodomo, "parking")), "駐車");
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(kodomo, "toilet")), "トイレ");
@@ -143,7 +143,7 @@ const hado: FishingSpotDetailSet = {
   itemDefinitions: runtime.itemDefinitions,
   values: runtime.values.filter((value) => value.spotId === "hado-port"),
 };
-assert.deepEqual(formatTerrainDetailForPresentation(hado, "spot_features"), { text: "波止、岸壁、埠頭", confidence: "low" });
+assert.deepEqual(formatTerrainDetailForPresentation(hado, "spot_features"), { text: "堤防、岸壁", confidence: "low" });
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(hado, "parking")), "調査済み・未確定");
 assert.match(formatSpotDetailValue(findDisplayableSpotDetail(hado, "restriction_status")), /立入禁止/);
 assert.match(formatSpotDetailValue(findDisplayableSpotDetail(hado, "restriction_status")), /駐車禁止/);
@@ -152,7 +152,7 @@ const nagoya: FishingSpotDetailSet = {
   itemDefinitions: runtime.itemDefinitions,
   values: runtime.values.filter((value) => value.spotId === "nagoya-port"),
 };
-assert.deepEqual(formatTerrainDetailForPresentation(nagoya, "spot_features"), { text: "岸壁、護岸、波止", confidence: "low" });
+assert.deepEqual(formatTerrainDetailForPresentation(nagoya, "spot_features"), { text: "堤防、岸壁、護岸", confidence: "low" });
 assert.match(formatSpotDetailValue(findDisplayableSpotDetail(nagoya, "restriction_status")), /赤灯波止/);
 
 const override = kodomo.values.find((value) => value.itemKey === "spot_features")!;
