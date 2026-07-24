@@ -9,7 +9,16 @@ const curation = JSON.parse(fs.readFileSync("data/curation/fishing-spots/issue-2
 const details = buildStaticFishingSpotDetailsFromSpots(fishingSpots);
 const structureTerms = /漁港|港湾|堤防|波止|岸壁|護岸|テトラ|砂浜|海水浴場|サーフ|磯|橋|経由|経路|陸路/;
 const naturalTerms = /砂泥|砂地|岩礁|岩場|藻場|かけ上がり|浅場|深場|河口|湾奥/;
-const laterReresearchedIssue205Spots = new Set(["ouka-port", "tobo-port", "minatohama-port"]);
+const laterReresearchedIssue205Spots = new Set([
+  "ouka-port",
+  "tobo-port",
+  "minatohama-port",
+  "yobuko-port",
+  "kodomo-port",
+  "kabeshima-port",
+  "hado-port",
+  "nagoya-port",
+]);
 
 assert.equal(fishingSpots.length, 52);
 
@@ -65,11 +74,11 @@ for (const spot of curation.spots) {
 }
 
 const kodomo = scopeSpotDetails(details, "kodomo-port");
-assert.equal(formatTerrainDetailForPresentation(kodomo, "coastal_topography"), null);
-assert.equal(formatTerrainDetailForPresentation(kodomo, "spot_features")?.text, "堤防、砂浜");
+assert.equal(formatTerrainDetailForPresentation(kodomo, "coastal_topography")?.text, "砂地");
+assert.equal(formatTerrainDetailForPresentation(kodomo, "spot_features")?.text, "砂浜、波止");
 const kabeshima = scopeSpotDetails(details, "kabeshima-port");
 assert.equal(formatTerrainDetailForPresentation(kabeshima, "coastal_topography"), null);
-assert.equal(formatTerrainDetailForPresentation(kabeshima, "spot_features")?.text, "島の漁港");
+assert.equal(formatTerrainDetailForPresentation(kabeshima, "spot_features")?.text, "波止、岸壁");
 assert.doesNotMatch(formatTerrainDetailForPresentation(kabeshima, "spot_features")?.text ?? "", /呼子大橋|経路|陸路/);
 assert.equal(formatTerrainDetailForPresentation(scopeSpotDetails(details, "tobo-port"), "coastal_topography")?.text, "河口");
 
