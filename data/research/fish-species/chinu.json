@@ -370,14 +370,9 @@
     "secondaryResearch": "民間釣りサイト、SNS、動画、ブログ単独ではmedium以上にしない。",
     "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
     "comparisonWithCurrentImplementation": {
-      "currentFishSpeciesNameJa": "チヌ",
-      "currentSeasonMonths": [],
-      "currentMethodAffinity": [
-        "コマセ"
-      ],
-      "currentCategory": "fish",
-      "comparisonPolicy": "現行値は比較対象に限定し、sourceまたは正解として不使用。",
-      "scoreV2Policy": "固定値は比較対象のみ。今回の採否から計算ロジック・閾値・重みを変更しない。"
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_PRODUCTION_ADOPTION_REVIEW.md",
+      "scoreV2Status": "supported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
     },
     "attributeDecisions": [
       {

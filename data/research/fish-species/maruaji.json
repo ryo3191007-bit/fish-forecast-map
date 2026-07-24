@@ -247,9 +247,9 @@
     "secondaryResearch": "民間釣りサイト、SNS、動画、ブログ単独ではmedium以上にしない。",
     "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
     "comparisonWithCurrentImplementation": {
-      "currentFishSpeciesNameJa": "マルアジ（既存exact_species）",
-      "currentAjiScore": "比較対象のみ。現行アジ固定値は根拠不足のためマルアジへ適用不可。",
-      "comparisonPolicy": "SCORE v2のロジック・閾値・重みは変更しない。"
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_PRODUCTION_ADOPTION_REVIEW.md",
+      "scoreV2Status": "unsupported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
     },
     "attributeDecisions": [
       {

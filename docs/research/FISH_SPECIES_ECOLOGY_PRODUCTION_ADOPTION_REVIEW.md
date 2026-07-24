@@ -2,6 +2,8 @@
 
 確認日: 2026-07-24。詳細なpath別判定、source、地域、confidence、理由、再確認条件は各JSONの`review.attributeDecisions`を正本とする。
 
+現行SCORE v2固定値との具体比較は本資料を唯一の正本とする。各JSONの`review.comparisonWithCurrentImplementation`は固定値を重複保持せず、本資料への参照、対応有無、種・グループ間の継承禁止だけを機械可読に示す。
+
 ## アジグループの分離
 
 `aji`は現行魚種マスターで選択可能な`species_group`であり、`maaji`と`maruaji`だけを構成種として列挙する。canonical和名と学名は「根拠待ち」ではなく、単一taxonでないため`reject`とした。未特定の「アジ」は`aji`のままとし、`maaji`のalias、安全な自動解決、個別種値のfallbackにはしない。`maaji`の「アジ」「真鯵」も、前者は曖昧で後者はsourceと採否判断がないためaliasから除外した。

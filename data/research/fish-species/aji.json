@@ -227,14 +227,9 @@
     "secondaryResearch": "民間釣りサイト、SNS、動画、ブログ単独ではmedium以上にしない。",
     "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
     "comparisonWithCurrentImplementation": {
-      "currentFishSpeciesNameJa": "アジ",
-      "currentSeasonMonths": [],
-      "currentMethodAffinity": [
-        "サビキ",
-        "コマセ"
-      ],
-      "currentCategory": "fish",
-      "comparisonPolicy": "現行アジ固定値はグループ向け比較対象のみ。マアジ・マルアジへ根拠なく適用しない。"
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_PRODUCTION_ADOPTION_REVIEW.md",
+      "scoreV2Status": "unsupported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
     },
     "attributeDecisions": [
       {

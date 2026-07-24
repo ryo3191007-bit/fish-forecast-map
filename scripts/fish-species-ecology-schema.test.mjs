@@ -11,6 +11,7 @@ addFormats(ajv);
 assert.doesNotThrow(() => ajv.compile(schema), 'schema must be valid JSON Schema');
 const validate = ajv.compile(schema);
 const targets = { aji: 'アジ', maaji: 'マアジ', maruaji: 'マルアジ', seabass: 'シーバス', chinu: 'チヌ' };
+const scoreV2Support = { aji: 'unsupported', maaji: 'supported', maruaji: 'unsupported', seabass: 'supported', chinu: 'supported' };
 const docs = Object.fromEntries(Object.keys(targets).map((id) => [id, JSON.parse(fs.readFileSync(path.join(root, `data/research/fish-species/${id}.json`), 'utf8'))]));
 const ecologyKeys = ['seasonality', 'waterTemperature', 'depthRange', 'substrateHabitat', 'salinityAndWaterBody', 'dayNightTiming', 'fishingMethods', 'spawningOrConfusableInfo'];
 const requiredDecisionPaths = [
@@ -58,6 +59,7 @@ function validateResearchDoc(id, doc) {
   assert.equal(validate(doc), true, `${id}: ${ajv.errorsText(validate.errors)}`);
   assert.equal(doc.speciesId, id);
   assert.equal(doc.identity.displayNameJa, targets[id]);
+  assert.equal(doc.review.comparisonWithCurrentImplementation.scoreV2Status, scoreV2Support[id], `${id}: SCORE v2 support status must match the authoritative comparison`);
   const sourceIds = new Set(doc.sources.map((source) => source.id));
   assert.equal(sourceIds.size, doc.sources.length, `${id}: source ids must be unique`);
   const sourceById = new Map(doc.sources.map((source) => [source.id, source]));

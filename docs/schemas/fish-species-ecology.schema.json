@@ -157,7 +157,24 @@
           "type": "string"
         },
         "comparisonWithCurrentImplementation": {
-          "type": "object"
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "authoritativeComparisonDocument",
+            "scoreV2Status",
+            "inheritancePolicy"
+          ],
+          "properties": {
+            "authoritativeComparisonDocument": {
+              "const": "docs/research/FISH_SPECIES_ECOLOGY_PRODUCTION_ADOPTION_REVIEW.md"
+            },
+            "scoreV2Status": {
+              "enum": ["supported", "unsupported"]
+            },
+            "inheritancePolicy": {
+              "const": "do_not_inherit_between_species_or_group"
+            }
+          }
         },
         "attributeDecisions": {
           "type": "array",
