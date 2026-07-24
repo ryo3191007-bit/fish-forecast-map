@@ -5,7 +5,6 @@ import { fishingSpots } from "../src/data/fishingSpots";
 import { buildCatchRegistrationSpotOptions, buildFishingSpotMapEntries, filterFishingSpotOptions, selectFishingSpot, toEnvironmentPoint } from "../src/domain/fishingSpotPresentation";
 import { getTideReferenceForSpot } from "../src/domain/environment";
 import { JMA_AREA_BY_SPOT } from "../src/domain/jmaWarning";
-import { buildStaticFishingSpotDetailsFromSpots } from "../src/lib/fishingSpotDetailFallback";
 import { fetchFishingEnvironment } from "../src/services/openMeteo";
 
 const EXPECTED = new Map([
@@ -90,6 +89,7 @@ assert.equal(audit.activeCandidates.find(({ spotId }) => spotId === "hirado-seto
 assert.equal(audit.activeCandidates.find(({ spotId }) => spotId === "hirado-port")?.publicFacilityType, "港湾");
 assert.ok(audit.activeCandidates.every(({ relationToExisting }) => /再割当|移動/.test(relationToExisting.migrationPolicy)));
 assert.ok(fallback.includes("issue-252-detail-curation.json"));
+assert.ok(fallback.includes("issue288SetoDetails"), "later re-research may supersede Issue #252 runtime values");
 const hiradoDetails = details.spots.find(({ spotId }) => spotId === "hirado-port");
 assert.ok(hiradoDetails);
 assert.equal(audit.sources[GSI_SOURCE_ID]?.id, GSI_SOURCE_ID);
@@ -112,6 +112,4 @@ for (const key of UNKNOWN_KEYS) {
   assert.deepEqual(value.sources.supporting, []);
   assert.ok(value.sources.checked.includes(GSI_SOURCE_ID));
 }
-const runtimeDetails = buildStaticFishingSpotDetailsFromSpots(fishingSpots).values.filter(({ spotId }) => spotId === "hirado-port");
-assert.ok(UNKNOWN_KEYS.every((key) => runtimeDetails.some((value) => value.itemKey === key && value.informationState === "researched_unknown")));
 console.log("Issue #252 Hirado Seto spot tests passed");
