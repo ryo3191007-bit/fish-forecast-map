@@ -17,4 +17,10 @@ Issue #177の範囲で、`アジ`、`シーバス`、`チヌ`の3表示魚種だ
 
 ## v1.1.0 本番採否拡張（Issue #274）
 
+この節はv1.1.0で導入した採否構造の記録である。現行Schemaはv1.2.0である。
+
 `aji`をグループ定義専用とし、`maaji`と`maruaji`を個別種へ分離した。本番採否、非継承、unknownの扱い、機械可読な投影方針は`docs/FISH_SPECIES_ECOLOGY_PRODUCTION_ADOPTION_SPEC.md`を参照する。対象はアジグループとマアジ、マルアジ、スズキ、チヌに限定し、本番SCOREへは接続しない。
+
+## v1.2.0 SCORE投影purpose拡張（Issue #276）
+
+SCORE v2へ安全に投影する用途を一般用途と区別するため、`score_v2_water_temperature / score_v2_season_time / score_v2_spot_affinity / score_v2_method_affinity`をpurpose enumへ追加した。このenum追加は契約変更としてSchema、全調査JSON、exampleをv1.2.0へ一括移行し、v1.1.0文書は現行Schemaで拒否する。

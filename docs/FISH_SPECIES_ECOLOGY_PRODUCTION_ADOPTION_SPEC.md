@@ -1,4 +1,4 @@
-# 魚種生態マスター 本番採用仕様 v1.1.0
+# 魚種生態マスター 本番採用仕様 v1.2.0
 
 ## 境界と単位
 
@@ -23,7 +23,7 @@
 
 ## Schema互換方針
 
-全対象JSONとexampleはv1.1.0へ移行済みである。現行Schemaは`const: 1.1.0`とし、旧v1.0.0文書を新しい必須フィールド付きSchemaで検証できるとは扱わない。v1.0.0はnegative fixture、v1.1.0はpositive fixtureで検証する。
+全対象JSONとexampleはv1.2.0へ移行済みである。現行Schemaは`const: 1.2.0`とし、SCORE固有purposeを認識しない旧v1.1.0文書を同じ契約として扱わない。v1.1.0はnegative fixture、v1.2.0はpositive fixtureで検証する。
 
 ## 適用範囲
 
