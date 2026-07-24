@@ -1,4 +1,4 @@
-import type { FishingSpotDetailSet } from "@/domain/fishingSpotDetail";
+import type { FishingSpotDetailSet, SpotDetailValue } from "@/domain/fishingSpotDetail";
 import { fishingSpots } from "@/data/fishingSpots";
 import { getSupabaseClient, type SupabaseClientStatus } from "@/lib/supabaseClient";
 import { buildStaticFishingSpotDetailsFromSpots } from "@/lib/fishingSpotDetailFallback";
@@ -12,6 +12,47 @@ function buildStaticFishingSpotDetails(spotId?: string): FishingSpotDetailSet {
 
 function fallback(fallbackReason: NonNullable<MasterDataMeta["fallbackReason"]>, spotId?: string, message?: string): MasterDataResult<FishingSpotDetailSet> {
   return { data: buildStaticFishingSpotDetails(spotId), meta: { source: "static-fallback", fallbackReason, message } };
+}
+
+const valueKey = (value: Pick<SpotDetailValue, "spotId" | "itemKey">) => `${value.spotId}:${value.itemKey}`;
+
+function isApprovedUserValue(value: SpotDetailValue) {
+  return value.contributionOrigin === "user_contribution"
+    && value.moderationStatus === "approved"
+    && value.reviewStatus === "reviewed"
+    && value.adoptionStatus === "adopted";
+}
+
+/**
+ * Issue #278 re-research values ship with the application so they can replace older
+ * Supabase curated rows immediately after deployment. Approved user contributions keep
+ * priority, and the remote database is not modified by this read-time merge.
+ */
+export function mergeStaticSpotDetailOverrides(
+  databaseDetails: FishingSpotDetailSet,
+  staticDetails: FishingSpotDetailSet,
+): FishingSpotDetailSet {
+  const overrides = staticDetails.values.filter((value) => value.id.endsWith(":issue278"));
+  if (overrides.length === 0) return databaseDetails;
+
+  const overrideKeys = new Set(overrides.map(valueKey));
+  const userValues = databaseDetails.values.filter((value) =>
+    isApprovedUserValue(value) && overrideKeys.has(valueKey(value))
+  );
+  const retainedDatabaseValues = databaseDetails.values.filter((value) =>
+    !overrideKeys.has(valueKey(value)) || isApprovedUserValue(value)
+  );
+  const retainedWithoutPrioritizedUsers = retainedDatabaseValues.filter((value) => !userValues.includes(value));
+
+  const definitions = new Map(databaseDetails.itemDefinitions.map((definition) => [definition.itemKey, definition]));
+  for (const definition of staticDetails.itemDefinitions) {
+    if (!definitions.has(definition.itemKey)) definitions.set(definition.itemKey, definition);
+  }
+
+  return {
+    itemDefinitions: [...definitions.values()],
+    values: [...userValues, ...overrides, ...retainedWithoutPrioritizedUsers],
+  };
 }
 
 export async function fetchFishingSpotDetails(spotId?: string, clientStatus?: SupabaseClientStatus): Promise<MasterDataResult<FishingSpotDetailSet>> {
@@ -28,7 +69,14 @@ export async function fetchFishingSpotDetails(spotId?: string, clientStatus?: Su
   if (itemResult.error) return fallback("supabase-error", spotId, itemResult.error.message);
   if (valueResult.error) return fallback("supabase-error", spotId, valueResult.error.message);
 
-  return { data: mapFishingSpotDetailRows((itemResult.data ?? []) as SpotDetailItemDefinitionRow[], (valueResult.data ?? []) as unknown as SpotDetailValueRow[]), meta: { source: "supabase" } };
+  const databaseDetails = mapFishingSpotDetailRows(
+    (itemResult.data ?? []) as SpotDetailItemDefinitionRow[],
+    (valueResult.data ?? []) as unknown as SpotDetailValueRow[],
+  );
+  return {
+    data: mergeStaticSpotDetailOverrides(databaseDetails, buildStaticFishingSpotDetails(spotId)),
+    meta: { source: "supabase", message: "Supabase data with newer static curated re-research overrides." },
+  };
 }
 
 export function getStaticFishingSpotDetails(spotId?: string): FishingSpotDetailSet {
