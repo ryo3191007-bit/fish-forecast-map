@@ -92,7 +92,9 @@ const records = fishingSpots
     };
   });
 
-console.log("ISSUE296_COORDINATE_EXPORT_BEGIN");
-console.log(JSON.stringify({ count: records.length, records }, null, 2));
-console.log("ISSUE296_COORDINATE_EXPORT_END");
-process.exitCode = 1;
+fs.mkdirSync("artifacts", { recursive: true });
+fs.writeFileSync(
+  "artifacts/issue-296-coordinate-export.json",
+  `${JSON.stringify({ count: records.length, records }, null, 2)}\n`,
+);
+console.log(`Exported ${records.length} coordinate audit records.`);
