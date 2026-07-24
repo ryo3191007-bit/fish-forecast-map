@@ -139,16 +139,38 @@ const merged = mergeStaticSpotDetailOverrides(
 );
 assert.equal(merged.values[0].id, override.id, "new static re-research must replace old database curated value");
 
-const userValue = { ...override, id: "approved-user-value", contributionOrigin: "user_contribution" as const };
+const approvedUserValue = {
+  ...override,
+  id: "approved-user-value",
+  contributionOrigin: "user_contribution" as const,
+  moderationStatus: "approved" as const,
+  reviewStatus: "reviewed" as const,
+  adoptionStatus: "adopted" as const,
+};
 const mergedWithUser = mergeStaticSpotDetailOverrides(
-  { itemDefinitions: runtime.itemDefinitions, values: [oldCurated, userValue] },
+  { itemDefinitions: runtime.itemDefinitions, values: [oldCurated, approvedUserValue] },
   { itemDefinitions: runtime.itemDefinitions, values: [override] },
 );
-assert.equal(mergedWithUser.values[0].id, userValue.id, "approved user contribution keeps display priority");
+assert.equal(mergedWithUser.values[0].id, approvedUserValue.id, "approved user contribution keeps display priority");
+
+const pendingUserValue = {
+  ...approvedUserValue,
+  id: "pending-user-value",
+  moderationStatus: "pending" as const,
+  reviewStatus: "pending_review" as const,
+  adoptionStatus: "candidate" as const,
+};
+const mergedWithPendingUser = mergeStaticSpotDetailOverrides(
+  { itemDefinitions: runtime.itemDefinitions, values: [oldCurated, pendingUserValue] },
+  { itemDefinitions: runtime.itemDefinitions, values: [override] },
+);
+assert.equal(mergedWithPendingUser.values[0].id, override.id, "unapproved user contribution must not outrank curated re-research");
+assert.ok(!mergedWithPendingUser.values.some(({ id }) => id === pendingUserValue.id));
 
 assert.match(fallbackSource, /issue278NorthDetails/);
 assert.match(fallbackSource, /latestBySpotItem\.set/);
 assert.match(repositorySource, /mergeStaticSpotDetailOverrides/);
+assert.match(repositorySource, /isApprovedUserValue/);
 assert.match(repositorySource, /remote database is not modified/);
 assert.match(policy, /地点を直接特定できる民間単独資料/);
 assert.match(policy, /SCORE v2へ入力しない/);
