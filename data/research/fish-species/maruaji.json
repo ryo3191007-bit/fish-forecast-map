@@ -281,6 +281,18 @@
         "recheckCondition": "source更新または分類変更時に再確認する。"
       },
       {
+        "path": "/identity/aliases",
+        "decision": "reject",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "reason": "マルアジのaliasは今回採用しない。",
+        "recheckCondition": "aliasごとの直接source、曖昧性、解決可否を個別審査できる場合に再確認する。"
+      },
+      {
         "path": "/ecology/stableGeneral/seasonality",
         "decision": "hold",
         "purposes": [

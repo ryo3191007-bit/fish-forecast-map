@@ -15,10 +15,7 @@
   ],
   "properties": {
     "schemaVersion": {
-      "enum": [
-        "1.0.0",
-        "1.1.0"
-      ]
+      "const": "1.1.0"
     },
     "speciesId": {
       "enum": [

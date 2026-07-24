@@ -29,10 +29,7 @@
       },
       "note": "学名はsourceで直接確認できる場合のみ採用。"
     },
-    "aliases": [
-      "アジ",
-      "真鯵"
-    ],
+    "aliases": [],
     "entityType": "exact_species",
     "note": "マアジ固有の自己完結型記録。親グループやマルアジへの暗黙継承は禁止する。",
     "parentGroupId": "aji",
@@ -371,6 +368,18 @@
         "recheckCondition": "source更新または分類変更時に再確認する。"
       },
       {
+        "path": "/identity/aliases",
+        "decision": "reject",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "reason": "「アジ」は独立した未特定species_groupであり「真鯵」は採否根拠未確認のため、安全な自動aliasとして登録しない。",
+        "recheckCondition": "aliasごとの直接source、曖昧性、解決可否を個別審査できる場合に再確認する。"
+      },
+      {
         "path": "/ecology/stableGeneral/seasonality",
         "decision": "hold",
         "purposes": [
@@ -476,7 +485,6 @@
         "path": "/ecology/regionalCatchability/seasonality",
         "decision": "hold",
         "purposes": [
-          "ecology_description",
           "score_excluded"
         ],
         "sourceIds": [
@@ -503,7 +511,6 @@
         "path": "/ecology/regionalCatchability/depthRange",
         "decision": "hold",
         "purposes": [
-          "ecology_description",
           "score_excluded"
         ],
         "sourceIds": [
@@ -554,7 +561,6 @@
         "path": "/ecology/regionalCatchability/fishingMethods",
         "decision": "hold",
         "purposes": [
-          "ecology_description",
           "score_excluded"
         ],
         "sourceIds": [

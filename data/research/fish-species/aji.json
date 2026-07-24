@@ -239,27 +239,39 @@
     "attributeDecisions": [
       {
         "path": "/identity/canonicalNameJa",
-        "decision": "hold",
+        "decision": "reject",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "ajiは複数の構成種を束ねる表示グループであり、単一taxonのcanonical和名を持たせると誤同定になる。",
+        "recheckCondition": "グループ定義を廃止して単一taxonへ移行する仕様変更時にのみ再検討する。"
       },
       {
         "path": "/identity/scientificName",
-        "decision": "hold",
+        "decision": "reject",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "ajiは単一taxonではないため、構成種いずれかの学名をグループへ採用しない。",
+        "recheckCondition": "グループ定義を廃止して単一taxonへ移行する仕様変更時にのみ再検討する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "reject",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "reason": "アジのaliasは今回採用しない。",
+        "recheckCondition": "aliasごとの直接source、曖昧性、解決可否を個別審査できる場合に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/seasonality",
@@ -270,8 +282,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "表示グループに共通する一般生態としてseasonalityを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/waterTemperature",
@@ -282,8 +294,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "表示グループに共通する一般生態としてwaterTemperatureを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/depthRange",
@@ -294,8 +306,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "表示グループに共通する一般生態としてdepthRangeを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/substrateHabitat",
@@ -306,8 +318,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "表示グループに共通する一般生態としてsubstrateHabitatを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/salinityAndWaterBody",
@@ -318,8 +330,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "表示グループに共通する一般生態としてsalinityAndWaterBodyを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/dayNightTiming",
@@ -330,8 +342,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "表示グループに共通する一般生態としてdayNightTimingを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/fishingMethods",
@@ -342,8 +354,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "表示グループに共通する一般生態としてfishingMethodsを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
@@ -354,8 +366,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "表示グループに共通する一般生態としてspawningOrConfusableInfoを裏付ける根拠がなく、構成種の値も集約しない。",
+        "recheckCondition": "構成種すべてに共通すると直接確認できる分類群レベルの生態sourceと採用要件が整った場合に再確認する。"
       },
       {
         "path": "/ecology/regionalCatchability/seasonality",
@@ -366,8 +378,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "未特定ajiの対象地域別seasonalityを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
       },
       {
         "path": "/ecology/regionalCatchability/waterTemperature",
@@ -378,8 +390,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "未特定ajiの対象地域別waterTemperatureを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
       },
       {
         "path": "/ecology/regionalCatchability/depthRange",
@@ -390,8 +402,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "未特定ajiの対象地域別depthRangeを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
       },
       {
         "path": "/ecology/regionalCatchability/substrateHabitat",
@@ -402,8 +414,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "未特定ajiの対象地域別substrateHabitatを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
       },
       {
         "path": "/ecology/regionalCatchability/salinityAndWaterBody",
@@ -414,8 +426,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "未特定ajiの対象地域別salinityAndWaterBodyを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
       },
       {
         "path": "/ecology/regionalCatchability/dayNightTiming",
@@ -426,8 +438,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "未特定ajiの対象地域別dayNightTimingを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
       },
       {
         "path": "/ecology/regionalCatchability/fishingMethods",
@@ -438,8 +450,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "未特定ajiの対象地域別fishingMethodsを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
       },
       {
         "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
@@ -450,8 +462,8 @@
         "sourceIds": [],
         "regionScope": "未特定",
         "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "reason": "未特定ajiの対象地域別spawningOrConfusableInfoを構成種別に切り分けられる直接根拠がなく、釣れやすさへ投影しない。",
+        "recheckCondition": "対象地域の記録を構成種まで同定し、グループ値を定義する妥当性が確認できた場合に再確認する。"
       }
     ],
     "reviewStatus": "ready_for_review",

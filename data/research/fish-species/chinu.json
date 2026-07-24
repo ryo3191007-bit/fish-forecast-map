@@ -304,7 +304,8 @@
         "/identity/canonicalNameJa",
         "/ecology/stableGeneral/depthRange",
         "/ecology/stableGeneral/salinityAndWaterBody",
-        "/ecology/stableGeneral/spawningOrConfusableInfo"
+        "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "/identity/aliases"
       ],
       "usageNote": "河川・汽水域利用と産卵の確認に限定。遊漁釣期へ直結しない。"
     },
@@ -406,6 +407,20 @@
         "confidence": "medium",
         "reason": "個別種を直接示す分類sourceがあり、identity表示に限定して採用できる。",
         "recheckCondition": "source更新または分類変更時に再確認する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "adopt",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "mlit_ootagawa_kurodai"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "medium",
+        "reason": "分類・呼称sourceで確認できた名称だけをidentity表示・検索用aliasとして採用する。",
+        "recheckCondition": "aliasごとの直接source、曖昧性、解決可否を個別審査できる場合に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/seasonality",
@@ -528,7 +543,6 @@
         "path": "/ecology/regionalCatchability/waterTemperature",
         "decision": "hold",
         "purposes": [
-          "ecology_description",
           "score_excluded"
         ],
         "sourceIds": [
@@ -543,7 +557,6 @@
         "path": "/ecology/regionalCatchability/depthRange",
         "decision": "hold",
         "purposes": [
-          "ecology_description",
           "score_excluded"
         ],
         "sourceIds": [
@@ -558,7 +571,6 @@
         "path": "/ecology/regionalCatchability/substrateHabitat",
         "decision": "hold",
         "purposes": [
-          "ecology_description",
           "score_excluded"
         ],
         "sourceIds": [
@@ -585,7 +597,6 @@
         "path": "/ecology/regionalCatchability/dayNightTiming",
         "decision": "hold",
         "purposes": [
-          "ecology_description",
           "score_excluded"
         ],
         "sourceIds": [
@@ -600,7 +611,6 @@
         "path": "/ecology/regionalCatchability/fishingMethods",
         "decision": "hold",
         "purposes": [
-          "ecology_description",
           "score_excluded"
         ],
         "sourceIds": [
@@ -631,6 +641,7 @@
       "acceptedPaths": [
         "/identity/canonicalNameJa",
         "/identity/scientificName",
+        "/identity/aliases",
         "/ecology/stableGeneral/depthRange",
         "/ecology/stableGeneral/salinityAndWaterBody",
         "/ecology/stableGeneral/spawningOrConfusableInfo"
