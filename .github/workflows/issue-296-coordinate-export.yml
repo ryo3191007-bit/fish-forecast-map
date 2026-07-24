@@ -23,3 +23,8 @@ jobs:
       - run: npm ci
       - name: Export remaining coordinate evidence
         run: npx tsx scripts/issue-296-coordinate-export.test.mts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: issue-296-coordinate-export
+          path: artifacts/issue-296-coordinate-export.json
+          if-no-files-found: error
