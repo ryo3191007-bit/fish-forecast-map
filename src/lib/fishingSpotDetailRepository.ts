@@ -16,6 +16,13 @@ function fallback(fallbackReason: NonNullable<MasterDataMeta["fallbackReason"]>,
 
 const valueKey = (value: Pick<SpotDetailValue, "spotId" | "itemKey">) => `${value.spotId}:${value.itemKey}`;
 
+function isApprovedUserValue(value: SpotDetailValue) {
+  return value.contributionOrigin === "user_contribution"
+    && value.moderationStatus === "approved"
+    && value.reviewStatus === "reviewed"
+    && value.adoptionStatus === "adopted";
+}
+
 /**
  * Issue #278 re-research values ship with the application so they can replace older
  * Supabase curated rows immediately after deployment. Approved user contributions keep
@@ -30,10 +37,10 @@ export function mergeStaticSpotDetailOverrides(
 
   const overrideKeys = new Set(overrides.map(valueKey));
   const userValues = databaseDetails.values.filter((value) =>
-    value.contributionOrigin === "user_contribution" && overrideKeys.has(valueKey(value))
+    isApprovedUserValue(value) && overrideKeys.has(valueKey(value))
   );
   const retainedDatabaseValues = databaseDetails.values.filter((value) =>
-    !overrideKeys.has(valueKey(value)) || value.contributionOrigin === "user_contribution"
+    !overrideKeys.has(valueKey(value)) || isApprovedUserValue(value)
   );
   const retainedWithoutPrioritizedUsers = retainedDatabaseValues.filter((value) => !userValues.includes(value));
 
