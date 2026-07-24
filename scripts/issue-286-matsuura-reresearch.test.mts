@@ -138,25 +138,25 @@ const detailSet = (spotId: string): FishingSpotDetailSet => ({
   values: runtime.values.filter((value) => value.spotId === spotId),
 });
 
-assert.deepEqual(formatTerrainDetailForPresentation(detailSet("fukushima-area"), "spot_features"), { text: "波止、岸壁", confidence: "low" });
-assert.deepEqual(formatTerrainDetailForPresentation(detailSet("fukushima-port"), "spot_features"), { text: "波止、岸壁", confidence: "low" });
+assert.deepEqual(formatTerrainDetailForPresentation(detailSet("fukushima-area"), "spot_features"), { text: "堤防、岸壁", confidence: "low" });
+assert.deepEqual(formatTerrainDetailForPresentation(detailSet("fukushima-port"), "spot_features"), { text: "堤防、岸壁", confidence: "low" });
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(detailSet("fukushima-port"), "lighting")), "あり");
 
-assert.deepEqual(formatTerrainDetailForPresentation(detailSet("nabegushi-fishing-port"), "spot_features"), { text: "波止", confidence: "low" });
+assert.deepEqual(formatTerrainDetailForPresentation(detailSet("nabegushi-fishing-port"), "spot_features"), { text: "堤防", confidence: "low" });
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(detailSet("nabegushi-fishing-port"), "toilet")), "トイレ");
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(detailSet("nabegushi-fishing-port"), "fishable_area")), "調査済み・未確定");
 
-assert.deepEqual(formatTerrainDetailForPresentation(detailSet("takashima-area"), "spot_features"), { text: "波止、岸壁、護岸", confidence: "low" });
+assert.deepEqual(formatTerrainDetailForPresentation(detailSet("takashima-area"), "spot_features"), { text: "堤防、岸壁、護岸", confidence: "low" });
 assert.match(formatSpotDetailValue(findDisplayableSpotDetail(detailSet("takashima-area"), "restriction_status")), /白浜海水浴場内/);
 
-assert.deepEqual(formatTerrainDetailForPresentation(detailSet("aonoura-fishing-port"), "spot_features"), { text: "波止、岸壁", confidence: "low" });
+assert.deepEqual(formatTerrainDetailForPresentation(detailSet("aonoura-fishing-port"), "spot_features"), { text: "堤防、岸壁", confidence: "low" });
 assert.match(formatSpotDetailValue(findDisplayableSpotDetail(detailSet("aonoura-fishing-port"), "restriction_status")), /漁港区画は未確認/);
 
-assert.deepEqual(formatTerrainDetailForPresentation(detailSet("tononoura-fishing-port"), "spot_features"), { text: "波止", confidence: "low" });
+assert.deepEqual(formatTerrainDetailForPresentation(detailSet("tononoura-fishing-port"), "spot_features"), { text: "堤防", confidence: "low" });
 assert.match(formatSpotDetailValue(findDisplayableSpotDetail(detailSet("tononoura-fishing-port"), "restriction_status")), /関係車両以外進入禁止/);
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(detailSet("tononoura-fishing-port"), "lighting")), "調査済み・未確定");
 
-assert.deepEqual(formatTerrainDetailForPresentation(detailSet("funakaratsu-fishing-port"), "spot_features"), { text: "波止、護岸", confidence: "low" });
+assert.deepEqual(formatTerrainDetailForPresentation(detailSet("funakaratsu-fishing-port"), "spot_features"), { text: "堤防、護岸", confidence: "low" });
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(detailSet("funakaratsu-fishing-port"), "lighting")), "あり");
 
 const override = detailSet("fukushima-port").values.find((value) => value.itemKey === "spot_features")!;
