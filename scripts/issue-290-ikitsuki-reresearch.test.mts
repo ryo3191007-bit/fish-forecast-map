@@ -119,7 +119,7 @@ assert.match(formatSpotDetailValue(findDisplayableSpotDetail(areaDetails, "parki
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(areaDetails, "fishable_area")), "調査済み・未確定");
 
 const ikitsukiPort = detailSet("ikitsuki-fishing-port");
-assert.deepEqual(formatTerrainDetailForPresentation(ikitsukiPort, "spot_features"), { text: "堤防", confidence: "medium" });
+assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(ikitsukiPort, "spot_features")), "防波堤");
 assert.equal(formatSpotDetailValue(findDisplayableSpotDetail(ikitsukiPort, "parking")), "調査済み・未確定");
 
 const tachiura = detailSet("tachiura-fishing-port");
