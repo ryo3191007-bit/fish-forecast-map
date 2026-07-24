@@ -101,6 +101,7 @@ for (const [spotId, expected] of EXPECTED) {
   assert.deepEqual(mapEntry.coordinates, [expected.longitude, expected.latitude]);
   assert.deepEqual(toEnvironmentPoint(spot), {
     spotId,
+    spotName: spot.name,
     latitude: expected.latitude,
     longitude: expected.longitude,
   });
