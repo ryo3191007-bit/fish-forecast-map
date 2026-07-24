@@ -10,7 +10,7 @@ const ajv = new Ajv2020({ strict: false, allErrors: true });
 addFormats(ajv);
 assert.doesNotThrow(() => ajv.compile(schema), 'schema must be valid JSON Schema');
 const validate = ajv.compile(schema);
-const targets = { aji: 'アジ', seabass: 'シーバス', chinu: 'チヌ' };
+const targets = { aji: 'アジ', maaji: 'マアジ', maruaji: 'マルアジ', seabass: 'シーバス', chinu: 'チヌ' };
 const docs = Object.fromEntries(Object.keys(targets).map((id) => [id, JSON.parse(fs.readFileSync(path.join(root, `data/research/fish-species/${id}.json`), 'utf8'))]));
 
 function collectClaims(value, pointer = '', claims = []) {
@@ -90,6 +90,16 @@ function validateResearchDoc(id, doc) {
     if (claim.value?.months) for (const month of claim.value.months) assert(month >= 1 && month <= 12, `${id}:${pointer}: invalid month`);
     if (pointer.endsWith('/waterTemperature') && claim.temperatureContext === 'spawning') assert(!pointer.includes('regionalCatchability'), `${id}:${pointer}: spawning temperature cannot be catchability input`);
   }
+  for (const decision of doc.review.attributeDecisions) {
+    for (const sourceId of decision.sourceIds) assert(sourceIds.has(sourceId), `${id}:${decision.path}: decision references missing source ${sourceId}`);
+    if (['adopt', 'adopt_with_warning'].includes(decision.decision)) {
+      assert(decision.sourceIds.length > 0, `${id}:${decision.path}: adopted decision requires source`);
+    }
+  }
+  const accepted = doc.review.attributeDecisions
+    .filter(({ decision }) => ['adopt', 'adopt_with_warning'].includes(decision))
+    .map(({ path }) => path);
+  assert.deepEqual(doc.review.productionAdoption.acceptedPaths, accepted, `${id}: acceptedPaths must match decisions`);
   assert.notEqual(doc.identity.displayNameJa, doc.identity.scientificName.value, `${id}: display/scientific over-merged`);
   assert(doc.identity.entityType !== 'unknown' || doc.identity.canonicalNameJa.status === 'unknown');
 }
@@ -109,20 +119,37 @@ function assertNoOverSimilarCopies(allDocs) {
 for (const [id, doc] of Object.entries(docs)) validateResearchDoc(id, doc);
 assertNoOverSimilarCopies(docs);
 
-const copiedFixture = structuredClone(docs.aji);
-copiedFixture.speciesId = 'seabass';
-copiedFixture.identity.displayNameJa = 'シーバス';
-assert.throws(() => assertNoOverSimilarCopies({ aji: docs.aji, copiedFixture }), /overly similar copied text/);
+assert.equal(docs.aji.identity.entityType, 'species_group');
+assert.equal(docs.aji.identity.canonicalNameJa.value, null);
+assert.equal(docs.aji.identity.scientificName.value, null);
+assert.deepEqual(docs.aji.identity.memberSpeciesIds, ['maaji', 'maruaji']);
+for (const id of ['maaji', 'maruaji']) {
+  assert.equal(docs[id].identity.entityType, 'exact_species');
+  assert.equal(docs[id].identity.parentGroupId, 'aji');
+}
+assert.notDeepEqual(docs.maaji.sources.map(({ id }) => id), docs.maruaji.sources.map(({ id }) => id));
+assert.notDeepEqual(docs.maaji.ecology, docs.maruaji.ecology);
+assert(!docs.aji.review.productionAdoption.acceptedPaths.some((path) => path.startsWith('/ecology/')));
+assert.equal(docs.maruaji.ecology.regionalCatchability.waterTemperature.value, null);
+assert.equal(docs.maaji.ecology.stableGeneral.waterTemperature.value, null);
+assert.equal(
+  docs.maaji.review.attributeDecisions.find(({ path }) => path === '/ecology/stableGeneral/spawningOrConfusableInfo').purposes.includes('score_excluded'),
+  true,
+);
+assert(!docs.maaji.review.productionAdoption.acceptedPaths.includes('/ecology/regionalCatchability/waterTemperature'));
+
+const copiedFixture = structuredClone(docs.maaji);
+assert.throws(() => assertNoOverSimilarCopies({ maaji: docs.maaji, copiedFixture }), /overly similar copied text/);
 
 const oneWayFixture = structuredClone(docs.chinu);
 oneWayFixture.sources.find((source) => source.id === oneWayFixture.identity.scientificName.evidenceSources.supportingSourceIds[0]).supports = [];
 assert.throws(() => validateResearchDoc('chinu', oneWayFixture), /supportingSourceIds source .* does not reference claim path/);
 
 
-const checkedFixture = structuredClone(docs.aji);
+const checkedFixture = structuredClone(docs.maaji);
 const checkedClaim = checkedFixture.ecology.stableGeneral.depthRange;
 checkedClaim.evidenceSources.checkedSourceIds = ['tsuriking_fukuoka_aji'];
-assert.throws(() => validateResearchDoc('aji', checkedFixture), /checkedSourceIds source .* does not reference claim path/);
+assert.throws(() => validateResearchDoc('maaji', checkedFixture), /checkedSourceIds source .* does not reference claim path/);
 
 const contradictingFixture = structuredClone(docs.chinu);
 const contradictingClaim = contradictingFixture.ecology.regionalCatchability.waterTemperature;

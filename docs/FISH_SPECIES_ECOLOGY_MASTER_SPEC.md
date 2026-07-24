@@ -14,3 +14,7 @@ Issue #177の範囲で、`アジ`、`シーバス`、`チヌ`の3表示魚種だ
 ## 採否判断
 
 属性単位で`adopt`、`adopt_with_warning`、`hold`、`reject`を記録します。産卵期、水深、漁獲量、分布などを遊漁の釣れやすさへ転用する場合は原則`hold`または`reject`とします。
+
+## v1.1.0 本番採否拡張（Issue #274）
+
+`aji`をグループ定義専用とし、`maaji`と`maruaji`を個別種へ分離した。本番採否、非継承、unknownの扱い、機械可読な投影方針は`docs/FISH_SPECIES_ECOLOGY_PRODUCTION_ADOPTION_SPEC.md`を参照する。対象はアジグループとマアジ、マルアジ、スズキ、チヌに限定し、本番SCOREへは接続しない。

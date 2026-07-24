@@ -1,38 +1,39 @@
 {
   "schemaVersion": "1.1.0",
-  "speciesId": "aji",
+  "speciesId": "maruaji",
   "identity": {
-    "displayNameJa": "アジ",
+    "displayNameJa": "マルアジ",
     "canonicalNameJa": {
-      "value": null,
-      "status": "unknown",
-      "confidence": "unknown",
+      "value": "マルアジ",
+      "status": "confirmed",
+      "confidence": "high",
       "evidenceSources": {
-        "supportingSourceIds": [],
+        "supportingSourceIds": [
+          "bismal_maruaji"
+        ],
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "note": "アジは複数の構成種を含むグループであり、単一のcanonical和名を設定しない。"
+      "note": "BISMaLのaccepted taxonで直接確認。"
     },
     "scientificName": {
-      "value": null,
-      "status": "unknown",
-      "confidence": "unknown",
+      "value": "Decapterus maruadsi",
+      "status": "confirmed",
+      "confidence": "high",
       "evidenceSources": {
-        "supportingSourceIds": [],
+        "supportingSourceIds": [
+          "bismal_maruaji"
+        ],
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "note": "グループ全体を単一種の学名で表さない。"
+      "note": "BISMaLのaccepted taxonで直接確認。"
     },
     "aliases": [],
-    "entityType": "species_group",
-    "note": "未特定のアジをマアジまたはマルアジへ自動解決しない。個別種の値をグループへ継承しない。",
-    "parentGroupId": null,
-    "memberSpeciesIds": [
-      "maaji",
-      "maruaji"
-    ]
+    "entityType": "exact_species",
+    "note": "マルアジ固有の記録。マアジの値・source・理由を転用しない。",
+    "parentGroupId": "aji",
+    "memberSpeciesIds": []
   },
   "researchScope": {
     "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。ただし本JSONは本番SCOREへ自動採用しない。",
@@ -50,7 +51,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "waterTemperature": {
         "value": null,
@@ -61,7 +62,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "depthRange": {
         "value": null,
@@ -72,7 +73,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "substrateHabitat": {
         "value": null,
@@ -83,7 +84,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "salinityAndWaterBody": {
         "value": null,
@@ -94,7 +95,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "dayNightTiming": {
         "value": null,
@@ -105,7 +106,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "fishingMethods": {
         "value": null,
@@ -116,7 +117,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "spawningOrConfusableInfo": {
         "value": null,
@@ -127,7 +128,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       }
     },
     "regionalCatchability": {
@@ -140,7 +141,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "waterTemperature": {
         "value": null,
@@ -151,7 +152,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "depthRange": {
         "value": null,
@@ -162,7 +163,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "substrateHabitat": {
         "value": null,
@@ -173,7 +174,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "salinityAndWaterBody": {
         "value": null,
@@ -184,7 +185,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "dayNightTiming": {
         "value": null,
@@ -195,7 +196,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "fishingMethods": {
         "value": null,
@@ -206,7 +207,7 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       },
       "spawningOrConfusableInfo": {
         "value": null,
@@ -217,49 +218,67 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "構成種を横断して直接支える根拠がないためグループ共通値を設定しない。"
+        "note": "マルアジ固有かつ用途に適合する直接根拠を今回確認できず、マアジから補完しない。"
       }
     }
   },
-  "sources": [],
+  "sources": [
+    {
+      "id": "bismal_maruaji",
+      "title": "Decapterus maruadsi マルアジ",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9005967",
+      "publisher": "BISMaL / JAMSTEC",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-24",
+      "regionScope": "分類情報",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "bismal-maruaji",
+      "supports": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName"
+      ],
+      "usageNote": "標準和名とaccepted taxonの確認だけに使い、生態値や釣れやすさへ転用しない。"
+    }
+  ],
   "review": {
     "officialResearch": "公的または研究機関sourceを優先。原典派生ページはderivationGroupで重複管理。",
     "secondaryResearch": "民間釣りサイト、SNS、動画、ブログ単独ではmedium以上にしない。",
     "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
     "comparisonWithCurrentImplementation": {
-      "currentFishSpeciesNameJa": "アジ",
-      "currentSeasonMonths": [],
-      "currentMethodAffinity": [
-        "サビキ",
-        "コマセ"
-      ],
-      "currentCategory": "fish",
-      "comparisonPolicy": "現行アジ固定値はグループ向け比較対象のみ。マアジ・マルアジへ根拠なく適用しない。"
+      "currentFishSpeciesNameJa": "マルアジ（既存exact_species）",
+      "currentAjiScore": "比較対象のみ。現行アジ固定値は根拠不足のためマルアジへ適用不可。",
+      "comparisonPolicy": "SCORE v2のロジック・閾値・重みは変更しない。"
     },
     "attributeDecisions": [
       {
         "path": "/identity/canonicalNameJa",
-        "decision": "hold",
+        "decision": "adopt",
         "purposes": [
-          "score_excluded"
+          "identity_display"
         ],
-        "sourceIds": [],
-        "regionScope": "未特定",
-        "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "sourceIds": [
+          "bismal_maruaji"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "reason": "個別種を直接示す分類sourceがあり、identity表示に限定して採用できる。",
+        "recheckCondition": "source更新または分類変更時に再確認する。"
       },
       {
         "path": "/identity/scientificName",
-        "decision": "hold",
+        "decision": "adopt",
         "purposes": [
-          "score_excluded"
+          "identity_display"
         ],
-        "sourceIds": [],
-        "regionScope": "未特定",
-        "confidence": "unknown",
-        "reason": "直接根拠が不足しているため具体値を採用せずunknownを維持する。",
-        "recheckCondition": "対象地域の陸っぱり釣れやすさを直接支える公的・研究sourceが得られた時点で再確認する。"
+        "sourceIds": [
+          "bismal_maruaji"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "reason": "個別種を直接示す分類sourceがあり、identity表示に限定して採用できる。",
+        "recheckCondition": "source更新または分類変更時に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/seasonality",
@@ -457,7 +476,10 @@
     "reviewStatus": "ready_for_review",
     "productionAdoption": {
       "projectionPolicy": "decisionがadoptまたはadopt_with_warningで、sourceIdsが存在する属性だけをspeciesId単位で明示投影する。親・子・兄弟間の継承、unknownのfallback補完は禁止する。",
-      "acceptedPaths": [],
+      "acceptedPaths": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName"
+      ],
       "unknownPolicy": "unknownまたはholdは値なしとして扱い、0点・不適・釣れないへ変換しない。"
     }
   }
