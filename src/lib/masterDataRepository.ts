@@ -18,7 +18,8 @@ export type MasterDataSet = { fishSpecies: FishSpecies[]; fishSpeciesAliases: Fi
 const staticFishSpecies: FishSpecies[] = createStaticFishSpecies();
 const runtimeFishingSpots = applyFishingSpotCoordinateOverrides(fishingSpots);
 const selectableRuntimeFishingSpots = filterSelectableFishingSpots(runtimeFishingSpots);
-const staticMasterData: MasterDataSet = { fishSpecies: staticFishSpecies, fishSpeciesAliases: [...staticFishSpeciesAliases], fishingSpots: runtimeFishingSpots, externalSources };
+const rawStaticMasterData: MasterDataSet = { fishSpecies: staticFishSpecies, fishSpeciesAliases: [...staticFishSpeciesAliases], fishingSpots: runtimeFishingSpots, externalSources };
+const staticMasterData: MasterDataSet = { ...rawStaticMasterData, fishingSpots: selectableRuntimeFishingSpots };
 
 function fallback<T>(data: T, fallbackReason: MasterDataFallbackReason, message?: string): MasterDataResult<T> {
   return { data, meta: { source: "static-fallback", fallbackReason, message } };
@@ -30,10 +31,13 @@ async function selectRows<T>(tableName: string, columns = "*"): Promise<MasterDa
     return fallback([], "supabase-not-configured", `Missing env vars: ${status.missingEnvVars.join(", ")}`);
   }
 
-  const { data, error } = await status.client.from(tableName).select(columns);
-  if (error) return fallback([], "supabase-error", error.message);
-
-  return { data: (data ?? []) as T[], meta: { source: "supabase" } };
+  try {
+    const { data, error } = await status.client.from(tableName).select(columns);
+    if (error) return fallback([], "supabase-error", error.message);
+    return { data: (data ?? []) as T[], meta: { source: "supabase" } };
+  } catch (error) {
+    return fallback([], "supabase-error", error instanceof Error ? error.message : "Supabase request failed");
+  }
 }
 
 export function mapSuccessfulFishSpeciesAliasRows(rows: readonly FishSpeciesAliasRow[]): FishSpeciesAlias[] {
@@ -83,4 +87,8 @@ export async function fetchMasterData(): Promise<MasterDataResult<MasterDataSet>
 
 export function getStaticMasterData(): MasterDataSet {
   return staticMasterData;
+}
+
+export function getRawStaticMasterData(): MasterDataSet {
+  return rawStaticMasterData;
 }
