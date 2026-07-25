@@ -23,6 +23,7 @@ const css = readFileSync(new URL("../src/app/globals.css", import.meta.url), "ut
 const dashboard = readFileSync(new URL("../src/components/FishingDashboard.tsx", import.meta.url), "utf8");
 const allSpeciesScreen = readFileSync(new URL("../src/components/AllSpeciesEvaluation.tsx", import.meta.url), "utf8");
 const presentation = load("src/domain/spotEvaluationPresentation.ts");
+const detailUi = load("src/domain/spotDetailUiPresentation.ts");
 
 assert.equal((dashboard.match(/<SpotEvaluationCard\b/g) ?? []).length, 1, "spot evaluation mode renders exactly one integrated card");
 assert.ok(!dashboard.includes("legacySpotEvaluations") && !dashboard.includes("areaEvaluations"), "legacy aggregate evaluation cards and their calculation are removed");
@@ -147,11 +148,11 @@ assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "target_s
 assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "target_species").informationState, "has_evidence", "display lookup does not promote low-confidence evidence or rewrite its state");
 assert.equal(presentation.findDisplayableSpotDetail(visibilityDetails, "parking"), undefined, "rejected evidence is excluded from the normal UI");
 assert.notEqual(presentation.formatSpotDetailValue(visibilityDetails.values[1]), "未調査", "rejected evidence retains its state instead of being converted to unresearched");
-assert.ok(card.includes("items.flatMap") && card.includes("if (!item && !terrainPresentation) return []"), "detail rows without displayable adopted evidence are omitted");
+assert.ok(card.includes("items.map") && card.includes("resolveSpotDetailUiPresentation(details, key)"), "all common detail rows are rendered through the unified presentation policy");
 assert.ok(card.includes("候補がありません"), "the unrelated empty search result message is preserved");
-assert.ok(card.includes('["fishable_area", "釣り可能範囲"]') && !card.includes('["fishing_range", "釣り可能範囲"]'), "the fishing tab uses the split fishable-area key");
-for (const key of ["tidal_flow", "river_influence", "open_sea_bay_character"]) assert.ok(card.includes(`["${key}",`), `the terrain tab displays ${key} independently`);
-assert.ok(!card.includes('["water_flow_influences",'), "the legacy composite is absent from the normal UI");
+assert.ok(detailUi.fishingDetailItems.some(([key, label]) => key === "fishable_area" && label === "釣り可能範囲") && !detailUi.fishingDetailItems.some(([key]) => key === "fishing_range"), "the fishing tab uses the split fishable-area key");
+for (const key of ["tidal_flow", "river_influence", "open_sea_bay_character"]) assert.ok(detailUi.terrainDetailItems.some(([itemKey]) => itemKey === key), `the terrain tab displays ${key} independently`);
+assert.ok(!detailUi.terrainDetailItems.some(([key]) => key === "water_flow_influences"), "the legacy composite is absent from the normal UI");
 
 const environment = (cacheStatus, fetchStatus, warning = null) => ({ cacheStatus, fetchStatus, warning });
 assert.equal(presentation.getEnvironmentStatusLabel(environment("fresh", "success"), null), "最新データ");
