@@ -92,7 +92,8 @@ assert.match(repository, /rpc\("delete_my_spot_observation"/);
 assert.doesNotMatch(repository, /\.from\("fishing_spot_detail_values"\)\.(?:insert|update|delete)/, "browser code does not write the shared table directly");
 
 const migration = fs.readFileSync("supabase/migrations/20260725090000_issue_306_field_observations.sql", "utf8");
-assert.match(migration, /security definer[\s\S]*?set search_path = public/);
+assert.match(migration, /security definer[\s\S]*?set search_path = ''/);
+assert.doesNotMatch(migration, /security definer[\s\S]*?set search_path = public/);
 assert.match(migration, /v_user_id uuid := auth\.uid\(\)/);
 assert.match(migration, /contribution_origin = 'user_contribution'/);
 assert.match(migration, /'pending',[\s\S]*?'pending_review',[\s\S]*?'candidate'/);
