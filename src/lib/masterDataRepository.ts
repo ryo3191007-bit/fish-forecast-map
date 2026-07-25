@@ -1,6 +1,7 @@
 import { createStaticFishSpecies, type FishSpecies, type FishSpeciesAlias } from "@/domain/fishing";
 import { fishingSpots } from "@/data/fishingSpots";
 import { applyFishingSpotCoordinateOverrides } from "@/data/fishingSpotCoordinateOverrides";
+import { filterSelectableFishingSpots } from "@/data/fishingSpotVisibility";
 import { externalSources } from "@/data/externalSources";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import type { ExternalSource } from "@/domain/externalSource";
@@ -16,7 +17,9 @@ export type MasterDataSet = { fishSpecies: FishSpecies[]; fishSpeciesAliases: Fi
 
 const staticFishSpecies: FishSpecies[] = createStaticFishSpecies();
 const runtimeFishingSpots = applyFishingSpotCoordinateOverrides(fishingSpots);
-const staticMasterData: MasterDataSet = { fishSpecies: staticFishSpecies, fishSpeciesAliases: [...staticFishSpeciesAliases], fishingSpots: runtimeFishingSpots, externalSources };
+const selectableRuntimeFishingSpots = filterSelectableFishingSpots(runtimeFishingSpots);
+const rawStaticMasterData: MasterDataSet = { fishSpecies: staticFishSpecies, fishSpeciesAliases: [...staticFishSpeciesAliases], fishingSpots: runtimeFishingSpots, externalSources };
+const staticMasterData: MasterDataSet = { ...rawStaticMasterData, fishingSpots: selectableRuntimeFishingSpots };
 
 function fallback<T>(data: T, fallbackReason: MasterDataFallbackReason, message?: string): MasterDataResult<T> {
   return { data, meta: { source: "static-fallback", fallbackReason, message } };
@@ -28,10 +31,13 @@ async function selectRows<T>(tableName: string, columns = "*"): Promise<MasterDa
     return fallback([], "supabase-not-configured", `Missing env vars: ${status.missingEnvVars.join(", ")}`);
   }
 
-  const { data, error } = await status.client.from(tableName).select(columns);
-  if (error) return fallback([], "supabase-error", error.message);
-
-  return { data: (data ?? []) as T[], meta: { source: "supabase" } };
+  try {
+    const { data, error } = await status.client.from(tableName).select(columns);
+    if (error) return fallback([], "supabase-error", error.message);
+    return { data: (data ?? []) as T[], meta: { source: "supabase" } };
+  } catch (error) {
+    return fallback([], "supabase-error", error instanceof Error ? error.message : "Supabase request failed");
+  }
 }
 
 export function mapSuccessfulFishSpeciesAliasRows(rows: readonly FishSpeciesAliasRow[]): FishSpeciesAlias[] {
@@ -54,10 +60,11 @@ export async function fetchFishSpeciesAliases(): Promise<MasterDataResult<FishSp
 
 export async function fetchFishingSpotsMaster(): Promise<MasterDataResult<FishingSpot[]>> {
   const result = await selectRows<FishingSpotRow>("fishing_spots", "id,name,area_name,latitude,longitude,spot_type,shore_access,target_species,recommended_methods,notes,coordinate_precision,is_active");
-  if (result.meta.source !== "supabase") return fallback(runtimeFishingSpots, result.meta.fallbackReason ?? "supabase-error", result.meta.message);
+  if (result.meta.source !== "supabase") return fallback(selectableRuntimeFishingSpots, result.meta.fallbackReason ?? "supabase-error", result.meta.message);
   const mapped = result.data.map(mapFishingSpotRow).filter((row): row is FishingSpot => row !== null);
   const corrected = applyFishingSpotCoordinateOverrides(mapped);
-  return corrected.length > 0 ? { data: corrected, meta: result.meta } : fallback(runtimeFishingSpots, "empty-supabase-result");
+  const selectable = filterSelectableFishingSpots(corrected);
+  return selectable.length > 0 ? { data: selectable, meta: result.meta } : fallback(selectableRuntimeFishingSpots, "empty-supabase-result");
 }
 
 export async function fetchSourceRegistryMaster(): Promise<MasterDataResult<ExternalSource[]>> {
@@ -80,4 +87,8 @@ export async function fetchMasterData(): Promise<MasterDataResult<MasterDataSet>
 
 export function getStaticMasterData(): MasterDataSet {
   return staticMasterData;
+}
+
+export function getRawStaticMasterData(): MasterDataSet {
+  return rawStaticMasterData;
 }

@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 298,
+  "auditedAt": "2026-07-25",
+  "scope": {
+    "masterSpotCount": 52,
+    "broadCandidateCount": 8,
+    "hiddenFromNewSelectionCount": 5,
+    "retainedPendingReplacementCount": 2,
+    "retainedAsSpecificLandmarkCount": 1
+  },
+  "policy": {
+    "purpose": "広域地点を個別の行き先として扱わず、既存データを壊さずに新規選択・地図・地点評価から除外する",
+    "legacyDataHandling": "地点IDとマスター行は保持し、既存釣果・投稿・詳細データを別地点へ自動再割当しない",
+    "databaseHandling": "remote Supabaseの行は削除・更新せず、アプリケーションの表示ポリシーで新規利用だけを抑止する",
+    "notGuaranteed": [
+      "実釣位置",
+      "港の入口",
+      "駐車場所",
+      "堤防先端",
+      "立入可能範囲",
+      "安全な足場",
+      "禁止区域との境界"
+    ]
+  },
+  "decisionCodes": {
+    "HIDE_REPLACED_BY_SPECIFIC_SPOTS": "個別地点が登録済みのため、広域地点は新規選択・地図・地点評価から非表示にする。",
+    "RETAIN_PENDING_REPLACEMENT": "広域地点だが、対象範囲を置き換える個別地点が不足しているため現時点では維持する。",
+    "RETAIN_SPECIFIC_LANDMARK": "名称に『周辺』を含むが、独立して識別できる地形・ランドマーク地点として維持する。"
+  },
+  "candidates": [
+    {
+      "spotId": "keya-gate",
+      "name": "芥屋大門周辺",
+      "areaName": "糸島西岸",
+      "decision": "retained",
+      "reasonCode": "RETAIN_SPECIFIC_LANDMARK",
+      "replacementSpotIds": [],
+      "relatedIssues": [258],
+      "note": "島・湾・自治体全域ではなく、芥屋大門という独立した地形ランドマークを識別する地点。"
+    },
+    {
+      "spotId": "niji-matsubara",
+      "name": "虹の松原周辺",
+      "areaName": "唐津湾",
+      "decision": "retained_pending_replacement",
+      "reasonCode": "RETAIN_PENDING_REPLACEMENT",
+      "replacementSpotIds": [],
+      "relatedIssues": [205, 280, 296],
+      "note": "海岸区間として広く、現在の個別地点だけでは置換範囲を十分に表せない。後続Issueで地点粒度を再検討する。"
+    },
+    {
+      "spotId": "yobuko-area",
+      "name": "呼子周辺",
+      "areaName": "唐津湾北部",
+      "decision": "hidden_from_new_selection",
+      "reasonCode": "HIDE_REPLACED_BY_SPECIFIC_SPOTS",
+      "replacementSpotIds": [
+        "yobuko-port",
+        "kodomo-port",
+        "kabeshima-port",
+        "hado-port",
+        "nagoya-port"
+      ],
+      "relatedIssues": [205, 282],
+      "note": "個別の港を選択できるため、広域地点は履歴参照用にのみ保持する。"
+    },
+    {
+      "spotId": "imari-inner-bay",
+      "name": "伊万里湾奥",
+      "areaName": "伊万里湾",
+      "decision": "retained_pending_replacement",
+      "reasonCode": "RETAIN_PENDING_REPLACEMENT",
+      "replacementSpotIds": [],
+      "relatedIssues": [248, 284],
+      "note": "内湾全体を置き換える具体的な岸壁・河口等の登録が不足しているため、現時点では維持する。"
+    },
+    {
+      "spotId": "fukushima-area",
+      "name": "福島周辺",
+      "areaName": "伊万里湾",
+      "decision": "hidden_from_new_selection",
+      "reasonCode": "HIDE_REPLACED_BY_SPECIFIC_SPOTS",
+      "replacementSpotIds": [
+        "fukushima-port",
+        "nabegushi-fishing-port"
+      ],
+      "relatedIssues": [250, 286],
+      "note": "島全体の代表点ではなく、登録済みの個別港を行き先として使用する。"
+    },
+    {
+      "spotId": "takashima-area",
+      "name": "鷹島周辺",
+      "areaName": "伊万里湾",
+      "decision": "hidden_from_new_selection",
+      "reasonCode": "HIDE_REPLACED_BY_SPECIFIC_SPOTS",
+      "replacementSpotIds": [
+        "aonoura-fishing-port",
+        "tononoura-fishing-port",
+        "funakaratsu-fishing-port"
+      ],
+      "relatedIssues": [250, 286, 296],
+      "note": "島全体の代表点ではなく、登録済みの個別漁港を行き先として使用する。"
+    },
+    {
+      "spotId": "hirado-seto",
+      "name": "平戸瀬戸周辺",
+      "areaName": "平戸",
+      "decision": "hidden_from_new_selection",
+      "reasonCode": "HIDE_REPLACED_BY_SPECIFIC_SPOTS",
+      "replacementSpotIds": [
+        "tabira-port",
+        "hirado-port"
+      ],
+      "relatedIssues": [252, 253, 288],
+      "note": "水道全体の文脈地点であり、利用者の行き先としては田平港・平戸港等の個別地点を使用する。"
+    },
+    {
+      "spotId": "ikitsuki-area",
+      "name": "生月島方面",
+      "areaName": "平戸",
+      "decision": "hidden_from_new_selection",
+      "reasonCode": "HIDE_REPLACED_BY_SPECIFIC_SPOTS",
+      "replacementSpotIds": [
+        "ikitsuki-fishing-port",
+        "tachiura-fishing-port",
+        "misaki-fishing-port"
+      ],
+      "relatedIssues": [254, 290],
+      "note": "島全体の代表点ではなく、登録済みの個別漁港を行き先として使用する。"
+    }
+  ]
+}
