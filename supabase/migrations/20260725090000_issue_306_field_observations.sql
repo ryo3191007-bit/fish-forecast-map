@@ -62,6 +62,7 @@ declare
   v_user_id uuid := auth.uid();
   v_observation_id uuid;
   v_value_count integer;
+  v_today_jst date := (current_timestamp at time zone 'Asia/Tokyo')::date;
   v_trimmed_text text := nullif(btrim(coalesce(p_value_text, '')), '');
   v_note text := nullif(btrim(coalesce(p_note, '')), '');
   v_list text[] := coalesce(p_value_text_list, '{}'::text[]);
@@ -86,7 +87,7 @@ begin
   if p_information_state not in ('weak_evidence', 'researched_unknown') then
     raise exception 'invalid information state';
   end if;
-  if p_checked_at is null or p_checked_at > current_date or p_checked_at < date '1900-01-01' then
+  if p_checked_at is null or p_checked_at > v_today_jst or p_checked_at < date '1900-01-01' then
     raise exception 'invalid checked date';
   end if;
   if v_note is not null and char_length(v_note) > 1000 then
@@ -116,6 +117,10 @@ begin
   end if;
 
   if p_information_state = 'weak_evidence' then
+    if p_item_key <> 'depth' and p_unit is not null then
+      raise exception 'unit is only supported for depth observations';
+    end if;
+
     case p_item_key
       when 'target_species' then
         if cardinality(v_list) = 0 or exists (
@@ -126,13 +131,13 @@ begin
           )
         ) then raise exception 'invalid target species'; end if;
       when 'shore_access' then
-        if v_trimmed_text <> all (array['安定した足場を確認', '足場が不安定', '足場が滑りやすい']::text[]) then raise exception 'invalid shore access observation'; end if;
+        if v_trimmed_text is null or v_trimmed_text <> all (array['安定した足場を確認', '足場が不安定', '足場が滑りやすい']::text[]) then raise exception 'invalid shore access observation'; end if;
       when 'toilet' then
-        if v_trimmed_text <> all (array['あり', 'なし']::text[]) then raise exception 'invalid toilet observation'; end if;
+        if v_trimmed_text is null or v_trimmed_text <> all (array['あり', 'なし']::text[]) then raise exception 'invalid toilet observation'; end if;
       when 'lighting' then
-        if v_trimmed_text <> all (array['あり', 'なし']::text[]) then raise exception 'invalid lighting observation'; end if;
+        if v_trimmed_text is null or v_trimmed_text <> all (array['あり', 'なし']::text[]) then raise exception 'invalid lighting observation'; end if;
       when 'parking' then
-        if v_trimmed_text <> all (array['駐車スペースを確認', '駐車スペースを確認できず']::text[]) then raise exception 'invalid parking observation'; end if;
+        if v_trimmed_text is null or v_trimmed_text <> all (array['駐車スペースを確認', '駐車スペースを確認できず']::text[]) then raise exception 'invalid parking observation'; end if;
       when 'access' then
         if v_trimmed_text is null or char_length(v_trimmed_text) > 300 then raise exception 'invalid access observation'; end if;
       when 'fishable_area' then
@@ -150,11 +155,11 @@ begin
       when 'spot_features' then
         if cardinality(v_list) = 0 or not (v_list <@ array['堤防', '岸壁', '護岸', 'テトラ', '磯', '砂浜', 'その他']::text[]) then raise exception 'invalid spot features observation'; end if;
       when 'tidal_flow' then
-        if v_trimmed_text <> all (array['強い', '普通', '弱い']::text[]) then raise exception 'invalid tidal flow observation'; end if;
+        if v_trimmed_text is null or v_trimmed_text <> all (array['強い', '普通', '弱い']::text[]) then raise exception 'invalid tidal flow observation'; end if;
       when 'river_influence' then
-        if v_trimmed_text <> all (array['影響あり', '影響が弱い', '見当たらない']::text[]) then raise exception 'invalid river influence observation'; end if;
+        if v_trimmed_text is null or v_trimmed_text <> all (array['影響あり', '影響が弱い', '見当たらない']::text[]) then raise exception 'invalid river influence observation'; end if;
       when 'open_sea_bay_character' then
-        if v_trimmed_text <> all (array['外海', '湾口', '湾内', '内湾']::text[]) then raise exception 'invalid sea character observation'; end if;
+        if v_trimmed_text is null or v_trimmed_text <> all (array['外海', '湾口', '湾内', '内湾']::text[]) then raise exception 'invalid sea character observation'; end if;
       else
         raise exception 'unsupported item';
     end case;
