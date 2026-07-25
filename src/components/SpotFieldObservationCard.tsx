@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import type { SpotDetailUiPresentation } from "@/domain/spotDetailUiPresentation";
 import {
   buildSaveSpotFieldObservationInput,
@@ -16,18 +16,16 @@ import {
 import type { SpotFieldObservationStatus } from "@/hooks/useSpotFieldObservations";
 import styles from "./SpotFieldObservationCard.module.css";
 
-const confidenceLabel = { high: "高", medium: "中", low: "低" } as const;
-
 type Props = {
   spotId: string;
   itemKey: string;
   label: string;
   icon: string;
   research: SpotDetailUiPresentation;
+  researchConfidence?: ReactNode;
   observation: SpotFieldObservation | undefined;
   status: SpotFieldObservationStatus;
   isMutating: boolean;
-  error: string | null;
   speciesOptions?: readonly string[];
   onSave: (input: SaveSpotFieldObservationInput) => Promise<boolean>;
   onDelete: (observationId: string) => Promise<boolean>;
@@ -39,10 +37,10 @@ export function SpotFieldObservationCard({
   label,
   icon,
   research,
+  researchConfidence,
   observation,
   status,
   isMutating,
-  error,
   speciesOptions,
   onSave,
   onDelete,
@@ -84,20 +82,17 @@ export function SpotFieldObservationCard({
     else setFormError("削除できませんでした。");
   };
 
-  const researchConfidence = research.confidence ? `信憑性: ${confidenceLabel[research.confidence]}` : null;
-
   return <div>
     <dt><span className="detailIcon" aria-hidden="true">{icon}</span>{label}</dt>
     <dd className={styles.content}>
       <section className={styles.section} aria-label={`${label}の事前調査`}>
         <strong className={styles.sectionTitle}>事前調査</strong>
-        <p className={styles.value}>{research.text}{researchConfidence ? <span className={styles.confidence}>{researchConfidence}</span> : null}</p>
+        <p className={styles.value}>{research.text}{researchConfidence}</p>
       </section>
       <hr className={styles.divider} />
       <section className={styles.section} aria-label={`${label}の実地調査`}>
         <strong className={styles.sectionTitle}>実地調査</strong>
         <FieldObservationDisplay status={status} observation={observation} />
-        {error ? <p className={styles.errorText}>{error}</p> : null}
         {status === "ready" ? <div className={styles.actionRow}>
           <button type="button" className={observation ? styles.editButton : styles.addButton} disabled={isMutating || !config} onClick={openEditor}>
             {observation ? "編集" : "＋ 追加"}
@@ -160,14 +155,14 @@ function ObservationValueInput({
   config: (typeof spotFieldObservationConfigs)[string];
   options: readonly string[];
   draft: SpotFieldObservationDraft;
-  onChange: React.Dispatch<React.SetStateAction<SpotFieldObservationDraft>>;
+  onChange: Dispatch<SetStateAction<SpotFieldObservationDraft>>;
 }) {
   const sortedOptions = useMemo(() => [...options], [options]);
   if (config.kind === "single") {
     return <fieldset className={styles.field}>
       <legend>確認内容</legend>
       <div className={styles.choiceGrid}>{sortedOptions.map((option) => <label className={styles.choice} key={option}>
-        <input type="radio" name="field-observation-value" value={option} checked={draft.textValue === option} onChange={() => onChange((current) => ({ ...current, textValue: option }))} />
+        <input type="radio" name={`field-observation-value-${option}`} value={option} checked={draft.textValue === option} onChange={() => onChange((current) => ({ ...current, textValue: option }))} />
         {option}
       </label>)}</div>
     </fieldset>;
