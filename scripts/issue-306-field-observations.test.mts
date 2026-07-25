@@ -91,10 +91,12 @@ assert.match(repository, /rpc\("save_my_spot_observation"/);
 assert.match(repository, /rpc\("delete_my_spot_observation"/);
 assert.doesNotMatch(repository, /\.from\("fishing_spot_detail_values"\)\.(?:insert|update|delete)/, "browser code does not write the shared table directly");
 
-const migration = fs.readFileSync("supabase/migrations/20260725090000_issue_306_field_observations.sql", "utf8");
+const migration = fs.readFileSync("supabase/migrations/20260725230000_issue_306_field_observations.sql", "utf8");
 assert.match(migration, /security definer[\s\S]*?set search_path = ''/);
 assert.doesNotMatch(migration, /security definer[\s\S]*?set search_path = public/);
 assert.match(migration, /v_user_id uuid := auth\.uid\(\)/);
+assert.match(migration, /time zone 'Asia\/Tokyo'/);
+assert.match(migration, /v_trimmed_text is null or v_trimmed_text <> all/);
 assert.match(migration, /contribution_origin = 'user_contribution'/);
 assert.match(migration, /'pending',[\s\S]*?'pending_review',[\s\S]*?'candidate'/);
 assert.match(migration, /grant execute on function public\.save_my_spot_observation[\s\S]*?to authenticated/);
