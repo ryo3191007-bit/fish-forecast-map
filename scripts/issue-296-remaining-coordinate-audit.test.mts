@@ -5,7 +5,7 @@ import {
   applyFishingSpotCoordinateOverrides,
   fishingSpotCoordinateOverrides,
 } from "../src/data/fishingSpotCoordinateOverrides";
-import { getStaticMasterData } from "../src/lib/masterDataRepository";
+import { getRawStaticMasterData } from "../src/lib/masterDataRepository";
 import {
   buildFishingSpotMapEntries,
   toEnvironmentPoint,
@@ -164,7 +164,7 @@ for (const [spotId, expected] of EXPECTED_ISSUE_294) {
   assert.deepEqual([spot.latitude, spot.longitude, spot.coordinatePrecision], [expected[0], expected[1], "approximate"]);
 }
 
-const runtimeSpots = getStaticMasterData().fishingSpots;
+const runtimeSpots = getRawStaticMasterData().fishingSpots;
 assert.equal(runtimeSpots.length, 52);
 const [minLatitude, maxLatitude, minLongitude, maxLongitude] = audit.policy.bounds;
 for (const spot of runtimeSpots) {
