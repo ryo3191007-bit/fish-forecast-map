@@ -24,6 +24,7 @@ import {
   resolveSpotDetailUiPresentation,
   terrainDetailItems,
 } from "@/domain/spotDetailUiPresentation";
+import { getRegisteredCatchSpeciesForSpot } from "@/domain/spotSpeciesPresentation";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形" | "魚種";
 
@@ -109,7 +110,7 @@ export function SpotEvaluationCard(props: Props) {
         {props.activeTab === "環境" && <EnvironmentTab environment={selectedEnvironment} row={selectedRow} loading={props.isLoading} error={props.error} />}
         {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} hiddenKeys={["target_species", "recommended_methods"]} />}
         {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} />}
-        {props.activeTab === "魚種" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} visibleKeys={["target_species"]} />}
+        {props.activeTab === "魚種" && <SpeciesTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} catches={props.catches} spotId={props.selectedSpotId} />}
       </div>
     </section>
   );
@@ -204,6 +205,15 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
     </section>
     <dl className="detailGrid">{fields.map(([label, text]) => <div key={label}><dt>{label}</dt><dd>{text || "情報なし"}</dd></div>)}</dl>
   </div>;
+}
+
+function SpeciesTab({ details, status, catches, spotId }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; catches: ExternalCatchRecord[]; spotId: string }) {
+  const registeredSpecies = getRegisteredCatchSpeciesForSpot(catches, spotId);
+  const targetPresentation = status === "ready" ? resolveSpotDetailUiPresentation(details, "target_species") : null;
+  return <dl className="detailGrid">
+    <div><dt><span className="detailIcon" aria-hidden="true">🐟</span>自分の釣果</dt><dd>{registeredSpecies.length > 0 ? registeredSpecies.join("、") : "この地点の釣果はまだありません"}</dd></div>
+    {targetPresentation?.state === "displayable" ? <div><dt><span className="detailIcon" aria-hidden="true">🐟</span>調査上の対象魚種</dt><dd>{targetPresentation.text}{targetPresentation.confidence ? <span className={`confidence ${targetPresentation.confidence}`}>信憑性: {confidenceLabel[targetPresentation.confidence]}</span> : null}</dd></div> : null}
+  </dl>;
 }
 
 function DetailTab({ details, status, items, hiddenKeys = [], visibleKeys }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[]; hiddenKeys?: readonly string[]; visibleKeys?: readonly string[] }) {
