@@ -104,8 +104,8 @@ assert.ok(selectableSpots.every((spot) => !expectedHiddenIds.has(spot.id)));
 assert.ok([...expectedHiddenIds].every((spotId) => fishingSpotById.has(spotId)));
 
 const mapIds = new Set(buildFishingSpotMapEntries(selectableSpots).map((entry) => entry.spot.id));
-const registrationIds = new Set(buildCatchRegistrationSpotOptions(fishingSpots).map((option) => option.id));
-const blankQueryIds = new Set(filterFishingSpotOptions(fishingSpots, "").map((spot) => spot.id));
+const registrationIds = new Set(buildCatchRegistrationSpotOptions(selectableSpots).map((option) => option.id));
+const blankQueryIds = new Set(filterFishingSpotOptions(selectableSpots, "").map((spot) => spot.id));
 
 for (const hiddenId of expectedHiddenIds) {
   assert.equal(mapIds.has(hiddenId), false, `${hiddenId} must not appear on the map`);
@@ -113,11 +113,11 @@ for (const hiddenId of expectedHiddenIds) {
   assert.equal(blankQueryIds.has(hiddenId), false, `${hiddenId} must not be an evaluation option`);
 }
 
-assert.equal(filterFishingSpotOptions(fishingSpots, "呼子周辺").length, 0);
-assert.equal(filterFishingSpotOptions(fishingSpots, "虹の松原")[0]?.id, "niji-matsubara");
-assert.equal(filterFishingSpotOptions(fishingSpots, "芥屋大門")[0]?.id, "keya-gate");
-assert.equal(selectFishingSpot(fishingSpots, "yobuko-area")?.id, selectableSpots[0]?.id);
-assert.equal(selectFishingSpot(fishingSpots, "yobuko-port")?.id, "yobuko-port");
+assert.equal(filterFishingSpotOptions(selectableSpots, "呼子周辺").length, 0);
+assert.equal(filterFishingSpotOptions(selectableSpots, "虹の松原")[0]?.id, "niji-matsubara");
+assert.equal(filterFishingSpotOptions(selectableSpots, "芥屋大門")[0]?.id, "keya-gate");
+assert.equal(selectFishingSpot(selectableSpots, "yobuko-area")?.id, selectableSpots[0]?.id);
+assert.equal(selectFishingSpot(selectableSpots, "yobuko-port")?.id, "yobuko-port");
 
 assert.match(audit.policy.legacyDataHandling, /自動再割当しない/);
 assert.match(audit.policy.databaseHandling, /削除・更新せず/);
