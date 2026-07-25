@@ -18,7 +18,12 @@ import type {
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
 import type { JmaWarningDecision } from "@/domain/jmaWarning";
 import { getJmaWarningDisplay } from "@/domain/jmaWarningPresentation";
-import { findDisplayableSpotDetail, formatSpotDetailValue, formatTerrainDetailForPresentation, getAvailableForecastDates, getEnvironmentStatusLabel, getEvaluationReferenceTime, getFirstForecastTimeForDate, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
+import { getAvailableForecastDates, getEnvironmentStatusLabel, getEvaluationReferenceTime, getFirstForecastTimeForDate, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
+import {
+  fishingDetailItems,
+  resolveSpotDetailUiPresentation,
+  terrainDetailItems,
+} from "@/domain/spotDetailUiPresentation";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形";
 
@@ -43,18 +48,6 @@ type Props = {
 };
 
 const tabs: SpotEvaluationTab[] = ["環境", "釣場", "地形", "評価"];
-const fishingItems = [
-  ["target_species", "対象魚種"], ["recommended_methods", "推奨釣法"],
-  ["shore_access", "足場"], ["toilet", "トイレ"], ["lighting", "常夜灯・照明"],
-  ["parking", "駐車場"], ["access", "アクセス情報"], ["fishable_area", "釣り可能範囲"],
-  ["restriction_status", "釣り禁止・立入禁止・工事・閉鎖等"],
-] as const;
-const terrainItems = [
-  ["depth", "水深"], ["bottom_material", "底質"], ["coastal_topography", "海底・沿岸地形"],
-  ["obstacles", "テトラ・根・障害物"], ["spot_features", "釣り場の構造・足場"],
-  ["tidal_flow", "潮通し"], ["river_influence", "河川影響"],
-  ["open_sea_bay_character", "外海・湾内特性"],
-] as const;
 const confidenceLabel: Record<SpotDetailConfidence, string> = { high: "高", medium: "中", low: "低" };
 const detailIcons: Record<string, string> = {
   target_species: "🐟", recommended_methods: "⌁", shore_access: "↝",
@@ -113,8 +106,8 @@ export function SpotEvaluationCard(props: Props) {
       <div role="tabpanel" id={`spot-panel-${props.activeTab}`} aria-labelledby={`spot-tab-${props.activeTab}`}>
         {props.activeTab === "評価" && <EvaluationTab {...props} selectedTime={props.selectedTime} />}
         {props.activeTab === "環境" && <EnvironmentTab environment={selectedEnvironment} row={selectedRow} loading={props.isLoading} error={props.error} />}
-        {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingItems} />}
-        {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainItems} />}
+        {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} />}
+        {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} />}
       </div>
     </section>
   );
@@ -214,15 +207,11 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
 function DetailTab({ details, status, items }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[] }) {
   if (status === "loading") return <StateMessage>地点詳細を取得中です…</StateMessage>;
   if (status === "failed") return <StateMessage>地点詳細を取得できませんでした。状態を表示できません。</StateMessage>;
-  const cards = items.flatMap(([key, label]) => {
-    const terrainPresentation = key === "coastal_topography" || key === "spot_features" ? formatTerrainDetailForPresentation(details, key) : null;
-    const item = findDisplayableSpotDetail(details, key);
-    if ((key === "coastal_topography" || key === "spot_features") && !terrainPresentation) return [];
-    if (!item && !terrainPresentation) return [];
-    const confidence = terrainPresentation?.confidence ?? item?.confidence ?? null;
-    return [<div key={key}><dt><span className="detailIcon" aria-hidden="true">{detailIcons[key] ?? "•"}</span>{label}</dt><dd>{terrainPresentation?.text ?? formatSpotDetailValue(item)}{confidence ? <span className={`confidence ${confidence}`}>信憑性: {confidenceLabel[confidence]}</span> : null}</dd></div>];
+  const cards = items.map(([key, label]) => {
+    const presentation = resolveSpotDetailUiPresentation(details, key);
+    return <div key={key}><dt><span className="detailIcon" aria-hidden="true">{detailIcons[key] ?? "•"}</span>{label}</dt><dd>{presentation.text}{presentation.confidence ? <span className={`confidence ${presentation.confidence}`}>信憑性: {confidenceLabel[presentation.confidence]}</span> : null}</dd></div>;
   });
-  return cards.length ? <dl className="detailGrid">{cards}</dl> : <EmptyState />;
+  return <dl className="detailGrid">{cards}</dl>;
 }
 function StateMessage({ children }: { children: React.ReactNode }) { return <p className="spotEvaluationState" role="status">{children}</p>; }
 function EmptyState() { return <p className="spotEvaluationState empty" role="status">情報なし</p>; }
