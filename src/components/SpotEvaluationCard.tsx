@@ -25,7 +25,7 @@ import {
   terrainDetailItems,
 } from "@/domain/spotDetailUiPresentation";
 
-export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形";
+export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形" | "魚種";
 
 type Props = {
   spots: FishingSpot[];
@@ -48,6 +48,7 @@ type Props = {
 };
 
 const tabs: SpotEvaluationTab[] = ["環境", "釣場", "地形", "評価"];
+const orderedTabs: SpotEvaluationTab[] = [...tabs.slice(0, 3), "魚種", ...tabs.slice(3)];
 const confidenceLabel: Record<SpotDetailConfidence, string> = { high: "高", medium: "中", low: "低" };
 const detailIcons: Record<string, string> = {
   target_species: "🐟", recommended_methods: "⌁", shore_access: "↝",
@@ -101,13 +102,14 @@ export function SpotEvaluationCard(props: Props) {
       </div>
 
       <div className="spotInternalTabs" role="tablist" aria-label="地点評価の表示内容">
-        {tabs.map((tab) => <button type="button" role="tab" id={`spot-tab-${tab}`} aria-selected={props.activeTab === tab} aria-controls={`spot-panel-${tab}`} tabIndex={props.activeTab === tab ? 0 : -1} key={tab} onClick={() => props.onActiveTabChange(tab)}>{tab}</button>)}
+        {orderedTabs.map((tab) => <button type="button" role="tab" id={`spot-tab-${tab}`} aria-selected={props.activeTab === tab} aria-controls={`spot-panel-${tab}`} tabIndex={props.activeTab === tab ? 0 : -1} key={tab} onClick={() => props.onActiveTabChange(tab)}>{tab}</button>)}
       </div>
       <div role="tabpanel" id={`spot-panel-${props.activeTab}`} aria-labelledby={`spot-tab-${props.activeTab}`}>
         {props.activeTab === "評価" && <EvaluationTab {...props} selectedTime={props.selectedTime} />}
         {props.activeTab === "環境" && <EnvironmentTab environment={selectedEnvironment} row={selectedRow} loading={props.isLoading} error={props.error} />}
-        {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} />}
+        {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} hiddenKeys={["target_species", "recommended_methods"]} />}
         {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} />}
+        {props.activeTab === "魚種" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} visibleKeys={["target_species"]} />}
       </div>
     </section>
   );
@@ -204,10 +206,11 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
   </div>;
 }
 
-function DetailTab({ details, status, items }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[] }) {
+function DetailTab({ details, status, items, hiddenKeys = [], visibleKeys }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[]; hiddenKeys?: readonly string[]; visibleKeys?: readonly string[] }) {
   if (status === "loading") return <StateMessage>地点詳細を取得中です…</StateMessage>;
   if (status === "failed") return <StateMessage>地点詳細を取得できませんでした。状態を表示できません。</StateMessage>;
   const cards = items.map(([key, label]) => {
+    if (hiddenKeys.includes(key) || (visibleKeys && !visibleKeys.includes(key))) return null;
     const presentation = resolveSpotDetailUiPresentation(details, key);
     return <div key={key}><dt><span className="detailIcon" aria-hidden="true">{detailIcons[key] ?? "•"}</span>{label}</dt><dd>{presentation.text}{presentation.confidence ? <span className={`confidence ${presentation.confidence}`}>信憑性: {confidenceLabel[presentation.confidence]}</span> : null}</dd></div>;
   });
