@@ -1,0 +1,268 @@
+.content {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.section {
+  display: grid;
+  gap: 5px;
+}
+
+.sectionTitle {
+  color: #bae6fd;
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+.value {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.date {
+  margin: 0;
+  color: #a5f3fc;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.note {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  margin: 1px 0;
+  border: 0;
+  background: rgba(125, 211, 252, 0.2);
+}
+
+.actionRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2px;
+}
+
+.editButton,
+.addButton {
+  min-height: 34px;
+  border: 1px solid rgba(125, 211, 252, 0.32);
+  border-radius: 10px;
+  padding: 6px 11px;
+  background: rgba(14, 116, 144, 0.28);
+  color: #e0faff;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.editButton:hover,
+.editButton:focus-visible,
+.addButton:hover,
+.addButton:focus-visible {
+  background: rgba(14, 116, 144, 0.52);
+  outline: none;
+}
+
+.statusText {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.errorText {
+  margin: 0;
+  color: #fecaca;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.confidence {
+  display: inline-flex;
+  margin-left: 7px;
+  border-radius: 999px;
+  padding: 2px 7px;
+  background: rgba(15, 23, 42, 0.65);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(2, 6, 23, 0.78);
+  backdrop-filter: blur(5px);
+}
+
+.modal {
+  width: min(560px, 100%);
+  max-height: min(760px, calc(100dvh - 36px));
+  overflow-y: auto;
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  border-radius: 20px;
+  padding: 18px;
+  background: rgba(8, 24, 44, 0.98);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.modalHeader h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.05rem;
+}
+
+.closeButton {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.65);
+  color: #e2e8f0;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.form {
+  display: grid;
+  gap: 15px;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+  color: #dbeafe;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.field input[type="date"],
+.field input[type="number"],
+.field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  border-radius: 11px;
+  padding: 10px 11px;
+  background: rgba(15, 23, 42, 0.78);
+  color: #f8fafc;
+  font: inherit;
+}
+
+.field textarea {
+  min-height: 86px;
+  resize: vertical;
+}
+
+.choiceGrid {
+  display: grid;
+  gap: 7px;
+}
+
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  border: 1px solid rgba(125, 211, 252, 0.16);
+  border-radius: 10px;
+  padding: 9px 10px;
+  background: rgba(15, 23, 42, 0.46);
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.choice input {
+  margin-top: 2px;
+}
+
+.safetyNotice {
+  margin: 0;
+  border-left: 3px solid #fbbf24;
+  padding: 8px 10px;
+  background: rgba(120, 53, 15, 0.22);
+  color: #fde68a;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.formError {
+  margin: 0;
+  color: #fecaca;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 3px;
+}
+
+.actions button {
+  min-height: 42px;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.cancelButton {
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(30, 41, 59, 0.76);
+  color: #e2e8f0;
+}
+
+.saveButton {
+  border: 1px solid rgba(103, 232, 249, 0.38);
+  background: rgba(8, 145, 178, 0.8);
+  color: #ecfeff;
+}
+
+.deleteButton {
+  grid-column: 1 / -1;
+  border: 1px solid rgba(248, 113, 113, 0.36);
+  background: rgba(127, 29, 29, 0.34);
+  color: #fecaca;
+}
+
+.actions button:disabled,
+.editButton:disabled,
+.addButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@media (max-width: 520px) {
+  .modalBackdrop { padding: 10px; }
+  .modal { padding: 15px; border-radius: 16px; }
+  .actions { grid-template-columns: 1fr; }
+  .deleteButton { grid-column: auto; }
+}
