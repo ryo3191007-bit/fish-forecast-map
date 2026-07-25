@@ -20,14 +20,15 @@ assert.match(fishingPanel, /items=\{fishingDetailItems\}/);
 assert.match(fishingPanel, /hiddenKeys=\{\["target_species", "recommended_methods"\]\}/, "the fishing tab hides species and recommended methods");
 
 const speciesPanel = card.match(/props\.activeTab === "魚種"[^\n]+/)?.[0] ?? "";
-assert.match(speciesPanel, /items=\{fishingDetailItems\}/);
-assert.match(speciesPanel, /visibleKeys=\{\["target_species"\]\}/, "the species tab renders target species only");
+assert.match(speciesPanel, /<SpeciesTab/);
+assert.match(speciesPanel, /catches=\{props\.catches\}/, "the species tab receives the current user's catch records");
+assert.match(speciesPanel, /spotId=\{props\.selectedSpotId\}/, "the species tab is scoped to the selected spot");
 assert.doesNotMatch(speciesPanel, /recommended_methods/, "recommended methods are not rendered in the species tab");
 
 assert.match(
   card,
-  /function DetailTab\([\s\S]*?hiddenKeys\.includes\(key\)[\s\S]*?visibleKeys\.includes\(key\)[\s\S]*?resolveSpotDetailUiPresentation\(details, key\)/,
-  "tab-specific filtering still uses the shared unresolved and confidence presentation policy",
+  /function SpeciesTab\([\s\S]*?resolveSpotDetailUiPresentation\(details, "target_species"\)[\s\S]*?targetPresentation\?\.state === "displayable"/,
+  "the species tab keeps the shared target-species presentation policy and hides unresolved values",
 );
 
 const evaluationTab = card.slice(card.indexOf("function EvaluationTab"), card.indexOf("function JmaWarningPanel"));
