@@ -1,6 +1,7 @@
 import { createStaticFishSpecies, type FishSpecies, type FishSpeciesAlias } from "@/domain/fishing";
 import { fishingSpots } from "@/data/fishingSpots";
 import { applyFishingSpotCoordinateOverrides } from "@/data/fishingSpotCoordinateOverrides";
+import { filterSelectableFishingSpots } from "@/data/fishingSpotVisibility";
 import { externalSources } from "@/data/externalSources";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import type { ExternalSource } from "@/domain/externalSource";
@@ -16,6 +17,7 @@ export type MasterDataSet = { fishSpecies: FishSpecies[]; fishSpeciesAliases: Fi
 
 const staticFishSpecies: FishSpecies[] = createStaticFishSpecies();
 const runtimeFishingSpots = applyFishingSpotCoordinateOverrides(fishingSpots);
+const selectableRuntimeFishingSpots = filterSelectableFishingSpots(runtimeFishingSpots);
 const staticMasterData: MasterDataSet = { fishSpecies: staticFishSpecies, fishSpeciesAliases: [...staticFishSpeciesAliases], fishingSpots: runtimeFishingSpots, externalSources };
 
 function fallback<T>(data: T, fallbackReason: MasterDataFallbackReason, message?: string): MasterDataResult<T> {
@@ -54,10 +56,11 @@ export async function fetchFishSpeciesAliases(): Promise<MasterDataResult<FishSp
 
 export async function fetchFishingSpotsMaster(): Promise<MasterDataResult<FishingSpot[]>> {
   const result = await selectRows<FishingSpotRow>("fishing_spots", "id,name,area_name,latitude,longitude,spot_type,shore_access,target_species,recommended_methods,notes,coordinate_precision,is_active");
-  if (result.meta.source !== "supabase") return fallback(runtimeFishingSpots, result.meta.fallbackReason ?? "supabase-error", result.meta.message);
+  if (result.meta.source !== "supabase") return fallback(selectableRuntimeFishingSpots, result.meta.fallbackReason ?? "supabase-error", result.meta.message);
   const mapped = result.data.map(mapFishingSpotRow).filter((row): row is FishingSpot => row !== null);
   const corrected = applyFishingSpotCoordinateOverrides(mapped);
-  return corrected.length > 0 ? { data: corrected, meta: result.meta } : fallback(runtimeFishingSpots, "empty-supabase-result");
+  const selectable = filterSelectableFishingSpots(corrected);
+  return selectable.length > 0 ? { data: selectable, meta: result.meta } : fallback(selectableRuntimeFishingSpots, "empty-supabase-result");
 }
 
 export async function fetchSourceRegistryMaster(): Promise<MasterDataResult<ExternalSource[]>> {
