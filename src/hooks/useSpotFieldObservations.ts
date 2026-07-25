@@ -36,6 +36,7 @@ export function useSpotFieldObservations(spotId: string): SpotFieldObservationSt
       setStatus("unavailable");
       return;
     }
+    setStatus("loading");
     const { data: userData, error: userError } = await clientStatus.client.auth.getUser();
     if (currentSpotIdRef.current !== targetSpotId) return;
     if (userError || !userData.user) {
@@ -44,7 +45,6 @@ export function useSpotFieldObservations(spotId: string): SpotFieldObservationSt
       setError(null);
       return;
     }
-    setStatus("loading");
     try {
       const next = await fetchMySpotFieldObservations(targetSpotId);
       if (currentSpotIdRef.current !== targetSpotId) return;
@@ -94,7 +94,7 @@ export function useSpotFieldObservations(spotId: string): SpotFieldObservationSt
       if (currentSpotIdRef.current === input.spotId) setError("実地調査情報を保存できませんでした。");
       return false;
     } finally {
-      if (currentSpotIdRef.current === input.spotId) setIsMutating(false);
+      setIsMutating(false);
     }
   }, [load, status]);
 
@@ -111,7 +111,7 @@ export function useSpotFieldObservations(spotId: string): SpotFieldObservationSt
       if (currentSpotIdRef.current === targetSpotId) setError("実地調査情報を削除できませんでした。");
       return false;
     } finally {
-      if (currentSpotIdRef.current === targetSpotId) setIsMutating(false);
+      setIsMutating(false);
     }
   }, [load, status]);
 
