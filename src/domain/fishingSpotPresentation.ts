@@ -17,7 +17,7 @@ export function filterFishingSpotOptions(spots: readonly FishingSpot[], query: s
 }
 
 export function buildFishingSpotMapEntries(spots: readonly FishingSpot[]) {
-  return filterSelectableFishingSpots(spots).map(toFishingSpotMapEntry);
+  return spots.map(toFishingSpotMapEntry);
 }
 
 export function toFishingSpotMapEntry(spot: FishingSpot) {
