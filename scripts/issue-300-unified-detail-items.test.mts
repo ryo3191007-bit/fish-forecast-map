@@ -93,7 +93,8 @@ assert.equal(
   ).text,
   "未確定",
 );
-assert.equal(
+
+assert.deepEqual(
   resolveSpotDetailUiPresentation(
     details(
       value("toilet", {
@@ -103,16 +104,17 @@ assert.equal(
       }),
     ),
     "toilet",
-  ).text,
-  "未確定",
+  ),
+  { text: "トイレ", confidence: "low", state: "displayable" },
+  "weak_evidence / low stays visible with the low-confidence badge",
 );
-assert.equal(
+assert.deepEqual(
   resolveSpotDetailUiPresentation(
     details(value("toilet", { confidence: "low", valueBoolean: true })),
     "toilet",
-  ).text,
-  "未確定",
-  "low-confidence content is not shown as confirmed even if its information state is inconsistent",
+  ),
+  { text: "トイレ", confidence: "low", state: "displayable" },
+  "low confidence does not hide an otherwise displayable adopted value",
 );
 
 assert.deepEqual(
@@ -120,14 +122,14 @@ assert.deepEqual(
     details(value("toilet", { valueBoolean: false, confidence: "high" })),
     "toilet",
   ),
-  { text: "なし", confidence: "high", state: "confirmed" },
+  { text: "なし", confidence: "high", state: "displayable" },
 );
 assert.deepEqual(
   resolveSpotDetailUiPresentation(
     details(value("toilet", { valueBoolean: true, confidence: "medium" })),
     "toilet",
   ),
-  { text: "トイレ", confidence: "medium", state: "confirmed" },
+  { text: "トイレ", confidence: "medium", state: "displayable" },
 );
 assert.equal(
   resolveSpotDetailUiPresentation(
@@ -178,7 +180,8 @@ assert.deepEqual(
     ),
     "coastal_topography",
   ),
-  { text: "未確定", confidence: null, state: "uncertain" },
+  { text: "砂地", confidence: "low", state: "displayable" },
+  "terrain weak evidence stays visible with low confidence",
 );
 assert.deepEqual(
   resolveSpotDetailUiPresentation(
@@ -190,7 +193,7 @@ assert.deepEqual(
     ),
     "coastal_topography",
   ),
-  { text: "砂地", confidence: "medium", state: "confirmed" },
+  { text: "砂地", confidence: "medium", state: "displayable" },
 );
 
 const rawWeakValue = value("parking", {
@@ -200,8 +203,10 @@ const rawWeakValue = value("parking", {
   note: "internal research note",
 });
 const before = structuredClone(rawWeakValue);
-resolveSpotDetailUiPresentation(details(rawWeakValue), "parking");
+const weakPresentation = resolveSpotDetailUiPresentation(details(rawWeakValue), "parking");
 assert.deepEqual(rawWeakValue, before, "presentation must not rewrite internal research state");
+assert.equal(weakPresentation.text, "駐車");
+assert.equal(weakPresentation.confidence, "low");
 
 const card = fs.readFileSync("src/components/SpotEvaluationCard.tsx", "utf8");
 assert.match(card, /items\.map\(\(\[key, label\]\) =>/);
@@ -213,5 +218,6 @@ assert.doesNotMatch(
 );
 assert.match(card, /items=\{fishingDetailItems\}/);
 assert.match(card, /items=\{terrainDetailItems\}/);
+assert.match(card, /信憑性: \{confidenceLabel\[presentation\.confidence\]\}/);
 
 console.log("Issue #300 unified spot detail item tests passed");
