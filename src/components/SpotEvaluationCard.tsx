@@ -9,6 +9,7 @@ import {
   type FishingEnvironment,
 } from "@/domain/environment";
 import type { ExternalCatchRecord } from "@/domain/externalCatch";
+import { fishSpeciesNames } from "@/domain/fishing";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import { filterFishingSpotOptions } from "@/domain/fishingSpotPresentation";
 import type {
@@ -23,8 +24,11 @@ import {
   fishingDetailItems,
   resolveSpotDetailUiPresentation,
   terrainDetailItems,
+  type SpotDetailUiPresentation,
 } from "@/domain/spotDetailUiPresentation";
 import { getRegisteredCatchSpeciesForSpot } from "@/domain/spotSpeciesPresentation";
+import { useSpotFieldObservations, type SpotFieldObservationState } from "@/hooks/useSpotFieldObservations";
+import { SpotFieldObservationCard } from "./SpotFieldObservationCard";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形" | "魚種";
 
@@ -69,6 +73,7 @@ export function SpotEvaluationCard(props: Props) {
   const selectedIndex = selectedRow ? rows.indexOf(selectedRow) : -1;
   const selectedDate = (selectedRow?.forecastTime ?? "").slice(0, 10);
   const dayRows = rows.filter((row) => row.forecastTime.startsWith(selectedDate));
+  const fieldObservations = useSpotFieldObservations(props.selectedSpotId);
 
   useEffect(() => {
     const resolvedTime = resolveSelectedForecastTime(rows, selectedTime);
@@ -108,9 +113,9 @@ export function SpotEvaluationCard(props: Props) {
       <div role="tabpanel" id={`spot-panel-${props.activeTab}`} aria-labelledby={`spot-tab-${props.activeTab}`}>
         {props.activeTab === "評価" && <EvaluationTab {...props} selectedTime={props.selectedTime} />}
         {props.activeTab === "環境" && <EnvironmentTab environment={selectedEnvironment} row={selectedRow} loading={props.isLoading} error={props.error} />}
-        {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} hiddenKeys={["target_species", "recommended_methods"]} />}
-        {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} />}
-        {props.activeTab === "魚種" && <SpeciesTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} catches={props.catches} spotId={props.selectedSpotId} />}
+        {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} hiddenKeys={["target_species", "recommended_methods"]} spotId={props.selectedSpotId} fieldObservations={fieldObservations} />}
+        {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} spotId={props.selectedSpotId} fieldObservations={fieldObservations} />}
+        {props.activeTab === "魚種" && <SpeciesTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} catches={props.catches} spotId={props.selectedSpotId} fieldObservations={fieldObservations} />}
       </div>
     </section>
   );
@@ -207,22 +212,51 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
   </div>;
 }
 
-function SpeciesTab({ details, status, catches, spotId }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; catches: ExternalCatchRecord[]; spotId: string }) {
+function researchPresentation(details: FishingSpotDetailSet | null, status: SpotDetailLoadStatus, itemKey: string): SpotDetailUiPresentation {
+  if (status === "loading") return { text: "取得中…", confidence: null, state: "uncertain" };
+  if (status === "failed") return { text: "取得できませんでした", confidence: null, state: "uncertain" };
+  return resolveSpotDetailUiPresentation(details, itemKey);
+}
+
+function SpeciesTab({ details, status, catches, spotId, fieldObservations }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; catches: ExternalCatchRecord[]; spotId: string; fieldObservations: SpotFieldObservationState }) {
   const registeredSpecies = getRegisteredCatchSpeciesForSpot(catches, spotId);
-  const targetPresentation = status === "ready" ? resolveSpotDetailUiPresentation(details, "target_species") : null;
+  const observation = fieldObservations.observations.find((item) => item.itemKey === "target_species");
   return <dl className="detailGrid">
     <div><dt><span className="detailIcon" aria-hidden="true">🐟</span>自分の釣果</dt><dd>{registeredSpecies.length > 0 ? registeredSpecies.join("、") : "この地点の釣果はまだありません"}</dd></div>
-    {targetPresentation?.state === "displayable" ? <div><dt><span className="detailIcon" aria-hidden="true">🐟</span>調査上の対象魚種</dt><dd>{targetPresentation.text}{targetPresentation.confidence ? <span className={`confidence ${targetPresentation.confidence}`}>信憑性: {confidenceLabel[targetPresentation.confidence]}</span> : null}</dd></div> : null}
+    <SpotFieldObservationCard
+      spotId={spotId}
+      itemKey="target_species"
+      label="対象魚種"
+      icon="🐟"
+      research={researchPresentation(details, status, "target_species")}
+      observation={observation}
+      status={fieldObservations.status}
+      isMutating={fieldObservations.isMutating}
+      error={null}
+      speciesOptions={fishSpeciesNames}
+      onSave={fieldObservations.saveObservation}
+      onDelete={fieldObservations.deleteObservation}
+    />
   </dl>;
 }
 
-function DetailTab({ details, status, items, hiddenKeys = [], visibleKeys }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[]; hiddenKeys?: readonly string[]; visibleKeys?: readonly string[] }) {
-  if (status === "loading") return <StateMessage>地点詳細を取得中です…</StateMessage>;
-  if (status === "failed") return <StateMessage>地点詳細を取得できませんでした。状態を表示できません。</StateMessage>;
+function DetailTab({ details, status, items, spotId, fieldObservations, hiddenKeys = [], visibleKeys }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[]; spotId: string; fieldObservations: SpotFieldObservationState; hiddenKeys?: readonly string[]; visibleKeys?: readonly string[] }) {
   const cards = items.map(([key, label]) => {
     if (hiddenKeys.includes(key) || (visibleKeys && !visibleKeys.includes(key))) return null;
-    const presentation = resolveSpotDetailUiPresentation(details, key);
-    return <div key={key}><dt><span className="detailIcon" aria-hidden="true">{detailIcons[key] ?? "•"}</span>{label}</dt><dd>{presentation.text}{presentation.confidence ? <span className={`confidence ${presentation.confidence}`}>信憑性: {confidenceLabel[presentation.confidence]}</span> : null}</dd></div>;
+    return <SpotFieldObservationCard
+      key={key}
+      spotId={spotId}
+      itemKey={key}
+      label={label}
+      icon={detailIcons[key] ?? "•"}
+      research={researchPresentation(details, status, key)}
+      observation={fieldObservations.observations.find((item) => item.itemKey === key)}
+      status={fieldObservations.status}
+      isMutating={fieldObservations.isMutating}
+      error={null}
+      onSave={fieldObservations.saveObservation}
+      onDelete={fieldObservations.deleteObservation}
+    />;
   });
   return <dl className="detailGrid">{cards}</dl>;
 }
