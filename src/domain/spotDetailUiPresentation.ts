@@ -35,7 +35,7 @@ export const terrainDetailItems = [
 export type SpotDetailUiPresentation = {
   text: string;
   confidence: SpotDetailConfidence | null;
-  state: "confirmed" | "uncertain" | "not_applicable";
+  state: "displayable" | "uncertain" | "not_applicable";
 };
 
 const NOT_APPLICABLE_VALUES = new Set(["not_applicable", "該当なし"]);
@@ -54,21 +54,11 @@ function uncertain(): SpotDetailUiPresentation {
   return { text: "未確定", confidence: null, state: "uncertain" };
 }
 
-function confirmedDetailsOnly(details: FishingSpotDetailSet | null) {
-  if (!details) return null;
-  return {
-    ...details,
-    values: details.values.filter(
-      (value) =>
-        value.informationState === "has_evidence" && value.confidence !== "low",
-    ),
-  };
-}
-
 /**
  * Resolve one common spot-detail row for the ordinary UI without mutating the
- * underlying research state. Missing, unresearched, researched-unknown and
- * low-confidence values intentionally collapse to the user-facing "未確定".
+ * underlying research state. Missing, unresearched and researched-unknown
+ * values collapse to "未確定". weak_evidence / low remains visible with its
+ * low-confidence badge, matching the existing UI policy.
  */
 export function resolveSpotDetailUiPresentation(
   details: FishingSpotDetailSet | null,
@@ -77,8 +67,8 @@ export function resolveSpotDetailUiPresentation(
   const item = findDisplayableSpotDetail(details, itemKey);
   if (
     !item ||
-    item.informationState !== "has_evidence" ||
-    item.confidence === "low"
+    item.informationState === "unresearched" ||
+    item.informationState === "researched_unknown"
   ) {
     return uncertain();
   }
@@ -92,15 +82,12 @@ export function resolveSpotDetailUiPresentation(
   }
 
   if (itemKey === "coastal_topography" || itemKey === "spot_features") {
-    const terrainPresentation = formatTerrainDetailForPresentation(
-      confirmedDetailsOnly(details),
-      itemKey,
-    );
+    const terrainPresentation = formatTerrainDetailForPresentation(details, itemKey);
     return terrainPresentation
       ? {
           text: terrainPresentation.text,
           confidence: terrainPresentation.confidence,
-          state: "confirmed",
+          state: "displayable",
         }
       : uncertain();
   }
@@ -108,6 +95,6 @@ export function resolveSpotDetailUiPresentation(
   return {
     text: formatSpotDetailValue(item),
     confidence: item.confidence,
-    state: "confirmed",
+    state: "displayable",
   };
 }
