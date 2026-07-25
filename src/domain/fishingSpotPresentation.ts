@@ -1,8 +1,10 @@
 import type { EnvironmentPoint } from "@/domain/environment";
 import type { FishingSpot } from "@/domain/fishingSpot";
+import { filterSelectableFishingSpots } from "@/data/fishingSpotVisibility";
 
 export function selectFishingSpot(spots: readonly FishingSpot[], spotId: string) {
-  return spots.find((spot) => spot.id === spotId) ?? spots[0];
+  const selectableSpots = filterSelectableFishingSpots(spots);
+  return selectableSpots.find((spot) => spot.id === spotId) ?? selectableSpots[0];
 }
 
 export function toEnvironmentPoint(spot: FishingSpot): EnvironmentPoint {
@@ -11,11 +13,11 @@ export function toEnvironmentPoint(spot: FishingSpot): EnvironmentPoint {
 
 export function filterFishingSpotOptions(spots: readonly FishingSpot[], query: string) {
   const normalized = query.trim().toLocaleLowerCase("ja");
-  return spots.filter((spot) => !normalized || `${spot.name} ${spot.areaName}`.toLocaleLowerCase("ja").includes(normalized));
+  return filterSelectableFishingSpots(spots).filter((spot) => !normalized || `${spot.name} ${spot.areaName}`.toLocaleLowerCase("ja").includes(normalized));
 }
 
 export function buildFishingSpotMapEntries(spots: readonly FishingSpot[]) {
-  return spots.map(toFishingSpotMapEntry);
+  return filterSelectableFishingSpots(spots).map(toFishingSpotMapEntry);
 }
 
 export function toFishingSpotMapEntry(spot: FishingSpot) {
@@ -23,5 +25,5 @@ export function toFishingSpotMapEntry(spot: FishingSpot) {
 }
 
 export function buildCatchRegistrationSpotOptions(spots: readonly FishingSpot[]) {
-  return spots.map((spot) => ({ id: spot.id, label: `${spot.name} / ${spot.areaName}`, spotType: spot.spotType }));
+  return filterSelectableFishingSpots(spots).map((spot) => ({ id: spot.id, label: `${spot.name} / ${spot.areaName}`, spotType: spot.spotType }));
 }
