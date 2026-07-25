@@ -103,7 +103,7 @@ assert.equal(selectableSpots.length, 47);
 assert.ok(selectableSpots.every((spot) => !expectedHiddenIds.has(spot.id)));
 assert.ok([...expectedHiddenIds].every((spotId) => fishingSpotById.has(spotId)));
 
-const mapIds = new Set(buildFishingSpotMapEntries(fishingSpots).map((entry) => entry.spot.id));
+const mapIds = new Set(buildFishingSpotMapEntries(selectableSpots).map((entry) => entry.spot.id));
 const registrationIds = new Set(buildCatchRegistrationSpotOptions(fishingSpots).map((option) => option.id));
 const blankQueryIds = new Set(filterFishingSpotOptions(fishingSpots, "").map((spot) => spot.id));
 
