@@ -212,15 +212,20 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
   </div>;
 }
 
-function researchPresentation(details: FishingSpotDetailSet | null, status: SpotDetailLoadStatus, itemKey: string): SpotDetailUiPresentation {
+function researchPresentation(details: FishingSpotDetailSet | null, status: SpotDetailLoadStatus, key: string): SpotDetailUiPresentation {
   if (status === "loading") return { text: "取得中…", confidence: null, state: "uncertain" };
   if (status === "failed") return { text: "取得できませんでした", confidence: null, state: "uncertain" };
-  return resolveSpotDetailUiPresentation(details, itemKey);
+  return resolveSpotDetailUiPresentation(details, key);
+}
+
+function renderResearchConfidence(presentation: SpotDetailUiPresentation) {
+  return presentation.confidence ? <span className={`confidence ${presentation.confidence}`}>信憑性: {confidenceLabel[presentation.confidence]}</span> : null;
 }
 
 function SpeciesTab({ details, status, catches, spotId, fieldObservations }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; catches: ExternalCatchRecord[]; spotId: string; fieldObservations: SpotFieldObservationState }) {
   const registeredSpecies = getRegisteredCatchSpeciesForSpot(catches, spotId);
   const observation = fieldObservations.observations.find((item) => item.itemKey === "target_species");
+  const presentation = researchPresentation(details, status, "target_species");
   return <dl className="detailGrid">
     <div><dt><span className="detailIcon" aria-hidden="true">🐟</span>自分の釣果</dt><dd>{registeredSpecies.length > 0 ? registeredSpecies.join("、") : "この地点の釣果はまだありません"}</dd></div>
     <SpotFieldObservationCard
@@ -228,11 +233,11 @@ function SpeciesTab({ details, status, catches, spotId, fieldObservations }: { d
       itemKey="target_species"
       label="対象魚種"
       icon="🐟"
-      research={researchPresentation(details, status, "target_species")}
+      research={presentation}
+      researchConfidence={renderResearchConfidence(presentation)}
       observation={observation}
       status={fieldObservations.status}
       isMutating={fieldObservations.isMutating}
-      error={null}
       speciesOptions={fishSpeciesNames}
       onSave={fieldObservations.saveObservation}
       onDelete={fieldObservations.deleteObservation}
@@ -243,17 +248,18 @@ function SpeciesTab({ details, status, catches, spotId, fieldObservations }: { d
 function DetailTab({ details, status, items, spotId, fieldObservations, hiddenKeys = [], visibleKeys }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[]; spotId: string; fieldObservations: SpotFieldObservationState; hiddenKeys?: readonly string[]; visibleKeys?: readonly string[] }) {
   const cards = items.map(([key, label]) => {
     if (hiddenKeys.includes(key) || (visibleKeys && !visibleKeys.includes(key))) return null;
+    const presentation = researchPresentation(details, status, key);
     return <SpotFieldObservationCard
       key={key}
       spotId={spotId}
       itemKey={key}
       label={label}
       icon={detailIcons[key] ?? "•"}
-      research={researchPresentation(details, status, key)}
+      research={presentation}
+      researchConfidence={renderResearchConfidence(presentation)}
       observation={fieldObservations.observations.find((item) => item.itemKey === key)}
       status={fieldObservations.status}
       isMutating={fieldObservations.isMutating}
-      error={null}
       onSave={fieldObservations.saveObservation}
       onDelete={fieldObservations.deleteObservation}
     />;
