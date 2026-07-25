@@ -12,6 +12,10 @@ import {
   filterFishingSpotOptions,
   selectFishingSpot,
 } from "../src/domain/fishingSpotPresentation";
+import {
+  getRawStaticMasterData,
+  getStaticMasterData,
+} from "../src/lib/masterDataRepository";
 
 const audit = JSON.parse(
   fs.readFileSync(
@@ -99,7 +103,12 @@ for (const candidate of audit.candidates) {
 }
 
 const selectableSpots = filterSelectableFishingSpots(fishingSpots);
+const rawStaticSpots = getRawStaticMasterData().fishingSpots;
+const staticSpots = getStaticMasterData().fishingSpots;
 assert.equal(selectableSpots.length, 47);
+assert.equal(rawStaticSpots.length, 52);
+assert.deepEqual(new Set(rawStaticSpots.map((spot) => spot.id)), new Set(fishingSpots.map((spot) => spot.id)));
+assert.deepEqual(new Set(staticSpots.map((spot) => spot.id)), new Set(selectableSpots.map((spot) => spot.id)));
 assert.ok(selectableSpots.every((spot) => !expectedHiddenIds.has(spot.id)));
 assert.ok([...expectedHiddenIds].every((spotId) => fishingSpotById.has(spotId)));
 
