@@ -17,7 +17,7 @@ returns table (
 )
 language sql
 security definer
-set search_path = public
+set search_path = ''
 as $$
   select
     value.id,
@@ -56,7 +56,7 @@ create or replace function public.save_my_spot_observation(
 returns uuid
 language plpgsql
 security definer
-set search_path = public
+set search_path = ''
 as $$
 declare
   v_user_id uuid := auth.uid();
@@ -200,7 +200,7 @@ create or replace function public.delete_my_spot_observation(p_observation_id uu
 returns boolean
 language plpgsql
 security definer
-set search_path = public
+set search_path = ''
 as $$
 declare
   v_user_id uuid := auth.uid();
