@@ -6,11 +6,13 @@ const expansionPath = "supabase/migrations/20260720190000_expand_fish_species_ma
 const batch1Path = "supabase/migrations/20260720210000_seed_fish_species_aliases_batch_1.sql";
 const batch2Path = "supabase/migrations/20260720220000_seed_fish_species_aliases_batch_2.sql";
 const regionalPath = "supabase/migrations/20260721090000_simplify_regional_fish_species_aliases.sql";
+const issue323Path = "supabase/migrations/20260726200000_expand_verified_catch_species_master.sql";
 const baseline = readFileSync(baselinePath, "utf8");
 const expansion = readFileSync(expansionPath, "utf8");
 const batch1 = readFileSync(batch1Path, "utf8");
 const batch2 = readFileSync(batch2Path, "utf8");
 const regional = readFileSync(regionalPath, "utf8");
+const issue323 = readFileSync(issue323Path, "utf8");
 const staticSpecies = readFileSync("src/domain/fishing.ts", "utf8");
 
 const baselineSeeds = [...baseline.matchAll(/\('([0-9a-f-]{36})',\s*'([^']+)',\s*'([^']+)'\)/g)]
@@ -27,13 +29,16 @@ const batch2Seeds = [...batch2.matchAll(/\('([0-9a-f-]{36})',\s*'([^']+)',\s*'([
   .map((match) => ({ id: match[1], speciesId: match[2], alias: match[3] }));
 const regionalSeeds = [...regional.matchAll(/\('([0-9a-f-]{36})',\s*'([^']+)',\s*'([^']+)'\)/g)]
   .map((match) => ({ id: match[1], speciesId: match[2], alias: match[3] }));
-const seeds = [...baselineSeeds, ...expansionSpecies, ...batch1Seeds, ...batch2Seeds, ...regionalSeeds];
+const issue323Seeds = [...issue323.matchAll(/\('([0-9a-f-]{36})'::uuid,\s*'([^']+)',\s*'([^']+)'\)/g)]
+  .map((match) => ({ id: match[1], speciesId: match[2], alias: match[3] }));
+const seeds = [...baselineSeeds, ...expansionSpecies, ...batch1Seeds, ...batch2Seeds, ...regionalSeeds, ...issue323Seeds];
 
 assert.equal(baselineSeeds.length, 17, "all baseline alias seeds must be inspected");
 assert.equal(expansionSpecies.length, 28, "all expansion alias seeds must be inspected");
 assert.equal(batch1Seeds.length, 5, "Issue #211 batch 1 must contain exactly five approved aliases");
 assert.equal(batch2Seeds.length, 10, "Issue #220 batch 2 must contain exactly ten approved aliases");
 assert.equal(regionalSeeds.length, 24, "regional simplification must add all aliases approved by the latest specification");
+assert.equal(issue323Seeds.length, 23, "Issue #323 must seed 17 canonical names and six approved aliases");
 assert.match(expansion, /drop constraint if exists fish_species_category_check;[\s\S]*?check \(category in \('fish', 'squid', 'category', 'cephalopod'\)\)[\s\S]*?validate constraint fish_species_category_check;[\s\S]*?insert into public\.fish_species/, "the category constraint must allow cephalopod before species are seeded");
 assert.equal(new Set(seeds.map((seed) => seed.id)).size, seeds.length, "alias seed UUIDs must be unique across migrations");
 assert.equal(new Set(seeds.map((seed) => seed.alias.normalize("NFKC").trim().toLowerCase())).size, seeds.length, "approved active match_key values must be unique across migrations");
@@ -88,5 +93,24 @@ for (const [alias, speciesId] of [
 assert.match(regional, /where id in \('akakamasu', 'yamatokamasu'\)/, "legacy kamasu IDs are updated in place");
 assert.match(regional, /set fish_species_id = 'kamasu'[\s\S]*?fish_species_match_key\('アカカマス'\)[\s\S]*?fish_species_match_key\('ヤマトカマス'\)/, "existing individual kamasu aliases are reassigned to the group");
 assert.doesNotMatch(regional, /'シリヤケイカ'/, "unspecified cuttlefish names are not added");
+
+const issue323ExpectedCanonical = new Map([
+  ["カレイ", "karei"], ["メゴチ", "megochi"], ["アイゴ", "aigo"], ["ハゼ", "haze"],
+  ["ヒラスズキ", "hirasuzuki"], ["カツオ", "katsuo"], ["エソ", "eso"], ["キュウセン", "kyusen"],
+  ["キチヌ", "kichinu"], ["ジンドウイカ", "jindouika"], ["ムツ", "mutsu"], ["ダツ", "datsu"],
+  ["ホウボウ", "houbou"], ["ヤガラ", "yagara"], ["ヨコフエダイ", "yokofuedai"], ["フエダイ", "fuedai"], ["アナゴ", "anago"],
+]);
+for (const [alias, speciesId] of issue323ExpectedCanonical) {
+  assert.equal(issue323Seeds.find((seed) => seed.alias === alias)?.speciesId, speciesId, `${alias} is seeded as the Issue #323 canonical name`);
+}
+for (const [alias, speciesId] of [
+  ["バリ", "aigo"], ["ギザミ", "kyusen"], ["キビレ", "kichinu"],
+  ["ヒイカ", "jindouika"], ["コイカ", "jindouika"], ["マダイ", "madai"],
+]) assert.equal(issue323Seeds.find((seed) => seed.alias === alias)?.speciesId, speciesId, `${alias} has the Issue #323 approved target`);
+assert.ok(issue323Seeds.every((seed) => /^00000000-0000-4000-8000-0000000006(?:0\d|1\d|2[0-2])$/.test(seed.id)), "Issue #323 uses deterministic UUID range 600-622");
+assert.match(issue323, /set parent_group_id = 'anago', updated_at = now\(\)\s*where id = 'maanago';/, "existing maanago is grouped under anago without changing its ID");
+assert.doesNotMatch(issue323, /'maanago','アナゴ'|'maanago',\s*'アナゴ'/, "generic アナゴ is never seeded as a maanago alias");
+assert.doesNotMatch(issue323, /'ネズミゴチ'|'アカヤガラ'|'シブダイ'|'ベラ'/, "ambiguous extra names are not guessed into exact species");
+assert.match(issue323, /'migration:issue-323'/, "Issue #323 alias seeds keep audit attribution");
 
 console.log(`fish species alias seed tests passed (${seeds.length} seeds)`);
