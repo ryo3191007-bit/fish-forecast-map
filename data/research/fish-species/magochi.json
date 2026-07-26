@@ -247,7 +247,7 @@
     "secondaryResearch": "二次的な釣り情報から季節・水温・水深・釣法を補完していない。",
     "schemaValidation": "fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。",
     "comparisonWithCurrentImplementation": {
-      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_A_REVIEW.md",
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_B_REVIEW.md",
       "scoreV2Status": "unsupported",
       "inheritancePolicy": "do_not_inherit_between_species_or_group"
     },

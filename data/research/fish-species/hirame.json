@@ -65,15 +65,17 @@
         "note": "直接根拠を確認できていない。推測で補完しない。"
       },
       "depthRange": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": "水深10〜200 mに分布する。",
+        "status": "confirmed",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "fishbase_hirame_ecology"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "FishBaseのspecies summaryに記載された一般分布・生息環境。岸から狙える水深、対象地域の釣れやすさ、SCORE閾値には変換しない。"
       },
       "substrateHabitat": {
         "value": null,
@@ -81,21 +83,25 @@
         "confidence": "unknown",
         "evidenceSources": {
           "supportingSourceIds": [],
-          "checkedSourceIds": [],
+          "checkedSourceIds": [
+            "fishbase_hirame_ecology"
+          ],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "確認したFishBase species summaryから、この属性を直接採用できる記載を確認できなかった。推測で補完しない。"
       },
       "salinityAndWaterBody": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": "海水域に生息する。",
+        "status": "confirmed",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "fishbase_hirame_ecology"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "FishBaseのspecies summaryに記載された一般分布・生息環境。岸から狙える水深、対象地域の釣れやすさ、SCORE閾値には変換しない。"
       },
       "dayNightTiming": {
         "value": null,
@@ -240,6 +246,25 @@
         "/identity/scientificName"
       ],
       "usageNote": "accepted scientific nameと日本語vernacular nameの確認に限定し、生態・地域別釣れやすさには使用しない。"
+    },
+    {
+      "id": "fishbase_hirame_ecology",
+      "title": "FishBase species summary: Paralichthys olivaceus",
+      "url": "https://www.fishbase.se/summary/Paralichthys-olivaceus.html",
+      "publisher": "FishBase (WorldFish and partners)",
+      "publisherType": "secondary",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "種の世界的な一般分布・生態",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "fishbase_hirame_ecology",
+      "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/salinityAndWaterBody"
+      ],
+      "usageNote": "一般生態の説明に限定する二次source。一般水深を岸から狙える水深へ変換せず、対象地域の釣れやすさまたはSCORE閾値へ直接使用しない。"
     }
   ],
   "review": {
@@ -247,7 +272,7 @@
     "secondaryResearch": "二次的な釣り情報から季節・水温・水深・釣法を補完していない。",
     "schemaValidation": "fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。",
     "comparisonWithCurrentImplementation": {
-      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_A_REVIEW.md",
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_B_REVIEW.md",
       "scoreV2Status": "unsupported",
       "inheritancePolicy": "do_not_inherit_between_species_or_group"
     },
@@ -318,39 +343,45 @@
       },
       {
         "path": "/ecology/stableGeneral/depthRange",
-        "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "decision": "adopt",
+        "reason": "編集責任が明確な魚類データベースで一般生態として直接確認した。地域別の釣れやすさには転用しない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "sourceIds": [
+          "fishbase_hirame_ecology"
+        ],
+        "regionScope": "種の一般分布・生態",
+        "confidence": "medium",
+        "recheckCondition": "原典更新時、または地域別・遊漁用途へ採用を検討する前に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/substrateHabitat",
         "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "reason": "確認したsourceから属性の直接根拠を取得できず、推測補完しない。",
         "purposes": [
           "score_excluded"
         ],
-        "sourceIds": [],
+        "sourceIds": [
+          "fishbase_hirame_ecology"
+        ],
         "regionScope": "未確定",
         "confidence": "unknown",
         "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/salinityAndWaterBody",
-        "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "decision": "adopt",
+        "reason": "編集責任が明確な魚類データベースで一般生態として直接確認した。地域別の釣れやすさには転用しない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "sourceIds": [
+          "fishbase_hirame_ecology"
+        ],
+        "regionScope": "種の一般分布・生態",
+        "confidence": "medium",
+        "recheckCondition": "原典更新時、または地域別・遊漁用途へ採用を検討する前に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/dayNightTiming",
@@ -490,7 +521,9 @@
       "projectionPolicy": "acceptedPathsのみ名称表示の投影候補とし、SCORE v2・UI・DBへは未接続とする。",
       "acceptedPaths": [
         "/identity/canonicalNameJa",
-        "/identity/scientificName"
+        "/identity/scientificName",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/salinityAndWaterBody"
       ],
       "unknownPolicy": "unknownを0点、不適、他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"
     }
