@@ -19,7 +19,6 @@ type AuthStatusPanelProps = {
     status: SupabaseAuthStatus;
     user: User | null;
     isPasswordRecovery: boolean;
-    signInWithGoogle: () => Promise<AuthResult>;
     signInWithPassword: (email: string, password: string) => Promise<AuthResult>;
     signUpWithPassword: (email: string, password: string) => Promise<AuthResult>;
     sendPasswordReset: (email: string) => Promise<AuthResult>;
@@ -33,7 +32,6 @@ export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
     status,
     user,
     isPasswordRecovery,
-    signInWithGoogle,
     signInWithPassword,
     signUpWithPassword,
     sendPasswordReset,
@@ -88,15 +86,6 @@ export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
     setResultMessage(result, "登録しました。");
   };
 
-  const handleGoogleSignIn = async () => {
-    setIsSubmitting(true);
-    const result = await signInWithGoogle();
-    if (!result.ok) {
-      setIsSubmitting(false);
-      setResultMessage(result, "Googleログインを開始しました。");
-    }
-  };
-
   const handlePasswordReset = async () => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
@@ -138,7 +127,7 @@ export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
       <div>
         <p className="eyebrow">Supabase Auth</p>
         <h3 id="auth-status-heading">ログイン</h3>
-        <p className="muted">Googleまたはメールアドレス＋パスワードでログインできます。docomoメールを含め、メールドメインによる制限はありません。</p>
+        <p className="muted">メールアドレス＋パスワードでログインできます。docomoメールを含め、メールドメインによる制限はありません。</p>
       </div>
 
       {status === "unavailable" ? (
@@ -149,12 +138,6 @@ export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
 
       {status === "signed-out" ? (
         <div className="externalMemoForm authForm">
-          <button type="button" className="button" onClick={handleGoogleSignIn} disabled={isSubmitting}>
-            {isSubmitting ? "処理中..." : "Googleで続ける"}
-          </button>
-
-          <p className="muted" aria-hidden="true">──────── または ────────</p>
-
           <form onSubmit={submitPasswordLogin}>
             <label htmlFor="auth-email">
               メールアドレス
