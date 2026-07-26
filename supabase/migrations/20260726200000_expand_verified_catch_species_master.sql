@@ -32,11 +32,6 @@ on conflict (id) do update set
   ui_subgroup=excluded.ui_subgroup,
   updated_at=now();
 
--- Keep the existing exact マアナゴ ID/data and place it under the generic アナゴ group.
-update public.fish_species
-set parent_group_id = 'anago', updated_at = now()
-where id = 'maanago';
-
 with alias_seeds(alias_id, fish_species_id, alias_name) as (values
   ('00000000-0000-4000-8000-000000000600'::uuid,'karei','カレイ'),
   ('00000000-0000-4000-8000-000000000601'::uuid,'megochi','メゴチ'),
