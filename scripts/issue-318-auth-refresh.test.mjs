@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 
 const authHook = readFileSync("src/hooks/useSupabaseAuth.ts", "utf8");
 const authPanel = readFileSync("src/components/AuthStatusPanel.tsx", "utf8");
+const authStyles = readFileSync("src/components/AuthStatusPanel.module.css", "utf8");
 const setupDoc = readFileSync("docs/AUTH_SETUP.md", "utf8");
 
 const checks = [
@@ -17,7 +18,11 @@ const checks = [
   ["registration is visible", authPanel.includes("新規登録")],
   ["existing magic-link users have password migration guidance", authPanel.includes("以前Magic Linkで登録した方")],
   ["password reset entry point is visible", authPanel.includes("パスワードを設定・忘れた方")],
-  ["docomo is explicitly supported", authPanel.includes("docomoメール") && setupDoc.includes("@docomo.ne.jp")],
+  ["redundant login description is removed", !authPanel.includes("メールアドレス＋パスワードでログインできます")],
+  ["auth UI uses dedicated responsive styles", authPanel.includes("AuthStatusPanel.module.css") && authStyles.includes("@media (max-width: 480px)")],
+  ["auth actions stack on narrow screens", authStyles.includes("grid-template-columns: 1fr")],
+  ["password reset button keeps readable width", authStyles.includes(".resetButton") && authStyles.includes("width: 100%") && authStyles.includes("word-break: keep-all")],
+  ["docomo is explicitly supported", setupDoc.includes("@docomo.ne.jp")],
   ["Google provider setup is not required", !setupDoc.includes("Google provider") && !setupDoc.includes("Authorized redirect URI")],
   ["custom SMTP is documented", setupDoc.includes("Custom SMTP")],
   ["service role is not introduced in auth hook", !/SERVICE_ROLE|service_role/.test(authHook)],
