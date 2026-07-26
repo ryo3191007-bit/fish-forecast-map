@@ -268,7 +268,7 @@
     }
   ],
   "review": {
-    "officialResearch": "GBIFの公開分類DBを優先してidentityを確認した。直接根拠を取得できない属性はunknownを維持した。",
+    "officialResearch": "対象地域の自治体・水産試験研究機関、FRA、大学・博物館/水族館、JAMSTEC BISMaL / WoRMSの順で再探索した。属性を種単位で直接確認できた公的・研究機関sourceだけを採用し、検索結果や一般分布から推測して補完していない。",
     "secondaryResearch": "二次的な釣り情報から季節・水温・水深・釣法を補完していない。",
     "schemaValidation": "fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。",
     "comparisonWithCurrentImplementation": {

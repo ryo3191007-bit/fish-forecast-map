@@ -6,13 +6,27 @@ Issue #311 では、沿岸・磯・湾内系9エントリを v1.3.0 の自己完
 
 ## 採用した一般生態
 
-- exact species 8件は、GBIFまたはWoRMSで和名・学名の対応を確認し、identity表示の候補とした。分類DBの用途をidentityに限定し、生態や地域別釣れやすさの根拠にはしていない。
+- exact species 8件は、対象地域の自治体・水産試験研究機関、FRA、大学・博物館/水族館、公的DBの順で再探索した。検索結果だけで属性を埋めず、種と属性を本文で直接確認できた公的・研究機関sourceだけを追加採用した。
+- イサキは佐賀県公式資料から、成魚（水深20m前後の岩礁域）と稚魚（内湾の水深5〜10m程度の藻場付近）を分けた水深、成長段階別の藻場・岩礁利用、昼間は海藻の間・海底付近、夜間は海面近くへ浮上する行動を採用した。生活段階と一般生態のscopeを保持する。
 - FishBaseで直接確認できた海水・汽水・淡水の区分だけを `stableGeneral.salinityAndWaterBody` の一般生態説明候補とした。メジナ、イサキ、イシダイ、イシガキダイは海水域、タチウオ、コノシロ、サヨリは海水・汽水域、ボラは海水・汽水・淡水域として記録した。
 - FishBaseは編集責任が明確な二次sourceとして一般生態説明に限定する。一般水深、生息環境、産卵情報を岸釣りの条件へ変換しない。
 
+### 再探索結果
+
+| entry | 公的・研究機関sourceの再確認 | `stableGeneral` の判断 |
+| --- | --- | --- |
+| `mejina` | 自治体・FRA・研究教育機関・公的DBを優先して再探索 | 種と属性を直接結ぶ追加根拠を確定できず、既存の水域区分以外はhold |
+| `isaki` | 佐賀県公式「イサキ」を本文確認 | `depthRange`、`substrateHabitat`、`dayNightTiming` を生活段階・一般生態に限定してadopt |
+| `ishidai` | 自治体・FRA・研究教育機関・公的DBを優先して再探索 | 既存の水域区分以外はhold |
+| `ishigakidai` | 自治体・FRA・研究教育機関・公的DBを優先して再探索 | 既存の水域区分以外はhold |
+| `tachiuo` | WoRMSとJAMSTEC BISMaLを本文照合 | taxonomy差を `spawningOrConfusableInfo` に警告付きでadopt。他の生態値には継承しない |
+| `konoshiro` | 自治体・FRA・研究教育機関・公的DBを優先して再探索 | 既存の水域区分以外はhold |
+| `sayori` | 自治体・FRA・研究教育機関・公的DBを優先して再探索 | 既存の水域区分以外はhold |
+| `bora` | 自治体・FRA・研究教育機関・公的DBを優先して再探索 | 既存の水域区分以外はhold |
+
 ## holdした属性
 
-全エントリで19属性（identity 3属性、`stableGeneral` 8属性、`regionalCatchability` 8属性）を `attributeDecisions` により重複なく分類した。exact speciesではidentity 2属性と一般水域区分のみadoptし、aliasesおよび根拠を直接確認できない一般生態7属性をholdした。対象地域の陸っぱり釣れやすさを直接示す十分な資料は確認できなかったため、`regionalCatchability` 8属性はすべて `unknown / hold` とした。
+全エントリで19属性（identity 3属性、`stableGeneral` 8属性、`regionalCatchability` 8属性）を `attributeDecisions` により重複なく分類した。イサキは3一般生態属性を追加採用し、タチウオはtaxonomy差を警告付き一般注意情報として追加採用した。それ以外は、aliasesおよび根拠を直接確認できない一般生態をholdした。対象地域の陸っぱり釣れやすさを直接示す十分な資料は確認できなかったため、`regionalCatchability` 8属性は9エントリすべて `unknown / hold` のままとした。
 
 `unknown` は0点、不適、他魚種の値、漁期、水揚げ時期、産卵期で補完しない。確認済みsourceに対象属性の直接記載がない場合も推測せず、checked sourceとして記録してholdする。
 
@@ -26,7 +40,9 @@ Issue #311 では、沿岸・磯・湾内系9エントリを v1.3.0 の自己完
 
 `kamasu` はアプリ上のspecies_groupであり、単一taxonではない。現行マスターで `akakamasu` と `yamatokamasu` はinactiveであるため、両種をactive化せず、memberにも含めず、canonical和名・学名・生態値・sourceをグループへ継承しない。このため `kamasu` の19属性はすべてrejectまたはholdであり、accepted pathはない。
 
-タチウオはWoRMSでaccepted nameの `Trichiurus japonicus` を確認した。一方、分類DB間で取扱いが異なる可能性があるため、identity用途を越えた自動同一視や近縁taxonからの値継承は行わない。
+タチウオはWoRMS（AphiaID 305414）で `Trichiurus japonicus` をacceptedとして確認した。一方、JAMSTEC BISMaLは `Trichiurus japonicus` をsynonym、`Trichiurus lepturus` をaccepted asとして掲載する。この差により `/identity/scientificName` は `inferred / low / adopt_with_warning` とし、分類差自体を `stableGeneral.spawningOrConfusableInfo` に記録した。どちらか一方のDBを根拠に他の生態値を継承しない。
+
+佐賀県公式イサキページの「4〜9月」「釣り、ごち網」は商業漁業を含む漁期・漁法情報である。これらは `stableGeneral.fishingMethods` にも、`regionalCatchability.seasonality` / `fishingMethods` にも採用せず、陸っぱりで釣れやすい時期・方法へ変換しない。
 
 ## regionalCatchability / SCOREへ転用しない理由
 

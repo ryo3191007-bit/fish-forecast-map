@@ -9,25 +9,28 @@
       "confidence": "medium",
       "evidenceSources": {
         "supportingSourceIds": [
-          "gbif_tachiuo"
+          "worms_tachiuo",
+          "bismal_tachiuo"
         ],
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "note": "GBIFの日本語vernacular nameを確認。表記揺れや近縁種へは拡張しない。"
+      "note": "WoRMSとJAMSTEC BISMaLでタチウオの名称対応を確認した。分類上の扱い差はscientificNameに分離して記録する。"
     },
     "scientificName": {
       "value": "Trichiurus japonicus",
-      "status": "confirmed",
-      "confidence": "medium",
+      "status": "inferred",
+      "confidence": "low",
       "evidenceSources": {
         "supportingSourceIds": [
-          "gbif_tachiuo"
+          "worms_tachiuo"
         ],
         "checkedSourceIds": [],
-        "contradictingSourceIds": []
+        "contradictingSourceIds": [
+          "bismal_tachiuo"
+        ]
       },
-      "note": "GBIF Backbone Taxonomyのaccepted scientific nameを確認。"
+      "note": "WoRMSはTrichiurus japonicusをacceptedとする一方、JAMSTEC BISMaLは同名をsynonym、Trichiurus lepturusをaccepted asとする。表示魚種との対応候補だがDB間差があるため確定扱いにしない。"
     },
     "aliases": [],
     "entityType": "exact_species",
@@ -126,15 +129,18 @@
         "note": "直接根拠を確認できていない。推測で補完しない。"
       },
       "spawningOrConfusableInfo": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": "分類DB間で扱いが異なる。WoRMSはTrichiurus japonicusをacceptedとし、JAMSTEC BISMaLは同名をTrichiurus lepturusのsynonymとして掲載する。",
+        "status": "confirmed",
+        "confidence": "high",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "worms_tachiuo",
+            "bismal_tachiuo"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "分類差の注意情報のみ。他の生態属性や近縁taxonの値を継承しない。"
       }
     },
     "regionalCatchability": {
@@ -230,8 +236,8 @@
   },
   "sources": [
     {
-      "id": "gbif_tachiuo",
-      "title": "GBIF species worms-305414: Trichiurus japonicus",
+      "id": "worms_tachiuo",
+      "title": "WoRMS AphiaID 305414: Trichiurus japonicus",
       "url": "https://www.marinespecies.org/aphia.php?p=taxdetails&id=305414",
       "publisher": "World Register of Marine Species (WoRMS)",
       "publisherType": "public_research",
@@ -240,12 +246,13 @@
       "regionScope": "世界規模の分類・名称データベース",
       "sourceType": "supporting",
       "directness": "direct",
-      "derivationGroup": "gbif_tachiuo",
+      "derivationGroup": "worms_tachiuo",
       "supports": [
         "/identity/canonicalNameJa",
-        "/identity/scientificName"
+        "/identity/scientificName",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
       ],
-      "usageNote": "accepted scientific nameと日本語vernacular nameの確認に限定し、生態・地域別釣れやすさには使用しない。"
+      "usageNote": "WoRMSでTrichiurus japonicusをacceptedとして確認。分類identityに限定し、生態・地域別釣れやすさには使用しない。"
     },
     {
       "id": "fishbase_tachiuo_ecology",
@@ -265,10 +272,29 @@
         "/ecology/stableGeneral/salinityAndWaterBody"
       ],
       "usageNote": "一般生態の説明に限定する二次source。一般水深を岸から狙える水深へ変換せず、対象地域の釣れやすさまたはSCORE閾値へ直接使用しない。"
+    },
+    {
+      "id": "bismal_tachiuo",
+      "title": "BISMaL: Trichiurus japonicus タチウオ",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9024224",
+      "publisher": "海洋研究開発機構（JAMSTEC）",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "海洋生物分類データベース",
+      "sourceType": "contradicting",
+      "directness": "direct",
+      "derivationGroup": "bismal_tachiuo",
+      "supports": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "BISMaLはTrichiurus japonicusをsynonym、Trichiurus lepturusをaccepted asとして掲載する。WoRMSとの差の記録に限定し、他の生態値の継承根拠にしない。"
     }
   ],
   "review": {
-    "officialResearch": "GBIFの公開分類DBを優先してidentityを確認した。直接根拠を取得できない属性はunknownを維持した。",
+    "officialResearch": "WoRMSとJAMSTEC BISMaLを照合し、Trichiurus japonicusのaccepted / synonymの扱い差を確認した。scientificNameは警告付き候補とし、分類差を他の生態値の継承根拠にしていない。",
     "secondaryResearch": "二次的な釣り情報から季節・水温・水深・釣法を補完していない。",
     "schemaValidation": "fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。",
     "comparisonWithCurrentImplementation": {
@@ -280,12 +306,13 @@
       {
         "path": "/identity/canonicalNameJa",
         "decision": "adopt",
-        "reason": "GBIF Backbone Taxonomyの和名情報で名称対応を確認した。",
+        "reason": "WoRMSとJAMSTEC BISMaLで和名対応を確認した。",
         "purposes": [
           "identity_display"
         ],
         "sourceIds": [
-          "gbif_tachiuo"
+          "worms_tachiuo",
+          "bismal_tachiuo"
         ],
         "regionScope": "分類・名称情報",
         "confidence": "medium",
@@ -293,17 +320,18 @@
       },
       {
         "path": "/identity/scientificName",
-        "decision": "adopt",
-        "reason": "GBIF Backbone Taxonomyのaccepted nameを確認した。",
+        "decision": "adopt_with_warning",
+        "reason": "WoRMSではacceptedだが、JAMSTEC BISMaLではTrichiurus lepturusのsynonymであり、DB間差を警告付きで保持する。",
         "purposes": [
           "identity_display"
         ],
         "sourceIds": [
-          "gbif_tachiuo"
+          "worms_tachiuo",
+          "bismal_tachiuo"
         ],
         "regionScope": "分類・名称情報",
-        "confidence": "medium",
-        "recheckCondition": "分類DBの更新時または本番利用前に再確認する。"
+        "confidence": "low",
+        "recheckCondition": "本番identity利用前に国内標準魚類目録を含む最新taxonomyで再確認する。"
       },
       {
         "path": "/identity/aliases",
@@ -409,15 +437,18 @@
       },
       {
         "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
-        "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "decision": "adopt_with_warning",
+        "reason": "WoRMSとJAMSTEC BISMaLの分類上の扱い差を直接確認した注意情報。生態値の継承には使わない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "sourceIds": [
+          "worms_tachiuo",
+          "bismal_tachiuo"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "recheckCondition": "いずれかの分類DB更新時に再確認する。"
       },
       {
         "path": "/ecology/regionalCatchability/seasonality",
@@ -522,7 +553,8 @@
       "acceptedPaths": [
         "/identity/canonicalNameJa",
         "/identity/scientificName",
-        "/ecology/stableGeneral/salinityAndWaterBody"
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
       ],
       "unknownPolicy": "unknownを0点、不適、他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"
     }

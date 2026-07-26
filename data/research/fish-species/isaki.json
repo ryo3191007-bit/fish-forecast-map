@@ -65,30 +65,30 @@
         "note": "直接根拠を確認できていない。推測で補完しない。"
       },
       "depthRange": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": "成魚は水深20m前後の岩礁域に生息する。稚魚期は内湾の水深5〜10m程度の藻場付近に群れる。",
+        "status": "confirmed",
+        "confidence": "high",
         "evidenceSources": {
-          "supportingSourceIds": [],
-          "checkedSourceIds": [
-            "fishbase_isaki_ecology"
+          "supportingSourceIds": [
+            "saga_pref_isaki"
           ],
+          "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "確認したFishBase species summaryから、この属性を直接採用できる記載を確認できなかった。推測で補完しない。"
+        "note": "佐賀県公式資料の玄海沿岸に近い一般生態。生活段階と昼夜行動のscopeを保持し、岸からの到達可能性・釣れやすさへ変換しない。"
       },
       "substrateHabitat": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": "稚魚期は内湾の藻場付近に群れ、成長後はやや沖合の海藻がよく茂る岩礁域に群れる。",
+        "status": "confirmed",
+        "confidence": "high",
         "evidenceSources": {
-          "supportingSourceIds": [],
-          "checkedSourceIds": [
-            "fishbase_isaki_ecology"
+          "supportingSourceIds": [
+            "saga_pref_isaki"
           ],
+          "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "確認したFishBase species summaryから、この属性を直接採用できる記載を確認できなかった。推測で補完しない。"
+        "note": "佐賀県公式資料の玄海沿岸に近い一般生態。生活段階と昼夜行動のscopeを保持し、岸からの到達可能性・釣れやすさへ変換しない。"
       },
       "salinityAndWaterBody": {
         "value": "海水域に生息する。",
@@ -104,15 +104,17 @@
         "note": "FishBaseのspecies summaryに記載された一般分布・生息環境。岸から狙える水深、対象地域の釣れやすさ、SCORE閾値には変換しない。"
       },
       "dayNightTiming": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": "昼間は海藻の間や海底付近にとどまり、夜間は海面近くまで浮上する。",
+        "status": "confirmed",
+        "confidence": "high",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "saga_pref_isaki"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "佐賀県公式資料の玄海沿岸に近い一般生態。生活段階と昼夜行動のscopeを保持し、岸からの到達可能性・釣れやすさへ変換しない。"
       },
       "fishingMethods": {
         "value": null,
@@ -265,10 +267,29 @@
         "/ecology/stableGeneral/salinityAndWaterBody"
       ],
       "usageNote": "一般生態の説明に限定する二次source。一般水深を岸から狙える水深へ変換せず、対象地域の釣れやすさまたはSCORE閾値へ直接使用しない。"
+    },
+    {
+      "id": "saga_pref_isaki",
+      "title": "佐賀県公式「イサキ」",
+      "url": "https://www.pref.saga.lg.jp/kiji00320225/index.html",
+      "publisher": "佐賀県",
+      "publisherType": "government",
+      "publishedOrUpdatedAt": "2015-03-24",
+      "checkedAt": "2026-07-26",
+      "regionScope": "佐賀県玄海沿岸および種の一般生態",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "saga_pref_isaki",
+      "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/dayNightTiming"
+      ],
+      "usageNote": "成魚・稚魚の生活段階を保持した一般生態に限定する。「4〜9月」「釣り、ごち網」は商業漁業を含む漁期・漁法情報なのでregionalCatchability、岸釣りの釣期・釣法、SCOREへ転用しない。"
     }
   ],
   "review": {
-    "officialResearch": "GBIFの公開分類DBを優先してidentityを確認した。直接根拠を取得できない属性はunknownを維持した。",
+    "officialResearch": "佐賀県公式「イサキ」を確認し、玄海沿岸に近い直接記載から生活段階別の水深・生息基質と昼夜行動だけを採用した。漁期・漁法はregionalCatchabilityへ転用していない。",
     "secondaryResearch": "二次的な釣り情報から季節・水温・水深・釣法を補完していない。",
     "schemaValidation": "fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。",
     "comparisonWithCurrentImplementation": {
@@ -343,31 +364,31 @@
       },
       {
         "path": "/ecology/stableGeneral/depthRange",
-        "decision": "hold",
-        "reason": "確認したsourceから属性の直接根拠を取得できず、推測補完しない。",
+        "decision": "adopt",
+        "reason": "佐賀県公式資料で生活段階または昼夜別の一般生態を直接確認した。漁期・漁法情報は採用根拠に含めない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
         "sourceIds": [
-          "fishbase_isaki_ecology"
+          "saga_pref_isaki"
         ],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "regionScope": "佐賀県玄海沿岸に近い種の一般生態",
+        "confidence": "high",
+        "recheckCondition": "原典更新時、または遊漁・地域別釣れやすさへの利用を検討する前に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/substrateHabitat",
-        "decision": "hold",
-        "reason": "確認したsourceから属性の直接根拠を取得できず、推測補完しない。",
+        "decision": "adopt",
+        "reason": "佐賀県公式資料で生活段階または昼夜別の一般生態を直接確認した。漁期・漁法情報は採用根拠に含めない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
         "sourceIds": [
-          "fishbase_isaki_ecology"
+          "saga_pref_isaki"
         ],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "regionScope": "佐賀県玄海沿岸に近い種の一般生態",
+        "confidence": "high",
+        "recheckCondition": "原典更新時、または遊漁・地域別釣れやすさへの利用を検討する前に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/salinityAndWaterBody",
@@ -385,15 +406,17 @@
       },
       {
         "path": "/ecology/stableGeneral/dayNightTiming",
-        "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "decision": "adopt",
+        "reason": "佐賀県公式資料で生活段階または昼夜別の一般生態を直接確認した。漁期・漁法情報は採用根拠に含めない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "sourceIds": [
+          "saga_pref_isaki"
+        ],
+        "regionScope": "佐賀県玄海沿岸に近い種の一般生態",
+        "confidence": "high",
+        "recheckCondition": "原典更新時、または遊漁・地域別釣れやすさへの利用を検討する前に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/fishingMethods",
@@ -522,7 +545,10 @@
       "acceptedPaths": [
         "/identity/canonicalNameJa",
         "/identity/scientificName",
-        "/ecology/stableGeneral/salinityAndWaterBody"
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/dayNightTiming"
       ],
       "unknownPolicy": "unknownを0点、不適、他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"
     }
