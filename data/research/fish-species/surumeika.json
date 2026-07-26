@@ -1,0 +1,549 @@
+{
+  "schemaVersion": "1.3.0",
+  "speciesId": "surumeika",
+  "identity": {
+    "displayNameJa": "スルメイカ",
+    "canonicalNameJa": {
+      "value": "スルメイカ",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_surumeika"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "JAMSTEC BISMaLで標準和名を確認。"
+    },
+    "scientificName": {
+      "value": "Todarodes pacificus",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_surumeika"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "JAMSTEC BISMaLで学名を確認。"
+    },
+    "aliases": [],
+    "entityType": "squid_species",
+    "note": "スルメイカの自己完結型調査記録。資源系群や他イカ類の値を暗黙継承せず、一般生態と地域別釣れやすさを分離する。",
+    "parentGroupId": null,
+    "memberSpeciesIds": []
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-26",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "depthRange": {
+        "value": "表層から中層に分布する。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fra_surumeika_specimen"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "水産研究・教育機構JAMARC標本解説の一般的な深さ区分。岸から狙える水深やSCORE閾値には変換しない。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "salinityAndWaterBody": {
+        "value": "北部太平洋の海洋域に分布する。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fra_surumeika_specimen"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "JAMARC標本解説の分布情報。対象地域での出現確率や釣れやすさには転用しない。"
+      },
+      "dayNightTiming": {
+        "value": "北上期には成長に伴って日周鉛直移動が顕著になることがあり、中型個体では昼間に30m以深、夜間に表層へ移動する傾向が確認されている。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fra_surumeika_vertical"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "2000年6〜7月の北西太平洋調査に基づく限定知見。海域・体サイズ・水温により異なるため、固定的な時合いや釣れやすさへ変換しない。",
+        "regionScope": "2000年6〜7月の北西太平洋・北上期"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "bismal_surumeika",
+      "title": "BISMaL: Todarodes pacificus（スルメイカ）",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9000317",
+      "publisher": "海洋研究開発機構（JAMSTEC）",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "日本の海洋生物分類・名称情報",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "bismal_surumeika",
+      "supports": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName"
+      ],
+      "usageNote": "標準和名・学名対応の確認に限定し、BISMaL出現レコードの深海観測値を代表的生息水深へ変換しない。"
+    },
+    {
+      "id": "fra_surumeika_specimen",
+      "title": "JAMARC剥製標本（スルメイカ）",
+      "url": "https://www.fra.go.jp/jamarc/archive/jyoho/hakusei/surumeika/surumeika.htm",
+      "publisher": "国立研究開発法人 水産研究・教育機構",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "北部太平洋・日本海を含む一般分布情報",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "fra_surumeika_specimen",
+      "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/salinityAndWaterBody"
+      ],
+      "usageNote": "分布を北部太平洋、深さを表層〜中層とする公的標本解説を一般生態説明に限定して使用し、岸から狙える水深やSCOREへ変換しない。"
+    },
+    {
+      "id": "fra_surumeika_vertical",
+      "title": "北西太平洋における北上期スルメイカの分布特性",
+      "url": "https://www.fra.go.jp/home/kenkyushokai/kseika/h13/myg01003.html",
+      "publisher": "国立研究開発法人 水産研究・教育機構",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "2000年6〜7月の北西太平洋・北上期",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "fra_surumeika_vertical",
+      "supports": [
+        "/ecology/stableGeneral/dayNightTiming"
+      ],
+      "usageNote": "北上期の体サイズ別・海域別の日周鉛直移動を確認する。調査時期・海域に限定された知見であり、対象地域の釣れやすさや一般的な固定水深へ一般化しない。"
+    }
+  ],
+  "review": {
+    "officialResearch": "JAMSTEC BISMaLと水産研究・教育機構の標本・研究成果でidentityと一般分布・北上期行動を確認した。",
+    "secondaryResearch": "資源量・漁獲量や民間釣果から釣期・適水温を補完していない。",
+    "schemaValidation": "fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。",
+    "comparisonWithCurrentImplementation": {
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_E_REVIEW.md",
+      "scoreV2Status": "unsupported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt",
+        "reason": "BISMaLで標準和名スルメイカを直接確認した。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_surumeika"
+        ],
+        "regionScope": "日本語名称",
+        "confidence": "high",
+        "recheckCondition": "分類DB更新時に再確認する。"
+      },
+      {
+        "path": "/identity/scientificName",
+        "decision": "adopt",
+        "reason": "BISMaLでTodarodes pacificusを直接確認した。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_surumeika"
+        ],
+        "regionScope": "分類・名称情報",
+        "confidence": "high",
+        "recheckCondition": "分類DB更新時に再確認する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/seasonality",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "adopt",
+        "reason": "水産研究・教育機構の標本解説で表層〜中層の分布を直接確認した。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fra_surumeika_specimen"
+        ],
+        "regionScope": "北部太平洋の一般分布",
+        "confidence": "medium",
+        "recheckCondition": "より定量的な一般分布水深資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "adopt",
+        "reason": "水産研究・教育機構資料で北部太平洋の海洋域に分布することを確認した。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fra_surumeika_specimen"
+        ],
+        "regionScope": "北部太平洋",
+        "confidence": "medium",
+        "recheckCondition": "分布資料更新時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "adopt_with_warning",
+        "reason": "北上期調査で成長とともに日周鉛直移動が顕著になることが確認されたが、時期・海域・体サイズ依存のため警告付きで採用する。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fra_surumeika_vertical"
+        ],
+        "regionScope": "2000年6〜7月の北西太平洋・北上期",
+        "confidence": "medium",
+        "recheckCondition": "他季節・他海域を含む行動研究取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/waterTemperature",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/depthRange",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/substrateHabitat",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/salinityAndWaterBody",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/dayNightTiming",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/fishingMethods",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      }
+    ],
+    "reviewStatus": "ready_for_review",
+    "productionAdoption": {
+      "projectionPolicy": "acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。",
+      "acceptedPaths": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/dayNightTiming"
+      ],
+      "unknownPolicy": "unknownを0点、不適、他頭足類・他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"
+    }
+  }
+}
