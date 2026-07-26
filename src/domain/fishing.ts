@@ -18,7 +18,7 @@ export const fishSpeciesDefinitions = [
   ["mejina", "メジナ", "exact_species", null, null], ["tachiuo", "タチウオ", "exact_species", null, null],
   ["kawahagi", "カワハギ", "exact_species", null, null], ["umazurahagi", "ウマヅラハギ", "exact_species", null, null],
   ["konoshiro", "コノシロ", "exact_species", null, null], ["sayori", "サヨリ", "exact_species", null, null],
-  ["bora", "ボラ", "exact_species", null, null], ["maanago", "マアナゴ", "exact_species", "anago", null],
+  ["bora", "ボラ", "exact_species", null, null], ["maanago", "マアナゴ", "exact_species", null, null],
   ["ishidai", "イシダイ", "exact_species", null, null], ["ishigakidai", "イシガキダイ", "exact_species", null, null],
   ["akakamasu", "アカカマス", "exact_species", "kamasu", null, false, false], ["yamatokamasu", "ヤマトカマス", "exact_species", "kamasu", null, false, false],
   ["maaji", "マアジ", "exact_species", "aji", null], ["maruaji", "マルアジ", "exact_species", "aji", null],
