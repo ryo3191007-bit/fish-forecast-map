@@ -48,9 +48,13 @@ const card = fs.readFileSync("src/components/SpotEvaluationCard.tsx", "utf8");
 assert.match(card, /props\.activeTab === "魚種" && <SpeciesTab/);
 assert.match(card, />自分の釣果</);
 assert.match(card, /この地点の釣果はまだありません/);
-assert.match(card, />調査上の対象魚種</);
-assert.match(card, /targetPresentation\?\.state === "displayable"/);
-assert.doesNotMatch(card.slice(card.indexOf("function SpeciesTab"), card.indexOf("function DetailTab")), /historical_target_species/);
+const speciesTab = card.slice(card.indexOf("function SpeciesTab"), card.indexOf("function DetailTab"));
+assert.match(speciesTab, /itemKey="target_species"/);
+assert.match(speciesTab, /label="対象魚種"/);
+assert.match(speciesTab, /research=\{presentation\}/, "pre-research target species stays separate from the user's field observation");
+assert.match(speciesTab, /observation=\{observation\}/, "field-observed species are a separate personal layer");
+assert.doesNotMatch(speciesTab, /historical_target_species/);
+assert.doesNotMatch(speciesTab, /recommended_methods/);
 
 const dashboard = fs.readFileSync("src/components/FishingDashboard.tsx", "utf8");
 assert.match(
@@ -64,5 +68,6 @@ const evaluationTab = card.slice(card.indexOf("function EvaluationTab"), card.in
 assert.match(evaluationTab, /calculateProductionScoreV2\(/, "SCORE v2 calculation must remain unchanged");
 assert.match(evaluationTab, /result\.speciesResults/);
 assert.match(evaluationTab, /result\.methodResults/);
+assert.doesNotMatch(evaluationTab, /fieldObservations|SpotFieldObservation/, "field observations do not affect SCORE v2");
 
 console.log("Issue #304 user catch species tab tests passed");
