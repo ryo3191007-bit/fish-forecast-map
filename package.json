@@ -49,7 +49,7 @@
     "test:score-v2-production": "node scripts/score-v2-production.test.mjs",
     "test:spot-evaluation-card": "node scripts/spot-evaluation-card.test.mjs",
     "test:issue-203-spot-detail-curation": "node scripts/issue-203-spot-detail-curation.test.mjs",
-    "test:issue-194-spot-detail-split": "node scripts/issue-194-detail-split.test.mjs",
+    "test:issue-194-spot-detail-split": "node scripts/issue-194-spot-detail-split.test.mjs",
     "test:jma-warnings": "node scripts/jma-warnings.test.mjs",
     "check:fish-species-alias-seed": "node scripts/fish-species-aliases.test.mjs",
     "test:fish-species-resolution": "tsx scripts/fish-species-resolution.test.ts && node scripts/fish-species-aliases.test.mjs",
