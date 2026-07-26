@@ -4,6 +4,7 @@ import { fishSpeciesNames } from "../src/domain/fishing";
 import { resolveSpotDetailUiPresentation } from "../src/domain/spotDetailUiPresentation";
 import { fishingSpots } from "../src/data/fishingSpots";
 import { buildStaticFishingSpotDetailsFromSpots } from "../src/lib/fishingSpotDetailFallback";
+import { buildVerifiedCatchSpeciesValues } from "../src/lib/verifiedCatchSpeciesCuration";
 
 type VerifiedCatchSpeciesSpot = { spotId: string; species: string[] | null; note?: string };
 type VerifiedCatchSpeciesData = { issue: number; spots: VerifiedCatchSpeciesSpot[] };
@@ -40,6 +41,10 @@ for (const alias of ["マダイ", "キビレ", "ヒイカ", "ササイカ", "ヒ
   assert.ok(!confirmed.some((spot) => spot.species?.includes(alias)), `${alias} must be normalized before curation storage`);
 }
 
+const issue325Values = buildVerifiedCatchSpeciesValues(new Set(fishingSpots.map((spot) => spot.id)));
+assert.equal(issue325Values.length, 52);
+assert.ok(issue325Values.every((value) => value.itemKey === "historical_target_species"), "Issue #325 never writes target_species");
+
 const details = buildStaticFishingSpotDetailsFromSpots(fishingSpots);
 const detailBySpotItem = new Map(details.values.map((value) => [`${value.spotId}:${value.itemKey}`, value]));
 for (const row of data.spots) {
@@ -62,9 +67,7 @@ for (const row of data.spots) {
 const karatsuEast = fishingSpots.find((spot) => spot.id === "karatsu-east-port");
 assert.ok(karatsuEast);
 const karatsuDetails = buildStaticFishingSpotDetailsFromSpots([karatsuEast]);
-const rawTargetSpecies = karatsuDetails.values.find((value) => value.itemKey === "target_species");
 const rawHistoricalSpecies = karatsuDetails.values.find((value) => value.itemKey === "historical_target_species");
-assert.deepEqual(rawTargetSpecies?.valueTextList, ["アジ", "スズキ", "チヌ"], "existing target_species stays unchanged for SCORE v2");
 assert.deepEqual(rawHistoricalSpecies?.valueTextList, ["アジ", "チヌ", "メバル", "カレイ", "キス", "スズキ", "コノシロ", "コウイカ"]);
 assert.equal(
   resolveSpotDetailUiPresentation(karatsuDetails, "target_species").text,
