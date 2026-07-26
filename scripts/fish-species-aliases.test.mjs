@@ -108,7 +108,7 @@ for (const [alias, speciesId] of [
   ["ヒイカ", "jindouika"], ["コイカ", "jindouika"], ["マダイ", "madai"],
 ]) assert.equal(issue323Seeds.find((seed) => seed.alias === alias)?.speciesId, speciesId, `${alias} has the Issue #323 approved target`);
 assert.ok(issue323Seeds.every((seed) => /^00000000-0000-4000-8000-0000000006(?:0\d|1\d|2[0-2])$/.test(seed.id)), "Issue #323 uses deterministic UUID range 600-622");
-assert.match(issue323, /set parent_group_id = 'anago', updated_at = now\(\)\s*where id = 'maanago';/, "existing maanago is grouped under anago without changing its ID");
+assert.doesNotMatch(issue323, /where id = 'maanago'/, "Issue #323 does not change existing maanago taxonomy or data");
 assert.doesNotMatch(issue323, /'maanago','アナゴ'|'maanago',\s*'アナゴ'/, "generic アナゴ is never seeded as a maanago alias");
 assert.doesNotMatch(issue323, /'ネズミゴチ'|'アカヤガラ'|'シブダイ'|'ベラ'/, "ambiguous extra names are not guessed into exact species");
 assert.match(issue323, /'migration:issue-323'/, "Issue #323 alias seeds keep audit attribution");
