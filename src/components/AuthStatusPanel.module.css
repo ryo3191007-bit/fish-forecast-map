@@ -1,0 +1,133 @@
+.formCard {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+  padding: clamp(14px, 3vw, 20px);
+  border: 1px solid rgba(125, 211, 252, 0.25);
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(8, 47, 73, 0.62), rgba(15, 23, 42, 0.72));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.credentialsForm,
+.recoveryForm {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  color: #93c5fd;
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.field input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  border: 1px solid rgba(125, 211, 252, 0.42);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, rgba(8, 47, 73, 0.94), rgba(14, 116, 144, 0.74));
+  color: #e0faff;
+  font: inherit;
+  font-weight: 800;
+}
+
+.field input:focus-visible {
+  outline: 3px solid rgba(34, 211, 238, 0.42);
+  outline-offset: 2px;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  min-width: 0;
+}
+
+.primaryButton,
+.secondaryButton,
+.resetButton {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font: inherit;
+  font-weight: 900;
+  line-height: 1.35;
+  text-align: center;
+  white-space: normal;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  cursor: pointer;
+}
+
+.primaryButton {
+  border: 0;
+}
+
+.secondaryButton,
+.resetButton {
+  border: 1px solid rgba(125, 211, 252, 0.42);
+  background: rgba(8, 47, 73, 0.72);
+  color: #dffbff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.resetButton {
+  min-height: 44px;
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled,
+.resetButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.secondaryButton:hover:not(:disabled),
+.resetButton:hover:not(:disabled),
+.secondaryButton:focus-visible,
+.resetButton:focus-visible {
+  border-color: #67e8f9;
+  background: rgba(14, 116, 144, 0.72);
+  outline: 2px solid rgba(125, 211, 252, 0.45);
+  outline-offset: 2px;
+}
+
+.helpText {
+  display: block;
+  margin: 0;
+  color: #b6d8e6;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  .formCard {
+    gap: 14px;
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .primaryButton,
+  .secondaryButton,
+  .resetButton {
+    min-height: 48px;
+  }
+}
