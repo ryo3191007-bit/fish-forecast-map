@@ -3,6 +3,9 @@
 import { useState, type FormEvent } from "react";
 import type { SupabaseAuthStatus } from "@/hooks/useSupabaseAuth";
 import type { User } from "@supabase/supabase-js";
+import styles from "./AuthStatusPanel.module.css";
+
+type AuthResult = { ok: true; message?: string } | { ok: false; message: string };
 
 function maskEmail(email?: string) {
   if (!email) return "メール未設定";
@@ -16,52 +19,115 @@ type AuthStatusPanelProps = {
   auth: {
     status: SupabaseAuthStatus;
     user: User | null;
-    signInWithEmail: (email: string) => Promise<{ ok: true } | { ok: false; message: string }>;
-    signOut: () => Promise<{ ok: true } | { ok: false; message: string }>;
+    isPasswordRecovery: boolean;
+    signInWithPassword: (email: string, password: string) => Promise<AuthResult>;
+    signUpWithPassword: (email: string, password: string) => Promise<AuthResult>;
+    sendPasswordReset: (email: string) => Promise<AuthResult>;
+    updatePassword: (password: string) => Promise<AuthResult>;
+    signOut: () => Promise<AuthResult>;
   };
 };
 
 export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
-  const { status, user, signInWithEmail, signOut } = auth;
+  const {
+    status,
+    user,
+    isPasswordRecovery,
+    signInWithPassword,
+    signUpWithPassword,
+    sendPasswordReset,
+    updatePassword,
+    signOut,
+  } = auth;
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<"success" | "error" | "info">("info");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitEmail = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const setResultMessage = (result: AuthResult, fallbackSuccess: string) => {
+    setMessageType(result.ok ? "success" : "error");
+    setMessage(result.ok ? (result.message ?? fallbackSuccess) : result.message);
+  };
+
+  const validateCredentials = () => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
       setMessageType("error");
       setMessage("メールアドレスを入力してください。");
-      return;
+      return null;
     }
+    if (!password) {
+      setMessageType("error");
+      setMessage("パスワードを入力してください。");
+      return null;
+    }
+    return { email: trimmedEmail, password };
+  };
+
+  const submitPasswordLogin = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const credentials = validateCredentials();
+    if (!credentials) return;
+
     setIsSubmitting(true);
-    const result = await signInWithEmail(trimmedEmail);
+    const result = await signInWithPassword(credentials.email, credentials.password);
     setIsSubmitting(false);
-    if (result.ok) {
-      setMessageType("success");
-      setMessage("ログインリンクを送信しました。メールを確認してください。");
+    setResultMessage(result, "ログインしました。");
+  };
+
+  const handleSignUp = async () => {
+    const credentials = validateCredentials();
+    if (!credentials) return;
+
+    setIsSubmitting(true);
+    const result = await signUpWithPassword(credentials.email, credentials.password);
+    setIsSubmitting(false);
+    setResultMessage(result, "登録しました。");
+  };
+
+  const handlePasswordReset = async () => {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setMessageType("error");
+      setMessage("先にメールアドレスを入力してください。");
       return;
     }
-    setMessageType("error");
-    setMessage(result.message);
+
+    setIsSubmitting(true);
+    const result = await sendPasswordReset(trimmedEmail);
+    setIsSubmitting(false);
+    setResultMessage(result, "パスワード設定・再設定メールを送信しました。");
+  };
+
+  const submitNewPassword = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!newPassword) {
+      setMessageType("error");
+      setMessage("新しいパスワードを入力してください。");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const result = await updatePassword(newPassword);
+    setIsSubmitting(false);
+    setResultMessage(result, "パスワードを更新しました。");
+    if (result.ok) setNewPassword("");
   };
 
   const handleSignOut = async () => {
     setIsSubmitting(true);
     const result = await signOut();
     setIsSubmitting(false);
-    setMessageType(result.ok ? "success" : "error");
-    setMessage(result.ok ? "ログアウトしました。" : result.message);
+    setResultMessage(result, "ログアウトしました。");
   };
 
   return (
     <section className="authStatusPanel" aria-labelledby="auth-status-heading">
       <div>
         <p className="eyebrow">Supabase Auth</p>
-        <h3 id="auth-status-heading">外部メモDB保存の認証準備</h3>
-        <p className="muted">ログイン状態だけを確認します。ログイン中は外部メモをSupabaseへ保存し、未ログイン・未設定・DBエラー時はlocalStorageへfallbackします。</p>
+        <h3 id="auth-status-heading">ログイン</h3>
       </div>
 
       {status === "unavailable" ? (
@@ -71,16 +137,68 @@ export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
       {status === "loading" ? <p className="authStatusNote" role="status">認証状態を確認中...</p> : null}
 
       {status === "signed-out" ? (
-        <form className="authForm" onSubmit={submitEmail}>
-          <label htmlFor="auth-email">メールアドレス</label>
-          <div className="authFormRow">
-            <input id="auth-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" autoComplete="email" />
-            <button type="submit" className="clearSearchButton" disabled={isSubmitting}>{isSubmitting ? "送信中..." : "ログインリンク送信"}</button>
-          </div>
+        <div className={styles.formCard}>
+          <form className={styles.credentialsForm} onSubmit={submitPasswordLogin}>
+            <label className={styles.field} htmlFor="auth-email">
+              メールアドレス
+              <input
+                id="auth-email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
+              />
+            </label>
+
+            <label className={styles.field} htmlFor="auth-password">
+              パスワード
+              <input
+                id="auth-password"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                autoComplete="current-password"
+              />
+            </label>
+
+            <div className={styles.actions}>
+              <button type="submit" className={`button ${styles.primaryButton}`} disabled={isSubmitting}>
+                {isSubmitting ? "処理中..." : "ログイン"}
+              </button>
+              <button type="button" className={styles.secondaryButton} onClick={handleSignUp} disabled={isSubmitting}>
+                新規登録
+              </button>
+            </div>
+          </form>
+
+          <button type="button" className={styles.resetButton} onClick={handlePasswordReset} disabled={isSubmitting}>
+            パスワードを設定・忘れた方
+          </button>
+          <small className={styles.helpText}>以前Magic Linkで登録した方は、メールアドレスを入力してこのボタンから一度だけパスワードを設定できます。</small>
+        </div>
+      ) : null}
+
+      {status === "signed-in" && isPasswordRecovery ? (
+        <form className={`${styles.formCard} ${styles.recoveryForm}`} onSubmit={submitNewPassword}>
+          <p className="authStatusNote">新しいパスワードを設定してください。</p>
+          <label className={styles.field} htmlFor="auth-new-password">
+            新しいパスワード
+            <input
+              id="auth-new-password"
+              type="password"
+              value={newPassword}
+              onChange={(event) => setNewPassword(event.target.value)}
+              autoComplete="new-password"
+            />
+          </label>
+          <button type="submit" className={`button ${styles.primaryButton}`} disabled={isSubmitting}>
+            {isSubmitting ? "更新中..." : "パスワードを更新"}
+          </button>
         </form>
       ) : null}
 
-      {status === "signed-in" ? (
+      {status === "signed-in" && !isPasswordRecovery ? (
         <div className="authSignedIn" role="status">
           <span>ログイン中: {maskEmail(user?.email)}</span>
           <button type="button" className="clearSearchButton" onClick={handleSignOut} disabled={isSubmitting}>{isSubmitting ? "処理中..." : "ログアウト"}</button>
