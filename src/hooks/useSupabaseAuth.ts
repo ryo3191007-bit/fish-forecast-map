@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
+import type { Session, User } from "@supabase/supabase-js";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 
 export type SupabaseAuthStatus = "loading" | "signed-in" | "signed-out" | "unavailable";
@@ -15,7 +15,6 @@ type UseSupabaseAuthResult = {
   isConfigured: boolean;
   missingEnvVars: string[];
   isPasswordRecovery: boolean;
-  signInWithGoogle: () => Promise<AuthResult>;
   signInWithPassword: (email: string, password: string) => Promise<AuthResult>;
   signUpWithPassword: (email: string, password: string) => Promise<AuthResult>;
   sendPasswordReset: (email: string) => Promise<AuthResult>;
@@ -31,7 +30,6 @@ function getFriendlyAuthMessage(error: unknown) {
   if (normalized.includes("email not confirmed")) return "メールアドレスの確認が完了していません。確認メールをご確認ください。";
   if (normalized.includes("user already registered")) return "このメールアドレスは登録済みです。ログインまたはパスワード再設定をお試しください。";
   if (normalized.includes("password") && normalized.includes("characters")) return "パスワードがSupabase側の最低要件を満たしていません。";
-  if (normalized.includes("provider") && normalized.includes("not enabled")) return "GoogleログインがSupabase側で有効化されていません。";
   if (normalized.includes("email address not authorized")) return "このメールアドレスへ認証メールを送信できません。SupabaseのSMTP設定を確認してください。";
   if (rawMessage) return rawMessage;
   return "Supabase Authの処理に失敗しました。";
@@ -40,10 +38,6 @@ function getFriendlyAuthMessage(error: unknown) {
 function getRedirectTo() {
   if (typeof window === "undefined") return undefined;
   return `${window.location.origin}${window.location.pathname}`;
-}
-
-function isRecoveryEvent(event: AuthChangeEvent) {
-  return event === "PASSWORD_RECOVERY";
 }
 
 export function useSupabaseAuth(): UseSupabaseAuthResult {
@@ -76,7 +70,7 @@ export function useSupabaseAuth(): UseSupabaseAuthResult {
     const { data: subscription } = client.auth.onAuthStateChange((event, nextSession) => {
       setSession(nextSession);
       setStatus(nextSession ? "signed-in" : "signed-out");
-      if (isRecoveryEvent(event)) setIsPasswordRecovery(true);
+      if (event === "PASSWORD_RECOVERY") setIsPasswordRecovery(true);
       if (event === "SIGNED_OUT") setIsPasswordRecovery(false);
     });
 
@@ -84,21 +78,6 @@ export function useSupabaseAuth(): UseSupabaseAuthResult {
       isActive = false;
       subscription.subscription.unsubscribe();
     };
-  }, [supabaseStatus]);
-
-  const signInWithGoogle = useCallback<UseSupabaseAuthResult["signInWithGoogle"]>(async () => {
-    if (!supabaseStatus.isConfigured) return { ok: false, message: "Supabaseが未設定のため認証を利用できません。" };
-    try {
-      const redirectTo = getRedirectTo();
-      const { error } = await supabaseStatus.client.auth.signInWithOAuth({
-        provider: "google",
-        options: redirectTo ? { redirectTo } : undefined,
-      });
-      if (error) return { ok: false, message: getFriendlyAuthMessage(error) };
-      return { ok: true };
-    } catch (error) {
-      return { ok: false, message: getFriendlyAuthMessage(error) };
-    }
   }, [supabaseStatus]);
 
   const signInWithPassword = useCallback<UseSupabaseAuthResult["signInWithPassword"]>(async (email, password) => {
@@ -172,7 +151,6 @@ export function useSupabaseAuth(): UseSupabaseAuthResult {
     isConfigured: supabaseStatus.isConfigured,
     missingEnvVars: supabaseStatus.missingEnvVars,
     isPasswordRecovery,
-    signInWithGoogle,
     signInWithPassword,
     signUpWithPassword,
     sendPasswordReset,
