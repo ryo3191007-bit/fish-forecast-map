@@ -65,17 +65,17 @@
         "note": "直接根拠を確認できていない。推測で補完しない。"
       },
       "depthRange": {
-        "value": "水深320〜830 mに分布する。",
-        "status": "confirmed",
-        "confidence": "medium",
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
         "evidenceSources": {
-          "supportingSourceIds": [
+          "supportingSourceIds": [],
+          "checkedSourceIds": [
             "fishbase_maanago_ecology"
           ],
-          "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "FishBaseのspecies summaryに記載された一般分布・生息環境。岸から狙える水深、対象地域の釣れやすさ、SCORE閾値には変換しない。"
+        "note": "FishBaseの320〜830 mは限定的な深所記録として確認したが、日本沿岸の代表的な一般生息水深としては採用しない。安全に整理できる公的・研究機関の直接資料が不足するためholdし、岸から狙える水深、地点相性、regionalCatchability、SCOREへ変換しない。"
       },
       "substrateHabitat": {
         "value": "日本沿岸の砂泥底に生息する底生魚である。",
@@ -264,7 +264,7 @@
         "/ecology/stableGeneral/substrateHabitat",
         "/ecology/stableGeneral/salinityAndWaterBody"
       ],
-      "usageNote": "一般生態の説明に限定する二次source。一般水深を岸から狙える水深へ変換せず、対象地域の釣れやすさまたはSCORE閾値へ直接使用しない。"
+      "usageNote": "砂泥底・海水域の一般生態説明に限定する二次source。320〜830 mは限定的な深所記録としてcheckedに留め、代表水深、岸から狙える水深、対象地域の釣れやすさまたはSCORE閾値へ使用しない。"
     }
   ],
   "review": {
@@ -343,17 +343,17 @@
       },
       {
         "path": "/ecology/stableGeneral/depthRange",
-        "decision": "adopt",
-        "reason": "編集責任が明確な魚類データベースで一般生態として直接確認した。地域別の釣れやすさには転用しない。",
+        "decision": "hold",
+        "reason": "FishBaseの320〜830 mは限定的な深所記録で、日本沿岸の代表的な一般生息水深として安全に採用できないためholdする。",
         "purposes": [
-          "ecology_description"
+          "score_excluded"
         ],
         "sourceIds": [
           "fishbase_maanago_ecology"
         ],
-        "regionScope": "種の一般分布・生態",
-        "confidence": "medium",
-        "recheckCondition": "原典更新時、または地域別・遊漁用途へ採用を検討する前に再確認する。"
+        "regionScope": "種の限定的な深所記録",
+        "confidence": "unknown",
+        "recheckCondition": "日本の公的・研究機関資料で生活段階・海域を区別した代表的な一般水深を直接確認できた場合に再評価する。"
       },
       {
         "path": "/ecology/stableGeneral/substrateHabitat",
@@ -518,11 +518,10 @@
     ],
     "reviewStatus": "ready_for_review",
     "productionAdoption": {
-      "projectionPolicy": "acceptedPathsのみ名称表示の投影候補とし、SCORE v2・UI・DBへは未接続とする。",
+      "projectionPolicy": "acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。",
       "acceptedPaths": [
         "/identity/canonicalNameJa",
         "/identity/scientificName",
-        "/ecology/stableGeneral/depthRange",
         "/ecology/stableGeneral/substrateHabitat",
         "/ecology/stableGeneral/salinityAndWaterBody"
       ],

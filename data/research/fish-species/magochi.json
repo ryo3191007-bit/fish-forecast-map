@@ -483,7 +483,7 @@
     ],
     "reviewStatus": "ready_for_review",
     "productionAdoption": {
-      "projectionPolicy": "acceptedPathsのみ名称表示の投影候補とし、SCORE v2・UI・DBへは未接続とする。",
+      "projectionPolicy": "acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。",
       "acceptedPaths": [],
       "unknownPolicy": "unknownを0点、不適、他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"
     }

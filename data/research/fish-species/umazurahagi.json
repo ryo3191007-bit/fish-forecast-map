@@ -54,15 +54,17 @@
         "note": "直接根拠を確認できていない。推測で補完しない。"
       },
       "waterTemperature": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": "一般生息環境の水温は10〜28℃である。",
+        "status": "confirmed",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "fishbase_umazurahagi_ecology"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "FishBaseが種の一般生息環境（climate zone）として示す水温。釣れやすい適水温ではなく、regionalCatchability、地点相性、SCORE v2の水温閾値へ転用しない。"
       },
       "depthRange": {
         "value": "水深50〜110 mに分布する。",
@@ -260,11 +262,12 @@
       "directness": "direct",
       "derivationGroup": "fishbase_umazurahagi_ecology",
       "supports": [
+        "/ecology/stableGeneral/waterTemperature",
         "/ecology/stableGeneral/depthRange",
         "/ecology/stableGeneral/substrateHabitat",
         "/ecology/stableGeneral/salinityAndWaterBody"
       ],
-      "usageNote": "一般生態の説明に限定する二次source。一般水深を岸から狙える水深へ変換せず、対象地域の釣れやすさまたはSCORE閾値へ直接使用しない。"
+      "usageNote": "一般生態の説明に限定する二次source。10〜28℃は種の一般生息環境の水温であり釣れやすい適水温ではない。一般水深も岸から狙える水深へ変換せず、regionalCatchability、地点相性、SCORE v2の水温閾値へ使用しない。"
     }
   ],
   "review": {
@@ -331,15 +334,17 @@
       },
       {
         "path": "/ecology/stableGeneral/waterTemperature",
-        "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "decision": "adopt",
+        "reason": "FishBaseで種の一般生息環境（climate zone）の水温として直接確認した。釣れやすい適水温には読み替えない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "sourceIds": [
+          "fishbase_umazurahagi_ecology"
+        ],
+        "regionScope": "種の一般生息環境",
+        "confidence": "medium",
+        "recheckCondition": "原典更新時、または地域別・遊漁用途への採用を検討する前に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/depthRange",
@@ -518,10 +523,11 @@
     ],
     "reviewStatus": "ready_for_review",
     "productionAdoption": {
-      "projectionPolicy": "acceptedPathsのみ名称表示の投影候補とし、SCORE v2・UI・DBへは未接続とする。",
+      "projectionPolicy": "acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。",
       "acceptedPaths": [
         "/identity/canonicalNameJa",
         "/identity/scientificName",
+        "/ecology/stableGeneral/waterTemperature",
         "/ecology/stableGeneral/depthRange",
         "/ecology/stableGeneral/substrateHabitat",
         "/ecology/stableGeneral/salinityAndWaterBody"
