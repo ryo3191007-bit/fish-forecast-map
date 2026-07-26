@@ -25,7 +25,7 @@ for (const legacyId of ["akakamasu", "yamatokamasu"] as const) {
   assert.equal(legacy?.isSelectable, false);
   assert.equal(legacy?.isActive, false);
 }
-assert.equal(species.find((item) => item.id === "maanago")?.parentGroupId, "anago", "maanago remains exact and is grouped under anago");
+assert.equal(species.find((item) => item.id === "maanago")?.parentGroupId, null, "existing maanago taxonomy stays unchanged");
 const selectableIds = species.filter((item) => item.isSelectable).map((item) => item.id).sort();
 for (const includeLegacyAggregates of [false, true]) {
   const groupedIds = groupSelectableFishSpecies(species, { includeLegacyAggregates }).flatMap((group) => group.items.map((item) => item.id));
@@ -44,7 +44,6 @@ for (const [label, expectedIds] of [
   ["サバ", ["masaba", "gomasaba"]],
   ["イワシ", ["maiwashi", "katakuchiiwashi", "urumeiwashi"]],
   ["メバル", ["akamebaru", "kuromebaru", "shiromebaru"]],
-  ["アナゴ", ["maanago"]],
 ] as const) assert.deepEqual(uiGroups.find((group) => group.label === label)?.items.map((item) => item.id), expectedIds);
 const records = [{ species: "ブリ" }, { species: "青物" }, { species: "カサゴ" }];
 assert.deepEqual(filterByFishSpecies(records, "青物", (item) => item.species, species, staticFishSpeciesAliases), records.slice(0, 2));
@@ -53,7 +52,7 @@ const splitRecords = [{ species: "アジ" }, { species: "マアジ" }, { species
 assert.deepEqual(filterByFishSpecies(splitRecords, "アジ", (item) => item.species, species, staticFishSpeciesAliases), splitRecords.slice(0, 3));
 assert.deepEqual(filterByFishSpecies(splitRecords, "根魚", (item) => item.species, species, staticFishSpeciesAliases), splitRecords.slice(3), "nested group filtering includes descendants");
 const anagoRecords = [{ species: "アナゴ" }, { species: "マアナゴ" }, { species: "カレイ" }];
-assert.deepEqual(filterByFishSpecies(anagoRecords, "アナゴ", (item) => item.species, species, staticFishSpeciesAliases), anagoRecords.slice(0, 2), "anago group includes maanago without collapsing their IDs");
+assert.deepEqual(filterByFishSpecies(anagoRecords, "アナゴ", (item) => item.species, species, staticFishSpeciesAliases), anagoRecords.slice(0, 1), "generic anago does not guess an exact maanago relationship");
 for (const definition of fishSpeciesDefinitions) {
   if (definition[0] !== "yariika") assert.equal(resolveFishSpeciesName(definition[1], species, staticFishSpeciesAliases).status, "resolved");
 }
