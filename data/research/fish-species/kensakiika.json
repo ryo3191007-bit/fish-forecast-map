@@ -1,1 +1,555 @@
-{"schemaVersion":"1.3.0","speciesId":"kensakiika","identity":{"displayNameJa":"ヤリイカ","canonicalNameJa":{"value":"ヤリイカ","status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["bismal_yariika"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"masterの表示名とBISMaLの標準和名を一致確認。speciesId文字列『kensakiika』を標準和名ケンサキイカとは解釈しない。"},"scientificName":{"value":"Heterololigo bleekeri","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["bismal_yariika","fra_yariika_ecology"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"BISMaLと水産研究・教育機構資料でヤリイカの学名として確認。"},"aliases":[],"entityType":"squid_species","note":"現行active ID `kensakiika` の表示名『ヤリイカ』を対象とする自己完結型記録。inactive `yariika` を復活させず、標準和名ケンサキイカの生態も継承しない。","parentGroupId":null,"memberSpeciesIds":[]},"researchScope":{"targetArea":"福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。","checkedAt":"2026-07-26","sourcePolicy":"docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"},"ecology":{"stableGeneral":{"seasonality":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":["fra_yariika_ecology"],"contradictingSourceIds":[]},"note":"12〜14℃は産卵時の水温として確認したが、一般生息水温・釣れやすい適水温ではないためholdする。"},"depthRange":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":["fra_yariika_ecology"],"contradictingSourceIds":[]},"note":"70〜150mは産卵時の海底水深として確認したが、一般分布水深・岸から狙える水深ではないためholdする。"},"substrateHabitat":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"salinityAndWaterBody":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"spawningOrConfusableInfo":{"value":"本entryは表示名どおりヤリイカ Heterololigo bleekeri を対象とし、ケンサキイカ Uroteuthis (Photololigo) edulis とは別種として扱う。水産研究・教育機構資料ではヤリイカの産卵期は冬〜春、産卵時は水温12〜14℃・水深70〜150mの海底とされる。","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["bismal_yariika","bismal_kensakiika","fra_yariika_ecology"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"speciesId文字列と標準和名の混同防止、および産卵情報の用途限定記録。産卵水温・産卵水深を一般生態やregionalCatchability、SCOREへ転用しない。"}},"regionalCatchability":{"seasonality":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"depthRange":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"substrateHabitat":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"salinityAndWaterBody":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"spawningOrConfusableInfo":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"}}},"sources":[{"id":"bismal_yariika","title":"BISMaL: Heterololigo bleekeri（ヤリイカ）","url":"https://www.godac.jamstec.go.jp/bismal/j/view/9054737","publisher":"海洋研究開発機構（JAMSTEC）","publisherType":"public_research","publishedOrUpdatedAt":null,"checkedAt":"2026-07-26","regionScope":"日本の海洋生物分類・名称情報","sourceType":"supporting","directness":"direct","derivationGroup":"bismal_yariika","supports":["/identity/canonicalNameJa","/identity/scientificName","/ecology/stableGeneral/spawningOrConfusableInfo"],"usageNote":"表示名『ヤリイカ』とHeterololigo bleekeriの対応確認に使用する。speciesId文字列からケンサキイカへ読み替えない。"},{"id":"bismal_kensakiika","title":"BISMaL: Uroteuthis (Photololigo) edulis（ケンサキイカ）","url":"https://www.godac.jamstec.go.jp/bismal/j/view/9037334","publisher":"海洋研究開発機構（JAMSTEC）","publisherType":"public_research","publishedOrUpdatedAt":null,"checkedAt":"2026-07-26","regionScope":"日本の海洋生物分類・名称情報","sourceType":"supporting","directness":"direct","derivationGroup":"bismal_kensakiika","supports":["/ecology/stableGeneral/spawningOrConfusableInfo"],"usageNote":"ヤリイカとケンサキイカが別taxonであることを確認するために使用し、当entryへケンサキイカの生態を継承しない。"},{"id":"fra_yariika_ecology","title":"水産研究・教育機構機関リポジトリ: ヤリイカ太平洋系群","url":"https://fra.repo.nii.ac.jp/records/2013931","publisher":"国立研究開発法人 水産研究・教育機構","publisherType":"public_research","publishedOrUpdatedAt":null,"checkedAt":"2026-07-26","regionScope":"日本沿岸・太平洋系群を中心とするヤリイカ生態","sourceType":"supporting","directness":"direct","derivationGroup":"fra_yariika_ecology","supports":["/identity/scientificName","/ecology/stableGeneral/waterTemperature","/ecology/stableGeneral/depthRange","/ecology/stableGeneral/spawningOrConfusableInfo"],"usageNote":"Heterololigo bleekeriの生態確認に使用する。12〜14℃・70〜150mは産卵条件であり、一般適水温・一般水深・陸っぱり釣れやすさへ変換しない。"}],"review":{"officialResearch":"JAMSTEC BISMaLと水産研究・教育機構資料で表示名ヤリイカのtaxonを確認し、ケンサキイカとの別種関係を明示した。","secondaryResearch":"産卵条件を一般適水温・一般水深へ変換せず、民間釣り情報で補完していない。","schemaValidation":"fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。","comparisonWithCurrentImplementation":{"authoritativeComparisonDocument":"docs/research/FISH_SPECIES_ECOLOGY_E_REVIEW.md","scoreV2Status":"unsupported","inheritancePolicy":"do_not_inherit_between_species_or_group"},"attributeDecisions":[{"path":"/identity/canonicalNameJa","decision":"adopt","reason":"master表示名とBISMaLの標準和名がヤリイカで一致する。","purposes":["identity_display"],"sourceIds":["bismal_yariika"],"regionScope":"日本語名称","confidence":"medium","recheckCondition":"master表示名または分類DB更新時に再確認する。"},{"path":"/identity/scientificName","decision":"adopt","reason":"BISMaLと水産研究・教育機構資料でヤリイカをHeterololigo bleekeriとして直接確認した。","purposes":["identity_display"],"sourceIds":["bismal_yariika","fra_yariika_ecology"],"regionScope":"分類・名称情報","confidence":"high","recheckCondition":"分類DB更新時に再確認する。"},{"path":"/identity/aliases","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/seasonality","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/waterTemperature","decision":"hold","reason":"水産研究・教育機構資料の12〜14℃は産卵時の条件であり、一般生息水温や適水温へ読み替えない。","purposes":["score_excluded"],"sourceIds":["fra_yariika_ecology"],"regionScope":"産卵条件のみ","confidence":"unknown","recheckCondition":"一般生息水温を直接示す資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/depthRange","decision":"hold","reason":"水産研究・教育機構資料の70〜150mは産卵時の海底水深であり、一般分布水深へ読み替えない。","purposes":["score_excluded"],"sourceIds":["fra_yariika_ecology"],"regionScope":"産卵条件のみ","confidence":"unknown","recheckCondition":"一般分布水深を直接示す資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/substrateHabitat","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/salinityAndWaterBody","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/dayNightTiming","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/fishingMethods","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/spawningOrConfusableInfo","decision":"adopt_with_warning","reason":"BISMaLはヤリイカHeterololigo bleekeriとケンサキイカUroteuthis edulisを別taxonとして扱う。masterのspeciesId名に引きずられず表示名ヤリイカを対象とし、産卵条件も用途限定で記録する。","purposes":["ecology_description"],"sourceIds":["bismal_yariika","bismal_kensakiika","fra_yariika_ecology"],"regionScope":"日本の分類・ヤリイカ生態","confidence":"high","recheckCondition":"master ID/表示名対応が変更された場合に再確認する。"},{"path":"/ecology/regionalCatchability/seasonality","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/waterTemperature","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/depthRange","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/substrateHabitat","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/salinityAndWaterBody","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/dayNightTiming","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/fishingMethods","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/spawningOrConfusableInfo","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"}],"reviewStatus":"ready_for_review","productionAdoption":{"projectionPolicy":"acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。","acceptedPaths":["/identity/canonicalNameJa","/identity/scientificName","/ecology/stableGeneral/spawningOrConfusableInfo"],"unknownPolicy":"unknownを0点、不適、他頭足類・他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"}}}
+{
+  "schemaVersion": "1.3.0",
+  "speciesId": "kensakiika",
+  "identity": {
+    "displayNameJa": "ヤリイカ",
+    "canonicalNameJa": {
+      "value": "ヤリイカ",
+      "status": "confirmed",
+      "confidence": "medium",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_yariika"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "masterの表示名とBISMaLの標準和名を一致確認。speciesId文字列『kensakiika』を標準和名ケンサキイカとは解釈しない。"
+    },
+    "scientificName": {
+      "value": "Heterololigo bleekeri",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_yariika",
+          "fra_yariika_ecology"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "BISMaLと水産研究・教育機構資料でヤリイカの学名として確認。"
+    },
+    "aliases": [],
+    "entityType": "squid_species",
+    "note": "現行active ID `kensakiika` の表示名『ヤリイカ』を対象とする自己完結型記録。inactive `yariika` を復活させず、標準和名ケンサキイカの生態も継承しない。",
+    "parentGroupId": null,
+    "memberSpeciesIds": []
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-26",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [
+            "fra_yariika_ecology"
+          ],
+          "contradictingSourceIds": []
+        },
+        "note": "12〜14℃は産卵時の水温として確認したが、一般生息水温・釣れやすい適水温ではないためholdする。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [
+            "fra_yariika_ecology"
+          ],
+          "contradictingSourceIds": []
+        },
+        "note": "70〜150mは産卵時の海底水深として確認したが、一般分布水深・岸から狙える水深ではないためholdする。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": "本entryは表示名どおりヤリイカ Heterololigo bleekeri を対象とし、ケンサキイカ Uroteuthis (Photololigo) edulis とは別種として扱う。水産研究・教育機構資料ではヤリイカの産卵期は冬〜春、産卵時は水温12〜14℃・水深70〜150mの海底とされる。",
+        "status": "confirmed",
+        "confidence": "high",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "bismal_yariika",
+            "bismal_kensakiika",
+            "fra_yariika_ecology"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "speciesId文字列と標準和名の混同防止、および産卵情報の用途限定記録。産卵水温・産卵水深を一般生態やregionalCatchability、SCOREへ転用しない。"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "bismal_yariika",
+      "title": "BISMaL: Heterololigo bleekeri（ヤリイカ）",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9054737",
+      "publisher": "海洋研究開発機構（JAMSTEC）",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "日本の海洋生物分類・名称情報",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "bismal_yariika",
+      "supports": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "表示名『ヤリイカ』とHeterololigo bleekeriの対応確認に使用する。speciesId文字列からケンサキイカへ読み替えない。"
+    },
+    {
+      "id": "bismal_kensakiika",
+      "title": "BISMaL: Uroteuthis (Photololigo) edulis（ケンサキイカ）",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9037334",
+      "publisher": "海洋研究開発機構（JAMSTEC）",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "日本の海洋生物分類・名称情報",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "bismal_kensakiika",
+      "supports": [
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "ヤリイカとケンサキイカが別taxonであることを確認するために使用し、当entryへケンサキイカの生態を継承しない。"
+    },
+    {
+      "id": "fra_yariika_ecology",
+      "title": "水産研究・教育機構機関リポジトリ: ヤリイカ太平洋系群",
+      "url": "https://fra.repo.nii.ac.jp/records/2013931",
+      "publisher": "国立研究開発法人 水産研究・教育機構",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "日本沿岸・太平洋系群を中心とするヤリイカ生態",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "fra_yariika_ecology",
+      "supports": [
+        "/identity/scientificName",
+        "/ecology/stableGeneral/waterTemperature",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "Heterololigo bleekeriの生態確認に使用する。12〜14℃・70〜150mは産卵条件であり、一般適水温・一般水深・陸っぱり釣れやすさへ変換しない。"
+    }
+  ],
+  "review": {
+    "officialResearch": "JAMSTEC BISMaLと水産研究・教育機構資料で表示名ヤリイカのtaxonを確認し、ケンサキイカとの別種関係を明示した。",
+    "secondaryResearch": "産卵条件を一般適水温・一般水深へ変換せず、民間釣り情報で補完していない。",
+    "schemaValidation": "fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。",
+    "comparisonWithCurrentImplementation": {
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_E_REVIEW.md",
+      "scoreV2Status": "unsupported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt",
+        "reason": "master表示名とBISMaLの標準和名がヤリイカで一致する。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_yariika"
+        ],
+        "regionScope": "日本語名称",
+        "confidence": "medium",
+        "recheckCondition": "master表示名または分類DB更新時に再確認する。"
+      },
+      {
+        "path": "/identity/scientificName",
+        "decision": "adopt",
+        "reason": "BISMaLと水産研究・教育機構資料でヤリイカをHeterololigo bleekeriとして直接確認した。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_yariika",
+          "fra_yariika_ecology"
+        ],
+        "regionScope": "分類・名称情報",
+        "confidence": "high",
+        "recheckCondition": "分類DB更新時に再確認する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/seasonality",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "reason": "水産研究・教育機構資料の12〜14℃は産卵時の条件であり、一般生息水温や適水温へ読み替えない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "fra_yariika_ecology"
+        ],
+        "regionScope": "産卵条件のみ",
+        "confidence": "unknown",
+        "recheckCondition": "一般生息水温を直接示す資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "hold",
+        "reason": "水産研究・教育機構資料の70〜150mは産卵時の海底水深であり、一般分布水深へ読み替えない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "fra_yariika_ecology"
+        ],
+        "regionScope": "産卵条件のみ",
+        "confidence": "unknown",
+        "recheckCondition": "一般分布水深を直接示す資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt_with_warning",
+        "reason": "BISMaLはヤリイカHeterololigo bleekeriとケンサキイカUroteuthis edulisを別taxonとして扱う。masterのspeciesId名に引きずられず表示名ヤリイカを対象とし、産卵条件も用途限定で記録する。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "bismal_yariika",
+          "bismal_kensakiika",
+          "fra_yariika_ecology"
+        ],
+        "regionScope": "日本の分類・ヤリイカ生態",
+        "confidence": "high",
+        "recheckCondition": "master ID/表示名対応が変更された場合に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/waterTemperature",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/depthRange",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/substrateHabitat",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/salinityAndWaterBody",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/dayNightTiming",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/fishingMethods",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      }
+    ],
+    "reviewStatus": "ready_for_review",
+    "productionAdoption": {
+      "projectionPolicy": "acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。",
+      "acceptedPaths": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "unknownPolicy": "unknownを0点、不適、他頭足類・他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"
+    }
+  }
+}
