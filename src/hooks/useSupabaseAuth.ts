@@ -31,6 +31,12 @@ function getFriendlyAuthMessage(error: unknown) {
   if (normalized.includes("user already registered")) return "このメールアドレスは登録済みです。ログインまたはパスワード再設定をお試しください。";
   if (normalized.includes("password") && normalized.includes("characters")) return "パスワードがSupabase側の最低要件を満たしていません。";
   if (normalized.includes("email address not authorized")) return "このメールアドレスへ認証メールを送信できません。SupabaseのSMTP設定を確認してください。";
+  if (normalized.includes("email rate limit") || normalized.includes("over_email_send_rate_limit")) {
+    return "認証メールの送信回数が上限に達しました。しばらく時間をおいてから、もう一度お試しください。";
+  }
+  if (normalized.includes("rate limit") || normalized.includes("too many requests")) {
+    return "認証処理の回数が上限に達しました。しばらく時間をおいてから、もう一度お試しください。";
+  }
   if (rawMessage) return rawMessage;
   return "Supabase Authの処理に失敗しました。";
 }
