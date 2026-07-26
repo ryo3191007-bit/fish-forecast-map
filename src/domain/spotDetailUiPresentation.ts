@@ -59,12 +59,18 @@ function uncertain(): SpotDetailUiPresentation {
  * underlying research state. Missing, unresearched and researched-unknown
  * values collapse to "未確定". weak_evidence / low remains visible with its
  * low-confidence badge, matching the existing UI policy.
+ *
+ * target_species is hidden from the ordinary fishing-detail grid and is rendered
+ * by the species tab. For that research presentation only, use the dedicated
+ * historical_target_species value so historical catches never become direct
+ * SCORE v2 target-species evidence. Field observations keep target_species.
  */
 export function resolveSpotDetailUiPresentation(
   details: FishingSpotDetailSet | null,
   itemKey: string,
 ): SpotDetailUiPresentation {
-  const item = findDisplayableSpotDetail(details, itemKey);
+  const presentationKey = itemKey === "target_species" ? "historical_target_species" : itemKey;
+  const item = findDisplayableSpotDetail(details, presentationKey);
   if (
     !item ||
     item.informationState === "unresearched" ||
@@ -81,8 +87,8 @@ export function resolveSpotDetailUiPresentation(
     };
   }
 
-  if (itemKey === "coastal_topography" || itemKey === "spot_features") {
-    const terrainPresentation = formatTerrainDetailForPresentation(details, itemKey);
+  if (presentationKey === "coastal_topography" || presentationKey === "spot_features") {
+    const terrainPresentation = formatTerrainDetailForPresentation(details, presentationKey);
     return terrainPresentation
       ? {
           text: terrainPresentation.text,

@@ -25,6 +25,7 @@ import issue288SetoDetails from "../../data/curation/fishing-spots/issue-288-hir
 import issue288NorthDetails from "../../data/curation/fishing-spots/issue-288-hirado-north-reresearch.json";
 import issue290IkitsukiDetails from "../../data/curation/fishing-spots/issue-290-ikitsuki-reresearch.json";
 import issue292HiradoSouthDetails from "../../data/curation/fishing-spots/issue-292-hirado-south-reresearch.json";
+import { buildVerifiedCatchSpeciesValues } from "@/lib/verifiedCatchSpeciesCuration";
 
 export const staticFishingSpotDetailItemDefinitions: SpotDetailItemDefinition[] = [
   { itemKey: "target_species", category: "basic", valueKind: "text_list", labelJa: "対象魚種", description: "既存釣り場マスターの対象魚種。", displayOrder: 10 },
@@ -149,6 +150,7 @@ function mapCuratedSpot(spot: CuratedSpot, supplementalSpot?: CuratedSpot): Spot
  * Build curated fallback values in chronological import order.
  * Issue #194 supplements and overrides the original Issue #181 split fields.
  * Later re-research files then replace older values for the same spot/item key.
+ * Issue #325 is applied last for historical_target_species only.
  */
 function buildCuratedStaticValues(spotIds: Set<string>): SpotDetailValue[] {
   const issue181Values = issue181DetailSpots
@@ -157,9 +159,10 @@ function buildCuratedStaticValues(spotIds: Set<string>): SpotDetailValue[] {
   const newerValues = issue205DetailSpots.concat(laterDetailSpots)
     .filter((spot) => spotIds.has(spot.spotId))
     .flatMap((spot) => mapCuratedSpot(spot));
+  const verifiedCatchSpeciesValues = buildVerifiedCatchSpeciesValues(spotIds);
 
   const latestBySpotItem = new Map<string, SpotDetailValue>();
-  for (const value of issue181Values.concat(newerValues)) {
+  for (const value of issue181Values.concat(newerValues, verifiedCatchSpeciesValues)) {
     latestBySpotItem.set(`${value.spotId}:${value.itemKey}`, value);
   }
   return [...latestBySpotItem.values()];
