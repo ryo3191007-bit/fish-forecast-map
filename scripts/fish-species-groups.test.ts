@@ -8,7 +8,7 @@ assert.equal(new Set(fishSpeciesIds).size, fishSpeciesIds.length);
 assert.equal(new Set(fishSpeciesNames).size, fishSpeciesNames.length);
 assert.equal(species.length, fishSpeciesDefinitions.length);
 for (const aggregate of ["aomono", "rockfish"]) assert.equal(species.find((item) => item.id === aggregate)?.isSelectable, false);
-for (const aggregate of ["aji", "saba", "iwashi", "mebaru", "kamasu"]) {
+for (const aggregate of ["aji", "saba", "iwashi", "mebaru", "kamasu", "karei", "megochi", "haze", "eso", "yagara", "anago"]) {
   assert.equal(species.find((item) => item.id === aggregate)?.entityType, "species_group");
   assert.equal(species.find((item) => item.id === aggregate)?.isSelectable, true);
 }
@@ -25,6 +25,7 @@ for (const legacyId of ["akakamasu", "yamatokamasu"] as const) {
   assert.equal(legacy?.isSelectable, false);
   assert.equal(legacy?.isActive, false);
 }
+assert.equal(species.find((item) => item.id === "maanago")?.parentGroupId, "anago", "maanago remains exact and is grouped under anago");
 const selectableIds = species.filter((item) => item.isSelectable).map((item) => item.id).sort();
 for (const includeLegacyAggregates of [false, true]) {
   const groupedIds = groupSelectableFishSpecies(species, { includeLegacyAggregates }).flatMap((group) => group.items.map((item) => item.id));
@@ -43,6 +44,7 @@ for (const [label, expectedIds] of [
   ["サバ", ["masaba", "gomasaba"]],
   ["イワシ", ["maiwashi", "katakuchiiwashi", "urumeiwashi"]],
   ["メバル", ["akamebaru", "kuromebaru", "shiromebaru"]],
+  ["アナゴ", ["maanago"]],
 ] as const) assert.deepEqual(uiGroups.find((group) => group.label === label)?.items.map((item) => item.id), expectedIds);
 const records = [{ species: "ブリ" }, { species: "青物" }, { species: "カサゴ" }];
 assert.deepEqual(filterByFishSpecies(records, "青物", (item) => item.species, species, staticFishSpeciesAliases), records.slice(0, 2));
@@ -50,13 +52,29 @@ assert.deepEqual(filterByFishSpecies(records, "根魚", (item) => item.species, 
 const splitRecords = [{ species: "アジ" }, { species: "マアジ" }, { species: "マルアジ" }, { species: "メバル" }, { species: "アカメバル" }];
 assert.deepEqual(filterByFishSpecies(splitRecords, "アジ", (item) => item.species, species, staticFishSpeciesAliases), splitRecords.slice(0, 3));
 assert.deepEqual(filterByFishSpecies(splitRecords, "根魚", (item) => item.species, species, staticFishSpeciesAliases), splitRecords.slice(3), "nested group filtering includes descendants");
+const anagoRecords = [{ species: "アナゴ" }, { species: "マアナゴ" }, { species: "カレイ" }];
+assert.deepEqual(filterByFishSpecies(anagoRecords, "アナゴ", (item) => item.species, species, staticFishSpeciesAliases), anagoRecords.slice(0, 2), "anago group includes maanago without collapsing their IDs");
 for (const definition of fishSpeciesDefinitions) {
   if (definition[0] !== "yariika") assert.equal(resolveFishSpeciesName(definition[1], species, staticFishSpeciesAliases).status, "resolved");
 }
-for (const [name, expectedId] of [["ハゲ", "kawahagi"], ["ハギ", "kawahagi"], ["カマス", "kamasu"], ["アカカマス", "kamasu"], ["ヤマトカマス", "kamasu"], ["モンゴウイカ", "kouika"], ["カミナリイカ", "kouika"], ["コウイカ", "kouika"]] as const) {
+for (const [name, expectedId] of [
+  ["ハゲ", "kawahagi"], ["ハギ", "kawahagi"], ["カマス", "kamasu"], ["アカカマス", "kamasu"], ["ヤマトカマス", "kamasu"],
+  ["モンゴウイカ", "kouika"], ["カミナリイカ", "kouika"], ["コウイカ", "kouika"],
+  ["バリ", "aigo"], ["ギザミ", "kyusen"], ["キビレ", "kichinu"], ["ヒイカ", "jindouika"], ["コイカ", "jindouika"], ["マダイ", "madai"],
+] as const) {
   const resolution = resolveFishSpeciesName(name, species, staticFishSpeciesAliases);
   assert.equal(resolution.status, "resolved");
   if (resolution.status === "resolved") assert.equal(resolution.speciesId, expectedId);
 }
-for (const forbidden of ["ハタ", "シリヤケイカ", "ヤリイカ（旧分類）", "未登録魚"]) assert.equal(resolveFishSpeciesName(forbidden, species, staticFishSpeciesAliases).status, "unresolved");
+for (const [name, expectedId] of [
+  ["カレイ", "karei"], ["メゴチ", "megochi"], ["アイゴ", "aigo"], ["ハゼ", "haze"],
+  ["ヒラスズキ", "hirasuzuki"], ["カツオ", "katsuo"], ["エソ", "eso"], ["キュウセン", "kyusen"],
+  ["キビレ", "kichinu"], ["ヒイカ", "jindouika"], ["ムツ", "mutsu"], ["ダツ", "datsu"],
+  ["ホウボウ", "houbou"], ["ヤガラ", "yagara"], ["ヨコフエダイ", "yokofuedai"], ["フエダイ", "fuedai"],
+] as const) {
+  const resolution = resolveFishSpeciesName(name, species, staticFishSpeciesAliases);
+  assert.equal(resolution.status, "resolved", `${name} from the verified catch list is registered`);
+  if (resolution.status === "resolved") assert.equal(resolution.speciesId, expectedId);
+}
+for (const forbidden of ["ハタ", "シリヤケイカ", "ヤリイカ（旧分類）", "ネズミゴチ", "アカヤガラ", "未登録魚"]) assert.equal(resolveFishSpeciesName(forbidden, species, staticFishSpeciesAliases).status, "unresolved");
 console.log("fish species group tests passed");
