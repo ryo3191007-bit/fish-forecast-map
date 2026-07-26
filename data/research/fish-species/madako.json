@@ -1,1 +1,603 @@
-{"schemaVersion":"1.3.0","speciesId":"madako","identity":{"displayNameJa":"マダコ","canonicalNameJa":{"value":"マダコ","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["bismal_madako"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"JAMSTEC BISMaLで標準和名を確認。"},"scientificName":{"value":"Octopus sinensis","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["bismal_madako","worms_madako"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"JAMSTEC BISMaLとWoRMS/MolluscaBaseで現行学名を確認。旧Octopus vulgaris同定と混同しない。"},"aliases":[],"entityType":"cephalopod_species","note":"マダコの自己完結型調査記録。Octopus vulgarisとの旧来同定を区別し、他タコ類の生態を暗黙継承しない。","parentGroupId":null,"memberSpeciesIds":[]},"researchScope":{"targetArea":"福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。","checkedAt":"2026-07-26","sourcePolicy":"docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"},"ecology":{"stableGeneral":{"seasonality":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"depthRange":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":["kamo_madako","shizuoka_madako"],"contradictingSourceIds":[]},"note":"加茂水族館は潮間帯〜約40m、静岡県水産・海洋技術研究所は潮間帯〜200mとする。対象範囲の違いを解消できないため代表的な一般水深として固定しない。"},"substrateHabitat":{"value":"岩礁・砂泥底などに生息し、昼間は穴や岩の割れ目などに潜む。","status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["kamo_madako","shizuoka_madako"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"日本沿岸の種解説に基づく一般生息環境。地点相性や釣れやすさへ直接転用しない。"},"salinityAndWaterBody":{"value":"海水域に生息する。","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["worms_madako"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"WoRMSのenvironment=marineを根拠とする。"},"dayNightTiming":{"value":"昼間は穴や岩の割れ目に潜み、夜に活動する。","status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["kamo_madako"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"鶴岡市立加茂水族館の種解説に基づく一般行動。対象地域の時合い・釣れやすさには直接変換しない。"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"spawningOrConfusableInfo":{"value":"日本近海で従来Octopus vulgaris（マダコ）とされてきた集団は、分類学的見直しによりOctopus sinensisが標準和名マダコに対応するとされる。","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["bismal_madako","bismal_octopus_vulgaris_note"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"分類上の混同防止情報。大西洋・地中海のOctopus vulgarisの生態値を本entryへ継承しない。"}},"regionalCatchability":{"seasonality":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"depthRange":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"substrateHabitat":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"salinityAndWaterBody":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"spawningOrConfusableInfo":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"}}},"sources":[{"id":"bismal_madako","title":"BISMaL: Octopus sinensis（マダコ）","url":"https://www.godac.jamstec.go.jp/bismal/j/view/9060818","publisher":"海洋研究開発機構（JAMSTEC）","publisherType":"public_research","publishedOrUpdatedAt":null,"checkedAt":"2026-07-26","regionScope":"日本の海洋生物分類・名称情報","sourceType":"supporting","directness":"direct","derivationGroup":"bismal_madako","supports":["/identity/canonicalNameJa","/identity/scientificName","/ecology/stableGeneral/spawningOrConfusableInfo"],"usageNote":"現行のマダコとOctopus sinensisの対応確認に使用する。"},{"id":"worms_madako","title":"WoRMS: Octopus sinensis A. d'Orbigny, 1834","url":"https://www.marinespecies.org/aphia.php?id=534443&p=taxdetails","publisher":"World Register of Marine Species / MolluscaBase","publisherType":"public_research","publishedOrUpdatedAt":null,"checkedAt":"2026-07-26","regionScope":"世界規模の海洋生物分類データベース","sourceType":"supporting","directness":"direct","derivationGroup":"worms_madako","supports":["/identity/scientificName","/ecology/stableGeneral/salinityAndWaterBody"],"usageNote":"accepted nameとmarine environmentの確認に使用する。地域別釣れやすさには使用しない。"},{"id":"bismal_octopus_vulgaris_note","title":"BISMaL: Octopus vulgaris（日本近海の旧マダコ同定に関する注記）","url":"https://www.godac.jamstec.go.jp/bismal/j/view/9000903","publisher":"海洋研究開発機構（JAMSTEC）","publisherType":"public_research","publishedOrUpdatedAt":null,"checkedAt":"2026-07-26","regionScope":"日本近海を含む分類注記","sourceType":"supporting","directness":"direct","derivationGroup":"bismal_octopus_vulgaris_note","supports":["/ecology/stableGeneral/spawningOrConfusableInfo"],"usageNote":"従来日本近海でOctopus vulgarisとされたマダコが分類見直しによりOctopus sinensisとされる旨の注記確認に使用する。"},{"id":"kamo_madako","title":"鶴岡市立加茂水族館: マダコ","url":"https://kamo-kurage.jp/shonaizukan/madako/","publisher":"鶴岡市立加茂水族館","publisherType":"museum_aquarium","publishedOrUpdatedAt":null,"checkedAt":"2026-07-26","regionScope":"日本各地・庄内を含む種解説","sourceType":"supporting","directness":"direct","derivationGroup":"kamo_madako","supports":["/ecology/stableGeneral/depthRange","/ecology/stableGeneral/substrateHabitat","/ecology/stableGeneral/dayNightTiming"],"usageNote":"潮間帯〜約40m、昼間は穴や岩の割れ目に潜み夜に活動するという種解説を確認する。深度は他の公的資料との幅があるため代表値には固定しない。"},{"id":"shizuoka_madako","title":"静岡県水産・海洋技術研究所: 浜名湖の生物（マダコ）","url":"https://fish-exp.pref.shizuoka.jp/hamanako/8_seibutsu/shellfish.html","publisher":"静岡県水産・海洋技術研究所","publisherType":"public_research","publishedOrUpdatedAt":null,"checkedAt":"2026-07-26","regionScope":"日本沿岸・浜名湖を含む種解説","sourceType":"supporting","directness":"direct","derivationGroup":"shizuoka_madako","supports":["/ecology/stableGeneral/depthRange","/ecology/stableGeneral/substrateHabitat"],"usageNote":"潮間帯〜200m、岩礁・砂泥底という生息情報を確認する。加茂水族館の約40m記述と対象範囲が異なるため、一般水深の代表値はholdする。"}],"review":{"officialResearch":"JAMSTEC BISMaL、WoRMS、鶴岡市立加茂水族館、静岡県水産・海洋技術研究所を照合し、現行分類と一般生息環境を整理した。","secondaryResearch":"水深資料の範囲差は無理に統合せずholdし、民間釣果や漁期で地域別釣れやすさを補完していない。","schemaValidation":"fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。","comparisonWithCurrentImplementation":{"authoritativeComparisonDocument":"docs/research/FISH_SPECIES_ECOLOGY_E_REVIEW.md","scoreV2Status":"unsupported","inheritancePolicy":"do_not_inherit_between_species_or_group"},"attributeDecisions":[{"path":"/identity/canonicalNameJa","decision":"adopt","reason":"BISMaLで標準和名マダコを直接確認した。","purposes":["identity_display"],"sourceIds":["bismal_madako"],"regionScope":"日本語名称","confidence":"high","recheckCondition":"分類DB更新時に再確認する。"},{"path":"/identity/scientificName","decision":"adopt","reason":"BISMaLとWoRMSでOctopus sinensisを現行accepted nameとして確認した。","purposes":["identity_display"],"sourceIds":["bismal_madako","worms_madako"],"regionScope":"分類・名称情報","confidence":"high","recheckCondition":"MolluscaBase等の分類更新時に再確認する。"},{"path":"/identity/aliases","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/seasonality","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/waterTemperature","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/depthRange","decision":"hold","reason":"公的・博物館系資料で潮間帯〜約40mと潮間帯〜200mの記述があり、対象範囲が異なる。代表的な一般水深として固定せずholdする。","purposes":["score_excluded"],"sourceIds":["kamo_madako","shizuoka_madako"],"regionScope":"資料により対象範囲が異なる","confidence":"unknown","recheckCondition":"生活段階・地域・代表分布を区別した公的資料取得時に再評価する。"},{"path":"/ecology/stableGeneral/substrateHabitat","decision":"adopt","reason":"加茂水族館と静岡県水産研究機関で岩の割れ目・岩礁・砂泥底を直接確認した。","purposes":["ecology_description"],"sourceIds":["kamo_madako","shizuoka_madako"],"regionScope":"日本沿岸の一般生態","confidence":"medium","recheckCondition":"より広域の生息底質資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/salinityAndWaterBody","decision":"adopt","reason":"WoRMSでenvironmentがmarineと明示されている。","purposes":["ecology_description"],"sourceIds":["worms_madako"],"regionScope":"世界規模の分類・環境情報","confidence":"high","recheckCondition":"WoRMS更新時に再確認する。"},{"path":"/ecology/stableGeneral/dayNightTiming","decision":"adopt","reason":"加茂水族館の種解説で昼間は穴や岩の割れ目に潜み、夜に活動すると直接確認した。","purposes":["ecology_description"],"sourceIds":["kamo_madako"],"regionScope":"日本沿岸の一般種解説","confidence":"medium","recheckCondition":"行動研究の追加取得時に再確認する。"},{"path":"/ecology/stableGeneral/fishingMethods","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/spawningOrConfusableInfo","decision":"adopt","reason":"BISMaLで日本近海の旧Octopus vulgaris同定が分類見直しによりOctopus sinensis（マダコ）とされる旨を確認した。","purposes":["ecology_description"],"sourceIds":["bismal_madako","bismal_octopus_vulgaris_note"],"regionScope":"日本近海の分類上の注意","confidence":"high","recheckCondition":"Octopus vulgaris種群の分類更新時に再確認する。"},{"path":"/ecology/regionalCatchability/seasonality","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/waterTemperature","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/depthRange","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/substrateHabitat","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/salinityAndWaterBody","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/dayNightTiming","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/fishingMethods","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/spawningOrConfusableInfo","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"}],"reviewStatus":"ready_for_review","productionAdoption":{"projectionPolicy":"acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。","acceptedPaths":["/identity/canonicalNameJa","/identity/scientificName","/ecology/stableGeneral/substrateHabitat","/ecology/stableGeneral/salinityAndWaterBody","/ecology/stableGeneral/dayNightTiming","/ecology/stableGeneral/spawningOrConfusableInfo"],"unknownPolicy":"unknownを0点、不適、他頭足類・他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"}}}
+{
+  "schemaVersion": "1.3.0",
+  "speciesId": "madako",
+  "identity": {
+    "displayNameJa": "マダコ",
+    "canonicalNameJa": {
+      "value": "マダコ",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_madako"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "JAMSTEC BISMaLで標準和名を確認。"
+    },
+    "scientificName": {
+      "value": "Octopus sinensis",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_madako",
+          "worms_madako"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "JAMSTEC BISMaLとWoRMS/MolluscaBaseで現行学名を確認。旧Octopus vulgaris同定と混同しない。"
+    },
+    "aliases": [],
+    "entityType": "cephalopod_species",
+    "note": "マダコの自己完結型調査記録。Octopus vulgarisとの旧来同定を区別し、他タコ類の生態を暗黙継承しない。",
+    "parentGroupId": null,
+    "memberSpeciesIds": []
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-26",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [
+            "kamo_madako",
+            "shizuoka_madako"
+          ],
+          "contradictingSourceIds": []
+        },
+        "note": "加茂水族館は潮間帯〜約40m、静岡県水産・海洋技術研究所は潮間帯〜200mとする。対象範囲の違いを解消できないため代表的な一般水深として固定しない。"
+      },
+      "substrateHabitat": {
+        "value": "岩礁・砂泥底などに生息し、昼間は穴や岩の割れ目などに潜む。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "kamo_madako",
+            "shizuoka_madako"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "日本沿岸の種解説に基づく一般生息環境。地点相性や釣れやすさへ直接転用しない。"
+      },
+      "salinityAndWaterBody": {
+        "value": "海水域に生息する。",
+        "status": "confirmed",
+        "confidence": "high",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "worms_madako"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "WoRMSのenvironment=marineを根拠とする。"
+      },
+      "dayNightTiming": {
+        "value": "昼間は穴や岩の割れ目に潜み、夜に活動する。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "kamo_madako"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "鶴岡市立加茂水族館の種解説に基づく一般行動。対象地域の時合い・釣れやすさには直接変換しない。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": "日本近海で従来Octopus vulgaris（マダコ）とされてきた集団は、分類学的見直しによりOctopus sinensisが標準和名マダコに対応するとされる。",
+        "status": "confirmed",
+        "confidence": "high",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "bismal_madako",
+            "bismal_octopus_vulgaris_note"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "分類上の混同防止情報。大西洋・地中海のOctopus vulgarisの生態値を本entryへ継承しない。"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "bismal_madako",
+      "title": "BISMaL: Octopus sinensis（マダコ）",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9060818",
+      "publisher": "海洋研究開発機構（JAMSTEC）",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "日本の海洋生物分類・名称情報",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "bismal_madako",
+      "supports": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "現行のマダコとOctopus sinensisの対応確認に使用する。"
+    },
+    {
+      "id": "worms_madako",
+      "title": "WoRMS: Octopus sinensis A. d'Orbigny, 1834",
+      "url": "https://www.marinespecies.org/aphia.php?id=534443&p=taxdetails",
+      "publisher": "World Register of Marine Species / MolluscaBase",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "世界規模の海洋生物分類データベース",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "worms_madako",
+      "supports": [
+        "/identity/scientificName",
+        "/ecology/stableGeneral/salinityAndWaterBody"
+      ],
+      "usageNote": "accepted nameとmarine environmentの確認に使用する。地域別釣れやすさには使用しない。"
+    },
+    {
+      "id": "bismal_octopus_vulgaris_note",
+      "title": "BISMaL: Octopus vulgaris（日本近海の旧マダコ同定に関する注記）",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9000903",
+      "publisher": "海洋研究開発機構（JAMSTEC）",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "日本近海を含む分類注記",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "bismal_octopus_vulgaris_note",
+      "supports": [
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "従来日本近海でOctopus vulgarisとされたマダコが分類見直しによりOctopus sinensisとされる旨の注記確認に使用する。"
+    },
+    {
+      "id": "kamo_madako",
+      "title": "鶴岡市立加茂水族館: マダコ",
+      "url": "https://kamo-kurage.jp/shonaizukan/madako/",
+      "publisher": "鶴岡市立加茂水族館",
+      "publisherType": "museum_aquarium",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "日本各地・庄内を含む種解説",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "kamo_madako",
+      "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/dayNightTiming"
+      ],
+      "usageNote": "潮間帯〜約40m、昼間は穴や岩の割れ目に潜み夜に活動するという種解説を確認する。深度は他の公的資料との幅があるため代表値には固定しない。"
+    },
+    {
+      "id": "shizuoka_madako",
+      "title": "静岡県水産・海洋技術研究所: 浜名湖の生物（マダコ）",
+      "url": "https://fish-exp.pref.shizuoka.jp/hamanako/8_seibutsu/shellfish.html",
+      "publisher": "静岡県水産・海洋技術研究所",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "日本沿岸・浜名湖を含む種解説",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "shizuoka_madako",
+      "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/substrateHabitat"
+      ],
+      "usageNote": "潮間帯〜200m、岩礁・砂泥底という生息情報を確認する。加茂水族館の約40m記述と対象範囲が異なるため、一般水深の代表値はholdする。"
+    }
+  ],
+  "review": {
+    "officialResearch": "JAMSTEC BISMaL、WoRMS、鶴岡市立加茂水族館、静岡県水産・海洋技術研究所を照合し、現行分類と一般生息環境を整理した。",
+    "secondaryResearch": "水深資料の範囲差は無理に統合せずholdし、民間釣果や漁期で地域別釣れやすさを補完していない。",
+    "schemaValidation": "fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。",
+    "comparisonWithCurrentImplementation": {
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_E_REVIEW.md",
+      "scoreV2Status": "unsupported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt",
+        "reason": "BISMaLで標準和名マダコを直接確認した。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_madako"
+        ],
+        "regionScope": "日本語名称",
+        "confidence": "high",
+        "recheckCondition": "分類DB更新時に再確認する。"
+      },
+      {
+        "path": "/identity/scientificName",
+        "decision": "adopt",
+        "reason": "BISMaLとWoRMSでOctopus sinensisを現行accepted nameとして確認した。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_madako",
+          "worms_madako"
+        ],
+        "regionScope": "分類・名称情報",
+        "confidence": "high",
+        "recheckCondition": "MolluscaBase等の分類更新時に再確認する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/seasonality",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "hold",
+        "reason": "公的・博物館系資料で潮間帯〜約40mと潮間帯〜200mの記述があり、対象範囲が異なる。代表的な一般水深として固定せずholdする。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "kamo_madako",
+          "shizuoka_madako"
+        ],
+        "regionScope": "資料により対象範囲が異なる",
+        "confidence": "unknown",
+        "recheckCondition": "生活段階・地域・代表分布を区別した公的資料取得時に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "adopt",
+        "reason": "加茂水族館と静岡県水産研究機関で岩の割れ目・岩礁・砂泥底を直接確認した。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "kamo_madako",
+          "shizuoka_madako"
+        ],
+        "regionScope": "日本沿岸の一般生態",
+        "confidence": "medium",
+        "recheckCondition": "より広域の生息底質資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "adopt",
+        "reason": "WoRMSでenvironmentがmarineと明示されている。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "worms_madako"
+        ],
+        "regionScope": "世界規模の分類・環境情報",
+        "confidence": "high",
+        "recheckCondition": "WoRMS更新時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "adopt",
+        "reason": "加茂水族館の種解説で昼間は穴や岩の割れ目に潜み、夜に活動すると直接確認した。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "kamo_madako"
+        ],
+        "regionScope": "日本沿岸の一般種解説",
+        "confidence": "medium",
+        "recheckCondition": "行動研究の追加取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt",
+        "reason": "BISMaLで日本近海の旧Octopus vulgaris同定が分類見直しによりOctopus sinensis（マダコ）とされる旨を確認した。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "bismal_madako",
+          "bismal_octopus_vulgaris_note"
+        ],
+        "regionScope": "日本近海の分類上の注意",
+        "confidence": "high",
+        "recheckCondition": "Octopus vulgaris種群の分類更新時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/waterTemperature",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/depthRange",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/substrateHabitat",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/salinityAndWaterBody",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/dayNightTiming",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/fishingMethods",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      }
+    ],
+    "reviewStatus": "ready_for_review",
+    "productionAdoption": {
+      "projectionPolicy": "acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。",
+      "acceptedPaths": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/dayNightTiming",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "unknownPolicy": "unknownを0点、不適、他頭足類・他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"
+    }
+  }
+}
