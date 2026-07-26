@@ -37,6 +37,8 @@ export const staticFishSpeciesAliases: readonly FishSpeciesAlias[] = [
     ["331", "kawahagi", "ハゲ"], ["332", "kawahagi", "ハギ"],
     ["126", "kamasu", "アカカマス"], ["127", "kamasu", "ヤマトカマス"], ["333", "kamasu", "カマス"],
     ["335", "kouika", "モンゴウイカ"], ["336", "kouika", "カミナリイカ"],
+    ["617", "aigo", "バリ"], ["618", "kyusen", "ギザミ"], ["619", "kichinu", "キビレ"],
+    ["620", "jindouika", "ヒイカ"], ["621", "jindouika", "コイカ"], ["622", "madai", "マダイ"],
   ] as const).map(([suffix, fishSpeciesId, aliasName]) => ({ id: `00000000-0000-4000-8000-000000000${suffix}`, fishSpeciesId, aliasName, matchKey: createFishSpeciesMatchKey(aliasName), approvalStatus: "approved" as const, isActive: true })),
 ];
 

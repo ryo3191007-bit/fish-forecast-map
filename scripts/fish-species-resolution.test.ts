@@ -24,6 +24,10 @@ const regionalAliases = new Map([
   ["カマス", "kamasu"], ["アカカマス", "kamasu"], ["ヤマトカマス", "kamasu"],
   ["モンゴウイカ", "kouika"], ["カミナリイカ", "kouika"], ["コウイカ", "kouika"],
 ] as const);
+const issue323Aliases = new Map([
+  ["バリ", "aigo"], ["ギザミ", "kyusen"], ["キビレ", "kichinu"],
+  ["ヒイカ", "jindouika"], ["コイカ", "jindouika"], ["マダイ", "madai"],
+] as const);
 
 for (const [name, speciesId] of batch1Aliases) {
   const result = resolve(name);
@@ -40,10 +44,26 @@ for (const [name, speciesId] of regionalAliases) {
   assert.equal(result.status, "resolved");
   if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
 }
-for (const name of ["ハネ", "ヤズコ", "ワラサ", "シリヤケイカ"]) {
+for (const [name, speciesId] of issue323Aliases) {
+  const result = resolve(name);
+  assert.equal(result.status, "resolved");
+  if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
+}
+for (const name of ["ハネ", "ヤズコ", "ワラサ", "シリヤケイカ", "ネズミゴチ", "アカヤガラ", "シブダイ", "ベラ"]) {
   assert.equal(resolve(name).status, "unresolved", `${name} remains intentionally unregistered`);
 }
 for (const [name, speciesId] of [["マアジ", "maaji"], ["マサバ", "masaba"], ["マイワシ", "maiwashi"], ["メバル", "mebaru"]] as const) {
+  const result = resolve(name);
+  assert.equal(result.status, "resolved");
+  if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
+}
+for (const [name, speciesId] of [
+  ["カレイ", "karei"], ["メゴチ", "megochi"], ["アイゴ", "aigo"], ["ハゼ", "haze"],
+  ["ヒラスズキ", "hirasuzuki"], ["カツオ", "katsuo"], ["エソ", "eso"], ["キュウセン", "kyusen"],
+  ["キチヌ", "kichinu"], ["ジンドウイカ", "jindouika"], ["ムツ", "mutsu"], ["ダツ", "datsu"],
+  ["ホウボウ", "houbou"], ["ヤガラ", "yagara"], ["ヨコフエダイ", "yokofuedai"], ["フエダイ", "fuedai"],
+  ["アナゴ", "anago"], ["マアナゴ", "maanago"],
+] as const) {
   const result = resolve(name);
   assert.equal(result.status, "resolved");
   if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
@@ -69,6 +89,8 @@ assert.equal(resolve("黒鯛", conflictAliases).status, "conflict");
 const list = [{ species: "黒鯛" }, { species: "チヌ" }, { species: "アジ" }, { species: "未登録魚" }];
 assert.deepEqual(filterByFishSpecies(list, "クロダイ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), list.slice(0, 2));
 assert.deepEqual(filterByFishSpecies(list, "アジ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), [list[2]]);
+const anagoList = [{ species: "アナゴ" }, { species: "マアナゴ" }, { species: "カレイ" }];
+assert.deepEqual(filterByFishSpecies(anagoList, "アナゴ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), anagoList.slice(0, 1), "generic anago stays separate from exact maanago until taxonomy is explicitly researched");
 
 for (const [aliasName, speciesId] of batch1Aliases) {
   const canonicalName = staticFishSpecies.find((species) => species.id === speciesId)?.nameJa;
@@ -77,6 +99,12 @@ for (const [aliasName, speciesId] of batch1Aliases) {
   assert.deepEqual(filterByFishSpecies(aliasList, canonicalName, (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), aliasList.slice(0, 2), `${aliasName} is included in canonical search and aggregation`);
 }
 for (const [aliasName, speciesId] of batch2Aliases) {
+  const canonicalName = staticFishSpecies.find((species) => species.id === speciesId)?.nameJa;
+  assert.ok(canonicalName);
+  const aliasList = [{ species: aliasName }, { species: canonicalName }, { species: "未登録魚" }];
+  assert.deepEqual(filterByFishSpecies(aliasList, canonicalName, (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), aliasList.slice(0, 2), `${aliasName} is included in canonical search and aggregation`);
+}
+for (const [aliasName, speciesId] of issue323Aliases) {
   const canonicalName = staticFishSpecies.find((species) => species.id === speciesId)?.nameJa;
   assert.ok(canonicalName);
   const aliasList = [{ species: aliasName }, { species: canonicalName }, { species: "未登録魚" }];

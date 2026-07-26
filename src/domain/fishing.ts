@@ -28,6 +28,15 @@ export const fishSpeciesDefinitions = [
   ["akamebaru", "アカメバル", "exact_species", "mebaru", null], ["kuromebaru", "クロメバル", "exact_species", "mebaru", null],
   ["shiromebaru", "シロメバル", "exact_species", "mebaru", null],
   ["kamasu", "カマス", "species_group", null, null, true],
+  ["karei", "カレイ", "species_group", null, null, true], ["megochi", "メゴチ", "species_group", null, null, true],
+  ["aigo", "アイゴ", "exact_species", null, null], ["haze", "ハゼ", "species_group", null, null, true],
+  ["hirasuzuki", "ヒラスズキ", "exact_species", null, null], ["katsuo", "カツオ", "exact_species", null, null],
+  ["eso", "エソ", "species_group", null, null, true], ["kyusen", "キュウセン", "exact_species", null, null],
+  ["kichinu", "キチヌ", "exact_species", null, null], ["jindouika", "ジンドウイカ", "squid_species", null, null],
+  ["mutsu", "ムツ", "exact_species", null, null], ["datsu", "ダツ", "exact_species", null, null],
+  ["houbou", "ホウボウ", "exact_species", null, null], ["yagara", "ヤガラ", "species_group", null, null, true],
+  ["yokofuedai", "ヨコフエダイ", "exact_species", null, null], ["fuedai", "フエダイ", "exact_species", null, null],
+  ["anago", "アナゴ", "species_group", null, null, true],
 ] as const;
 
 export const fishSpeciesIds = fishSpeciesDefinitions.map((row) => row[0]);
