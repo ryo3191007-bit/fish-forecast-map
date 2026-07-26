@@ -1,1 +1,545 @@
-{"schemaVersion":"1.3.0","speciesId":"kouika","identity":{"displayNameJa":"コウイカ","canonicalNameJa":{"value":"コウイカ","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["fukuoka_kouika"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"福岡市の現行いきもの図鑑で和名を確認。"},"scientificName":{"value":"Acanthosepion esculentum","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["fukuoka_kouika","worms_kouika"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"福岡市の現行図鑑とWoRMS/MolluscaBaseの現行accepted nameを確認。旧Sepia esculenta表記と混同しない。"},"aliases":[],"entityType":"squid_species","note":"コウイカの自己完結型調査記録。旧学名表記と現行学名を区別し、一般生態を地域別釣れやすさへ暗黙転用しない。","parentGroupId":null,"memberSpeciesIds":[]},"researchScope":{"targetArea":"福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。","checkedAt":"2026-07-26","sourcePolicy":"docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"},"ecology":{"stableGeneral":{"seasonality":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"depthRange":{"value":"日本沿岸の水深100m以浅に生息する。","status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["fukuoka_kouika"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"福岡市の現行種解説に基づく一般生態。岸から狙える水深やSCOREへ変換しない。"},"substrateHabitat":{"value":"日本沿岸の砂泥底などに生息する。","status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["fukuoka_kouika"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"福岡市の現行種解説に基づく。対象地域の地点相性へは直接転用しない。"},"salinityAndWaterBody":{"value":"日本沿岸の海水域に生息する。","status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["fukuoka_kouika"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"沿岸性の一般生態として採用し、対象地域の出現確率へは転用しない。"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠を確認できていない。推測で補完しない。"},"spawningOrConfusableInfo":{"value":"現行学名はAcanthosepion esculentumで、旧資料のSepia esculenta / Sepia (Platysepia) esculentaは同種の旧組合せとして扱われる。福岡市資料では春に産卵のため博多湾へ来遊するとされる。","status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["worms_kouika","fukuoka_kouika"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"分類上の混同防止と地域限定の産卵来遊情報。春の来遊を対象地域全体の釣期・釣れやすさへ変換しない。","regionScope":"分類情報は世界規模、産卵来遊は博多湾"}},"regionalCatchability":{"seasonality":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"depthRange":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"substrateHabitat":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"salinityAndWaterBody":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"},"spawningOrConfusableInfo":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"}}},"sources":[{"id":"fukuoka_kouika","title":"生物多様性ふくおかウェブセンター: コウイカ","url":"https://seibutsutayousei.city.fukuoka.lg.jp/learning/3433/","publisher":"福岡市 環境局 環境共生部 自然共生課","publisherType":"government","publishedOrUpdatedAt":"2026-04-06","checkedAt":"2026-07-26","regionScope":"福岡市・博多湾を含む現行種解説","sourceType":"supporting","directness":"direct","derivationGroup":"fukuoka_kouika","supports":["/identity/canonicalNameJa","/identity/scientificName","/ecology/stableGeneral/depthRange","/ecology/stableGeneral/substrateHabitat","/ecology/stableGeneral/salinityAndWaterBody","/ecology/stableGeneral/spawningOrConfusableInfo"],"usageNote":"現行の和名・学名と、日本沿岸100m以浅の砂泥底という一般生態を確認する。博多湾への春の産卵来遊は地域限定情報としてcheckedに留め、釣期へ変換しない。"},{"id":"worms_kouika","title":"WoRMS taxon list: Sepia esculenta accepted as Acanthosepion esculentum","url":"https://www.marinespecies.org/aphia.php?p=taxlist&tName=Sepia+esculenta","publisher":"World Register of Marine Species / MolluscaBase","publisherType":"public_research","publishedOrUpdatedAt":null,"checkedAt":"2026-07-26","regionScope":"世界規模の海洋生物分類データベース","sourceType":"supporting","directness":"direct","derivationGroup":"worms_kouika","supports":["/identity/scientificName","/ecology/stableGeneral/spawningOrConfusableInfo"],"usageNote":"旧学名Sepia esculenta / Sepia (Platysepia) esculentaが現行Acanthosepion esculentumにacceptedされることの確認に使用する。"}],"review":{"officialResearch":"福岡市の現行図鑑とWoRMS/MolluscaBaseを照合し、現行学名Acanthosepion esculentumと一般的な沿岸・底質情報を採用した。","secondaryResearch":"博多湾の主な漁期や産卵来遊を対象地域の遊漁釣期へ転用していない。","schemaValidation":"fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。","comparisonWithCurrentImplementation":{"authoritativeComparisonDocument":"docs/research/FISH_SPECIES_ECOLOGY_E_REVIEW.md","scoreV2Status":"unsupported","inheritancePolicy":"do_not_inherit_between_species_or_group"},"attributeDecisions":[{"path":"/identity/canonicalNameJa","decision":"adopt","reason":"福岡市の現行いきもの図鑑で和名コウイカを確認した。","purposes":["identity_display"],"sourceIds":["fukuoka_kouika"],"regionScope":"日本語名称","confidence":"high","recheckCondition":"公的分類情報更新時に再確認する。"},{"path":"/identity/scientificName","decision":"adopt","reason":"福岡市の現行図鑑とWoRMSでAcanthosepion esculentumを現行名として確認した。","purposes":["identity_display"],"sourceIds":["fukuoka_kouika","worms_kouika"],"regionScope":"分類・名称情報","confidence":"high","recheckCondition":"WoRMS/MolluscaBase更新時に再確認する。"},{"path":"/identity/aliases","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/seasonality","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/waterTemperature","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/depthRange","decision":"adopt","reason":"福岡市資料で日本沿岸の水深100m以浅に生息すると直接確認した。","purposes":["ecology_description"],"sourceIds":["fukuoka_kouika"],"regionScope":"日本沿岸","confidence":"medium","recheckCondition":"より広域の公的生態資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/substrateHabitat","decision":"adopt","reason":"福岡市資料で砂泥底などに生息すると直接確認した。","purposes":["ecology_description"],"sourceIds":["fukuoka_kouika"],"regionScope":"日本沿岸","confidence":"medium","recheckCondition":"より広域の公的生態資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/salinityAndWaterBody","decision":"adopt","reason":"福岡市資料で日本沿岸の海域に生息すると確認した。","purposes":["ecology_description"],"sourceIds":["fukuoka_kouika"],"regionScope":"日本沿岸","confidence":"medium","recheckCondition":"分布資料更新時に再確認する。"},{"path":"/ecology/stableGeneral/dayNightTiming","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/fishingMethods","decision":"hold","reason":"直接根拠が不足しているため推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"公的・研究機関の属性別直接資料取得時に再確認する。"},{"path":"/ecology/stableGeneral/spawningOrConfusableInfo","decision":"adopt_with_warning","reason":"WoRMSで旧Sepia esculenta系の名称がAcanthosepion esculentumへ整理されていることを確認し、分類上の混同防止情報として採用する。福岡市の春の博多湾産卵来遊は地域限定で釣期へ転用しない。","purposes":["ecology_description"],"sourceIds":["worms_kouika","fukuoka_kouika"],"regionScope":"分類情報および博多湾の局地観察","confidence":"medium","recheckCondition":"分類更新または広域の産卵生態資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/seasonality","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/waterTemperature","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/depthRange","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/substrateHabitat","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/salinityAndWaterBody","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/dayNightTiming","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/fishingMethods","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"},{"path":"/ecology/regionalCatchability/spawningOrConfusableInfo","decision":"hold","reason":"対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"}],"reviewStatus":"ready_for_review","productionAdoption":{"projectionPolicy":"acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。","acceptedPaths":["/identity/canonicalNameJa","/identity/scientificName","/ecology/stableGeneral/depthRange","/ecology/stableGeneral/substrateHabitat","/ecology/stableGeneral/salinityAndWaterBody","/ecology/stableGeneral/spawningOrConfusableInfo"],"unknownPolicy":"unknownを0点、不適、他頭足類・他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"}}}
+{
+  "schemaVersion": "1.3.0",
+  "speciesId": "kouika",
+  "identity": {
+    "displayNameJa": "コウイカ",
+    "canonicalNameJa": {
+      "value": "コウイカ",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "fukuoka_kouika"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "福岡市の現行いきもの図鑑で和名を確認。"
+    },
+    "scientificName": {
+      "value": "Acanthosepion esculentum",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "fukuoka_kouika",
+          "worms_kouika"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "福岡市の現行図鑑とWoRMS/MolluscaBaseの現行accepted nameを確認。旧Sepia esculenta表記と混同しない。"
+    },
+    "aliases": [],
+    "entityType": "squid_species",
+    "note": "コウイカの自己完結型調査記録。旧学名表記と現行学名を区別し、一般生態を地域別釣れやすさへ暗黙転用しない。",
+    "parentGroupId": null,
+    "memberSpeciesIds": []
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-26",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "depthRange": {
+        "value": "日本沿岸の水深100m以浅に生息する。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fukuoka_kouika"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "福岡市の現行種解説に基づく一般生態。岸から狙える水深やSCOREへ変換しない。"
+      },
+      "substrateHabitat": {
+        "value": "日本沿岸の砂泥底などに生息する。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fukuoka_kouika"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "福岡市の現行種解説に基づく。対象地域の地点相性へは直接転用しない。"
+      },
+      "salinityAndWaterBody": {
+        "value": "日本沿岸の海水域に生息する。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fukuoka_kouika"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "沿岸性の一般生態として採用し、対象地域の出現確率へは転用しない。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "直接根拠を確認できていない。推測で補完しない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": "現行学名はAcanthosepion esculentumで、旧資料のSepia esculenta / Sepia (Platysepia) esculentaは同種の旧組合せとして扱われる。福岡市資料では春に産卵のため博多湾へ来遊するとされる。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "worms_kouika",
+            "fukuoka_kouika"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "分類上の混同防止と地域限定の産卵来遊情報。春の来遊を対象地域全体の釣期・釣れやすさへ変換しない。",
+        "regionScope": "分類情報は世界規模、産卵来遊は博多湾"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "fukuoka_kouika",
+      "title": "生物多様性ふくおかウェブセンター: コウイカ",
+      "url": "https://seibutsutayousei.city.fukuoka.lg.jp/learning/3433/",
+      "publisher": "福岡市 環境局 環境共生部 自然共生課",
+      "publisherType": "government",
+      "publishedOrUpdatedAt": "2026-04-06",
+      "checkedAt": "2026-07-26",
+      "regionScope": "福岡市・博多湾を含む現行種解説",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "fukuoka_kouika",
+      "supports": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "現行の和名・学名と、日本沿岸100m以浅の砂泥底という一般生態を確認する。博多湾への春の産卵来遊は地域限定情報としてcheckedに留め、釣期へ変換しない。"
+    },
+    {
+      "id": "worms_kouika",
+      "title": "WoRMS taxon list: Sepia esculenta accepted as Acanthosepion esculentum",
+      "url": "https://www.marinespecies.org/aphia.php?p=taxlist&tName=Sepia+esculenta",
+      "publisher": "World Register of Marine Species / MolluscaBase",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-26",
+      "regionScope": "世界規模の海洋生物分類データベース",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "worms_kouika",
+      "supports": [
+        "/identity/scientificName",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "旧学名Sepia esculenta / Sepia (Platysepia) esculentaが現行Acanthosepion esculentumにacceptedされることの確認に使用する。"
+    }
+  ],
+  "review": {
+    "officialResearch": "福岡市の現行図鑑とWoRMS/MolluscaBaseを照合し、現行学名Acanthosepion esculentumと一般的な沿岸・底質情報を採用した。",
+    "secondaryResearch": "博多湾の主な漁期や産卵来遊を対象地域の遊漁釣期へ転用していない。",
+    "schemaValidation": "fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。",
+    "comparisonWithCurrentImplementation": {
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_E_REVIEW.md",
+      "scoreV2Status": "unsupported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt",
+        "reason": "福岡市の現行いきもの図鑑で和名コウイカを確認した。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "fukuoka_kouika"
+        ],
+        "regionScope": "日本語名称",
+        "confidence": "high",
+        "recheckCondition": "公的分類情報更新時に再確認する。"
+      },
+      {
+        "path": "/identity/scientificName",
+        "decision": "adopt",
+        "reason": "福岡市の現行図鑑とWoRMSでAcanthosepion esculentumを現行名として確認した。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "fukuoka_kouika",
+          "worms_kouika"
+        ],
+        "regionScope": "分類・名称情報",
+        "confidence": "high",
+        "recheckCondition": "WoRMS/MolluscaBase更新時に再確認する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/seasonality",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "adopt",
+        "reason": "福岡市資料で日本沿岸の水深100m以浅に生息すると直接確認した。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fukuoka_kouika"
+        ],
+        "regionScope": "日本沿岸",
+        "confidence": "medium",
+        "recheckCondition": "より広域の公的生態資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "adopt",
+        "reason": "福岡市資料で砂泥底などに生息すると直接確認した。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fukuoka_kouika"
+        ],
+        "regionScope": "日本沿岸",
+        "confidence": "medium",
+        "recheckCondition": "より広域の公的生態資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "adopt",
+        "reason": "福岡市資料で日本沿岸の海域に生息すると確認した。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fukuoka_kouika"
+        ],
+        "regionScope": "日本沿岸",
+        "confidence": "medium",
+        "recheckCondition": "分布資料更新時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "hold",
+        "reason": "直接根拠が不足しているため推測補完しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt_with_warning",
+        "reason": "WoRMSで旧Sepia esculenta系の名称がAcanthosepion esculentumへ整理されていることを確認し、分類上の混同防止情報として採用する。福岡市の春の博多湾産卵来遊は地域限定で釣期へ転用しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "worms_kouika",
+          "fukuoka_kouika"
+        ],
+        "regionScope": "分類情報および博多湾の局地観察",
+        "confidence": "medium",
+        "recheckCondition": "分類更新または広域の産卵生態資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/waterTemperature",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/depthRange",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/substrateHabitat",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/salinityAndWaterBody",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/dayNightTiming",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/fishingMethods",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
+        "decision": "hold",
+        "reason": "対象地域の陸っぱり釣れやすさを示す直接根拠が不足している。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+      }
+    ],
+    "reviewStatus": "ready_for_review",
+    "productionAdoption": {
+      "projectionPolicy": "acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。",
+      "acceptedPaths": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "unknownPolicy": "unknownを0点、不適、他頭足類・他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"
+    }
+  }
+}
