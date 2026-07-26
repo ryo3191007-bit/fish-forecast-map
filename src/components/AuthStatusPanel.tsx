@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import type { SupabaseAuthStatus } from "@/hooks/useSupabaseAuth";
 import type { User } from "@supabase/supabase-js";
+import styles from "./AuthStatusPanel.module.css";
 
 type AuthResult = { ok: true; message?: string } | { ok: false; message: string };
 
@@ -127,7 +128,6 @@ export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
       <div>
         <p className="eyebrow">Supabase Auth</p>
         <h3 id="auth-status-heading">ログイン</h3>
-        <p className="muted">メールアドレス＋パスワードでログインできます。docomoメールを含め、メールドメインによる制限はありません。</p>
       </div>
 
       {status === "unavailable" ? (
@@ -137,9 +137,9 @@ export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
       {status === "loading" ? <p className="authStatusNote" role="status">認証状態を確認中...</p> : null}
 
       {status === "signed-out" ? (
-        <div className="externalMemoForm authForm">
-          <form onSubmit={submitPasswordLogin}>
-            <label htmlFor="auth-email">
+        <div className={styles.formCard}>
+          <form className={styles.credentialsForm} onSubmit={submitPasswordLogin}>
+            <label className={styles.field} htmlFor="auth-email">
               メールアドレス
               <input
                 id="auth-email"
@@ -151,7 +151,7 @@ export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
               />
             </label>
 
-            <label htmlFor="auth-password">
+            <label className={styles.field} htmlFor="auth-password">
               パスワード
               <input
                 id="auth-password"
@@ -162,23 +162,27 @@ export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
               />
             </label>
 
-            <div className="externalMemoActions">
-              <button type="submit" className="button" disabled={isSubmitting}>{isSubmitting ? "処理中..." : "ログイン"}</button>
-              <button type="button" className="clearSearchButton" onClick={handleSignUp} disabled={isSubmitting}>新規登録</button>
+            <div className={styles.actions}>
+              <button type="submit" className={`button ${styles.primaryButton}`} disabled={isSubmitting}>
+                {isSubmitting ? "処理中..." : "ログイン"}
+              </button>
+              <button type="button" className={styles.secondaryButton} onClick={handleSignUp} disabled={isSubmitting}>
+                新規登録
+              </button>
             </div>
           </form>
 
-          <button type="button" className="clearSearchButton" onClick={handlePasswordReset} disabled={isSubmitting}>
+          <button type="button" className={styles.resetButton} onClick={handlePasswordReset} disabled={isSubmitting}>
             パスワードを設定・忘れた方
           </button>
-          <small className="muted">以前Magic Linkで登録した方は、メールアドレスを入力してこのボタンから一度だけパスワードを設定できます。</small>
+          <small className={styles.helpText}>以前Magic Linkで登録した方は、メールアドレスを入力してこのボタンから一度だけパスワードを設定できます。</small>
         </div>
       ) : null}
 
       {status === "signed-in" && isPasswordRecovery ? (
-        <form className="externalMemoForm authForm" onSubmit={submitNewPassword}>
+        <form className={`${styles.formCard} ${styles.recoveryForm}`} onSubmit={submitNewPassword}>
           <p className="authStatusNote">新しいパスワードを設定してください。</p>
-          <label htmlFor="auth-new-password">
+          <label className={styles.field} htmlFor="auth-new-password">
             新しいパスワード
             <input
               id="auth-new-password"
@@ -188,7 +192,9 @@ export function AuthStatusPanel({ auth }: AuthStatusPanelProps) {
               autoComplete="new-password"
             />
           </label>
-          <button type="submit" className="button" disabled={isSubmitting}>{isSubmitting ? "更新中..." : "パスワードを更新"}</button>
+          <button type="submit" className={`button ${styles.primaryButton}`} disabled={isSubmitting}>
+            {isSubmitting ? "更新中..." : "パスワードを更新"}
+          </button>
         </form>
       ) : null}
 
