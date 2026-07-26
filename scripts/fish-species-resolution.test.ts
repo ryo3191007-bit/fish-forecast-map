@@ -90,7 +90,7 @@ const list = [{ species: "黒鯛" }, { species: "チヌ" }, { species: "アジ" 
 assert.deepEqual(filterByFishSpecies(list, "クロダイ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), list.slice(0, 2));
 assert.deepEqual(filterByFishSpecies(list, "アジ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), [list[2]]);
 const anagoList = [{ species: "アナゴ" }, { species: "マアナゴ" }, { species: "カレイ" }];
-assert.deepEqual(filterByFishSpecies(anagoList, "アナゴ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), anagoList.slice(0, 2), "generic anago includes exact maanago without aliasing the two IDs");
+assert.deepEqual(filterByFishSpecies(anagoList, "アナゴ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), anagoList.slice(0, 1), "generic anago stays separate from exact maanago until taxonomy is explicitly researched");
 
 for (const [aliasName, speciesId] of batch1Aliases) {
   const canonicalName = staticFishSpecies.find((species) => species.id === speciesId)?.nameJa;
