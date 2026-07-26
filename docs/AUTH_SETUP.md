@@ -1,9 +1,6 @@
 # FishForecastMap 認証設定
 
-Issue #318 で、ログイン方式を Magic Link 中心から次の2方式へ変更する。
-
-- Googleログイン
-- メールアドレス + パスワード
+Issue #318 で、ログイン方式を Magic Link 中心から **メールアドレス + パスワード** へ変更する。
 
 既存のSupabase Auth、既存user id、RLS、remote Supabaseデータは維持する。
 
@@ -21,27 +18,11 @@ Hosted Supabaseでは Email provider を有効にし、メール + パスワー�
 
 ただし、確認メールやパスワード再設定メールが受信側の迷惑メール設定・受信許可設定等で届かない場合は、SMTP送信元ドメインを受信許可するなど、利用者側のメール設定確認が必要になることがある。
 
-## 2. Googleログイン
-
-Supabase Dashboard の Authentication > Providers で Google provider を有効にする。
-
-Google Auth Platform / Google Cloud側でWeb用OAuth Clientを作成し、Supabase DashboardのGoogle provider画面に表示されるcallback URLを **Authorized redirect URI** として登録する。
-
-例:
-
-```text
-https://<project-ref>.supabase.co/auth/v1/callback
-```
-
-取得したClient ID / Client SecretをSupabase DashboardのGoogle provider設定へ登録する。
-
-アプリ側では `signInWithOAuth({ provider: "google" })` を利用し、認証完了後は呼び出し元ページへ戻す。
-
-## 3. Site URL / Redirect URLs
+## 2. Site URL / Redirect URLs
 
 Supabase Dashboard の Authentication > URL Configuration で、少なくとも本番URLをSite URLとして設定する。
 
-また、認証後・パスワード再設定後に戻すURLをRedirect URLsへ登録する。
+また、メール確認後・パスワード再設定後に戻すURLをRedirect URLsへ登録する。
 
 対象例:
 
@@ -50,9 +31,9 @@ https://<production-domain>/
 http://localhost:3000/**
 ```
 
-Vercel PreviewでOAuth/パスワード再設定を実機確認する場合は、プロジェクト運用方針に従ってPreview URLも許可する。ワイルドカードを利用する場合は、許可範囲を必要最小限にする。
+Vercel Previewでパスワード再設定を実機確認する場合は、プロジェクト運用方針に従ってPreview URLも許可する。ワイルドカードを利用する場合は、許可範囲を必要最小限にする。
 
-## 4. Production用 Custom SMTP
+## 3. Production用 Custom SMTP
 
 Supabase標準のメール送信サービスは開発・試用向けであり、本番の確認メール・パスワード再設定メールには **Custom SMTP** を設定する。
 
@@ -69,7 +50,7 @@ Supabase Dashboard の Authentication > Emails > SMTP Settings から、利用�
 
 `@docomo.ne.jp` 等のキャリアメールへの到達性を含め、本番公開前に実際の受信確認を行う。
 
-## 5. セキュリティ方針
+## 4. セキュリティ方針
 
 ブラウザ側で利用するのは既存の安全なSupabase clientのみとする。
 
@@ -86,7 +67,7 @@ Supabase Dashboard の Authentication > Emails > SMTP Settings から、利用�
 
 認証方式の変更を理由にRLSを弱めない。
 
-## 6. 動作確認
+## 5. 動作確認
 
 コード側:
 
@@ -101,10 +82,9 @@ npm run build
 
 Supabase設定後のPreview確認:
 
-1. Googleでログインできる
-2. 新規メール + パスワード登録ができる
-3. 確認メールが必要な設定では確認後にログインできる
-4. 既存Magic Linkユーザーがパスワード再設定メールからパスワードを設定できる
-5. 設定後はメール + パスワードだけでログインできる
-6. `@docomo.ne.jp` の登録・確認メール・パスワード再設定メールを実機確認する
-7. ログアウト後に既存ユーザー所有データ/RLSの所有関係が変わっていないことを確認する
+1. 新規メール + パスワード登録ができる
+2. 確認メールが必要な設定では確認後にログインできる
+3. 既存Magic Linkユーザーがパスワード再設定メールからパスワードを設定できる
+4. 設定後はメール + パスワードだけでログインできる
+5. `@docomo.ne.jp` の登録・確認メール・パスワード再設定メールを実機確認する
+6. ログアウト後に既存ユーザー所有データ/RLSの所有関係が変わっていないことを確認する
