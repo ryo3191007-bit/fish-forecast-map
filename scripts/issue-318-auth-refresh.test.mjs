@@ -23,10 +23,16 @@ const checks = [
   ["login and registration stay side by side on narrow screens", authStyles.includes("grid-template-columns: repeat(2, minmax(0, 1fr))") && !authStyles.includes("grid-template-columns: 1fr;")],
   ["auth button labels are vertically centered", authStyles.includes("display: flex") && authStyles.includes("align-items: center") && authStyles.includes("justify-content: center")],
   ["password reset button keeps readable width", authStyles.includes(".resetButton") && authStyles.includes("width: 100%") && authStyles.includes("word-break: keep-all")],
+  ["auth error code is normalized", authHook.includes('"code" in error') && authHook.includes("rawCode")],
+  ["auth HTTP status is normalized", authHook.includes('"status" in error') && authHook.includes('rawStatus === "429"')],
+  ["email rate limit error is localized", authHook.includes("over_email_send_rate_limit") && authHook.includes("認証メールの送信回数が上限に達しました")],
+  ["generic auth rate limit error is localized", authHook.includes("too many requests") && authHook.includes("認証処理の回数が上限に達しました")],
   ["docomo is explicitly supported", setupDoc.includes("@docomo.ne.jp")],
   ["Google provider setup is not required", !setupDoc.includes("Google provider") && !setupDoc.includes("Authorized redirect URI")],
-  ["custom SMTP is documented", setupDoc.includes("Custom SMTP")],
-  ["service role is not introduced in auth hook", !/SERVICE_ROLE|service_role/.test(authHook)],
+  ["custom SMTP is documented", setupDoc.includes("Custom SMTP") && setupDoc.includes("Built-in SMTP service") && setupDoc.includes("Authentication > Rate Limits")],
+  ["admin password recovery uses Auth Admin API", setupDoc.includes("updateUserById") && setupDoc.includes("TARGET_USER_ID") && setupDoc.includes("TARGET_PASSWORD")],
+  ["direct auth password SQL update is prohibited", setupDoc.includes("encrypted_password") && setupDoc.includes("SQLで直接UPDATEしない")],
+  ["service role is not introduced in auth hook", !/SERVICE_ROLE|service_role|SUPABASE_SECRET_KEY/.test(authHook)],
 ];
 
 let failed = false;
@@ -36,8 +42,8 @@ for (const [label, passed] of checks) {
 }
 
 if (failed) {
-  console.error("Issue #318 auth refresh test failed.");
+  console.error("Issue #318/#320 auth refresh test failed.");
   process.exit(1);
 }
 
-console.log("Issue #318 auth refresh test passed.");
+console.log("Issue #318/#320 auth refresh test passed.");

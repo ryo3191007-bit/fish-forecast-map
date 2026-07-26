@@ -37,6 +37,8 @@ Vercel Previewでパスワード再設定を実機確認する場合は、プロ
 
 Supabase標準のメール送信サービスは開発・試用向けであり、本番の確認メール・パスワード再設定メールには **Custom SMTP** を設定する。
 
+Built-in SMTP serviceは本番用途に使用しない。Supabaseの現行仕様では、Custom SMTP未設定時はプロジェクトのTeamで事前承認されたメールアドレス以外への配送が拒否され、メール送信系エンドポイントにはプロジェクト全体で2通/時の厳しい上限がある。この値や制限内容は将来変更される可能性があるため、本番運用時はSupabase公式ドキュメントとDashboardの設定を正とする。
+
 Supabase Dashboard の Authentication > Emails > SMTP Settings から、利用するメールサービスのSMTP情報を設定する。
 
 設定項目は利用するSMTPサービスに従うが、一般に以下を準備する。
@@ -48,9 +50,50 @@ Supabase Dashboard の Authentication > Emails > SMTP Settings から、利用�
 - sender email
 - sender name
 
+Custom SMTP設定後は Authentication > Rate Limits も確認し、想定利用量に合わせてメール送信上限を設定する。
+
 `@docomo.ne.jp` 等のキャリアメールへの到達性を含め、本番公開前に実際の受信確認を行う。
 
-## 4. セキュリティ方針
+## 4. 緊急時の既存ユーザーへのパスワード設定
+
+メール送信制限等によりパスワード再設定メールを使えず、管理者判断で既存ユーザーへ直ちにパスワードを設定する必要がある場合は、`auth.users` の `encrypted_password` をSQLで直接UPDATEしない。
+
+Supabase Auth Admin API の `updateUserById()` を、管理者だけが扱えるtrusted server / ローカル端末から利用する。Admin APIによる変更は確認メール等のconfirmation flowを介さず直接反映されるため、対象user idを必ず確認してから実行する。
+
+```ts
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_SECRET_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false,
+    },
+  },
+);
+
+const { error } = await supabase.auth.admin.updateUserById(
+  process.env.TARGET_USER_ID!,
+  { password: process.env.TARGET_PASSWORD! },
+);
+
+if (error) throw error;
+```
+
+対象のuser idはSupabase Dashboardの Authentication > Users で確認する。既存user idを維持したままパスワードだけを設定するため、ユーザーを削除・再作成しない。
+
+以下はGitHub、ブラウザコード、Issue/PR本文、チャットへ記載しない。
+
+- Supabase secret key / legacy service role key
+- 利用者の実パスワード
+- 一時的に使った管理用資格情報
+
+管理処理完了後は、管理用の一時ファイルや環境変数を残さない。管理APIはメール送信を伴わないため、メール送信rate limitの回避目的でAuth内部DBを直接変更する必要はない。
+
+## 5. セキュリティ方針
 
 ブラウザ側で利用するのは既存の安全なSupabase clientのみとする。
 
@@ -61,13 +104,13 @@ Supabase Dashboard の Authentication > Emails > SMTP Settings から、利用�
 
 ブラウザ側へ追加してはいけないもの:
 
-- service role key
+- secret key / service role key
 - database password
 - database connection URL
 
 認証方式の変更を理由にRLSを弱めない。
 
-## 5. 動作確認
+## 6. 動作確認
 
 コード側:
 
@@ -87,4 +130,5 @@ Supabase設定後のPreview確認:
 3. 既存Magic Linkユーザーがパスワード再設定メールからパスワードを設定できる
 4. 設定後はメール + パスワードだけでログインできる
 5. `@docomo.ne.jp` の登録・確認メール・パスワード再設定メールを実機確認する
-6. ログアウト後に既存ユーザー所有データ/RLSの所有関係が変わっていないことを確認する
+6. email rate limit発生時に技術エラー文字列ではなく日本語案内が表示される
+7. ログアウト後に既存ユーザー所有データ/RLSの所有関係が変わっていないことを確認する
