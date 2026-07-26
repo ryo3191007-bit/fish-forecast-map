@@ -37,7 +37,7 @@ Vercel Previewでパスワード再設定を実機確認する場合は、プロ
 
 Supabase標準のメール送信サービスは開発・試用向けであり、本番の確認メール・パスワード再設定メールには **Custom SMTP** を設定する。
 
-Built-in email providerは本番用途に使用しない。送信回数制限や送信先制限があるため、ProductionではCustom SMTPを設定したうえで、`@docomo.ne.jp` 等のキャリアメールを含む実アドレスへの到達性を確認する。
+Built-in SMTP serviceは本番用途に使用しない。Supabaseの現行仕様では、Custom SMTP未設定時はプロジェクトのTeamで事前承認されたメールアドレス以外への配送が拒否され、メール送信系エンドポイントにはプロジェクト全体で2通/時の厳しい上限がある。この値や制限内容は将来変更される可能性があるため、本番運用時はSupabase公式ドキュメントとDashboardの設定を正とする。
 
 Supabase Dashboard の Authentication > Emails > SMTP Settings から、利用するメールサービスのSMTP情報を設定する。
 
@@ -50,13 +50,15 @@ Supabase Dashboard の Authentication > Emails > SMTP Settings から、利用�
 - sender email
 - sender name
 
+Custom SMTP設定後は Authentication > Rate Limits も確認し、想定利用量に合わせてメール送信上限を設定する。
+
 `@docomo.ne.jp` 等のキャリアメールへの到達性を含め、本番公開前に実際の受信確認を行う。
 
 ## 4. 緊急時の既存ユーザーへのパスワード設定
 
 メール送信制限等によりパスワード再設定メールを使えず、管理者判断で既存ユーザーへ直ちにパスワードを設定する必要がある場合は、`auth.users` の `encrypted_password` をSQLで直接UPDATEしない。
 
-Supabase Auth Admin API の `updateUserById()` を、管理者だけが扱えるtrusted server / ローカル端末から利用する。
+Supabase Auth Admin API の `updateUserById()` を、管理者だけが扱えるtrusted server / ローカル端末から利用する。Admin APIによる変更は確認メール等のconfirmation flowを介さず直接反映されるため、対象user idを必ず確認してから実行する。
 
 ```ts
 import { createClient } from "@supabase/supabase-js";
