@@ -24,7 +24,13 @@ type UseSupabaseAuthResult = {
 
 function getFriendlyAuthMessage(error: unknown) {
   const rawMessage = error instanceof Error && error.message ? error.message : "";
-  const normalized = rawMessage.toLowerCase();
+  const rawCode = typeof error === "object" && error !== null && "code" in error
+    ? String((error as { code?: unknown }).code ?? "")
+    : "";
+  const rawStatus = typeof error === "object" && error !== null && "status" in error
+    ? String((error as { status?: unknown }).status ?? "")
+    : "";
+  const normalized = `${rawCode} ${rawStatus} ${rawMessage}`.toLowerCase();
 
   if (normalized.includes("invalid login credentials")) return "メールアドレスまたはパスワードが正しくありません。";
   if (normalized.includes("email not confirmed")) return "メールアドレスの確認が完了していません。確認メールをご確認ください。";
@@ -34,7 +40,7 @@ function getFriendlyAuthMessage(error: unknown) {
   if (normalized.includes("email rate limit") || normalized.includes("over_email_send_rate_limit")) {
     return "認証メールの送信回数が上限に達しました。しばらく時間をおいてから、もう一度お試しください。";
   }
-  if (normalized.includes("rate limit") || normalized.includes("too many requests")) {
+  if (rawStatus === "429" || normalized.includes("rate limit") || normalized.includes("too many requests")) {
     return "認証処理の回数が上限に達しました。しばらく時間をおいてから、もう一度お試しください。";
   }
   if (rawMessage) return rawMessage;
