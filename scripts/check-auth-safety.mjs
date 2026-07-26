@@ -45,16 +45,16 @@ checks.push(["auth hook uses shared safe Supabase client", /getSupabaseClient/.t
 checks.push(["auth hook supports unavailable status", /unavailable/.test(authHook)]);
 checks.push(["auth hook supports password sign in", /signInWithPassword/.test(authHook)]);
 checks.push(["auth hook supports password sign up", /\.auth\.signUp\(/.test(authHook)]);
-checks.push(["auth hook supports Google OAuth", /signInWithOAuth/.test(authHook) && /provider:\s*["']google["']/.test(authHook)]);
 checks.push(["auth hook supports password recovery email", /resetPasswordForEmail/.test(authHook)]);
 checks.push(["auth hook supports password update", /updateUser\(\{\s*password/.test(authHook)]);
 checks.push(["auth hook no longer depends on magic-link sign in", !/signInWithOtp/.test(authHook)]);
+checks.push(["auth hook does not include social OAuth", !/signInWithOAuth/.test(authHook)]);
 
 const authPanel = readFileSync("src/components/AuthStatusPanel.tsx", "utf8");
-checks.push(["auth panel exposes Google login", /Googleで続ける/.test(authPanel)]);
 checks.push(["auth panel exposes password login", /type="password"/.test(authPanel) && /ログイン/.test(authPanel)]);
 checks.push(["auth panel exposes registration", /新規登録/.test(authPanel)]);
 checks.push(["auth panel exposes password reset", /パスワードを設定・忘れた方/.test(authPanel)]);
+checks.push(["auth panel has no Google login", !/Googleで続ける/.test(authPanel)]);
 checks.push(["auth panel does not restrict docomo email", !/@docomo\.ne\.jp.*(?:拒否|禁止|invalid|deny)/i.test(authPanel)]);
 
 let failed = false;
