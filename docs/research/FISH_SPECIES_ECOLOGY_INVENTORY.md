@@ -9,7 +9,10 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 - 生態JSONあり: **68件** / なし: **1件**
 - schemaVersion: `1.2.0` 5件 / `1.3.0` 63件
 - 既存JSON内の `stableGeneral` unknown: **398/544属性 (73.2%)**
-- JSON未作成を8属性未評価として含めた未解決相当: **406/552属性 (73.6%)**
+  - species_group: **96/96属性 (100.0%)**
+  - 個別taxon（species_group以外）: **302/448属性 (67.4%)**
+- 既存JSON内の `regionalCatchability` unknown: **533/544属性 (98.0%)**
+- JSON未作成を8属性未評価として含めた `stableGeneral` 未解決相当: **406/552属性 (73.6%)**
 - `stableGeneral` 8/8 unknown: **16件**
 - 子species 0件のspecies_group: **7件**
 - active master外の研究JSON: **0件**
