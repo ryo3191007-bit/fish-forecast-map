@@ -41,7 +41,7 @@
     "test:bathymetry-point": "node scripts/bathymetry-point.test.mjs",
     "test:issue-163-fishing-spots": "node scripts/fishing-spot-research-schema.test.mjs",
     "test:issue-178-safe-spots-production": "node scripts/issue-178-safe-spots-production.test.mjs",
-    "test:fish-species-ecology": "node scripts/fish-species-ecology-schema.test.mjs && node scripts/fish-species-ecology-expanded.test.mjs && npm run test:fish-species-ecology-v2 && tsx scripts/fish-species-ecology-score-projection.test.mts",
+    "test:fish-species-ecology": "node scripts/fish-species-ecology-schema.test.mjs && node scripts/fish-species-ecology-expanded.test.mjs && npm run test:fish-species-ecology-v2 && npm run test:fish-species-ecology-v2-integrity && tsx scripts/fish-species-ecology-score-projection.test.mts",
     "test:fishing-spot-detail-foundation": "node scripts/fishing-spot-detail-foundation.test.mjs",
     "test:fishing-spot-detail-runtime": "node scripts/fishing-spot-detail-runtime.test.mjs",
     "test:issue-181-fishing-spot-details": "node scripts/issue-181-fishing-spot-details.test.mjs",
@@ -56,7 +56,7 @@
     "test:fish-species-groups": "tsx scripts/fish-species-groups.test.ts",
     "test:map-focus-popup": "node scripts/map-focus-popup.test.mjs",
     "test:mock-report-removal": "node scripts/mock-fishing-reports-removal.test.mjs",
-    "test:issue-205-karatsu-spots": "node scripts/issue-205-karatsu-spots.test.mjs",
+    "test:issue-205-karatsu-spots": "tsx scripts/issue-205-karatsu-spots.test.mts",
     "test:issue-237-terrain-presentation": "tsx scripts/issue-237-terrain-presentation.test.ts",
     "test:issue-238-compact-map-ui": "node scripts/issue-238-compact-map-ui.test.mjs",
     "test:issue-248-imari-spots": "tsx scripts/issue-248-imari-spots.test.mts",
@@ -83,7 +83,8 @@
     "test:issue-302-split-species-tab": "tsx scripts/issue-302-split-species-tab.test.mts",
     "test:issue-304-user-catch-species-tab": "tsx scripts/issue-304-user-catch-species-tab.test.mts",
     "test:issue-306-field-observations": "tsx scripts/issue-306-field-observations.test.mts",
-    "test:fish-species-ecology-v2": "node scripts/fish-species-ecology-v2.test.mjs"
+    "test:fish-species-ecology-v2": "node scripts/fish-species-ecology-v2.test.mjs",
+    "test:fish-species-ecology-v2-integrity": "node scripts/fish-species-ecology-v2-integrity.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",
