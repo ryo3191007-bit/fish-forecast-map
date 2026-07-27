@@ -7,15 +7,15 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 - active master: **80件**
 - entityType: `cephalopod_species` 1件 / `exact_species` 61件 / `species_group` 13件 / `squid_species` 5件
 - 生態JSONあり: **68件** / なし: **12件**
-- schemaVersion: `1.2.0` 3件 / `1.3.0` 45件 / `1.4.0` 20件
-- v1.4移行: **20/67 taxon** / 未移行または未調査claimあり: **47 taxon**
-- v1.4 researchState（identity 2 + ecology 16 claim）: `not_researched` 0 / `complete` 359 / `blocked` 1 / `not_applicable` 0
-- v1.4 unknownReason: `not_researched` 0 / `source_not_found` 27 / `insufficient_evidence` 20 / `conflicting_evidence` 0 / `scope_mismatch` 172 / `taxonomy_uncertain` 1
-- 既存JSON内の `stableGeneral` unknown: **354/544属性 (65.1%)**
+- schemaVersion: `1.2.0` 3件 / `1.3.0` 35件 / `1.4.0` 30件
+- v1.4移行: **30/67 taxon** / 未移行または未調査claimあり: **37 taxon**
+- v1.4 researchState（identity 2 + ecology 16 claim）: `not_researched` 0 / `complete` 539 / `blocked` 1 / `not_applicable` 0
+- v1.4 unknownReason: `not_researched` 0 / `source_not_found` 36 / `insufficient_evidence` 39 / `conflicting_evidence` 0 / `scope_mismatch` 277 / `taxonomy_uncertain` 1
+- 既存JSON内の `stableGeneral` unknown: **350/544属性 (64.3%)**
   - species_group: **96/96属性 (100.0%)**
-  - 個別taxon（species_group以外）: **258/448属性 (57.6%)**
+  - 個別taxon（species_group以外）: **254/448属性 (56.7%)**
 - 既存JSON内の `regionalCatchability` unknown: **541/544属性 (99.4%)**
-- JSON未作成を8属性未評価として含めた `stableGeneral` 未解決相当: **450/640属性 (70.3%)**
+- JSON未作成を8属性未評価として含めた `stableGeneral` 未解決相当: **446/640属性 (69.7%)**
 - `stableGeneral` 8/8 unknown: **15件**
 - 子species 0件のspecies_group: **0件**
 - active master外の研究JSON: **0件**
@@ -55,16 +55,6 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 
 ### v2未調査taxon
 
-- クエ (`kue`) — schema 1.3.0
-- ヤリイカ (`kensakiika`) — schema 1.3.0
-- スルメイカ (`surumeika`) — schema 1.3.0
-- マダコ (`madako`) — schema 1.3.0
-- イサキ (`isaki`) — schema 1.3.0
-- メジナ (`mejina`) — schema 1.3.0
-- タチウオ (`tachiuo`) — schema 1.3.0
-- カワハギ (`kawahagi`) — schema 1.3.0
-- ウマヅラハギ (`umazurahagi`) — schema 1.3.0
-- コノシロ (`konoshiro`) — schema 1.3.0
 - サヨリ (`sayori`) — schema 1.3.0
 - ボラ (`bora`) — schema 1.3.0
 - マアナゴ (`maanago`) — schema 1.3.0
@@ -138,16 +128,16 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 | 23 | `akahata` | アカハタ | exact_species | `rockfish` | 0 | あり | 1.4.0 | C5/I1/U2/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
 | 24 | `mahata` | マハタ | exact_species | `rockfish` | 0 | あり | 1.4.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
 | 25 | `aohata` | アオハタ | exact_species | `rockfish` | 0 | あり | 1.4.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
-| 26 | `kue` | クエ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
-| 27 | `kensakiika` | ヤリイカ | squid_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
-| 28 | `surumeika` | スルメイカ | squid_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
-| 29 | `madako` | マダコ | cephalopod_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
-| 30 | `isaki` | イサキ | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
-| 31 | `mejina` | メジナ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
-| 32 | `tachiuo` | タチウオ | exact_species | - | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
-| 33 | `kawahagi` | カワハギ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
-| 34 | `umazurahagi` | ウマヅラハギ | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
-| 35 | `konoshiro` | コノシロ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
+| 26 | `kue` | クエ | exact_species | `rockfish` | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 27 | `kensakiika` | ヤリイカ | squid_species | - | 0 | あり | 1.4.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 28 | `surumeika` | スルメイカ | squid_species | - | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 29 | `madako` | マダコ | cephalopod_species | - | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 30 | `isaki` | イサキ | exact_species | - | 0 | あり | 1.4.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 31 | `mejina` | メジナ | exact_species | - | 0 | あり | 1.4.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 32 | `tachiuo` | タチウオ | exact_species | - | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 33 | `kawahagi` | カワハギ | exact_species | - | 0 | あり | 1.4.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 34 | `umazurahagi` | ウマヅラハギ | exact_species | - | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 35 | `konoshiro` | コノシロ | exact_species | - | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
 | 36 | `sayori` | サヨリ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
 | 37 | `bora` | ボラ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
 | 38 | `maanago` | マアナゴ | exact_species | `anago` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
