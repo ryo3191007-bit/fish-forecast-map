@@ -16,6 +16,8 @@ const ecologyKeys = [
   "spawningOrConfusableInfo",
 ];
 const statuses = ["confirmed", "inferred", "unknown", "not_applicable"];
+const researchStates = ["not_researched", "complete", "blocked", "not_applicable"];
+const unknownReasons = ["not_researched", "source_not_found", "insufficient_evidence", "conflicting_evidence", "scope_mismatch", "taxonomy_uncertain"];
 
 function parseNullableToken(token) {
   return token === "null" ? null : token.slice(1, -1);
@@ -69,6 +71,31 @@ function compactCounts(counts) {
   return `C${counts.confirmed}/I${counts.inferred}/U${counts.unknown}/N${counts.not_applicable}`;
 }
 
+function summarizeV14(doc) {
+  if (doc?.schemaVersion !== "1.4.0") return null;
+  const stateCounts = Object.fromEntries(researchStates.map((state) => [state, 0]));
+  const reasonCounts = Object.fromEntries(unknownReasons.map((reason) => [reason, 0]));
+  const claims = [doc.identity.canonicalNameJa, doc.identity.scientificName];
+  for (const section of ["stableGeneral", "regionalCatchability"]) {
+    for (const key of ecologyKeys) claims.push(doc.ecology[section][key]);
+  }
+  for (const claim of claims) {
+    if (!researchStates.includes(claim.researchState)) throw new Error(`${doc.speciesId}: unexpected researchState ${String(claim.researchState)}`);
+    stateCounts[claim.researchState] += 1;
+    if (claim.unknownReason !== null) {
+      if (!unknownReasons.includes(claim.unknownReason)) throw new Error(`${doc.speciesId}: unexpected unknownReason ${String(claim.unknownReason)}`);
+      reasonCounts[claim.unknownReason] += 1;
+    }
+  }
+  return { stateCounts, reasonCounts };
+}
+
+function compactResearchStates(summary) {
+  if (!summary) return "-";
+  const counts = summary.stateCounts;
+  return `NR${counts.not_researched}/C${counts.complete}/B${counts.blocked}/NA${counts.not_applicable}`;
+}
+
 function escapeCell(value) {
   return String(value ?? "-").replaceAll("|", "\\|");
 }
@@ -97,6 +124,7 @@ function generateInventory() {
       schemaVersion: research?.doc.schemaVersion ?? null,
       stable,
       regional,
+      v14: research ? summarizeV14(research.doc) : null,
     };
   });
 
@@ -122,6 +150,11 @@ function generateInventory() {
   const schemaCounts = new Map();
   for (const row of researchedRows) schemaCounts.set(row.schemaVersion, (schemaCounts.get(row.schemaVersion) ?? 0) + 1);
   const orphanResearch = researchDocs.filter(({ doc }) => !activeById.has(doc.speciesId));
+  const v14Rows = researchedRows.filter((row) => row.v14);
+  const v14StateTotals = Object.fromEntries(researchStates.map((state) => [state, v14Rows.reduce((sum, row) => sum + row.v14.stateCounts[state], 0)]));
+  const v14ReasonTotals = Object.fromEntries(unknownReasons.map((reason) => [reason, v14Rows.reduce((sum, row) => sum + row.v14.reasonCounts[reason], 0)]));
+  const v2TargetRows = rows.filter((row) => row.entityType !== "species_group");
+  const v2UnresearchedRows = v2TargetRows.filter((row) => row.schemaVersion !== "1.4.0" || row.v14.stateCounts.not_researched > 0);
 
   const lines = [
     "# 魚種master × 生態調査状況 棚卸し",
@@ -134,6 +167,9 @@ function generateInventory() {
     `- entityType: ${[...entityCounts.entries()].sort().map(([type, count]) => `\`${type}\` ${count}件`).join(" / ")}`,
     `- 生態JSONあり: **${researchedRows.length}件** / なし: **${missingRows.length}件**`,
     `- schemaVersion: ${[...schemaCounts.entries()].sort().map(([version, count]) => `\`${version}\` ${count}件`).join(" / ") || "なし"}`,
+    `- v1.4移行: **${v14Rows.length}/${v2TargetRows.length} taxon** / 未移行または未調査claimあり: **${v2UnresearchedRows.length} taxon**`,
+    `- v1.4 researchState（identity 2 + ecology 16 claim）: ${researchStates.map((state) => `\`${state}\` ${v14StateTotals[state]}`).join(" / ")}`,
+    `- v1.4 unknownReason: ${unknownReasons.map((reason) => `\`${reason}\` ${v14ReasonTotals[reason]}`).join(" / ")}`,
     `- 既存JSON内の \`stableGeneral\` unknown: **${stableUnknown}/${stableMeasuredTotal}属性 (${ratio(stableUnknown, stableMeasuredTotal)})**`,
     `  - species_group: **${groupStableUnknown}/${groupStableTotal}属性 (${ratio(groupStableUnknown, groupStableTotal)})**`,
     `  - 個別taxon（species_group以外）: **${nonGroupStableUnknown}/${nonGroupStableTotal}属性 (${ratio(nonGroupStableUnknown, nonGroupStableTotal)})**`,
@@ -151,6 +187,10 @@ function generateInventory() {
     "",
     allStableUnknown.length > 0 ? allStableUnknown.map((row) => `- ${row.nameJa} (\`${row.id}\`) — ${row.entityType}`).join("\n") : "なし",
     "",
+    "### v2未調査taxon",
+    "",
+    v2UnresearchedRows.length > 0 ? v2UnresearchedRows.map((row) => `- ${row.nameJa} (\`${row.id}\`) — ${row.schemaVersion === "1.4.0" ? "not_researched claimあり" : `schema ${row.schemaVersion ?? "なし"}`}`).join("\n") : "なし",
+    "",
     "### 子speciesが0件のspecies_group",
     "",
     emptyGroups.length > 0 ? emptyGroups.map((row) => `- ${row.nameJa} (\`${row.id}\`)`).join("\n") : "なし",
@@ -159,9 +199,9 @@ function generateInventory() {
     "",
     "`stable` / `regional` は `C=confirmed / I=inferred / U=unknown / N=not_applicable` の8属性内訳。JSONがない場合は `-`。",
     "",
-    "| # | speciesId | 表示名 | entityType | parent | 子 | JSON | schema | stable | regional |",
-    "|---:|---|---|---|---|---:|:---:|---|---|---|",
-    ...rows.map((row, index) => `| ${index + 1} | \`${escapeCell(row.id)}\` | ${escapeCell(row.nameJa)} | ${escapeCell(row.entityType)} | ${row.parentGroupId ? `\`${escapeCell(row.parentGroupId)}\`` : "-"} | ${row.childCount} | ${row.hasResearch ? "あり" : "なし"} | ${escapeCell(row.schemaVersion)} | ${compactCounts(row.stable)} | ${compactCounts(row.regional)} |`),
+    "| # | speciesId | 表示名 | entityType | parent | 子 | JSON | schema | stable | regional | v1.4 state |",
+    "|---:|---|---|---|---|---:|:---:|---|---|---|---|",
+    ...rows.map((row, index) => `| ${index + 1} | \`${escapeCell(row.id)}\` | ${escapeCell(row.nameJa)} | ${escapeCell(row.entityType)} | ${row.parentGroupId ? `\`${escapeCell(row.parentGroupId)}\`` : "-"} | ${row.childCount} | ${row.hasResearch ? "あり" : "なし"} | ${escapeCell(row.schemaVersion)} | ${compactCounts(row.stable)} | ${compactCounts(row.regional)} | ${compactResearchStates(row.v14)} |`),
     "",
     "## 読み方と次工程への注意",
     "",

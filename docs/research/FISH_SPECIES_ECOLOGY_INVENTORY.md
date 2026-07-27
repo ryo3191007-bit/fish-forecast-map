@@ -8,6 +8,9 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 - entityType: `cephalopod_species` 1件 / `exact_species` 61件 / `species_group` 13件 / `squid_species` 5件
 - 生態JSONあり: **68件** / なし: **12件**
 - schemaVersion: `1.2.0` 5件 / `1.3.0` 63件
+- v1.4移行: **0/67 taxon** / 未移行または未調査claimあり: **67 taxon**
+- v1.4 researchState（identity 2 + ecology 16 claim）: `not_researched` 0 / `complete` 0 / `blocked` 0 / `not_applicable` 0
+- v1.4 unknownReason: `not_researched` 0 / `source_not_found` 0 / `insufficient_evidence` 0 / `conflicting_evidence` 0 / `scope_mismatch` 0 / `taxonomy_uncertain` 0
 - 既存JSON内の `stableGeneral` unknown: **398/544属性 (73.2%)**
   - species_group: **96/96属性 (100.0%)**
   - 個別taxon（species_group以外）: **302/448属性 (67.4%)**
@@ -51,6 +54,76 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 - エソ (`eso`) — species_group
 - ヤガラ (`yagara`) — species_group
 
+### v2未調査taxon
+
+- シイラ (`shiira`) — schema 1.3.0
+- ヒラメ (`hirame`) — schema 1.3.0
+- マゴチ (`magochi`) — schema 1.3.0
+- スズキ (`seabass`) — schema 1.2.0
+- アオリイカ (`aoriika`) — schema 1.3.0
+- コウイカ (`kouika`) — schema 1.3.0
+- チヌ (`chinu`) — schema 1.2.0
+- 真鯛 (`madai`) — schema 1.3.0
+- キス (`kisu`) — schema 1.3.0
+- ブリ (`buri`) — schema 1.3.0
+- ヒラマサ (`hiramasa`) — schema 1.3.0
+- カンパチ (`kanpachi`) — schema 1.3.0
+- サワラ (`sawara`) — schema 1.3.0
+- カサゴ (`kasago`) — schema 1.3.0
+- オニオコゼ (`oniokoze`) — schema 1.3.0
+- キジハタ (`kijihata`) — schema 1.3.0
+- オオモンハタ (`oomonhata`) — schema 1.3.0
+- アカハタ (`akahata`) — schema 1.3.0
+- マハタ (`mahata`) — schema 1.3.0
+- アオハタ (`aohata`) — schema 1.3.0
+- クエ (`kue`) — schema 1.3.0
+- ヤリイカ (`kensakiika`) — schema 1.3.0
+- スルメイカ (`surumeika`) — schema 1.3.0
+- マダコ (`madako`) — schema 1.3.0
+- イサキ (`isaki`) — schema 1.3.0
+- メジナ (`mejina`) — schema 1.3.0
+- タチウオ (`tachiuo`) — schema 1.3.0
+- カワハギ (`kawahagi`) — schema 1.3.0
+- ウマヅラハギ (`umazurahagi`) — schema 1.3.0
+- コノシロ (`konoshiro`) — schema 1.3.0
+- サヨリ (`sayori`) — schema 1.3.0
+- ボラ (`bora`) — schema 1.3.0
+- マアナゴ (`maanago`) — schema 1.3.0
+- イシダイ (`ishidai`) — schema 1.3.0
+- イシガキダイ (`ishigakidai`) — schema 1.3.0
+- アカカマス (`akakamasu`) — schema なし
+- ヤマトカマス (`yamatokamasu`) — schema なし
+- マアジ (`maaji`) — schema 1.2.0
+- マルアジ (`maruaji`) — schema 1.2.0
+- マサバ (`masaba`) — schema 1.3.0
+- ゴマサバ (`gomasaba`) — schema 1.3.0
+- マイワシ (`maiwashi`) — schema 1.3.0
+- カタクチイワシ (`katakuchiiwashi`) — schema 1.3.0
+- ウルメイワシ (`urumeiwashi`) — schema 1.3.0
+- アカメバル (`akamebaru`) — schema 1.3.0
+- クロメバル (`kuromebaru`) — schema 1.3.0
+- シロメバル (`shiromebaru`) — schema 1.3.0
+- アイゴ (`aigo`) — schema 1.3.0
+- ヒラスズキ (`hirasuzuki`) — schema 1.3.0
+- カツオ (`katsuo`) — schema 1.3.0
+- キュウセン (`kyusen`) — schema 1.3.0
+- キチヌ (`kichinu`) — schema 1.3.0
+- ジンドウイカ (`jindouika`) — schema 1.3.0
+- ムツ (`mutsu`) — schema 1.3.0
+- ダツ (`datsu`) — schema 1.3.0
+- ホウボウ (`houbou`) — schema 1.3.0
+- ヨコフエダイ (`yokofuedai`) — schema 1.3.0
+- フエダイ (`fuedai`) — schema 1.3.0
+- マコガレイ (`makogarei`) — schema なし
+- ネズミゴチ (`nezumigochi`) — schema なし
+- マハゼ (`mahaze`) — schema なし
+- ウロハゼ (`urohaze`) — schema なし
+- マエソ (`maeso`) — schema なし
+- ワニエソ (`wanieso`) — schema なし
+- トカゲエソ (`tokageeso`) — schema なし
+- アカヤガラ (`akayagara`) — schema なし
+- アオヤガラ (`aoyagara`) — schema なし
+
 ### 子speciesが0件のspecies_group
 
 なし
@@ -59,88 +132,88 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 
 `stable` / `regional` は `C=confirmed / I=inferred / U=unknown / N=not_applicable` の8属性内訳。JSONがない場合は `-`。
 
-| # | speciesId | 表示名 | entityType | parent | 子 | JSON | schema | stable | regional |
-|---:|---|---|---|---|---:|:---:|---|---|---|
-| 1 | `aji` | アジ | species_group | - | 2 | あり | 1.2.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 2 | `saba` | サバ | species_group | - | 2 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 3 | `iwashi` | イワシ | species_group | - | 3 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 4 | `aomono` | 青物 | species_group | - | 4 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 5 | `shiira` | シイラ | exact_species | - | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 |
-| 6 | `hirame` | ヒラメ | exact_species | - | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 |
-| 7 | `magochi` | マゴチ | exact_species | - | 0 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 8 | `seabass` | スズキ | exact_species | - | 0 | あり | 1.2.0 | C2/I0/U6/N0 | C0/I3/U5/N0 |
-| 9 | `aoriika` | アオリイカ | squid_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 |
-| 10 | `kouika` | コウイカ | squid_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 |
-| 11 | `chinu` | チヌ | exact_species | - | 0 | あり | 1.2.0 | C3/I0/U5/N0 | C0/I5/U3/N0 |
-| 12 | `madai` | 真鯛 | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 13 | `kisu` | キス | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 14 | `rockfish` | 根魚 | species_group | - | 9 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 15 | `buri` | ブリ | exact_species | `aomono` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 16 | `hiramasa` | ヒラマサ | exact_species | `aomono` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 17 | `kanpachi` | カンパチ | exact_species | `aomono` | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 |
-| 18 | `sawara` | サワラ | exact_species | `aomono` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 19 | `kasago` | カサゴ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 |
-| 20 | `oniokoze` | オニオコゼ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 |
-| 21 | `kijihata` | キジハタ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 22 | `oomonhata` | オオモンハタ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 23 | `akahata` | アカハタ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 24 | `mahata` | マハタ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 |
-| 25 | `aohata` | アオハタ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 |
-| 26 | `kue` | クエ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 |
-| 27 | `kensakiika` | ヤリイカ | squid_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 |
-| 28 | `surumeika` | スルメイカ | squid_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 29 | `madako` | マダコ | cephalopod_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 |
-| 30 | `isaki` | イサキ | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 |
-| 31 | `mejina` | メジナ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 |
-| 32 | `tachiuo` | タチウオ | exact_species | - | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 |
-| 33 | `kawahagi` | カワハギ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 |
-| 34 | `umazurahagi` | ウマヅラハギ | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 |
-| 35 | `konoshiro` | コノシロ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 |
-| 36 | `sayori` | サヨリ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 |
-| 37 | `bora` | ボラ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 |
-| 38 | `maanago` | マアナゴ | exact_species | `anago` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 |
-| 39 | `ishidai` | イシダイ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 |
-| 40 | `ishigakidai` | イシガキダイ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 |
-| 41 | `akakamasu` | アカカマス | exact_species | `kamasu` | 0 | なし | - | - | - |
-| 42 | `yamatokamasu` | ヤマトカマス | exact_species | `kamasu` | 0 | なし | - | - | - |
-| 43 | `maaji` | マアジ | exact_species | `aji` | 0 | あり | 1.2.0 | C2/I0/U6/N0 | C0/I3/U5/N0 |
-| 44 | `maruaji` | マルアジ | exact_species | `aji` | 0 | あり | 1.2.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 45 | `masaba` | マサバ | exact_species | `saba` | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 |
-| 46 | `gomasaba` | ゴマサバ | exact_species | `saba` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 |
-| 47 | `maiwashi` | マイワシ | exact_species | `iwashi` | 0 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 48 | `katakuchiiwashi` | カタクチイワシ | exact_species | `iwashi` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 |
-| 49 | `urumeiwashi` | ウルメイワシ | exact_species | `iwashi` | 0 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 50 | `mebaru` | メバル | species_group | `rockfish` | 3 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 51 | `akamebaru` | アカメバル | exact_species | `mebaru` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 |
-| 52 | `kuromebaru` | クロメバル | exact_species | `mebaru` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 |
-| 53 | `shiromebaru` | シロメバル | exact_species | `mebaru` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 54 | `kamasu` | カマス | species_group | - | 2 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 55 | `karei` | カレイ | species_group | - | 1 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 56 | `megochi` | メゴチ | species_group | - | 1 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 57 | `aigo` | アイゴ | exact_species | - | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 |
-| 58 | `haze` | ハゼ | species_group | - | 2 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 59 | `hirasuzuki` | ヒラスズキ | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 60 | `katsuo` | カツオ | exact_species | - | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 |
-| 61 | `eso` | エソ | species_group | - | 3 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 62 | `kyusen` | キュウセン | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 |
-| 63 | `kichinu` | キチヌ | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 |
-| 64 | `jindouika` | ジンドウイカ | squid_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 |
-| 65 | `mutsu` | ムツ | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 |
-| 66 | `datsu` | ダツ | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 67 | `houbou` | ホウボウ | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 |
-| 68 | `yagara` | ヤガラ | species_group | - | 2 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 |
-| 69 | `yokofuedai` | ヨコフエダイ | exact_species | - | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 |
-| 70 | `fuedai` | フエダイ | exact_species | - | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 |
-| 71 | `anago` | アナゴ | species_group | - | 1 | なし | - | - | - |
-| 72 | `makogarei` | マコガレイ | exact_species | `karei` | 0 | なし | - | - | - |
-| 73 | `nezumigochi` | ネズミゴチ | exact_species | `megochi` | 0 | なし | - | - | - |
-| 74 | `mahaze` | マハゼ | exact_species | `haze` | 0 | なし | - | - | - |
-| 75 | `urohaze` | ウロハゼ | exact_species | `haze` | 0 | なし | - | - | - |
-| 76 | `maeso` | マエソ | exact_species | `eso` | 0 | なし | - | - | - |
-| 77 | `wanieso` | ワニエソ | exact_species | `eso` | 0 | なし | - | - | - |
-| 78 | `tokageeso` | トカゲエソ | exact_species | `eso` | 0 | なし | - | - | - |
-| 79 | `akayagara` | アカヤガラ | exact_species | `yagara` | 0 | なし | - | - | - |
-| 80 | `aoyagara` | アオヤガラ | exact_species | `yagara` | 0 | なし | - | - | - |
+| # | speciesId | 表示名 | entityType | parent | 子 | JSON | schema | stable | regional | v1.4 state |
+|---:|---|---|---|---|---:|:---:|---|---|---|---|
+| 1 | `aji` | アジ | species_group | - | 2 | あり | 1.2.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 2 | `saba` | サバ | species_group | - | 2 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 3 | `iwashi` | イワシ | species_group | - | 3 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 4 | `aomono` | 青物 | species_group | - | 4 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 5 | `shiira` | シイラ | exact_species | - | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | - |
+| 6 | `hirame` | ヒラメ | exact_species | - | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
+| 7 | `magochi` | マゴチ | exact_species | - | 0 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 8 | `seabass` | スズキ | exact_species | - | 0 | あり | 1.2.0 | C2/I0/U6/N0 | C0/I3/U5/N0 | - |
+| 9 | `aoriika` | アオリイカ | squid_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
+| 10 | `kouika` | コウイカ | squid_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
+| 11 | `chinu` | チヌ | exact_species | - | 0 | あり | 1.2.0 | C3/I0/U5/N0 | C0/I5/U3/N0 | - |
+| 12 | `madai` | 真鯛 | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 13 | `kisu` | キス | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 14 | `rockfish` | 根魚 | species_group | - | 9 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 15 | `buri` | ブリ | exact_species | `aomono` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 16 | `hiramasa` | ヒラマサ | exact_species | `aomono` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 17 | `kanpachi` | カンパチ | exact_species | `aomono` | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
+| 18 | `sawara` | サワラ | exact_species | `aomono` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 19 | `kasago` | カサゴ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
+| 20 | `oniokoze` | オニオコゼ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | - |
+| 21 | `kijihata` | キジハタ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 22 | `oomonhata` | オオモンハタ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 23 | `akahata` | アカハタ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 24 | `mahata` | マハタ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
+| 25 | `aohata` | アオハタ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
+| 26 | `kue` | クエ | exact_species | `rockfish` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
+| 27 | `kensakiika` | ヤリイカ | squid_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
+| 28 | `surumeika` | スルメイカ | squid_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 29 | `madako` | マダコ | cephalopod_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
+| 30 | `isaki` | イサキ | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
+| 31 | `mejina` | メジナ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
+| 32 | `tachiuo` | タチウオ | exact_species | - | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
+| 33 | `kawahagi` | カワハギ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
+| 34 | `umazurahagi` | ウマヅラハギ | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
+| 35 | `konoshiro` | コノシロ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
+| 36 | `sayori` | サヨリ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
+| 37 | `bora` | ボラ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
+| 38 | `maanago` | マアナゴ | exact_species | `anago` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
+| 39 | `ishidai` | イシダイ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
+| 40 | `ishigakidai` | イシガキダイ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
+| 41 | `akakamasu` | アカカマス | exact_species | `kamasu` | 0 | なし | - | - | - | - |
+| 42 | `yamatokamasu` | ヤマトカマス | exact_species | `kamasu` | 0 | なし | - | - | - | - |
+| 43 | `maaji` | マアジ | exact_species | `aji` | 0 | あり | 1.2.0 | C2/I0/U6/N0 | C0/I3/U5/N0 | - |
+| 44 | `maruaji` | マルアジ | exact_species | `aji` | 0 | あり | 1.2.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 45 | `masaba` | マサバ | exact_species | `saba` | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | - |
+| 46 | `gomasaba` | ゴマサバ | exact_species | `saba` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
+| 47 | `maiwashi` | マイワシ | exact_species | `iwashi` | 0 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 48 | `katakuchiiwashi` | カタクチイワシ | exact_species | `iwashi` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
+| 49 | `urumeiwashi` | ウルメイワシ | exact_species | `iwashi` | 0 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 50 | `mebaru` | メバル | species_group | `rockfish` | 3 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 51 | `akamebaru` | アカメバル | exact_species | `mebaru` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
+| 52 | `kuromebaru` | クロメバル | exact_species | `mebaru` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
+| 53 | `shiromebaru` | シロメバル | exact_species | `mebaru` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 54 | `kamasu` | カマス | species_group | - | 2 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 55 | `karei` | カレイ | species_group | - | 1 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 56 | `megochi` | メゴチ | species_group | - | 1 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 57 | `aigo` | アイゴ | exact_species | - | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | - |
+| 58 | `haze` | ハゼ | species_group | - | 2 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 59 | `hirasuzuki` | ヒラスズキ | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 60 | `katsuo` | カツオ | exact_species | - | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | - |
+| 61 | `eso` | エソ | species_group | - | 3 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 62 | `kyusen` | キュウセン | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
+| 63 | `kichinu` | キチヌ | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
+| 64 | `jindouika` | ジンドウイカ | squid_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
+| 65 | `mutsu` | ムツ | exact_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
+| 66 | `datsu` | ダツ | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 67 | `houbou` | ホウボウ | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 68 | `yagara` | ヤガラ | species_group | - | 2 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
+| 69 | `yokofuedai` | ヨコフエダイ | exact_species | - | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | - |
+| 70 | `fuedai` | フエダイ | exact_species | - | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
+| 71 | `anago` | アナゴ | species_group | - | 1 | なし | - | - | - | - |
+| 72 | `makogarei` | マコガレイ | exact_species | `karei` | 0 | なし | - | - | - | - |
+| 73 | `nezumigochi` | ネズミゴチ | exact_species | `megochi` | 0 | なし | - | - | - | - |
+| 74 | `mahaze` | マハゼ | exact_species | `haze` | 0 | なし | - | - | - | - |
+| 75 | `urohaze` | ウロハゼ | exact_species | `haze` | 0 | なし | - | - | - | - |
+| 76 | `maeso` | マエソ | exact_species | `eso` | 0 | なし | - | - | - | - |
+| 77 | `wanieso` | ワニエソ | exact_species | `eso` | 0 | なし | - | - | - | - |
+| 78 | `tokageeso` | トカゲエソ | exact_species | `eso` | 0 | なし | - | - | - | - |
+| 79 | `akayagara` | アカヤガラ | exact_species | `yagara` | 0 | なし | - | - | - | - |
+| 80 | `aoyagara` | アオヤガラ | exact_species | `yagara` | 0 | なし | - | - | - | - |
 
 ## 読み方と次工程への注意
 

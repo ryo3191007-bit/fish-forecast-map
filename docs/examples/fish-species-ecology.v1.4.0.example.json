@@ -1,0 +1,540 @@
+{
+  "schemaVersion": "1.4.0",
+  "speciesId": "fixture_taxon",
+  "identity": {
+    "displayNameJa": "fixture taxon",
+    "canonicalNameJa": {
+      "value": null,
+      "status": "unknown",
+      "confidence": "unknown",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "",
+      "researchState": "not_researched",
+      "searchedSourceTiers": [],
+      "unknownReason": "not_researched",
+      "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+    },
+    "scientificName": {
+      "value": null,
+      "status": "unknown",
+      "confidence": "unknown",
+      "evidenceSources": {
+        "supportingSourceIds": [],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "",
+      "researchState": "not_researched",
+      "searchedSourceTiers": [],
+      "unknownReason": "not_researched",
+      "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+    },
+    "aliases": [],
+    "entityType": "exact_species",
+    "note": "マアジ固有の自己完結型記録。親グループやマルアジへの暗黙継承は禁止する。",
+    "parentGroupId": null,
+    "memberSpeciesIds": []
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。ただし本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-24",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "",
+        "researchState": "not_researched",
+        "searchedSourceTiers": [],
+        "unknownReason": "not_researched",
+        "researchNote": "調査batchで規定tierを探索し、値と状態を更新する。"
+      }
+    }
+  },
+  "sources": [],
+  "review": {
+    "officialResearch": "公的または研究機関sourceを優先。原典派生ページはderivationGroupで重複管理。",
+    "secondaryResearch": "民間釣りサイト、SNS、動画、ブログ単独ではmedium以上にしない。",
+    "schemaValidation": "scripts/fish-species-ecology-schema.test.mjsで検証。",
+    "comparisonWithCurrentImplementation": {
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_PRODUCTION_ADOPTION_REVIEW.md",
+      "scoreV2Status": "unsupported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/identity/scientificName",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/seasonality",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/waterTemperature",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/depthRange",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/substrateHabitat",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/salinityAndWaterBody",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/dayNightTiming",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/fishingMethods",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
+        "decision": "hold",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未調査",
+        "confidence": "unknown",
+        "reason": "fixtureは未調査。",
+        "recheckCondition": "担当batchで再調査する。"
+      }
+    ],
+    "reviewStatus": "draft",
+    "productionAdoption": {
+      "projectionPolicy": "decisionがadoptまたはadopt_with_warningで、sourceIdsが存在する属性だけをspeciesId単位で明示投影する。親・子・兄弟間の継承、unknownのfallback補完は禁止する。",
+      "acceptedPaths": [],
+      "unknownPolicy": "unknownまたはholdは値なしとして扱い、0点・不適・釣れないへ変換しない。"
+    }
+  }
+}
