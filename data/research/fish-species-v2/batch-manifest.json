@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.0.0",
+  "masterSource": "src/domain/fishing.ts",
+  "selectionPolicy": "active master excluding species_group",
+  "taxonCount": 67,
+  "batches": [
+    {
+      "batchId": "ecology-v2-01",
+      "status": "planned",
+      "taxonIds": [
+        "shiira",
+        "hirame",
+        "magochi",
+        "seabass",
+        "aoriika",
+        "kouika",
+        "chinu",
+        "madai",
+        "kisu",
+        "buri"
+      ]
+    },
+    {
+      "batchId": "ecology-v2-02",
+      "status": "planned",
+      "taxonIds": [
+        "hiramasa",
+        "kanpachi",
+        "sawara",
+        "kasago",
+        "oniokoze",
+        "kijihata",
+        "oomonhata",
+        "akahata",
+        "mahata",
+        "aohata"
+      ]
+    },
+    {
+      "batchId": "ecology-v2-03",
+      "status": "planned",
+      "taxonIds": [
+        "kue",
+        "kensakiika",
+        "surumeika",
+        "madako",
+        "isaki",
+        "mejina",
+        "tachiuo",
+        "kawahagi",
+        "umazurahagi",
+        "konoshiro"
+      ]
+    },
+    {
+      "batchId": "ecology-v2-04",
+      "status": "planned",
+      "taxonIds": [
+        "sayori",
+        "bora",
+        "maanago",
+        "ishidai",
+        "ishigakidai",
+        "akakamasu",
+        "yamatokamasu",
+        "maaji",
+        "maruaji",
+        "masaba"
+      ]
+    },
+    {
+      "batchId": "ecology-v2-05",
+      "status": "planned",
+      "taxonIds": [
+        "gomasaba",
+        "maiwashi",
+        "katakuchiiwashi",
+        "urumeiwashi",
+        "akamebaru",
+        "kuromebaru",
+        "shiromebaru",
+        "aigo",
+        "hirasuzuki"
+      ]
+    },
+    {
+      "batchId": "ecology-v2-06",
+      "status": "planned",
+      "taxonIds": [
+        "katsuo",
+        "kyusen",
+        "kichinu",
+        "jindouika",
+        "mutsu",
+        "datsu",
+        "houbou",
+        "yokofuedai",
+        "fuedai"
+      ]
+    },
+    {
+      "batchId": "ecology-v2-07",
+      "status": "planned",
+      "taxonIds": [
+        "makogarei",
+        "nezumigochi",
+        "mahaze",
+        "urohaze",
+        "maeso",
+        "wanieso",
+        "tokageeso",
+        "akayagara",
+        "aoyagara"
+      ]
+    }
+  ]
+}
