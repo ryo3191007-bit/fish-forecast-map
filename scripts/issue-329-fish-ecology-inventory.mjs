@@ -105,8 +105,16 @@ function generateInventory() {
 
   const researchedRows = rows.filter((row) => row.hasResearch);
   const missingRows = rows.filter((row) => !row.hasResearch);
+  const groupResearchedRows = researchedRows.filter((row) => row.entityType === "species_group");
+  const nonGroupResearchedRows = researchedRows.filter((row) => row.entityType !== "species_group");
   const stableUnknown = researchedRows.reduce((sum, row) => sum + row.stable.unknown, 0);
   const stableMeasuredTotal = researchedRows.length * ecologyKeys.length;
+  const groupStableUnknown = groupResearchedRows.reduce((sum, row) => sum + row.stable.unknown, 0);
+  const groupStableTotal = groupResearchedRows.length * ecologyKeys.length;
+  const nonGroupStableUnknown = nonGroupResearchedRows.reduce((sum, row) => sum + row.stable.unknown, 0);
+  const nonGroupStableTotal = nonGroupResearchedRows.length * ecologyKeys.length;
+  const regionalUnknown = researchedRows.reduce((sum, row) => sum + row.regional.unknown, 0);
+  const regionalMeasuredTotal = researchedRows.length * ecologyKeys.length;
   const effectiveUnresolved = stableUnknown + missingRows.length * ecologyKeys.length;
   const activeAttributeTotal = rows.length * ecologyKeys.length;
   const allStableUnknown = rows.filter((row) => row.stable?.unknown === ecologyKeys.length);
@@ -127,7 +135,10 @@ function generateInventory() {
     `- 生態JSONあり: **${researchedRows.length}件** / なし: **${missingRows.length}件**`,
     `- schemaVersion: ${[...schemaCounts.entries()].sort().map(([version, count]) => `\`${version}\` ${count}件`).join(" / ") || "なし"}`,
     `- 既存JSON内の \`stableGeneral\` unknown: **${stableUnknown}/${stableMeasuredTotal}属性 (${ratio(stableUnknown, stableMeasuredTotal)})**`,
-    `- JSON未作成を8属性未評価として含めた未解決相当: **${effectiveUnresolved}/${activeAttributeTotal}属性 (${ratio(effectiveUnresolved, activeAttributeTotal)})**`,
+    `  - species_group: **${groupStableUnknown}/${groupStableTotal}属性 (${ratio(groupStableUnknown, groupStableTotal)})**`,
+    `  - 個別taxon（species_group以外）: **${nonGroupStableUnknown}/${nonGroupStableTotal}属性 (${ratio(nonGroupStableUnknown, nonGroupStableTotal)})**`,
+    `- 既存JSON内の \`regionalCatchability\` unknown: **${regionalUnknown}/${regionalMeasuredTotal}属性 (${ratio(regionalUnknown, regionalMeasuredTotal)})**`,
+    `- JSON未作成を8属性未評価として含めた \`stableGeneral\` 未解決相当: **${effectiveUnresolved}/${activeAttributeTotal}属性 (${ratio(effectiveUnresolved, activeAttributeTotal)})**`,
     `- \`stableGeneral\` 8/8 unknown: **${allStableUnknown.length}件**`,
     `- 子species 0件のspecies_group: **${emptyGroups.length}件**`,
     `- active master外の研究JSON: **${orphanResearch.length}件**`,
