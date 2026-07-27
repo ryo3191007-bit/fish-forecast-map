@@ -22,5 +22,18 @@ jobs:
           path: docs/research/FISH_SPECIES_ECOLOGY_INVENTORY.md
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm test
+      - name: Run tests and capture log
+        run: |
+          set +e
+          npm test > test-output.log 2>&1
+          echo $? > test-exit-code.txt
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: batch01-test-log
+          path: |
+            test-output.log
+            test-exit-code.txt
+      - name: Enforce test result
+        run: test "$(cat test-exit-code.txt)" = "0"
       - run: npm run build
