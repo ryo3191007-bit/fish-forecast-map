@@ -1,62 +1,86 @@
 {
-  "schemaVersion": "1.3.0",
+  "schemaVersion": "1.4.0",
   "speciesId": "aoriika",
   "identity": {
     "displayNameJa": "アオリイカ",
     "canonicalNameJa": {
       "value": "アオリイカ",
       "status": "confirmed",
-      "confidence": "medium",
+      "confidence": "high",
       "evidenceSources": {
         "supportingSourceIds": [
-          "fukuoka_aoriika"
+          "fukuoka_city_aoriika_v2"
         ],
         "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "note": "福岡市の現行いきもの図鑑で和名を確認。複合群の個別系統名へは拡張しない。"
+      "note": "福岡市現行図鑑で和名を確認。",
+      "researchState": "complete",
+      "searchedSourceTiers": [
+        "official_primary"
+      ],
+      "unknownReason": null,
+      "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"
     },
     "scientificName": {
-      "value": "Sepioteuthis lessoniana",
-      "status": "inferred",
-      "confidence": "low",
+      "value": null,
+      "status": "unknown",
+      "confidence": "unknown",
       "evidenceSources": {
-        "supportingSourceIds": [
-          "fukuoka_aoriika",
-          "worms_aoriika"
-        ],
+        "supportingSourceIds": [],
         "checkedSourceIds": [
-          "niigata_aoriika_complex"
+          "fukuoka_city_aoriika_v2",
+          "niigata_aoriika_complex_v2",
+          "jstage_aoriika_complex_v2"
         ],
         "contradictingSourceIds": []
       },
-      "note": "公的資料とWoRMSは本学名を対応させるが、従来『アオリイカ』とされた集団に3種が含まれるとの研究機関解説があるため、master上の便宜的対応として扱う。"
+      "note": "福岡市はSepioteuthis lessonianaを対応させる一方、査読研究と大学解説では従来『アオリイカ』とされた群が複数種を含むため、master entry全体に単一学名を固定しない。",
+      "researchState": "blocked",
+      "searchedSourceTiers": [
+        "official_primary",
+        "peer_reviewed",
+        "institutional_reference",
+        "authoritative_database"
+      ],
+      "unknownReason": "taxonomy_uncertain",
+      "researchNote": "公的資料・査読研究・大学解説を比較し、species complexのため単一学名の採用を保留した。"
     },
-    "aliases": [],
+    "aliases": [
+      "みずいか"
+    ],
     "entityType": "squid_species",
-    "note": "アオリイカの自己完結型調査記録。複合群の個別種・他頭足類への暗黙継承を禁止する。",
+    "note": "アオリイカの運用taxon。species complexのため単一学名固定を避け、各生態値の適用対象を注記する。",
     "parentGroupId": null,
     "memberSpeciesIds": []
   },
   "researchScope": {
     "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。",
-    "checkedAt": "2026-07-26",
+    "checkedAt": "2026-07-27",
     "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
   },
   "ecology": {
     "stableGeneral": {
       "seasonality": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": "春〜夏に産卵のため沿岸の浅瀬へ接近する。",
+        "status": "confirmed",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
-          "checkedSourceIds": [
-            "fukuoka_aoriika"
+          "supportingSourceIds": [
+            "fukuoka_city_aoriika_v2"
           ],
+          "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "福岡市資料に漁期・産卵接岸の記載はあるが、複合群の分類注意と一般生態・遊漁の釣期を分離するため採用しない。"
+        "note": "福岡市の現行種解説に基づく繁殖接岸。5〜10月の『主な漁期』は商業・観察文脈なので一般seasonality値には使用しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "福岡市・博多湾を含む種解説",
+        "rangeType": "qualitative"
       },
       "waterTemperature": {
         "value": null,
@@ -64,83 +88,170 @@
         "confidence": "unknown",
         "evidenceSources": {
           "supportingSourceIds": [],
-          "checkedSourceIds": [],
+          "checkedSourceIds": [
+            "sealifebase_aoriika_v2",
+            "fukuoka_city_aoriika_v2"
+          ],
           "contradictingSourceIds": []
         },
-        "note": "一般生息環境の水温を安全に確定できる直接根拠を確認できていない。"
+        "note": "SeaLifeBaseには暖海性の記載はあるが、masterのアオリイカ複合群全体に安全に適用できる数値水温範囲を確定できない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "insufficient_evidence",
+        "researchNote": "公的資料、査読分類研究、専門DBを確認したが、分類複合群の問題を超えて一般水温範囲を直接採用できなかった。"
       },
       "depthRange": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
-        "evidenceSources": {
-          "supportingSourceIds": [],
-          "checkedSourceIds": [
-            "fukuoka_aoriika",
-            "niigata_aoriika_complex"
-          ],
-          "contradictingSourceIds": []
+        "value": {
+          "min": 10,
+          "max": 30
         },
-        "note": "福岡市資料には成体10〜30mの記載があるが、従来の『アオリイカ』が複数種を含むとの研究機関資料があり、master entry全体の代表水深として固定しない。"
-      },
-      "substrateHabitat": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
-        "evidenceSources": {
-          "supportingSourceIds": [],
-          "checkedSourceIds": [],
-          "contradictingSourceIds": []
-        },
-        "note": "属性を直接採用できる十分な根拠を確認できていない。"
-      },
-      "salinityAndWaterBody": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
-        "evidenceSources": {
-          "supportingSourceIds": [],
-          "checkedSourceIds": [
-            "worms_aoriika"
-          ],
-          "contradictingSourceIds": []
-        },
-        "note": "学名側の海洋生物情報は確認したが、master entryが複合群を含み得るため一般属性として固定しない。"
-      },
-      "dayNightTiming": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
-        "evidenceSources": {
-          "supportingSourceIds": [],
-          "checkedSourceIds": [],
-          "contradictingSourceIds": []
-        },
-        "note": "直接根拠を確認できていない。"
-      },
-      "fishingMethods": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
-        "evidenceSources": {
-          "supportingSourceIds": [],
-          "checkedSourceIds": [],
-          "contradictingSourceIds": []
-        },
-        "note": "一般生態調査から遊漁の釣法を推定しない。"
-      },
-      "spawningOrConfusableInfo": {
-        "value": "従来『アオリイカ』とされてきた集団は近年の研究で3種に分かれるとされ、Sepioteuthis lessonianaはそのうち『シロイカ』に相当するとされる。",
         "status": "confirmed",
         "confidence": "medium",
         "evidenceSources": {
           "supportingSourceIds": [
-            "niigata_aoriika_complex"
+            "fukuoka_city_aoriika_v2"
           ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "分類上の注意情報。産卵期・接岸期・地域別釣れやすさの根拠としては使用しない。"
+        "note": "福岡市資料の成体の通常生息水深。複合群の分類注意があるため福岡市の運用名レベルの記録として扱う。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "unit": "m",
+        "rangeType": "bounded_range",
+        "regionScope": "福岡市資料のアオリイカ運用名"
+      },
+      "substrateHabitat": {
+        "value": [
+          "沿岸浅海域",
+          "岩礁・海藻周辺",
+          "河口域を含むことがある"
+        ],
+        "status": "inferred",
+        "confidence": "low",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "sealifebase_aoriika_v2",
+            "fukuoka_city_aoriika_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "SeaLifeBaseのS. lessoniana生態と福岡市の沿岸浅場記載。分類複合群のため注意付き。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "authoritative_database"
+        ],
+        "unknownReason": null,
+        "researchNote": "S. lessonianaの生態をアオリイカ運用名に限定的に参照するためinferredとした。",
+        "rangeType": "qualitative",
+        "regionScope": "Sepioteuthis lessoniana一般生態＋福岡市"
+      },
+      "salinityAndWaterBody": {
+        "value": [
+          "海水",
+          "汽水",
+          "沿岸域"
+        ],
+        "status": "inferred",
+        "confidence": "low",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "sealifebase_aoriika_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "SeaLifeBaseのS. lessonianaに対するmarine/brackish沿岸生態。masterの分類複合群へは注意付き。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "authoritative_database"
+        ],
+        "unknownReason": null,
+        "researchNote": "分類複合群のためinferredとした。",
+        "rangeType": "qualitative",
+        "regionScope": "Sepioteuthis lessoniana一般生態"
+      },
+      "dayNightTiming": {
+        "value": "Sepioteuthis lessonianaでは主に夜間活動とされる。",
+        "status": "inferred",
+        "confidence": "low",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "sealifebase_aoriika_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "SeaLifeBaseのS. lessoniana直接記載。アオリイカ複合群全体や夜釣り優位へ一般化しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "authoritative_database"
+        ],
+        "unknownReason": null,
+        "researchNote": "分類複合群のためinferredとした。",
+        "rangeType": "qualitative",
+        "regionScope": "Sepioteuthis lessoniana一般生態"
+      },
+      "fishingMethods": {
+        "value": [
+          "ジグ"
+        ],
+        "status": "inferred",
+        "confidence": "low",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "sealifebase_aoriika_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "SeaLifeBaseでjigsによる漁獲を確認。日本のエギングと自動同義化せず、広い釣法カテゴリとして扱う。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "authoritative_database"
+        ],
+        "unknownReason": null,
+        "researchNote": "DBの漁獲方法を遊漁方法へ限定的に採用するためinferred。",
+        "rangeType": "qualitative",
+        "regionScope": "Sepioteuthis lessoniana一般利用"
+      },
+      "spawningOrConfusableInfo": {
+        "value": {
+          "spawning": "春〜夏に浅瀬へ接近して産卵",
+          "taxonomy": "従来アオリイカとされた群には複数種が含まれ、Sepioteuthis lessonianaはその一部に相当するとの研究がある"
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fukuoka_city_aoriika_v2",
+            "niigata_aoriika_complex_v2",
+            "jstage_aoriika_complex_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "産卵接岸と分類複合群の注意を同一field内で明確に区別する。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "institutional_reference",
+          "peer_reviewed"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "福岡市＋日本の分類研究",
+        "rangeType": "qualitative"
       }
     },
     "regionalCatchability": {
@@ -150,12 +261,18 @@
         "confidence": "unknown",
         "evidenceSources": {
           "supportingSourceIds": [],
-          "checkedSourceIds": [
-            "fukuoka_aoriika"
-          ],
+          "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "福岡市資料の漁期・産卵接岸を糸島〜平戸の陸っぱりでの釣れやすさへ転用しない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "waterTemperature": {
         "value": null,
@@ -166,7 +283,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の陸っぱり釣れやすさを示す水温の直接根拠を確認できていない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "depthRange": {
         "value": null,
@@ -174,12 +299,18 @@
         "confidence": "unknown",
         "evidenceSources": {
           "supportingSourceIds": [],
-          "checkedSourceIds": [
-            "fukuoka_aoriika"
-          ],
+          "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "一般的な生息水深を岸から狙える水深や地域別釣れやすさへ変換しない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "substrateHabitat": {
         "value": null,
@@ -190,7 +321,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "salinityAndWaterBody": {
         "value": null,
@@ -201,7 +340,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "dayNightTiming": {
         "value": null,
@@ -212,7 +359,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の釣れる時間帯を示す直接根拠を確認できていない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "fishingMethods": {
         "value": null,
@@ -223,7 +378,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の釣法別釣れやすさを示す直接根拠を確認できていない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "spawningOrConfusableInfo": {
         "value": null,
@@ -231,85 +394,131 @@
         "confidence": "unknown",
         "evidenceSources": {
           "supportingSourceIds": [],
-          "checkedSourceIds": [
-            "fukuoka_aoriika",
-            "niigata_aoriika_complex"
-          ],
+          "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "分類・産卵接岸情報は対象地域の釣れやすさへ変換しない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       }
     }
   },
   "sources": [
     {
-      "id": "fukuoka_aoriika",
-      "title": "生物多様性ふくおかウェブセンター: アオリイカ",
+      "id": "fukuoka_city_aoriika_v2",
+      "title": "アオリイカ - 生物多様性ふくおかウェブセンター",
       "url": "https://seibutsutayousei.city.fukuoka.lg.jp/learning/3432/",
       "publisher": "福岡市",
       "publisherType": "government",
       "publishedOrUpdatedAt": "2026-04-06",
-      "checkedAt": "2026-07-26",
-      "regionScope": "福岡市の生物情報と種の一般解説",
+      "checkedAt": "2026-07-27",
+      "regionScope": "福岡市・博多湾を含む種解説",
       "sourceType": "supporting",
       "directness": "direct",
-      "derivationGroup": "fukuoka_aoriika",
+      "derivationGroup": "fukuoka_city_aoriika",
       "supports": [
-        "/identity/canonicalNameJa",
-        "/identity/scientificName",
-        "/ecology/stableGeneral/seasonality",
         "/ecology/stableGeneral/depthRange",
-        "/ecology/regionalCatchability/seasonality",
-        "/ecology/regionalCatchability/depthRange",
-        "/ecology/regionalCatchability/spawningOrConfusableInfo"
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/waterTemperature",
+        "/identity/canonicalNameJa",
+        "/identity/scientificName"
       ],
-      "usageNote": "和名・学名対応と確認済み生態記載の照合に使用する。漁期・産卵接岸・一般水深を対象地域の遊漁上の釣期・釣れやすさ・岸から狙える水深へ変換しない。"
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "official_primary"
     },
     {
-      "id": "worms_aoriika",
-      "title": "WoRMS: Sepioteuthis lessoniana R. P. Lesson, 1831",
-      "url": "https://www.marinespecies.org/aphia.php?id=220317&p=taxdetails",
-      "publisher": "World Register of Marine Species (WoRMS)",
-      "publisherType": "public_research",
-      "publishedOrUpdatedAt": null,
-      "checkedAt": "2026-07-26",
-      "regionScope": "世界規模の海洋生物分類DB",
-      "sourceType": "supporting",
-      "directness": "direct",
-      "derivationGroup": "worms_aoriika",
-      "supports": [
-        "/identity/scientificName",
-        "/ecology/stableGeneral/salinityAndWaterBody"
-      ],
-      "usageNote": "学名と海洋生物分類情報の確認に使用し、master上の『アオリイカ』が単一種であるとの根拠にはしない。"
-    },
-    {
-      "id": "niigata_aoriika_complex",
-      "title": "新潟大学佐渡自然共生科学センター臨海実験所: アオリイカ",
+      "id": "niigata_aoriika_complex_v2",
+      "title": "アオリイカ",
       "url": "https://www.sc.niigata-u.ac.jp/sc/sadomarine/marinelife/aoriika.html",
-      "publisher": "新潟大学",
+      "publisher": "新潟大学佐渡自然共生科学センター臨海実験所",
       "publisherType": "university",
       "publishedOrUpdatedAt": null,
-      "checkedAt": "2026-07-26",
-      "regionScope": "日本のアオリイカ分類・生物解説",
+      "checkedAt": "2026-07-27",
+      "regionScope": "日本周辺・分類解説",
       "sourceType": "supporting",
       "directness": "direct",
       "derivationGroup": "niigata_aoriika_complex",
       "supports": [
-        "/identity/scientificName",
-        "/ecology/stableGeneral/depthRange",
         "/ecology/stableGeneral/spawningOrConfusableInfo",
-        "/ecology/regionalCatchability/spawningOrConfusableInfo"
+        "/identity/scientificName"
       ],
-      "usageNote": "従来アオリイカと呼ばれた集団の複数種化という分類上の注意に使用し、別系統の生態値をmaster entryへ暗黙継承しない。"
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "institutional_reference"
+    },
+    {
+      "id": "jstage_aoriika_complex_v2",
+      "title": "Evidence on the Existence of Three Species in the Oval Squid Sepioteuthis lessoniana Complex in Ishigaki Island, Okinawa, Southwestern Japan, by Isozyme Analyses",
+      "url": "https://www.jstage.jst.go.jp/article/venusjjm/53/3/53_KJ00004344155/_article",
+      "publisher": "Venus (Japanese Journal of Malacology)",
+      "publisherType": "peer_reviewed",
+      "publishedOrUpdatedAt": "1994-10-31",
+      "checkedAt": "2026-07-27",
+      "regionScope": "石垣島のアオリイカ複合群",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "jstage_aoriika_complex",
+      "supports": [
+        "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "/identity/scientificName"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "peer_reviewed"
+    },
+    {
+      "id": "sealifebase_aoriika_v2",
+      "title": "Sepioteuthis lessoniana summary page",
+      "url": "https://www.sealifebase.se/summary/Sepioteuthis-lessoniana.html",
+      "publisher": "SeaLifeBase",
+      "publisherType": "secondary",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-27",
+      "regionScope": "Sepioteuthis lessonianaの世界的生態",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "sealifebase_aoriika",
+      "supports": [
+        "/ecology/stableGeneral/dayNightTiming",
+        "/ecology/stableGeneral/fishingMethods",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/waterTemperature"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "authoritative_database"
+    },
+    {
+      "id": "jizakana_aoriika_v2",
+      "title": "地魚情報｜アオリイカ｜じざかなび福岡公式サイト",
+      "url": "https://jizakanavi-fukuoka.jp/library/fish/d89fe6787e0caf429b537e6725cc0c8344674f39.html",
+      "publisher": "福岡県水産海洋技術センター（事務局）",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-27",
+      "regionScope": "筑前海・豊前海の地魚情報",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "jizakana_aoriika",
+      "supports": [
+        "/identity/aliases"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "official_primary"
     }
   ],
   "review": {
-    "officialResearch": "福岡市、WoRMS、新潟大学の公開資料でidentityと分類上の注意を確認した。複合群の可能性があるため個別生態値の採用は保守的にした。",
-    "secondaryResearch": "民間釣り情報や漁期から季節・適水温・釣法を補完していない。",
-    "schemaValidation": "fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。",
+    "officialResearch": "公的機関・水産研究機関・査読研究・専門DBを属性別に探索し、用途が直接一致する根拠のみ採用した。",
+    "secondaryResearch": "FishBase/SeaLifeBase等は一般生態の補助に限定し、モデル推定値・出現記録・商業漁獲情報を釣れやすさへ転用していない。",
+    "schemaValidation": "fish-species-ecology.v1.4.0.schema.jsonおよびv2 integrity testで検証する。",
     "comparisonWithCurrentImplementation": {
-      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_E_REVIEW.md",
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_V2_BATCH01_REVIEW.md",
       "scoreV2Status": "unsupported",
       "inheritancePolicy": "do_not_inherit_between_species_or_group"
     },
@@ -317,263 +526,275 @@
       {
         "path": "/identity/canonicalNameJa",
         "decision": "adopt",
-        "reason": "福岡市の現行公開資料で和名を確認した。",
+        "reason": "直接根拠を確認し、注記された範囲でidentityとして採用する。",
         "purposes": [
           "identity_display"
         ],
         "sourceIds": [
-          "fukuoka_aoriika"
+          "fukuoka_city_aoriika_v2"
         ],
-        "regionScope": "分類・名称情報",
-        "confidence": "medium",
-        "recheckCondition": "masterのアオリイカ粒度が個別系統へ分割された場合に再評価する。"
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
       },
       {
         "path": "/identity/scientificName",
+        "decision": "hold",
+        "reason": "分類・同定上の不確実性または根拠不足が残るため保留する。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "fukuoka_city_aoriika_v2",
+          "niigata_aoriika_complex_v2",
+          "jstage_aoriika_complex_v2"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "unknown",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
+      },
+      {
+        "path": "/identity/aliases",
         "decision": "adopt_with_warning",
-        "reason": "公的資料とWoRMSはSepioteuthis lessonianaを対応させるが、研究機関資料で従来アオリイカとされた集団の複数種化が示されるため警告付きで採用する。",
+        "reason": "公的・研究機関資料で呼称を確認したが、地域・成長段階の限定があり得る。",
         "purposes": [
           "identity_display"
         ],
         "sourceIds": [
-          "fukuoka_aoriika",
-          "worms_aoriika",
-          "niigata_aoriika_complex"
+          "jizakana_aoriika_v2"
         ],
-        "regionScope": "分類・名称情報",
-        "confidence": "low",
-        "recheckCondition": "masterが個別種・系統へ分割される場合、または国内標準分類の更新時に再確認する。"
-      },
-      {
-        "path": "/identity/aliases",
-        "decision": "hold",
-        "reason": "複合群内の通称・系統名をaliasとして無条件に登録しない。",
-        "purposes": [
-          "score_excluded"
-        ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "masterの分類粒度確定後に再確認する。"
+        "regionScope": "source記載地域",
+        "confidence": "medium",
+        "recheckCondition": "地域別aliasを分離する場合に再確認する。"
       },
       {
         "path": "/ecology/stableGeneral/seasonality",
-        "decision": "hold",
-        "reason": "漁期・産卵接岸を一般季節性へ読み替えず、複合群の分類注意もあるためholdする。",
-        "purposes": [
-          "score_excluded"
-        ],
-        "sourceIds": [
-          "fukuoka_aoriika"
-        ],
-        "regionScope": "福岡市資料の解説範囲",
-        "confidence": "unknown",
-        "recheckCondition": "個別種を特定した一般季節性の直接資料取得時に再評価する。"
-      },
-      {
-        "path": "/ecology/stableGeneral/waterTemperature",
-        "decision": "hold",
-        "reason": "一般生息環境の水温を直接確認できていない。",
-        "purposes": [
-          "score_excluded"
-        ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "個別種を特定した研究資料取得時に再評価する。"
-      },
-      {
-        "path": "/ecology/stableGeneral/depthRange",
-        "decision": "hold",
-        "reason": "公的資料の一般水深記載は確認したが、従来アオリイカとされた集団の複数種化によりmaster entry全体へ安全に固定できない。",
-        "purposes": [
-          "score_excluded"
-        ],
-        "sourceIds": [
-          "fukuoka_aoriika",
-          "niigata_aoriika_complex"
-        ],
-        "regionScope": "分類上の範囲が未確定",
-        "confidence": "unknown",
-        "recheckCondition": "masterの対象taxonを明確化した後に再評価する。"
-      },
-      {
-        "path": "/ecology/stableGeneral/substrateHabitat",
-        "decision": "hold",
-        "reason": "直接根拠が不足するため推測補完しない。",
-        "purposes": [
-          "score_excluded"
-        ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
-      },
-      {
-        "path": "/ecology/stableGeneral/salinityAndWaterBody",
-        "decision": "hold",
-        "reason": "学名taxonの海洋環境は確認したが、複合群になり得るmaster entry全体の一般属性として固定しない。",
-        "purposes": [
-          "score_excluded"
-        ],
-        "sourceIds": [
-          "worms_aoriika"
-        ],
-        "regionScope": "分類上の範囲が未確定",
-        "confidence": "unknown",
-        "recheckCondition": "masterの対象taxonを明確化した後に再評価する。"
-      },
-      {
-        "path": "/ecology/stableGeneral/dayNightTiming",
-        "decision": "hold",
-        "reason": "直接根拠が不足するため推測補完しない。",
-        "purposes": [
-          "score_excluded"
-        ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
-      },
-      {
-        "path": "/ecology/stableGeneral/fishingMethods",
-        "decision": "hold",
-        "reason": "一般生態資料から遊漁の釣法を推定しない。",
-        "purposes": [
-          "score_excluded"
-        ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "対象地域の遊漁釣法を直接示す信頼できる資料取得時に再確認する。"
-      },
-      {
-        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
-        "decision": "adopt",
-        "reason": "大学資料で従来アオリイカとされた集団が3種に分かれるとの分類上の注意を直接確認した。",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
         "purposes": [
           "ecology_description"
         ],
         "sourceIds": [
-          "niigata_aoriika_complex"
+          "fukuoka_city_aoriika_v2"
         ],
-        "regionScope": "日本の分類・生物解説",
+        "regionScope": "福岡市・博多湾を含む種解説",
         "confidence": "medium",
-        "recheckCondition": "国内分類体系やmaster粒度変更時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "reason": "insufficient_evidenceとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "sealifebase_aoriika_v2",
+          "fukuoka_city_aoriika_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fukuoka_city_aoriika_v2"
+        ],
+        "regionScope": "福岡市資料のアオリイカ運用名",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "sealifebase_aoriika_v2",
+          "fukuoka_city_aoriika_v2"
+        ],
+        "regionScope": "Sepioteuthis lessoniana一般生態＋福岡市",
+        "confidence": "low",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "sealifebase_aoriika_v2"
+        ],
+        "regionScope": "Sepioteuthis lessoniana一般生態",
+        "confidence": "low",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "sealifebase_aoriika_v2"
+        ],
+        "regionScope": "Sepioteuthis lessoniana一般生態",
+        "confidence": "low",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "sealifebase_aoriika_v2"
+        ],
+        "regionScope": "Sepioteuthis lessoniana一般利用",
+        "confidence": "low",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fukuoka_city_aoriika_v2",
+          "niigata_aoriika_complex_v2",
+          "jstage_aoriika_complex_v2"
+        ],
+        "regionScope": "福岡市＋日本の分類研究",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/seasonality",
         "decision": "hold",
-        "reason": "漁期・産卵接岸を対象地域の陸っぱり釣れやすさへ転用しない。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
-        "sourceIds": [
-          "fukuoka_aoriika"
-        ],
-        "regionScope": "対象地域の遊漁として未確定",
+        "sourceIds": [],
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "対象地域の遊漁釣果を直接示す資料取得時に再評価する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/waterTemperature",
         "decision": "hold",
-        "reason": "対象地域の陸っぱり釣れやすさと水温を直接結び付ける根拠がない。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "対象地域の魚種・釣果・水温を直接結び付ける資料取得時に再評価する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/depthRange",
         "decision": "hold",
-        "reason": "一般生息水深を岸から狙える水深へ変換しない。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
-        "sourceIds": [
-          "fukuoka_aoriika"
-        ],
-        "regionScope": "対象地域の陸っぱりとして未確定",
+        "sourceIds": [],
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "対象地点と遊漁を直接結び付ける水深資料取得時に再評価する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/substrateHabitat",
         "decision": "hold",
-        "reason": "対象地域の地点相性を直接示す根拠がない。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "対象地域の出現と底質を直接結び付ける資料取得時に再評価する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/salinityAndWaterBody",
         "decision": "hold",
-        "reason": "一般的な海洋生物情報を地点別の釣れやすさへ変換しない。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "対象地域の水域条件と遊漁釣果の直接資料取得時に再評価する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/dayNightTiming",
         "decision": "hold",
-        "reason": "対象地域の釣れる時間帯を直接示す根拠がない。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "対象地域の時間帯別遊漁データ取得時に再評価する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/fishingMethods",
         "decision": "hold",
-        "reason": "対象地域の釣法別釣れやすさを直接示す根拠がない。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "対象地域の釣法別遊漁データ取得時に再評価する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
         "decision": "hold",
-        "reason": "分類・産卵接岸情報を地域別釣れやすさへ変換しない。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
-        "sourceIds": [
-          "fukuoka_aoriika",
-          "niigata_aoriika_complex"
-        ],
-        "regionScope": "対象地域の遊漁として未確定",
+        "sourceIds": [],
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "対象地域の産卵行動と遊漁釣果を直接結び付ける資料取得時に再評価する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       }
     ],
     "reviewStatus": "ready_for_review",
     "productionAdoption": {
-      "projectionPolicy": "acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。",
+      "projectionPolicy": "本調査のacceptedPathsは監査上の採用候補を示すだけで、SCORE v2へ自動接続しない。親・子・兄弟taxonへの継承を禁止する。",
       "acceptedPaths": [
         "/identity/canonicalNameJa",
-        "/identity/scientificName",
+        "/identity/aliases",
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/dayNightTiming",
+        "/ecology/stableGeneral/fishingMethods",
         "/ecology/stableGeneral/spawningOrConfusableInfo"
       ],
-      "unknownPolicy": "unknownを0点、不適、他頭足類・他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"
+      "unknownPolicy": "unknown/holdは未確定として保持し、0点・不適・非生息・釣れないへ変換しない。"
     }
   }
 }

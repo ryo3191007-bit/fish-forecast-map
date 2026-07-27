@@ -1,57 +1,85 @@
 {
-  "schemaVersion": "1.3.0",
+  "schemaVersion": "1.4.0",
   "speciesId": "magochi",
   "identity": {
     "displayNameJa": "マゴチ",
     "canonicalNameJa": {
-      "value": null,
-      "status": "unknown",
-      "confidence": "unknown",
+      "value": "マゴチ",
+      "status": "confirmed",
+      "confidence": "high",
       "evidenceSources": {
-        "supportingSourceIds": [],
-        "checkedSourceIds": [
-          "gbif_magochi_name_search"
+        "supportingSourceIds": [
+          "chiba_magochi_v2",
+          "jstage_magochi_current_v2"
         ],
+        "checkedSourceIds": [],
         "contradictingSourceIds": []
       },
-      "note": "表示名から単一種を推定しない。"
+      "note": "現行公的資料と近年の日本産魚類分類論文で和名を確認。",
+      "researchState": "complete",
+      "searchedSourceTiers": [
+        "official_primary",
+        "peer_reviewed"
+      ],
+      "unknownReason": null,
+      "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"
     },
     "scientificName": {
-      "value": null,
-      "status": "unknown",
-      "confidence": "unknown",
+      "value": "Platycephalus sp. 2",
+      "status": "confirmed",
+      "confidence": "medium",
       "evidenceSources": {
-        "supportingSourceIds": [],
+        "supportingSourceIds": [
+          "chiba_magochi_v2",
+          "jstage_magochi_current_v2"
+        ],
         "checkedSourceIds": [
-          "gbif_magochi_name_search"
+          "jstage_magochi_1997_v2"
         ],
         "contradictingSourceIds": []
       },
-      "note": "旧来の学名表記や未記載種相当の扱いを推定せずunknownとする。"
+      "note": "正式な二名法学名ではなく、現行日本産分類で用いられる未記載種相当の暫定表記。1997年文献のsp. Iとは番号体系が異なる。",
+      "researchState": "complete",
+      "searchedSourceTiers": [
+        "official_primary",
+        "peer_reviewed"
+      ],
+      "unknownReason": null,
+      "researchNote": "現行公的資料と2021年分類論文がPlatycephalus sp. 2を採用することを確認し、旧文献のsp. I表記は同一番号体系ではないため注記した。"
     },
     "aliases": [],
     "entityType": "exact_species",
-    "note": "マゴチの自己完結型調査記録。他魚種や表示グループとの暗黙継承を禁止する。",
+    "note": "マゴチの自己完結型v2調査記録。Platycephalus sp. 2は暫定分類表記として保持し、ヨシノゴチ等へ継承しない。",
     "parentGroupId": null,
     "memberSpeciesIds": []
   },
   "researchScope": {
     "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。",
-    "checkedAt": "2026-07-26",
+    "checkedAt": "2026-07-27",
     "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
   },
   "ecology": {
     "stableGeneral": {
       "seasonality": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": "5〜7月に接岸し、浅海の砂場で産卵する繁殖に伴う季節移動が報告される。",
+        "status": "confirmed",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "chiba_magochi_v2"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "繁殖接岸の季節性であり、遊漁の釣期へ変換しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "南日本の一般解説",
+        "rangeType": "qualitative"
       },
       "waterTemperature": {
         "value": null,
@@ -62,40 +90,88 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "一般生息・活動水温をspecies-levelで直接確定できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "source_not_found",
+        "researchNote": "公的資料・査読研究・専門DBを属性別に確認し、直接根拠が得られないためunknownで終了した。"
       },
       "depthRange": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": {
+          "max": 30
+        },
+        "status": "confirmed",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "chiba_magochi_v2"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "内湾・河口付近の水深30m以浅という生息環境。下限を補完しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "unit": "m",
+        "rangeType": "maximum_only",
+        "regionScope": "一般生態"
       },
       "substrateHabitat": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": [
+          "内湾",
+          "河口付近",
+          "砂泥底"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "chiba_magochi_v2"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "千葉県の一般的特性に基づく。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "南日本の一般解説"
       },
       "salinityAndWaterBody": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": [
+          "内湾",
+          "河口付近"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "chiba_magochi_v2"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "水域利用のみを採用し、汽水耐性の数値・塩分範囲は推測しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "南日本の一般解説"
       },
       "dayNightTiming": {
         "value": null,
@@ -106,7 +182,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "昼夜の活動性を直接示す高品質sourceを確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "source_not_found",
+        "researchNote": "公的資料・査読研究・専門DBを属性別に確認し、直接根拠が得られないためunknownで終了した。"
       },
       "fishingMethods": {
         "value": null,
@@ -114,21 +198,51 @@
         "confidence": "unknown",
         "evidenceSources": {
           "supportingSourceIds": [],
-          "checkedSourceIds": [],
+          "checkedSourceIds": [
+            "jstage_magochi_1997_v2"
+          ],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "査読研究には刺網等の商業漁獲方法があるが、一般遊漁釣法へ転用しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "公的生態資料と査読研究を確認したが、アプリの釣法属性へ直接適用できる遊漁根拠を確定しない。"
       },
       "spawningOrConfusableInfo": {
-        "value": null,
-        "status": "unknown",
-        "confidence": "unknown",
+        "value": {
+          "months": [
+            5,
+            6,
+            7
+          ],
+          "location": "浅海の砂場",
+          "taxonomyNote": "現行資料ではマゴチをPlatycephalus sp. 2として扱う"
+        },
+        "status": "confirmed",
+        "confidence": "medium",
         "evidenceSources": {
-          "supportingSourceIds": [],
+          "supportingSourceIds": [
+            "chiba_magochi_v2",
+            "jstage_magochi_current_v2"
+          ],
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "直接根拠を確認できていない。推測で補完しない。"
+        "note": "産卵情報と、正式な二名法学名が未付与の現行分類表記を併記。旧1997年論文では番号が異なるため注記が必要。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "南日本・日本産分類",
+        "rangeType": "qualitative"
       }
     },
     "regionalCatchability": {
@@ -141,7 +255,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "waterTemperature": {
         "value": null,
@@ -152,7 +274,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "depthRange": {
         "value": null,
@@ -163,7 +293,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "substrateHabitat": {
         "value": null,
@@ -174,7 +312,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "salinityAndWaterBody": {
         "value": null,
@@ -185,7 +331,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "dayNightTiming": {
         "value": null,
@@ -196,7 +350,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "fishingMethods": {
         "value": null,
@@ -207,7 +369,15 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       },
       "spawningOrConfusableInfo": {
         "value": null,
@@ -218,274 +388,354 @@
           "checkedSourceIds": [],
           "contradictingSourceIds": []
         },
-        "note": "対象地域の陸っぱり釣れやすさを示す直接根拠を確認できていない。推測で補完しない。"
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
       }
     }
   },
   "sources": [
     {
-      "id": "gbif_magochi_name_search",
-      "title": "GBIF species search: Platycephalus sp. 2",
-      "url": "https://www.gbif.org/species/search?q=Platycephalus%20sp.%202",
-      "publisher": "Global Biodiversity Information Facility (GBIF)",
-      "publisherType": "public_research",
-      "publishedOrUpdatedAt": null,
-      "checkedAt": "2026-07-26",
-      "regionScope": "世界規模の分類・名称データベース",
-      "sourceType": "checked",
+      "id": "chiba_magochi_v2",
+      "title": "マゴチ｜三番瀬自然環境データベース",
+      "url": "https://www.pref.chiba.lg.jp/shizen/sanbanze/database/seibutsu/magochi.html",
+      "publisher": "千葉県",
+      "publisherType": "government",
+      "publishedOrUpdatedAt": "2026-01-06",
+      "checkedAt": "2026-07-27",
+      "regionScope": "南日本・三番瀬を含む一般生態",
+      "sourceType": "supporting",
       "directness": "direct",
-      "derivationGroup": "gbif_magochi_name_search",
+      "derivationGroup": "chiba_magochi",
       "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "/ecology/stableGeneral/substrateHabitat",
         "/identity/canonicalNameJa",
         "/identity/scientificName"
       ],
-      "usageNote": "マゴチに対応するaccepted taxonを一意に確認できなかったため、canonical名・学名はunknownのまま維持する。"
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "official_primary"
+    },
+    {
+      "id": "jstage_magochi_current_v2",
+      "title": "種子島から得られた北限記録のコチ科魚類Platycephalus indicus，および本種の和名に関する経緯と標準化",
+      "url": "https://www.jstage.jst.go.jp/article/ichthy/7/0/7_1/_article/-char/ja",
+      "publisher": "Ichthy, Natural History of Fishes of Japan",
+      "publisherType": "peer_reviewed",
+      "publishedOrUpdatedAt": "2021-01-01",
+      "checkedAt": "2026-07-27",
+      "regionScope": "日本産Platycephalus属の分類整理",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "jstage_magochi_current",
+      "supports": [
+        "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "/identity/canonicalNameJa",
+        "/identity/scientificName"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "peer_reviewed"
+    },
+    {
+      "id": "jstage_magochi_1997_v2",
+      "title": "周防灘西部および八代海南部海域産コチ属2種の形態学的および遺伝生化学的比較",
+      "url": "https://www.jstage.jst.go.jp/article/suisan1932/63/3/63_3_345/_article/-char/ja",
+      "publisher": "日本水産学会誌",
+      "publisherType": "peer_reviewed",
+      "publishedOrUpdatedAt": "1997-05-15",
+      "checkedAt": "2026-07-27",
+      "regionScope": "周防灘西部・八代海南部、旧分類表記",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "jstage_magochi_1997",
+      "supports": [
+        "/ecology/stableGeneral/fishingMethods",
+        "/identity/scientificName"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "peer_reviewed"
     }
   ],
   "review": {
-    "officialResearch": "GBIFの公開分類DBを確認したが、表示名「マゴチ」に対応するaccepted taxonを一意に確定できなかった。直接根拠を取得できない属性はunknownを維持した。",
-    "secondaryResearch": "二次的な釣り情報から季節・水温・水深・釣法を補完していない。",
-    "schemaValidation": "fish-species-ecology.v1.3.0.schema.jsonと共通自動発見テストで検証する。",
+    "officialResearch": "公的機関・水産研究機関・査読研究・専門DBを属性別に探索し、用途が直接一致する根拠のみ採用した。",
+    "secondaryResearch": "FishBase/SeaLifeBase等は一般生態の補助に限定し、モデル推定値・出現記録・商業漁獲情報を釣れやすさへ転用していない。",
+    "schemaValidation": "fish-species-ecology.v1.4.0.schema.jsonおよびv2 integrity testで検証する。",
     "comparisonWithCurrentImplementation": {
-      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_B_REVIEW.md",
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_V2_BATCH01_REVIEW.md",
       "scoreV2Status": "unsupported",
       "inheritancePolicy": "do_not_inherit_between_species_or_group"
     },
     "attributeDecisions": [
       {
         "path": "/identity/canonicalNameJa",
-        "decision": "hold",
-        "reason": "単一種のcanonical名を確定できる直接根拠が不足している。",
+        "decision": "adopt",
+        "reason": "直接根拠を確認し、注記された範囲でidentityとして採用する。",
         "purposes": [
-          "score_excluded"
+          "identity_display"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的機関または分類DBの直接資料取得時に再確認する。"
+        "sourceIds": [
+          "chiba_magochi_v2",
+          "jstage_magochi_current_v2"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
       },
       {
         "path": "/identity/scientificName",
-        "decision": "hold",
-        "reason": "マゴチの分類上の扱いを確定できる直接根拠が不足している。",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認し、注記された範囲でidentityとして採用する。",
         "purposes": [
-          "score_excluded"
+          "identity_display"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的機関または分類DBの直接資料取得時に再確認する。"
+        "sourceIds": [
+          "chiba_magochi_v2",
+          "jstage_magochi_current_v2"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "medium",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
       },
       {
         "path": "/identity/aliases",
         "decision": "hold",
-        "reason": "別名は網羅性と同一性を評価できていない。",
+        "reason": "本batchでは安全に追加できるaliasを確定していない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
         "regionScope": "未確定",
         "confidence": "unknown",
-        "recheckCondition": "公的機関または分類DBの直接資料取得時に再確認する。"
+        "recheckCondition": "直接sourceで別名を確認した場合に再評価する。"
       },
       {
         "path": "/ecology/stableGeneral/seasonality",
-        "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "sourceIds": [
+          "chiba_magochi_v2"
+        ],
+        "regionScope": "南日本の一般解説",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/stableGeneral/waterTemperature",
         "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "reason": "source_not_foundとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "一般生態",
         "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/stableGeneral/depthRange",
-        "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "sourceIds": [
+          "chiba_magochi_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/stableGeneral/substrateHabitat",
-        "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "sourceIds": [
+          "chiba_magochi_v2"
+        ],
+        "regionScope": "南日本の一般解説",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/stableGeneral/salinityAndWaterBody",
-        "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "sourceIds": [
+          "chiba_magochi_v2"
+        ],
+        "regionScope": "南日本の一般解説",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/stableGeneral/dayNightTiming",
         "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "reason": "source_not_foundとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "一般生態",
         "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/stableGeneral/fishingMethods",
         "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
+        "sourceIds": [
+          "jstage_magochi_1997_v2"
+        ],
+        "regionScope": "一般生態",
         "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
-        "decision": "hold",
-        "reason": "一般生態の直接根拠が不足しているため推測補完しない。",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
         "purposes": [
-          "score_excluded"
+          "ecology_description"
         ],
-        "sourceIds": [],
-        "regionScope": "未確定",
-        "confidence": "unknown",
-        "recheckCondition": "公的・研究機関の属性別直接資料取得時に再確認する。"
+        "sourceIds": [
+          "chiba_magochi_v2",
+          "jstage_magochi_current_v2"
+        ],
+        "regionScope": "南日本・日本産分類",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/seasonality",
         "decision": "hold",
-        "reason": "対象地域の釣れやすさを示す直接根拠が不足している。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/waterTemperature",
         "decision": "hold",
-        "reason": "対象地域の釣れやすさを示す直接根拠が不足している。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/depthRange",
         "decision": "hold",
-        "reason": "対象地域の釣れやすさを示す直接根拠が不足している。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/substrateHabitat",
         "decision": "hold",
-        "reason": "対象地域の釣れやすさを示す直接根拠が不足している。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/salinityAndWaterBody",
         "decision": "hold",
-        "reason": "対象地域の釣れやすさを示す直接根拠が不足している。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/dayNightTiming",
         "decision": "hold",
-        "reason": "対象地域の釣れやすさを示す直接根拠が不足している。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/fishingMethods",
         "decision": "hold",
-        "reason": "対象地域の釣れやすさを示す直接根拠が不足している。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       },
       {
         "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
         "decision": "hold",
-        "reason": "対象地域の釣れやすさを示す直接根拠が不足している。",
+        "reason": "scope_mismatchとして確定値を採用しない。",
         "purposes": [
           "score_excluded"
         ],
         "sourceIds": [],
-        "regionScope": "未確定",
+        "regionScope": "対象地域",
         "confidence": "unknown",
-        "recheckCondition": "糸島〜唐津湾〜伊万里湾〜平戸の陸っぱり釣果を直接示す信頼できる資料取得時に再確認する。"
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
       }
     ],
     "reviewStatus": "ready_for_review",
     "productionAdoption": {
-      "projectionPolicy": "acceptedPathsのみidentity表示または一般生態説明への投影候補とする。SCORE v2・地点相性・regionalCatchability・UI・DBへは未接続。",
-      "acceptedPaths": [],
-      "unknownPolicy": "unknownを0点、不適、他魚種の値、一般漁期・産卵期・水揚げ時期で補完しない。"
+      "projectionPolicy": "本調査のacceptedPathsは監査上の採用候補を示すだけで、SCORE v2へ自動接続しない。親・子・兄弟taxonへの継承を禁止する。",
+      "acceptedPaths": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "unknownPolicy": "unknown/holdは未確定として保持し、0点・不適・非生息・釣れないへ変換しない。"
     }
   }
 }

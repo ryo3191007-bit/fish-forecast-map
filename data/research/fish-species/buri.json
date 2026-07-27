@@ -1,1 +1,764 @@
-{"schemaVersion":"1.3.0","speciesId":"buri","identity":{"displayNameJa":"ブリ","canonicalNameJa":{"value":"ブリ","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["mie_buri"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":""},"scientificName":{"value":"Seriola quinqueradiata","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["mie_buri"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":""},"aliases":[],"entityType":"exact_species","note":"ブリ固有値。青物グループや他のSeriola属へ継承しない。","parentGroupId":"aomono","memberSpeciesIds":[]},"researchScope":{"targetArea":"福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。","checkedAt":"2026-07-26","sourcePolicy":"docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"},"ecology":{"stableGeneral":{"seasonality":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠未確認。"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠未確認。"},"depthRange":{"value":{"max":100},"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["fishbase_seriola_quinqueradiata"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"一般生息水深の上限情報のみ。下限を補完せず、岸から狙える水深とはしない。","regionScope":"一般分布","unit":"m","rangeType":"maximum_only"},"substrateHabitat":{"value":["浮遊藻周辺（幼魚）"],"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["fishbase_seriola_quinqueradiata"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"幼魚期に浮遊藻へ付随する生態。成魚の地点適性には自動転用しない。","regionScope":"一般生態","rangeType":"qualitative"},"salinityAndWaterBody":{"value":["海洋","外洋域"],"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["fishbase_seriola_quinqueradiata"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"海洋性・回遊性の一般情報。","regionScope":"北西太平洋を含む一般分布","rangeType":"qualitative"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠未確認。"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠未確認。"},"spawningOrConfusableInfo":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"直接根拠未確認。"}},"regionalCatchability":{"seasonality":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の直接根拠なし。"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の直接根拠なし。"},"depthRange":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の直接根拠なし。"},"substrateHabitat":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の直接根拠なし。"},"salinityAndWaterBody":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の直接根拠なし。"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の直接根拠なし。"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の直接根拠なし。"},"spawningOrConfusableInfo":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の直接根拠なし。"}}},"sources":[{"id":"mie_buri","title":"魚種紹介（ブリ）","url":"https://www.pref.mie.lg.jp/suigi/hp/84621017151.htm","publisher":"三重県水産研究所","publisherType":"government","publishedOrUpdatedAt":"2014-04-01","checkedAt":"2026-07-26","regionScope":"三重県熊野灘","sourceType":"supporting","directness":"direct","derivationGroup":"mie_buri","supports":["/identity/canonicalNameJa","/identity/scientificName"],"usageNote":"分類・生態情報のみ利用。"},{"id":"fishbase_seriola_quinqueradiata","title":"Seriola quinqueradiata summary page","url":"https://www.fishbase.se/summary/Seriola-quinqueradiata","publisher":"FishBase","publisherType":"secondary","publishedOrUpdatedAt":null,"checkedAt":"2026-07-26","regionScope":"北西太平洋を含む一般生態","sourceType":"supporting","directness":"direct","derivationGroup":"fishbase_seriola_quinqueradiata","supports":["/ecology/stableGeneral/depthRange","/ecology/stableGeneral/substrateHabitat","/ecology/stableGeneral/salinityAndWaterBody"],"usageNote":"分類・生態情報のみ利用。"}],"review":{"officialResearch":"公的・研究sourceを優先。","secondaryResearch":"二次sourceは一般生態の補助に限定。","schemaValidation":"v1.3.0自動検証対象。","comparisonWithCurrentImplementation":{"authoritativeComparisonDocument":"docs/research/FISH_SPECIES_ECOLOGY_A_REVIEW.md","scoreV2Status":"unsupported","inheritancePolicy":"do_not_inherit_between_species_or_group"},"attributeDecisions":[{"path":"/identity/canonicalNameJa","decision":"adopt","reason":"分類の直接根拠あり。","purposes":["identity_display"],"sourceIds":["mie_buri"],"regionScope":"分類情報","confidence":"high","recheckCondition":"分類変更またはSCORE利用前に再確認。"},{"path":"/identity/scientificName","decision":"adopt","reason":"分類の直接根拠あり。","purposes":["identity_display"],"sourceIds":["mie_buri"],"regionScope":"分類情報","confidence":"high","recheckCondition":"分類変更またはSCORE利用前に再確認。"},{"path":"/identity/aliases","decision":"reject","reason":"alias未評価。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/stableGeneral/seasonality","decision":"hold","reason":"直接根拠なし。推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/stableGeneral/waterTemperature","decision":"hold","reason":"直接根拠なし。推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/stableGeneral/depthRange","decision":"adopt_with_warning","reason":"一般化せず生態説明に限定。","purposes":["ecology_description"],"sourceIds":["fishbase_seriola_quinqueradiata"],"regionScope":"一般分布","confidence":"medium","recheckCondition":"分類変更またはSCORE利用前に再確認。"},{"path":"/ecology/stableGeneral/substrateHabitat","decision":"adopt_with_warning","reason":"一般化せず生態説明に限定。","purposes":["ecology_description"],"sourceIds":["fishbase_seriola_quinqueradiata"],"regionScope":"一般生態","confidence":"medium","recheckCondition":"分類変更またはSCORE利用前に再確認。"},{"path":"/ecology/stableGeneral/salinityAndWaterBody","decision":"adopt_with_warning","reason":"一般化せず生態説明に限定。","purposes":["ecology_description"],"sourceIds":["fishbase_seriola_quinqueradiata"],"regionScope":"北西太平洋を含む一般分布","confidence":"medium","recheckCondition":"分類変更またはSCORE利用前に再確認。"},{"path":"/ecology/stableGeneral/dayNightTiming","decision":"hold","reason":"直接根拠なし。推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/stableGeneral/fishingMethods","decision":"hold","reason":"直接根拠なし。推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/stableGeneral/spawningOrConfusableInfo","decision":"hold","reason":"直接根拠なし。推測補完しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/regionalCatchability/seasonality","decision":"hold","reason":"対象地域の直接根拠なし。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/regionalCatchability/waterTemperature","decision":"hold","reason":"対象地域の直接根拠なし。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/regionalCatchability/depthRange","decision":"hold","reason":"対象地域の直接根拠なし。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/regionalCatchability/substrateHabitat","decision":"hold","reason":"対象地域の直接根拠なし。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/regionalCatchability/salinityAndWaterBody","decision":"hold","reason":"対象地域の直接根拠なし。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/regionalCatchability/dayNightTiming","decision":"hold","reason":"対象地域の直接根拠なし。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/regionalCatchability/fishingMethods","decision":"hold","reason":"対象地域の直接根拠なし。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"},{"path":"/ecology/regionalCatchability/spawningOrConfusableInfo","decision":"hold","reason":"対象地域の直接根拠なし。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接source取得時に再確認。"}],"reviewStatus":"ready_for_review","productionAdoption":{"projectionPolicy":"acceptedPathsのみ投影候補。SCORE未接続。","acceptedPaths":["/identity/canonicalNameJa","/identity/scientificName","/ecology/stableGeneral/depthRange","/ecology/stableGeneral/substrateHabitat","/ecology/stableGeneral/salinityAndWaterBody"],"unknownPolicy":"unknownを0点・不適へ変換しない。"}}}
+{
+  "schemaVersion": "1.4.0",
+  "speciesId": "buri",
+  "identity": {
+    "displayNameJa": "ブリ",
+    "canonicalNameJa": {
+      "value": "ブリ",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_buri_v2",
+          "mie_buri_v2"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "BISMaLと三重県水産研究所で和名を確認。",
+      "researchState": "complete",
+      "searchedSourceTiers": [
+        "official_primary",
+        "authoritative_database"
+      ],
+      "unknownReason": null,
+      "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"
+    },
+    "scientificName": {
+      "value": "Seriola quinqueradiata",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_buri_v2",
+          "mie_buri_v2"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "BISMaLと三重県水産研究所で学名を確認。",
+      "researchState": "complete",
+      "searchedSourceTiers": [
+        "official_primary",
+        "authoritative_database"
+      ],
+      "unknownReason": null,
+      "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"
+    },
+    "aliases": [
+      "わらさ",
+      "いなだ",
+      "つばす",
+      "あぶこ"
+    ],
+    "entityType": "exact_species",
+    "note": "ブリの自己完結型v2調査記録。青物group、ヒラマサ、カンパチへ値を継承しない。",
+    "parentGroupId": "aomono",
+    "memberSpeciesIds": []
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-27",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": "日本周辺では年齢・海域に応じて大規模な季節回遊を行い、産卵場は水温上昇に伴って東シナ海側から北方へ移ると整理されている。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fra_buri_review_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "FRAの産卵・回遊レビュー。年齢・系群差が大きいため月を単一の一般seasonalityへ固定しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "日本周辺・東シナ海〜日本海・太平洋",
+        "rangeType": "qualitative"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [
+            "fra_buri_review_v2"
+          ],
+          "contradictingSourceIds": []
+        },
+        "note": "FRAには産卵・仔稚魚や回遊に関する水温知見があるが、成魚の一般適水温へ転用しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "公的レビューと専門DBを確認し、産卵・生活史段階別水温を一般水温へ変換せずunknownとした。"
+      },
+      "depthRange": {
+        "value": {
+          "max": 100
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fishbase_buri_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "FishBaseの一般生息水深上限100m。BISMaLの2〜241mは出現レコード範囲なので採用しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "authoritative_database"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "unit": "m",
+        "rangeType": "maximum_only",
+        "regionScope": "一般生態"
+      },
+      "substrateHabitat": {
+        "value": [
+          "外洋・沿岸の遊泳性水域",
+          "幼魚は浮遊藻に随伴することがある"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fishbase_buri_v2",
+            "fra_buri_review_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "回遊性・浮遊藻利用等の一般生態。底質適性へ変換しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "authoritative_database"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "一般生態"
+      },
+      "salinityAndWaterBody": {
+        "value": [
+          "海水",
+          "外洋・沿岸域"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fishbase_buri_v2",
+            "fra_buri_review_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "海洋回遊性の一般生態。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "authoritative_database"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "北西太平洋を含む一般生態"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "昼夜の鉛直移動研究は地域・時期・サイズが限定され、全般的な昼夜活動性として採用しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "insufficient_evidence",
+        "researchNote": "公的レビューと関連研究を確認したが、一般的なdayNightTimingへ単一化するには文脈依存が大きいためunknownとした。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [
+            "mie_buri_v2"
+          ],
+          "contradictingSourceIds": []
+        },
+        "note": "三重県資料は定置網等の商業漁法中心で、対象とする一般遊漁釣法へ転用しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "公的資料を確認したが、アプリ用の遊漁釣法をspecies-levelで直接確定できる根拠を本batchでは採用しない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": "FRAレビューでは東シナ海から日本周辺で産卵場・産卵時期が海域・年齢・水温に応じて変化し、単一の全国産卵期には固定できない。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fra_buri_review_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "産卵場・時期の地域差そのものを採用し、釣期・一般水温へ変換しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "日本周辺・東シナ海",
+        "rangeType": "qualitative"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "bismal_buri_v2",
+      "title": "Seriola quinqueradiata ブリ - Biological Information System for Marine Life",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9005942",
+      "publisher": "JAMSTEC/GODAC",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-27",
+      "regionScope": "日本周辺の分類・出現情報",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "bismal_buri",
+      "supports": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "authoritative_database"
+    },
+    {
+      "id": "fishbase_buri_v2",
+      "title": "Seriola quinqueradiata summary page",
+      "url": "https://www.fishbase.org/summary/SpeciesSummary.php?id=381&lang=japanese",
+      "publisher": "FishBase",
+      "publisherType": "secondary",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-27",
+      "regionScope": "北西太平洋を含む一般生態",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "fishbase_buri",
+      "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/substrateHabitat"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "authoritative_database"
+    },
+    {
+      "id": "fra_buri_review_v2",
+      "title": "ブリ（Seriola quinqueradiata）の産卵，回遊生態及びその研究課題・手法について",
+      "url": "https://www.fra.go.jp/home/kenkyushokai/book/bulletin/files/bull21_sousetsu.pdf",
+      "publisher": "水産研究・教育機構",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": "2008-01-01",
+      "checkedAt": "2026-07-27",
+      "regionScope": "日本周辺・東シナ海・日本海・太平洋",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "fra_buri_review",
+      "supports": [
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/waterTemperature"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "official_primary"
+    },
+    {
+      "id": "mie_buri_v2",
+      "title": "魚種紹介（ブリ）",
+      "url": "https://www.pref.mie.lg.jp/suigi/hp/84621017151.htm",
+      "publisher": "三重県水産研究所",
+      "publisherType": "government",
+      "publishedOrUpdatedAt": "2014-04-01",
+      "checkedAt": "2026-07-27",
+      "regionScope": "三重県熊野灘",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "mie_buri",
+      "supports": [
+        "/ecology/stableGeneral/fishingMethods",
+        "/identity/aliases",
+        "/identity/canonicalNameJa",
+        "/identity/scientificName"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "official_primary"
+    }
+  ],
+  "review": {
+    "officialResearch": "公的機関・水産研究機関・査読研究・専門DBを属性別に探索し、用途が直接一致する根拠のみ採用した。",
+    "secondaryResearch": "FishBase/SeaLifeBase等は一般生態の補助に限定し、モデル推定値・出現記録・商業漁獲情報を釣れやすさへ転用していない。",
+    "schemaValidation": "fish-species-ecology.v1.4.0.schema.jsonおよびv2 integrity testで検証する。",
+    "comparisonWithCurrentImplementation": {
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_V2_BATCH01_REVIEW.md",
+      "scoreV2Status": "unsupported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt",
+        "reason": "直接根拠を確認し、注記された範囲でidentityとして採用する。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_buri_v2",
+          "mie_buri_v2"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
+      },
+      {
+        "path": "/identity/scientificName",
+        "decision": "adopt",
+        "reason": "直接根拠を確認し、注記された範囲でidentityとして採用する。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_buri_v2",
+          "mie_buri_v2"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "adopt_with_warning",
+        "reason": "公的・研究機関資料で呼称を確認したが、地域・成長段階の限定があり得る。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "mie_buri_v2"
+        ],
+        "regionScope": "source記載地域",
+        "confidence": "medium",
+        "recheckCondition": "地域別aliasを分離する場合に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/seasonality",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fra_buri_review_v2"
+        ],
+        "regionScope": "日本周辺・東シナ海〜日本海・太平洋",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "fra_buri_review_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fishbase_buri_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fishbase_buri_v2",
+          "fra_buri_review_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fishbase_buri_v2",
+          "fra_buri_review_v2"
+        ],
+        "regionScope": "北西太平洋を含む一般生態",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "hold",
+        "reason": "insufficient_evidenceとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "mie_buri_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fra_buri_review_v2"
+        ],
+        "regionScope": "日本周辺・東シナ海",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/waterTemperature",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/depthRange",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/substrateHabitat",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/salinityAndWaterBody",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/dayNightTiming",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/fishingMethods",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      }
+    ],
+    "reviewStatus": "ready_for_review",
+    "productionAdoption": {
+      "projectionPolicy": "本調査のacceptedPathsは監査上の採用候補を示すだけで、SCORE v2へ自動接続しない。親・子・兄弟taxonへの継承を禁止する。",
+      "acceptedPaths": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/identity/aliases",
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "unknownPolicy": "unknown/holdは未確定として保持し、0点・不適・非生息・釣れないへ変換しない。"
+    }
+  }
+}

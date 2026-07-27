@@ -7,16 +7,16 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 - active master: **80件**
 - entityType: `cephalopod_species` 1件 / `exact_species` 61件 / `species_group` 13件 / `squid_species` 5件
 - 生態JSONあり: **68件** / なし: **12件**
-- schemaVersion: `1.2.0` 5件 / `1.3.0` 63件
-- v1.4移行: **0/67 taxon** / 未移行または未調査claimあり: **67 taxon**
-- v1.4 researchState（identity 2 + ecology 16 claim）: `not_researched` 0 / `complete` 0 / `blocked` 0 / `not_applicable` 0
-- v1.4 unknownReason: `not_researched` 0 / `source_not_found` 0 / `insufficient_evidence` 0 / `conflicting_evidence` 0 / `scope_mismatch` 0 / `taxonomy_uncertain` 0
-- 既存JSON内の `stableGeneral` unknown: **398/544属性 (73.2%)**
+- schemaVersion: `1.2.0` 3件 / `1.3.0` 55件 / `1.4.0` 10件
+- v1.4移行: **10/67 taxon** / 未移行または未調査claimあり: **57 taxon**
+- v1.4 researchState（identity 2 + ecology 16 claim）: `not_researched` 0 / `complete` 179 / `blocked` 1 / `not_applicable` 0
+- v1.4 unknownReason: `not_researched` 0 / `source_not_found` 9 / `insufficient_evidence` 9 / `conflicting_evidence` 0 / `scope_mismatch` 86 / `taxonomy_uncertain` 1
+- 既存JSON内の `stableGeneral` unknown: **368/544属性 (67.6%)**
   - species_group: **96/96属性 (100.0%)**
-  - 個別taxon（species_group以外）: **302/448属性 (67.4%)**
-- 既存JSON内の `regionalCatchability` unknown: **533/544属性 (98.0%)**
-- JSON未作成を8属性未評価として含めた `stableGeneral` 未解決相当: **494/640属性 (77.2%)**
-- `stableGeneral` 8/8 unknown: **16件**
+  - 個別taxon（species_group以外）: **272/448属性 (60.7%)**
+- 既存JSON内の `regionalCatchability` unknown: **541/544属性 (99.4%)**
+- JSON未作成を8属性未評価として含めた `stableGeneral` 未解決相当: **464/640属性 (72.5%)**
+- `stableGeneral` 8/8 unknown: **15件**
 - 子species 0件のspecies_group: **0件**
 - active master外の研究JSON: **0件**
 
@@ -41,7 +41,6 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 - サバ (`saba`) — species_group
 - イワシ (`iwashi`) — species_group
 - 青物 (`aomono`) — species_group
-- マゴチ (`magochi`) — exact_species
 - 根魚 (`rockfish`) — species_group
 - マルアジ (`maruaji`) — exact_species
 - マイワシ (`maiwashi`) — exact_species
@@ -56,16 +55,6 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 
 ### v2未調査taxon
 
-- シイラ (`shiira`) — schema 1.3.0
-- ヒラメ (`hirame`) — schema 1.3.0
-- マゴチ (`magochi`) — schema 1.3.0
-- スズキ (`seabass`) — schema 1.2.0
-- アオリイカ (`aoriika`) — schema 1.3.0
-- コウイカ (`kouika`) — schema 1.3.0
-- チヌ (`chinu`) — schema 1.2.0
-- 真鯛 (`madai`) — schema 1.3.0
-- キス (`kisu`) — schema 1.3.0
-- ブリ (`buri`) — schema 1.3.0
 - ヒラマサ (`hiramasa`) — schema 1.3.0
 - カンパチ (`kanpachi`) — schema 1.3.0
 - サワラ (`sawara`) — schema 1.3.0
@@ -138,17 +127,17 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 | 2 | `saba` | サバ | species_group | - | 2 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
 | 3 | `iwashi` | イワシ | species_group | - | 3 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
 | 4 | `aomono` | 青物 | species_group | - | 4 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
-| 5 | `shiira` | シイラ | exact_species | - | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | - |
-| 6 | `hirame` | ヒラメ | exact_species | - | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
-| 7 | `magochi` | マゴチ | exact_species | - | 0 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
-| 8 | `seabass` | スズキ | exact_species | - | 0 | あり | 1.2.0 | C2/I0/U6/N0 | C0/I3/U5/N0 | - |
-| 9 | `aoriika` | アオリイカ | squid_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
-| 10 | `kouika` | コウイカ | squid_species | - | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
-| 11 | `chinu` | チヌ | exact_species | - | 0 | あり | 1.2.0 | C3/I0/U5/N0 | C0/I5/U3/N0 | - |
-| 12 | `madai` | 真鯛 | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
-| 13 | `kisu` | キス | exact_species | - | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 5 | `shiira` | シイラ | exact_species | - | 0 | あり | 1.4.0 | C4/I1/U3/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 6 | `hirame` | ヒラメ | exact_species | - | 0 | あり | 1.4.0 | C5/I1/U2/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 7 | `magochi` | マゴチ | exact_species | - | 0 | あり | 1.4.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 8 | `seabass` | スズキ | exact_species | - | 0 | あり | 1.4.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 9 | `aoriika` | アオリイカ | squid_species | - | 0 | あり | 1.4.0 | C3/I4/U1/N0 | C0/I0/U8/N0 | NR0/C17/B1/NA0 |
+| 10 | `kouika` | コウイカ | squid_species | - | 0 | あり | 1.4.0 | C7/I0/U1/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 11 | `chinu` | チヌ | exact_species | - | 0 | あり | 1.4.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 12 | `madai` | 真鯛 | exact_species | - | 0 | あり | 1.4.0 | C6/I0/U2/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 13 | `kisu` | キス | exact_species | - | 0 | あり | 1.4.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
 | 14 | `rockfish` | 根魚 | species_group | - | 9 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
-| 15 | `buri` | ブリ | exact_species | `aomono` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
+| 15 | `buri` | ブリ | exact_species | `aomono` | 0 | あり | 1.4.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
 | 16 | `hiramasa` | ヒラマサ | exact_species | `aomono` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
 | 17 | `kanpachi` | カンパチ | exact_species | `aomono` | 0 | あり | 1.3.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | - |
 | 18 | `sawara` | サワラ | exact_species | `aomono` | 0 | あり | 1.3.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | - |
