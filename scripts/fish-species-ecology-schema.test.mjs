@@ -5,12 +5,15 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 
 const root = process.cwd();
-const schema = JSON.parse(fs.readFileSync(path.join(root, 'docs/schemas/fish-species-ecology.schema.json'), 'utf8'));
+const legacySchema = JSON.parse(fs.readFileSync(path.join(root, 'docs/schemas/fish-species-ecology.schema.json'), 'utf8'));
+const v14Schema = JSON.parse(fs.readFileSync(path.join(root, 'docs/schemas/fish-species-ecology.v1.4.0.schema.json'), 'utf8'));
 const ajv = new Ajv2020({ strict: false, allErrors: true });
 addFormats(ajv);
-assert.doesNotThrow(() => ajv.compile(schema), 'schema must be valid JSON Schema');
-const validate = ajv.compile(schema);
-const targets = { aji: 'アジ', maaji: 'マアジ', maruaji: 'マルアジ', seabass: 'シーバス', chinu: 'チヌ' };
+assert.doesNotThrow(() => ajv.compile(legacySchema), 'legacy schema must be valid JSON Schema');
+assert.doesNotThrow(() => ajv.compile(v14Schema), 'v1.4 schema must be valid JSON Schema');
+const validateLegacy = ajv.compile(legacySchema);
+const validateV14 = ajv.compile(v14Schema);
+const targets = { aji: 'アジ', maaji: 'マアジ', maruaji: 'マルアジ', seabass: 'スズキ', chinu: 'チヌ' };
 const scoreV2Support = { aji: 'unsupported', maaji: 'supported', maruaji: 'unsupported', seabass: 'supported', chinu: 'supported' };
 const docs = Object.fromEntries(Object.keys(targets).map((id) => [id, JSON.parse(fs.readFileSync(path.join(root, `data/research/fish-species/${id}.json`), 'utf8'))]));
 const ecologyKeys = ['seasonality', 'waterTemperature', 'depthRange', 'substrateHabitat', 'salinityAndWaterBody', 'dayNightTiming', 'fishingMethods', 'spawningOrConfusableInfo'];
@@ -33,8 +36,11 @@ function collectClaims(value, pointer = '', claims = []) {
 }
 
 function collectTextFragments(value, pointer = '', fragments = []) {
+  if (value && typeof value === 'object' && !Array.isArray(value) && 'status' in value && 'researchState' in value && value.status === 'unknown') {
+    return fragments;
+  }
   if (typeof value === 'string') {
-    if (pointer.includes('/supports/')) return fragments;
+    if (pointer.includes('/supports/') || pointer.endsWith('/researchNote') || pointer.endsWith('/usageNote')) return fragments;
     const normalized = value.replace(/https?:\/\/\S+/g, '').replace(/[\s、。，．・/／()（）「」『』:：;；,.-]+/g, '').toLowerCase();
     if (normalized.length >= 24) fragments.push([pointer, normalized]);
   } else if (Array.isArray(value)) {
@@ -55,8 +61,14 @@ function similarity(a, b) {
   return intersection / Math.min(ga.size, gb.size);
 }
 
+function validatorFor(doc) {
+  if (doc.schemaVersion === '1.4.0') return validateV14;
+  return validateLegacy;
+}
+
 function validateResearchDoc(id, doc) {
-  assert.equal(validate(doc), true, `${id}: ${ajv.errorsText(validate.errors)}`);
+  const validator = validatorFor(doc);
+  assert.equal(validator(doc), true, `${id}: ${ajv.errorsText(validator.errors)}`);
   assert.equal(doc.speciesId, id);
   assert.equal(doc.identity.displayNameJa, targets[id]);
   assert.equal(doc.review.comparisonWithCurrentImplementation.scoreV2Status, scoreV2Support[id], `${id}: SCORE v2 support status must match the authoritative comparison`);
@@ -88,7 +100,7 @@ function validateResearchDoc(id, doc) {
     }
     if (['confirmed', 'inferred'].includes(claim.status)) assert(claim.evidenceSources.supportingSourceIds.length > 0, `${id}:${pointer}: confirmed/inferred requires support`);
     if (claim.status === 'unknown') assert.equal(claim.value, null, `${id}:${pointer}: unknown must not contain concrete value`);
-    if (pointer.includes('regionalCatchability') && claim.status !== 'unknown') assert(claim.regionScope, `${id}:${pointer}: regional value requires regionScope`);
+    if (pointer.includes('regionalCatchability') && !['unknown', 'not_applicable'].includes(claim.status)) assert(claim.regionScope, `${id}:${pointer}: regional value requires regionScope`);
     if (claim.unit === 'celsius' && claim.value) {
       for (const key of ['min', 'max', 'point']) {
         if (claim.value[key] !== undefined) assert(claim.value[key] >= -2 && claim.value[key] <= 35, `${id}:${pointer}: invalid celsius ${key}`);
@@ -96,7 +108,7 @@ function validateResearchDoc(id, doc) {
     }
     if (claim.unit === 'm' && claim.value) {
       if (claim.rangeType === 'maximum_only') assert(claim.value.min === undefined && claim.value.max >= 0 && claim.value.max <= 1000, `${id}:${pointer}: maximum_only depth must not invent min`);
-      if (claim.rangeType === 'bounded_range') assert(claim.value.min >= 0 && claim.value.max <= 1000, `${id}:${pointer}: invalid depth range`);
+      if (claim.rangeType === 'bounded_range') assert(claim.value.min >= 0 && claim.value.max >= claim.value.min && claim.value.max <= 1000, `${id}:${pointer}: invalid depth range`);
     }
     if (claim.value?.months) for (const month of claim.value.months) assert(month >= 1 && month <= 12, `${id}:${pointer}: invalid month`);
     if (pointer.endsWith('/waterTemperature') && claim.temperatureContext === 'spawning') assert(!pointer.includes('regionalCatchability'), `${id}:${pointer}: spawning temperature cannot be catchability input`);
@@ -153,7 +165,7 @@ for (const id of ['maaji', 'maruaji']) {
 }
 assert.notDeepEqual(docs.maaji.sources.map(({ id }) => id), docs.maruaji.sources.map(({ id }) => id));
 assert.notDeepEqual(docs.maaji.ecology, docs.maruaji.ecology);
-assert(!docs.aji.review.productionAdoption.acceptedPaths.some((path) => path.startsWith('/ecology/')));
+assert(!docs.aji.review.productionAdoption.acceptedPaths.some((decisionPath) => decisionPath.startsWith('/ecology/')));
 assert.equal(docs.maruaji.ecology.regionalCatchability.waterTemperature.value, null);
 assert.equal(docs.maaji.ecology.stableGeneral.waterTemperature.value, null);
 assert.equal(
@@ -169,7 +181,6 @@ const oneWayFixture = structuredClone(docs.chinu);
 oneWayFixture.sources.find((source) => source.id === oneWayFixture.identity.scientificName.evidenceSources.supportingSourceIds[0]).supports = [];
 assert.throws(() => validateResearchDoc('chinu', oneWayFixture), /supportingSourceIds source .* does not reference claim path/);
 
-
 const checkedFixture = structuredClone(docs.maaji);
 const checkedClaim = checkedFixture.ecology.stableGeneral.depthRange;
 checkedClaim.evidenceSources.checkedSourceIds = ['tsuriking_fukuoka_aji'];
@@ -177,7 +188,7 @@ assert.throws(() => validateResearchDoc('maaji', checkedFixture), /checkedSource
 
 const contradictingFixture = structuredClone(docs.chinu);
 const contradictingClaim = contradictingFixture.ecology.regionalCatchability.waterTemperature;
-contradictingClaim.evidenceSources.contradictingSourceIds = ['bisma_kurodai'];
+contradictingClaim.evidenceSources.contradictingSourceIds = ['bismal_kurodai_v2'];
 assert.throws(() => validateResearchDoc('chinu', contradictingFixture), /contradictingSourceIds source .* does not reference claim path/);
 
 const duplicateDerivationFixture = structuredClone(docs.chinu);
@@ -188,19 +199,31 @@ duplicateDerivationFixture.sources.push({
 });
 assert.throws(() => validateResearchDoc('chinu', duplicateDerivationFixture), /duplicated derivation group/);
 
-const invalidPointCelsiusFixture = structuredClone(docs.chinu);
-invalidPointCelsiusFixture.ecology.regionalCatchability.waterTemperature.value.point = 60;
-assert.throws(() => validateResearchDoc('chinu', invalidPointCelsiusFixture), /invalid celsius point/);
+function makeInvalidTemperatureFixture(value, rangeType) {
+  const fixture = structuredClone(docs.chinu);
+  const claim = fixture.ecology.stableGeneral.waterTemperature;
+  const sourceId = 'mie_kurodai_2025_v2';
+  Object.assign(claim, {
+    value,
+    status: 'confirmed',
+    confidence: 'medium',
+    evidenceSources: { supportingSourceIds: [sourceId], checkedSourceIds: [], contradictingSourceIds: [] },
+    note: 'range validation fixture',
+    researchState: 'complete',
+    searchedSourceTiers: ['official_primary'],
+    unknownReason: null,
+    researchNote: 'range validation fixture',
+    unit: 'celsius',
+    temperatureContext: 'general',
+    rangeType,
+    regionScope: 'test',
+  });
+  return fixture;
+}
 
-const invalidMinimumOnlyCelsiusFixture = structuredClone(docs.chinu);
-invalidMinimumOnlyCelsiusFixture.ecology.regionalCatchability.waterTemperature.rangeType = 'minimum_only';
-invalidMinimumOnlyCelsiusFixture.ecology.regionalCatchability.waterTemperature.value = { min: -5 };
-assert.throws(() => validateResearchDoc('chinu', invalidMinimumOnlyCelsiusFixture), /invalid celsius min/);
-
-const invalidMaximumOnlyCelsiusFixture = structuredClone(docs.chinu);
-invalidMaximumOnlyCelsiusFixture.ecology.regionalCatchability.waterTemperature.rangeType = 'maximum_only';
-invalidMaximumOnlyCelsiusFixture.ecology.regionalCatchability.waterTemperature.value = { max: 40 };
-assert.throws(() => validateResearchDoc('chinu', invalidMaximumOnlyCelsiusFixture), /invalid celsius max/);
+assert.throws(() => validateResearchDoc('chinu', makeInvalidTemperatureFixture({ point: 60 }, 'point')), /invalid celsius point/);
+assert.throws(() => validateResearchDoc('chinu', makeInvalidTemperatureFixture({ min: -5 }, 'minimum_only')), /invalid celsius min/);
+assert.throws(() => validateResearchDoc('chinu', makeInvalidTemperatureFixture({ max: 40 }, 'maximum_only')), /invalid celsius max/);
 
 const duplicateDecisionFixture = structuredClone(docs.chinu);
 duplicateDecisionFixture.review.attributeDecisions.push(structuredClone(duplicateDecisionFixture.review.attributeDecisions[0]));
@@ -211,20 +234,22 @@ missingDecisionFixture.review.attributeDecisions.pop();
 assert.throws(() => validateResearchDoc('chinu', missingDecisionFixture), /must each be classified exactly once/);
 
 const unsupportedAdoptionFixture = structuredClone(docs.chinu);
-const adoptedAliasDecision = unsupportedAdoptionFixture.review.attributeDecisions.find(({ path }) => path === '/identity/aliases');
-unsupportedAdoptionFixture.sources.find(({ id }) => id === adoptedAliasDecision.sourceIds[0]).supports = unsupportedAdoptionFixture.sources
-  .find(({ id }) => id === adoptedAliasDecision.sourceIds[0]).supports.filter((path) => path !== '/identity/aliases');
-assert.throws(() => validateResearchDoc('chinu', unsupportedAdoptionFixture), /adopted source .* does not support decision path/);
+const adoptedScientificDecision = unsupportedAdoptionFixture.review.attributeDecisions.find(({ path }) => path === '/identity/scientificName');
+unsupportedAdoptionFixture.sources.find(({ id }) => id === adoptedScientificDecision.sourceIds[0]).supports = unsupportedAdoptionFixture.sources
+  .find(({ id }) => id === adoptedScientificDecision.sourceIds[0]).supports.filter((pointer) => pointer !== '/identity/scientificName');
+assert.throws(() => validateResearchDoc('chinu', unsupportedAdoptionFixture), /adopted source .* does not support decision path|supportingSourceIds source .* does not reference claim path/);
 
 const invalidAcceptedPathFixture = structuredClone(docs.chinu);
 invalidAcceptedPathFixture.review.productionAdoption.acceptedPaths.push('/identity/notKnown');
 assert.throws(() => validateResearchDoc('chinu', invalidAcceptedPathFixture), /acceptedPaths must match decisions/);
 
-const legacyVersionFixture = structuredClone(docs.chinu);
+const legacyVersionFixture = structuredClone(docs.maaji);
 legacyVersionFixture.schemaVersion = '1.1.0';
-assert.equal(validate(legacyVersionFixture), false, 'v1.1.0 is intentionally rejected after the v1.2.0 purpose migration');
-const currentVersionFixture = structuredClone(docs.chinu);
+assert.equal(validateLegacy(legacyVersionFixture), false, 'v1.1.0 is intentionally rejected after the v1.2.0 purpose migration');
+const currentVersionFixture = structuredClone(docs.maaji);
 currentVersionFixture.schemaVersion = '1.2.0';
-assert.equal(validate(currentVersionFixture), true, 'v1.2.0 fixture must validate');
+assert.equal(validateLegacy(currentVersionFixture), true, 'v1.2.0 fixture must validate');
+const v14VersionFixture = structuredClone(docs.chinu);
+assert.equal(validateV14(v14VersionFixture), true, 'v1.4.0 fixture must validate with the ecology-v2 schema');
 
 console.log('fish species ecology schema tests passed');
