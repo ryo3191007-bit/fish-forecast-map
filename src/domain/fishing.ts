@@ -18,9 +18,9 @@ export const fishSpeciesDefinitions = [
   ["mejina", "メジナ", "exact_species", null, null], ["tachiuo", "タチウオ", "exact_species", null, null],
   ["kawahagi", "カワハギ", "exact_species", null, null], ["umazurahagi", "ウマヅラハギ", "exact_species", null, null],
   ["konoshiro", "コノシロ", "exact_species", null, null], ["sayori", "サヨリ", "exact_species", null, null],
-  ["bora", "ボラ", "exact_species", null, null], ["maanago", "マアナゴ", "exact_species", null, null],
+  ["bora", "ボラ", "exact_species", null, null], ["maanago", "マアナゴ", "exact_species", "anago", null],
   ["ishidai", "イシダイ", "exact_species", null, null], ["ishigakidai", "イシガキダイ", "exact_species", null, null],
-  ["akakamasu", "アカカマス", "exact_species", "kamasu", null, false, false], ["yamatokamasu", "ヤマトカマス", "exact_species", "kamasu", null, false, false],
+  ["akakamasu", "アカカマス", "exact_species", "kamasu", null, false, true], ["yamatokamasu", "ヤマトカマス", "exact_species", "kamasu", null, false, true],
   ["maaji", "マアジ", "exact_species", "aji", null], ["maruaji", "マルアジ", "exact_species", "aji", null],
   ["masaba", "マサバ", "exact_species", "saba", null], ["gomasaba", "ゴマサバ", "exact_species", "saba", null],
   ["maiwashi", "マイワシ", "exact_species", "iwashi", null], ["katakuchiiwashi", "カタクチイワシ", "exact_species", "iwashi", null],
@@ -37,6 +37,11 @@ export const fishSpeciesDefinitions = [
   ["houbou", "ホウボウ", "exact_species", null, null], ["yagara", "ヤガラ", "species_group", null, null, true],
   ["yokofuedai", "ヨコフエダイ", "exact_species", null, null], ["fuedai", "フエダイ", "exact_species", null, null],
   ["anago", "アナゴ", "species_group", null, null, true],
+  ["makogarei", "マコガレイ", "exact_species", "karei", null, false, true], ["nezumigochi", "ネズミゴチ", "exact_species", "megochi", null, false, true],
+  ["mahaze", "マハゼ", "exact_species", "haze", null, false, true], ["urohaze", "ウロハゼ", "exact_species", "haze", null, false, true],
+  ["maeso", "マエソ", "exact_species", "eso", null, false, true], ["wanieso", "ワニエソ", "exact_species", "eso", null, false, true],
+  ["tokageeso", "トカゲエソ", "exact_species", "eso", null, false, true], ["akayagara", "アカヤガラ", "exact_species", "yagara", null, false, true],
+  ["aoyagara", "アオヤガラ", "exact_species", "yagara", null, false, true],
 ] as const;
 
 export const fishSpeciesIds = fishSpeciesDefinitions.map((row) => row[0]);
