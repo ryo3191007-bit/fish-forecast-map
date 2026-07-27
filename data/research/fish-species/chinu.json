@@ -1,1 +1,717 @@
-{"schemaVersion":"1.4.0","speciesId":"chinu","identity":{"displayNameJa":"チヌ","canonicalNameJa":{"value":"クロダイ","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["bismal_kurodai_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"BISMaLの和名はクロダイ。アプリ表示名チヌのcanonicalとして扱う。","researchState":"complete","searchedSourceTiers":["authoritative_database"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"},"scientificName":{"value":"Acanthopagrus schlegelii","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["bismal_kurodai_v2","mie_kurodai_2025_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"BISMaLと三重県資源評価で一致。","researchState":"complete","searchedSourceTiers":["official_primary","authoritative_database"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"},"aliases":[],"entityType":"exact_species","note":"表示名チヌをクロダイtaxonとして管理するv2記録。キチヌ等の近縁種へ値を継承しない。","parentGroupId":null,"memberSpeciesIds":[]},"researchScope":{"targetArea":"福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。","checkedAt":"2026-07-27","sourcePolicy":"docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"},"ecology":{"stableGeneral":{"seasonality":{"value":"伊勢湾では4月頃から湾内へ来遊し、6〜10月は広く湾内に分布、11月以降は湾口付近へ集まり冬季は湾外へ移動する。","status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["mie_kurodai_2025_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"伊勢湾の標本船調査に基づく季節分布。釣れやすさや全国共通季節性へは変換しない。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","regionScope":"伊勢湾","rangeType":"qualitative"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":["mie_kurodai_2025_v2"],"contradictingSourceIds":[]},"note":"三重県資料には25cm未満で約14℃が活動に関係する研究があるが、成魚や一般適水温には拡張できない。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"insufficient_evidence","researchNote":"公的資源評価と専門DBを確認し、生活史段階に限定される14℃情報を一般水温へ転用しないためunknownとした。"},"depthRange":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":["mie_kurodai_2025_v2","bismal_kurodai_v2"],"contradictingSourceIds":[]},"note":"内湾浅所・湾口・湾外への移動は確認できるが、一般生息水深の上下限を直接定義できない。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"insufficient_evidence","researchNote":"公的資料と専門DBを確認したが、BISMaLの水深は出現レコードであり生息範囲には使用しない。"},"substrateHabitat":{"value":["内湾浅所の砕波帯・アマモ場（稚魚）","河川汽水域","沿岸岩礁域"],"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["mie_kurodai_2025_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"生活史段階ごとの直接記載。成魚の地点適性へ単純継承しない。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","rangeType":"qualitative","regionScope":"日本沿岸・伊勢湾等"},"salinityAndWaterBody":{"value":["内湾","河川汽水域","沿岸海域","湾口・湾外"],"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["mie_kurodai_2025_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"稚魚から成長後までの水域利用を公的資源評価で確認。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","rangeType":"qualitative","regionScope":"日本沿岸・伊勢湾等"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"昼夜活動性を直接示すspecies-levelの高品質sourceを確認できなかった。釣り時間から推定しない。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"source_not_found","researchNote":"公的資料・査読研究・専門DBを属性別に確認し、直接根拠が得られないためunknownで終了した。"},"fishingMethods":{"value":["釣り"],"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["mie_kurodai_2025_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"三重県資源評価で漁法として釣りを直接確認。仕掛け・時間帯は補完しない。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","rangeType":"qualitative","regionScope":"三重県"},"spawningOrConfusableInfo":{"value":{"season":"spring_to_early_summer","note":"産卵期は春〜初夏"},"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["mie_kurodai_2025_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"公的資源評価の産卵期。商業主漁期・遊漁釣期へは転用しない。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","regionScope":"一般生態","rangeType":"qualitative"}},"regionalCatchability":{"seasonality":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"depthRange":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"substrateHabitat":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"salinityAndWaterBody":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"spawningOrConfusableInfo":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"}}},"sources":[{"id":"bismal_kurodai_v2","title":"Acanthopagrus schlegelii クロダイ - Biological Information System for Marine Life","url":"https://www.godac.jamstec.go.jp/bismal/j/view/9012283","publisher":"JAMSTEC/GODAC","publisherType":"public_research","publishedOrUpdatedAt":null,"checkedAt":"2026-07-27","regionScope":"日本周辺の分類・出現情報","sourceType":"supporting","directness":"direct","derivationGroup":"bismal_kurodai","supports":["/ecology/stableGeneral/depthRange","/identity/canonicalNameJa","/identity/scientificName"],"usageNote":"調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。","sourceTier":"authoritative_database"},{"id":"mie_kurodai_2025_v2","title":"令和7（2025）年度三重県におけるクロダイの資源評価","url":"https://www.pref.mie.lg.jp/common/content/001250945.pdf","publisher":"三重県水産研究所","publisherType":"government","publishedOrUpdatedAt":"2026-05-01","checkedAt":"2026-07-27","regionScope":"三重県・伊勢湾を中心とする資源生態","sourceType":"supporting","directness":"direct","derivationGroup":"mie_kurodai_2025","supports":["/ecology/stableGeneral/depthRange","/ecology/stableGeneral/fishingMethods","/ecology/stableGeneral/salinityAndWaterBody","/ecology/stableGeneral/seasonality","/ecology/stableGeneral/spawningOrConfusableInfo","/ecology/stableGeneral/substrateHabitat","/ecology/stableGeneral/waterTemperature","/identity/scientificName"],"usageNote":"調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。","sourceTier":"official_primary"}],"review":{"officialResearch":"公的機関・水産研究機関・査読研究・専門DBを属性別に探索し、用途が直接一致する根拠のみ採用した。","secondaryResearch":"FishBase/SeaLifeBase等は一般生態の補助に限定し、モデル推定値・出現記録・商業漁獲情報を釣れやすさへ転用していない。","schemaValidation":"fish-species-ecology.v1.4.0.schema.jsonおよびv2 integrity testで検証する。","comparisonWithCurrentImplementation":{"authoritativeComparisonDocument":"docs/research/FISH_SPECIES_ECOLOGY_V2_BATCH01_REVIEW.md","scoreV2Status":"supported","inheritancePolicy":"do_not_inherit_between_species_or_group"},"attributeDecisions":[{"path":"/identity/canonicalNameJa","decision":"adopt","reason":"直接根拠を確認し、注記された範囲でidentityとして採用する。","purposes":["identity_display"],"sourceIds":["bismal_kurodai_v2"],"regionScope":"分類情報","confidence":"high","recheckCondition":"分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"},{"path":"/identity/scientificName","decision":"adopt","reason":"直接根拠を確認し、注記された範囲でidentityとして採用する。","purposes":["identity_display"],"sourceIds":["bismal_kurodai_v2","mie_kurodai_2025_v2"],"regionScope":"分類情報","confidence":"high","recheckCondition":"分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"},{"path":"/identity/aliases","decision":"hold","reason":"本batchでは安全に追加できるaliasを確定していない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接sourceで別名を確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/seasonality","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["mie_kurodai_2025_v2"],"regionScope":"伊勢湾","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/waterTemperature","decision":"hold","reason":"insufficient_evidenceとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":["mie_kurodai_2025_v2"],"regionScope":"一般生態","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/depthRange","decision":"hold","reason":"insufficient_evidenceとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":["mie_kurodai_2025_v2","bismal_kurodai_v2"],"regionScope":"一般生態","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/substrateHabitat","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["mie_kurodai_2025_v2"],"regionScope":"日本沿岸・伊勢湾等","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/salinityAndWaterBody","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["mie_kurodai_2025_v2"],"regionScope":"日本沿岸・伊勢湾等","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/dayNightTiming","decision":"hold","reason":"source_not_foundとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"一般生態","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/fishingMethods","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["mie_kurodai_2025_v2"],"regionScope":"三重県","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/spawningOrConfusableInfo","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["mie_kurodai_2025_v2"],"regionScope":"一般生態","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/seasonality","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/waterTemperature","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/depthRange","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/substrateHabitat","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/salinityAndWaterBody","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/dayNightTiming","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/fishingMethods","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/spawningOrConfusableInfo","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"}],"reviewStatus":"ready_for_review","productionAdoption":{"projectionPolicy":"本調査のacceptedPathsは監査上の採用候補を示すだけで、SCORE v2へ自動接続しない。親・子・兄弟taxonへの継承を禁止する。","acceptedPaths":["/identity/canonicalNameJa","/identity/scientificName","/ecology/stableGeneral/seasonality","/ecology/stableGeneral/substrateHabitat","/ecology/stableGeneral/salinityAndWaterBody","/ecology/stableGeneral/fishingMethods","/ecology/stableGeneral/spawningOrConfusableInfo"],"unknownPolicy":"unknown/holdは未確定として保持し、0点・不適・非生息・釣れないへ変換しない。"}}}
+{
+  "schemaVersion": "1.4.0",
+  "speciesId": "chinu",
+  "identity": {
+    "displayNameJa": "チヌ",
+    "canonicalNameJa": {
+      "value": "クロダイ",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_kurodai_v2"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "BISMaLの和名はクロダイ。アプリ表示名チヌのcanonicalとして扱う。",
+      "researchState": "complete",
+      "searchedSourceTiers": [
+        "authoritative_database"
+      ],
+      "unknownReason": null,
+      "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"
+    },
+    "scientificName": {
+      "value": "Acanthopagrus schlegelii",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_kurodai_v2",
+          "mie_kurodai_2025_v2"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "BISMaLと三重県資源評価で一致。",
+      "researchState": "complete",
+      "searchedSourceTiers": [
+        "official_primary",
+        "authoritative_database"
+      ],
+      "unknownReason": null,
+      "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"
+    },
+    "aliases": [],
+    "entityType": "exact_species",
+    "note": "表示名チヌをクロダイtaxonとして管理するv2記録。キチヌ等の近縁種へ値を継承しない。",
+    "parentGroupId": null,
+    "memberSpeciesIds": []
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-27",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": "伊勢湾では4月頃から湾内へ来遊し、6〜10月は広く湾内に分布、11月以降は湾口付近へ集まり冬季は湾外へ移動する。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mie_kurodai_2025_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "伊勢湾の標本船調査に基づく季節分布。釣れやすさや全国共通季節性へは変換しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "伊勢湾",
+        "rangeType": "qualitative"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [
+            "mie_kurodai_2025_v2"
+          ],
+          "contradictingSourceIds": []
+        },
+        "note": "三重県資料には25cm未満で約14℃が活動に関係する研究があるが、成魚や一般適水温には拡張できない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "insufficient_evidence",
+        "researchNote": "公的資源評価と専門DBを確認し、生活史段階に限定される14℃情報を一般水温へ転用しないためunknownとした。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [
+            "mie_kurodai_2025_v2",
+            "bismal_kurodai_v2"
+          ],
+          "contradictingSourceIds": []
+        },
+        "note": "内湾浅所・湾口・湾外への移動は確認できるが、一般生息水深の上下限を直接定義できない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "insufficient_evidence",
+        "researchNote": "公的資料と専門DBを確認したが、BISMaLの水深は出現レコードであり生息範囲には使用しない。"
+      },
+      "substrateHabitat": {
+        "value": [
+          "内湾浅所の砕波帯・アマモ場（稚魚）",
+          "河川汽水域",
+          "沿岸岩礁域"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mie_kurodai_2025_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "生活史段階ごとの直接記載。成魚の地点適性へ単純継承しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "日本沿岸・伊勢湾等"
+      },
+      "salinityAndWaterBody": {
+        "value": [
+          "内湾",
+          "河川汽水域",
+          "沿岸海域",
+          "湾口・湾外"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mie_kurodai_2025_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "稚魚から成長後までの水域利用を公的資源評価で確認。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "日本沿岸・伊勢湾等"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "昼夜活動性を直接示すspecies-levelの高品質sourceを確認できなかった。釣り時間から推定しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "source_not_found",
+        "researchNote": "公的資料・査読研究・専門DBを属性別に確認し、直接根拠が得られないためunknownで終了した。"
+      },
+      "fishingMethods": {
+        "value": [
+          "釣り"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mie_kurodai_2025_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "三重県資源評価で漁法として釣りを直接確認。仕掛け・時間帯は補完しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "三重県"
+      },
+      "spawningOrConfusableInfo": {
+        "value": {
+          "season": "spring_to_early_summer",
+          "note": "産卵期は春〜初夏"
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mie_kurodai_2025_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "公的資源評価の産卵期。商業主漁期・遊漁釣期へは転用しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "一般生態",
+        "rangeType": "qualitative"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "bismal_kurodai_v2",
+      "title": "Acanthopagrus schlegelii クロダイ - Biological Information System for Marine Life",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9012283",
+      "publisher": "JAMSTEC/GODAC",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-27",
+      "regionScope": "日本周辺の分類・出現情報",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "bismal_kurodai",
+      "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/identity/canonicalNameJa",
+        "/identity/scientificName"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "authoritative_database"
+    },
+    {
+      "id": "mie_kurodai_2025_v2",
+      "title": "令和7（2025）年度三重県におけるクロダイの資源評価",
+      "url": "https://www.pref.mie.lg.jp/common/content/001250945.pdf",
+      "publisher": "三重県水産研究所",
+      "publisherType": "government",
+      "publishedOrUpdatedAt": "2026-05-01",
+      "checkedAt": "2026-07-27",
+      "regionScope": "三重県・伊勢湾を中心とする資源生態",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "mie_kurodai_2025",
+      "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/fishingMethods",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/waterTemperature",
+        "/identity/scientificName"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "official_primary"
+    }
+  ],
+  "review": {
+    "officialResearch": "公的機関・水産研究機関・査読研究・専門DBを属性別に探索し、用途が直接一致する根拠のみ採用した。",
+    "secondaryResearch": "FishBase/SeaLifeBase等は一般生態の補助に限定し、モデル推定値・出現記録・商業漁獲情報を釣れやすさへ転用していない。",
+    "schemaValidation": "fish-species-ecology.v1.4.0.schema.jsonおよびv2 integrity testで検証する。",
+    "comparisonWithCurrentImplementation": {
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_V2_BATCH01_REVIEW.md",
+      "scoreV2Status": "supported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt",
+        "reason": "直接根拠を確認し、注記された範囲でidentityとして採用する。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_kurodai_v2"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
+      },
+      {
+        "path": "/identity/scientificName",
+        "decision": "adopt",
+        "reason": "直接根拠を確認し、注記された範囲でidentityとして採用する。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_kurodai_v2",
+          "mie_kurodai_2025_v2"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "hold",
+        "reason": "本batchでは安全に追加できるaliasを確定していない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "直接sourceで別名を確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/seasonality",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "mie_kurodai_2025_v2"
+        ],
+        "regionScope": "伊勢湾",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "reason": "insufficient_evidenceとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "mie_kurodai_2025_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "hold",
+        "reason": "insufficient_evidenceとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "mie_kurodai_2025_v2",
+          "bismal_kurodai_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "mie_kurodai_2025_v2"
+        ],
+        "regionScope": "日本沿岸・伊勢湾等",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "mie_kurodai_2025_v2"
+        ],
+        "regionScope": "日本沿岸・伊勢湾等",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "hold",
+        "reason": "source_not_foundとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "mie_kurodai_2025_v2"
+        ],
+        "regionScope": "三重県",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "mie_kurodai_2025_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/waterTemperature",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/depthRange",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/substrateHabitat",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/salinityAndWaterBody",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/dayNightTiming",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/fishingMethods",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      }
+    ],
+    "reviewStatus": "ready_for_review",
+    "productionAdoption": {
+      "projectionPolicy": "本調査のacceptedPathsは監査上の採用候補を示すだけで、SCORE v2へ自動接続しない。親・子・兄弟taxonへの継承を禁止する。",
+      "acceptedPaths": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/fishingMethods",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "unknownPolicy": "unknown/holdは未確定として保持し、0点・不適・非生息・釣れないへ変換しない。"
+    }
+  }
+}

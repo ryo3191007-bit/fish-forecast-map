@@ -1,1 +1,765 @@
-{"schemaVersion":"1.4.0","speciesId":"seabass","identity":{"displayNameJa":"スズキ","canonicalNameJa":{"value":"スズキ","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["bismal_suzuki_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"BISMaLで和名を確認。","researchState":"complete","searchedSourceTiers":["authoritative_database"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"},"scientificName":{"value":"Lateolabrax japonicus","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["bismal_suzuki_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"BISMaLで学名を確認。","researchState":"complete","searchedSourceTiers":["authoritative_database"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"},"aliases":["セイゴ","フッコ","マダカ"],"entityType":"exact_species","note":"スズキの自己完結型v2調査記録。旧UI呼称シーバスやヒラスズキ等を自動的に同一taxonへ継承しない。","parentGroupId":null,"memberSpeciesIds":[]},"researchScope":{"targetArea":"福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。","checkedAt":"2026-07-27","sourcePolicy":"docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"},"ecology":{"stableGeneral":{"seasonality":{"value":"三番瀬周辺では幼魚の出現ピークが5〜6月で、7〜8月には成長に伴い沖合域へ分布が拡大する。","status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["chiba_suzuki_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"幼魚の地域別季節分布。成魚の釣期や対象地域の釣れやすさには拡張しない。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","regionScope":"東京湾三番瀬周辺・幼魚","rangeType":"qualitative"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"一般生息・活動水温を直接確定できなかった。季節や釣り時期から推測しない。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"source_not_found","researchNote":"公的資料・査読研究・専門DBを属性別に確認し、直接根拠が得られないためunknownで終了した。"},"depthRange":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":["fishbase_suzuki_v2","bismal_suzuki_v2"],"contradictingSourceIds":[]},"note":"FishBaseは下限5mのみ、BISMaLの0〜61mは出現レコードであり、一般生息水深の閉区間を作れない。","researchState":"complete","searchedSourceTiers":["official_primary","authoritative_database","peer_reviewed"],"unknownReason":"insufficient_evidence","researchNote":"公的資料と専門DBを確認したが、一般生息水深の上下限を直接定義できる根拠が不足した。"},"substrateHabitat":{"value":["沿岸の流れのある岩礁域","河口・河川域を利用する生活史段階あり"],"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["fishbase_suzuki_v2","mie_suzuki_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"沿岸岩礁と河川利用を採用。特定地点の適性や釣れやすさには変換しない。","researchState":"complete","searchedSourceTiers":["official_primary","authoritative_database"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","rangeType":"qualitative","regionScope":"一般生態・三重県河川"},"salinityAndWaterBody":{"value":["海水","汽水","淡水","沿岸・河川"],"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["fishbase_suzuki_v2","mie_suzuki_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"FishBaseのmarine/freshwater/brackishと、三重県で河口から10km以上上流の純淡水域まで確認された記載。","researchState":"complete","searchedSourceTiers":["official_primary","authoritative_database"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","rangeType":"qualitative","regionScope":"一般生態・三重県"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":["mie_suzuki_v2"],"contradictingSourceIds":[]},"note":"三重県資料に夏場の夜釣り人気はあるが、釣り時間の情報から昼夜活動性を推定しない。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"公的資料を確認したが、釣りの推奨時間と生態学的な昼夜活動性を分離し、直接行動研究がないためunknownとした。"},"fishingMethods":{"value":["ゴカイ等を餌にした餌釣り"],"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["mie_suzuki_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"三重県水産研究所が捕獲方法として直接記載。夜釣り人気という時間情報は釣法から分離する。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","rangeType":"qualitative","regionScope":"三重県"},"spawningOrConfusableInfo":{"value":{"season":"winter","note":"産卵期は冬"},"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["chiba_suzuki_v2","mie_suzuki_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"公的資料2件で冬の産卵を確認。釣期へ転用しない。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","regionScope":"日本沿岸の一般解説","rangeType":"qualitative"}},"regionalCatchability":{"seasonality":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"depthRange":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"substrateHabitat":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"salinityAndWaterBody":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"spawningOrConfusableInfo":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"}}},"sources":[{"id":"bismal_suzuki_v2","title":"Lateolabrax japonicus スズキ - Biological Information System for Marine Life","url":"https://www.godac.jamstec.go.jp/bismal/j/view/9005278","publisher":"JAMSTEC/GODAC","publisherType":"public_research","publishedOrUpdatedAt":null,"checkedAt":"2026-07-27","regionScope":"日本周辺の分類・出現情報","sourceType":"supporting","directness":"direct","derivationGroup":"bismal_suzuki","supports":["/ecology/stableGeneral/depthRange","/identity/canonicalNameJa","/identity/scientificName"],"usageNote":"調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。","sourceTier":"authoritative_database"},{"id":"fishbase_suzuki_v2","title":"Lateolabrax japonicus summary page","url":"https://www.fishbase.org/summary/Lateolabrax_japonicus.html","publisher":"FishBase","publisherType":"secondary","publishedOrUpdatedAt":null,"checkedAt":"2026-07-27","regionScope":"世界的な一般生態","sourceType":"supporting","directness":"direct","derivationGroup":"fishbase_suzuki","supports":["/ecology/stableGeneral/depthRange","/ecology/stableGeneral/salinityAndWaterBody","/ecology/stableGeneral/substrateHabitat"],"usageNote":"調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。","sourceTier":"authoritative_database"},{"id":"chiba_suzuki_v2","title":"スズキ｜三番瀬自然環境データベース","url":"https://www.pref.chiba.lg.jp/shizen/sanbanze/database/seibutsu/suzuki.html","publisher":"千葉県","publisherType":"government","publishedOrUpdatedAt":"2026-01-06","checkedAt":"2026-07-27","regionScope":"東京湾三番瀬および一般特性","sourceType":"supporting","directness":"direct","derivationGroup":"chiba_suzuki","supports":["/ecology/stableGeneral/seasonality","/ecology/stableGeneral/spawningOrConfusableInfo"],"usageNote":"調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。","sourceTier":"official_primary"},{"id":"mie_suzuki_v2","title":"おさかな図鑑：スズキ","url":"https://www.pref.mie.lg.jp/suigi/hp/16222017537.htm","publisher":"三重県水産研究所","publisherType":"government","publishedOrUpdatedAt":"2008-08-05","checkedAt":"2026-07-27","regionScope":"三重県伊勢湾・熊野灘流入河川","sourceType":"supporting","directness":"direct","derivationGroup":"mie_suzuki","supports":["/ecology/stableGeneral/dayNightTiming","/ecology/stableGeneral/fishingMethods","/ecology/stableGeneral/salinityAndWaterBody","/ecology/stableGeneral/spawningOrConfusableInfo","/ecology/stableGeneral/substrateHabitat","/identity/aliases"],"usageNote":"調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。","sourceTier":"official_primary"}],"review":{"officialResearch":"公的機関・水産研究機関・査読研究・専門DBを属性別に探索し、用途が直接一致する根拠のみ採用した。","secondaryResearch":"FishBase/SeaLifeBase等は一般生態の補助に限定し、モデル推定値・出現記録・商業漁獲情報を釣れやすさへ転用していない。","schemaValidation":"fish-species-ecology.v1.4.0.schema.jsonおよびv2 integrity testで検証する。","comparisonWithCurrentImplementation":{"authoritativeComparisonDocument":"docs/research/FISH_SPECIES_ECOLOGY_V2_BATCH01_REVIEW.md","scoreV2Status":"supported","inheritancePolicy":"do_not_inherit_between_species_or_group"},"attributeDecisions":[{"path":"/identity/canonicalNameJa","decision":"adopt","reason":"直接根拠を確認し、注記された範囲でidentityとして採用する。","purposes":["identity_display"],"sourceIds":["bismal_suzuki_v2"],"regionScope":"分類情報","confidence":"high","recheckCondition":"分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"},{"path":"/identity/scientificName","decision":"adopt","reason":"直接根拠を確認し、注記された範囲でidentityとして採用する。","purposes":["identity_display"],"sourceIds":["bismal_suzuki_v2"],"regionScope":"分類情報","confidence":"high","recheckCondition":"分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"},{"path":"/identity/aliases","decision":"adopt_with_warning","reason":"公的・研究機関資料で呼称を確認したが、地域・成長段階の限定があり得る。","purposes":["identity_display"],"sourceIds":["mie_suzuki_v2"],"regionScope":"source記載地域","confidence":"medium","recheckCondition":"地域別aliasを分離する場合に再確認する。"},{"path":"/ecology/stableGeneral/seasonality","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["chiba_suzuki_v2"],"regionScope":"東京湾三番瀬周辺・幼魚","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/waterTemperature","decision":"hold","reason":"source_not_foundとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"一般生態","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/depthRange","decision":"hold","reason":"insufficient_evidenceとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":["fishbase_suzuki_v2","bismal_suzuki_v2"],"regionScope":"一般生態","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/substrateHabitat","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["fishbase_suzuki_v2","mie_suzuki_v2"],"regionScope":"一般生態・三重県河川","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/salinityAndWaterBody","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["fishbase_suzuki_v2","mie_suzuki_v2"],"regionScope":"一般生態・三重県","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/dayNightTiming","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":["mie_suzuki_v2"],"regionScope":"一般生態","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/fishingMethods","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["mie_suzuki_v2"],"regionScope":"三重県","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/spawningOrConfusableInfo","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["chiba_suzuki_v2","mie_suzuki_v2"],"regionScope":"日本沿岸の一般解説","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/seasonality","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/waterTemperature","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/depthRange","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/substrateHabitat","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/salinityAndWaterBody","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/dayNightTiming","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/fishingMethods","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/spawningOrConfusableInfo","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"}],"reviewStatus":"ready_for_review","productionAdoption":{"projectionPolicy":"本調査のacceptedPathsは監査上の採用候補を示すだけで、SCORE v2へ自動接続しない。親・子・兄弟taxonへの継承を禁止する。","acceptedPaths":["/identity/canonicalNameJa","/identity/scientificName","/identity/aliases","/ecology/stableGeneral/seasonality","/ecology/stableGeneral/substrateHabitat","/ecology/stableGeneral/salinityAndWaterBody","/ecology/stableGeneral/fishingMethods","/ecology/stableGeneral/spawningOrConfusableInfo"],"unknownPolicy":"unknown/holdは未確定として保持し、0点・不適・非生息・釣れないへ変換しない。"}}}
+{
+  "schemaVersion": "1.4.0",
+  "speciesId": "seabass",
+  "identity": {
+    "displayNameJa": "スズキ",
+    "canonicalNameJa": {
+      "value": "スズキ",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_suzuki_v2"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "BISMaLで和名を確認。",
+      "researchState": "complete",
+      "searchedSourceTiers": [
+        "authoritative_database"
+      ],
+      "unknownReason": null,
+      "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"
+    },
+    "scientificName": {
+      "value": "Lateolabrax japonicus",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "bismal_suzuki_v2"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "BISMaLで学名を確認。",
+      "researchState": "complete",
+      "searchedSourceTiers": [
+        "authoritative_database"
+      ],
+      "unknownReason": null,
+      "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"
+    },
+    "aliases": [
+      "セイゴ",
+      "フッコ",
+      "マダカ"
+    ],
+    "entityType": "exact_species",
+    "note": "スズキの自己完結型v2調査記録。旧UI呼称シーバスやヒラスズキ等を自動的に同一taxonへ継承しない。",
+    "parentGroupId": null,
+    "memberSpeciesIds": []
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-27",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": "三番瀬周辺では幼魚の出現ピークが5〜6月で、7〜8月には成長に伴い沖合域へ分布が拡大する。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "chiba_suzuki_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "幼魚の地域別季節分布。成魚の釣期や対象地域の釣れやすさには拡張しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "東京湾三番瀬周辺・幼魚",
+        "rangeType": "qualitative"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "一般生息・活動水温を直接確定できなかった。季節や釣り時期から推測しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "source_not_found",
+        "researchNote": "公的資料・査読研究・専門DBを属性別に確認し、直接根拠が得られないためunknownで終了した。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [
+            "fishbase_suzuki_v2",
+            "bismal_suzuki_v2"
+          ],
+          "contradictingSourceIds": []
+        },
+        "note": "FishBaseは下限5mのみ、BISMaLの0〜61mは出現レコードであり、一般生息水深の閉区間を作れない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "authoritative_database",
+          "peer_reviewed"
+        ],
+        "unknownReason": "insufficient_evidence",
+        "researchNote": "公的資料と専門DBを確認したが、一般生息水深の上下限を直接定義できる根拠が不足した。"
+      },
+      "substrateHabitat": {
+        "value": [
+          "沿岸の流れのある岩礁域",
+          "河口・河川域を利用する生活史段階あり"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fishbase_suzuki_v2",
+            "mie_suzuki_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "沿岸岩礁と河川利用を採用。特定地点の適性や釣れやすさには変換しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "authoritative_database"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "一般生態・三重県河川"
+      },
+      "salinityAndWaterBody": {
+        "value": [
+          "海水",
+          "汽水",
+          "淡水",
+          "沿岸・河川"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "fishbase_suzuki_v2",
+            "mie_suzuki_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "FishBaseのmarine/freshwater/brackishと、三重県で河口から10km以上上流の純淡水域まで確認された記載。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "authoritative_database"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "一般生態・三重県"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [
+            "mie_suzuki_v2"
+          ],
+          "contradictingSourceIds": []
+        },
+        "note": "三重県資料に夏場の夜釣り人気はあるが、釣り時間の情報から昼夜活動性を推定しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "公的資料を確認したが、釣りの推奨時間と生態学的な昼夜活動性を分離し、直接行動研究がないためunknownとした。"
+      },
+      "fishingMethods": {
+        "value": [
+          "ゴカイ等を餌にした餌釣り"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "mie_suzuki_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "三重県水産研究所が捕獲方法として直接記載。夜釣り人気という時間情報は釣法から分離する。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "三重県"
+      },
+      "spawningOrConfusableInfo": {
+        "value": {
+          "season": "winter",
+          "note": "産卵期は冬"
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "chiba_suzuki_v2",
+            "mie_suzuki_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "公的資料2件で冬の産卵を確認。釣期へ転用しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "日本沿岸の一般解説",
+        "rangeType": "qualitative"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "bismal_suzuki_v2",
+      "title": "Lateolabrax japonicus スズキ - Biological Information System for Marine Life",
+      "url": "https://www.godac.jamstec.go.jp/bismal/j/view/9005278",
+      "publisher": "JAMSTEC/GODAC",
+      "publisherType": "public_research",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-27",
+      "regionScope": "日本周辺の分類・出現情報",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "bismal_suzuki",
+      "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/identity/canonicalNameJa",
+        "/identity/scientificName"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "authoritative_database"
+    },
+    {
+      "id": "fishbase_suzuki_v2",
+      "title": "Lateolabrax japonicus summary page",
+      "url": "https://www.fishbase.org/summary/Lateolabrax_japonicus.html",
+      "publisher": "FishBase",
+      "publisherType": "secondary",
+      "publishedOrUpdatedAt": null,
+      "checkedAt": "2026-07-27",
+      "regionScope": "世界的な一般生態",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "fishbase_suzuki",
+      "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/substrateHabitat"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "authoritative_database"
+    },
+    {
+      "id": "chiba_suzuki_v2",
+      "title": "スズキ｜三番瀬自然環境データベース",
+      "url": "https://www.pref.chiba.lg.jp/shizen/sanbanze/database/seibutsu/suzuki.html",
+      "publisher": "千葉県",
+      "publisherType": "government",
+      "publishedOrUpdatedAt": "2026-01-06",
+      "checkedAt": "2026-07-27",
+      "regionScope": "東京湾三番瀬および一般特性",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "chiba_suzuki",
+      "supports": [
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "official_primary"
+    },
+    {
+      "id": "mie_suzuki_v2",
+      "title": "おさかな図鑑：スズキ",
+      "url": "https://www.pref.mie.lg.jp/suigi/hp/16222017537.htm",
+      "publisher": "三重県水産研究所",
+      "publisherType": "government",
+      "publishedOrUpdatedAt": "2008-08-05",
+      "checkedAt": "2026-07-27",
+      "regionScope": "三重県伊勢湾・熊野灘流入河川",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "mie_suzuki",
+      "supports": [
+        "/ecology/stableGeneral/dayNightTiming",
+        "/ecology/stableGeneral/fishingMethods",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/identity/aliases"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "official_primary"
+    }
+  ],
+  "review": {
+    "officialResearch": "公的機関・水産研究機関・査読研究・専門DBを属性別に探索し、用途が直接一致する根拠のみ採用した。",
+    "secondaryResearch": "FishBase/SeaLifeBase等は一般生態の補助に限定し、モデル推定値・出現記録・商業漁獲情報を釣れやすさへ転用していない。",
+    "schemaValidation": "fish-species-ecology.v1.4.0.schema.jsonおよびv2 integrity testで検証する。",
+    "comparisonWithCurrentImplementation": {
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_V2_BATCH01_REVIEW.md",
+      "scoreV2Status": "supported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt",
+        "reason": "直接根拠を確認し、注記された範囲でidentityとして採用する。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_suzuki_v2"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
+      },
+      {
+        "path": "/identity/scientificName",
+        "decision": "adopt",
+        "reason": "直接根拠を確認し、注記された範囲でidentityとして採用する。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "bismal_suzuki_v2"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "adopt_with_warning",
+        "reason": "公的・研究機関資料で呼称を確認したが、地域・成長段階の限定があり得る。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "mie_suzuki_v2"
+        ],
+        "regionScope": "source記載地域",
+        "confidence": "medium",
+        "recheckCondition": "地域別aliasを分離する場合に再確認する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/seasonality",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "chiba_suzuki_v2"
+        ],
+        "regionScope": "東京湾三番瀬周辺・幼魚",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "reason": "source_not_foundとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "hold",
+        "reason": "insufficient_evidenceとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "fishbase_suzuki_v2",
+          "bismal_suzuki_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fishbase_suzuki_v2",
+          "mie_suzuki_v2"
+        ],
+        "regionScope": "一般生態・三重県河川",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "fishbase_suzuki_v2",
+          "mie_suzuki_v2"
+        ],
+        "regionScope": "一般生態・三重県",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [
+          "mie_suzuki_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "mie_suzuki_v2"
+        ],
+        "regionScope": "三重県",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "chiba_suzuki_v2",
+          "mie_suzuki_v2"
+        ],
+        "regionScope": "日本沿岸の一般解説",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/waterTemperature",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/depthRange",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/substrateHabitat",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/salinityAndWaterBody",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/dayNightTiming",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/fishingMethods",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      }
+    ],
+    "reviewStatus": "ready_for_review",
+    "productionAdoption": {
+      "projectionPolicy": "本調査のacceptedPathsは監査上の採用候補を示すだけで、SCORE v2へ自動接続しない。親・子・兄弟taxonへの継承を禁止する。",
+      "acceptedPaths": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/identity/aliases",
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/fishingMethods",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "unknownPolicy": "unknown/holdは未確定として保持し、0点・不適・非生息・釣れないへ変換しない。"
+    }
+  }
+}

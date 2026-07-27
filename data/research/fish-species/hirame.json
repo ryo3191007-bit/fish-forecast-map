@@ -1,1 +1,708 @@
-{"schemaVersion":"1.4.0","speciesId":"hirame","identity":{"displayNameJa":"ヒラメ","canonicalNameJa":{"value":"ヒラメ","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["chiba_hirame_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"千葉県の公的種解説で標準和名を確認。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"},"scientificName":{"value":"Paralichthys olivaceus","status":"confirmed","confidence":"high","evidenceSources":{"supportingSourceIds":["chiba_hirame_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"千葉県の公的種解説で学名を確認。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"},"aliases":[],"entityType":"exact_species","note":"ヒラメの自己完結型v2調査記録。親・子・近縁taxonとの暗黙継承を禁止する。","parentGroupId":null,"memberSpeciesIds":[]},"researchScope":{"targetArea":"福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。","checkedAt":"2026-07-27","sourcePolicy":"docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"},"ecology":{"stableGeneral":{"seasonality":{"value":"早春〜初夏は沿岸の浅場へ出現し、夏〜冬はより深場で生活する季節移動が報告される。","status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["chiba_hirame_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"千葉県の一般生態解説。釣期ではなく分布水深の季節変化。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","regionScope":"本州中部以南を含む一般生態","rangeType":"qualitative"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"一般生息・活動に関する水温範囲を直接確定できなかった。産卵・養殖水温は代用しない。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"source_not_found","researchNote":"公的資料・査読研究・専門DBを属性別に確認し、直接根拠が得られないためunknownで終了した。"},"depthRange":{"value":{"max":200},"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["chiba_hirame_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"水深200m以浅の生息記載。下限を補完しない。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","unit":"m","rangeType":"maximum_only","regionScope":"一般生態"},"substrateHabitat":{"value":["岩礁域周辺の砂泥底"],"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["chiba_hirame_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"千葉県の一般生態解説に基づく。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","rangeType":"qualitative","regionScope":"一般生態"},"salinityAndWaterBody":{"value":["沿岸海域","浅海〜深場"],"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["chiba_hirame_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"沿岸海域の海産魚としての分布説明。汽水・淡水利用は本claimでは追加しない。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","rangeType":"qualitative","regionScope":"一般生態"},"dayNightTiming":{"value":"飼育下の幼魚では、遊泳・砂からの離脱が昼間より夜間に多かった。","status":"inferred","confidence":"medium","evidenceSources":{"supportingSourceIds":["jstage_hirame_nocturnal_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"種苗生産幼魚の実験結果であり、成魚の一般行動や夜釣り優位を意味しない。","researchState":"complete","searchedSourceTiers":["peer_reviewed"],"unknownReason":null,"researchNote":"生活史段階と飼育条件が限定されるためinferredとして採用。","rangeType":"qualitative","regionScope":"飼育下の幼魚"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"漁業・遊漁方法の資料はあるが、v2の一般釣法属性へ直接採用するための用途適合根拠を本batchでは確定しない。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"source_not_found","researchNote":"公的資料・査読研究・専門DBを属性別に確認し、直接根拠が得られないためunknownで終了した。"},"spawningOrConfusableInfo":{"value":{"months":[2,3,4,5],"context":"本州中部以南の太平洋岸の産卵期"},"status":"confirmed","confidence":"medium","evidenceSources":{"supportingSourceIds":["chiba_hirame_v2"],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"産卵期のみ。一般seasonality・regionalCatchabilityへは転用しない。","researchState":"complete","searchedSourceTiers":["official_primary"],"unknownReason":null,"researchNote":"採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。","regionScope":"本州中部以南の太平洋岸","rangeType":"qualitative"}},"regionalCatchability":{"seasonality":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"waterTemperature":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"depthRange":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"substrateHabitat":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"salinityAndWaterBody":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"dayNightTiming":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"fishingMethods":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"},"spawningOrConfusableInfo":{"value":null,"status":"unknown","confidence":"unknown","evidenceSources":{"supportingSourceIds":[],"checkedSourceIds":[],"contradictingSourceIds":[]},"note":"対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。","researchState":"complete","searchedSourceTiers":["official_primary","peer_reviewed","authoritative_database"],"unknownReason":"scope_mismatch","researchNote":"対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"}}},"sources":[{"id":"chiba_hirame_v2","title":"各魚種の種苗生産・ヒラメ","url":"https://www.pref.chiba.lg.jp/lab-suisan/suisan/soshiki/futtsu/hirame.html","publisher":"千葉県水産総合研究センター","publisherType":"government","publishedOrUpdatedAt":"2026-02-13","checkedAt":"2026-07-27","regionScope":"本州中部以南を含むヒラメ一般生態","sourceType":"supporting","directness":"direct","derivationGroup":"chiba_hirame","supports":["/ecology/stableGeneral/depthRange","/ecology/stableGeneral/salinityAndWaterBody","/ecology/stableGeneral/seasonality","/ecology/stableGeneral/spawningOrConfusableInfo","/ecology/stableGeneral/substrateHabitat","/identity/canonicalNameJa","/identity/scientificName"],"usageNote":"調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。","sourceTier":"official_primary"},{"id":"jstage_hirame_nocturnal_v2","title":"Laboratory Observation on the Nocturnal Activity of Hatchery-reared Juvenile Japanese Flounder Paralichthys olivaceus","url":"https://www.jstage.jst.go.jp/article/fishsci1994/63/2/63_2_205/_article","publisher":"Fisheries Science","publisherType":"peer_reviewed","publishedOrUpdatedAt":"1997-01-01","checkedAt":"2026-07-27","regionScope":"飼育下の種苗生産ヒラメ幼魚","sourceType":"supporting","directness":"direct","derivationGroup":"jstage_hirame_nocturnal","supports":["/ecology/stableGeneral/dayNightTiming"],"usageNote":"調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。","sourceTier":"peer_reviewed"}],"review":{"officialResearch":"公的機関・水産研究機関・査読研究・専門DBを属性別に探索し、用途が直接一致する根拠のみ採用した。","secondaryResearch":"FishBase/SeaLifeBase等は一般生態の補助に限定し、モデル推定値・出現記録・商業漁獲情報を釣れやすさへ転用していない。","schemaValidation":"fish-species-ecology.v1.4.0.schema.jsonおよびv2 integrity testで検証する。","comparisonWithCurrentImplementation":{"authoritativeComparisonDocument":"docs/research/FISH_SPECIES_ECOLOGY_V2_BATCH01_REVIEW.md","scoreV2Status":"unsupported","inheritancePolicy":"do_not_inherit_between_species_or_group"},"attributeDecisions":[{"path":"/identity/canonicalNameJa","decision":"adopt","reason":"直接根拠を確認し、注記された範囲でidentityとして採用する。","purposes":["identity_display"],"sourceIds":["chiba_hirame_v2"],"regionScope":"分類情報","confidence":"high","recheckCondition":"分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"},{"path":"/identity/scientificName","decision":"adopt","reason":"直接根拠を確認し、注記された範囲でidentityとして採用する。","purposes":["identity_display"],"sourceIds":["chiba_hirame_v2"],"regionScope":"分類情報","confidence":"high","recheckCondition":"分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"},{"path":"/identity/aliases","decision":"hold","reason":"本batchでは安全に追加できるaliasを確定していない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"未確定","confidence":"unknown","recheckCondition":"直接sourceで別名を確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/seasonality","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["chiba_hirame_v2"],"regionScope":"本州中部以南を含む一般生態","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/waterTemperature","decision":"hold","reason":"source_not_foundとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"一般生態","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/depthRange","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["chiba_hirame_v2"],"regionScope":"一般生態","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/substrateHabitat","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["chiba_hirame_v2"],"regionScope":"一般生態","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/salinityAndWaterBody","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["chiba_hirame_v2"],"regionScope":"一般生態","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/dayNightTiming","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["jstage_hirame_nocturnal_v2"],"regionScope":"飼育下の幼魚","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/fishingMethods","decision":"hold","reason":"source_not_foundとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"一般生態","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/stableGeneral/spawningOrConfusableInfo","decision":"adopt_with_warning","reason":"直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。","purposes":["ecology_description"],"sourceIds":["chiba_hirame_v2"],"regionScope":"本州中部以南の太平洋岸","confidence":"medium","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/seasonality","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/waterTemperature","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/depthRange","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/substrateHabitat","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/salinityAndWaterBody","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/dayNightTiming","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/fishingMethods","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"},{"path":"/ecology/regionalCatchability/spawningOrConfusableInfo","decision":"hold","reason":"scope_mismatchとして確定値を採用しない。","purposes":["score_excluded"],"sourceIds":[],"regionScope":"対象地域","confidence":"unknown","recheckCondition":"用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"}],"reviewStatus":"ready_for_review","productionAdoption":{"projectionPolicy":"本調査のacceptedPathsは監査上の採用候補を示すだけで、SCORE v2へ自動接続しない。親・子・兄弟taxonへの継承を禁止する。","acceptedPaths":["/identity/canonicalNameJa","/identity/scientificName","/ecology/stableGeneral/seasonality","/ecology/stableGeneral/depthRange","/ecology/stableGeneral/substrateHabitat","/ecology/stableGeneral/salinityAndWaterBody","/ecology/stableGeneral/dayNightTiming","/ecology/stableGeneral/spawningOrConfusableInfo"],"unknownPolicy":"unknown/holdは未確定として保持し、0点・不適・非生息・釣れないへ変換しない。"}}}
+{
+  "schemaVersion": "1.4.0",
+  "speciesId": "hirame",
+  "identity": {
+    "displayNameJa": "ヒラメ",
+    "canonicalNameJa": {
+      "value": "ヒラメ",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "chiba_hirame_v2"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "千葉県の公的種解説で標準和名を確認。",
+      "researchState": "complete",
+      "searchedSourceTiers": [
+        "official_primary"
+      ],
+      "unknownReason": null,
+      "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"
+    },
+    "scientificName": {
+      "value": "Paralichthys olivaceus",
+      "status": "confirmed",
+      "confidence": "high",
+      "evidenceSources": {
+        "supportingSourceIds": [
+          "chiba_hirame_v2"
+        ],
+        "checkedSourceIds": [],
+        "contradictingSourceIds": []
+      },
+      "note": "千葉県の公的種解説で学名を確認。",
+      "researchState": "complete",
+      "searchedSourceTiers": [
+        "official_primary"
+      ],
+      "unknownReason": null,
+      "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。"
+    },
+    "aliases": [],
+    "entityType": "exact_species",
+    "note": "ヒラメの自己完結型v2調査記録。親・子・近縁taxonとの暗黙継承を禁止する。",
+    "parentGroupId": null,
+    "memberSpeciesIds": []
+  },
+  "researchScope": {
+    "targetArea": "福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面の陸っぱり利用を想定。一般生態と対象地域の釣れやすさを分離し、本JSONは本番SCOREへ自動採用しない。",
+    "checkedAt": "2026-07-27",
+    "sourcePolicy": "docs/FISH_SPECIES_SECONDARY_SOURCE_POLICY.md"
+  },
+  "ecology": {
+    "stableGeneral": {
+      "seasonality": {
+        "value": "早春〜初夏は沿岸の浅場へ出現し、夏〜冬はより深場で生活する季節移動が報告される。",
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "chiba_hirame_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "千葉県の一般生態解説。釣期ではなく分布水深の季節変化。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "本州中部以南を含む一般生態",
+        "rangeType": "qualitative"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "一般生息・活動に関する水温範囲を直接確定できなかった。産卵・養殖水温は代用しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "source_not_found",
+        "researchNote": "公的資料・査読研究・専門DBを属性別に確認し、直接根拠が得られないためunknownで終了した。"
+      },
+      "depthRange": {
+        "value": {
+          "max": 200
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "chiba_hirame_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "水深200m以浅の生息記載。下限を補完しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "unit": "m",
+        "rangeType": "maximum_only",
+        "regionScope": "一般生態"
+      },
+      "substrateHabitat": {
+        "value": [
+          "岩礁域周辺の砂泥底"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "chiba_hirame_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "千葉県の一般生態解説に基づく。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "一般生態"
+      },
+      "salinityAndWaterBody": {
+        "value": [
+          "沿岸海域",
+          "浅海〜深場"
+        ],
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "chiba_hirame_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "沿岸海域の海産魚としての分布説明。汽水・淡水利用は本claimでは追加しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "rangeType": "qualitative",
+        "regionScope": "一般生態"
+      },
+      "dayNightTiming": {
+        "value": "飼育下の幼魚では、遊泳・砂からの離脱が昼間より夜間に多かった。",
+        "status": "inferred",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "jstage_hirame_nocturnal_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "種苗生産幼魚の実験結果であり、成魚の一般行動や夜釣り優位を意味しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "peer_reviewed"
+        ],
+        "unknownReason": null,
+        "researchNote": "生活史段階と飼育条件が限定されるためinferredとして採用。",
+        "rangeType": "qualitative",
+        "regionScope": "飼育下の幼魚"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "漁業・遊漁方法の資料はあるが、v2の一般釣法属性へ直接採用するための用途適合根拠を本batchでは確定しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "source_not_found",
+        "researchNote": "公的資料・査読研究・専門DBを属性別に確認し、直接根拠が得られないためunknownで終了した。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": {
+          "months": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "context": "本州中部以南の太平洋岸の産卵期"
+        },
+        "status": "confirmed",
+        "confidence": "medium",
+        "evidenceSources": {
+          "supportingSourceIds": [
+            "chiba_hirame_v2"
+          ],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "産卵期のみ。一般seasonality・regionalCatchabilityへは転用しない。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary"
+        ],
+        "unknownReason": null,
+        "researchNote": "採用値の直接根拠と適用範囲を確認し、別用途への転用を禁止した。",
+        "regionScope": "本州中部以南の太平洋岸",
+        "rangeType": "qualitative"
+      }
+    },
+    "regionalCatchability": {
+      "seasonality": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "waterTemperature": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "depthRange": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "substrateHabitat": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "salinityAndWaterBody": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "dayNightTiming": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "fishingMethods": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      },
+      "spawningOrConfusableInfo": {
+        "value": null,
+        "status": "unknown",
+        "confidence": "unknown",
+        "evidenceSources": {
+          "supportingSourceIds": [],
+          "checkedSourceIds": [],
+          "contradictingSourceIds": []
+        },
+        "note": "対象地域の陸っぱり釣れやすさを当該属性へ直接結び付ける根拠を確認できなかった。",
+        "researchState": "complete",
+        "searchedSourceTiers": [
+          "official_primary",
+          "peer_reviewed",
+          "authoritative_database"
+        ],
+        "unknownReason": "scope_mismatch",
+        "researchNote": "対象地域を優先して公的資料・研究資料を探索したが、得られた資料は一般生態、商業漁業、他地域、船釣り等であり、糸島西岸〜唐津湾〜伊万里湾〜平戸の陸っぱり釣れやすさへは転用できない。"
+      }
+    }
+  },
+  "sources": [
+    {
+      "id": "chiba_hirame_v2",
+      "title": "各魚種の種苗生産・ヒラメ",
+      "url": "https://www.pref.chiba.lg.jp/lab-suisan/suisan/soshiki/futtsu/hirame.html",
+      "publisher": "千葉県水産総合研究センター",
+      "publisherType": "government",
+      "publishedOrUpdatedAt": "2026-02-13",
+      "checkedAt": "2026-07-27",
+      "regionScope": "本州中部以南を含むヒラメ一般生態",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "chiba_hirame",
+      "supports": [
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/identity/canonicalNameJa",
+        "/identity/scientificName"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "official_primary"
+    },
+    {
+      "id": "jstage_hirame_nocturnal_v2",
+      "title": "Laboratory Observation on the Nocturnal Activity of Hatchery-reared Juvenile Japanese Flounder Paralichthys olivaceus",
+      "url": "https://www.jstage.jst.go.jp/article/fishsci1994/63/2/63_2_205/_article",
+      "publisher": "Fisheries Science",
+      "publisherType": "peer_reviewed",
+      "publishedOrUpdatedAt": "1997-01-01",
+      "checkedAt": "2026-07-27",
+      "regionScope": "飼育下の種苗生産ヒラメ幼魚",
+      "sourceType": "supporting",
+      "directness": "direct",
+      "derivationGroup": "jstage_hirame_nocturnal",
+      "supports": [
+        "/ecology/stableGeneral/dayNightTiming"
+      ],
+      "usageNote": "調査v2の該当claimにのみ使用し、別属性・regionalCatchabilityへ自動転用しない。",
+      "sourceTier": "peer_reviewed"
+    }
+  ],
+  "review": {
+    "officialResearch": "公的機関・水産研究機関・査読研究・専門DBを属性別に探索し、用途が直接一致する根拠のみ採用した。",
+    "secondaryResearch": "FishBase/SeaLifeBase等は一般生態の補助に限定し、モデル推定値・出現記録・商業漁獲情報を釣れやすさへ転用していない。",
+    "schemaValidation": "fish-species-ecology.v1.4.0.schema.jsonおよびv2 integrity testで検証する。",
+    "comparisonWithCurrentImplementation": {
+      "authoritativeComparisonDocument": "docs/research/FISH_SPECIES_ECOLOGY_V2_BATCH01_REVIEW.md",
+      "scoreV2Status": "unsupported",
+      "inheritancePolicy": "do_not_inherit_between_species_or_group"
+    },
+    "attributeDecisions": [
+      {
+        "path": "/identity/canonicalNameJa",
+        "decision": "adopt",
+        "reason": "直接根拠を確認し、注記された範囲でidentityとして採用する。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "chiba_hirame_v2"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
+      },
+      {
+        "path": "/identity/scientificName",
+        "decision": "adopt",
+        "reason": "直接根拠を確認し、注記された範囲でidentityとして採用する。",
+        "purposes": [
+          "identity_display"
+        ],
+        "sourceIds": [
+          "chiba_hirame_v2"
+        ],
+        "regionScope": "分類情報",
+        "confidence": "high",
+        "recheckCondition": "分類改訂、新しい直接資料、またはmaster粒度変更時に再確認する。"
+      },
+      {
+        "path": "/identity/aliases",
+        "decision": "hold",
+        "reason": "本batchでは安全に追加できるaliasを確定していない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "未確定",
+        "confidence": "unknown",
+        "recheckCondition": "直接sourceで別名を確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/seasonality",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "chiba_hirame_v2"
+        ],
+        "regionScope": "本州中部以南を含む一般生態",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/waterTemperature",
+        "decision": "hold",
+        "reason": "source_not_foundとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/depthRange",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "chiba_hirame_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/substrateHabitat",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "chiba_hirame_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/salinityAndWaterBody",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "chiba_hirame_v2"
+        ],
+        "regionScope": "一般生態",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/dayNightTiming",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "jstage_hirame_nocturnal_v2"
+        ],
+        "regionScope": "飼育下の幼魚",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/fishingMethods",
+        "decision": "hold",
+        "reason": "source_not_foundとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "一般生態",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/stableGeneral/spawningOrConfusableInfo",
+        "decision": "adopt_with_warning",
+        "reason": "直接根拠を確認したが、記録された地域・生活史・文脈を超えて一般化しない。",
+        "purposes": [
+          "ecology_description"
+        ],
+        "sourceIds": [
+          "chiba_hirame_v2"
+        ],
+        "regionScope": "本州中部以南の太平洋岸",
+        "confidence": "medium",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/seasonality",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/waterTemperature",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/depthRange",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/substrateHabitat",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/salinityAndWaterBody",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/dayNightTiming",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/fishingMethods",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      },
+      {
+        "path": "/ecology/regionalCatchability/spawningOrConfusableInfo",
+        "decision": "hold",
+        "reason": "scope_mismatchとして確定値を採用しない。",
+        "purposes": [
+          "score_excluded"
+        ],
+        "sourceIds": [],
+        "regionScope": "対象地域",
+        "confidence": "unknown",
+        "recheckCondition": "用途に直接適合する新しい高品質sourceを確認した場合に再評価する。"
+      }
+    ],
+    "reviewStatus": "ready_for_review",
+    "productionAdoption": {
+      "projectionPolicy": "本調査のacceptedPathsは監査上の採用候補を示すだけで、SCORE v2へ自動接続しない。親・子・兄弟taxonへの継承を禁止する。",
+      "acceptedPaths": [
+        "/identity/canonicalNameJa",
+        "/identity/scientificName",
+        "/ecology/stableGeneral/seasonality",
+        "/ecology/stableGeneral/depthRange",
+        "/ecology/stableGeneral/substrateHabitat",
+        "/ecology/stableGeneral/salinityAndWaterBody",
+        "/ecology/stableGeneral/dayNightTiming",
+        "/ecology/stableGeneral/spawningOrConfusableInfo"
+      ],
+      "unknownPolicy": "unknown/holdは未確定として保持し、0点・不適・非生息・釣れないへ変換しない。"
+    }
+  }
+}
