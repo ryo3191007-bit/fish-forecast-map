@@ -191,11 +191,11 @@ function validateDocumentIntegrity(doc, label) {
 
 // Exercise the cross-document invariants even before the first real v1.4 batch lands.
 const synthetic = structuredClone(fixture);
-synthetic.speciesId = "maaji";
-synthetic.identity.displayNameJa = "マアジ";
+synthetic.speciesId = "shiira";
+synthetic.identity.displayNameJa = "シイラ";
 synthetic.identity.entityType = "exact_species";
-synthetic.identity.parentGroupId = "aji";
-synthetic.review.comparisonWithCurrentImplementation.scoreV2Status = "supported";
+synthetic.identity.parentGroupId = null;
+synthetic.review.comparisonWithCurrentImplementation.scoreV2Status = "unsupported";
 validateDocumentIntegrity(synthetic, "v1.4 fixture smoke test");
 
 // The schema allows two searched tiers as long as one is upper-tier; v2 policy requires two distinct upper tiers.
