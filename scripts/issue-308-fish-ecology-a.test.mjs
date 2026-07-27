@@ -13,7 +13,7 @@ for (const id of targetIds) {
   const file = path.join(root, `data/research/fish-species/${id}.json`);
   assert(fs.existsSync(file), `${id}: Issue #308 research file is required`);
   const doc = JSON.parse(fs.readFileSync(file, "utf8"));
-  assert.equal(doc.schemaVersion, "1.3.0");
+  assert(["1.3.0", "1.4.0"].includes(doc.schemaVersion), `${id}: Issue #308 research must remain on v1.3 or migrate to ecology v2`);
   assert.equal(doc.speciesId, id);
   assert.equal(doc.review.comparisonWithCurrentImplementation.scoreV2Status, "unsupported");
   for (const key of ["seasonality", "waterTemperature", "depthRange", "substrateHabitat", "salinityAndWaterBody", "dayNightTiming", "fishingMethods", "spawningOrConfusableInfo"]) {
@@ -44,7 +44,9 @@ for (const [id, members] of Object.entries(expectedMembers)) {
   assert.deepEqual(doc.identity.memberSpeciesIds, members);
 }
 
-const legacyInactive = ["yariika", "akakamasu", "yamatokamasu"];
+// akakamasu / yamatokamasu were reactivated as non-selectable exact species in Issue #333
+// and are valid ecology-v2 research targets. Only the old yariika compatibility entry remains inactive.
+const legacyInactive = ["yariika"];
 for (const id of legacyInactive) {
   assert.equal(fs.existsSync(path.join(root, `data/research/fish-species/${id}.json`)), false, `${id}: inactive/legacy species must not be added`);
 }
