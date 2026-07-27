@@ -15,7 +15,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: node scripts/issue-329-fish-ecology-inventory.mjs --check
+      - run: node scripts/issue-329-fish-ecology-inventory.mjs --write
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ecology-inventory-generated
+          path: docs/research/FISH_SPECIES_ECOLOGY_INVENTORY.md
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
