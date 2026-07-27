@@ -56,7 +56,7 @@
     "test:fish-species-groups": "tsx scripts/fish-species-groups.test.ts",
     "test:map-focus-popup": "node scripts/map-focus-popup.test.mjs",
     "test:mock-report-removal": "node scripts/mock-fishing-reports-removal.test.mjs",
-    "test:issue-205-karatsu-spots": "tsx scripts/issue-205-karatsu-spots.test.mts",
+    "test:issue-205-karatsu-spots": "node scripts/issue-205-karatsu-spots.test.mjs",
     "test:issue-237-terrain-presentation": "tsx scripts/issue-237-terrain-presentation.test.ts",
     "test:issue-238-compact-map-ui": "node scripts/issue-238-compact-map-ui.test.mjs",
     "test:issue-248-imari-spots": "tsx scripts/issue-248-imari-spots.test.mts",
