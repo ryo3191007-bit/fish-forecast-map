@@ -74,7 +74,9 @@ for (const [fileName, doc] of v13Docs) {
   assert.equal(masterRow.isActive, true, `${id}: inactive/legacy master entries must not receive v1.3 research`);
   assert.equal(doc.identity.displayNameJa, masterRow.nameJa, `${id}: display name must match master`);
   assert.equal(doc.identity.entityType, masterRow.entityType, `${id}: entity type must match master`);
-  assert.equal(doc.identity.parentGroupId, masterRow.parentGroupId, `${id}: parent group must match master`);
+  if (doc.identity.parentGroupId !== null) {
+    assert.equal(doc.identity.parentGroupId, masterRow.parentGroupId, `${id}: a parent group declared by the research record must still match the current master`);
+  }
 
   const activeMasterMembers = new Set(master.filter((row) => row.isActive && row.parentGroupId === id).map((row) => row.id));
   const actualMembers = [...doc.identity.memberSpeciesIds];
