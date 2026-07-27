@@ -15,6 +15,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: node scripts/issue-329-fish-ecology-inventory.mjs --print
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
