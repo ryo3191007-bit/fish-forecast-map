@@ -6,24 +6,22 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 
 - active master: **80件**
 - entityType: `cephalopod_species` 1件 / `exact_species` 61件 / `species_group` 13件 / `squid_species` 5件
-- 生態JSONあり: **68件** / なし: **12件**
-- schemaVersion: `1.2.0` 3件 / `1.3.0` 35件 / `1.4.0` 30件
-- v1.4移行: **30/67 taxon** / 未移行または未調査claimあり: **37 taxon**
-- v1.4 researchState（identity 2 + ecology 16 claim）: `not_researched` 0 / `complete` 539 / `blocked` 1 / `not_applicable` 0
-- v1.4 unknownReason: `not_researched` 0 / `source_not_found` 36 / `insufficient_evidence` 39 / `conflicting_evidence` 0 / `scope_mismatch` 277 / `taxonomy_uncertain` 1
-- 既存JSON内の `stableGeneral` unknown: **350/544属性 (64.3%)**
+- 生態JSONあり: **70件** / なし: **10件**
+- schemaVersion: `1.2.0` 1件 / `1.3.0` 29件 / `1.4.0` 40件
+- v1.4移行: **40/67 taxon** / 未移行または未調査claimあり: **27 taxon**
+- v1.4 researchState（identity 2 + ecology 16 claim）: `not_researched` 0 / `complete` 719 / `blocked` 1 / `not_applicable` 0
+- v1.4 unknownReason: `not_researched` 0 / `source_not_found` 142 / `insufficient_evidence` 42 / `conflicting_evidence` 0 / `scope_mismatch` 299 / `taxonomy_uncertain` 1
+- 既存JSON内の `stableGeneral` unknown: **350/560属性 (62.5%)**
   - species_group: **96/96属性 (100.0%)**
-  - 個別taxon（species_group以外）: **254/448属性 (56.7%)**
-- 既存JSON内の `regionalCatchability` unknown: **541/544属性 (99.4%)**
-- JSON未作成を8属性未評価として含めた `stableGeneral` 未解決相当: **446/640属性 (69.7%)**
+  - 個別taxon（species_group以外）: **254/464属性 (54.7%)**
+- 既存JSON内の `regionalCatchability` unknown: **560/560属性 (100.0%)**
+- JSON未作成を8属性未評価として含めた `stableGeneral` 未解決相当: **430/640属性 (67.2%)**
 - `stableGeneral` 8/8 unknown: **15件**
 - 子species 0件のspecies_group: **0件**
 - active master外の研究JSON: **0件**
 
 ### JSON未作成
 
-- アカカマス (`akakamasu`)
-- ヤマトカマス (`yamatokamasu`)
 - アナゴ (`anago`)
 - マコガレイ (`makogarei`)
 - ネズミゴチ (`nezumigochi`)
@@ -42,7 +40,6 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 - イワシ (`iwashi`) — species_group
 - 青物 (`aomono`) — species_group
 - 根魚 (`rockfish`) — species_group
-- マルアジ (`maruaji`) — exact_species
 - マイワシ (`maiwashi`) — exact_species
 - ウルメイワシ (`urumeiwashi`) — exact_species
 - メバル (`mebaru`) — species_group
@@ -52,19 +49,10 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 - ハゼ (`haze`) — species_group
 - エソ (`eso`) — species_group
 - ヤガラ (`yagara`) — species_group
+- ヤマトカマス (`yamatokamasu`) — exact_species
 
 ### v2未調査taxon
 
-- サヨリ (`sayori`) — schema 1.3.0
-- ボラ (`bora`) — schema 1.3.0
-- マアナゴ (`maanago`) — schema 1.3.0
-- イシダイ (`ishidai`) — schema 1.3.0
-- イシガキダイ (`ishigakidai`) — schema 1.3.0
-- アカカマス (`akakamasu`) — schema なし
-- ヤマトカマス (`yamatokamasu`) — schema なし
-- マアジ (`maaji`) — schema 1.2.0
-- マルアジ (`maruaji`) — schema 1.2.0
-- マサバ (`masaba`) — schema 1.3.0
 - ゴマサバ (`gomasaba`) — schema 1.3.0
 - マイワシ (`maiwashi`) — schema 1.3.0
 - カタクチイワシ (`katakuchiiwashi`) — schema 1.3.0
@@ -138,16 +126,16 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 | 33 | `kawahagi` | カワハギ | exact_species | - | 0 | あり | 1.4.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
 | 34 | `umazurahagi` | ウマヅラハギ | exact_species | - | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
 | 35 | `konoshiro` | コノシロ | exact_species | - | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
-| 36 | `sayori` | サヨリ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
-| 37 | `bora` | ボラ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
-| 38 | `maanago` | マアナゴ | exact_species | `anago` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
-| 39 | `ishidai` | イシダイ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
-| 40 | `ishigakidai` | イシガキダイ | exact_species | - | 0 | あり | 1.3.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | - |
-| 41 | `akakamasu` | アカカマス | exact_species | `kamasu` | 0 | なし | - | - | - | - |
-| 42 | `yamatokamasu` | ヤマトカマス | exact_species | `kamasu` | 0 | なし | - | - | - | - |
-| 43 | `maaji` | マアジ | exact_species | `aji` | 0 | あり | 1.2.0 | C2/I0/U6/N0 | C0/I3/U5/N0 | - |
-| 44 | `maruaji` | マルアジ | exact_species | `aji` | 0 | あり | 1.2.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
-| 45 | `masaba` | マサバ | exact_species | `saba` | 0 | あり | 1.3.0 | C5/I0/U3/N0 | C0/I0/U8/N0 | - |
+| 36 | `sayori` | サヨリ | exact_species | - | 0 | あり | 1.4.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 37 | `bora` | ボラ | exact_species | - | 0 | あり | 1.4.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 38 | `maanago` | マアナゴ | exact_species | `anago` | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 39 | `ishidai` | イシダイ | exact_species | - | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 40 | `ishigakidai` | イシガキダイ | exact_species | - | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 41 | `akakamasu` | アカカマス | exact_species | `kamasu` | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 42 | `yamatokamasu` | ヤマトカマス | exact_species | `kamasu` | 0 | あり | 1.4.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 43 | `maaji` | マアジ | exact_species | `aji` | 0 | あり | 1.4.0 | C4/I0/U4/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 44 | `maruaji` | マルアジ | exact_species | `aji` | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 45 | `masaba` | マサバ | exact_species | `saba` | 0 | あり | 1.4.0 | C6/I0/U2/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
 | 46 | `gomasaba` | ゴマサバ | exact_species | `saba` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
 | 47 | `maiwashi` | マイワシ | exact_species | `iwashi` | 0 | あり | 1.3.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | - |
 | 48 | `katakuchiiwashi` | カタクチイワシ | exact_species | `iwashi` | 0 | あり | 1.3.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | - |
