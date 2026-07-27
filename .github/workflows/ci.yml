@@ -15,25 +15,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: node scripts/issue-329-fish-ecology-inventory.mjs --write
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ecology-inventory-generated
-          path: docs/research/FISH_SPECIES_ECOLOGY_INVENTORY.md
+      - run: node scripts/issue-329-fish-ecology-inventory.mjs --check
       - run: npm run lint
       - run: npm run typecheck
-      - name: Run tests and capture log
-        run: |
-          set +e
-          npm test > test-output.log 2>&1
-          echo $? > test-exit-code.txt
-          exit 0
-      - uses: actions/upload-artifact@v4
-        with:
-          name: batch01-test-log
-          path: |
-            test-output.log
-            test-exit-code.txt
-      - name: Enforce test result
-        run: test "$(cat test-exit-code.txt)" = "0"
+      - run: npm test
       - run: npm run build
