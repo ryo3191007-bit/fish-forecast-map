@@ -40,6 +40,7 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 - イワシ (`iwashi`) — species_group
 - 青物 (`aomono`) — species_group
 - 根魚 (`rockfish`) — species_group
+- ヤマトカマス (`yamatokamasu`) — exact_species
 - マイワシ (`maiwashi`) — exact_species
 - ウルメイワシ (`urumeiwashi`) — exact_species
 - メバル (`mebaru`) — species_group
@@ -49,7 +50,6 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 - ハゼ (`haze`) — species_group
 - エソ (`eso`) — species_group
 - ヤガラ (`yagara`) — species_group
-- ヤマトカマス (`yamatokamasu`) — exact_species
 
 ### v2未調査taxon
 
