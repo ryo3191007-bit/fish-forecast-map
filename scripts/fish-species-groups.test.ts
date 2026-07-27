@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { createStaticFishSpecies, fishSpeciesDefinitions, fishSpeciesIds, fishSpeciesNames } from "@/domain/fishing";
+import { createStaticFishSpecies, fishSpeciesDefinitions, fishSpeciesIds, fishSpeciesNames, type FishSpeciesId } from "@/domain/fishing";
 import { filterByFishSpecies, resolveFishSpeciesName, staticFishSpeciesAliases } from "@/lib/fishSpeciesResolver";
 import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
 
@@ -27,10 +27,10 @@ for (const kamasuId of ["akakamasu", "yamatokamasu"] as const) {
 }
 assert.equal(species.find((item) => item.id === "maanago")?.parentGroupId, "anago", "maanago is an exact child of the generic anago group");
 
-const researchOnlyChildren = new Map([
+const researchOnlyChildren: readonly (readonly [FishSpeciesId, FishSpeciesId])[] = [
   ["makogarei", "karei"], ["nezumigochi", "megochi"], ["mahaze", "haze"], ["urohaze", "haze"],
   ["maeso", "eso"], ["wanieso", "eso"], ["tokageeso", "eso"], ["akayagara", "yagara"], ["aoyagara", "yagara"],
-] as const);
+];
 for (const [id, parentGroupId] of researchOnlyChildren) {
   const child = species.find((item) => item.id === id);
   assert.equal(child?.entityType, "exact_species", `${id} is an exact species`);
@@ -40,13 +40,14 @@ for (const [id, parentGroupId] of researchOnlyChildren) {
 }
 
 const selectableIds = species.filter((item) => item.isSelectable).map((item) => item.id).sort();
+const hiddenResearchIds: FishSpeciesId[] = ["akakamasu", "yamatokamasu", ...researchOnlyChildren.map(([id]) => id)];
 for (const includeLegacyAggregates of [false, true]) {
   const groupedIds = groupSelectableFishSpecies(species, { includeLegacyAggregates }).flatMap((group) => group.items.map((item) => item.id));
   const groupedSelectableIds = groupedIds.filter((id) => species.find((item) => item.id === id)?.isSelectable).sort();
   assert.deepEqual(groupedSelectableIds, selectableIds, "every selectable species appears in UI groups exactly once");
   assert.equal(new Set(groupedIds).size, groupedIds.length, "UI groups do not contain duplicate species");
   assert.ok(!groupedIds.includes("yariika"), "legacy yariika never appears in normal UI groups");
-  for (const hiddenId of ["akakamasu", "yamatokamasu", ...researchOnlyChildren.keys()]) {
+  for (const hiddenId of hiddenResearchIds) {
     assert.ok(!groupedIds.includes(hiddenId), `${hiddenId} remains hidden from normal UI groups`);
   }
   assert.equal(groupedIds.filter((id) => id === "kamasu").length, 1, "the selectable kamasu group appears exactly once");
