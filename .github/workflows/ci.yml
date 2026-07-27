@@ -1,44 +1,22 @@
 name: CI
 
 on:
+  pull_request:
   push:
-    branches: [agent/issue-340-ecology-v2-batch01]
-
-permissions:
-  contents: write
+    branches: [main]
 
 jobs:
-  normalize-batch01:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: agent/issue-340-ecology-v2-batch01
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Regenerate inventory and format Batch 01 JSON
-        run: |
-          node scripts/issue-329-fish-ecology-inventory.mjs --write
-          node <<'NODE'
-          const fs = require('node:fs');
-          const ids = ['shiira','hirame','magochi','seabass','aoriika','kouika','chinu','madai','kisu','buri'];
-          for (const id of ids) {
-            const file = `data/research/fish-species/${id}.json`;
-            const doc = JSON.parse(fs.readFileSync(file, 'utf8'));
-            fs.writeFileSync(file, `${JSON.stringify(doc, null, 2)}\n`);
-          }
-          NODE
-      - name: Commit generated files on the existing PR branch
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/research/FISH_SPECIES_ECOLOGY_INVENTORY.md data/research/fish-species/{shiira,hirame,magochi,seabass,aoriika,kouika,chinu,madai,kisu,buri}.json
-          if git diff --cached --quiet; then
-            echo "No generated changes"
-          else
-            git commit -m "Issue #340 normalize Batch 01 generated files"
-            git push origin HEAD:agent/issue-340-ecology-v2-batch01
-          fi
+      - run: node scripts/issue-329-fish-ecology-inventory.mjs --check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
