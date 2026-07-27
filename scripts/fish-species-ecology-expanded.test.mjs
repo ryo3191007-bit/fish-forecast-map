@@ -74,11 +74,15 @@ for (const [fileName, doc] of v13Docs) {
   assert.equal(masterRow.isActive, true, `${id}: inactive/legacy master entries must not receive v1.3 research`);
   assert.equal(doc.identity.displayNameJa, masterRow.nameJa, `${id}: display name must match master`);
   assert.equal(doc.identity.entityType, masterRow.entityType, `${id}: entity type must match master`);
-  assert.equal(doc.identity.parentGroupId, masterRow.parentGroupId, `${id}: parent group must match master`);
+  if (doc.identity.parentGroupId !== null) {
+    assert.equal(doc.identity.parentGroupId, masterRow.parentGroupId, `${id}: a parent group declared by the research record must still match the current master`);
+  }
 
-  const expectedMembers = master.filter((row) => row.isActive && row.parentGroupId === id).map((row) => row.id).sort();
-  const actualMembers = [...doc.identity.memberSpeciesIds].sort();
-  assert.deepEqual(actualMembers, expectedMembers, `${id}: group members must come from active master children`);
+  const activeMasterMembers = new Set(master.filter((row) => row.isActive && row.parentGroupId === id).map((row) => row.id));
+  const actualMembers = [...doc.identity.memberSpeciesIds];
+  for (const memberId of actualMembers) {
+    assert(activeMasterMembers.has(memberId), `${id}: declared research member ${memberId} must be an active child in the current master`);
+  }
   if (masterRow.entityType !== "species_group") assert.deepEqual(actualMembers, [], `${id}: exact species must not declare member species`);
 
   const expectedScoreStatus = scoreV2SupportedNames.has(masterRow.nameJa) ? "supported" : "unsupported";

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { createStaticFishSpecies, fishSpeciesDefinitions, fishSpeciesIds, fishSpeciesNames } from "@/domain/fishing";
+import { createStaticFishSpecies, fishSpeciesDefinitions, fishSpeciesIds, fishSpeciesNames, type FishSpeciesId } from "@/domain/fishing";
 import { filterByFishSpecies, resolveFishSpeciesName, staticFishSpeciesAliases } from "@/lib/fishSpeciesResolver";
 import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
 
@@ -19,21 +19,37 @@ assert.equal(species.find((item) => item.id === "madako")?.category, "cephalopod
 assert.deepEqual(species.find((item) => item.id === "yariika"), {
   ...species.find((item) => item.id === "yariika"), isSelectable: false, isActive: false,
 }, "the legacy yariika ID remains in static data but cannot be selected");
-for (const legacyId of ["akakamasu", "yamatokamasu"] as const) {
-  const legacy = species.find((item) => item.id === legacyId);
-  assert.equal(legacy?.parentGroupId, "kamasu");
-  assert.equal(legacy?.isSelectable, false);
-  assert.equal(legacy?.isActive, false);
+for (const kamasuId of ["akakamasu", "yamatokamasu"] as const) {
+  const child = species.find((item) => item.id === kamasuId);
+  assert.equal(child?.parentGroupId, "kamasu");
+  assert.equal(child?.isSelectable, false);
+  assert.equal(child?.isActive, true, "exact kamasu children are active for research/taxonomy");
 }
-assert.equal(species.find((item) => item.id === "maanago")?.parentGroupId, null, "existing maanago taxonomy stays unchanged");
+assert.equal(species.find((item) => item.id === "maanago")?.parentGroupId, "anago", "maanago is an exact child of the generic anago group");
+
+const researchOnlyChildren: readonly (readonly [FishSpeciesId, FishSpeciesId])[] = [
+  ["makogarei", "karei"], ["nezumigochi", "megochi"], ["mahaze", "haze"], ["urohaze", "haze"],
+  ["maeso", "eso"], ["wanieso", "eso"], ["tokageeso", "eso"], ["akayagara", "yagara"], ["aoyagara", "yagara"],
+];
+for (const [id, parentGroupId] of researchOnlyChildren) {
+  const child = species.find((item) => item.id === id);
+  assert.equal(child?.entityType, "exact_species", `${id} is an exact species`);
+  assert.equal(child?.parentGroupId, parentGroupId, `${id} has the reviewed parent group`);
+  assert.equal(child?.isActive, true, `${id} is active for research/taxonomy`);
+  assert.equal(child?.isSelectable, false, `${id} stays out of normal selection UI`);
+}
+
 const selectableIds = species.filter((item) => item.isSelectable).map((item) => item.id).sort();
+const hiddenResearchIds: FishSpeciesId[] = ["akakamasu", "yamatokamasu", ...researchOnlyChildren.map(([id]) => id)];
 for (const includeLegacyAggregates of [false, true]) {
   const groupedIds = groupSelectableFishSpecies(species, { includeLegacyAggregates }).flatMap((group) => group.items.map((item) => item.id));
   const groupedSelectableIds = groupedIds.filter((id) => species.find((item) => item.id === id)?.isSelectable).sort();
   assert.deepEqual(groupedSelectableIds, selectableIds, "every selectable species appears in UI groups exactly once");
   assert.equal(new Set(groupedIds).size, groupedIds.length, "UI groups do not contain duplicate species");
   assert.ok(!groupedIds.includes("yariika"), "legacy yariika never appears in normal UI groups");
-  assert.ok(!groupedIds.includes("akakamasu") && !groupedIds.includes("yamatokamasu"), "legacy kamasu classifications never appear in normal UI groups");
+  for (const hiddenId of hiddenResearchIds) {
+    assert.ok(!groupedIds.includes(hiddenId), `${hiddenId} remains hidden from normal UI groups`);
+  }
   assert.equal(groupedIds.filter((id) => id === "kamasu").length, 1, "the selectable kamasu group appears exactly once");
   const displayedNames = groupedIds.map((id) => species.find((item) => item.id === id)?.nameJa);
   assert.equal(new Set(displayedNames).size, displayedNames.length, "selectable UI names are unique");
@@ -52,7 +68,9 @@ const splitRecords = [{ species: "アジ" }, { species: "マアジ" }, { species
 assert.deepEqual(filterByFishSpecies(splitRecords, "アジ", (item) => item.species, species, staticFishSpeciesAliases), splitRecords.slice(0, 3));
 assert.deepEqual(filterByFishSpecies(splitRecords, "根魚", (item) => item.species, species, staticFishSpeciesAliases), splitRecords.slice(3), "nested group filtering includes descendants");
 const anagoRecords = [{ species: "アナゴ" }, { species: "マアナゴ" }, { species: "カレイ" }];
-assert.deepEqual(filterByFishSpecies(anagoRecords, "アナゴ", (item) => item.species, species, staticFishSpeciesAliases), anagoRecords.slice(0, 1), "generic anago does not guess an exact maanago relationship");
+assert.deepEqual(filterByFishSpecies(anagoRecords, "アナゴ", (item) => item.species, species, staticFishSpeciesAliases), anagoRecords.slice(0, 2), "generic anago filtering includes its exact maanago child without rewriting the generic record");
+const kareiRecords = [{ species: "カレイ" }, { species: "マコガレイ" }, { species: "ハゼ" }];
+assert.deepEqual(filterByFishSpecies(kareiRecords, "カレイ", (item) => item.species, species, staticFishSpeciesAliases), kareiRecords.slice(0, 2), "generic karei filtering includes a non-selectable exact child");
 for (const definition of fishSpeciesDefinitions) {
   if (definition[0] !== "yariika") assert.equal(resolveFishSpeciesName(definition[1], species, staticFishSpeciesAliases).status, "resolved");
 }
@@ -75,5 +93,13 @@ for (const [name, expectedId] of [
   assert.equal(resolution.status, "resolved", `${name} from the verified catch list is registered`);
   if (resolution.status === "resolved") assert.equal(resolution.speciesId, expectedId);
 }
-for (const forbidden of ["ハタ", "シリヤケイカ", "ヤリイカ（旧分類）", "ネズミゴチ", "アカヤガラ", "未登録魚"]) assert.equal(resolveFishSpeciesName(forbidden, species, staticFishSpeciesAliases).status, "unresolved");
+for (const [name, expectedId] of [
+  ["マコガレイ", "makogarei"], ["ネズミゴチ", "nezumigochi"], ["マハゼ", "mahaze"], ["ウロハゼ", "urohaze"],
+  ["マエソ", "maeso"], ["ワニエソ", "wanieso"], ["トカゲエソ", "tokageeso"], ["アカヤガラ", "akayagara"], ["アオヤガラ", "aoyagara"],
+] as const) {
+  const resolution = resolveFishSpeciesName(name, species, staticFishSpeciesAliases);
+  assert.equal(resolution.status, "resolved", `${name} canonical name is resolvable even though it is not selectable`);
+  if (resolution.status === "resolved") assert.equal(resolution.speciesId, expectedId);
+}
+for (const forbidden of ["ハタ", "シリヤケイカ", "ヤリイカ（旧分類）", "イシガレイ", "クロアナゴ", "未登録魚"]) assert.equal(resolveFishSpeciesName(forbidden, species, staticFishSpeciesAliases).status, "unresolved");
 console.log("fish species group tests passed");

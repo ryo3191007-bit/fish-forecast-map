@@ -49,7 +49,7 @@ for (const [name, speciesId] of issue323Aliases) {
   assert.equal(result.status, "resolved");
   if (result.status === "resolved") assert.equal(result.speciesId, speciesId);
 }
-for (const name of ["ハネ", "ヤズコ", "ワラサ", "シリヤケイカ", "ネズミゴチ", "アカヤガラ", "シブダイ", "ベラ"]) {
+for (const name of ["ハネ", "ヤズコ", "ワラサ", "シリヤケイカ", "シブダイ", "ベラ"]) {
   assert.equal(resolve(name).status, "unresolved", `${name} remains intentionally unregistered`);
 }
 for (const [name, speciesId] of [["マアジ", "maaji"], ["マサバ", "masaba"], ["マイワシ", "maiwashi"], ["メバル", "mebaru"]] as const) {
@@ -63,6 +63,8 @@ for (const [name, speciesId] of [
   ["キチヌ", "kichinu"], ["ジンドウイカ", "jindouika"], ["ムツ", "mutsu"], ["ダツ", "datsu"],
   ["ホウボウ", "houbou"], ["ヤガラ", "yagara"], ["ヨコフエダイ", "yokofuedai"], ["フエダイ", "fuedai"],
   ["アナゴ", "anago"], ["マアナゴ", "maanago"],
+  ["マコガレイ", "makogarei"], ["ネズミゴチ", "nezumigochi"], ["マハゼ", "mahaze"], ["ウロハゼ", "urohaze"],
+  ["マエソ", "maeso"], ["ワニエソ", "wanieso"], ["トカゲエソ", "tokageeso"], ["アカヤガラ", "akayagara"], ["アオヤガラ", "aoyagara"],
 ] as const) {
   const result = resolve(name);
   assert.equal(result.status, "resolved");
@@ -90,7 +92,7 @@ const list = [{ species: "黒鯛" }, { species: "チヌ" }, { species: "アジ" 
 assert.deepEqual(filterByFishSpecies(list, "クロダイ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), list.slice(0, 2));
 assert.deepEqual(filterByFishSpecies(list, "アジ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), [list[2]]);
 const anagoList = [{ species: "アナゴ" }, { species: "マアナゴ" }, { species: "カレイ" }];
-assert.deepEqual(filterByFishSpecies(anagoList, "アナゴ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), anagoList.slice(0, 1), "generic anago stays separate from exact maanago until taxonomy is explicitly researched");
+assert.deepEqual(filterByFishSpecies(anagoList, "アナゴ", (item) => item.species, staticFishSpecies, staticFishSpeciesAliases), anagoList.slice(0, 2), "generic anago search includes the exact maanago child without rewriting the generic record");
 
 for (const [aliasName, speciesId] of batch1Aliases) {
   const canonicalName = staticFishSpecies.find((species) => species.id === speciesId)?.nameJa;
