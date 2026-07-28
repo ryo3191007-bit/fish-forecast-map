@@ -44,3 +44,10 @@ Issue #347。`ecology-v2-06` の9 taxonを `docs/research/FISH_SPECIES_ECOLOGY_R
 - fish species master: 変更しない
 - fishing spots / target species: 変更しない
 - Supabase既存データ: 変更しない
+
+## 2026-07-28 再開時確認
+
+- PR #360による `README.md` / `docs/ROADMAP.md` / `docs/開発引き継ぎ書.md` の更新後も、Batch 06の研究差分は対象9 taxon JSON、inventory、Batch 06 reviewに限定されることを再確認した。
+- 直前HEADのGitHub Actions CIは成功済み。Vercel failureはbuild rate limit由来で、Next.js build失敗ではない。
+- 本追記後の最新HEADでCI / Vercelを再確認し、merge可否は最新statusと全diffを基準に判断する。
+- PR #357のmergeおよびIssue #347のcloseはユーザー明示承認前に行わない。
