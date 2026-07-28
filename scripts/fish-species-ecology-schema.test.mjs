@@ -183,7 +183,8 @@ assert.throws(() => validateResearchDoc('chinu', oneWayFixture), /supportingSour
 
 const checkedFixture = structuredClone(docs.maaji);
 const checkedClaim = checkedFixture.ecology.stableGeneral.depthRange;
-checkedClaim.evidenceSources.checkedSourceIds = ['tsuriking_fukuoka_aji'];
+const checkedSourceId = checkedFixture.sources.find((source) => !source.supports.includes('/ecology/stableGeneral/depthRange')).id;
+checkedClaim.evidenceSources.checkedSourceIds = [checkedSourceId];
 assert.throws(() => validateResearchDoc('maaji', checkedFixture), /checkedSourceIds source .* does not reference claim path/);
 
 const contradictingFixture = structuredClone(docs.chinu);
@@ -243,10 +244,10 @@ const invalidAcceptedPathFixture = structuredClone(docs.chinu);
 invalidAcceptedPathFixture.review.productionAdoption.acceptedPaths.push('/identity/notKnown');
 assert.throws(() => validateResearchDoc('chinu', invalidAcceptedPathFixture), /acceptedPaths must match decisions/);
 
-const legacyVersionFixture = structuredClone(docs.maaji);
+const legacyVersionFixture = structuredClone(docs.aji);
 legacyVersionFixture.schemaVersion = '1.1.0';
 assert.equal(validateLegacy(legacyVersionFixture), false, 'v1.1.0 is intentionally rejected after the v1.2.0 purpose migration');
-const currentVersionFixture = structuredClone(docs.maaji);
+const currentVersionFixture = structuredClone(docs.aji);
 currentVersionFixture.schemaVersion = '1.2.0';
 assert.equal(validateLegacy(currentVersionFixture), true, 'v1.2.0 fixture must validate');
 const v14VersionFixture = structuredClone(docs.chinu);
