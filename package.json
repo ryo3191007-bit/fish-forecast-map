@@ -18,7 +18,7 @@
     "check:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.mjs",
     "test:bootstrap-schema-diff": "node scripts/check-bootstrap-schema-diff.test.mjs",
     "test:environment": "node scripts/environment.test.mjs",
-    "test": "node scripts/fish-species-ecology-expanded.test.mjs",
+    "test": "node scripts/fish-species-ecology-schema.test.mjs",
     "test:issue-325-verified-catch-species": "tsx scripts/issue-325-verified-catch-species.test.mts",
     "test:issue-318-auth-refresh": "node scripts/issue-318-auth-refresh.test.mjs",
     "test:issue-308-fish-ecology-a": "node scripts/issue-308-fish-ecology-a.test.mjs",
