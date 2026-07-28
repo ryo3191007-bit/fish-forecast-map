@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/fish-forecast-map/shore-fishing-segment.schema.v1.json",
+  "title": "ShoreFishingSegmentResearch",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "spotId", "researchedAt", "segments", "sources"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "spotId": { "type": "string", "minLength": 1 },
+    "researchedAt": { "type": "string", "format": "date" },
+    "segments": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/segment" }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/source" }
+    }
+  },
+  "$defs": {
+    "coordinate": {
+      "type": "array",
+      "prefixItems": [
+        { "type": "number", "minimum": 122, "maximum": 154 },
+        { "type": "number", "minimum": 20, "maximum": 46 }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "segmentId",
+        "label",
+        "geometry",
+        "geometryStatus",
+        "distanceReferenceStatus",
+        "physicalType",
+        "physicalState",
+        "publicAccessStatus",
+        "fishingUseStatus",
+        "confidence",
+        "checkedAt",
+        "sourceIds",
+        "note"
+      ],
+      "properties": {
+        "segmentId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "label": { "type": "string", "minLength": 1 },
+        "geometry": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "coordinates"],
+          "properties": {
+            "type": { "const": "LineString" },
+            "coordinates": {
+              "type": "array",
+              "minItems": 2,
+              "items": { "$ref": "#/$defs/coordinate" }
+            }
+          }
+        },
+        "geometryStatus": { "enum": ["confirmed", "approximate"] },
+        "distanceReferenceStatus": { "enum": ["eligible", "not_eligible", "unknown"] },
+        "physicalType": { "enum": ["quay", "breakwater", "revetment", "promenade", "rocky_shore", "beach", "other"] },
+        "physicalState": { "enum": ["confirmed", "likely", "candidate", "unknown"] },
+        "publicAccessStatus": { "enum": ["confirmed", "likely", "prohibited", "unknown"] },
+        "fishingUseStatus": { "enum": ["confirmed", "observed", "prohibited", "unknown"] },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "checkedAt": { "type": "string", "format": "date" },
+        "sourceIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "note": { "type": "string" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sourceType", "sourceName", "sourceUrl", "checkedOn", "relation", "note"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "sourceType": { "enum": ["official", "public_map", "public_database", "map_reference", "other"] },
+        "sourceName": { "type": "string", "minLength": 1 },
+        "sourceUrl": { "type": "string", "format": "uri" },
+        "checkedOn": { "type": "string", "format": "date" },
+        "relation": { "enum": ["supporting", "checked", "contradicting"] },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}
