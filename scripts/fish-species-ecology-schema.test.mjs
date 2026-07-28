@@ -183,7 +183,7 @@ assert.throws(() => validateResearchDoc('chinu', oneWayFixture), /supportingSour
 
 const checkedFixture = structuredClone(docs.maaji);
 const checkedClaim = checkedFixture.ecology.stableGeneral.depthRange;
-checkedClaim.evidenceSources.checkedSourceIds = ['tsuriking_fukuoka_aji'];
+checkedClaim.evidenceSources.checkedSourceIds = ['bismal_maaji_v2'];
 assert.throws(() => validateResearchDoc('maaji', checkedFixture), /checkedSourceIds source .* does not reference claim path/);
 
 const contradictingFixture = structuredClone(docs.chinu);
