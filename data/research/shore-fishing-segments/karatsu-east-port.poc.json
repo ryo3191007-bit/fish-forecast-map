@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0.0",
+  "spotId": "karatsu-east-port",
+  "researchedAt": "2026-07-28",
+  "segments": [
+    {
+      "segmentId": "east-port-quay-reference-01",
+      "label": "唐津港東港岸壁（耐震岸壁）概略区間",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [129.965, 33.468967],
+          [129.965, 33.471033]
+        ]
+      },
+      "geometryStatus": "approximate",
+      "distanceReferenceStatus": "not_eligible",
+      "physicalType": "quay",
+      "physicalState": "confirmed",
+      "publicAccessStatus": "unknown",
+      "fishingUseStatus": "unknown",
+      "confidence": "low",
+      "checkedAt": "2026-07-28",
+      "sourceIds": [
+        "src-jcg-karatsu-harbor-facilities",
+        "src-mlit-karatsu-port-pamphlet-2026",
+        "src-karatsu-city-cruise-access-20260715"
+      ],
+      "note": "海上保安庁水路誌追補に記載された東港岸壁の概位（33°28.2′N, 129°57.9′E）と延長230mを基準に、国交省の東港地区図で概略方向を確認してPoC用LineStringへ置いた。測量済み岸線ではなく、正確な岸端・立ち位置を示さない。2026年のクルーズ寄港案内では東港地区岸壁の制限区域フェンス内への入場に手続きが必要とされるため、一般立入可否を恒常的に確認できずunknownとする。釣り利用可能という公的根拠も確認できないためunknown。近岸150m計算の基準にはまだ使わない。"
+    }
+  ],
+  "sources": [
+    {
+      "id": "src-jcg-karatsu-harbor-facilities",
+      "sourceType": "official",
+      "sourceName": "海上保安庁 九州沿岸水路誌 追補第6（唐津港 港湾施設）",
+      "sourceUrl": "https://www1.kaiho.mlit.go.jp/shoshi/tsuiho/pdf/105/105-2021-06.pdf",
+      "checkedOn": "2026-07-28",
+      "relation": "supporting",
+      "note": "東港岸壁の概位33°28.2′N 129°57.9′E、延長230m、水深9mを確認。概位であり精密岸線ではない。"
+    },
+    {
+      "id": "src-mlit-karatsu-port-pamphlet-2026",
+      "sourceType": "official",
+      "sourceName": "国土交通省 九州地方整備局 唐津港湾事務所 唐津港パンフレット（令和8年4月1日編集）",
+      "sourceUrl": "https://www.pa.qsr.mlit.go.jp/karatsu/minato/files/2026karatsu-port_pamphlet.pdf",
+      "checkedOn": "2026-07-28",
+      "relation": "supporting",
+      "note": "東港岸壁-9.0m・延長230m、東港フェリー岸壁-4.5m・延長115m、東港地区の配置を確認。"
+    },
+    {
+      "id": "src-karatsu-city-cruise-access-20260715",
+      "sourceType": "official",
+      "sourceName": "唐津市 7月15日寄港 クルーズ船MITSUI OCEAN FUJI",
+      "sourceUrl": "https://www.city.karatsu.lg.jp/page/47158.html",
+      "checkedOn": "2026-07-28",
+      "relation": "checked",
+      "note": "東港地区岸壁に制限区域があり、フェンス内入場には立入手続きが必要な運用例を確認。これだけで恒常的な立入禁止・許可を断定しない。"
+    },
+    {
+      "id": "src-nfaj-karatsu-east-waterfront",
+      "sourceType": "public_database",
+      "sourceName": "全国ロケーションデータベース 唐津東港",
+      "sourceUrl": "https://jl-db.nfaj.go.jp/location/410200647/",
+      "checkedOn": "2026-07-28",
+      "relation": "checked",
+      "note": "東大島町1に海辺のベンチ、レンガ敷き通路、街路灯がある水際空間を確認。ただし掲載地図は名称・所在地からの表示で実位置差異の注意書きがあるため、このPoCではLineStringの直接根拠にしない。"
+    }
+  ]
+}
