@@ -6,32 +6,23 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 
 - active master: **80件**
 - entityType: `cephalopod_species` 1件 / `exact_species` 61件 / `species_group` 13件 / `squid_species` 5件
-- 生態JSONあり: **70件** / なし: **10件**
-- schemaVersion: `1.2.0` 1件 / `1.3.0` 11件 / `1.4.0` 58件
-- v1.4移行: **58/67 taxon** / 未移行または未調査claimあり: **9 taxon**
-- v1.4 researchState（identity 2 + ecology 16 claim）: `not_researched` 0 / `complete` 1043 / `blocked` 1 / `not_applicable` 0
-- v1.4 unknownReason: `not_researched` 0 / `source_not_found` 369 / `insufficient_evidence` 44 / `conflicting_evidence` 0 / `scope_mismatch` 331 / `taxonomy_uncertain` 1
-- 既存JSON内の `stableGeneral` unknown: **376/560属性 (67.1%)**
+- 生態JSONあり: **79件** / なし: **1件**
+- schemaVersion: `1.2.0` 1件 / `1.3.0` 11件 / `1.4.0` 67件
+- v1.4移行: **67/67 taxon** / 未移行または未調査claimあり: **0 taxon**
+- v1.4 researchState（identity 2 + ecology 16 claim）: `not_researched` 0 / `complete` 1205 / `blocked` 1 / `not_applicable` 0
+- v1.4 unknownReason: `not_researched` 0 / `source_not_found` 500 / `insufficient_evidence` 45 / `conflicting_evidence` 0 / `scope_mismatch` 332 / `taxonomy_uncertain` 1
+- 既存JSON内の `stableGeneral` unknown: **434/632属性 (68.7%)**
   - species_group: **96/96属性 (100.0%)**
-  - 個別taxon（species_group以外）: **280/464属性 (60.3%)**
-- 既存JSON内の `regionalCatchability` unknown: **560/560属性 (100.0%)**
-- JSON未作成を8属性未評価として含めた `stableGeneral` 未解決相当: **456/640属性 (71.3%)**
-- `stableGeneral` 8/8 unknown: **23件**
+  - 個別taxon（species_group以外）: **338/536属性 (63.1%)**
+- 既存JSON内の `regionalCatchability` unknown: **632/632属性 (100.0%)**
+- JSON未作成を8属性未評価として含めた `stableGeneral` 未解決相当: **442/640属性 (69.1%)**
+- `stableGeneral` 8/8 unknown: **26件**
 - 子species 0件のspecies_group: **0件**
 - active master外の研究JSON: **0件**
 
 ### JSON未作成
 
 - アナゴ (`anago`)
-- マコガレイ (`makogarei`)
-- ネズミゴチ (`nezumigochi`)
-- マハゼ (`mahaze`)
-- ウロハゼ (`urohaze`)
-- マエソ (`maeso`)
-- ワニエソ (`wanieso`)
-- トカゲエソ (`tokageeso`)
-- アカヤガラ (`akayagara`)
-- アオヤガラ (`aoyagara`)
 
 ### stableGeneral が8/8 unknown
 
@@ -58,18 +49,13 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 - ヤガラ (`yagara`) — species_group
 - ヨコフエダイ (`yokofuedai`) — exact_species
 - フエダイ (`fuedai`) — exact_species
+- ネズミゴチ (`nezumigochi`) — exact_species
+- ウロハゼ (`urohaze`) — exact_species
+- アオヤガラ (`aoyagara`) — exact_species
 
 ### v2未調査taxon
 
-- マコガレイ (`makogarei`) — schema なし
-- ネズミゴチ (`nezumigochi`) — schema なし
-- マハゼ (`mahaze`) — schema なし
-- ウロハゼ (`urohaze`) — schema なし
-- マエソ (`maeso`) — schema なし
-- ワニエソ (`wanieso`) — schema なし
-- トカゲエソ (`tokageeso`) — schema なし
-- アカヤガラ (`akayagara`) — schema なし
-- アオヤガラ (`aoyagara`) — schema なし
+なし
 
 ### 子speciesが0件のspecies_group
 
@@ -152,15 +138,15 @@ Issue #329 の棚卸し正本。`src/domain/fishing.ts` のactive masterと `dat
 | 69 | `yokofuedai` | ヨコフエダイ | exact_species | - | 0 | あり | 1.4.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
 | 70 | `fuedai` | フエダイ | exact_species | - | 0 | あり | 1.4.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
 | 71 | `anago` | アナゴ | species_group | - | 1 | なし | - | - | - | - |
-| 72 | `makogarei` | マコガレイ | exact_species | `karei` | 0 | なし | - | - | - | - |
-| 73 | `nezumigochi` | ネズミゴチ | exact_species | `megochi` | 0 | なし | - | - | - | - |
-| 74 | `mahaze` | マハゼ | exact_species | `haze` | 0 | なし | - | - | - | - |
-| 75 | `urohaze` | ウロハゼ | exact_species | `haze` | 0 | なし | - | - | - | - |
-| 76 | `maeso` | マエソ | exact_species | `eso` | 0 | なし | - | - | - | - |
-| 77 | `wanieso` | ワニエソ | exact_species | `eso` | 0 | なし | - | - | - | - |
-| 78 | `tokageeso` | トカゲエソ | exact_species | `eso` | 0 | なし | - | - | - | - |
-| 79 | `akayagara` | アカヤガラ | exact_species | `yagara` | 0 | なし | - | - | - | - |
-| 80 | `aoyagara` | アオヤガラ | exact_species | `yagara` | 0 | なし | - | - | - | - |
+| 72 | `makogarei` | マコガレイ | exact_species | `karei` | 0 | あり | 1.4.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 73 | `nezumigochi` | ネズミゴチ | exact_species | `megochi` | 0 | あり | 1.4.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 74 | `mahaze` | マハゼ | exact_species | `haze` | 0 | あり | 1.4.0 | C1/I0/U7/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 75 | `urohaze` | ウロハゼ | exact_species | `haze` | 0 | あり | 1.4.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 76 | `maeso` | マエソ | exact_species | `eso` | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 77 | `wanieso` | ワニエソ | exact_species | `eso` | 0 | あり | 1.4.0 | C2/I0/U6/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 78 | `tokageeso` | トカゲエソ | exact_species | `eso` | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 79 | `akayagara` | アカヤガラ | exact_species | `yagara` | 0 | あり | 1.4.0 | C3/I0/U5/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
+| 80 | `aoyagara` | アオヤガラ | exact_species | `yagara` | 0 | あり | 1.4.0 | C0/I0/U8/N0 | C0/I0/U8/N0 | NR0/C18/B0/NA0 |
 
 ## 読み方と次工程への注意
 
