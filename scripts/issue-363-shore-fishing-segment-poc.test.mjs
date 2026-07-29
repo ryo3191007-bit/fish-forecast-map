@@ -76,3 +76,5 @@ test("Issue #365 does not couple coastal distance eligibility to fishing permiss
     assert.notEqual(segment.fishingUseStatus, "confirmed");
   }
 });
+
+await import("./issue-365-gsi-vector-probe.mjs");
