@@ -13,6 +13,9 @@ const shoreData = JSON.parse(
   await readFile(new URL("../data/research/shore-fishing-segments/karatsu-east-port.poc.json", import.meta.url), "utf8"),
 );
 const reference = shoreData.segments.find((segment) => segment.segmentId === "east-port-green-revetment-reference-01");
+const livePocUrl = new URL("../data/research/seashiru/karatsu-east-port-nearshore.poc.json", import.meta.url);
+const livePocText = await readFile(livePocUrl, "utf8");
+const livePoc = JSON.parse(livePocText);
 
 test("Issue #367 uses the eligible Issue #365 coastal reference segment", () => {
   assert.ok(reference);
@@ -86,4 +89,38 @@ test("search envelope expands beyond every reference-segment vertex", () => {
     assert.ok(lon > minLon && lon < maxLon);
     assert.ok(lat > minLat && lat < maxLat);
   }
+});
+
+test("Issue #367 live PoC snapshot is secret-free and records successful API results", () => {
+  assert.equal(livePoc.issue, 367);
+  assert.equal(livePoc.spotId, "karatsu-east-port");
+  assert.equal(livePoc.reference.segmentId, "east-port-green-revetment-reference-01");
+  assert.equal(livePoc.query.maxDistanceFromShoreM, 150);
+  assert.ok(livePoc.datasets.length >= 10);
+  assert.ok(livePoc.datasets.every((dataset) => dataset.status === "ok"));
+  assert.equal(livePocText.includes("SEASHIRU_SUBSCRIPTION_KEY"), false);
+  assert.equal(livePocText.includes("Ocp-Apim-Subscription-Key"), false);
+  assert.equal(/\b[a-fA-F0-9]{24,}\b/.test(livePocText), false);
+});
+
+test("Issue #367 live PoC records one nearshore stone point and two ESI lines", () => {
+  const stone = livePoc.datasets.find((dataset) => dataset.id === "bottom-stone-rock");
+  assert.ok(stone);
+  assert.equal(stone.fetchedFeatureCount, 1);
+  assert.equal(stone.nearshoreFeatureCount, 1);
+  assert.deepEqual(stone.distanceBands, { "0-50": 1, "50-100": 0, "100-150": 0 });
+  assert.equal(stone.nearestDistanceM, 10.3);
+  assert.equal(stone.records[0].properties.nature, "石");
+
+  const obstructionArea = livePoc.datasets.find((dataset) => dataset.id === "seabed-obstruction-area");
+  assert.ok(obstructionArea);
+  assert.equal(obstructionArea.fetchedFeatureCount, 1);
+  assert.equal(obstructionArea.nearshoreFeatureCount, 0);
+
+  const esi = livePoc.datasets.find((dataset) => dataset.id === "esi-coastline");
+  assert.ok(esi);
+  assert.equal(esi.fetchedFeatureCount, 2);
+  assert.equal(esi.nearshoreFeatureCount, 2);
+  assert.deepEqual(esi.distanceBands, { "0-50": 1, "50-100": 0, "100-150": 1 });
+  assert.equal(esi.records[0].properties["海岸地形"], "人工海岸(防波堤・護岸・埠頭等)");
 });
