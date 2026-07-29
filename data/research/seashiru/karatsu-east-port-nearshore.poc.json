@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "1.0.0",
+  "issue": 367,
+  "spotId": "karatsu-east-port",
+  "checkedAt": "2026-07-29T13:23:20.402Z",
+  "reference": {
+    "segmentId": "east-port-green-revetment-reference-01",
+    "geometryStatus": "approximate",
+    "distanceReferenceStatus": "eligible",
+    "confidence": "medium",
+    "geometry": {
+      "type": "LineString",
+      "coordinates": [
+        [129.9626612663269, 33.46940568381841],
+        [129.9627685546875, 33.46942022721781],
+        [129.96288388967514, 33.46943477061474],
+        [129.96294021606445, 33.46964844639625],
+        [129.96333181858063, 33.46956566107747],
+        [129.96356785297394, 33.46952650583157],
+        [129.96388033032417, 33.4694481952867],
+        [129.96393665671349, 33.46946161995655]
+      ]
+    }
+  },
+  "query": {
+    "maxDistanceFromShoreM": 150,
+    "searchEnvelopeWgs84": [129.96077460611113, 33.46783187100805, 129.96582331692926, 33.471222259206606],
+    "seaSidePolicy": "distance_only_first_poc",
+    "note": "This first PoC filters by distance to the adopted coastal reference segment. It does not claim a rigorous directional casting sector."
+  },
+  "datasets": [
+    {"id":"bottom-shells","group":"bottomSediment","label":"貝殻","layer":1,"status":"ok","fetchedFeatureCount":0,"nearshoreFeatureCount":0,"distanceBands":{"0-50":0,"50-100":0,"100-150":0},"nearestDistanceM":null,"records":[]},
+    {"id":"bottom-coral","group":"bottomSediment","label":"さんご","layer":1,"status":"ok","fetchedFeatureCount":0,"nearshoreFeatureCount":0,"distanceBands":{"0-50":0,"50-100":0,"100-150":0},"nearestDistanceM":null,"records":[]},
+    {"id":"bottom-gravel","group":"bottomSediment","label":"礫","layer":1,"status":"ok","fetchedFeatureCount":0,"nearshoreFeatureCount":0,"distanceBands":{"0-50":0,"50-100":0,"100-150":0},"nearestDistanceM":null,"records":[]},
+    {"id":"bottom-stone-rock","group":"bottomSediment","label":"石・岩","layer":1,"status":"ok","fetchedFeatureCount":1,"nearshoreFeatureCount":1,"distanceBands":{"0-50":1,"50-100":0,"100-150":0},"nearestDistanceM":10.3,"records":[{"distanceFromShoreM":10.3,"distanceBand":"0-50","geometryType":"Point","properties":{"OBJECTID":37860,"nature":"石"},"geometry":{"type":"Point","coordinates":[129.96313720000012,33.46951160000003]}}]},
+    {"id":"bottom-sand","group":"bottomSediment","label":"砂","layer":1,"status":"ok","fetchedFeatureCount":0,"nearshoreFeatureCount":0,"distanceBands":{"0-50":0,"50-100":0,"100-150":0},"nearestDistanceM":null,"records":[]},
+    {"id":"bottom-mud-clay","group":"bottomSediment","label":"泥・粘土","layer":1,"status":"ok","fetchedFeatureCount":0,"nearshoreFeatureCount":0,"distanceBands":{"0-50":0,"50-100":0,"100-150":0},"nearestDistanceM":null,"records":[]},
+    {"id":"seabed-obstruction-point","group":"seabedObstruction","label":"海底障害物（Point）","layer":1,"status":"ok","fetchedFeatureCount":0,"nearshoreFeatureCount":0,"distanceBands":{"0-50":0,"50-100":0,"100-150":0},"nearestDistanceM":null,"records":[]},
+    {"id":"seabed-obstruction-area","group":"seabedObstruction","label":"海底障害物（Polygon）","layer":3,"status":"ok","fetchedFeatureCount":1,"nearshoreFeatureCount":0,"distanceBands":{"0-50":0,"50-100":0,"100-150":0},"nearestDistanceM":null,"records":[]},
+    {"id":"wrecks","group":"wrecks","label":"沈船","layer":1,"status":"ok","fetchedFeatureCount":0,"nearshoreFeatureCount":0,"distanceBands":{"0-50":0,"50-100":0,"100-150":0},"nearestDistanceM":null,"records":[]},
+    {"id":"esi-coastline","group":"esi","label":"海岸線種類（ESI）","layer":1,"status":"ok","fetchedFeatureCount":2,"nearshoreFeatureCount":2,"distanceBands":{"0-50":1,"50-100":0,"100-150":1},"nearestDistanceM":0,"records":[{"distanceFromShoreM":0,"distanceBand":"0-50","geometryType":"LineString","properties":{"esiランク":"1B","海岸地形":"人工海岸(防波堤・護岸・埠頭等)","海岸名称":null,"読み":null,"遮蔽性海域":"×","調査年月日":" ","調査方法":null,"出典_情報提供者":"海上保安庁","特記事項":" ","所在地":"佐賀県唐津市","管区":"第七管区海上保安本部","海岸写真":"https://www.msil.go.jp/data/gis-link-file/prop/photo/ESI/07/photo/07201000038.jpg","基質写真":null,"海岸の利用状況":"防波堤"},"geometry":{"type":"LineString","coordinates":[[129.96675900000002,33.47152920000008],[129.96677190000003,33.47148960000004],[129.9667869000001,33.471425500000066],[129.96686770000008,33.470988300000045],[129.96700970000006,33.47022000000004],[129.96707190000006,33.469883700000025],[129.9670721000001,33.46988280000005],[129.96697330000006,33.46986950000007],[129.96435110000004,33.469518900000025],[129.96414800000002,33.46949180000007],[129.96392830000002,33.46946170000007],[129.96388560000003,33.46945580000005],[129.96294690000002,33.469654200000036],[129.96288110000012,33.46943500000003],[129.96282000000008,33.469426800000065],[129.9619547000001,33.46931060000003],[129.9614246000001,33.46923940000005],[129.9609405000001,33.46917470000005],[129.96093370000006,33.469218900000044],[129.96092740000006,33.46926070000006],[129.96092410000006,33.46928230000003],[129.9607406,33.46917610000003],[129.96072500000002,33.46916700000003],[129.96025090000012,33.46886570000004],[129.96017370000004,33.46881680000007],[129.96001,33.46871300000004],[129.96010300000012,33.46859950000004],[129.9602050000001,33.46847500000007],[129.9605031000001,33.46811350000007],[129.96069810000006,33.46787690000008],[129.9610815000001,33.46741120000007],[129.96127020000006,33.46718200000004],[129.96138300000007,33.46704500000004],[129.9614557000001,33.466957500000035],[129.96156100000007,33.46683100000007],[129.96164805500007,33.46672824700005],[129.96153100000004,33.46664500000003],[129.96167900000012,33.46646800000008],[129.96204430000012,33.46603320000003],[129.9620890000001,33.46598000000006],[129.96244950000005,33.465553500000055],[129.96252550000008,33.46547680000003],[129.96285110000008,33.46507260000004],[129.96287400000006,33.46504530000004],[129.96375440000008,33.46399710000003],[129.96430150000003,33.46334570000005]]}},{"distanceFromShoreM":104.3,"distanceBand":"100-150","geometryType":"LineString","properties":{"esiランク":"8B","海岸地形":"人工海岸(防波堤・護岸・埠頭等)","海岸名称":null,"読み":null,"遮蔽性海域":"○","調査年月日":" ","調査方法":null,"出典_情報提供者":"海上保安庁","特記事項":" ","所在地":"佐賀県唐津市","管区":"第七管区海上保安本部","海岸写真":"https://www.msil.go.jp/data/gis-link-file/prop/photo/ESI/07/photo/07201000038.jpg","基質写真":null,"海岸の利用状況":"防波堤"},"geometry":{"type":"LineString","coordinates":[[129.96160298600012,33.46678144300006],[129.9617788600001,33.46689009500005],[129.9617969530001,33.46696074600004],[129.96258530900002,33.46742492800007],[129.962368179,33.46850023600007]]}}]}
+  ],
+  "limitations": [
+    "Sea-side directional casting-sector clipping is not implemented in this first PoC.",
+    "The lava bottom-sediment API is not queried because its current v2 base URL was not independently confirmed in the official API documentation during Issue #367 implementation.",
+    "Zero returned records and API errors are stored separately; missing data is never inferred as absence of seabed features."
+  ],
+  "sources": [
+    {"name":"海しるAPI 利用方法","url":"https://portal.msil.go.jp/howtouse"},
+    {"name":"海しるAPI 項目一覧","url":"https://portal.msil.go.jp/msil-api-list"}
+  ]
+}
