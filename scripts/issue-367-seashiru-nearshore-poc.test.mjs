@@ -19,20 +19,19 @@ test("Issue #367 uses the eligible Issue #365 coastal reference segment", () => 
   assert.equal(reference.distanceReferenceStatus, "eligible");
   assert.equal(reference.geometry.type, "LineString");
   assert.ok(reference.geometry.coordinates.length >= 2);
-  assert.notDeepEqual(reference.geometry.coordinates, [
-    [129.965, 33.468967],
-    [129.965, 33.471033],
-  ]);
+  assert.notDeepEqual(reference.geometry.coordinates, [[129.965, 33.468967], [129.965, 33.471033]]);
 });
 
-test("Issue #367 SeaShiru configuration never contains a subscription key", () => {
-  assert.ok(DATASETS.length >= 9);
+test("Issue #367 SeaShiru configuration contains no key and covers point/polygon seabed obstructions", () => {
+  assert.ok(DATASETS.length >= 10);
   for (const dataset of DATASETS) {
     assert.match(dataset.baseUrl, /^https:\/\/api\.msil\.go\.jp\//);
-    assert.equal(dataset.layer, 1);
+    assert.ok([1, 3].includes(dataset.layer));
     assert.equal("subscriptionKey" in dataset, false);
     assert.equal("key" in dataset, false);
   }
+  assert.ok(DATASETS.some((dataset) => dataset.id === "seabed-obstruction-point" && dataset.layer === 1));
+  assert.ok(DATASETS.some((dataset) => dataset.id === "seabed-obstruction-area" && dataset.layer === 3));
 });
 
 test("nearshore distance bands use 0-50, 50-100, and 100-150m", () => {
@@ -46,10 +45,7 @@ test("nearshore distance bands use 0-50, 50-100, and 100-150m", () => {
 });
 
 test("geometry distance is measured against the LineString rather than the representative point", () => {
-  const line = [
-    [129.0, 33.0],
-    [129.001, 33.0],
-  ];
+  const line = [[129.0, 33.0], [129.001, 33.0]];
   const onLine = { type: "Point", coordinates: [129.0005, 33.0] };
   const north = { type: "Point", coordinates: [129.0005, 33.00045] };
   assert.ok(minGeometryDistanceToReference(onLine, line) < 0.1);
@@ -57,22 +53,27 @@ test("geometry distance is measured against the LineString rather than the repre
   assert.ok(distance > 49 && distance < 51.5, `expected about 50m, got ${distance}`);
 });
 
+test("polygon containing the reference segment has zero nearshore distance", () => {
+  const line = [[129.0, 33.0], [129.001, 33.0]];
+  const polygon = {
+    type: "Polygon",
+    coordinates: [[
+      [128.9995, 32.9995], [129.0015, 32.9995], [129.0015, 33.0005],
+      [128.9995, 33.0005], [128.9995, 32.9995],
+    ]],
+  };
+  assert.equal(minGeometryDistanceToReference(polygon, line), 0);
+});
+
 test("dataset summary keeps over-150m features out and counts exact distance bands", () => {
-  const line = [
-    [129.0, 33.0],
-    [129.001, 33.0],
-  ];
+  const line = [[129.0, 33.0], [129.001, 33.0]];
   const features = [
     { type: "Feature", properties: { name: "near" }, geometry: { type: "Point", coordinates: [129.0005, 33.000225] } },
     { type: "Feature", properties: { name: "mid" }, geometry: { type: "Point", coordinates: [129.0005, 33.000675] } },
     { type: "Feature", properties: { name: "far" }, geometry: { type: "Point", coordinates: [129.0005, 33.001125] } },
     { type: "Feature", properties: { name: "outside" }, geometry: { type: "Point", coordinates: [129.0005, 33.0018] } },
   ];
-  const summary = summarizeDataset({
-    dataset: { id: "synthetic", group: "test", label: "synthetic" },
-    features,
-    referenceCoordinates: line,
-  });
+  const summary = summarizeDataset({ dataset: { id: "synthetic", group: "test", label: "synthetic", layer: 1 }, features, referenceCoordinates: line });
   assert.equal(summary.nearshoreFeatureCount, 3);
   assert.deepEqual(summary.distanceBands, { "0-50": 1, "50-100": 1, "100-150": 1 });
   assert.equal(summary.records.some((record) => record.properties.name === "outside"), false);
