@@ -25,6 +25,17 @@ const haversineMeters = (a, b) => {
   return 2 * earthRadiusM * Math.asin(Math.sqrt(h));
 };
 
+const polylineLengthMeters = (coordinates) => {
+  let total = 0;
+  for (let index = 1; index < coordinates.length; index += 1) {
+    total += haversineMeters(
+      { longitude: coordinates[index - 1][0], latitude: coordinates[index - 1][1] },
+      { longitude: coordinates[index][0], latitude: coordinates[index][1] },
+    );
+  }
+  return total;
+};
+
 test("Issue #363 PoC keeps physical shore, access, and fishing use separate", () => {
   assert.equal(data.schemaVersion, "1.0.0");
   assert.equal(data.spotId, "karatsu-east-port");
@@ -72,9 +83,18 @@ test("Issue #365 does not couple coastal distance eligibility to fishing permiss
   assert.equal(schema.$defs.segment.then, undefined);
   assert.equal(schema.$defs.segment.dependentSchemas, undefined);
 
-  for (const segment of data.segments) {
-    assert.notEqual(segment.fishingUseStatus, "confirmed");
-  }
-});
+  const coastalReference = data.segments.find(
+    (segment) => segment.segmentId === "east-port-green-revetment-reference-01",
+  );
+  assert.ok(coastalReference, "Issue #365 must retain the adopted coastal reference segment");
+  assert.equal(coastalReference.geometryStatus, "approximate");
+  assert.equal(coastalReference.distanceReferenceStatus, "eligible");
+  assert.equal(coastalReference.physicalType, "revetment");
+  assert.equal(coastalReference.physicalState, "confirmed");
+  assert.equal(coastalReference.publicAccessStatus, "unknown");
+  assert.equal(coastalReference.fishingUseStatus, "unknown");
+  assert.equal(coastalReference.confidence, "medium");
 
-await import("./issue-365-gsi-vector-probe.mjs");
+  const lengthM = polylineLengthMeters(coastalReference.geometry.coordinates);
+  assert.ok(lengthM >= 139 && lengthM <= 142, `expected coastal reference length near 140m, got ${lengthM}`);
+});
