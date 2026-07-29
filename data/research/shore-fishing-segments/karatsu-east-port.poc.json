@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "spotId": "karatsu-east-port",
-  "researchedAt": "2026-07-28",
+  "researchedAt": "2026-07-29",
   "segments": [
     {
       "segmentId": "east-port-quay-reference-01",
@@ -20,13 +20,13 @@
       "publicAccessStatus": "unknown",
       "fishingUseStatus": "unknown",
       "confidence": "low",
-      "checkedAt": "2026-07-28",
+      "checkedAt": "2026-07-29",
       "sourceIds": [
         "src-jcg-karatsu-harbor-facilities",
         "src-mlit-karatsu-port-pamphlet-2026",
         "src-karatsu-city-cruise-access-20260715"
       ],
-      "note": "海上保安庁水路誌追補に記載された東港岸壁の概位（33°28.2′N, 129°57.9′E）と延長230mを基準に、国交省の東港地区図で概略方向を確認してPoC用LineStringへ置いた。測量済み岸線ではなく、正確な岸端・立ち位置を示さない。2026年のクルーズ寄港案内では東港地区岸壁の制限区域フェンス内への入場に手続きが必要とされるため、一般立入可否を恒常的に確認できずunknownとする。釣り利用可能という公的根拠も確認できないためunknown。近岸150m計算の基準にはまだ使わない。"
+      "note": "海上保安庁水路誌追補に記載された東港岸壁の概位（33°28.2′N, 129°57.9′E）と延長230mを基準にIssue #363でPoC用LineStringとして置いた研究用概略線。Issue #365の再確認で、国交省の北向き航空写真・配置図に見える東港岸壁の長辺方向と、このほぼ南北方向のLineStringが整合しないことを確認した。したがって実岸線の方向を示すgeometryとして昇格させず、履歴的PoCとしてのみ保持する。測量済み岸線・正確な岸端・立ち位置を示さず、SeaShiru等の0〜150m近岸距離計算には使用しない。publicAccessStatusとfishingUseStatusは直接根拠がないためunknownを維持するが、Issue #365以降はこれらをdistanceReferenceStatusの採否ゲートには使用しない。"
     }
   ],
   "sources": [
