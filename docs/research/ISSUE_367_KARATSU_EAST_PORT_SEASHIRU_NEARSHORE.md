@@ -46,10 +46,14 @@ Issue #365 / PR #366で定義した沿岸基準線を使い、地点代表座標
 ### その他
 
 - 海底障害物: `https://api.msil.go.jp/seabed-obstruction/v2`
-- 沈船: `https://api.msil.go.jp/wrecks/v2`
-- 海岸線種類（ESI）: `https://api.msil.go.jp/coastline-type-ESI/v2`
+  - Layer 1: Point
+  - Layer 3: Polygon
+- 沈船: `https://api.msil.go.jp/wrecks/v2` / Layer 1
+- 海岸線種類（ESI）: `https://api.msil.go.jp/coastline-type-ESI/v2` / Layer 1
 
-各APIは `MapServer/1/query` をGeoJSON形式で呼ぶ。1回1000件の上限を考慮し、`exceededTransferLimit` / `resultOffset` によるページングへ対応する。
+底質各種、沈船、ESIは確認済みの対象Layerを呼ぶ。海底障害物は公式仕様にPointとPolygonの両方があるため、Layer 1とLayer 3を別datasetとして取得して取りこぼしを防ぐ。
+
+GeoJSON形式で問い合わせる。1回1000件の上限を考慮し、`exceededTransferLimit` / `resultOffset` によるページングへ対応する。
 
 ## Secretの扱い
 
@@ -76,13 +80,15 @@ Remove-Item Env:SEASHIRU_SUBSCRIPTION_KEY
 
 ## 距離計算
 
-150m程度の局所PoCであるため、基準LineStringの平均緯度経度を原点とする局所平面へWGS84経緯度をメートル換算し、点-線分または線分-線分の最短距離を計算する。
+150m程度の局所PoCであるため、基準LineStringの平均緯度経度を原点とする局所平面へWGS84経緯度をメートル換算し、最短距離を計算する。
 
 対象geometry:
 
 - Point / MultiPoint
 - LineString / MultiLineString
-- Polygon / MultiPolygonの境界線
+- Polygon / MultiPolygon
+
+Polygonは境界までの距離だけでなく、基準LineStringがPolygon内に入る場合を距離0mとして扱う。これは海底障害物Layer 3を正しく扱うために必要な処理である。
 
 この距離値を測量成果や航海用距離として扱わない。目的は近岸データ密度の比較である。
 
@@ -93,8 +99,10 @@ Remove-Item Env:SEASHIRU_SUBSCRIPTION_KEY
 - #365で採用したeligible segmentを使用する。
 - 旧PoCの南北LineStringを基準にしない。
 - API定義にsubscription keyが埋め込まれていない。
+- 海底障害物のLayer 1 / Layer 3を両方対象にする。
 - 0〜150mの距離band境界。
 - 地点代表座標ではなくLineStringまでの距離を使う。
+- 基準LineStringを含むPolygonを距離0mと扱う。
 - 150m超の地物を除外する。
 - 検索envelopeが基準LineStringを十分含む。
 
@@ -105,7 +113,7 @@ Remove-Item Env:SEASHIRU_SUBSCRIPTION_KEY
 キーを保持するローカル環境でランナーを1回実行し、生成された `data/research/seashiru/karatsu-east-port-nearshore.poc.json` から次をレビューする。
 
 - 底質各種の0〜150m件数
-- 海底障害物件数
+- 海底障害物Point / Polygonの件数
 - 沈船件数
 - ESI地物件数
 - 0〜50 / 50〜100 / 100〜150m分布
