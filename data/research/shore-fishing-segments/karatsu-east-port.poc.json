@@ -1,1 +1,128 @@
-{}
+{
+  "schemaVersion": "1.0.0",
+  "spotId": "karatsu-east-port",
+  "researchedAt": "2026-07-29",
+  "segments": [
+    {
+      "segmentId": "east-port-quay-reference-01",
+      "label": "唐津港東港岸壁（耐震岸壁）概略区間",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [129.965, 33.468967],
+          [129.965, 33.471033]
+        ]
+      },
+      "geometryStatus": "approximate",
+      "distanceReferenceStatus": "not_eligible",
+      "physicalType": "quay",
+      "physicalState": "confirmed",
+      "publicAccessStatus": "unknown",
+      "fishingUseStatus": "unknown",
+      "confidence": "low",
+      "checkedAt": "2026-07-29",
+      "sourceIds": [
+        "src-jcg-karatsu-harbor-facilities",
+        "src-mlit-karatsu-port-pamphlet-2026",
+        "src-karatsu-city-cruise-access-20260715"
+      ],
+      "note": "海上保安庁水路誌追補に記載された東港岸壁の概位（33°28.2′N, 129°57.9′E）と延長230mを基準にIssue #363でPoC用LineStringとして置いた研究用概略線。Issue #365の再確認で、国交省の北向き航空写真・配置図に見える東港岸壁の長辺方向と、このほぼ南北方向のLineStringが整合しないことを確認した。したがって実岸線の方向を示すgeometryとして昇格させず、履歴的PoCとしてのみ保持する。測量済み岸線・正確な岸端・立ち位置を示さず、SeaShiru等の0〜150m近岸距離計算には使用しない。publicAccessStatusとfishingUseStatusは直接根拠がないためunknownを維持するが、Issue #365以降はこれらをdistanceReferenceStatusの採否ゲートには使用しない。"
+    },
+    {
+      "segmentId": "east-port-green-revetment-reference-01",
+      "label": "唐津港東港緑地護岸／水際プロムナード前面 沿岸基準線（近似）",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [129.9626612663269, 33.46940568381841],
+          [129.9627685546875, 33.46942022721781],
+          [129.96288388967514, 33.46943477061474],
+          [129.96294021606445, 33.46964844639625],
+          [129.96333181858063, 33.46956566107747],
+          [129.96356785297394, 33.46952650583157],
+          [129.96388033032417, 33.4694481952867],
+          [129.96393665671349, 33.46946161995655]
+        ]
+      },
+      "geometryStatus": "approximate",
+      "distanceReferenceStatus": "eligible",
+      "physicalType": "revetment",
+      "physicalState": "confirmed",
+      "publicAccessStatus": "unknown",
+      "fishingUseStatus": "unknown",
+      "confidence": "medium",
+      "checkedAt": "2026-07-29",
+      "sourceIds": [
+        "src-saga-karatsu-port-facilities-issue365",
+        "src-gsi-vector-coastline-issue365",
+        "src-mlit-karatsu-landscape-issue365"
+      ],
+      "note": "佐賀県の県管理港湾施設概要で東港緑地護岸の延長140mを確認。2026-04-01時点データへ更新済みの国土地理院地理院地図Vector提供実験について、唐津東港代表点を含むz16/x56427/y26295のcoastline layerからftCode 5103（堤防等に接する海岸線）を機械抽出した。代表点から最短約30mの397.2m LineStringの西端から8頂点目までの累計長は約140.72mで、県公示の140mとほぼ一致する。国交省資料でも緑地前面部から岸壁へ舗装・景観が連続すると確認でき、位置・延長・隣接関係が整合するため、この140.72m区間を0〜150m近岸調査の基準線として採用する。ただしベクトルタイル自体に施設名はなく、提供実験データを法定施設境界・測量済み岸線とは扱わないためgeometryStatusはapproximate、confidenceはmediumとする。釣り可否・一般立入可否は採否根拠に使用せずunknownを維持する。"
+    }
+  ],
+  "sources": [
+    {
+      "id": "src-jcg-karatsu-harbor-facilities",
+      "sourceType": "official",
+      "sourceName": "海上保安庁 九州沿岸水路誌 追補第6（唐津港 港湾施設）",
+      "sourceUrl": "https://www1.kaiho.mlit.go.jp/shoshi/tsuiho/pdf/105/105-2021-06.pdf",
+      "checkedOn": "2026-07-28",
+      "relation": "supporting",
+      "note": "東港岸壁の概位33°28.2′N 129°57.9′E、延長230m、水深9mを確認。概位であり精密岸線ではない。"
+    },
+    {
+      "id": "src-mlit-karatsu-port-pamphlet-2026",
+      "sourceType": "official",
+      "sourceName": "国土交通省 九州地方整備局 唐津港湾事務所 唐津港パンフレット（令和8年4月1日編集）",
+      "sourceUrl": "https://www.pa.qsr.mlit.go.jp/karatsu/minato/files/2026karatsu-port_pamphlet.pdf",
+      "checkedOn": "2026-07-28",
+      "relation": "supporting",
+      "note": "東港岸壁-9.0m・延長230m、東港フェリー岸壁-4.5m・延長115m、東港地区の配置を確認。"
+    },
+    {
+      "id": "src-karatsu-city-cruise-access-20260715",
+      "sourceType": "official",
+      "sourceName": "唐津市 7月15日寄港 クルーズ船MITSUI OCEAN FUJI",
+      "sourceUrl": "https://www.city.karatsu.lg.jp/page/47158.html",
+      "checkedOn": "2026-07-28",
+      "relation": "checked",
+      "note": "東港地区岸壁に制限区域があり、フェンス内入場には立入手続きが必要な運用例を確認。これだけで恒常的な立入禁止・許可を断定しない。"
+    },
+    {
+      "id": "src-nfaj-karatsu-east-waterfront",
+      "sourceType": "public_database",
+      "sourceName": "全国ロケーションデータベース 唐津東港",
+      "sourceUrl": "https://jl-db.nfaj.go.jp/location/410200647/",
+      "checkedOn": "2026-07-28",
+      "relation": "checked",
+      "note": "東大島町1に海辺のベンチ、レンガ敷き通路、街路灯がある水際空間を確認。ただし掲載地図は名称・所在地からの表示で実位置差異の注意書きがあるため、このPoCではLineStringの直接根拠にしない。"
+    },
+    {
+      "id": "src-saga-karatsu-port-facilities-issue365",
+      "sourceType": "official",
+      "sourceName": "佐賀県 県が管理する港湾施設の概要（唐津港）",
+      "sourceUrl": "https://www.pref.saga.lg.jp/kiji00329386/3_29386_321357_up_ibeqpe4w.pdf",
+      "checkedOn": "2026-07-29",
+      "relation": "supporting",
+      "note": "東港緑地護岸 延長140m、東港船溜防波堤 延長250m、東港緑地 面積26,000㎡等を確認。"
+    },
+    {
+      "id": "src-gsi-vector-coastline-issue365",
+      "sourceType": "public_map",
+      "sourceName": "国土地理院 地理院地図Vector提供実験 海岸線タイル（2026-04-01時点データ）",
+      "sourceUrl": "https://cyberjapandata.gsi.go.jp/xyz/experimental_bvmap/16/56427/26295.pbf",
+      "checkedOn": "2026-07-29",
+      "relation": "supporting",
+      "note": "coastline layerのftCode 5103（堤防等に接する部分）を機械抽出。代表点から最短約30.2mの397.2m LineStringの西端から8頂点目までが約140.72m。地理院地図Vector全国データは2026-06-24に2026-04-01時点データへ更新済み。ベクトルタイルに港湾施設名は含まれないため、佐賀県施設延長・国交省の隣接関係資料とのクロスチェックで利用する。"
+    },
+    {
+      "id": "src-mlit-karatsu-landscape-issue365",
+      "sourceType": "official",
+      "sourceName": "国土交通省 九州地方整備局 地域の要請「環境・景観」に配慮した唐津港の取り組みについて",
+      "sourceUrl": "https://www.qsr.mlit.go.jp/n-shiryo/kensyu_ronbun/02/16.pdf",
+      "checkedOn": "2026-07-29",
+      "relation": "supporting",
+      "note": "緑地前面部から岸壁へ舗装の導線を連続させ、緑地前面部の転落防止柵と岸壁の車止めを合わせて連続した景観を形成したことを確認。緑地前面部と岸壁が隣接・連続する水際であることの補助根拠。"
+    }
+  ]
+}
