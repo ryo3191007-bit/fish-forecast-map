@@ -98,3 +98,5 @@ test("Issue #365 does not couple coastal distance eligibility to fishing permiss
   const lengthM = polylineLengthMeters(coastalReference.geometry.coordinates);
   assert.ok(lengthM >= 139 && lengthM <= 142, `expected coastal reference length near 140m, got ${lengthM}`);
 });
+
+await import("./issue-367-seashiru-nearshore-poc.test.mjs");
