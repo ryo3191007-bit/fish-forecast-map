@@ -5,6 +5,11 @@ import maplibregl from "maplibre-gl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import { toFishingSpotMapEntry } from "@/domain/fishingSpotPresentation";
+import {
+  MAP_MARKER_LEGEND,
+  mapMarkerIconSvg,
+  markerKindForSpot,
+} from "@/domain/mapMarkerPresentation";
 import { legacySpeciesLabel, type FishSpeciesName } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import {
@@ -767,8 +772,10 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       const { spot, coordinates } = toFishingSpotMapEntry(sourceSpot);
       const element = document.createElement("button");
       element.type = "button";
-      element.className = "fishingSpotMarker";
-      element.setAttribute("aria-label", `${spot.name}の地点`);
+      const markerKind = markerKindForSpot(spot);
+      element.className = "mapIconMarker fishingSpotMarker";
+      element.setAttribute("aria-label", `${spot.name}（${spot.spotType}）の地点`);
+      element.innerHTML = `<span class="mapIconMarkerPin mapIconMarker--${markerKind}">${mapMarkerIconSvg(markerKind)}</span>`;
       const popup = registerPopup(
         new maplibregl.Popup({ offset: 18, maxWidth: "min(220px, calc(100vw - 24px))" }),
       );
@@ -784,16 +791,21 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       return marker;
     });
 
-    const memoMarkers = mappableExternalMemos.map((memo) =>
-      new maplibregl.Marker({ color: "#a855f7" })
+    const memoMarkers = mappableExternalMemos.map((memo) => {
+      const element = document.createElement("button");
+      element.type = "button";
+      element.className = "mapIconMarker catchMarker";
+      element.setAttribute("aria-label", `${memo.spotName}の登録済み釣果`);
+      element.innerHTML = `<span class="mapIconMarkerPin mapIconMarker--catch">${mapMarkerIconSvg("catch")}</span>`;
+      return new maplibregl.Marker({ element })
         .setLngLat([memo.longitude, memo.latitude])
         .setPopup(
           registerPopup(new maplibregl.Popup({ offset: 16, maxWidth: "min(300px, calc(100vw - 32px))" }).setDOMContent(
             createExternalMemoPopupContent(memo),
           )),
         )
-        .addTo(map),
-    );
+        .addTo(map);
+    });
 
     return () => {
       activePopupRef.current?.remove();
@@ -886,6 +898,17 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       <MapLayerToggle value={mapLayerMode} onChange={handleLayerModeChange} />
       <div className="mapShell">
       <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
+      <div className="mapMarkerLegend" aria-label="マーカー凡例">
+        {MAP_MARKER_LEGEND.map(({ kind, label }) => (
+          <span key={kind}>
+            <i
+              className={`mapLegendIcon mapIconMarker--${kind}`}
+              dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }}
+            />
+            {label}
+          </span>
+        ))}
+      </div>
       {mapLayerMode === "bathymetry" ? (
         <>
           <div
