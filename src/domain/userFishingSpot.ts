@@ -1,0 +1,96 @@
+import type { FishingSpotDetailSet, SpotDetailItemDefinition, SpotDetailValue } from "@/domain/fishingSpotDetail";
+import type { FishingSpot } from "@/domain/fishingSpot";
+import {
+  buildSaveSpotFieldObservationInput,
+  spotFieldObservationConfigs,
+  type SpotFieldObservationDraft,
+} from "@/domain/spotFieldObservation";
+
+export const USER_SPOT_ID_PREFIX = "user:";
+
+export const userFishingSpotDetailItemKeys = [
+  "shore_access", "toilet", "lighting", "parking", "access", "fishable_area", "restriction_status",
+  "depth", "bottom_material", "coastal_topography", "obstacles", "spot_features", "tidal_flow",
+  "river_influence", "open_sea_bay_character",
+] as const;
+
+export type UserFishingSpotDetailItemKey = (typeof userFishingSpotDetailItemKeys)[number];
+
+export type UserFishingSpot = {
+  id: string;
+  runtimeId: `${typeof USER_SPOT_ID_PREFIX}${string}`;
+  name: string;
+  latitude: number;
+  longitude: number;
+  areaName: string | null;
+  spotType: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SaveUserFishingSpotInput = Pick<UserFishingSpot, "name" | "latitude" | "longitude" | "areaName" | "spotType">;
+
+export type UserFishingSpotDetailValue = {
+  id: string;
+  spotId: string;
+  itemKey: UserFishingSpotDetailItemKey;
+  valueText: string | null;
+  valueTextList: string[];
+  valueNumber: number | null;
+  unit: string | null;
+  checkedAt: string;
+  note: string | null;
+  updatedAt: string;
+};
+
+export type RuntimeFishingSpot =
+  | { source: "master"; id: string; masterSpot: FishingSpot; name: string; latitude: number; longitude: number; areaName: string; spotType: string }
+  | { source: "user"; id: `${typeof USER_SPOT_ID_PREFIX}${string}`; userSpot: UserFishingSpot; name: string; latitude: number; longitude: number; areaName: string | null; spotType: string | null };
+
+export function userSpotRuntimeId(id: string): `${typeof USER_SPOT_ID_PREFIX}${string}` {
+  return `${USER_SPOT_ID_PREFIX}${id}`;
+}
+
+export function validateUserFishingSpotInput(input: SaveUserFishingSpotInput): SaveUserFishingSpotInput | null {
+  const name = input.name.trim();
+  if (!name || name.length > 120 || !Number.isFinite(input.latitude) || input.latitude < -90 || input.latitude > 90 || !Number.isFinite(input.longitude) || input.longitude < -180 || input.longitude > 180) return null;
+  const optional = (value: string | null) => value === null ? null : value.trim() || null;
+  const areaName = optional(input.areaName);
+  const spotType = optional(input.spotType);
+  if ((areaName?.length ?? 0) > 120 || (spotType?.length ?? 0) > 80) return null;
+  return { name, latitude: input.latitude, longitude: input.longitude, areaName, spotType };
+}
+
+export function mergeRuntimeFishingSpots(masterSpots: readonly FishingSpot[], userSpots: readonly UserFishingSpot[]): RuntimeFishingSpot[] {
+  return [
+    ...masterSpots.map((spot): RuntimeFishingSpot => ({ source: "master", id: spot.id, masterSpot: spot, name: spot.name, latitude: spot.latitude, longitude: spot.longitude, areaName: spot.areaName, spotType: spot.spotType })),
+    ...userSpots.map((spot): RuntimeFishingSpot => ({ source: "user", id: spot.runtimeId, userSpot: spot, name: spot.name, latitude: spot.latitude, longitude: spot.longitude, areaName: spot.areaName, spotType: spot.spotType })),
+  ];
+}
+
+export function buildUserSpotDetailInput(itemKey: UserFishingSpotDetailItemKey, draft: SpotFieldObservationDraft) {
+  return buildSaveSpotFieldObservationInput("user-spot", itemKey, spotFieldObservationConfigs[itemKey], draft);
+}
+
+export function mapUserSpotDetailsForDisplay(
+  values: readonly UserFishingSpotDetailValue[],
+  itemDefinitions: readonly SpotDetailItemDefinition[],
+): FishingSpotDetailSet {
+  const mapped: SpotDetailValue[] = values.map((value) => ({
+    ...value,
+    spotId: userSpotRuntimeId(value.spotId),
+    informationState: "weak_evidence",
+    valueBoolean: null,
+    valueJson: null,
+    confidence: "low",
+    contributionOrigin: "user_contribution",
+    contributorId: null,
+    submittedAt: value.updatedAt,
+    moderationStatus: "pending",
+    reviewStatus: "pending_review",
+    adoptionStatus: "candidate",
+    sources: [],
+  }));
+  const allowed = new Set(userFishingSpotDetailItemKeys);
+  return { itemDefinitions: itemDefinitions.filter(({ itemKey }) => allowed.has(itemKey as UserFishingSpotDetailItemKey)), values: mapped };
+}
