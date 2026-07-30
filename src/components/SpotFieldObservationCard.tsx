@@ -78,7 +78,11 @@ export function SpotFieldObservationCard({
   };
 
   const remove = async () => {
-    if (!observation || !window.confirm("この実地調査情報を削除しますか？")) return;
+    if (!observation) return;
+    const confirmed = ownerMode
+      ? window.confirm("この登録情報を削除しますか？")
+      : window.confirm("この実地調査情報を削除しますか？");
+    if (!confirmed) return;
     const deleted = await onDelete(observation.id);
     if (deleted) setIsOpen(false);
     else setFormError("削除できませんでした。");
@@ -87,14 +91,16 @@ export function SpotFieldObservationCard({
   return <div>
     <dt><span className="detailIcon" aria-hidden="true">{icon}</span>{label}</dt>
     <dd className={styles.content}>
-      <section className={styles.section} aria-label={`${label}の事前調査`}>
+      {!ownerMode && <section className={styles.section} aria-label={`${label}の事前調査`}>
         <strong className={styles.sectionTitle}>事前調査</strong>
         <p className={styles.value}>{research.text}{researchConfidence}</p>
-      </section>
+      </section>}
       {!ownerMode && <hr className={styles.divider} />}
-      <section className={styles.section} aria-label={`${label}の${ownerMode ? "編集" : "実地調査"}`}>
-        <strong className={styles.sectionTitle}>実地調査</strong>
-        <FieldObservationDisplay status={status} observation={observation} />
+      <section className={styles.section} aria-label={`${label}の${ownerMode ? "登録情報" : "実地調査"}`}>
+        {ownerMode
+          ? <strong className={styles.sectionTitle}>登録情報</strong>
+          : <strong className={styles.sectionTitle}>実地調査</strong>}
+        <FieldObservationDisplay status={status} observation={observation} ownerMode={ownerMode} />
         {status === "ready" ? <div className={styles.actionRow}>
           <button type="button" className={observation ? styles.editButton : styles.addButton} disabled={isMutating || !config} onClick={openEditor}>
             {observation ? "編集" : "＋ 追加"}
@@ -105,7 +111,7 @@ export function SpotFieldObservationCard({
     {isOpen && config ? <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeEditor(); }}>
       <section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby={`field-observation-${itemKey}`}>
         <header className={styles.modalHeader}>
-          <h3 id={`field-observation-${itemKey}`}>{label}の{ownerMode ? "編集" : "実地調査"}</h3>
+          <h3 id={`field-observation-${itemKey}`}>{label}の{ownerMode ? "登録情報を編集" : "実地調査"}</h3>
           <button type="button" className={styles.closeButton} aria-label="閉じる" disabled={isMutating} onClick={closeEditor}>×</button>
         </header>
         <div className={styles.form}>
@@ -135,11 +141,12 @@ export function SpotFieldObservationCard({
   </div>;
 }
 
-function FieldObservationDisplay({ status, observation }: { status: SpotFieldObservationStatus; observation: SpotFieldObservation | undefined }) {
+function FieldObservationDisplay({ status, observation, ownerMode }: { status: SpotFieldObservationStatus; observation: SpotFieldObservation | undefined; ownerMode: boolean }) {
   if (status === "loading") return <p className={styles.statusText}>取得中…</p>;
-  if (status === "signed-out") return <p className={styles.statusText}>ログインすると実地調査を登録できます。</p>;
-  if (status === "unavailable") return <p className={styles.statusText}>実地調査を利用できません。</p>;
-  if (status === "failed") return <p className={styles.statusText}>実地調査情報を取得できませんでした。</p>;
+  const sourceLabel = ownerMode ? "登録情報" : "実地調査";
+  if (status === "signed-out") return <p className={styles.statusText}>ログインすると{sourceLabel}を登録できます。</p>;
+  if (status === "unavailable") return <p className={styles.statusText}>{sourceLabel}を利用できません。</p>;
+  if (status === "failed") return <p className={styles.statusText}>{sourceLabel}を取得できませんでした。</p>;
   if (!observation) return <p className={styles.statusText}>まだ登録されていません</p>;
   return <>
     <p className={styles.date}>確認日:{formatSpotFieldObservationDate(observation.checkedAt)}</p>
