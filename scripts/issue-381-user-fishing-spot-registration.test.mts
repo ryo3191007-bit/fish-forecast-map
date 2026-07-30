@@ -6,6 +6,7 @@ import { createSpotFieldObservationDraft } from "../src/domain/spotFieldObservat
 const modal = fs.readFileSync("src/components/UserFishingSpotRegistrationModal.tsx", "utf8");
 const dashboard = fs.readFileSync("src/components/FishingDashboard.tsx", "utf8");
 const card = fs.readFileSync("src/components/SpotEvaluationCard.tsx", "utf8");
+const observationCard = fs.readFileSync("src/components/SpotFieldObservationCard.tsx", "utf8");
 const repository = fs.readFileSync("src/lib/userFishingSpotRepository.ts", "utf8");
 const migration = fs.readFileSync("supabase/migrations/20260730170000_create_user_spot_atomically.sql", "utf8");
 assert.match(card, /＋ 地点登録/);
@@ -26,6 +27,8 @@ assert.match(migration, /security definer/);
 assert.match(fs.readFileSync("src/hooks/useSpotFieldObservations.ts", "utf8"), /!spotId\.startsWith\("user:"\)/);
 assert.match(card, /ユーザー地点の対象魚種編集は現在利用できません/);
 assert.match(card, /ownerMode=\{ownerOnly\}/);
+assert.match(observationCard, /!ownerMode && <section[^>]+事前調査/);
+assert.match(observationCard, /<strong className=\{styles\.sectionTitle\}>登録情報<\/strong>/);
 assert.match(modal, /config\.safetyNotice/);
 assert.match(modal, /disabled=\{submitting\}/);
 assert.match(dashboard, /setEnvironmentSpotId\(spot\.runtimeId\)/);
