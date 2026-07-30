@@ -1,0 +1,108 @@
+{
+  "issue": 370,
+  "title": "対象7エリアの釣具店候補調査",
+  "checkedAt": "2026-07-30",
+  "policy": {
+    "adoption": "店舗運営者の公式ページ、メーカー店舗一覧、自治体・観光協会など信頼できる公開情報で営業実体、住所、地図位置を確認できる店舗のみ掲載する。",
+    "unknownValues": "公開情報で確認できない値は推測しない。営業時間は確認日を併記する。",
+    "separation": "釣具店POIはFishingSpot、SCORE、地点評価、釣果登録候補、Supabaseに混ぜない。"
+  },
+  "areas": [
+    {
+      "area": "糸島西岸",
+      "result": "adopted",
+      "candidates": [
+        {
+          "name": "つり具のまるきん 糸島店",
+          "decision": "adopted",
+          "shopId": "marukin-itoshima",
+          "reason": "公式店舗案内で営業実体、住所、電話、営業時間を確認でき、公式案内からリンクされた地図で位置を確認できる。",
+          "sources": ["https://marukin-net.co.jp/store/itoshima/"]
+        }
+      ]
+    },
+    {
+      "area": "唐津湾",
+      "result": "adopted",
+      "candidates": [
+        {
+          "name": "釣具のキャスティング 唐津店",
+          "decision": "adopted",
+          "shopId": "casting-karatsu",
+          "reason": "運営会社の現行店舗ページで住所、電話、営業時間、定休日を確認し、同ページの公式アクセス地図で位置を確認できる。",
+          "sources": ["https://castingnet.jp/shop/shop.php?s=38", "https://castingnet.jp/shop/map.php?s=38"]
+        }
+      ]
+    },
+    {
+      "area": "呼子・鎮西",
+      "result": "adopted",
+      "candidates": [
+        {
+          "name": "島屋釣漁具店",
+          "decision": "adopted",
+          "shopId": "shimaya-yobuko",
+          "reason": "唐津観光協会の現行店舗ページで住所、電話、営業時間、休業日と地図位置を確認できる。",
+          "sources": ["https://www.karatsu-kankou.jp/sp/spots/detail/59/"]
+        },
+        {
+          "name": "つりぐのオカベ",
+          "decision": "adopted",
+          "shopId": "okabe-yobuko",
+          "reason": "釣具メーカーDAIWAの現行店舗一覧で住所、電話、営業時間と地図位置を確認できる。独立した公式サイトは確認できないため、officialUrlは設定しない。",
+          "sources": ["https://www.daiwa.com/jp/partner/fishingmap/shop/list/detail?shop=1191126_4203"]
+        }
+      ]
+    },
+    {
+      "area": "伊万里湾",
+      "result": "adopted",
+      "candidates": [
+        {
+          "name": "つり具のまるきん 伊万里本店",
+          "decision": "adopted",
+          "shopId": "marukin-imari",
+          "reason": "公式店舗案内で営業実体、住所、電話、営業時間を確認でき、公式案内からリンクされた地図で位置を確認できる。",
+          "sources": ["https://marukin-net.co.jp/store/imari/"]
+        }
+      ]
+    },
+    {
+      "area": "松浦",
+      "result": "not_adopted",
+      "candidates": [
+        {
+          "name": "山口釣具店",
+          "decision": "not_adopted",
+          "reason": "一般検索・地図サービス上の候補は確認したが、2026年7月時点の営業実体と営業時間を公式、メーカー、自治体等の公開情報で十分に確認できなかった。値を推測せず掲載を見送る。",
+          "sources": []
+        }
+      ]
+    },
+    {
+      "area": "平戸",
+      "result": "adopted",
+      "candidates": [
+        {
+          "name": "つり具のまるきん 平戸店",
+          "decision": "adopted",
+          "shopId": "marukin-hirado",
+          "reason": "公式店舗案内で営業実体、住所、電話、営業時間を確認でき、公式案内からリンクされた地図で位置を確認できる。",
+          "sources": ["https://marukin-net.co.jp/store/hirado/"]
+        }
+      ]
+    },
+    {
+      "area": "生月",
+      "result": "not_adopted",
+      "candidates": [
+        {
+          "name": "生月島内の釣具店候補",
+          "decision": "not_adopted",
+          "reason": "一般検索・地図サービスを確認したが、2026年7月時点の営業実体、住所、地図位置を相互確認できる信頼性の高い公開情報が見つからなかった。候補名や値を推測せず掲載しない。",
+          "sources": []
+        }
+      ]
+    }
+  ]
+}

@@ -21,6 +21,40 @@ export const fishingShops: readonly FishingShop[] = [
     source: { ...MARUKIN_SOURCE, url: "https://marukin-net.co.jp/store/itoshima/" },
   },
   {
+    id: "casting-karatsu", name: "釣具のキャスティング 唐津店",
+    latitude: 33.434855, longitude: 129.979911,
+    address: "〒847-0085 佐賀県唐津市和多田本村2890-1",
+    officialUrl: "https://castingnet.jp/shop/shop.php?s=38", phone: "0955-74-6024",
+    openingHours: "月〜金 10:00〜20:00、土・日・祝 8:00〜20:00（定休日なし）",
+    openingHoursCheckedAt: "2026-07-30", checkedAt: "2026-07-30",
+    source: {
+      label: "釣具のキャスティング 公式 唐津店ページ",
+      url: "https://castingnet.jp/shop/shop.php?s=38",
+    },
+  },
+  {
+    id: "shimaya-yobuko", name: "島屋釣漁具店",
+    latitude: 33.5424262, longitude: 129.8933532,
+    address: "佐賀県唐津市呼子町呼子1959", phone: "0955-82-3152",
+    openingHours: "夏期 6:30〜18:30、冬期 7:00〜18:00（1月1日休み）",
+    openingHoursCheckedAt: "2026-07-30", checkedAt: "2026-07-30",
+    source: {
+      label: "唐津観光協会 島屋釣漁具店ページ",
+      url: "https://www.karatsu-kankou.jp/sp/spots/detail/59/",
+    },
+  },
+  {
+    id: "okabe-yobuko", name: "つりぐのオカベ",
+    latitude: 33.532056, longitude: 129.892116,
+    address: "佐賀県唐津市呼子町殿ノ浦105-1", phone: "0955-82-2120",
+    openingHours: "毎日24時間営業", openingHoursCheckedAt: "2026-07-30",
+    checkedAt: "2026-07-30",
+    source: {
+      label: "DAIWA 釣具店マップ つりぐのオカベ",
+      url: "https://www.daiwa.com/jp/partner/fishingmap/shop/list/detail?shop=1191126_4203",
+    },
+  },
+  {
     id: "marukin-imari", name: "つり具のまるきん 伊万里本店",
     latitude: 33.2680022, longitude: 129.8571368,
     address: "〒848-0035 佐賀県伊万里市二里町大里乙3番地24",
