@@ -11,6 +11,7 @@ import {
   MAP_MARKER_LEGEND,
   mapMarkerIconSvg,
   markerKindForSpot,
+  type MapMarkerKind,
 } from "@/domain/mapMarkerPresentation";
 import { legacySpeciesLabel, type FishSpeciesName } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
@@ -139,6 +140,15 @@ type BathymetrySelection = {
   result: BathymetryPointResult | { status: "loading" };
 };
 
+const INITIAL_MARKER_FILTERS: Record<MapMarkerKind, boolean> = {
+  port: true,
+  rock: true,
+  surf: true,
+  place: true,
+  catch: true,
+  shop: true,
+};
+
 const PRIMARY_LAYER_IDS = [
   BATHYMETRY_COLOR_LAYER_ID,
   BATHYMETRY_HILLSHADE_LAYER_ID,
@@ -174,8 +184,11 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   const activePopupRef = useRef<maplibregl.Popup | null>(null);
   const focusedSpotIdRef = useRef<string | null>(null);
   const markerVisibilityButtonRef = useRef<HTMLButtonElement | null>(null);
+  const mapViewportRef = useRef<HTMLDivElement | null>(null);
+  const markerLegendRef = useRef<HTMLFieldSetElement | null>(null);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
   const [markersVisible, setMarkersVisible] = useState(true);
+  const [markerFilters, setMarkerFilters] = useState(INITIAL_MARKER_FILTERS);
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
   const [terrainExaggeration, setTerrainExaggeration] = useState(
     BATHYMETRY_EXAGGERATION_DEFAULT,
@@ -297,6 +310,23 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
     button.setAttribute("aria-pressed", String(markersVisible));
     button.title = label;
     button.classList.toggle("markersAreHidden", !markersVisible);
+  }, [markersVisible]);
+
+  useEffect(() => {
+    const viewport = mapViewportRef.current;
+    const legend = markerLegendRef.current;
+    if (!viewport || !legend || !markersVisible) return;
+
+    const updateLegendOffset = () => {
+      viewport.style.setProperty(
+        "--map-marker-legend-offset",
+        `${legend.offsetHeight + 14}px`,
+      );
+    };
+    updateLegendOffset();
+    const observer = new ResizeObserver(updateLegendOffset);
+    observer.observe(legend);
+    return () => observer.disconnect();
   }, [markersVisible]);
 
   useEffect(() => {
@@ -816,6 +846,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       element.type = "button";
       const markerKind = markerKindForSpot(spot);
       element.className = "mapIconMarker fishingSpotMarker";
+      element.dataset.markerKind = markerKind;
       element.setAttribute("aria-label", `${spot.name}（${spot.spotType}）の地点`);
       element.innerHTML = `<span class="mapIconMarkerPin mapIconMarker--${markerKind}">${mapMarkerIconSvg(markerKind)}</span>`;
       const popup = registerPopup(
@@ -837,6 +868,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       const element = document.createElement("button");
       element.type = "button";
       element.className = "mapIconMarker catchMarker";
+      element.dataset.markerKind = "catch";
       element.setAttribute("aria-label", `${memo.spotName}の登録済み釣果`);
       element.innerHTML = `<span class="mapIconMarkerPin mapIconMarker--catch">${mapMarkerIconSvg("catch")}</span>`;
       return new maplibregl.Marker({ element })
@@ -853,6 +885,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       const element = document.createElement("button");
       element.type = "button";
       element.className = "mapIconMarker fishingShopMarker";
+      element.dataset.markerKind = "shop";
       element.setAttribute("aria-label", `${shop.name}の店舗情報`);
       element.innerHTML = `<span class="mapIconMarkerPin mapIconMarker--shop">${mapMarkerIconSvg("shop")}</span>`;
       return new maplibregl.Marker({ element })
@@ -952,20 +985,37 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
     <div className="mapFrame">
       <MapLayerToggle value={mapLayerMode} onChange={handleLayerModeChange} />
       <div className="mapShell">
-      <div className={`mapViewport${markersVisible ? "" : " markersHidden"}`}>
+      <div
+        ref={mapViewportRef}
+        className={`mapViewport${markersVisible ? "" : " markersHidden"} ${MAP_MARKER_LEGEND.filter(({ kind }) => !markerFilters[kind]).map(({ kind }) => `markerKindHidden--${kind}`).join(" ")}`}
+      >
         <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
         {markersVisible ? (
-          <div className="mapMarkerLegend" aria-label="マーカー凡例">
+          <fieldset
+            ref={markerLegendRef}
+            className="mapMarkerLegend"
+            aria-label="マーカー表示フィルタ"
+          >
             {MAP_MARKER_LEGEND.map(({ kind, label }) => (
-              <span key={kind}>
+              <label key={kind}>
+                <input
+                  type="checkbox"
+                  checked={markerFilters[kind]}
+                  onChange={(event) =>
+                    setMarkerFilters((current) => ({
+                      ...current,
+                      [kind]: event.target.checked,
+                    }))
+                  }
+                />
                 <i
                   className={`mapLegendIcon mapIconMarker--${kind}`}
                   dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }}
                 />
                 {label}
-              </span>
+              </label>
             ))}
-          </div>
+          </fieldset>
         ) : null}
       </div>
       {mapLayerMode === "bathymetry" ? (
