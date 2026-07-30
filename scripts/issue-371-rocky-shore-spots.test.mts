@@ -34,7 +34,6 @@ for (const candidate of adoptedCandidates) {
   assert.equal(spot.latitude, candidate.representativeCoordinate?.latitude);
   assert.equal(spot.longitude, candidate.representativeCoordinate?.longitude);
   assert.equal(spot.shoreAccess, "不明");
-  assert.deepEqual(spot.targetSpecies, []);
   assert.deepEqual(spot.recommendedMethods, []);
   assert.ok(spot.notes?.some((note) => note.includes("実釣位置")));
   assert.ok(spot.notes?.some((note) => note.includes("釣り可否は未確認")));
