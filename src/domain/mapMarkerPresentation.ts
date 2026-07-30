@@ -1,19 +1,21 @@
-import type { FishingSpotType } from "@/domain/fishingSpot";
+import type { FishingSpot, FishingSpotType } from "@/domain/fishingSpot";
 
 export type MapMarkerKind = "port" | "rock" | "surf" | "place" | "catch";
 
 export const MAP_MARKER_LEGEND: ReadonlyArray<{ kind: MapMarkerKind; label: string }> = [
-  { kind: "port", label: "港・波止" }, { kind: "rock", label: "岩場" },
+  { kind: "port", label: "港・波止" }, { kind: "rock", label: "磯" },
   { kind: "surf", label: "サーフ" }, { kind: "place", label: "地点" },
   { kind: "catch", label: "釣果" },
 ];
 
-export function markerKindForSpotType(spotType: FishingSpotType): MapMarkerKind {
+export function markerKindForSpot(spot: Pick<FishingSpot, "id" | "spotType">): MapMarkerKind {
+  if (spot.id.endsWith("-port")) return "port";
+
   const kinds: Record<FishingSpotType, MapMarkerKind> = {
     漁港: "port", 堤防: "port", 地磯: "rock", 磯場: "rock", サーフ: "surf",
     河口: "place", 湾岸: "place", その他: "place",
   };
-  return kinds[spotType];
+  return kinds[spot.spotType];
 }
 
 const ICON_PATHS: Record<MapMarkerKind, string> = {

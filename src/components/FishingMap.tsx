@@ -8,7 +8,7 @@ import { toFishingSpotMapEntry } from "@/domain/fishingSpotPresentation";
 import {
   MAP_MARKER_LEGEND,
   mapMarkerIconSvg,
-  markerKindForSpotType,
+  markerKindForSpot,
 } from "@/domain/mapMarkerPresentation";
 import { legacySpeciesLabel, type FishSpeciesName } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
@@ -772,7 +772,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       const { spot, coordinates } = toFishingSpotMapEntry(sourceSpot);
       const element = document.createElement("button");
       element.type = "button";
-      const markerKind = markerKindForSpotType(spot.spotType);
+      const markerKind = markerKindForSpot(spot);
       element.className = "mapIconMarker fishingSpotMarker";
       element.setAttribute("aria-label", `${spot.name}（${spot.spotType}）の地点`);
       element.innerHTML = `<span class="mapIconMarkerPin mapIconMarker--${markerKind}">${mapMarkerIconSvg(markerKind)}</span>`;
