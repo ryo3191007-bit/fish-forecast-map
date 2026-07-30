@@ -28,6 +28,7 @@ import {
 } from "@/domain/spotDetailUiPresentation";
 import { getRegisteredCatchSpeciesForSpot } from "@/domain/spotSpeciesPresentation";
 import { useSpotFieldObservations, type SpotFieldObservationState } from "@/hooks/useSpotFieldObservations";
+import { useUserFishingSpotDetails } from "@/hooks/useUserFishingSpotDetails";
 import { SpotFieldObservationCard } from "./SpotFieldObservationCard";
 
 export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形" | "魚種";
@@ -76,6 +77,7 @@ export function SpotEvaluationCard(props: Props) {
   const selectedDate = (selectedRow?.forecastTime ?? "").slice(0, 10);
   const dayRows = rows.filter((row) => row.forecastTime.startsWith(selectedDate));
   const fieldObservations = useSpotFieldObservations(props.selectedSpotId);
+  const ownerDetails = useUserFishingSpotDetails(props.selectedSpotId, Boolean(props.isUserSpot));
 
   useEffect(() => {
     const resolvedTime = resolveSelectedForecastTime(rows, selectedTime);
@@ -116,9 +118,9 @@ export function SpotEvaluationCard(props: Props) {
       <div role="tabpanel" id={`spot-panel-${props.activeTab}`} aria-labelledby={`spot-tab-${props.activeTab}`}>
         {props.activeTab === "評価" && <EvaluationTab {...props} selectedTime={props.selectedTime} />}
         {props.activeTab === "環境" && <EnvironmentTab environment={selectedEnvironment} row={selectedRow} loading={props.isLoading} error={props.error} />}
-        {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} hiddenKeys={["target_species", "recommended_methods"]} spotId={props.selectedSpotId} fieldObservations={fieldObservations} ownerOnly={props.isUserSpot} />}
-        {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} spotId={props.selectedSpotId} fieldObservations={fieldObservations} ownerOnly={props.isUserSpot} />}
-        {props.activeTab === "魚種" && <SpeciesTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} catches={props.catches} spotId={props.selectedSpotId} fieldObservations={fieldObservations} />}
+        {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} hiddenKeys={["target_species", "recommended_methods"]} spotId={props.selectedSpotId} fieldObservations={props.isUserSpot ? ownerDetails : fieldObservations} ownerOnly={props.isUserSpot} />}
+        {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} spotId={props.selectedSpotId} fieldObservations={props.isUserSpot ? ownerDetails : fieldObservations} ownerOnly={props.isUserSpot} />}
+        {props.activeTab === "魚種" && <SpeciesTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} catches={props.catches} spotId={props.selectedSpotId} fieldObservations={fieldObservations} isUserSpot={props.isUserSpot} />}
       </div>
     </section>
   );
@@ -225,7 +227,8 @@ function renderResearchConfidence(presentation: SpotDetailUiPresentation) {
   return presentation.confidence ? <span className={`confidence ${presentation.confidence}`}>信憑性: {confidenceLabel[presentation.confidence]}</span> : null;
 }
 
-function SpeciesTab({ details, status, catches, spotId, fieldObservations }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; catches: ExternalCatchRecord[]; spotId: string; fieldObservations: SpotFieldObservationState }) {
+function SpeciesTab({ details, status, catches, spotId, fieldObservations, isUserSpot }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; catches: ExternalCatchRecord[]; spotId: string; fieldObservations: SpotFieldObservationState; isUserSpot?: boolean }) {
+  if (isUserSpot) return <StateMessage>ユーザー地点の対象魚種編集は現在利用できません。</StateMessage>;
   const registeredSpecies = getRegisteredCatchSpeciesForSpot(catches, spotId);
   const observation = fieldObservations.observations.find((item) => item.itemKey === "target_species");
   const presentation = researchPresentation(details, status, "target_species");
@@ -252,7 +255,6 @@ function DetailTab({ details, status, items, spotId, fieldObservations, hiddenKe
   const cards = items.map(([key, label]) => {
     if (hiddenKeys.includes(key) || (visibleKeys && !visibleKeys.includes(key))) return null;
     const presentation = ownerOnly ? ownerPresentation(details, status, key) : researchPresentation(details, status, key);
-    if (ownerOnly) return <div key={key}><dt><span className="detailIcon" aria-hidden="true">{detailIcons[key] ?? "•"}</span>{label}</dt><dd>{presentation.text}{renderResearchConfidence(presentation)}</dd></div>;
     return <SpotFieldObservationCard
       key={key}
       spotId={spotId}
@@ -266,6 +268,7 @@ function DetailTab({ details, status, items, spotId, fieldObservations, hiddenKe
       isMutating={fieldObservations.isMutating}
       onSave={fieldObservations.saveObservation}
       onDelete={fieldObservations.deleteObservation}
+      ownerMode={ownerOnly}
     />;
   });
   return <dl className="detailGrid">{cards}</dl>;

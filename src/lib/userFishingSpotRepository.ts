@@ -44,6 +44,20 @@ export async function createMyUserFishingSpot(input: SaveUserFishingSpotInput): 
   return mapSpot(data as UserSpotRow);
 }
 
+export async function createMyUserFishingSpotWithDetails(creationId: string, input: SaveUserFishingSpotInput, details: SaveSpotFieldObservationInput[]): Promise<UserFishingSpot> {
+  const valid = validateUserFishingSpotInput(input);
+  if (!valid || details.some((detail) => !userFishingSpotDetailItemKeys.includes(detail.itemKey as UserFishingSpotDetailItemKey) || detail.informationState !== "weak_evidence")) throw new Error("invalid-user-fishing-spot");
+  const { data, error } = await client().rpc("create_my_user_fishing_spot_with_details", {
+    p_spot_id: creationId, p_name: valid.name, p_latitude: valid.latitude, p_longitude: valid.longitude,
+    p_area_name: valid.areaName, p_spot_type: valid.spotType,
+    p_details: details.map((detail) => ({ item_key: detail.itemKey, value_text: detail.valueText, value_text_list: detail.valueTextList, value_number: detail.valueNumber, unit: detail.unit, checked_at: detail.checkedAt, note: detail.note })),
+  });
+  if (error || !data) throw new Error("user-fishing-spot-create-failed");
+  const { data: row, error: fetchError } = await client().from("user_fishing_spots").select("id,name,latitude,longitude,area_name,spot_type,created_at,updated_at").eq("id", data as string).single();
+  if (fetchError || !row) throw new Error("user-fishing-spot-create-result-failed");
+  return mapSpot(row as UserSpotRow);
+}
+
 export async function updateMyUserFishingSpot(id: string, input: SaveUserFishingSpotInput): Promise<UserFishingSpot> {
   const valid = validateUserFishingSpotInput(input);
   if (!valid) throw new Error("invalid-user-fishing-spot");

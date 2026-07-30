@@ -29,6 +29,7 @@ type Props = {
   speciesOptions?: readonly string[];
   onSave: (input: SaveSpotFieldObservationInput) => Promise<boolean>;
   onDelete: (observationId: string) => Promise<boolean>;
+  ownerMode?: boolean;
 };
 
 export function SpotFieldObservationCard({
@@ -44,6 +45,7 @@ export function SpotFieldObservationCard({
   speciesOptions,
   onSave,
   onDelete,
+  ownerMode = false,
 }: Props) {
   const config = spotFieldObservationConfigs[itemKey];
   const [isOpen, setIsOpen] = useState(false);
@@ -89,8 +91,8 @@ export function SpotFieldObservationCard({
         <strong className={styles.sectionTitle}>事前調査</strong>
         <p className={styles.value}>{research.text}{researchConfidence}</p>
       </section>
-      <hr className={styles.divider} />
-      <section className={styles.section} aria-label={`${label}の実地調査`}>
+      {!ownerMode && <hr className={styles.divider} />}
+      <section className={styles.section} aria-label={`${label}の${ownerMode ? "編集" : "実地調査"}`}>
         <strong className={styles.sectionTitle}>実地調査</strong>
         <FieldObservationDisplay status={status} observation={observation} />
         {status === "ready" ? <div className={styles.actionRow}>
@@ -103,7 +105,7 @@ export function SpotFieldObservationCard({
     {isOpen && config ? <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeEditor(); }}>
       <section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby={`field-observation-${itemKey}`}>
         <header className={styles.modalHeader}>
-          <h3 id={`field-observation-${itemKey}`}>{label}の実地調査</h3>
+          <h3 id={`field-observation-${itemKey}`}>{label}の{ownerMode ? "編集" : "実地調査"}</h3>
           <button type="button" className={styles.closeButton} aria-label="閉じる" disabled={isMutating} onClick={closeEditor}>×</button>
         </header>
         <div className={styles.form}>
@@ -112,10 +114,10 @@ export function SpotFieldObservationCard({
             確認日
             <input type="date" required max={getTodayInJapan()} value={draft.checkedAt} onChange={(event) => setDraft((current) => ({ ...current, checkedAt: event.target.value }))} />
           </label>
-          <label className={styles.choice}>
+          {!ownerMode && <label className={styles.choice}>
             <input type="checkbox" checked={draft.isUnknown} onChange={(event) => setDraft((current) => ({ ...current, isUnknown: event.target.checked }))} />
             確認できず
-          </label>
+          </label>}
           {!draft.isUnknown ? <ObservationValueInput config={config} options={options} draft={draft} onChange={setDraft} /> : null}
           <label className={styles.field}>
             メモ（任意）
