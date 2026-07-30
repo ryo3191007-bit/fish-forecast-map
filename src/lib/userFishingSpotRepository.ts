@@ -1,6 +1,7 @@
 import type { SaveSpotFieldObservationInput } from "@/domain/spotFieldObservation";
 import {
   userFishingSpotDetailItemKeys,
+  isUserFishingSpotType,
   userSpotRuntimeId,
   validateUserFishingSpotInput,
   type SaveUserFishingSpotInput,
@@ -20,6 +21,7 @@ function client() {
 }
 
 function mapSpot(row: UserSpotRow): UserFishingSpot {
+  if (row.spot_type !== null && !isUserFishingSpotType(row.spot_type)) throw new Error("invalid-user-fishing-spot-type");
   return { id: row.id, runtimeId: userSpotRuntimeId(row.id), name: row.name, latitude: Number(row.latitude), longitude: Number(row.longitude), areaName: row.area_name, spotType: row.spot_type, createdAt: row.created_at, updatedAt: row.updated_at };
 }
 

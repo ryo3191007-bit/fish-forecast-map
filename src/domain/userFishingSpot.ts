@@ -1,5 +1,6 @@
 import type { FishingSpotDetailSet, SpotDetailItemDefinition, SpotDetailValue } from "@/domain/fishingSpotDetail";
 import type { FishingSpot } from "@/domain/fishingSpot";
+import { type FishingSpotType } from "@/domain/fishingSpot";
 import {
   buildSaveSpotFieldObservationInput,
   spotFieldObservationConfigs,
@@ -23,7 +24,7 @@ export type UserFishingSpot = {
   latitude: number;
   longitude: number;
   areaName: string | null;
-  spotType: string | null;
+  spotType: FishingSpotType | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -45,7 +46,18 @@ export type UserFishingSpotDetailValue = {
 
 export type RuntimeFishingSpot =
   | { source: "master"; id: string; masterSpot: FishingSpot; name: string; latitude: number; longitude: number; areaName: string; spotType: string }
-  | { source: "user"; id: `${typeof USER_SPOT_ID_PREFIX}${string}`; userSpot: UserFishingSpot; name: string; latitude: number; longitude: number; areaName: string | null; spotType: string | null };
+  | { source: "user"; id: `${typeof USER_SPOT_ID_PREFIX}${string}`; userSpot: UserFishingSpot; name: string; latitude: number; longitude: number; areaName: string | null; spotType: FishingSpotType | null };
+
+export const userFishingSpotTypes = ["漁港", "堤防", "サーフ", "地磯", "磯場", "河口", "湾岸", "その他"] as const satisfies readonly FishingSpotType[];
+
+export function isUserFishingSpotType(value: string): value is FishingSpotType {
+  return (userFishingSpotTypes as readonly string[]).includes(value);
+}
+
+/** Resolve nullable persisted user data only at the marker/display boundary. */
+export function userFishingSpotTypeForDisplay(spotType: FishingSpotType | null): FishingSpotType {
+  return spotType ?? "その他";
+}
 
 export function userSpotRuntimeId(id: string): `${typeof USER_SPOT_ID_PREFIX}${string}` {
   return `${USER_SPOT_ID_PREFIX}${id}`;
@@ -57,7 +69,7 @@ export function validateUserFishingSpotInput(input: SaveUserFishingSpotInput): S
   const optional = (value: string | null) => value === null ? null : value.trim() || null;
   const areaName = optional(input.areaName);
   const spotType = optional(input.spotType);
-  if ((areaName?.length ?? 0) > 120 || (spotType?.length ?? 0) > 80) return null;
+  if ((areaName?.length ?? 0) > 120 || (spotType !== null && !isUserFishingSpotType(spotType))) return null;
   return { name, latitude: input.latitude, longitude: input.longitude, areaName, spotType };
 }
 

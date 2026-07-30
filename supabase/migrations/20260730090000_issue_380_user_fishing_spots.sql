@@ -7,7 +7,7 @@ create table public.user_fishing_spots (
   latitude numeric not null check (latitude between -90 and 90),
   longitude numeric not null check (longitude between -180 and 180),
   area_name text null check (area_name is null or char_length(btrim(area_name)) between 1 and 120),
-  spot_type text null check (spot_type is null or char_length(btrim(spot_type)) between 1 and 80),
+  spot_type text null check (spot_type is null or spot_type in ('漁港', '堤防', 'サーフ', '地磯', '磯場', '河口', '湾岸', 'その他')),
   is_deleted boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),

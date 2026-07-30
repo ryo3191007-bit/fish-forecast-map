@@ -212,12 +212,24 @@ function classifiedLabels(values: readonly string[], rules: readonly (readonly [
 }
 
 /** Reduce one curated item to the short taxonomy labels used by the ordinary UI. */
-export function formatTerrainDetailForPresentation(details: FishingSpotDetailSet | null, itemKey: "coastal_topography" | "spot_features") {
+function isOwnerUserSpotDetail(value: SpotDetailValue) {
+  return value.spotId.startsWith("user:")
+    && value.contributionOrigin === "user_contribution"
+    && value.moderationStatus === "pending"
+    && value.reviewStatus === "pending_review"
+    && value.adoptionStatus === "candidate";
+}
+
+function formatTerrainDetails(
+  details: FishingSpotDetailSet | null,
+  itemKey: "coastal_topography" | "spot_features",
+  isVisible: (value: SpotDetailValue) => boolean,
+) {
   if (!details) return null;
   const candidates = details.values.filter((value) =>
     value.itemKey === itemKey
     && value.informationState !== "rejected"
-    && value.adoptionStatus === "adopted"
+    && isVisible(value)
   );
   const evidence = candidates.filter((value) => value.informationState === "has_evidence" || value.informationState === "weak_evidence");
   const rawValues = evidence
@@ -236,6 +248,15 @@ export function formatTerrainDetailForPresentation(details: FishingSpotDetailSet
   const confidence = contributing.map((value) => value.confidence).filter((value): value is NonNullable<SpotDetailValue["confidence"]> => value !== null)
     .sort((a, b) => confidenceRank[a] - confidenceRank[b])[0] ?? null;
   return { text: labels.join("、"), confidence };
+}
+
+export function formatTerrainDetailForPresentation(details: FishingSpotDetailSet | null, itemKey: "coastal_topography" | "spot_features") {
+  return formatTerrainDetails(details, itemKey, (value) => value.adoptionStatus === "adopted");
+}
+
+/** Format pending input only for the owner-only user-spot presentation path. */
+export function formatOwnerUserSpotTerrainDetail(details: FishingSpotDetailSet | null, itemKey: "coastal_topography" | "spot_features") {
+  return formatTerrainDetails(details, itemKey, isOwnerUserSpotDetail);
 }
 
 export function formatSpotDetailValue(item: SpotDetailValue | undefined) {
@@ -266,6 +287,11 @@ export function findDisplayableSpotDetail(details: FishingSpotDetailSet | null, 
     && value.informationState !== "rejected"
     && value.adoptionStatus === "adopted"
   );
+}
+
+/** Select pending input only for the owner-only user-spot presentation path. */
+export function findOwnerUserSpotDetail(details: FishingSpotDetailSet | null, itemKey: string) {
+  return details?.values.find((value) => value.itemKey === itemKey && value.informationState !== "rejected" && isOwnerUserSpotDetail(value));
 }
 
 export function scopeSpotDetails(details: FishingSpotDetailSet | null, selectedSpotId: string) {
