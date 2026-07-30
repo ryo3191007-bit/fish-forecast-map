@@ -25,7 +25,7 @@ assert.ok(closeWidth >= 26 && closeWidth <= 28 && closeWidth < 34, "popup close 
 assert.ok(closeFontSize < 24, "popup close glyph is smaller than the former 24px size");
 assert.ok(contentRightPadding > closeWidth + closeRight, "popup content reserves space to the right of a name such as 伊万里湾奥");
 
-assert.match(map, /<div className="mapFrame">\s*<MapLayerToggle[\s\S]*?<div className="mapShell">\s*<div ref=\{containerRef\} className="map"/, "toggle precedes and is adjacent to the map viewport");
+assert.match(map, /<div className="mapFrame">\s*<MapLayerToggle[\s\S]*?<div className="mapShell">\s*<div\s+ref=\{mapViewportRef\}\s+className=\{`mapViewport[\s\S]*?<div ref=\{containerRef\} className="map"/, "toggle precedes and is adjacent to the map viewport");
 assert.doesNotMatch(map, /className="mapAttribution/, "large custom attribution cards are not rendered");
 assert.match(map, /attributionControl: false/);
 assert.match(map, /new maplibregl\.AttributionControl\(\{ compact: true \}\)/, "one compact standard attribution control is explicit");
