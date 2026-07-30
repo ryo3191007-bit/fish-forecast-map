@@ -1,0 +1,28 @@
+{
+  "issue": 378,
+  "recordedOn": "2026-07-30",
+  "method": "Issue本文に記録された手動調査結果を既存魚種マスターへ正規化して反映。外部サイトの自動取得・スクレイピングは実施していない。",
+  "spots": [
+    {
+      "spotId": "hado-cape-rocky-shore",
+      "targetSpecies": ["アオリイカ", "ヤリイカ", "コウイカ", "ブリ", "キジハタ"],
+      "normalizations": [
+        { "sourceName": "ササイカ", "masterName": "ヤリイカ" },
+        { "sourceName": "ヤズ", "masterName": "ブリ" }
+      ],
+      "sourceUrl": "https://www.point-i.jp/fishing_spots/22442"
+    },
+    {
+      "spotId": "nanatsugama-rocky-shore",
+      "targetSpecies": ["アオリイカ", "アジ", "メジナ", "チヌ", "サワラ", "ヒラスズキ"],
+      "normalizations": [],
+      "sourceUrl": "https://www.point-i.jp/fishing_infos/883579"
+    },
+    {
+      "spotId": "doya-terraces-front-rocky-shore",
+      "targetSpecies": ["アオリイカ", "コウイカ", "キス", "メゴチ"],
+      "normalizations": [],
+      "sourceUrl": "https://seapicnic.blogspot.com/2020/11/blog-post_64.html"
+    }
+  ]
+}
