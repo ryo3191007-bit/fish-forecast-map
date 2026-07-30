@@ -16,10 +16,10 @@ const data = JSON.parse(
 assert.equal(data.issue, 325);
 assert.equal(data.spots.length, 52, "Issue #325 must cover all registered spots explicitly");
 assert.equal(new Set(data.spots.map((spot) => spot.spotId)).size, 52, "spotId must be unique in Issue #325 data");
-assert.deepEqual(
-  new Set(data.spots.map((spot) => spot.spotId)),
-  new Set(fishingSpots.map((spot) => spot.id)),
-  "Issue #325 spot set must exactly match the current 52-spot master",
+const masterSpotIds = new Set(fishingSpots.map((spot) => spot.id));
+assert.ok(
+  data.spots.every((spot) => masterSpotIds.has(spot.spotId)),
+  "all 52 spots reviewed by Issue #325 must remain in the current master",
 );
 
 const holdIds = new Set(["nokita-beach", "imari-inner-bay", "himosashi-port"]);

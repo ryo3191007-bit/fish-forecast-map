@@ -13,7 +13,8 @@ const css = read("src/app/globals.css");
 
 const spotPopup = map.slice(map.indexOf("function createSpotPopupContent"), map.indexOf("async function loadBathymetryTileImageData"));
 assert.match(spotPopup, /title\.textContent = spot\.name/);
-assert.doesNotMatch(spotPopup, /areaName|spotType|createElement\("p"\)/, "spot popup contains only its name");
+assert.doesNotMatch(spotPopup, /areaName|spotType|spot\.notes/, "normal spot popups do not expand with general spot metadata or notes");
+assert.match(spotPopup, /getFishingSpotPopupCaution\(spot\)/, "only scoped safety cautions may supplement the compact popup");
 assert.match(map, /maxWidth: "min\(220px, calc\(100vw - 24px\)\)"/);
 const popupContentRule = css.match(/\.map \.maplibregl-popup-content\s*\{([^}]*)\}/)?.[1] ?? "";
 const popupCloseRule = css.match(/\.map \.maplibregl-popup-close-button\s*\{([^}]*)\}/)?.[1] ?? "";

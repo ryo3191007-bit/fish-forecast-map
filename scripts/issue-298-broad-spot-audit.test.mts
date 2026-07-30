@@ -62,9 +62,9 @@ const expectedSpecificLandmark = new Set(["keya-gate"]);
 
 assert.equal(audit.issue, 298);
 assert.equal(audit.auditedAt, "2026-07-25");
-assert.equal(fishingSpots.length, 52);
-assert.equal(new Set(fishingSpots.map((spot) => spot.id)).size, 52);
-assert.equal(audit.scope.masterSpotCount, fishingSpots.length);
+assert.ok(fishingSpots.length >= 52, "the 52 records audited by Issue #298 remain in the growing master");
+assert.equal(new Set(fishingSpots.map((spot) => spot.id)).size, fishingSpots.length);
+assert.equal(audit.scope.masterSpotCount, 52, "Issue #298 retains its historical audit scope");
 assert.equal(audit.candidates.length, audit.scope.broadCandidateCount);
 assert.equal(new Set(audit.candidates.map((candidate) => candidate.spotId)).size, audit.candidates.length);
 
@@ -105,8 +105,8 @@ for (const candidate of audit.candidates) {
 const selectableSpots = filterSelectableFishingSpots(fishingSpots);
 const rawStaticSpots = getRawStaticMasterData().fishingSpots;
 const staticSpots = getStaticMasterData().fishingSpots;
-assert.equal(selectableSpots.length, 47);
-assert.equal(rawStaticSpots.length, 52);
+assert.equal(selectableSpots.length, fishingSpots.length - expectedHiddenIds.size);
+assert.equal(rawStaticSpots.length, fishingSpots.length);
 assert.deepEqual(new Set(rawStaticSpots.map((spot) => spot.id)), new Set(fishingSpots.map((spot) => spot.id)));
 assert.deepEqual(new Set(staticSpots.map((spot) => spot.id)), new Set(selectableSpots.map((spot) => spot.id)));
 assert.ok(selectableSpots.every((spot) => !expectedHiddenIds.has(spot.id)));

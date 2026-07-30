@@ -82,14 +82,12 @@ assert.deepEqual(audit.scope, {
   corrected: 13,
   retained: 37,
 });
-assert.equal(fishingSpots.length, 52);
-assert.equal(new Set(fishingSpots.map((spot) => spot.id)).size, 52);
+assert.ok(fishingSpots.length >= 52);
+assert.equal(new Set(fishingSpots.map((spot) => spot.id)).size, fishingSpots.length);
 assert.equal(audit.spots.length, 50);
 assert.equal(new Set(audit.spots.map((spot) => spot.id)).size, 50);
-assert.deepEqual(
-  new Set(audit.spots.map((spot) => spot.id)),
-  new Set(fishingSpots.filter((spot) => !ISSUE_294_IDS.has(spot.id)).map((spot) => spot.id)),
-);
+const currentSpotIds = new Set(fishingSpots.map((spot) => spot.id));
+assert.ok(audit.spots.every((spot) => currentSpotIds.has(spot.id)), "all Issue #296 audited spots remain in the master");
 assert.ok(audit.spots.every((spot) => !ISSUE_294_IDS.has(spot.id)));
 
 const correctedAuditSpots = audit.spots.filter((spot) => spot.decision === "corrected");
@@ -104,8 +102,8 @@ const expectedOverrideIds = new Set([
 assert.deepEqual(new Set(Object.keys(fishingSpotCoordinateOverrides)), expectedOverrideIds);
 
 const corrected = applyFishingSpotCoordinateOverrides(fishingSpots);
-assert.equal(corrected.length, 52);
-assert.equal(new Set(corrected.map((spot) => spot.id)).size, 52);
+assert.equal(corrected.length, fishingSpots.length);
+assert.equal(new Set(corrected.map((spot) => spot.id)).size, fishingSpots.length);
 
 function withoutCoordinates<T extends { latitude: number; longitude: number; coordinatePrecision: string }>(spot: T) {
   const { latitude: _latitude, longitude: _longitude, coordinatePrecision: _precision, ...rest } = spot;
@@ -165,7 +163,7 @@ for (const [spotId, expected] of EXPECTED_ISSUE_294) {
 }
 
 const runtimeSpots = getRawStaticMasterData().fishingSpots;
-assert.equal(runtimeSpots.length, 52);
+assert.equal(runtimeSpots.length, fishingSpots.length);
 const [minLatitude, maxLatitude, minLongitude, maxLongitude] = audit.policy.bounds;
 for (const spot of runtimeSpots) {
   assert.ok(spot.latitude >= minLatitude && spot.latitude <= maxLatitude, `${spot.id} latitude outside audit bounds`);

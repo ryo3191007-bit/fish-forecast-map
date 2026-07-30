@@ -1,5 +1,5 @@
 import { createStaticFishSpecies, type FishSpecies, type FishSpeciesAlias } from "@/domain/fishing";
-import { fishingSpots } from "@/data/fishingSpots";
+import { fishingSpots, issue371RockyShoreSpotIds } from "@/data/fishingSpots";
 import { applyFishingSpotCoordinateOverrides } from "@/data/fishingSpotCoordinateOverrides";
 import { filterSelectableFishingSpots } from "@/data/fishingSpotVisibility";
 import { externalSources } from "@/data/externalSources";
@@ -63,8 +63,18 @@ export async function fetchFishingSpotsMaster(): Promise<MasterDataResult<Fishin
   if (result.meta.source !== "supabase") return fallback(selectableRuntimeFishingSpots, result.meta.fallbackReason ?? "supabase-error", result.meta.message);
   const mapped = result.data.map(mapFishingSpotRow).filter((row): row is FishingSpot => row !== null);
   const corrected = applyFishingSpotCoordinateOverrides(mapped);
-  const selectable = filterSelectableFishingSpots(corrected);
-  return selectable.length > 0 ? { data: selectable, meta: result.meta } : fallback(selectableRuntimeFishingSpots, "empty-supabase-result");
+  return resolveSuccessfulFishingSpotsMaster(corrected);
+}
+
+export function resolveSuccessfulFishingSpotsMaster(remoteSpots: FishingSpot[]): MasterDataResult<FishingSpot[]> {
+  if (remoteSpots.length === 0) return fallback(selectableRuntimeFishingSpots, "empty-supabase-result");
+  return { data: mergeStaticFishingSpotAdditions(remoteSpots), meta: { source: "supabase" } };
+}
+
+export function mergeStaticFishingSpotAdditions(remoteSpots: FishingSpot[]): FishingSpot[] {
+  const remoteIds = new Set(remoteSpots.map(({ id }) => id));
+  const staticAdditions = selectableRuntimeFishingSpots.filter(({ id }) => issue371RockyShoreSpotIds.has(id) && !remoteIds.has(id));
+  return filterSelectableFishingSpots([...remoteSpots, ...staticAdditions]);
 }
 
 export async function fetchSourceRegistryMaster(): Promise<MasterDataResult<ExternalSource[]>> {

@@ -58,8 +58,8 @@ const migration = fs.readFileSync(
   "utf8",
 );
 
-assert.equal(fishingSpots.length, 52);
-assert.equal(new Set(fishingSpots.map((spot) => spot.id)).size, 52);
+assert.ok(fishingSpots.length >= 52);
+assert.equal(new Set(fishingSpots.map((spot) => spot.id)).size, fishingSpots.length);
 for (const spotId of EXPECTED.keys()) {
   assert.ok(fishingSpotCoordinateOverrides[spotId], `${spotId} override must remain defined`);
 }
@@ -77,7 +77,7 @@ for (const [spotId, expected] of EXPECTED) {
 }
 
 const runtimeSpots = getRawStaticMasterData().fishingSpots;
-assert.equal(runtimeSpots.length, 52);
+assert.equal(runtimeSpots.length, fishingSpots.length);
 
 for (const [spotId, expected] of EXPECTED) {
   const spot = runtimeSpots.find((candidate) => candidate.id === spotId);
