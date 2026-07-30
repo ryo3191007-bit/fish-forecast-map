@@ -3,7 +3,12 @@ import { readFileSync } from "node:fs";
 import { fishingShops } from "../src/data/fishingShops.ts";
 import { MAP_MARKER_LEGEND, mapMarkerIconSvg } from "../src/domain/mapMarkerPresentation.ts";
 
-assert.ok(fishingShops.length >= 6, "verified static shops include the follow-up research additions");
+assert.ok(fishingShops.length >= 7, "verified static shops include the follow-up research additions");
+assert.equal(
+  fishingShops.find(({ id }) => id === "yutoku-ikitsuki")?.name,
+  "ホームセンターユートク 生月店",
+  "non-specialist stores with verified tackle sales remain eligible",
+);
 assert.equal(new Set(fishingShops.map(({ id }) => id)).size, fishingShops.length, "shop ids are stable and unique");
 for (const shop of fishingShops) {
   assert.ok(shop.id && shop.name && shop.checkedAt && shop.source.label && shop.source.url);
@@ -21,7 +26,10 @@ const adoptedShopIds = research.areas.flatMap(({ candidates }: { candidates: { d
 assert.deepEqual(new Set(adoptedShopIds), new Set(fishingShops.map(({ id }) => id)));
 for (const area of research.areas) {
   assert.ok(area.result && area.candidates.length > 0, `${area.area} records candidates and a result`);
-  for (const candidate of area.candidates) assert.ok(candidate.reason, `${candidate.name} records a decision reason`);
+  for (const candidate of area.candidates) {
+    assert.ok(candidate.reason, `${candidate.name} records a decision reason`);
+    assert.ok(candidate.sources.length > 0, `${candidate.name} records traceable evidence`);
+  }
 }
 assert.equal(MAP_MARKER_LEGEND.find(({ kind }) => kind === "shop")?.label, "釣具店");
 assert.match(mapMarkerIconSvg("shop"), /<svg/);

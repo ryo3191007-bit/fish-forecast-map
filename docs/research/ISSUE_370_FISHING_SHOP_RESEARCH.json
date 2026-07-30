@@ -72,10 +72,10 @@
       "result": "not_adopted",
       "candidates": [
         {
-          "name": "山口釣具店",
+          "name": "有限会社西村釣具店",
           "decision": "not_adopted",
-          "reason": "一般検索・地図サービス上の候補は確認したが、2026年7月時点の営業実体と営業時間を公式、メーカー、自治体等の公開情報で十分に確認できなかった。値を推測せず掲載を見送る。",
-          "sources": []
+          "reason": "Gビズインフォで2026年1月27日の登記記録の閉鎖等（清算の結了等）を確認したため、営業店舗として掲載しない。ほかに現在の営業実体を信頼できる公開情報で確認できる候補を特定できず、候補名を推測補完しない。",
+          "sources": ["https://info.gbiz.go.jp/hojin/ichiran?hojinBango=2310002019781"]
         }
       ]
     },
@@ -94,13 +94,18 @@
     },
     {
       "area": "生月",
-      "result": "not_adopted",
+      "result": "adopted",
       "candidates": [
         {
-          "name": "生月島内の釣具店候補",
-          "decision": "not_adopted",
-          "reason": "一般検索・地図サービスを確認したが、2026年7月時点の営業実体、住所、地図位置を相互確認できる信頼性の高い公開情報が見つからなかった。候補名や値を推測せず掲載しない。",
-          "sources": []
+          "name": "ホームセンターユートク 生月店",
+          "decision": "adopted",
+          "shopId": "yutoku-ikitsuki",
+          "reason": "運営会社の公式店舗一覧で営業実体、住所、電話、営業時間を確認し、公式取扱商品ページで生月店が釣具取扱店舗であることを確認した。専業店に限定せず、釣行前後に釣具を購入できる店舗として採用する。地図位置は公開地図の店舗地点で確認した。",
+          "sources": [
+            "https://www.hc-yutoku.jp/store/",
+            "https://www.hc-yutoku.jp/item/",
+            "https://map.yahoo.co.jp/v3/place/eA9IDAMd7oE"
+          ]
         }
       ]
     }

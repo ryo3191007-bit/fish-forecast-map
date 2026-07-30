@@ -71,4 +71,16 @@ export const fishingShops: readonly FishingShop[] = [
     checkedAt: "2026-07-30",
     source: { ...MARUKIN_SOURCE, url: "https://marukin-net.co.jp/store/hirado/" },
   },
+  {
+    id: "yutoku-ikitsuki", name: "ホームセンターユートク 生月店",
+    latitude: 33.3683194, longitude: 129.4344043,
+    address: "〒859-5704 長崎県平戸市生月町山田免1051-6",
+    officialUrl: "https://www.hc-yutoku.jp/store/", phone: "0950-20-5033",
+    openingHours: "9:00〜18:00", openingHoursCheckedAt: "2026-07-30",
+    checkedAt: "2026-07-30",
+    source: {
+      label: "ホームセンターユートク 公式店舗一覧・取扱商品",
+      url: "https://www.hc-yutoku.jp/store/",
+    },
+  },
 ];
