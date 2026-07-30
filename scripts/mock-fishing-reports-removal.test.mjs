@@ -11,7 +11,7 @@ assert.ok(!dashboard.includes("adjustedMockFishingReports"), "the mock score adj
 assert.ok(!map.includes("reports:") && !map.includes("reportMarkers") && !map.includes("createPopupContent(report"), "the map cannot create mock markers or mock popups");
 assert.ok(!map.includes("SCORE ${report.forecast.score}") && !map.includes("scoreColor("), "the map cannot render a mock SCORE");
 assert.ok(map.includes("const spotMarkers = spots.map") && map.includes("const memoMarkers = mappableExternalMemos.map"), "spot and registered catch markers remain");
-assert.ok(map.includes("const markerPoints = [...spots, ...mappableExternalMemos]"), "map bounds include spots and registered catches");
+assert.ok(map.includes("const markerPoints = [...spots, ...mappableExternalMemos, ...fishingShops]"), "map bounds include spots, registered catches, and independent shop POIs");
 assert.ok(map.includes("spots.length === 0 && mappableExternalMemos.length === 0"), "existing spots prevent the empty-map message");
 assert.ok(dashboard.includes("focusRequest={mapFocusRequest}") && map.includes("spotMarkersRef.current.get(focusRequest.spotId)"), "map focus remains wired to spot markers");
 console.log("mock fishing report removal checks passed");
