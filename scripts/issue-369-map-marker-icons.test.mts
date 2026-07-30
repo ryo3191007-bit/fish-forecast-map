@@ -6,9 +6,16 @@ assert.deepEqual(["漁港", "堤防", "地磯", "磯場", "サーフ", "河口",
 assert.deepEqual(MAP_MARKER_LEGEND.map(({ kind }) => kind), ["port", "rock", "surf", "place", "catch"]);
 for (const { kind } of MAP_MARKER_LEGEND) assert.match(mapMarkerIconSvg(kind), /^<svg[^>]+aria-hidden="true"/);
 const map = readFileSync(new URL("../src/components/FishingMap.tsx", import.meta.url), "utf8");
+const styles = readFileSync(new URL("../src/app/globals.css", import.meta.url), "utf8");
 assert.match(map, /markerKindForSpotType\(spot\.spotType\)/);
-assert.match(map, /mapIconMarker--catch/);
+assert.match(map, /<span class="mapIconMarkerPin mapIconMarker--\$\{markerKind\}">/);
+assert.match(map, /<span class="mapIconMarkerPin mapIconMarker--catch">/);
 assert.match(map, /setAttribute\("aria-label", `\$\{memo\.spotName\}の登録済み釣果`\)/);
 assert.match(map, /createExternalMemoPopupContent\(memo\)/, "catch popup remains wired");
 assert.match(map, /className="mapMarkerLegend" aria-label="マーカー凡例"/);
+const markerRootRule = styles.match(/\.mapIconMarker\s*\{([^}]*)\}/)?.[1] ?? "";
+const markerPinRule = styles.match(/\.mapIconMarkerPin\s*\{([^}]*)\}/)?.[1] ?? "";
+assert.doesNotMatch(markerRootRule, /transform\s*:/, "MapLibre-managed marker root must not define a visual transform");
+assert.match(markerPinRule, /transform:\s*rotate\(-45deg\)/, "inner pin owns the visual rotation");
+assert.match(styles, /\.mapIconMarkerPin svg\s*\{\s*transform:\s*rotate\(45deg\)/, "the icon counter-rotates inside the pin");
 console.log("Issue #369 map marker icon checks passed");

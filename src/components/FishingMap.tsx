@@ -773,9 +773,9 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       const element = document.createElement("button");
       element.type = "button";
       const markerKind = markerKindForSpotType(spot.spotType);
-      element.className = `mapIconMarker fishingSpotMarker mapIconMarker--${markerKind}`;
+      element.className = "mapIconMarker fishingSpotMarker";
       element.setAttribute("aria-label", `${spot.name}（${spot.spotType}）の地点`);
-      element.innerHTML = mapMarkerIconSvg(markerKind);
+      element.innerHTML = `<span class="mapIconMarkerPin mapIconMarker--${markerKind}">${mapMarkerIconSvg(markerKind)}</span>`;
       const popup = registerPopup(
         new maplibregl.Popup({ offset: 18, maxWidth: "min(220px, calc(100vw - 24px))" }),
       );
@@ -794,9 +794,9 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
     const memoMarkers = mappableExternalMemos.map((memo) => {
       const element = document.createElement("button");
       element.type = "button";
-      element.className = "mapIconMarker catchMarker mapIconMarker--catch";
+      element.className = "mapIconMarker catchMarker";
       element.setAttribute("aria-label", `${memo.spotName}の登録済み釣果`);
-      element.innerHTML = mapMarkerIconSvg("catch");
+      element.innerHTML = `<span class="mapIconMarkerPin mapIconMarker--catch">${mapMarkerIconSvg("catch")}</span>`;
       return new maplibregl.Marker({ element })
         .setLngLat([memo.longitude, memo.latitude])
         .setPopup(

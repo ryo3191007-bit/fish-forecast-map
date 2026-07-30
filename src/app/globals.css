@@ -528,22 +528,29 @@ p {
   line-height: 26px;
 }
 .mapIconMarker {
-  display: grid; place-items: center; width: 32px; height: 32px; padding: 5px;
+  display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
+  border: 0; background: transparent; cursor: pointer;
+}
+.mapIconMarkerPin {
+  display: grid; place-items: center; width: 100%; height: 100%; padding: 5px;
   border: 2px solid #fff; border-radius: 50% 50% 50% 12px; color: #fff;
   box-shadow: 0 2px 8px rgba(2, 8, 23, 0.65);
-  cursor: pointer; transform: rotate(-45deg);
+  transform: rotate(-45deg);
 }
-.mapIconMarker svg, .mapLegendIcon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.mapIconMarker svg { transform: rotate(45deg); }
+.mapIconMarkerPin svg, .mapLegendIcon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.mapIconMarkerPin svg { transform: rotate(45deg); }
 .mapIconMarker--port { background: #0369a1; }
 .mapIconMarker--rock { background: #475569; }
 .mapIconMarker--surf { background: #0891b2; }
 .mapIconMarker--place { background: #15803d; }
 .mapIconMarker--catch { background: #9333ea; }
-.mapIconMarker:focus-visible { outline: 3px solid #fef08a; outline-offset: 3px; }
+.mapIconMarker:focus-visible { outline: none; }
+.mapIconMarker:focus-visible .mapIconMarkerPin { outline: 3px solid #fef08a; outline-offset: 3px; }
 .fishingSpotMarker.focused {
   width: 40px;
   height: 40px;
+}
+.fishingSpotMarker.focused .mapIconMarkerPin {
   border-color: #fef08a;
   box-shadow: 0 0 0 7px rgba(254, 240, 138, 0.38), 0 3px 12px rgba(2, 8, 23, 0.8);
 }
