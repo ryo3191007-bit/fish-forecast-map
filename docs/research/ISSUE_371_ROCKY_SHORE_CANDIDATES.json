@@ -1,16 +1,23 @@
 {
   "issue": 371,
   "checkedOn": "2026-07-30",
-  "scope": "糸島西岸から生月までの陸っぱり地磯・磯場候補の初回横断調査",
+  "scope": "糸島西岸から生月までの陸っぱり地磯・磯場候補について、地域ごとに候補発見フェーズを再実施した横断調査",
   "principles": {
     "coordinateMeaning": "代表座標であり、実釣位置、入口、安全な経路または立入可能範囲を示さない",
     "accessAndFishing": "一般アクセスと釣り利用可否を地形の存在から推測しない",
-    "speciesAndMethods": "地点へ直接対応する十分な根拠がない限り本番値を空配列にする"
+    "speciesAndMethods": "地点へ直接対応する十分な根拠がない限り本番値を空配列にする",
+    "discoveryAudit": "候補数を採用条件にせず、地域ごとに探索範囲と確認した資料群を記録する"
   },
   "areas": [
     {
       "area": "糸島西岸",
-      "result": "既存地点との重複を避けると、このPRで安全に独立採用できる候補なし",
+      "searchSummary": "自治体・県の観光情報で安定名称の海岸・岬を探索し、地理院地図で芥屋大門、姉子の浜、立石山西麓の海岸形状と既存地点との重複を確認した。砂浜または展望登山の案内だけの地点を地磯へ読み替えなかった。",
+      "sourceFamiliesChecked": [
+        "福岡県公式観光情報",
+        "糸島市公式観光情報",
+        "国土地理院地図"
+      ],
+      "result": "既存地点との重複、地形不一致、磯への一般経路不足により追加採用なし",
       "candidates": [
         {
           "name": "芥屋大門周辺の岩礁海岸",
@@ -31,12 +38,53 @@
               "checkedOn": "2026-07-30"
             }
           ]
+        },
+        {
+          "name": "姉子の浜",
+          "physicalExistence": "confirmed_sandy_beach",
+          "generalAccess": "beach_access_confirmed",
+          "fishingUse": "unknown",
+          "decision": "rejected_terrain_mismatch",
+          "reason": "公式案内と地図が示す主対象は砂浜であり、地磯候補として独立採用しない",
+          "sources": [
+            {
+              "label": "福岡県観光Web 姉子の浜",
+              "url": "https://www.crossroadfukuoka.jp/spot/12567",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "地理院地図 姉子の浜",
+              "url": "https://maps.gsi.go.jp/#16/33.5728/130.0547/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        },
+        {
+          "name": "立石山西麓の岩礁海岸",
+          "physicalExistence": "confirmed",
+          "generalAccess": "unknown",
+          "fishingUse": "unknown",
+          "decision": "deferred",
+          "reason": "地理院地図では岩礁海岸を確認できるが、安定した個別磯名、一般経路、釣り利用を確認できない",
+          "sources": [
+            {
+              "label": "地理院地図 立石山西麓",
+              "url": "https://maps.gsi.go.jp/#16/33.5780/130.1190/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
         }
       ]
     },
     {
       "area": "唐津湾周辺",
-      "result": "島・広域地点との重複および陸っぱり経路の不足により採用保留",
+      "searchSummary": "唐津市・県の観光情報から湾岸の島、海岸景勝地、砂浜を探索し、地理院地図で高島、立神岩、浜崎海岸の地形を照合した。観光アクセスと岩礁への進入を分離した。",
+      "sourceFamiliesChecked": [
+        "佐賀県公式観光情報",
+        "唐津観光協会公式情報",
+        "国土地理院地図"
+      ],
+      "result": "既存広域地点との重複、磯経路不足、砂浜地形のため追加採用なし",
       "candidates": [
         {
           "name": "高島外周の岩礁海岸",
@@ -52,26 +100,61 @@
               "checkedOn": "2026-07-30"
             }
           ]
+        },
+        {
+          "name": "立神岩周辺",
+          "physicalExistence": "confirmed",
+          "generalAccess": "unknown",
+          "fishingUse": "unknown",
+          "decision": "deferred",
+          "reason": "地理院地図で名称と岩礁地形は確認できるが、一般アクセス、岩礁への安全な進入、釣り利用は確認できない",
+          "sources": [
+            {
+              "label": "地理院地図 立神岩",
+              "url": "https://maps.gsi.go.jp/#17/33.5104/129.9740/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        },
+        {
+          "name": "浜崎海岸",
+          "physicalExistence": "confirmed_sandy_beach",
+          "generalAccess": "beach_access_confirmed",
+          "fishingUse": "unknown",
+          "decision": "rejected_terrain_mismatch",
+          "reason": "主要地形は砂浜であり地磯候補として扱わない",
+          "sources": [
+            {
+              "label": "唐津観光協会 浜崎海岸",
+              "url": "https://www.karatsu-kankou.jp/spots/detail/24/",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "地理院地図 浜崎海岸",
+              "url": "https://maps.gsi.go.jp/#15/33.4505/130.0380/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
         }
       ]
     },
     {
       "area": "呼子・鎮西",
-      "result": "波戸岬の磯場1地点を概略代表点として採用",
+      "searchSummary": "佐賀県・唐津観光協会の景勝地一覧と地理院地図から波戸岬、七ツ釜を候補化した。七ツ釜は柱状節理、海食洞、駐車場・徒歩観光、周辺の釣り人気まで確認したが、観光歩道を磯への安全な進入経路とはみなさなかった。",
+      "sourceFamiliesChecked": [
+        "佐賀県公式観光情報",
+        "唐津観光協会公式情報",
+        "国土地理院地図"
+      ],
+      "result": "波戸岬の磯場1地点を概略代表点として維持し、七ツ釜は磯進入と利用可否の確認待ち",
       "candidates": [
         {
           "name": "波戸岬の磯場",
-          "spotId": "hado-cape-rocky-shore",
           "physicalExistence": "confirmed",
           "generalAccess": "cape_access_confirmed_shore_route_unknown",
           "fishingUse": "unknown",
           "decision": "adopted",
           "reason": "公的観光案内と公的地図で岬、海岸地形、岬へのアクセスを確認でき、既存の波戸漁港とは別地点。磯場への経路と釣り利用は未確認として明示する",
-          "representativeCoordinate": {
-            "latitude": 33.5519,
-            "longitude": 129.8396,
-            "precision": "approximate"
-          },
           "sources": [
             {
               "label": "佐賀県公式観光 波戸岬",
@@ -83,13 +166,50 @@
               "url": "https://maps.gsi.go.jp/#17/33.5519/129.8396/",
               "checkedOn": "2026-07-30"
             }
+          ],
+          "spotId": "hado-cape-rocky-shore",
+          "representativeCoordinate": {
+            "latitude": 33.5519,
+            "longitude": 129.8396,
+            "precision": "approximate"
+          }
+        },
+        {
+          "name": "七ツ釜",
+          "physicalExistence": "confirmed",
+          "generalAccess": "parking_and_sightseeing_walk_confirmed_shore_entry_unknown",
+          "fishingUse": "nearby_popularity_confirmed_permission_unknown",
+          "decision": "deferred",
+          "reason": "玄武岩の柱状節理と海食洞、駐車場からの徒歩観光、近辺が釣人に人気との公式記載はある。ただし磯への安全な進入地点、経路、規制・許可を確定できないため採用しない",
+          "sources": [
+            {
+              "label": "佐賀県公式観光 七ツ釜",
+              "url": "https://www.asobo-saga.jp/spots/detail/a5cf8dd0-9218-4395-8540-b137a30c8165",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "唐津観光協会 七ツ釜",
+              "url": "https://www.karatsu-kankou.jp/spots/detail/4/",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "地理院地図 七ツ釜",
+              "url": "https://maps.gsi.go.jp/#17/33.6058/129.8945/",
+              "checkedOn": "2026-07-30"
+            }
           ]
         }
       ]
     },
     {
       "area": "伊万里湾",
-      "result": "島嶼景観と陸っぱり可能な磯場を分離できず採用保留",
+      "searchSummary": "県・市の観光情報で多島海、展望地点、福島西岸の安定名称を探索し、地理院地図でいろは島、土谷棚田前面海岸、竹の古場公園の位置関係を確認した。眺望対象・展望所と到達可能な磯を分離した。",
+      "sourceFamiliesChecked": [
+        "佐賀県公式観光情報",
+        "松浦市公式観光情報",
+        "国土地理院地図"
+      ],
+      "result": "島嶼景観・展望地点と一般到達可能な磯場を分離できず追加採用なし",
       "candidates": [
         {
           "name": "いろは島周辺",
@@ -105,12 +225,48 @@
               "checkedOn": "2026-07-30"
             }
           ]
+        },
+        {
+          "name": "土谷棚田前面の岩礁海岸",
+          "physicalExistence": "confirmed",
+          "generalAccess": "unknown",
+          "fishingUse": "unknown",
+          "decision": "deferred",
+          "reason": "地理院地図で海岸地形は確認できるが、個別磯名、一般経路、釣り利用を確認できない",
+          "sources": [
+            {
+              "label": "地理院地図 土谷棚田前面海岸",
+              "url": "https://maps.gsi.go.jp/#16/33.3660/129.8200/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        },
+        {
+          "name": "竹の古場公園から望む湾岸",
+          "physicalExistence": "confirmed_viewpoint",
+          "generalAccess": "unknown",
+          "fishingUse": "unknown",
+          "decision": "rejected_access_mismatch",
+          "reason": "地理院地図上の公園と海岸の位置関係だけでは、海岸を一般到達可能な独立地磯とは判断できない",
+          "sources": [
+            {
+              "label": "地理院地図 竹の古場公園",
+              "url": "https://maps.gsi.go.jp/#16/33.3270/129.8720/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
         }
       ]
     },
     {
       "area": "松浦",
-      "result": "沿岸候補は確認したが一般アクセスと釣り利用の直接根拠不足で採用保留",
+      "searchSummary": "松浦市の公式観光情報と地理院地図で本土側・鷹島側の岬、半島、海岸を探索し、星鹿半島北岸と鷹島北岸を照合した。安定した広域名だけの海岸は個別地磯として採用しなかった。",
+      "sourceFamiliesChecked": [
+        "松浦市公式観光情報",
+        "長崎県公式観光情報",
+        "国土地理院地図"
+      ],
+      "result": "沿岸地形は確認したが個別地磯名、一般経路、釣り利用の根拠不足で追加採用なし",
       "candidates": [
         {
           "name": "星鹿半島北岸の岩礁海岸",
@@ -126,24 +282,100 @@
               "checkedOn": "2026-07-30"
             }
           ]
+        },
+        {
+          "name": "鷹島北岸の岩礁海岸",
+          "physicalExistence": "confirmed",
+          "generalAccess": "unknown",
+          "fishingUse": "unknown",
+          "decision": "deferred",
+          "reason": "地理院地図で北岸の岩礁地形は確認できるが、個別磯への一般経路や利用可否を確認できない",
+          "sources": [
+            {
+              "label": "地理院地図 鷹島北岸",
+              "url": "https://maps.gsi.go.jp/#15/33.4560/129.7530/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        },
+        {
+          "name": "不老山公園から望む海岸",
+          "physicalExistence": "confirmed_viewpoint",
+          "generalAccess": "unknown",
+          "fishingUse": "unknown",
+          "decision": "rejected_access_mismatch",
+          "reason": "地理院地図上の公園と海岸の位置関係だけでは、眼下の海岸への進入を推定できない",
+          "sources": [
+            {
+              "label": "地理院地図 不老山",
+              "url": "https://maps.gsi.go.jp/#16/33.3680/129.6980/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
         }
       ]
     },
     {
       "area": "平戸",
-      "result": "候補海岸は確認したが岩場の独立地点化に必要な根拠不足で採用保留",
+      "searchSummary": "平戸観光協会と地理院地図で西岸の著名海岸・集落海岸を探索し、人津久、根獅子、春日集落前面を確認した。砂浜への観光アクセス、集落訪問、岩場進入を別の事実として評価した。",
+      "sourceFamiliesChecked": [
+        "平戸観光協会公式情報",
+        "長崎県公式観光情報",
+        "国土地理院地図"
+      ],
+      "result": "岩場の独立地点化に必要な一般経路と釣り利用の直接根拠不足で追加採用なし",
       "candidates": [
         {
           "name": "人津久海岸両端の岩場",
           "physicalExistence": "confirmed",
-          "generalAccess": "beach_access_only_confirmed",
+          "generalAccess": "unknown",
           "fishingUse": "unknown",
           "decision": "deferred",
-          "reason": "海岸への観光アクセスと岩場への安全な一般経路は同一ではなく、後者を確認できない",
+          "reason": "海岸両端の岩場は確認できるが、一般アクセスと安全な経路は確認できない",
           "sources": [
             {
               "label": "地理院地図 人津久海岸",
               "url": "https://maps.gsi.go.jp/#16/33.3510/129.4240/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        },
+        {
+          "name": "根獅子の浜",
+          "physicalExistence": "confirmed_sandy_beach",
+          "generalAccess": "beach_access_confirmed",
+          "fishingUse": "unknown",
+          "decision": "rejected_terrain_mismatch",
+          "reason": "公式情報の主対象は砂浜の海水浴場で、地磯候補として独立採用しない",
+          "sources": [
+            {
+              "label": "平戸観光協会 根獅子の浜海水浴場",
+              "url": "https://www.hirado-net.com/area/detail.php?id=87",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "地理院地図 根獅子の浜",
+              "url": "https://maps.gsi.go.jp/#16/33.3220/129.4350/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        },
+        {
+          "name": "春日集落前面の岩礁海岸",
+          "physicalExistence": "confirmed",
+          "generalAccess": "settlement_access_confirmed_shore_route_unknown",
+          "fishingUse": "unknown",
+          "decision": "deferred",
+          "reason": "公式情報で集落訪問は確認できるが、前面岩礁への一般経路・釣り利用・規制は確認できない",
+          "sources": [
+            {
+              "label": "平戸観光協会 春日集落",
+              "url": "https://www.hirado-net.com/area/detail.php?id=211",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "地理院地図 春日集落海岸",
+              "url": "https://maps.gsi.go.jp/#16/33.2900/129.4200/",
               "checkedOn": "2026-07-30"
             }
           ]
@@ -152,7 +384,13 @@
     },
     {
       "area": "生月",
-      "result": "大バエは断崖上の観光地点であり陸っぱり磯場として不採用",
+      "searchSummary": "平戸観光協会の生月エリア一覧と地理院地図から大バエ、塩俵の断崖、長瀬八洞・はなぐり洞門を候補化した。断崖上の観光設備、海食地形の存在、海岸への到達可能性を分離し、「陸上から見られない」とする公式情報をアクセス不一致に反映した。",
+      "sourceFamiliesChecked": [
+        "平戸観光協会公式情報",
+        "長崎県公式観光情報",
+        "国土地理院地図"
+      ],
+      "result": "主要な断崖・海食洞を確認したが、断崖上のみのアクセスまたは陸上アクセス不一致のため追加採用なし",
       "candidates": [
         {
           "name": "大バエ断崖下",
@@ -170,6 +408,51 @@
             {
               "label": "地理院地図 大バエ",
               "url": "https://maps.gsi.go.jp/#16/33.4365/129.4270/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        },
+        {
+          "name": "塩俵の断崖",
+          "physicalExistence": "confirmed_cliff",
+          "generalAccess": "parking_and_viewing_area_confirmed_cliff_base_unknown",
+          "fishingUse": "unknown",
+          "decision": "rejected_access_mismatch",
+          "reason": "公式情報は高さ約20m・南北約500mの柱状節理の断崖と駐車場を案内するが、断崖基部への経路を示さないため陸っぱり磯候補として採用しない",
+          "sources": [
+            {
+              "label": "平戸観光協会 塩俵の断崖",
+              "url": "https://www.hirado-net.com/area/detail.php?id=192",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "地理院地図 塩俵の断崖",
+              "url": "https://maps.gsi.go.jp/#17/33.4075/129.4185/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        },
+        {
+          "name": "長瀬八洞・はなぐり洞門",
+          "physicalExistence": "confirmed_sea_caves",
+          "generalAccess": "not_viewable_from_land",
+          "fishingUse": "unknown",
+          "decision": "rejected_access_mismatch",
+          "reason": "公式情報が海食洞は陸上から見ることができず駐車場もないと明記しており、陸っぱり候補のアクセス条件と一致しない",
+          "sources": [
+            {
+              "label": "平戸観光協会 長瀬八洞・はなぐり洞門",
+              "url": "https://www.hirado-net.com/area/detail.php?id=190",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "平戸観光協会 旧ページ 長瀬八洞・はなぐり洞門",
+              "url": "https://www.hirado-net.com/see/ikitsuki/see66/",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "地理院地図 生月西岸",
+              "url": "https://maps.gsi.go.jp/#16/33.3900/129.4120/",
               "checkedOn": "2026-07-30"
             }
           ]
