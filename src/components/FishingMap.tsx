@@ -173,7 +173,9 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   const spotMarkersRef = useRef(new Map<string, maplibregl.Marker>());
   const activePopupRef = useRef<maplibregl.Popup | null>(null);
   const focusedSpotIdRef = useRef<string | null>(null);
+  const markerVisibilityButtonRef = useRef<HTMLButtonElement | null>(null);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
+  const [markersVisible, setMarkersVisible] = useState(true);
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
   const [terrainExaggeration, setTerrainExaggeration] = useState(
     BATHYMETRY_EXAGGERATION_DEFAULT,
@@ -247,6 +249,32 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
     map.on("load", onLoad);
     map.on("error", onError);
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
+    const markerVisibilityControl: maplibregl.IControl = {
+      onAdd() {
+        const control = document.createElement("div");
+        control.className =
+          "maplibregl-ctrl maplibregl-ctrl-group markerVisibilityControl";
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "markerVisibilityButton";
+        button.setAttribute("aria-label", "マーカーと凡例を非表示にする");
+        button.setAttribute("aria-pressed", "true");
+        button.title = "マーカーと凡例を非表示にする";
+        button.innerHTML =
+          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/><path class="markerVisibilitySlash" d="M4 4l16 16"/></svg>';
+        button.addEventListener("click", () =>
+          setMarkersVisible((current) => !current),
+        );
+        control.append(button);
+        markerVisibilityButtonRef.current = button;
+        return control;
+      },
+      onRemove() {
+        markerVisibilityButtonRef.current?.parentElement?.remove();
+        markerVisibilityButtonRef.current = null;
+      },
+    };
+    map.addControl(markerVisibilityControl);
     map.addControl(new maplibregl.AttributionControl({ compact: true }));
 
     return () => {
@@ -258,6 +286,18 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       mapRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    const button = markerVisibilityButtonRef.current;
+    if (!button) return;
+    const label = markersVisible
+      ? "マーカーと凡例を非表示にする"
+      : "マーカーと凡例を表示する";
+    button.setAttribute("aria-label", label);
+    button.setAttribute("aria-pressed", String(markersVisible));
+    button.title = label;
+    button.classList.toggle("markersAreHidden", !markersVisible);
+  }, [markersVisible]);
 
   useEffect(() => {
     let cancelled = false;
@@ -912,17 +952,21 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
     <div className="mapFrame">
       <MapLayerToggle value={mapLayerMode} onChange={handleLayerModeChange} />
       <div className="mapShell">
-      <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
-      <div className="mapMarkerLegend" aria-label="マーカー凡例">
-        {MAP_MARKER_LEGEND.map(({ kind, label }) => (
-          <span key={kind}>
-            <i
-              className={`mapLegendIcon mapIconMarker--${kind}`}
-              dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }}
-            />
-            {label}
-          </span>
-        ))}
+      <div className={`mapViewport${markersVisible ? "" : " markersHidden"}`}>
+        <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
+        {markersVisible ? (
+          <div className="mapMarkerLegend" aria-label="マーカー凡例">
+            {MAP_MARKER_LEGEND.map(({ kind, label }) => (
+              <span key={kind}>
+                <i
+                  className={`mapLegendIcon mapIconMarker--${kind}`}
+                  dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }}
+                />
+                {label}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </div>
       {mapLayerMode === "bathymetry" ? (
         <>
