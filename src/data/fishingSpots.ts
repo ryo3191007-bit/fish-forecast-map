@@ -796,6 +796,23 @@ export const fishingSpots: FishingSpot[] = [
       "魚種・釣法・設備・地形・SCORE情報は直接根拠不足のため掲載していません。",
     ],
     coordinatePrecision: "approximate",
+  },
+  {
+    id: "hado-cape-rocky-shore",
+    name: "波戸岬の磯場",
+    areaName: "呼子・鎮西",
+    latitude: 33.5519,
+    longitude: 129.8396,
+    spotType: "磯場",
+    shoreAccess: "不明",
+    targetSpecies: [],
+    recommendedMethods: [],
+    notes: [
+      "波戸岬の海岸地形を識別する概略代表点です。正確な実釣位置、進入路、足場、危険箇所を示しません。",
+      "岬への一般アクセスは公的観光案内で確認しましたが、磯場への立入経路と釣り可否は未確認です。現地表示と管理者の最新案内を優先してください。",
+      "魚種・釣法・SCORE情報は地点に直接対応する十分な根拠がないため掲載していません。",
+    ],
+    coordinatePrecision: "approximate",
   }
 ];
 

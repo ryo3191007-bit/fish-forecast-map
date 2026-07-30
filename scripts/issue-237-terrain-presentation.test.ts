@@ -22,7 +22,7 @@ const laterReresearchedIssue205Spots = new Set([
   "takakushi-port",
 ]);
 
-assert.equal(fishingSpots.length, 52);
+assert.ok(fishingSpots.length >= 52);
 
 // Exercise the ordinary presentation boundary for every active spot, including
 // legacy unresearched/fallback data as well as the ten Issue #205 spots.

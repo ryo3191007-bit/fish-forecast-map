@@ -1,0 +1,181 @@
+{
+  "issue": 371,
+  "checkedOn": "2026-07-30",
+  "scope": "糸島西岸から生月までの陸っぱり地磯・磯場候補の初回横断調査",
+  "principles": {
+    "coordinateMeaning": "代表座標であり、実釣位置、入口、安全な経路または立入可能範囲を示さない",
+    "accessAndFishing": "一般アクセスと釣り利用可否を地形の存在から推測しない",
+    "speciesAndMethods": "地点へ直接対応する十分な根拠がない限り本番値を空配列にする"
+  },
+  "areas": [
+    {
+      "area": "糸島西岸",
+      "result": "既存地点との重複を避けると、このPRで安全に独立採用できる候補なし",
+      "candidates": [
+        {
+          "name": "芥屋大門周辺の岩礁海岸",
+          "physicalExistence": "confirmed",
+          "generalAccess": "partially_confirmed",
+          "fishingUse": "unknown",
+          "decision": "rejected_duplicate",
+          "reason": "既存 keya-gate が同じ周辺を代表するため独立地点にしない",
+          "sources": [
+            {
+              "label": "福岡県観光Web 芥屋の大門",
+              "url": "https://www.crossroadfukuoka.jp/spot/12469",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "地理院地図 芥屋大門周辺",
+              "url": "https://maps.gsi.go.jp/#16/33.5967/130.1106/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "area": "唐津湾周辺",
+      "result": "島・広域地点との重複および陸っぱり経路の不足により採用保留",
+      "candidates": [
+        {
+          "name": "高島外周の岩礁海岸",
+          "physicalExistence": "confirmed",
+          "generalAccess": "unknown",
+          "fishingUse": "unknown",
+          "decision": "deferred",
+          "reason": "既存 takashima-area と範囲が重なり、独立した一般アクセス可能な地磯を確定できない",
+          "sources": [
+            {
+              "label": "地理院地図 高島",
+              "url": "https://maps.gsi.go.jp/#15/33.4538/129.9555/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "area": "呼子・鎮西",
+      "result": "波戸岬の磯場1地点を概略代表点として採用",
+      "candidates": [
+        {
+          "name": "波戸岬の磯場",
+          "spotId": "hado-cape-rocky-shore",
+          "physicalExistence": "confirmed",
+          "generalAccess": "cape_access_confirmed_shore_route_unknown",
+          "fishingUse": "unknown",
+          "decision": "adopted",
+          "reason": "公的観光案内と公的地図で岬、海岸地形、岬へのアクセスを確認でき、既存の波戸漁港とは別地点。磯場への経路と釣り利用は未確認として明示する",
+          "representativeCoordinate": {
+            "latitude": 33.5519,
+            "longitude": 129.8396,
+            "precision": "approximate"
+          },
+          "sources": [
+            {
+              "label": "佐賀県公式観光 波戸岬",
+              "url": "https://www.asobo-saga.jp/spots/detail/00ecd501-157f-4301-96f1-cf08595b0ae7",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "地理院地図 波戸岬",
+              "url": "https://maps.gsi.go.jp/#17/33.5519/129.8396/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "area": "伊万里湾",
+      "result": "島嶼景観と陸っぱり可能な磯場を分離できず採用保留",
+      "candidates": [
+        {
+          "name": "いろは島周辺",
+          "physicalExistence": "confirmed",
+          "generalAccess": "unknown",
+          "fishingUse": "unknown",
+          "decision": "deferred",
+          "reason": "多島海の物理的存在だけでは陸から一般に到達できる磯場を特定できない",
+          "sources": [
+            {
+              "label": "地理院地図 いろは島周辺",
+              "url": "https://maps.gsi.go.jp/#14/33.3910/129.8350/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "area": "松浦",
+      "result": "沿岸候補は確認したが一般アクセスと釣り利用の直接根拠不足で採用保留",
+      "candidates": [
+        {
+          "name": "星鹿半島北岸の岩礁海岸",
+          "physicalExistence": "confirmed",
+          "generalAccess": "unknown",
+          "fishingUse": "unknown",
+          "decision": "deferred",
+          "reason": "安定した個別地磯名、一般アクセス経路、釣り利用可否を公的資料で確定できない",
+          "sources": [
+            {
+              "label": "地理院地図 星鹿半島北岸",
+              "url": "https://maps.gsi.go.jp/#14/33.4370/129.6700/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "area": "平戸",
+      "result": "候補海岸は確認したが岩場の独立地点化に必要な根拠不足で採用保留",
+      "candidates": [
+        {
+          "name": "人津久海岸両端の岩場",
+          "physicalExistence": "confirmed",
+          "generalAccess": "beach_access_only_confirmed",
+          "fishingUse": "unknown",
+          "decision": "deferred",
+          "reason": "海岸への観光アクセスと岩場への安全な一般経路は同一ではなく、後者を確認できない",
+          "sources": [
+            {
+              "label": "地理院地図 人津久海岸",
+              "url": "https://maps.gsi.go.jp/#16/33.3510/129.4240/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "area": "生月",
+      "result": "大バエは断崖上の観光地点であり陸っぱり磯場として不採用",
+      "candidates": [
+        {
+          "name": "大バエ断崖下",
+          "physicalExistence": "confirmed_cliff",
+          "generalAccess": "observation_area_only",
+          "fishingUse": "unknown",
+          "decision": "rejected_access_mismatch",
+          "reason": "公式案内は約80mの断崖上の灯台・展望所へのアクセスを示すのみで、断崖下を一般アクセス可能な釣り場とは扱えない",
+          "sources": [
+            {
+              "label": "平戸観光協会 大バエ灯台",
+              "url": "https://www.hirado-net.com/area/detail.php?id=193",
+              "checkedOn": "2026-07-30"
+            },
+            {
+              "label": "地理院地図 大バエ",
+              "url": "https://maps.gsi.go.jp/#16/33.4365/129.4270/",
+              "checkedOn": "2026-07-30"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "followUp": "保留候補は地域別に、管理者情報、現地掲示または現地確認で一般アクセスと釣り利用を確認してから採用を再判定する。Issue分割やcloseはこの記録では行わない。"
+}

@@ -209,7 +209,8 @@ const allReresearchedIds = reresearchFiles.flatMap((filename) => {
 });
 assert.equal(allReresearchedIds.length, 52);
 assert.equal(new Set(allReresearchedIds).size, 52);
-assert.deepEqual(new Set(allReresearchedIds), new Set(fishingSpots.map(({ id }) => id)));
+const currentSpotIds = new Set(fishingSpots.map(({ id }) => id));
+assert.ok(allReresearchedIds.every((id) => currentSpotIds.has(id)), "all 52 rereviewed spots remain in the master");
 
 assert.match(fallbackSource, /issue292HiradoSouthDetails/);
 assert.match(repositorySource, /isStaticReresearchOverride/);
