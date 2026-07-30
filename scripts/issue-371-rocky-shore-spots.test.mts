@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fishingSpots } from "../src/data/fishingSpots.ts";
+import { mergeStaticFishingSpotAdditions } from "../src/lib/masterDataRepository.ts";
 import { hiddenBroadFishingSpotIds, isSelectableFishingSpot } from "../src/data/fishingSpotVisibility.ts";
 
 const research = JSON.parse(readFileSync(new URL("../docs/research/ISSUE_371_ROCKY_SHORE_CANDIDATES.json", import.meta.url), "utf8"));
@@ -21,23 +22,32 @@ assert.ok(candidateNames.includes("塩俵の断崖"));
 assert.ok(candidateNames.includes("長瀬八洞・はなぐり洞門"));
 const nagase = research.areas.flatMap(({ candidates }: { candidates: Array<{ name: string; decision: string }> }) => candidates).find(({ name }: { name: string }) => name === "長瀬八洞・はなぐり洞門");
 assert.equal(nagase?.decision, "rejected_access_mismatch");
-const adopted = research.areas.flatMap(({ candidates }: { candidates: Array<{ decision: string; spotId?: string }> }) => candidates.filter(({ decision }) => decision === "adopted").map(({ spotId }) => spotId));
-assert.deepEqual(adopted, ["hado-cape-rocky-shore"]);
-const adoptedSpots = fishingSpots.filter(({ id }) => id === "hado-cape-rocky-shore");
-assert.equal(adoptedSpots.length, 1, "the adopted spot exists exactly once in the growing master");
-const [spot] = adoptedSpots;
-assert.ok(spot);
-assert.equal(spot.spotType, "磯場");
-assert.equal(spot.coordinatePrecision, "approximate");
-assert.equal(spot.shoreAccess, "不明");
-assert.deepEqual(spot.targetSpecies, []);
-assert.deepEqual(spot.recommendedMethods, []);
-assert.ok(isSelectableFishingSpot(spot));
+const adoptedCandidates = research.areas.flatMap(({ candidates }: { candidates: Array<{ decision: string; spotId?: string; representativeCoordinate?: { latitude: number; longitude: number; precision: string } }> }) => candidates.filter(({ decision }) => decision === "adopted"));
+const adoptedIds = adoptedCandidates.map(({ spotId }) => spotId);
+assert.equal(new Set(adoptedIds).size, 9);
+for (const candidate of adoptedCandidates) {
+  const adoptedSpots = fishingSpots.filter(({ id }) => id === candidate.spotId);
+  assert.equal(adoptedSpots.length, 1, `${candidate.spotId} exists exactly once in the growing master`);
+  const [spot] = adoptedSpots;
+  assert.equal(spot.spotType, "磯場");
+  assert.equal(spot.coordinatePrecision, candidate.representativeCoordinate?.precision);
+  assert.equal(spot.latitude, candidate.representativeCoordinate?.latitude);
+  assert.equal(spot.longitude, candidate.representativeCoordinate?.longitude);
+  assert.equal(spot.shoreAccess, "不明");
+  assert.deepEqual(spot.targetSpecies, []);
+  assert.deepEqual(spot.recommendedMethods, []);
+  assert.ok(spot.notes?.some((note) => note.includes("実釣位置")));
+  assert.ok(spot.notes?.some((note) => note.includes("釣り可否は未確認")));
+  assert.ok(spot.notes?.some((note) => note.includes("最新案内")));
+  assert.ok(isSelectableFishingSpot(spot));
+}
+const mergedRemoteMaster = mergeStaticFishingSpotAdditions(fishingSpots.filter(({ id }) => !adoptedIds.includes(id)));
+assert.ok(adoptedIds.every((id) => mergedRemoteMaster.some((spot) => spot.id === id)), "static additions survive a successful remote master load");
 const historicalBroadSpotIds = ["yobuko-area", "fukushima-area", "takashima-area", "hirado-seto", "ikitsuki-area"];
 for (const id of historicalBroadSpotIds) {
   assert.ok(hiddenBroadFishingSpotIds.includes(id), `${id} remains hidden after the additive master update`);
   assert.ok(fishingSpots.some((candidate) => candidate.id === id), `${id} remains in the fishing-spot master`);
 }
 assert.equal(new Set(fishingSpots.map(({ id }) => id)).size, fishingSpots.length);
-assert.ok(fishingSpots.length >= 53, "the fishing-spot master retains the 53 audited spots and may grow");
+assert.ok(fishingSpots.length >= 61, "the fishing-spot master retains the audited spots and may grow");
 console.log("Issue #371 rocky-shore candidate checks passed");

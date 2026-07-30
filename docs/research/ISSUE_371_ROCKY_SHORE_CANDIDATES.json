@@ -4,7 +4,7 @@
   "scope": "糸島西岸から生月までの陸っぱり地磯・磯場候補について、地域ごとに候補発見フェーズを再実施した横断調査",
   "principles": {
     "coordinateMeaning": "代表座標であり、実釣位置、入口、安全な経路または立入可能範囲を示さない",
-    "accessAndFishing": "一般アクセスと釣り利用可否を地形の存在から推測しない",
+    "accessAndFishing": "地磯・磯場・岩礁海岸の存在、識別可能な呼称、代表位置を確認でき、重大な不適合情報や重複がなければ、一般アクセスや釣り可否が未確認でも shoreAccess「不明」と注意書きを付けて採用する。未確認を利用可能とは推測しない",
     "speciesAndMethods": "地点へ直接対応する十分な根拠がない限り本番値を空配列にする",
     "discoveryAudit": "候補数を採用条件にせず、地域ごとに探索範囲と確認した資料群を記録する"
   },
@@ -17,7 +17,7 @@
         "糸島市公式観光情報",
         "国土地理院地図"
       ],
-      "result": "既存地点との重複、地形不一致、磯への一般経路不足により追加採用なし",
+      "result": "再判定基準により採用: 立石山西麓の岩礁海岸。アクセス・釣り可否の未確認事項は本番 notes に明示する",
       "candidates": [
         {
           "name": "芥屋大門周辺の岩礁海岸",
@@ -64,15 +64,21 @@
           "physicalExistence": "confirmed",
           "generalAccess": "unknown",
           "fishingUse": "unknown",
-          "decision": "deferred",
-          "reason": "地理院地図では岩礁海岸を確認できるが、安定した個別磯名、一般経路、釣り利用を確認できない",
+          "decision": "adopted",
+          "reason": "公開情報で岩礁海岸の物理的存在、識別可能な地理的呼称、代表位置を確認でき、既存地点との実質重複や明確な立入・釣り禁止を確認していないため採用。進入路・足場・規制・釣り可否は未確認として明示する",
           "sources": [
             {
               "label": "地理院地図 立石山西麓",
               "url": "https://maps.gsi.go.jp/#16/33.5780/130.1190/",
               "checkedOn": "2026-07-30"
             }
-          ]
+          ],
+          "spotId": "tateishiyama-west-rocky-shore",
+          "representativeCoordinate": {
+            "latitude": 33.578,
+            "longitude": 130.119,
+            "precision": "approximate"
+          }
         }
       ]
     },
@@ -84,7 +90,7 @@
         "唐津観光協会公式情報",
         "国土地理院地図"
       ],
-      "result": "既存広域地点との重複、磯経路不足、砂浜地形のため追加採用なし",
+      "result": "再判定基準により採用: 立神岩周辺。アクセス・釣り可否の未確認事項は本番 notes に明示する",
       "candidates": [
         {
           "name": "高島外周の岩礁海岸",
@@ -106,15 +112,21 @@
           "physicalExistence": "confirmed",
           "generalAccess": "unknown",
           "fishingUse": "unknown",
-          "decision": "deferred",
-          "reason": "地理院地図で名称と岩礁地形は確認できるが、一般アクセス、岩礁への安全な進入、釣り利用は確認できない",
+          "decision": "adopted",
+          "reason": "公開情報で岩礁海岸の物理的存在、識別可能な地理的呼称、代表位置を確認でき、既存地点との実質重複や明確な立入・釣り禁止を確認していないため採用。進入路・足場・規制・釣り可否は未確認として明示する",
           "sources": [
             {
               "label": "地理院地図 立神岩",
               "url": "https://maps.gsi.go.jp/#17/33.5104/129.9740/",
               "checkedOn": "2026-07-30"
             }
-          ]
+          ],
+          "spotId": "tategami-rock-rocky-shore",
+          "representativeCoordinate": {
+            "latitude": 33.5104,
+            "longitude": 129.974,
+            "precision": "approximate"
+          }
         },
         {
           "name": "浜崎海岸",
@@ -146,7 +158,7 @@
         "唐津観光協会公式情報",
         "国土地理院地図"
       ],
-      "result": "波戸岬の磯場1地点を概略代表点として維持し、七ツ釜は磯進入と利用可否の確認待ち",
+      "result": "再判定基準により採用: 波戸岬の磯場、七ツ釜。アクセス・釣り可否の未確認事項は本番 notes に明示する",
       "candidates": [
         {
           "name": "波戸岬の磯場",
@@ -179,8 +191,8 @@
           "physicalExistence": "confirmed",
           "generalAccess": "parking_and_sightseeing_walk_confirmed_shore_entry_unknown",
           "fishingUse": "nearby_popularity_confirmed_permission_unknown",
-          "decision": "deferred",
-          "reason": "玄武岩の柱状節理と海食洞、駐車場からの徒歩観光、近辺が釣人に人気との公式記載はある。ただし磯への安全な進入地点、経路、規制・許可を確定できないため採用しない",
+          "decision": "adopted",
+          "reason": "公開情報で岩礁海岸の物理的存在、識別可能な地理的呼称、代表位置を確認でき、既存地点との実質重複や明確な立入・釣り禁止を確認していないため採用。進入路・足場・規制・釣り可否は未確認として明示する",
           "sources": [
             {
               "label": "佐賀県公式観光 七ツ釜",
@@ -197,7 +209,13 @@
               "url": "https://maps.gsi.go.jp/#17/33.6058/129.8945/",
               "checkedOn": "2026-07-30"
             }
-          ]
+          ],
+          "spotId": "nanatsugama-rocky-shore",
+          "representativeCoordinate": {
+            "latitude": 33.6058,
+            "longitude": 129.8945,
+            "precision": "approximate"
+          }
         }
       ]
     },
@@ -209,7 +227,7 @@
         "松浦市公式観光情報",
         "国土地理院地図"
       ],
-      "result": "島嶼景観・展望地点と一般到達可能な磯場を分離できず追加採用なし",
+      "result": "再判定基準により採用: 土谷棚田前面の岩礁海岸。アクセス・釣り可否の未確認事項は本番 notes に明示する",
       "candidates": [
         {
           "name": "いろは島周辺",
@@ -231,15 +249,21 @@
           "physicalExistence": "confirmed",
           "generalAccess": "unknown",
           "fishingUse": "unknown",
-          "decision": "deferred",
-          "reason": "地理院地図で海岸地形は確認できるが、個別磯名、一般経路、釣り利用を確認できない",
+          "decision": "adopted",
+          "reason": "公開情報で岩礁海岸の物理的存在、識別可能な地理的呼称、代表位置を確認でき、既存地点との実質重複や明確な立入・釣り禁止を確認していないため採用。進入路・足場・規制・釣り可否は未確認として明示する",
           "sources": [
             {
               "label": "地理院地図 土谷棚田前面海岸",
               "url": "https://maps.gsi.go.jp/#16/33.3660/129.8200/",
               "checkedOn": "2026-07-30"
             }
-          ]
+          ],
+          "spotId": "doya-terraces-front-rocky-shore",
+          "representativeCoordinate": {
+            "latitude": 33.366,
+            "longitude": 129.82,
+            "precision": "approximate"
+          }
         },
         {
           "name": "竹の古場公園から望む湾岸",
@@ -266,37 +290,49 @@
         "長崎県公式観光情報",
         "国土地理院地図"
       ],
-      "result": "沿岸地形は確認したが個別地磯名、一般経路、釣り利用の根拠不足で追加採用なし",
+      "result": "再判定基準により採用: 星鹿半島北岸の岩礁海岸、鷹島北岸の岩礁海岸。アクセス・釣り可否の未確認事項は本番 notes に明示する",
       "candidates": [
         {
           "name": "星鹿半島北岸の岩礁海岸",
           "physicalExistence": "confirmed",
           "generalAccess": "unknown",
           "fishingUse": "unknown",
-          "decision": "deferred",
-          "reason": "安定した個別地磯名、一般アクセス経路、釣り利用可否を公的資料で確定できない",
+          "decision": "adopted",
+          "reason": "公開情報で岩礁海岸の物理的存在、識別可能な地理的呼称、代表位置を確認でき、既存地点との実質重複や明確な立入・釣り禁止を確認していないため採用。進入路・足場・規制・釣り可否は未確認として明示する",
           "sources": [
             {
               "label": "地理院地図 星鹿半島北岸",
               "url": "https://maps.gsi.go.jp/#14/33.4370/129.6700/",
               "checkedOn": "2026-07-30"
             }
-          ]
+          ],
+          "spotId": "hoshika-peninsula-north-rocky-shore",
+          "representativeCoordinate": {
+            "latitude": 33.437,
+            "longitude": 129.67,
+            "precision": "approximate"
+          }
         },
         {
           "name": "鷹島北岸の岩礁海岸",
           "physicalExistence": "confirmed",
           "generalAccess": "unknown",
           "fishingUse": "unknown",
-          "decision": "deferred",
-          "reason": "地理院地図で北岸の岩礁地形は確認できるが、個別磯への一般経路や利用可否を確認できない",
+          "decision": "adopted",
+          "reason": "公開情報で岩礁海岸の物理的存在、識別可能な地理的呼称、代表位置を確認でき、既存地点との実質重複や明確な立入・釣り禁止を確認していないため採用。進入路・足場・規制・釣り可否は未確認として明示する",
           "sources": [
             {
               "label": "地理院地図 鷹島北岸",
               "url": "https://maps.gsi.go.jp/#15/33.4560/129.7530/",
               "checkedOn": "2026-07-30"
             }
-          ]
+          ],
+          "spotId": "takashima-north-rocky-shore",
+          "representativeCoordinate": {
+            "latitude": 33.456,
+            "longitude": 129.753,
+            "precision": "approximate"
+          }
         },
         {
           "name": "不老山公園から望む海岸",
@@ -323,22 +359,28 @@
         "長崎県公式観光情報",
         "国土地理院地図"
       ],
-      "result": "岩場の独立地点化に必要な一般経路と釣り利用の直接根拠不足で追加採用なし",
+      "result": "再判定基準により採用: 人津久海岸両端の岩場、春日集落前面の岩礁海岸。アクセス・釣り可否の未確認事項は本番 notes に明示する",
       "candidates": [
         {
           "name": "人津久海岸両端の岩場",
           "physicalExistence": "confirmed",
           "generalAccess": "unknown",
           "fishingUse": "unknown",
-          "decision": "deferred",
-          "reason": "海岸両端の岩場は確認できるが、一般アクセスと安全な経路は確認できない",
+          "decision": "adopted",
+          "reason": "公開情報で岩礁海岸の物理的存在、識別可能な地理的呼称、代表位置を確認でき、既存地点との実質重複や明確な立入・釣り禁止を確認していないため採用。進入路・足場・規制・釣り可否は未確認として明示する",
           "sources": [
             {
               "label": "地理院地図 人津久海岸",
               "url": "https://maps.gsi.go.jp/#16/33.3510/129.4240/",
               "checkedOn": "2026-07-30"
             }
-          ]
+          ],
+          "spotId": "hitotsuku-coast-rocky-ends",
+          "representativeCoordinate": {
+            "latitude": 33.351,
+            "longitude": 129.424,
+            "precision": "approximate"
+          }
         },
         {
           "name": "根獅子の浜",
@@ -365,8 +407,8 @@
           "physicalExistence": "confirmed",
           "generalAccess": "settlement_access_confirmed_shore_route_unknown",
           "fishingUse": "unknown",
-          "decision": "deferred",
-          "reason": "公式情報で集落訪問は確認できるが、前面岩礁への一般経路・釣り利用・規制は確認できない",
+          "decision": "adopted",
+          "reason": "公開情報で岩礁海岸の物理的存在、識別可能な地理的呼称、代表位置を確認でき、既存地点との実質重複や明確な立入・釣り禁止を確認していないため採用。進入路・足場・規制・釣り可否は未確認として明示する",
           "sources": [
             {
               "label": "平戸観光協会 春日集落",
@@ -378,7 +420,13 @@
               "url": "https://maps.gsi.go.jp/#16/33.2900/129.4200/",
               "checkedOn": "2026-07-30"
             }
-          ]
+          ],
+          "spotId": "kasuga-settlement-front-rocky-shore",
+          "representativeCoordinate": {
+            "latitude": 33.29,
+            "longitude": 129.42,
+            "precision": "approximate"
+          }
         }
       ]
     },

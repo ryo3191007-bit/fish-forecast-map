@@ -25,16 +25,16 @@ const HIRADO = { prefectureEntryCode: "420000", municipalityCode: "4220700", are
 
 export const JMA_AREA_BY_SPOT: Record<string, JmaAreaCode> = {
   "nokita-port": ITOSHIMA, "nokita-beach": ITOSHIMA, "keya-port": ITOSHIMA, "keya-gate": ITOSHIMA,
-  "funakoshi-port": ITOSHIMA, "kishi-port": ITOSHIMA, "fukuyoshi-port": ITOSHIMA,
+  "funakoshi-port": ITOSHIMA, "kishi-port": ITOSHIMA, "fukuyoshi-port": ITOSHIMA, "tateishiyama-west-rocky-shore": ITOSHIMA,
   "kafuri-port": ITOSHIMA, "fukae-port": ITOSHIMA, "dainyu-port": ITOSHIMA, "shikaka-port": ITOSHIMA, "fukunoura-port": ITOSHIMA,
   "hamasaki-beach": KARATSU, "niji-matsubara": KARATSU, "karatsu-east-port": KARATSU,
-  "karatsu-west-port": KARATSU, "yobuko-area": KARATSU,
-  "ouka-port": KARATSU, "kodomo-port": KARATSU, "kabeshima-port": KARATSU, "hado-port": KARATSU, "hado-cape-rocky-shore": KARATSU, "haregi-port": KARATSU,
+  "karatsu-west-port": KARATSU, "yobuko-area": KARATSU, "tategami-rock-rocky-shore": KARATSU,
+  "ouka-port": KARATSU, "kodomo-port": KARATSU, "kabeshima-port": KARATSU, "hado-port": KARATSU, "hado-cape-rocky-shore": KARATSU, "nanatsugama-rocky-shore": KARATSU, "haregi-port": KARATSU,
   "tobo-port": KARATSU, "minatohama-port": KARATSU, "nagoya-port": KARATSU, "yobuko-port": KARATSU, "takakushi-port": KARATSU,
   "imari-inner-bay": IMARI, "hatazu-fishing-port": IMARI, "imarin-beach": IMARI,
-  "fukushima-area": MATSUURA, "fukushima-port": MATSUURA, "nabegushi-fishing-port": MATSUURA,
-  "takashima-area": MATSUURA, "aonoura-fishing-port": MATSUURA, "tononoura-fishing-port": MATSUURA, "funakaratsu-fishing-port": MATSUURA,
-  "tabira-port": HIRADO, "hirado-port": HIRADO, "hirado-seto": HIRADO, "ikitsuki-area": HIRADO, "ikitsuki-fishing-port": HIRADO, "tachiura-fishing-port": HIRADO, "misaki-fishing-port": HIRADO, "tasuke-fishing-port": HIRADO, "usukawan-fishing-port": HIRADO, "hoki-fishing-port": HIRADO, "shin-shishi-fishing-port": HIRADO, "himosashi-port": HIRADO, "maetsuyoshi-fishing-port": HIRADO, "shijikiura-fishing-port": HIRADO, "miyanoura-fishing-port": HIRADO,
+  "fukushima-area": MATSUURA, "fukushima-port": MATSUURA, "nabegushi-fishing-port": MATSUURA, "doya-terraces-front-rocky-shore": MATSUURA,
+  "takashima-area": MATSUURA, "aonoura-fishing-port": MATSUURA, "tononoura-fishing-port": MATSUURA, "funakaratsu-fishing-port": MATSUURA, "hoshika-peninsula-north-rocky-shore": MATSUURA, "takashima-north-rocky-shore": MATSUURA,
+  "tabira-port": HIRADO, "hirado-port": HIRADO, "hirado-seto": HIRADO, "ikitsuki-area": HIRADO, "hitotsuku-coast-rocky-ends": HIRADO, "kasuga-settlement-front-rocky-shore": HIRADO, "ikitsuki-fishing-port": HIRADO, "tachiura-fishing-port": HIRADO, "misaki-fishing-port": HIRADO, "tasuke-fishing-port": HIRADO, "usukawan-fishing-port": HIRADO, "hoki-fishing-port": HIRADO, "shin-shishi-fishing-port": HIRADO, "himosashi-port": HIRADO, "maetsuyoshi-fishing-port": HIRADO, "shijikiura-fishing-port": HIRADO, "miyanoura-fishing-port": HIRADO,
 };
 
 export type OpenMeteoGateState = "blocked" | "clear" | "unknown";

@@ -18,6 +18,11 @@ export type MasterDataSet = { fishSpecies: FishSpecies[]; fishSpeciesAliases: Fi
 const staticFishSpecies: FishSpecies[] = createStaticFishSpecies();
 const runtimeFishingSpots = applyFishingSpotCoordinateOverrides(fishingSpots);
 const selectableRuntimeFishingSpots = filterSelectableFishingSpots(runtimeFishingSpots);
+const staticAdditiveSpotIds = new Set([
+  "hado-cape-rocky-shore", "tateishiyama-west-rocky-shore", "tategami-rock-rocky-shore", "nanatsugama-rocky-shore",
+  "doya-terraces-front-rocky-shore", "hoshika-peninsula-north-rocky-shore", "takashima-north-rocky-shore",
+  "hitotsuku-coast-rocky-ends", "kasuga-settlement-front-rocky-shore",
+]);
 const rawStaticMasterData: MasterDataSet = { fishSpecies: staticFishSpecies, fishSpeciesAliases: [...staticFishSpeciesAliases], fishingSpots: runtimeFishingSpots, externalSources };
 const staticMasterData: MasterDataSet = { ...rawStaticMasterData, fishingSpots: selectableRuntimeFishingSpots };
 
@@ -63,8 +68,14 @@ export async function fetchFishingSpotsMaster(): Promise<MasterDataResult<Fishin
   if (result.meta.source !== "supabase") return fallback(selectableRuntimeFishingSpots, result.meta.fallbackReason ?? "supabase-error", result.meta.message);
   const mapped = result.data.map(mapFishingSpotRow).filter((row): row is FishingSpot => row !== null);
   const corrected = applyFishingSpotCoordinateOverrides(mapped);
-  const selectable = filterSelectableFishingSpots(corrected);
+  const selectable = mergeStaticFishingSpotAdditions(corrected);
   return selectable.length > 0 ? { data: selectable, meta: result.meta } : fallback(selectableRuntimeFishingSpots, "empty-supabase-result");
+}
+
+export function mergeStaticFishingSpotAdditions(remoteSpots: FishingSpot[]): FishingSpot[] {
+  const remoteIds = new Set(remoteSpots.map(({ id }) => id));
+  const staticAdditions = selectableRuntimeFishingSpots.filter(({ id }) => staticAdditiveSpotIds.has(id) && !remoteIds.has(id));
+  return filterSelectableFishingSpots([...remoteSpots, ...staticAdditions]);
 }
 
 export async function fetchSourceRegistryMaster(): Promise<MasterDataResult<ExternalSource[]>> {

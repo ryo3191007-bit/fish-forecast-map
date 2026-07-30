@@ -1202,12 +1202,21 @@ function createSpotPopupContent(spot: FishingSpot, onOpenSpotEvaluation: () => v
   const title = document.createElement("strong");
   title.className = "mapPopupTitle";
   title.textContent = spot.name;
+  const notes = document.createElement("ul");
+  notes.className = "mapSpotPopupNotes";
+  for (const note of spot.notes ?? []) {
+    const item = document.createElement("li");
+    item.textContent = note;
+    notes.append(item);
+  }
   const evaluationButton = document.createElement("button");
   evaluationButton.type = "button";
   evaluationButton.className = "mapSpotEvaluationButton";
   evaluationButton.textContent = "地点評価";
   evaluationButton.addEventListener("click", onOpenSpotEvaluation);
-  popup.append(title, evaluationButton);
+  popup.append(title);
+  if (notes.childElementCount > 0) popup.append(notes);
+  popup.append(evaluationButton);
   return popup;
 }
 

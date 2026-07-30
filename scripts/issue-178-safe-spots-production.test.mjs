@@ -270,7 +270,9 @@ for (const id of targetIds) {
 }
 
 assert.equal(spots.filter((spot) => targetIdSet.has(spot.id)).length, targetIds.length, "static target rows must remain available for marker rendering");
-assert.equal(new Set(spots.map((spot) => spot.areaName)).size, 11, "area filter option derivation must still include areas from empty-array target rows");
+const masterAreaNames = new Set(spots.map((spot) => spot.areaName));
+assert.ok(masterAreaNames.size >= 11, "area filter option derivation must allow the fishing-spot master to grow");
+assert.ok(targetIds.every((id) => masterAreaNames.has(staticById.get(id).areaName)), "areas from empty-array target rows remain filterable");
 for (const id of targetIds) {
   const spot = staticById.get(id);
   assert.ok(Number.isFinite(spot.latitude) && Number.isFinite(spot.longitude), `${id} marker coordinates must remain finite`);
