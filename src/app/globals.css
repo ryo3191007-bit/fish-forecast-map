@@ -544,6 +544,7 @@ p {
 .mapIconMarker--surf { background: #0891b2; }
 .mapIconMarker--place { background: #15803d; }
 .mapIconMarker--catch { background: #9333ea; }
+.mapIconMarker--shop { background: #c2410c; }
 .mapIconMarker:focus-visible { outline: none; }
 .mapIconMarker:focus-visible .mapIconMarkerPin { outline: 3px solid #fef08a; outline-offset: 3px; }
 .fishingSpotMarker.focused {
@@ -586,6 +587,8 @@ p {
 .mapPopupMeta {
   font-weight: 700;
 }
+.mapPopupCheckedAt { color: #64748b; font-size: .72rem; }
+.mapShopOfficialLink { color: #0369a1; font-weight: 800; text-decoration: underline; text-underline-offset: 2px; }
 .notice {
   margin: 18px 0 26px;
   padding: 16px 18px 16px 20px;

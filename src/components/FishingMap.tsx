@@ -4,6 +4,8 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl from "maplibre-gl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FishingSpot } from "@/domain/fishingSpot";
+import type { FishingShop } from "@/domain/fishingShop";
+import { fishingShops } from "@/data/fishingShops";
 import { toFishingSpotMapEntry } from "@/domain/fishingSpotPresentation";
 import {
   MAP_MARKER_LEGEND,
@@ -348,7 +350,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
 
   useEffect(() => {
     const map = mapRef.current;
-    const markerPoints = [...spots, ...mappableExternalMemos];
+    const markerPoints = [...spots, ...mappableExternalMemos, ...fishingShops];
     if (!map || markerPoints.length === 0) return;
 
     const adjustMapBounds = () => {
@@ -807,12 +809,25 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
         .addTo(map);
     });
 
+    const shopMarkers = fishingShops.map((shop) => {
+      const element = document.createElement("button");
+      element.type = "button";
+      element.className = "mapIconMarker fishingShopMarker";
+      element.setAttribute("aria-label", `${shop.name}の店舗情報`);
+      element.innerHTML = `<span class="mapIconMarkerPin mapIconMarker--shop">${mapMarkerIconSvg("shop")}</span>`;
+      return new maplibregl.Marker({ element })
+        .setLngLat([shop.longitude, shop.latitude])
+        .setPopup(registerPopup(new maplibregl.Popup({ offset: 18, maxWidth: "min(300px, calc(100vw - 32px))" })
+          .setDOMContent(createFishingShopPopupContent(shop))))
+        .addTo(map);
+    });
+
     return () => {
       activePopupRef.current?.remove();
       activePopupRef.current = null;
       focusedSpotIdRef.current = null;
       spotMarkerRegistry.clear();
-      [...spotMarkers, ...memoMarkers].forEach((marker) => marker.remove());
+      [...spotMarkers, ...memoMarkers, ...shopMarkers].forEach((marker) => marker.remove());
     };
   }, [mappableExternalMemos, onOpenSpotEvaluation, spots]);
 
@@ -1076,7 +1091,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
           {bathymetryRuntime.notice}
         </div>
       ) : null}
-      {spots.length === 0 && mappableExternalMemos.length === 0 ? (
+      {spots.length === 0 && mappableExternalMemos.length === 0 && fishingShops.length === 0 ? (
         <div className="mapEmpty" aria-hidden="true">
           <strong>表示できるマーカーはありません</strong>
           <span>条件を変更するか、フィルタをリセットしてください。</span>
@@ -1141,6 +1156,41 @@ function createExternalMemoPopupContent(memo: MappableExternalMemo) {
     .filter(Boolean)
     .join(" / ");
   popup.append(title, summary, meta, note);
+  return popup;
+}
+
+function createFishingShopPopupContent(shop: FishingShop) {
+  const popup = document.createElement("div");
+  popup.className = "mapPopup mapShopPopup";
+  const title = document.createElement("strong");
+  title.className = "mapPopupTitle";
+  title.textContent = shop.name;
+  popup.append(title);
+  for (const value of [shop.address, shop.phone ? `電話: ${shop.phone}` : undefined, shop.openingHours]) {
+    if (!value) continue;
+    const detail = document.createElement("p");
+    detail.textContent = value;
+    popup.append(detail);
+  }
+  if (shop.openingHours) {
+    const checked = document.createElement("small");
+    checked.className = "mapPopupCheckedAt";
+    checked.textContent = `営業時間確認日: ${shop.openingHoursCheckedAt ?? shop.checkedAt}`;
+    popup.append(checked);
+  }
+  if (shop.officialUrl) {
+    const link = document.createElement("a");
+    link.className = "mapShopOfficialLink";
+    link.href = shop.officialUrl;
+    link.target = "_blank";
+    link.rel = "noreferrer noopener";
+    link.textContent = "公式店舗ページを確認";
+    popup.append(link);
+  }
+  const coordinateNote = document.createElement("small");
+  coordinateNote.className = "mapPopupCheckedAt";
+  coordinateNote.textContent = `店舗位置は建物・敷地の代表点 / 情報確認日: ${shop.checkedAt}`;
+  popup.append(coordinateNote);
   return popup;
 }
 

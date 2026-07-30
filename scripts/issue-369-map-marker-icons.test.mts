@@ -12,7 +12,7 @@ for (const id of ["karatsu-west-port", "karatsu-east-port", "hirado-port"]) {
 assert.equal(markerKindForSpot({ id: "niji-matsubara", spotType: "その他" }), "place");
 assert.equal(markerKindForSpot({ id: "ordinary-fishing-port", spotType: "漁港" }), "port");
 assert.equal(markerKindForSpot({ id: "ordinary-breakwater", spotType: "堤防" }), "port");
-assert.deepEqual(MAP_MARKER_LEGEND.map(({ kind }) => kind), ["port", "rock", "surf", "place", "catch"]);
+assert.deepEqual(MAP_MARKER_LEGEND.map(({ kind }) => kind), ["port", "rock", "surf", "place", "catch", "shop"]);
 assert.equal(MAP_MARKER_LEGEND.find(({ kind }) => kind === "rock")?.label, "磯");
 for (const { kind } of MAP_MARKER_LEGEND) assert.match(mapMarkerIconSvg(kind), /^<svg[^>]+aria-hidden="true"/);
 const map = readFileSync(new URL("../src/components/FishingMap.tsx", import.meta.url), "utf8");
