@@ -16,6 +16,7 @@ function compile(sourcePath, outputName, replacements = {}) {
 }
 
 compile("src/domain/jmaWarning.ts", "domain.mjs");
+compile("src/data/fishingSpots.ts", "fishing-spots.mjs");
 compile("src/server/jmaWarningParser.ts", "parser.mjs", {
   '"@/domain/jmaWarning"': '"./domain.mjs"',
 });
@@ -34,6 +35,7 @@ compile("src/server/jmaWarningsRoute.ts", "route.mjs", {
 });
 
 const domain = await import(path.join(temporaryDirectory, "domain.mjs"));
+const { fishingSpots } = await import(path.join(temporaryDirectory, "fishing-spots.mjs"));
 const parser = await import(path.join(temporaryDirectory, "parser.mjs"));
 const service = await import(path.join(temporaryDirectory, "service.mjs"));
 const presentation = await import(path.join(temporaryDirectory, "presentation.mjs"));
@@ -41,7 +43,17 @@ const route = await import(path.join(temporaryDirectory, "route.mjs"));
 const area = domain.JMA_AREA_BY_SPOT["karatsu-east-port"];
 const now = new Date("2026-07-20T03:10:00Z");
 
-assert.equal(Object.keys(domain.JMA_AREA_BY_SPOT).length, 53);
+const masterSpotIds = fishingSpots.map(({ id }) => id);
+assert.deepEqual(
+  Object.keys(domain.JMA_AREA_BY_SPOT).sort(),
+  [...masterSpotIds].sort(),
+  "JMA mappings cover the current fishing-spot master without stale entries",
+);
+assert.deepEqual(domain.JMA_AREA_BY_SPOT["hado-cape-rocky-shore"], {
+  prefectureEntryCode: "410000",
+  municipalityCode: "4120200",
+  areaName: "佐賀県唐津市",
+});
 assert.equal(area.municipalityCode, "4120200");
 
 const vpwsUrl = "https://www.data.jma.go.jp/developer/xml/data/20260720030000_0_VPWS50_000000.xml";
