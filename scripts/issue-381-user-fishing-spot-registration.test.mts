@@ -1,0 +1,31 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import { buildUserSpotDetailInput, userFishingSpotDetailItemKeys, userFishingSpotToFishingSpot, validateUserFishingSpotInput, type UserFishingSpot } from "../src/domain/userFishingSpot.ts";
+import { createSpotFieldObservationDraft } from "../src/domain/spotFieldObservation.ts";
+
+const modal = fs.readFileSync("src/components/UserFishingSpotRegistrationModal.tsx", "utf8");
+const dashboard = fs.readFileSync("src/components/FishingDashboard.tsx", "utf8");
+const card = fs.readFileSync("src/components/SpotEvaluationCard.tsx", "utf8");
+assert.match(card, /＋ 地点登録/);
+assert.match(modal, /draggable:true/);
+assert.match(modal, /instance\.on\("click"/);
+assert.match(modal, /marker\.current\?\.setLngLat/);
+assert.match(modal, /lat>=-90&&lat<=90/);
+assert.match(modal, /lng>=-180&&lng<=180/);
+assert.match(modal, /<details[^>]*>/);
+assert.doesNotMatch(modal, /<details[^>]*open/);
+assert.match(modal, /Promise\.all\(values\.map/);
+assert.match(modal, /disabled=\{submitting\}/);
+assert.match(dashboard, /setEnvironmentSpotId\(spot\.runtimeId\)/);
+assert.match(dashboard, /setMapFocusRequest\(\{ spotId: spot\.runtimeId/);
+assert.match(dashboard, /mapUserSpotDetailsForDisplay/);
+assert.match(dashboard, /<ExternalCatchMemoSection[\s\S]*?spots=\{masterData\.fishingSpots\}/, "Issue #382 catch-form integration remains out of scope");
+
+const minimal = validateUserFishingSpotInput({ name: "登録地点", latitude: 33.123456789, longitude: 129.987654321, areaName: null, spotType: null });
+assert.equal(minimal?.latitude, 33.123456789, "coordinates are not rounded");
+assert.equal(minimal?.areaName, null);
+const drafts = Object.fromEntries(userFishingSpotDetailItemKeys.map(key => [key, createSpotFieldObservationDraft()]));
+assert.equal(userFishingSpotDetailItemKeys.map(key => buildUserSpotDetailInput(key, drafts[key])).filter(Boolean).length, 0, "empty optional fields create no detail rows");
+const stored: UserFishingSpot = { id: "id", runtimeId: "user:id", name: "登録地点", latitude: 33, longitude: 130, areaName: null, spotType: null, createdAt: "", updatedAt: "" };
+assert.equal(userFishingSpotToFishingSpot(stored).id, "user:id");
+console.log("Issue #381 user fishing spot registration checks passed");

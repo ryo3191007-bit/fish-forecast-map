@@ -19,7 +19,7 @@ import type {
 import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
 import type { JmaWarningDecision } from "@/domain/jmaWarning";
 import { getJmaWarningDisplay } from "@/domain/jmaWarningPresentation";
-import { getAvailableForecastDates, getEnvironmentStatusLabel, getEvaluationReferenceTime, getFirstForecastTimeForDate, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
+import { findOwnerUserSpotDetail, formatOwnerUserSpotTerrainDetail, formatSpotDetailValue, getAvailableForecastDates, getEnvironmentStatusLabel, getEvaluationReferenceTime, getFirstForecastTimeForDate, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
 import {
   fishingDetailItems,
   resolveSpotDetailUiPresentation,
@@ -50,6 +50,8 @@ type Props = {
   jmaWarning: JmaWarningDecision | null;
   onShowAllSpecies: () => void;
   onFocusMap: () => void;
+  onOpenSpotRegistration: () => void;
+  isUserSpot?: boolean;
 };
 
 const tabs: SpotEvaluationTab[] = ["環境", "釣場", "地形", "評価"];
@@ -84,6 +86,7 @@ export function SpotEvaluationCard(props: Props) {
     <section className="spotEvaluationCard" aria-live="polite">
       <header className="spotEvaluationHeader">
         <div><p className="eyebrow">Spot evaluation</p><h2>地点評価</h2></div>
+        <button type="button" className="userSpotRegisterButton" onClick={props.onOpenSpotRegistration}>＋ 地点登録</button>
       </header>
       <div className="spotSelectionRow">
         <SpotCombobox spots={props.spots} selected={props.selectedSpot} onSelect={props.onSelectedSpotIdChange} />
@@ -113,8 +116,8 @@ export function SpotEvaluationCard(props: Props) {
       <div role="tabpanel" id={`spot-panel-${props.activeTab}`} aria-labelledby={`spot-tab-${props.activeTab}`}>
         {props.activeTab === "評価" && <EvaluationTab {...props} selectedTime={props.selectedTime} />}
         {props.activeTab === "環境" && <EnvironmentTab environment={selectedEnvironment} row={selectedRow} loading={props.isLoading} error={props.error} />}
-        {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} hiddenKeys={["target_species", "recommended_methods"]} spotId={props.selectedSpotId} fieldObservations={fieldObservations} />}
-        {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} spotId={props.selectedSpotId} fieldObservations={fieldObservations} />}
+        {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} hiddenKeys={["target_species", "recommended_methods"]} spotId={props.selectedSpotId} fieldObservations={fieldObservations} ownerOnly={props.isUserSpot} />}
+        {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} spotId={props.selectedSpotId} fieldObservations={fieldObservations} ownerOnly={props.isUserSpot} />}
         {props.activeTab === "魚種" && <SpeciesTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} catches={props.catches} spotId={props.selectedSpotId} fieldObservations={fieldObservations} />}
       </div>
     </section>
@@ -245,10 +248,11 @@ function SpeciesTab({ details, status, catches, spotId, fieldObservations }: { d
   </dl>;
 }
 
-function DetailTab({ details, status, items, spotId, fieldObservations, hiddenKeys = [], visibleKeys }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[]; spotId: string; fieldObservations: SpotFieldObservationState; hiddenKeys?: readonly string[]; visibleKeys?: readonly string[] }) {
+function DetailTab({ details, status, items, spotId, fieldObservations, hiddenKeys = [], visibleKeys, ownerOnly = false }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; items: readonly (readonly [string, string])[]; spotId: string; fieldObservations: SpotFieldObservationState; hiddenKeys?: readonly string[]; visibleKeys?: readonly string[]; ownerOnly?: boolean }) {
   const cards = items.map(([key, label]) => {
     if (hiddenKeys.includes(key) || (visibleKeys && !visibleKeys.includes(key))) return null;
-    const presentation = researchPresentation(details, status, key);
+    const presentation = ownerOnly ? ownerPresentation(details, status, key) : researchPresentation(details, status, key);
+    if (ownerOnly) return <div key={key}><dt><span className="detailIcon" aria-hidden="true">{detailIcons[key] ?? "•"}</span>{label}</dt><dd>{presentation.text}{renderResearchConfidence(presentation)}</dd></div>;
     return <SpotFieldObservationCard
       key={key}
       spotId={spotId}
@@ -265,6 +269,15 @@ function DetailTab({ details, status, items, spotId, fieldObservations, hiddenKe
     />;
   });
   return <dl className="detailGrid">{cards}</dl>;
+}
+function ownerPresentation(details: FishingSpotDetailSet | null, status: SpotDetailLoadStatus, key: string): SpotDetailUiPresentation {
+  if (status !== "ready") return researchPresentation(details, status, key);
+  if (key === "coastal_topography" || key === "spot_features") {
+    const terrain = formatOwnerUserSpotTerrainDetail(details, key);
+    return terrain ? { ...terrain, state: "displayable" } : { text: "未確定", confidence: null, state: "uncertain" };
+  }
+  const value = findOwnerUserSpotDetail(details, key);
+  return value ? { text: formatSpotDetailValue(value), confidence: value.confidence, state: "displayable" } : { text: "未確定", confidence: null, state: "uncertain" };
 }
 function StateMessage({ children }: { children: React.ReactNode }) { return <p className="spotEvaluationState" role="status">{children}</p>; }
 function EmptyState() { return <p className="spotEvaluationState empty" role="status">情報なし</p>; }

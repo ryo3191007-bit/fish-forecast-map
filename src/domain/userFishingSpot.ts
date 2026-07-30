@@ -80,6 +80,22 @@ export function mergeRuntimeFishingSpots(masterSpots: readonly FishingSpot[], us
   ];
 }
 
+/** Adapt an owner-scoped spot only at runtime; it is never written to the shared master. */
+export function userFishingSpotToFishingSpot(spot: UserFishingSpot): FishingSpot {
+  return {
+    id: spot.runtimeId,
+    name: spot.name,
+    areaName: spot.areaName ?? "",
+    latitude: spot.latitude,
+    longitude: spot.longitude,
+    spotType: userFishingSpotTypeForDisplay(spot.spotType),
+    shoreAccess: "不明",
+    targetSpecies: [],
+    recommendedMethods: [],
+    coordinatePrecision: "exact",
+  };
+}
+
 export function buildUserSpotDetailInput(itemKey: UserFishingSpotDetailItemKey, draft: SpotFieldObservationDraft) {
   return buildSaveSpotFieldObservationInput("user-spot", itemKey, spotFieldObservationConfigs[itemKey], draft);
 }
