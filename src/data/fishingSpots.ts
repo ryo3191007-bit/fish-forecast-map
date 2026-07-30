@@ -953,3 +953,20 @@ export const fishingSpots: FishingSpot[] = [
 ];
 
 export const fishingSpotById = new Map(fishingSpots.map((spot) => [spot.id, spot]));
+
+export const issue371RockyShoreSpotIds = new Set([
+  "hado-cape-rocky-shore",
+  "tateishiyama-west-rocky-shore",
+  "tategami-rock-rocky-shore",
+  "nanatsugama-rocky-shore",
+  "doya-terraces-front-rocky-shore",
+  "hoshika-peninsula-north-rocky-shore",
+  "takashima-north-rocky-shore",
+  "hitotsuku-coast-rocky-ends",
+  "kasuga-settlement-front-rocky-shore",
+]);
+
+export function getFishingSpotPopupCaution(spot: FishingSpot): string | null {
+  if (!issue371RockyShoreSpotIds.has(spot.id)) return null;
+  return "代表点です。進入路・足場・規制・釣り可否は未確認です。現地表示・管理者の最新案内を優先してください。";
+}

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { fishingSpots } from "../src/data/fishingSpots.ts";
-import { mergeStaticFishingSpotAdditions } from "../src/lib/masterDataRepository.ts";
+import { fishingSpots, getFishingSpotPopupCaution } from "../src/data/fishingSpots.ts";
+import { getStaticMasterData, resolveSuccessfulFishingSpotsMaster } from "../src/lib/masterDataRepository.ts";
 import { hiddenBroadFishingSpotIds, isSelectableFishingSpot } from "../src/data/fishingSpotVisibility.ts";
 
 const research = JSON.parse(readFileSync(new URL("../docs/research/ISSUE_371_ROCKY_SHORE_CANDIDATES.json", import.meta.url), "utf8"));
@@ -41,8 +41,31 @@ for (const candidate of adoptedCandidates) {
   assert.ok(spot.notes?.some((note) => note.includes("最新案内")));
   assert.ok(isSelectableFishingSpot(spot));
 }
-const mergedRemoteMaster = mergeStaticFishingSpotAdditions(fishingSpots.filter(({ id }) => !adoptedIds.includes(id)));
-assert.ok(adoptedIds.every((id) => mergedRemoteMaster.some((spot) => spot.id === id)), "static additions survive a successful remote master load");
+const emptyRemoteMaster = resolveSuccessfulFishingSpotsMaster([]);
+assert.equal(emptyRemoteMaster.meta.source, "static-fallback");
+assert.equal(emptyRemoteMaster.meta.fallbackReason, "empty-supabase-result");
+assert.deepEqual(emptyRemoteMaster.data, getStaticMasterData().fishingSpots, "an empty remote result falls back to the complete selectable static master");
+const existingRemoteSpots = fishingSpots.filter(({ id }) => !adoptedIds.includes(id));
+const mergedRemoteMaster = resolveSuccessfulFishingSpotsMaster(existingRemoteSpots);
+assert.equal(mergedRemoteMaster.meta.source, "supabase");
+assert.ok(adoptedIds.every((id) => mergedRemoteMaster.data.some((spot) => spot.id === id)), "static additions supplement a non-empty remote master");
+
+const normalSpot = fishingSpots.find(({ id }) => id === "miyanoura-fishing-port");
+assert.ok(normalSpot);
+assert.equal(getFishingSpotPopupCaution(normalSpot), null, "an existing normal spot keeps its compact popup");
+for (const id of adoptedIds) {
+  const spot = fishingSpots.find((candidate) => candidate.id === id);
+  assert.ok(spot);
+  const caution = getFishingSpotPopupCaution(spot);
+  assert.match(caution ?? "", /代表点/);
+  assert.match(caution ?? "", /進入路・足場・規制・釣り可否は未確認/);
+  assert.match(caution ?? "", /最新案内/);
+}
+const mapSource = readFileSync(new URL("../src/components/FishingMap.tsx", import.meta.url), "utf8");
+const spotPopup = mapSource.slice(mapSource.indexOf("function createSpotPopupContent"), mapSource.indexOf("async function loadBathymetryTileImageData"));
+assert.match(spotPopup, /getFishingSpotPopupCaution\(spot\)/);
+assert.match(spotPopup, /if \(cautionText\) popup\.append\(caution\)/);
+assert.match(spotPopup, /evaluationButton\.textContent = "地点評価"/);
 const historicalBroadSpotIds = ["yobuko-area", "fukushima-area", "takashima-area", "hirado-seto", "ikitsuki-area"];
 for (const id of historicalBroadSpotIds) {
   assert.ok(hiddenBroadFishingSpotIds.includes(id), `${id} remains hidden after the additive master update`);

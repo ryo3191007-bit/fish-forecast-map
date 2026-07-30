@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { FishingSpot } from "@/domain/fishingSpot";
 import type { FishingShop } from "@/domain/fishingShop";
 import { fishingShops } from "@/data/fishingShops";
+import { getFishingSpotPopupCaution } from "@/data/fishingSpots";
 import { toFishingSpotMapEntry } from "@/domain/fishingSpotPresentation";
 import {
   MAP_MARKER_LEGEND,
@@ -1202,20 +1203,17 @@ function createSpotPopupContent(spot: FishingSpot, onOpenSpotEvaluation: () => v
   const title = document.createElement("strong");
   title.className = "mapPopupTitle";
   title.textContent = spot.name;
-  const notes = document.createElement("ul");
-  notes.className = "mapSpotPopupNotes";
-  for (const note of spot.notes ?? []) {
-    const item = document.createElement("li");
-    item.textContent = note;
-    notes.append(item);
-  }
+  const cautionText = getFishingSpotPopupCaution(spot);
+  const caution = document.createElement("p");
+  caution.className = "mapSpotPopupCaution";
+  caution.textContent = cautionText;
   const evaluationButton = document.createElement("button");
   evaluationButton.type = "button";
   evaluationButton.className = "mapSpotEvaluationButton";
   evaluationButton.textContent = "地点評価";
   evaluationButton.addEventListener("click", onOpenSpotEvaluation);
   popup.append(title);
-  if (notes.childElementCount > 0) popup.append(notes);
+  if (cautionText) popup.append(caution);
   popup.append(evaluationButton);
   return popup;
 }

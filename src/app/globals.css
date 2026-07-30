@@ -582,8 +582,7 @@ p {
   color: #075985;
   font-size: 1rem;
 }
-.mapSpotPopupNotes { margin: 6px 0; padding-left: 18px; color: #475569; font-size: .75rem; }
-.mapSpotPopupNotes li + li { margin-top: 3px; }
+.mapSpotPopupCaution { max-width: 190px; margin: 6px 0; color: #475569; font-size: .72rem; line-height: 1.35; }
 .mapPopupSummary {
   display: flex;
   flex-wrap: wrap;
