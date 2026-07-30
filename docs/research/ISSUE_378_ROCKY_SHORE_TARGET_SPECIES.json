@@ -1,7 +1,7 @@
 {
   "issue": 378,
   "recordedOn": "2026-07-30",
-  "method": "Issue本文に記録された手動調査結果を既存魚種マスターへ正規化して反映。外部サイトの自動取得・スクレイピングは実施していない。",
+  "method": "公開ページを手動確認し、ページ上で地点と魚種を直接確認できた記録だけを既存魚種マスターへ正規化して反映。外部サイトの自動取得・スクレイピングは実施していない。",
   "spots": [
     {
       "spotId": "hado-cape-rocky-shore",
@@ -10,19 +10,33 @@
         { "sourceName": "ササイカ", "masterName": "ヤリイカ" },
         { "sourceName": "ヤズ", "masterName": "ブリ" }
       ],
-      "sourceUrl": "https://www.point-i.jp/fishing_spots/22442"
+      "evidence": [
+        { "sourceSpecies": "アオリイカ", "masterSpecies": "アオリイカ", "sourceUrl": "https://www.point-i.jp/fishing_spots/22442" },
+        { "sourceSpecies": "ササイカ", "masterSpecies": "ヤリイカ", "sourceUrl": "https://www.point-i.jp/fishing_spots/22442" },
+        { "sourceSpecies": "コウイカ", "masterSpecies": "コウイカ", "sourceUrl": "https://www.point-i.jp/fishing_spots/22442" },
+        { "sourceSpecies": "ヤズ", "masterSpecies": "ブリ", "sourceUrl": "https://www.point-i.jp/fishing_spots/22442" },
+        { "sourceSpecies": "キジハタ", "masterSpecies": "キジハタ", "sourceUrl": "https://www.point-i.jp/fishing_spots/20906", "catchDate": "2024-09-11" }
+      ]
     },
     {
       "spotId": "nanatsugama-rocky-shore",
-      "targetSpecies": ["アオリイカ", "アジ", "メジナ", "チヌ", "サワラ", "ヒラスズキ"],
+      "targetSpecies": ["アオリイカ", "アジ"],
       "normalizations": [],
-      "sourceUrl": "https://www.point-i.jp/fishing_infos/883579"
+      "evidence": [
+        { "sourceSpecies": "アオリイカ", "masterSpecies": "アオリイカ", "sourceUrl": "https://www.point-i.jp/fishing_infos/883579", "catchDate": "2018-07-11" },
+        { "sourceSpecies": "アジ", "masterSpecies": "アジ", "sourceUrl": "https://www.point-i.jp/fishing_infos/883579", "catchDate": "2018-07-11" }
+      ]
     },
     {
       "spotId": "doya-terraces-front-rocky-shore",
       "targetSpecies": ["アオリイカ", "コウイカ", "キス", "メゴチ"],
       "normalizations": [],
-      "sourceUrl": "https://seapicnic.blogspot.com/2020/11/blog-post_64.html"
+      "evidence": [
+        { "sourceSpecies": "アオリイカ", "masterSpecies": "アオリイカ", "sourceUrl": "https://seapicnic.blogspot.com/2020/11/blog-post_64.html" },
+        { "sourceSpecies": "コウイカ", "masterSpecies": "コウイカ", "sourceUrl": "https://seapicnic.blogspot.com/2020/11/blog-post_64.html" },
+        { "sourceSpecies": "キス", "masterSpecies": "キス", "sourceUrl": "https://seapicnic.blogspot.com/2020/11/blog-post_64.html" },
+        { "sourceSpecies": "メゴチ", "masterSpecies": "メゴチ", "sourceUrl": "https://seapicnic.blogspot.com/2020/11/blog-post_64.html" }
+      ]
     }
   ]
 }

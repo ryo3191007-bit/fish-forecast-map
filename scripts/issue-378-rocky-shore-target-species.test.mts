@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { fishingSpots } from "../src/data/fishingSpots.ts";
+import { buildStaticFishingSpotDetailsFromSpots } from "../src/lib/fishingSpotDetailFallback.ts";
 
 const expectedSpecies = new Map([
   ["hado-cape-rocky-shore", ["アオリイカ", "ヤリイカ", "コウイカ", "ブリ", "キジハタ"]],
-  ["nanatsugama-rocky-shore", ["アオリイカ", "アジ", "メジナ", "チヌ", "サワラ", "ヒラスズキ"]],
+  ["nanatsugama-rocky-shore", ["アオリイカ", "アジ"]],
   ["doya-terraces-front-rocky-shore", ["アオリイカ", "コウイカ", "キス", "メゴチ"]],
 ]);
 const unchangedEmptySpeciesIds = [
@@ -24,6 +25,19 @@ for (const [id, species] of expectedSpecies) {
   assert.ok(spot.notes?.every((note) => !note.startsWith("魚種・釣法・SCORE情報")), `${id} notes no longer say species are absent`);
 }
 
+const staticDetails = buildStaticFishingSpotDetailsFromSpots(fishingSpots);
+for (const [id, species] of expectedSpecies) {
+  const targetSpeciesDetail = staticDetails.values.find(
+    (value) => value.spotId === id && value.itemKey === "target_species",
+  );
+  assert.ok(targetSpeciesDetail, `${id} exposes target_species through the static detail path`);
+  assert.deepEqual(
+    targetSpeciesDetail.valueTextList,
+    species,
+    `${id} target_species reaches the detail consumed by the species tab`,
+  );
+}
+
 for (const id of unchangedEmptySpeciesIds) {
   const spot = fishingSpots.find((candidate) => candidate.id === id);
   assert.ok(spot, `${id} exists`);
@@ -41,6 +55,17 @@ assert.deepEqual(audit.spots[0].normalizations, [
   { sourceName: "ササイカ", masterName: "ヤリイカ" },
   { sourceName: "ヤズ", masterName: "ブリ" },
 ]);
-assert.ok(audit.spots.every(({ sourceUrl }: { sourceUrl: string }) => sourceUrl.startsWith("https://")));
+for (const spot of audit.spots as Array<{
+  targetSpecies: string[];
+  evidence: Array<{ sourceSpecies: string; masterSpecies: string; sourceUrl: string }>;
+}>) {
+  assert.deepEqual(
+    spot.evidence.map(({ masterSpecies }) => masterSpecies),
+    spot.targetSpecies,
+    "every target species has a corresponding evidence entry",
+  );
+  assert.ok(spot.evidence.every(({ sourceSpecies }) => sourceSpecies.length > 0));
+  assert.ok(spot.evidence.every(({ sourceUrl }) => sourceUrl.startsWith("https://")));
+}
 
 console.log("Issue #378 rocky-shore target-species checks passed");

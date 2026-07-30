@@ -856,7 +856,7 @@ export const fishingSpots: FishingSpot[] = [
     longitude: 129.8945,
     spotType: "磯場",
     shoreAccess: "不明",
-    targetSpecies: ["アオリイカ", "アジ", "メジナ", "チヌ", "サワラ", "ヒラスズキ"],
+    targetSpecies: ["アオリイカ", "アジ"],
     recommendedMethods: [],
     notes: [
       "七ツ釜の海岸地形を識別する概略代表点であり、入口や実釣位置を示しません。",
