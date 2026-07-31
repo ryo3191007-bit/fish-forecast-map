@@ -57,6 +57,7 @@ type Props = {
 
 const tabs: SpotEvaluationTab[] = ["環境", "釣場", "地形", "評価"];
 const orderedTabs: SpotEvaluationTab[] = [...tabs.slice(0, 3), "魚種", ...tabs.slice(3)];
+const visibleTabs = orderedTabs.filter((tab) => tab !== "評価");
 const confidenceLabel: Record<SpotDetailConfidence, string> = { high: "高", medium: "中", low: "低" };
 const detailIcons: Record<string, string> = {
   target_species: "🐟", recommended_methods: "⌁", shore_access: "↝",
@@ -88,7 +89,7 @@ export function SpotEvaluationCard(props: Props) {
     <section className="spotEvaluationCard" aria-live="polite">
       <header className="spotEvaluationHeader">
         <div><p className="eyebrow">Spot evaluation</p><h2>地点評価</h2></div>
-        <button type="button" className="userSpotRegisterButton" onClick={props.onOpenSpotRegistration}>＋ 地点登録</button>
+        <button type="button" className="button catchReportRegisterButton userSpotRegisterButton" onClick={props.onOpenSpotRegistration}>＋ 地点登録</button>
       </header>
       <div className="spotSelectionRow">
         <SpotCombobox spots={props.spots} selected={props.selectedSpot} onSelect={props.onSelectedSpotIdChange} />
@@ -113,7 +114,7 @@ export function SpotEvaluationCard(props: Props) {
       </div>
 
       <div className="spotInternalTabs" role="tablist" aria-label="地点評価の表示内容">
-        {orderedTabs.map((tab) => <button type="button" role="tab" id={`spot-tab-${tab}`} aria-selected={props.activeTab === tab} aria-controls={`spot-panel-${tab}`} tabIndex={props.activeTab === tab ? 0 : -1} key={tab} onClick={() => props.onActiveTabChange(tab)}>{tab}</button>)}
+        {visibleTabs.map((tab) => <button type="button" role="tab" id={`spot-tab-${tab}`} aria-selected={props.activeTab === tab} aria-controls={`spot-panel-${tab}`} tabIndex={props.activeTab === tab ? 0 : -1} key={tab} onClick={() => props.onActiveTabChange(tab)}>{tab}</button>)}
       </div>
       <div role="tabpanel" id={`spot-panel-${props.activeTab}`} aria-labelledby={`spot-tab-${props.activeTab}`}>
         {props.activeTab === "評価" && <EvaluationTab {...props} selectedTime={props.selectedTime} />}

@@ -40,8 +40,8 @@ assert.match(card, /role="tablist"[\s\S]*?role="tab"[\s\S]*?aria-selected=\{prop
 assert.match(card, /role="tabpanel"[\s\S]*?id=\{`spot-panel-\$\{props\.activeTab\}`\}[\s\S]*?aria-labelledby=\{`spot-tab-\$\{props\.activeTab\}`\}/, "the active panel remains labelled by its corresponding tab");
 for (const tab of ["評価", "環境", "釣場", "地形"]) assert.ok(card.includes(`props.activeTab === "${tab}"`), `${tab} retains its conditional panel`);
 const internalTabsRule = css.match(/\.spotInternalTabs\s*\{[^}]+\}/)?.[0] ?? "";
-assert.match(internalTabsRule, /display:flex/, "the four compact tabs remain in one flex row on mobile");
-assert.doesNotMatch(internalTabsRule, /flex-wrap\s*:\s*wrap/, "the mobile tab row does not wrap");
+assert.match(internalTabsRule, /display:grid/, "the four compact tabs remain in one grid row on mobile");
+assert.match(internalTabsRule, /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/, "the visible tabs have equal widths");
 
 assert.match(card, /className="sharedTimeNavigation"[\s\S]*?aria-label="前の1時間"[\s\S]*?\{"<"\}[\s\S]*?aria-label="現在時刻へ戻る"[\s\S]*?>現在時刻<[\s\S]*?aria-label="次の1時間"[\s\S]*?\{">"\}/, "time navigation uses compact visible labels and descriptive accessible names");
 assert.match(card, /aria-label="前の1時間" disabled=\{selectedIndex <= 0\}[\s\S]*?rows\[selectedIndex - 1\]/, "previous-hour behavior and disabled boundary are retained");

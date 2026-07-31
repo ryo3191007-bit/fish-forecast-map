@@ -25,6 +25,11 @@ export function AppShell() {
   return (
     <main>
       <section className="hero">
+        <div className="heroGrid">
+          <div>
+            <h1>Fish Forecast Map</h1>
+          </div>
+        </div>
         <nav className="nav" aria-label="主要ナビゲーション">
           <div>
             <a href="#map">地図</a>
@@ -40,11 +45,6 @@ export function AppShell() {
             {loginLabel}
           </button>
         </nav>
-        <div className="heroGrid">
-          <div>
-            <h1>Fish Forecast Map</h1>
-          </div>
-        </div>
       </section>
       <FishingDashboard auth={auth} />
       <footer

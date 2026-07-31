@@ -13,7 +13,8 @@ assert.match(
   /const orderedTabs: SpotEvaluationTab\[\] = \[\.\.\.tabs\.slice\(0, 3\), "魚種", \.\.\.tabs\.slice\(3\)\];/,
   "the species tab is inserted immediately after terrain and before evaluation",
 );
-assert.match(card, /\{orderedTabs\.map\(\(tab\) =>/, "the five-tab order drives the rendered tab list");
+assert.match(card, /const visibleTabs = orderedTabs\.filter\(\(tab\) => tab !== "評価"\);/, "evaluation remains in the full tab order but is hidden from the visible tabs");
+assert.match(card, /\{visibleTabs\.map\(\(tab\) =>/, "the visible tab order drives the rendered tab list");
 
 const fishingPanel = card.match(/props\.activeTab === "釣場"[^\n]+/)?.[0] ?? "";
 assert.match(fishingPanel, /items=\{fishingDetailItems\}/);
