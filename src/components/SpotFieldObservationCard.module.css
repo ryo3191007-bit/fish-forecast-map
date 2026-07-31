@@ -1,3 +1,13 @@
+.card {
+  position: relative;
+}
+
+.cardTitle {
+  min-height: 34px;
+  box-sizing: border-box;
+  padding-right: 76px;
+}
+
 .content {
   display: grid;
   gap: 10px;
@@ -46,10 +56,10 @@
   background: rgba(125, 211, 252, 0.2);
 }
 
-.actionRow {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 2px;
+.topAction {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
 }
 
 .editButton,
