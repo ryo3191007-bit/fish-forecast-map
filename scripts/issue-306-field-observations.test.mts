@@ -71,9 +71,15 @@ const fieldIndex = card.indexOf(">実地調査<");
 assert.ok(preliminaryIndex >= 0 && preliminaryIndex < dividerIndex && dividerIndex < fieldIndex, "事前調査、罫線、実地調査の順で表示する");
 assert.match(card, /確認日:\{formatSpotFieldObservationDate\(observation\.checkedAt\)\}/);
 assert.match(card, /observation \? "編集" : "＋ 追加"/);
+assert.match(card, /className=\{`\$\{styles\.topAction\}/, "追加・編集操作をカード右上用の要素として表示する");
+assert.doesNotMatch(card, /styles\.actionRow/, "下部のアクション領域を表示しない");
 assert.match(card, /window\.confirm\("この実地調査情報を削除しますか？"\)/);
 assert.doesNotMatch(card, />自分の確認</);
 assert.doesNotMatch(card, />調査情報</);
+
+const cardStyles = fs.readFileSync("src/components/SpotFieldObservationCard.module.css", "utf8");
+assert.match(cardStyles, /\.topAction\s*\{[\s\S]*?position:\s*absolute;[\s\S]*?top:\s*0\.8rem;[\s\S]*?right:\s*0\.8rem;/, "操作をカード右上に固定する");
+assert.match(cardStyles, /\.cardTitle\s*\{[\s\S]*?min-height:\s*34px;[\s\S]*?padding-right:\s*76px;/, "タイトルと操作が重ならない余白を確保する");
 
 const evaluationCard = fs.readFileSync("src/components/SpotEvaluationCard.tsx", "utf8");
 assert.match(evaluationCard, /useSpotFieldObservations\(props\.selectedSpotId\)/);

@@ -88,8 +88,11 @@ export function SpotFieldObservationCard({
     else setFormError("削除できませんでした。");
   };
 
-  return <div>
-    <dt><span className="detailIcon" aria-hidden="true">{icon}</span>{label}</dt>
+  return <div className={styles.card}>
+    <dt className={styles.cardTitle}><span className="detailIcon" aria-hidden="true">{icon}</span>{label}</dt>
+    {status === "ready" ? <button type="button" className={`${styles.topAction} ${observation ? styles.editButton : styles.addButton}`} disabled={isMutating || !config} onClick={openEditor}>
+      {observation ? "編集" : "＋ 追加"}
+    </button> : null}
     <dd className={styles.content}>
       {!ownerMode && <section className={styles.section} aria-label={`${label}の事前調査`}>
         <strong className={styles.sectionTitle}>事前調査</strong>
@@ -101,11 +104,6 @@ export function SpotFieldObservationCard({
           ? <strong className={styles.sectionTitle}>登録情報</strong>
           : <strong className={styles.sectionTitle}>実地調査</strong>}
         <FieldObservationDisplay status={status} observation={observation} ownerMode={ownerMode} />
-        {status === "ready" ? <div className={styles.actionRow}>
-          <button type="button" className={observation ? styles.editButton : styles.addButton} disabled={isMutating || !config} onClick={openEditor}>
-            {observation ? "編集" : "＋ 追加"}
-          </button>
-        </div> : null}
       </section>
     </dd>
     {isOpen && config ? <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeEditor(); }}>
