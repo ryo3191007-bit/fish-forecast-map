@@ -33,7 +33,8 @@ assert.match(repository, /id: creationId[\s\S]*onConflict: "id"/, "compatibility
 assert.match(migration, /insert into public\.user_fishing_spots[\s\S]*insert into public\.user_fishing_spot_detail_values/);
 assert.match(migration, /security definer/);
 assert.match(fs.readFileSync("src/hooks/useSpotFieldObservations.ts", "utf8"), /!spotId\.startsWith\("user:"\)/);
-assert.match(card, /ユーザー地点の対象魚種編集は現在利用できません/);
+assert.doesNotMatch(card, /ユーザー地点の対象魚種編集は現在利用できません/);
+assert.match(card, /\{!isUserSpot && <SpotFieldObservationCard/);
 assert.match(card, /ownerMode=\{ownerOnly\}/);
 assert.match(observationCard, /!ownerMode && <section[^>]+事前調査/);
 assert.match(observationCard, /<strong className=\{styles\.sectionTitle\}>登録情報<\/strong>/);
