@@ -484,7 +484,6 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           onClick={() => setDashboardMode("catchReports")}
         >
           <span>釣果情報</span>
-          <small>登録・編集・一覧</small>
         </button>
         <button
           type="button"
@@ -497,18 +496,17 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           onClick={() => setDashboardMode("spotEvaluation")}
         >
           <span>地点評価</span>
-          <small>環境データ・地点別SCORE</small>
         </button>
       </div>
 
       {dashboardMode === "catchReports" ? (
         <div>
-          <div className="sectionHeading">
+          <div className="sectionHeading reportSectionHeading">
             <div>
               <p className="eyebrow">Catch reports</p>
               <h2>釣果情報一覧</h2>
             </div>
-            <button type="button" className="button catchReportRegisterButton" onClick={handleRegistrationRequest}>釣果を登録</button>
+            <button type="button" className="button catchReportRegisterButton" onClick={handleRegistrationRequest}>+釣果登録</button>
           </div>
 
           <div

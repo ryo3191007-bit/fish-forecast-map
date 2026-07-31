@@ -41,34 +41,17 @@ main {
     inset 0 -1px 0 rgba(255, 255, 255, 0.05),
     0 26px 80px rgba(0, 0, 0, 0.28);
 }
-.nav {
+.heroHeader {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin-bottom: 6px;
   flex-wrap: nowrap;
   min-width: 0;
 }
-.nav div {
-  display: flex;
-  gap: 12px;
-  flex: 0 0 auto;
-}
-.nav a,
 .button {
   text-decoration: none;
   font-weight: 700;
-}
-.nav a {
-  color: #cffafe;
-  text-shadow: 0 0 18px rgba(34, 211, 238, 0.38);
-}
-.heroGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 900px);
-  gap: 32px;
-  align-items: flex-end;
 }
 h1 {
   font-size: clamp(1.45rem, 4vw, 2.2rem);
@@ -76,6 +59,12 @@ h1 {
   margin: 0;
   max-width: 900px;
   letter-spacing: -0.04em;
+}
+.heroHeader h1 {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 h2,
 h3,
@@ -636,6 +625,10 @@ p {
   margin-bottom: 2px;
   line-height: 1.7;
 }
+.reportSectionHeading {
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(125, 211, 252, 0.32);
+}
 .catchReportRegisterButton {
   align-items: center;
   justify-content: center;
@@ -764,7 +757,6 @@ dd {
   line-height: 1.7;
 }
 @media (max-width: 760px) {
-  .heroGrid,
   .panel,
   .sectionHeading {
     grid-template-columns: 1fr;
@@ -796,6 +788,12 @@ dd {
   }
 }
 @media (max-width: 620px) {
+  .mapSection {
+    margin-inline: -16px;
+  }
+  .map {
+    height: 466px;
+  }
   .sortResetGrid {
     grid-template-columns: minmax(0, 1fr) auto;
   }
@@ -824,6 +822,9 @@ dd {
   .dashboard {
     padding-inline: 12px;
   }
+  .mapSection {
+    margin-inline: -12px;
+  }
   .panel,
   .card,
   .emptyState {
@@ -834,7 +835,7 @@ dd {
     border-radius: 0 0 23px 23px;
   }
   .map {
-    height: 340px;
+    height: 416px;
     border-radius: 0 0 18px 18px;
   }
   .mapEmpty {
@@ -939,6 +940,8 @@ dd {
   min-width: 0;
   width: 100%;
   margin: 0 0 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(125, 211, 252, 0.32);
   gap: 10px;
 }
 .filterCard {
@@ -1109,7 +1112,8 @@ dd {
 }
 .dashboardModeButton {
   display: grid;
-  gap: 4px;
+  place-items: center;
+  min-height: 60px;
   border: 1px solid transparent;
   border-radius: 18px;
   padding: 16px clamp(14px, 3vw, 22px);
@@ -1118,7 +1122,7 @@ dd {
   font: inherit;
   font-weight: 900;
   cursor: pointer;
-  text-align: left;
+  text-align: center;
   transition:
     background 0.15s ease,
     border-color 0.15s ease,
@@ -1127,11 +1131,6 @@ dd {
 }
 .dashboardModeButton span {
   font-size: clamp(1.05rem, 2.4vw, 1.35rem);
-}
-.dashboardModeButton small {
-  color: #a7f3d0;
-  font-size: 0.78rem;
-  font-weight: 800;
 }
 .dashboardModeButton:hover,
 .dashboardModeButton:focus-visible {
@@ -1145,9 +1144,6 @@ dd {
   background: linear-gradient(135deg, #e0faff, #7dd3fc);
   color: #083344;
   box-shadow: 0 0 28px rgba(34, 211, 238, 0.34);
-}
-.dashboardModeButton.active small {
-  color: #155e75;
 }
 @media (max-width: 620px) {
   .dashboardModeSwitch {
@@ -1789,11 +1785,21 @@ dd {
   cursor: pointer;
 }
 .authNavButton {
-  min-width: 0;
-  max-width: min(52vw, 24rem);
+  flex: 0 0 180px;
+  width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .heroHeader h1 {
+    font-size: 1.3rem;
+  }
+  .authNavButton {
+    flex-basis: 132px;
+    width: 132px;
+  }
 }
 
 .authModalBackdrop {
@@ -2205,7 +2211,8 @@ dd {
 .spotEvaluationCard { margin: 1.2rem 0; padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid rgba(125,211,252,.28); border-radius: 22px; background: rgba(2,8,23,.72); color: #e0faff; min-width: 0; }
 .spotEvaluationHeader, .evaluationTitle, .scoreCard header { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
 .spotEvaluationHeader h2, .evaluationContent h3, .scoreCard h4, .methodScores h4 { margin:.2rem 0; }
-.userSpotRegisterButton{padding:.55rem .8rem;border-radius:8px;border:1px solid #08745a;background:#eafff8;color:#075c48;font-weight:800}.userSpotAuthNotice{position:fixed;z-index:1300;inset:0;background:#071827cc;color:#17212b;display:grid;place-content:center;text-align:center}.userSpotAuthNotice p,.userSpotAuthNotice button{background:#fff;margin:0;padding:1rem}.userSpotAuthNotice button{border:0;color:#075c48;font-weight:800}
+.userSpotRegisterButton { margin-top:0; border:0; cursor:pointer; }
+.userSpotAuthNotice{position:fixed;z-index:1300;inset:0;background:#071827cc;color:#17212b;display:grid;place-content:center;text-align:center}.userSpotAuthNotice p,.userSpotAuthNotice button{background:#fff;margin:0;padding:1rem}.userSpotAuthNotice button{border:0;color:#075c48;font-weight:800}
 .spotSelectionRow { display:flex; align-items:flex-end; gap:.55rem; width:min(100%,680px); min-width:0; margin:1rem 0; }
 .spotCombobox { position:relative; flex:1 1 auto; min-width:0; margin:0; }
 .spotCombobox label, .sharedTimeControls label { display:grid; gap:.35rem; color:#bae6fd; font-size:.78rem; font-weight:800; }
@@ -2219,8 +2226,8 @@ dd {
 .sharedTimeNavigation button, .spotInternalTabs button, .evaluationTitle button { min-height:44px; padding:.55rem .8rem; border:1px solid rgba(125,211,252,.32); border-radius:10px; background:#0c4a6e; color:#e0faff; font:inherit; font-weight:800; cursor:pointer; }
 .sharedTimeNavigation button:first-child, .sharedTimeNavigation button:last-child { box-sizing:border-box; width:44px; min-width:44px; padding:.55rem .3rem; }
 .sharedTimeControls button:disabled { opacity:.45; cursor:not-allowed; }
-.spotInternalTabs { display:flex; gap:.35rem; padding:.3rem; margin:1rem 0; border-radius:12px; background:rgba(8,47,73,.42); overflow-x:auto; }
-.spotInternalTabs button { min-height:34px; padding:.4rem .8rem; border-color:transparent; background:transparent; font-size:.78rem; white-space:nowrap; }
+.spotInternalTabs { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.35rem; padding:.3rem; margin:1rem 0; border-radius:12px; background:rgba(8,47,73,.42); }
+.spotInternalTabs button { min-width:0; min-height:34px; padding:.4rem; border-color:transparent; background:transparent; font-size:.78rem; white-space:nowrap; }
 .spotInternalTabs button[aria-selected="true"] { border-color:#38bdf8; background:#155e75; }
 .scoreCards { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:.75rem; }
 .scoreCard, .methodScores article { padding:1rem; border:1px solid rgba(125,211,252,.22); border-radius:14px; background:rgba(8,47,73,.4); }

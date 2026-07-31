@@ -274,7 +274,7 @@ export function ExternalCatchMemoSection({
     setSelectedMigrationIds(new Set());
   };
 
-  const title = editingMemo ? "釣果を編集" : "釣果を登録";
+  const title = editingMemo ? "釣果を編集" : "釣果登録";
   const masterSpots = spots.filter((spot) => masterSpotIds.has(spot.id));
   const userSpots = spots.filter((spot) => !masterSpotIds.has(spot.id));
   const missingEditingSpot = editingMemo?.spotId && !spots.some((spot) => spot.id === editingMemo.spotId) ? editingMemo : null;

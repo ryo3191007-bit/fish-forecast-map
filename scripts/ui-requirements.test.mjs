@@ -49,10 +49,10 @@ assert.doesNotMatch(
   /マップを見る/,
   "AppShell user-facing text must not include マップを見る",
 );
-assert.match(
+assert.doesNotMatch(
   appShell,
-  /<a href="#map">地図<\/a>/,
-  "header navigation map link remains available",
+  /<a href="#map">地図<\/a>|<a href="#reports">一覧<\/a>/,
+  "header shortcut links stay removed",
 );
 assert.doesNotMatch(
   dashboard,

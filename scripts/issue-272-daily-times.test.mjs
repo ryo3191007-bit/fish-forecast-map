@@ -18,7 +18,7 @@ assert.match(service, /point\.spotId[\s\S]*point\.latitude[\s\S]*point\.longitud
 assert.match(dashboard, /setEnvironment\(null\)[\s\S]*setIsEnvironmentLoading\(true\)/, "uncached spot switches clear the previous result while loading");
 assert.doesNotMatch(shell, /福岡県糸島市西岸から唐津湾、伊万里湾、平戸方面まで/);
 assert.match(shell, /className="authNavButton"[\s\S]*title=\{loginLabel\}[\s\S]*aria-label=\{loginLabel\}/);
-assert.match(css, /\.nav \{[^}]*flex-wrap: nowrap/);
-assert.match(css, /\.authNavButton \{[^}]*min-width: 0[^}]*text-overflow: ellipsis[^}]*white-space: nowrap/);
+assert.match(css, /\.heroHeader \{[^}]*flex-wrap: nowrap[^}]*min-width: 0/);
+assert.match(css, /\.authNavButton \{[^}]*width: 180px[^}]*text-overflow: ellipsis[^}]*white-space: nowrap/);
 assert.match(css, /\.catchReportRegisterButton \{[^}]*align-items: center[^}]*justify-content: center/);
 console.log("Issue #272 daily time and compact UI checks passed");
