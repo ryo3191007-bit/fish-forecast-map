@@ -4,13 +4,14 @@ import { getSupabaseClient } from "@/lib/supabaseClient";
 import { mapExternalCatchMemoRow, mapExternalCatchMemoToUpsertPayload, type ExternalCatchMemoRow } from "@/lib/externalCatchMemoMapper";
 
 export type ExternalCatchMemoDbSource = "supabase" | "local-storage-fallback";
-export type ExternalCatchMemoDbFallbackReason = "not-authenticated" | "supabase-not-configured" | "supabase-error" | "local-data-not-migrated";
+export type ExternalCatchMemoDbFallbackReason = "not-authenticated" | "supabase-not-configured" | "supabase-error" | "integrity-error" | "local-data-not-migrated";
 export type ExternalCatchMemoDbResult<T> = {
   data: T;
   meta: { source: ExternalCatchMemoDbSource; fallbackReason?: ExternalCatchMemoDbFallbackReason; message?: string };
 };
 
-const externalCatchMemoColumns = "id,species,caught_date,caught_time,area_name,estimated_spot_name,spot_id,latitude,longitude,coordinate_precision,method,catch_count,size_cm,catch_items,source_id,source_name,source_url,acquisition_method,confidence,environment_match_notes,user_memo,owner_id,created_by,is_deleted,created_at,updated_at";
+const legacyExternalCatchMemoColumns = "id,species,caught_date,caught_time,area_name,estimated_spot_name,spot_id,latitude,longitude,coordinate_precision,method,catch_count,size_cm,catch_items,source_id,source_name,source_url,acquisition_method,confidence,environment_match_notes,user_memo,owner_id,created_by,is_deleted,created_at,updated_at";
+const externalCatchMemoColumns = `${legacyExternalCatchMemoColumns},user_spot_id`;
 const diagnosticMaxLength = 180;
 
 function sanitizeDiagnosticMessage(message: string | undefined): string | undefined {
@@ -31,6 +32,18 @@ function getSupabaseErrorCode(error: unknown): string | undefined {
   if (!error || typeof error !== "object") return undefined;
   const code = (error as { code?: unknown }).code;
   return typeof code === "string" && /^[A-Z0-9_]{2,16}$/i.test(code) ? code : undefined;
+}
+
+export function isUserSpotColumnMissing(error: unknown): boolean {
+  const code = getSupabaseErrorCode(error);
+  if (code !== "42703" && code !== "PGRST204") return false;
+  const message = error && typeof error === "object" ? String((error as { message?: unknown }).message ?? "") : "";
+  return /user_spot_id/i.test(message);
+}
+
+export function isUserSpotIntegrityError(error: unknown): boolean {
+  const code = getSupabaseErrorCode(error);
+  return code === "42501" || Boolean(code && /^23/.test(code)) || code === "P0001";
 }
 
 function buildDiagnosticMessage(message: string | undefined, code?: string): string | undefined {
@@ -61,12 +74,20 @@ export async function fetchExternalCatchMemosFromSupabase(userId: string | null)
   const clientStatus = getClientForUser(userId, []);
   if (!clientStatus.ok) return clientStatus.result;
 
-  const { data, error } = await clientStatus.client
+  const primaryResult = await clientStatus.client
     .from("external_catch_memos")
     .select(externalCatchMemoColumns)
     .eq("owner_id", clientStatus.userId)
     .eq("is_deleted", false)
     .order("updated_at", { ascending: false });
+  let data: unknown = primaryResult.data;
+  let error = primaryResult.error;
+
+  if (error && isUserSpotColumnMissing(error)) {
+    const legacyResult = await clientStatus.client.from("external_catch_memos").select(legacyExternalCatchMemoColumns).eq("owner_id", clientStatus.userId).eq("is_deleted", false).order("updated_at", { ascending: false });
+    data = legacyResult.data;
+    error = legacyResult.error;
+  }
 
   if (error) return fallback([], "supabase-error", buildDiagnosticMessage(error.message, getSupabaseErrorCode(error)));
 
@@ -88,25 +109,39 @@ export async function saveExternalCatchMemoToSupabase(userId: string | null, mem
     is_deleted: false,
   };
 
-  const mutation = options.mode === "update"
+  const buildMutation = (nextPayload: typeof payload, columns: string) => options.mode === "update"
     ? clientStatus.client
         .from("external_catch_memos")
-        .update(payload)
+        .update(nextPayload)
         .eq("id", memo.id)
         .eq("owner_id", clientStatus.userId)
-        .select(externalCatchMemoColumns)
+        .select(columns)
         .maybeSingle()
     : clientStatus.client
         .from("external_catch_memos")
-        .insert(payload)
-        .select(externalCatchMemoColumns)
+        .insert(nextPayload)
+        .select(columns)
         .single();
 
-  const { data, error } = await mutation;
+  const primaryMutation = await buildMutation(payload, externalCatchMemoColumns);
+  let data: unknown = primaryMutation.data;
+  let error = primaryMutation.error;
+  if (error && isUserSpotColumnMissing(error)) {
+    if (payload.user_spot_id) return fallback(null, "supabase-error", "user_spot_id column is not available yet.");
+    const { user_spot_id: _omitted, ...legacyPayload } = payload;
+    void _omitted;
+    const legacyMutation = await buildMutation(legacyPayload, legacyExternalCatchMemoColumns);
+    data = legacyMutation.data;
+    error = legacyMutation.error;
+  }
 
-  if (error) return fallback(null, "supabase-error", buildDiagnosticMessage(error.message, getSupabaseErrorCode(error)));
+  if (error) return fallback(
+    null,
+    payload.user_spot_id && isUserSpotIntegrityError(error) ? "integrity-error" : "supabase-error",
+    buildDiagnosticMessage(error.message, getSupabaseErrorCode(error)),
+  );
   if (!data) return fallback(null, "supabase-error", "No matching external catch memo row was updated.");
-  const savedMemo = mapExternalCatchMemoRow(data as ExternalCatchMemoRow);
+  const savedMemo = mapExternalCatchMemoRow(data as unknown as ExternalCatchMemoRow);
   return { data: savedMemo, meta: { source: "supabase" } };
 }
 

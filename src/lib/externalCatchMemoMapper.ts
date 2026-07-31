@@ -10,6 +10,7 @@ export type ExternalCatchMemoRow = {
   area_name: string;
   estimated_spot_name: string | null;
   spot_id: string | null;
+  user_spot_id?: string | null;
   latitude: number | string | null;
   longitude: number | string | null;
   coordinate_precision: string;
@@ -79,7 +80,7 @@ export function mapExternalCatchMemoRow(row: ExternalCatchMemoRow): ExternalCatc
     caughtTime: optionalString(row.caught_time),
     areaName: row.area_name,
     estimatedSpotName: optionalString(row.estimated_spot_name),
-    spotId: optionalString(row.spot_id),
+    spotId: row.user_spot_id ? `user:${row.user_spot_id}` : optionalString(row.spot_id),
     latitude: optionalNumber(row.latitude),
     longitude: optionalNumber(row.longitude),
     coordinatePrecision: enumValue(row.coordinate_precision, coordinatePrecisions, "unknown"),
@@ -100,6 +101,7 @@ export function mapExternalCatchMemoRow(row: ExternalCatchMemoRow): ExternalCatc
 
 export function mapExternalCatchMemoToUpsertPayload(memo: ExternalCatchMemo): ExternalCatchMemoUpsertPayload {
   const firstItem = memo.catchItems[0];
+  const userSpotId = memo.spotId?.startsWith("user:") ? memo.spotId.slice("user:".length) : null;
   return {
     id: memo.id,
     species: firstItem?.species ?? memo.species,
@@ -108,7 +110,8 @@ export function mapExternalCatchMemoToUpsertPayload(memo: ExternalCatchMemo): Ex
     caught_time: memo.caughtTime ?? null,
     area_name: memo.areaName,
     estimated_spot_name: memo.estimatedSpotName ?? null,
-    spot_id: memo.spotId ?? null,
+    spot_id: userSpotId ? null : memo.spotId ?? null,
+    user_spot_id: userSpotId,
     latitude: memo.latitude ?? null,
     longitude: memo.longitude ?? null,
     coordinate_precision: memo.coordinatePrecision,

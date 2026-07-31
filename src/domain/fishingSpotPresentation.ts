@@ -23,5 +23,5 @@ export function toFishingSpotMapEntry(spot: FishingSpot) {
 }
 
 export function buildCatchRegistrationSpotOptions(spots: readonly FishingSpot[]) {
-  return spots.map((spot) => ({ id: spot.id, label: `${spot.name} / ${spot.areaName}`, spotType: spot.spotType }));
+  return spots.map((spot) => ({ id: spot.id, label: spot.areaName ? `${spot.name} / ${spot.areaName}` : spot.name, spotType: spot.spotType }));
 }
