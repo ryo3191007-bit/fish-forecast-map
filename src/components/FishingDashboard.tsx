@@ -506,7 +506,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
               <p className="eyebrow">Catch reports</p>
               <h2>釣果情報一覧</h2>
             </div>
-            <button type="button" className="button catchReportRegisterButton" onClick={handleRegistrationRequest}>釣果を登録</button>
+            <button type="button" className="button catchReportRegisterButton" onClick={handleRegistrationRequest}>+釣果登録</button>
           </div>
 
           <div
