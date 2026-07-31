@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { lazy, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type {
   ExternalCatchMemoMigrationResult,
   ExternalCatchMemoStorageStatus,
@@ -16,6 +16,10 @@ import {
 } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
+const UserFishingSpotRegistrationModal = lazy(() => import("./UserFishingSpotRegistrationModal").then((module) => ({ default: module.UserFishingSpotRegistrationModal })));
+import type { UserFishingSpot } from "@/domain/userFishingSpot";
+
+export const NEW_USER_SPOT_SENTINEL = "__new-user-spot__";
 
 const methodOptions: FishingMethod[] = [
   "ジギング",
@@ -52,6 +56,7 @@ export function validateForm(form: FormState, editingMemo?: ExternalCatchMemo): 
   if (new Set(selected).size !== selected.length) errors.catchItems = "同じ魚種は重複して登録できません。";
   if (form.catchItems.some((item) => [item.catchCount, item.sizeCm].some((value) => value !== "" && (!Number.isFinite(Number(value)) || Number(value) < 0)))) errors.catchItems = "数とサイズは0以上の数値を入力してください。";
   if (!form.spotId) errors.spotId = "地図上の釣り場を選択してください。";
+  else if (form.spotId === NEW_USER_SPOT_SENTINEL) errors.spotId = "地図上の釣り場を選択してください。";
   if ((!editingMemo || editingMemo.caughtTime) && !form.caughtDateTime) errors.caughtDateTime = "釣果日時を入力してください。";
   return errors;
 }
@@ -73,7 +78,18 @@ export function createMemo(
 ): ExternalCatchMemo {
   const now = new Date().toISOString();
   const selectedSpot = spots.find((spot) => spot.id === form.spotId);
-  if (!selectedSpot) throw new Error("Selected fishing spot was not found.");
+  const isUnchangedMissingSpot = editingMemo?.spotId === form.spotId && !selectedSpot;
+  if (!selectedSpot && !isUnchangedMissingSpot) throw new Error("Selected fishing spot was not found.");
+  const spotSnapshot = selectedSpot ? {
+    areaName: selectedSpot.areaName,
+    estimatedSpotName: selectedSpot.id.startsWith("user:") ? selectedSpot.name : editingMemo?.estimatedSpotName,
+    spotId: selectedSpot.id, latitude: selectedSpot.latitude, longitude: selectedSpot.longitude,
+    coordinatePrecision: selectedSpot.coordinatePrecision,
+  } : {
+    areaName: editingMemo?.areaName ?? "", estimatedSpotName: editingMemo?.estimatedSpotName,
+    spotId: editingMemo?.spotId, latitude: editingMemo?.latitude, longitude: editingMemo?.longitude,
+    coordinatePrecision: editingMemo?.coordinatePrecision ?? "unknown",
+  };
   const [enteredDate, enteredTime] = form.caughtDateTime.split("T");
   const caughtDate = enteredDate || editingMemo?.caughtDate;
   const caughtTime = enteredTime || undefined;
@@ -90,10 +106,7 @@ export function createMemo(
     })),
     caughtDate,
     caughtTime,
-    areaName: selectedSpot.areaName,
-    estimatedSpotName: editingMemo?.estimatedSpotName,
-    spotId: selectedSpot.id,
-    coordinatePrecision: editingMemo?.coordinatePrecision ?? "unknown",
+    ...spotSnapshot,
     method: form.catchItems[0].method || undefined,
     catchCount: toOptionalNumber(form.catchItems[0].catchCount),
     sizeCm: toOptionalNumber(form.catchItems[0].sizeCm),
@@ -136,6 +149,9 @@ type ExternalCatchMemoSectionProps = {
   fishSpecies: FishSpecies[];
   isRegistrationRequested: boolean;
   onRegistrationRequestHandled: () => void;
+  masterSpotIds: Set<string>;
+  canCreateUserSpot: boolean;
+  onUserSpotCreated: (spot: UserFishingSpot) => void;
 };
 
 export function ExternalCatchMemoSection({
@@ -151,11 +167,15 @@ export function ExternalCatchMemoSection({
   fishSpecies,
   isRegistrationRequested,
   onRegistrationRequestHandled,
+  masterSpotIds,
+  canCreateUserSpot,
+  onUserSpotCreated,
 }: ExternalCatchMemoSectionProps) {
   const [form, setForm] = useState<FormState>(initialFormState());
   const [errors, setErrors] = useState<FormErrors>({});
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSpotRegistrationOpen, setIsSpotRegistrationOpen] = useState(false);
   const editingMemo = useMemo(
     () => memos.find((memo) => memo.id === editingId),
     [editingId, memos],
@@ -254,6 +274,18 @@ export function ExternalCatchMemoSection({
   };
 
   const title = editingMemo ? "釣果を編集" : "釣果を登録";
+  const masterSpots = spots.filter((spot) => masterSpotIds.has(spot.id));
+  const userSpots = spots.filter((spot) => !masterSpotIds.has(spot.id));
+  const missingEditingSpot = editingMemo?.spotId && !spots.some((spot) => spot.id === editingMemo.spotId) ? editingMemo : null;
+  const openSpotRegistration = () => {
+    if (!canCreateUserSpot) return;
+    setIsSpotRegistrationOpen(true);
+  };
+  const handleSpotCreated = (spot: UserFishingSpot) => {
+    onUserSpotCreated(spot);
+    setForm((current) => ({ ...current, spotId: spot.runtimeId }));
+    setIsSpotRegistrationOpen(false);
+  };
 
   return (
     <>
@@ -322,12 +354,16 @@ export function ExternalCatchMemoSection({
                     地図上の釣り場 <span className="requiredBadge">必須</span>
                     <select
                       value={form.spotId}
-                      onChange={(e) => updateForm("spotId", e.target.value)}
+                      onChange={(e) => {
+                        if (e.target.value === NEW_USER_SPOT_SENTINEL) { openSpotRegistration(); return; }
+                        updateForm("spotId", e.target.value);
+                      }}
                     >
                       <option value="">選択してください</option>
-                      {buildCatchRegistrationSpotOptions(spots).map((spot) => (
-                        <option key={spot.id} value={spot.id}>{spot.label}</option>
-                      ))}
+                      {missingEditingSpot ? <optgroup label="現在の紐付け"><option value={missingEditingSpot.spotId}>{missingEditingSpot.estimatedSpotName ?? missingEditingSpot.areaName}</option></optgroup> : null}
+                      <optgroup label="既存の釣り場">{buildCatchRegistrationSpotOptions(masterSpots).map((spot) => <option key={spot.id} value={spot.id}>{spot.label}</option>)}</optgroup>
+                      {userSpots.length > 0 ? <optgroup label="自分の登録地点">{buildCatchRegistrationSpotOptions(userSpots).map((spot) => <option key={spot.id} value={spot.id}>{spot.label}</option>)}</optgroup> : null}
+                      {canCreateUserSpot ? <optgroup label="地点操作"><option value={NEW_USER_SPOT_SENTINEL}>＋ 新規地点登録</option></optgroup> : null}
                     </select>
                   </label>
                   <label>
@@ -413,6 +449,11 @@ export function ExternalCatchMemoSection({
           </section>
         </div>
       ) : null}
+      {isSpotRegistrationOpen ? <UserFishingSpotRegistrationModal
+        initialPosition={[spots[0]?.longitude ?? 130.1, spots[0]?.latitude ?? 33.5]}
+        onClose={() => setIsSpotRegistrationOpen(false)}
+        onCreated={handleSpotCreated}
+      /> : null}
     </>
   );
 }
@@ -438,7 +479,7 @@ function ExternalMemoCard({
     : undefined;
   const displayLocationName = linkedSpot?.name ?? memo.estimatedSpotName ?? memo.areaName;
   const locationLabel = linkedSpot
-    ? `${displayLocationName}（${linkedSpot.areaName}）`
+    ? linkedSpot.areaName ? `${displayLocationName}（${linkedSpot.areaName}）` : displayLocationName
     : displayLocationName;
   const speciesLabels = memo.catchItems.map((item) =>
     legacySpeciesLabel(item.species as FishSpeciesName),

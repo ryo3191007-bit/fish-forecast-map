@@ -701,7 +701,10 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             localMemoIds={localMemoIds}
             storageError={storageError}
             storageStatus={memoStorageStatus}
-            spots={masterData.fishingSpots}
+            spots={fishingSpots}
+            masterSpotIds={new Set(masterData.fishingSpots.map((spot) => spot.id))}
+            canCreateUserSpot={auth.status === "signed-in"}
+            onUserSpotCreated={(spot) => setUserFishingSpots(current => [...current.filter(item => item.id !== spot.id), spot])}
             fishSpecies={masterData.fishSpecies}
             isRegistrationRequested={isRegistrationRequested}
             onRegistrationRequestHandled={handleRegistrationRequestHandled}
