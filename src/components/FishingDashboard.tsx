@@ -32,6 +32,9 @@ import { getEvaluationReferenceTime, isValidAllSpeciesHistoryState, resolveAllSp
 import { filterByFishSpecies } from "@/lib/fishSpeciesResolver";
 import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
 import { selectFishingSpot, toEnvironmentPoint } from "@/domain/fishingSpotPresentation";
+import { fetchMyUserFishingSpotDetails, fetchMyUserFishingSpots } from "@/lib/userFishingSpotRepository";
+import { mapUserSpotDetailsForDisplay, userFishingSpotToFishingSpot, type UserFishingSpot } from "@/domain/userFishingSpot";
+import { UserFishingSpotRegistrationModal } from "./UserFishingSpotRegistrationModal";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "catchReports" | "spotEvaluation";
@@ -94,6 +97,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [masterData, setMasterData] = useState<MasterDataSet>(() =>
     getStaticMasterData(),
   );
+  const [userFishingSpots, setUserFishingSpots] = useState<UserFishingSpot[]>([]);
+  const [isSpotRegistrationOpen, setIsSpotRegistrationOpen] = useState(false);
   const manualCatchMemos = useMemo(
     () => getManualCatchMemos(externalMemos),
     [externalMemos],
@@ -108,7 +113,13 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     }))),
     [externalMemos],
   );
-  const fishingSpots = masterData.fishingSpots;
+  const fishingSpots = useMemo(() => [...masterData.fishingSpots, ...userFishingSpots.map(userFishingSpotToFishingSpot)], [masterData.fishingSpots, userFishingSpots]);
+  useEffect(() => {
+    let active = true;
+    if (auth.status !== "signed-in") { setUserFishingSpots([]); return; }
+    fetchMyUserFishingSpots().then(spots => { if (active) setUserFishingSpots(spots); }).catch(() => { if (active) setUserFishingSpots([]); });
+    return () => { active = false; };
+  }, [auth.status, auth.user?.id]);
   const fishSpeciesFilterNames = useMemo(
     () => getFishSpeciesFilterNames(masterData),
     [masterData],
@@ -372,11 +383,25 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     setSpotDetails(null);
     if (!environmentSpot) { setSpotDetailStatus("idle"); return; }
     setSpotDetailStatus("loading");
-    fetchFishingSpotDetails(environmentSpot.id)
+    const userSpot = userFishingSpots.find(spot => spot.runtimeId === environmentSpot.id);
+    (userSpot
+      ? Promise.all([fetchFishingSpotDetails(), fetchMyUserFishingSpotDetails(userSpot.id)]).then(([definitions, values]) => ({ data: mapUserSpotDetailsForDisplay(values, definitions.data.itemDefinitions) }))
+      : fetchFishingSpotDetails(environmentSpot.id))
       .then((result) => { if (active) { setSpotDetails(result.data); setSpotDetailStatus("ready"); } })
       .catch(() => { if (active) { setSpotDetails(null); setSpotDetailStatus("failed"); } });
     return () => { active = false; };
-  }, [environmentSpot]);
+  }, [environmentSpot, userFishingSpots]);
+
+  const handleUserSpotCreated = useCallback((spot: UserFishingSpot) => {
+    setUserFishingSpots(current => [...current.filter(item => item.id !== spot.id), spot]);
+    setEnvironmentSpotId(spot.runtimeId);
+    setDashboardMode("spotEvaluation");
+    setSpotEvaluationTab("釣場");
+    setIsSpotRegistrationOpen(false);
+    mapFocusRequestIdRef.current += 1;
+    setMapFocusRequest({ spotId: spot.runtimeId, requestId: mapFocusRequestIdRef.current });
+    mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
 
   const activeSortOptions = reportSortOptions;
   const isInitialState =
@@ -676,7 +701,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             localMemoIds={localMemoIds}
             storageError={storageError}
             storageStatus={memoStorageStatus}
-            spots={fishingSpots}
+            spots={masterData.fishingSpots}
             fishSpecies={masterData.fishSpecies}
             isRegistrationRequested={isRegistrationRequested}
             onRegistrationRequestHandled={handleRegistrationRequestHandled}
@@ -702,9 +727,16 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             catches={scoreCatchRecords}
             onShowAllSpecies={openAllSpecies}
             onFocusMap={focusSelectedSpotOnMap}
+            onOpenSpotRegistration={() => setIsSpotRegistrationOpen(true)}
+            isUserSpot={Boolean(userFishingSpots.some(spot => spot.runtimeId === environmentSpotId))}
           />
         </div>
       )}
+      {isSpotRegistrationOpen && (auth.status === "signed-in" ? <UserFishingSpotRegistrationModal
+        initialPosition={[environmentSpot?.longitude ?? 130.1, environmentSpot?.latitude ?? 33.5]}
+        onClose={() => setIsSpotRegistrationOpen(false)}
+        onCreated={handleUserSpotCreated}
+      /> : <div className="userSpotAuthNotice" role="dialog" aria-modal="true" aria-label="地点登録にはログインが必要"><p>地点を登録するには、ヘッダーからログインしてください。</p><button type="button" onClick={() => setIsSpotRegistrationOpen(false)}>閉じる</button></div>)}
     </section>
   );
 }

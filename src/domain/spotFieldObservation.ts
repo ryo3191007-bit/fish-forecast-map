@@ -152,6 +152,7 @@ export function buildSaveSpotFieldObservationInput(
     return { spotId, itemKey, informationState: "weak_evidence", valueText: null, valueTextList, valueNumber: null, unit: null, checkedAt: draft.checkedAt, note };
   }
 
+  if (!draft.numberValue.trim()) return null;
   const valueNumber = Number(draft.numberValue);
   if (!Number.isFinite(valueNumber) || valueNumber < 0) return null;
   return { spotId, itemKey, informationState: "weak_evidence", valueText: null, valueTextList: [], valueNumber, unit: config.unit ?? null, checkedAt: draft.checkedAt, note };

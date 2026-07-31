@@ -13,6 +13,7 @@ import { getSupabaseClient } from "@/lib/supabaseClient";
 
 type UserSpotRow = { id: string; name: string; latitude: number | string; longitude: number | string; area_name: string | null; spot_type: string | null; created_at: string; updated_at: string };
 type UserDetailRow = { id: string; user_spot_id: string; item_key: UserFishingSpotDetailItemKey; value_text: string | null; value_text_list: string[] | null; value_number: number | string | null; unit: string | null; checked_at: string; note: string | null; updated_at: string };
+type PostgrestErrorLike = { code?: string; message?: string; details?: string; hint?: string };
 
 function client() {
   const status = getSupabaseClient();
@@ -42,6 +43,80 @@ export async function createMyUserFishingSpot(input: SaveUserFishingSpotInput): 
   const { data, error } = await client().from("user_fishing_spots").insert({ name: valid.name, latitude: valid.latitude, longitude: valid.longitude, area_name: valid.areaName, spot_type: valid.spotType }).select("id,name,latitude,longitude,area_name,spot_type,created_at,updated_at").single();
   if (error || !data) throw new Error("user-fishing-spot-create-failed");
   return mapSpot(data as UserSpotRow);
+}
+
+export async function createMyUserFishingSpotWithDetails(creationId: string, input: SaveUserFishingSpotInput, details: SaveSpotFieldObservationInput[]): Promise<UserFishingSpot> {
+  const valid = validateUserFishingSpotInput(input);
+  if (!valid || details.some((detail) => !userFishingSpotDetailItemKeys.includes(detail.itemKey as UserFishingSpotDetailItemKey) || detail.informationState !== "weak_evidence")) throw new Error("invalid-user-fishing-spot");
+  const { data, error } = await client().rpc("create_my_user_fishing_spot_with_details", {
+    p_spot_id: creationId, p_name: valid.name, p_latitude: valid.latitude, p_longitude: valid.longitude,
+    p_area_name: valid.areaName, p_spot_type: valid.spotType,
+    p_details: details.map((detail) => ({ item_key: detail.itemKey, value_text: detail.valueText, value_text_list: detail.valueTextList, value_number: detail.valueNumber, unit: detail.unit, checked_at: detail.checkedAt, note: detail.note })),
+  });
+  if (error) {
+    console.error("User fishing spot atomic RPC failed", { code: error.code, message: error.message });
+    if (!isCreateSpotRpcMissing(error)) throw new Error("user-fishing-spot-create-failed");
+    return createMyUserFishingSpotWithLegacyTables(creationId, valid, details);
+  }
+  if (!data) throw new Error("user-fishing-spot-create-failed");
+  const { data: row, error: fetchError } = await client().from("user_fishing_spots").select("id,name,latitude,longitude,area_name,spot_type,created_at,updated_at").eq("id", data as string).single();
+  if (fetchError || !row) throw new Error("user-fishing-spot-create-result-failed");
+  return mapSpot(row as UserSpotRow);
+}
+
+export function isCreateSpotRpcMissing(error: PostgrestErrorLike): boolean {
+  if (error.code === "PGRST202") return true;
+  const message = `${error.message ?? ""} ${error.details ?? ""} ${error.hint ?? ""}`.toLowerCase();
+  return message.includes("create_my_user_fishing_spot_with_details")
+    && (message.includes("schema cache") || message.includes("could not find the function"));
+}
+
+async function createMyUserFishingSpotWithLegacyTables(creationId: string, input: SaveUserFishingSpotInput, details: SaveSpotFieldObservationInput[]): Promise<UserFishingSpot> {
+  const supabase = client();
+  const spotPayload = {
+    id: creationId,
+    name: input.name,
+    latitude: input.latitude,
+    longitude: input.longitude,
+    area_name: input.areaName,
+    spot_type: input.spotType,
+    is_deleted: true,
+  };
+  try {
+    const { error: stageError } = await supabase.from("user_fishing_spots").upsert(spotPayload, { onConflict: "id" });
+    if (stageError) throw stageError;
+
+    const { error: clearError } = await supabase.from("user_fishing_spot_detail_values").delete().eq("user_spot_id", creationId);
+    if (clearError) throw clearError;
+    if (details.length > 0) {
+      const { error: detailError } = await supabase.from("user_fishing_spot_detail_values").insert(details.map((detail) => ({
+        user_spot_id: creationId,
+        item_key: detail.itemKey,
+        value_text: detail.valueText,
+        value_text_list: detail.valueTextList,
+        value_number: detail.valueNumber,
+        unit: detail.unit,
+        checked_at: detail.checkedAt,
+        note: detail.note,
+      })));
+      if (detailError) throw detailError;
+    }
+
+    const { data, error: publishError } = await supabase.from("user_fishing_spots")
+      .update({ is_deleted: false })
+      .eq("id", creationId)
+      .eq("is_deleted", true)
+      .select("id,name,latitude,longitude,area_name,spot_type,created_at,updated_at")
+      .single();
+    if (publishError || !data) throw publishError ?? new Error("legacy-user-fishing-spot-publish-failed");
+    return mapSpot(data as UserSpotRow);
+  } catch (error) {
+    const postgrestError = error as PostgrestErrorLike;
+    console.error("User fishing spot compatibility save failed", { code: postgrestError.code, message: postgrestError.message });
+    const { error: cleanupError } = await supabase.from("user_fishing_spots").delete().eq("id", creationId);
+    if (cleanupError) console.error("User fishing spot compatibility cleanup failed", { code: cleanupError.code, message: cleanupError.message });
+    throw new Error("user-fishing-spot-create-failed");
+  }
 }
 
 export async function updateMyUserFishingSpot(id: string, input: SaveUserFishingSpotInput): Promise<UserFishingSpot> {

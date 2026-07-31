@@ -17,6 +17,7 @@ export type SpotFieldObservationState = {
 };
 
 export function useSpotFieldObservations(spotId: string): SpotFieldObservationState {
+  const enabled = !spotId.startsWith("user:");
   const [observations, setObservations] = useState<SpotFieldObservation[]>([]);
   const [status, setStatus] = useState<SpotFieldObservationStatus>("loading");
   const [isMutating, setIsMutating] = useState(false);
@@ -25,6 +26,11 @@ export function useSpotFieldObservations(spotId: string): SpotFieldObservationSt
   currentSpotIdRef.current = spotId;
 
   const load = useCallback(async (targetSpotId: string) => {
+    if (!enabled) {
+      setObservations([]);
+      setStatus("ready");
+      return;
+    }
     if (!targetSpotId) {
       setObservations([]);
       setStatus("ready");
@@ -61,7 +67,7 @@ export function useSpotFieldObservations(spotId: string): SpotFieldObservationSt
       setStatus("failed");
       setError("実地調査情報を取得できませんでした。");
     }
-  }, []);
+  }, [enabled]);
 
   useEffect(() => {
     let active = true;
