@@ -228,13 +228,12 @@ function renderResearchConfidence(presentation: SpotDetailUiPresentation) {
 }
 
 function SpeciesTab({ details, status, catches, spotId, fieldObservations, isUserSpot }: { details: FishingSpotDetailSet | null; status: SpotDetailLoadStatus; catches: ExternalCatchRecord[]; spotId: string; fieldObservations: SpotFieldObservationState; isUserSpot?: boolean }) {
-  if (isUserSpot) return <StateMessage>ユーザー地点の対象魚種編集は現在利用できません。</StateMessage>;
   const registeredSpecies = getRegisteredCatchSpeciesForSpot(catches, spotId);
   const observation = fieldObservations.observations.find((item) => item.itemKey === "target_species");
   const presentation = researchPresentation(details, status, "target_species");
   return <dl className="detailGrid">
     <div><dt><span className="detailIcon" aria-hidden="true">🐟</span>自分の釣果</dt><dd>{registeredSpecies.length > 0 ? registeredSpecies.join("、") : "この地点の釣果はまだありません"}</dd></div>
-    <SpotFieldObservationCard
+    {!isUserSpot && <SpotFieldObservationCard
       spotId={spotId}
       itemKey="target_species"
       label="対象魚種"
@@ -247,7 +246,7 @@ function SpeciesTab({ details, status, catches, spotId, fieldObservations, isUse
       speciesOptions={fishSpeciesNames}
       onSave={fieldObservations.saveObservation}
       onDelete={fieldObservations.deleteObservation}
-    />
+    />}
   </dl>;
 }
 
