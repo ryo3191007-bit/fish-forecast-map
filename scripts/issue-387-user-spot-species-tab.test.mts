@@ -14,14 +14,15 @@ function catchRecord(id: string, species: string, spotId: string, acquisitionMet
 
 const userSpotId = "user:11111111-1111-4111-8111-111111111111";
 const catches = [
-  catchRecord("1", "アジ", userSpotId),
+  { ...catchRecord("1", "アジ", userSpotId), catchItems: [{ species: "アジ" }, { species: "チヌ" }, { species: " チヌ　" }] },
   catchRecord("2", "アジ", userSpotId),
-  catchRecord("3", "チヌ", userSpotId),
+  { ...catchRecord("3", "真鯛", userSpotId), catchItems: [] },
   catchRecord("4", "シーバス", "user:22222222-2222-4222-8222-222222222222"),
   catchRecord("5", "キス", userSpotId, "ai_assisted"),
+  { ...catchRecord("6", "サバ", userSpotId, "auto"), catchItems: [{ species: "イワシ" }, { species: "サバ" }] },
 ];
 
-assert.deepEqual(getRegisteredCatchSpeciesForSpot(catches, userSpotId), ["アジ", "チヌ"], "user spots show unique manual species for the exact spot only");
+assert.deepEqual(getRegisteredCatchSpeciesForSpot(catches, userSpotId), ["アジ", "チヌ", "真鯛"], "all catch-item species are deduplicated while legacy records fall back to their single species");
 assert.deepEqual(getRegisteredCatchSpeciesForSpot(catches, "user:33333333-3333-4333-8333-333333333333"), [], "a user spot without catches keeps the empty state");
 
 const card = fs.readFileSync("src/components/SpotEvaluationCard.tsx", "utf8");
