@@ -4,7 +4,7 @@ import { getSupabaseClient } from "@/lib/supabaseClient";
 import { mapExternalCatchMemoRow, mapExternalCatchMemoToUpsertPayload, type ExternalCatchMemoRow } from "@/lib/externalCatchMemoMapper";
 
 export type ExternalCatchMemoDbSource = "supabase" | "local-storage-fallback";
-export type ExternalCatchMemoDbFallbackReason = "not-authenticated" | "supabase-not-configured" | "supabase-error" | "local-data-not-migrated";
+export type ExternalCatchMemoDbFallbackReason = "not-authenticated" | "supabase-not-configured" | "supabase-error" | "integrity-error" | "local-data-not-migrated";
 export type ExternalCatchMemoDbResult<T> = {
   data: T;
   meta: { source: ExternalCatchMemoDbSource; fallbackReason?: ExternalCatchMemoDbFallbackReason; message?: string };
@@ -39,6 +39,11 @@ export function isUserSpotColumnMissing(error: unknown): boolean {
   if (code !== "42703" && code !== "PGRST204") return false;
   const message = error && typeof error === "object" ? String((error as { message?: unknown }).message ?? "") : "";
   return /user_spot_id/i.test(message);
+}
+
+export function isUserSpotIntegrityError(error: unknown): boolean {
+  const code = getSupabaseErrorCode(error);
+  return code === "42501" || Boolean(code && /^23/.test(code)) || code === "P0001";
 }
 
 function buildDiagnosticMessage(message: string | undefined, code?: string): string | undefined {
@@ -130,7 +135,11 @@ export async function saveExternalCatchMemoToSupabase(userId: string | null, mem
     error = legacyMutation.error;
   }
 
-  if (error) return fallback(null, "supabase-error", buildDiagnosticMessage(error.message, getSupabaseErrorCode(error)));
+  if (error) return fallback(
+    null,
+    payload.user_spot_id && isUserSpotIntegrityError(error) ? "integrity-error" : "supabase-error",
+    buildDiagnosticMessage(error.message, getSupabaseErrorCode(error)),
+  );
   if (!data) return fallback(null, "supabase-error", "No matching external catch memo row was updated.");
   const savedMemo = mapExternalCatchMemoRow(data as unknown as ExternalCatchMemoRow);
   return { data: savedMemo, meta: { source: "supabase" } };

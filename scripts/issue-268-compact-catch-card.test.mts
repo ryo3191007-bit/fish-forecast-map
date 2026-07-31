@@ -1,11 +1,9 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import {
-  buildCatchMeasurements,
-  buildMultipleCatchSummary,
-  formatCaughtDateTime,
-} from "../src/components/ExternalCatchMemoSection";
+import { createRequire } from "node:module";
 import type { ExternalCatchMemo } from "../src/lib/externalCatchMemoStorage";
+const require = createRequire(import.meta.url); require.extensions[".css"] = () => undefined;
+const { buildCatchMeasurements, buildMultipleCatchSummary, formatCaughtDateTime } = await import("../src/components/ExternalCatchMemoSection");
 
 const section = readFileSync("src/components/ExternalCatchMemoSection.tsx", "utf8");
 const css = readFileSync("src/app/globals.css", "utf8");

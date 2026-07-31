@@ -299,6 +299,12 @@ export function useExternalCatchMemos(authStatus: SupabaseAuthStatus, user: User
         return true;
       }
 
+      if (result.meta.fallbackReason === "integrity-error") {
+        setStorageError("選択したユーザー地点への紐付けが許可されなかったため、保存できませんでした。地点を選び直してください。入力内容は保持されています。");
+        setStatus((current) => ({ ...current, isMutating: false }));
+        return false;
+      }
+
       nextLocalMemoIds.add(memo.id);
       saveLocalOriginMemos(optimisticMemos, nextLocalMemoIds, mutationUserId);
       markLocalOwner(memo.id, mutationUserId);

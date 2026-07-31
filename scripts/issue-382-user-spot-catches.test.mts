@@ -1,8 +1,12 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import { createRequire } from "node:module";
 import { mapExternalCatchMemoRow, mapExternalCatchMemoToUpsertPayload, type ExternalCatchMemoRow } from "../src/lib/externalCatchMemoMapper";
-import { createMemo, NEW_USER_SPOT_SENTINEL, validateForm } from "../src/components/ExternalCatchMemoSection";
 import { userFishingSpotToFishingSpot } from "../src/domain/userFishingSpot";
+import { isUserSpotColumnMissing, isUserSpotIntegrityError } from "../src/lib/externalCatchMemoRepository";
+const require = createRequire(import.meta.url);
+require.extensions[".css"] = () => undefined;
+const { createMemo, NEW_USER_SPOT_SENTINEL, validateForm } = await import("../src/components/ExternalCatchMemoSection");
 const row = { id:"memo",species:"アジ",caught_date:"2026-07-31",caught_time:null,area_name:"",estimated_spot_name:"個人磯",spot_id:null,user_spot_id:"11111111-1111-4111-8111-111111111111",latitude:33,longitude:130,coordinate_precision:"exact",method:null,catch_count:null,size_cm:null,catch_items:[{species:"アジ"}],source_id:"self",source_name:"本人",source_url:"https://example.test",acquisition_method:"manual",confidence:"high",environment_match_notes:[],user_memo:null,owner_id:"owner",created_by:"authenticated_user",is_deleted:false,created_at:"2026-07-31T00:00:00Z",updated_at:"2026-07-31T00:00:00Z" } satisfies ExternalCatchMemoRow;
 const mapped=mapExternalCatchMemoRow(row)!; assert.equal(mapped.spotId,`user:${row.user_spot_id}`);
 let payload=mapExternalCatchMemoToUpsertPayload(mapped); assert.equal(payload.spot_id,null); assert.equal(payload.user_spot_id,row.user_spot_id);
@@ -12,6 +16,12 @@ const spot=userFishingSpotToFishingSpot({id:row.user_spot_id!,runtimeId:`user:${
 const form={catchItems:[{species:"アジ" as const,method:"" as const,catchCount:"",sizeCm:""}],caughtDateTime:"2026-07-31T12:00",spotId:spot.id,userMemo:"保持"};
 const memo=createMemo(form,[spot]); assert.deepEqual([memo.estimatedSpotName,memo.areaName,memo.latitude,memo.longitude,memo.coordinatePrecision],["個人磯","",33,130,"exact"]);
 assert.doesNotThrow(()=>createMemo({...form,caughtDateTime:"",spotId:mapped.spotId!},[],mapped));
+assert.equal(isUserSpotColumnMissing({code:"42703",message:"column user_spot_id does not exist"}),true);
+for (const code of ["42501","23502","23503","23505","23514","P0001"]) assert.equal(isUserSpotIntegrityError({code}),true);
+assert.equal(isUserSpotIntegrityError({code:"08006"}),false);
 const migration=fs.readFileSync("supabase/migrations/20260731120000_issue_382_user_spot_catches.sql","utf8"); assert.match(migration,/foreign key \(user_spot_id, owner_id\)/); assert.match(migration,/is_deleted = false/); assert.match(migration,/old\.user_spot_id is distinct from new\.user_spot_id/);
 const section=fs.readFileSync("src/components/ExternalCatchMemoSection.tsx","utf8"); assert.match(section,/自分の登録地点/); assert.match(section,/＋ 新規地点登録/); assert.match(section,/spotId: spot\.runtimeId/);
+assert.doesNotMatch(section,/\blazy\s*\(/); assert.match(section,/if \(isSpotRegistrationOpen\) return/);
+const hook=fs.readFileSync("src/hooks/useExternalCatchMemos.ts","utf8"); assert.match(hook,/fallbackReason === "integrity-error"[\s\S]*return false/);
+const modal=fs.readFileSync("src/components/UserFishingSpotRegistrationModal.tsx","utf8"); assert.match(modal,/stopImmediatePropagation\(\)/);
 console.log("Issue #382 user spot catch checks passed.");

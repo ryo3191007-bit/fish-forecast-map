@@ -1,6 +1,6 @@
 "use client";
 
-import { lazy, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type {
   ExternalCatchMemoMigrationResult,
   ExternalCatchMemoStorageStatus,
@@ -16,7 +16,7 @@ import {
 } from "@/domain/fishing";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
-const UserFishingSpotRegistrationModal = lazy(() => import("./UserFishingSpotRegistrationModal").then((module) => ({ default: module.UserFishingSpotRegistrationModal })));
+import { UserFishingSpotRegistrationModal } from "./UserFishingSpotRegistrationModal";
 import type { UserFishingSpot } from "@/domain/userFishingSpot";
 
 export const NEW_USER_SPOT_SENTINEL = "__new-user-spot__";
@@ -194,10 +194,11 @@ export function ExternalCatchMemoSection({
   const [migrationResult, setMigrationResult] =
     useState<ExternalCatchMemoMigrationResult | null>(null);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
+    if (isSpotRegistrationOpen) return;
     setIsModalOpen(false);
     setErrors({});
-  };
+  }, [isSpotRegistrationOpen]);
 
   useEffect(() => {
     if (!isModalOpen) return;
@@ -206,7 +207,7 @@ export function ExternalCatchMemoSection({
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isModalOpen]);
+  }, [closeModal, isModalOpen]);
 
   useEffect(() => {
     setSelectedMigrationIds(

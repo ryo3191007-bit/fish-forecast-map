@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { createMemo, formFromMemo, type FormState } from "../src/components/ExternalCatchMemoSection";
+import { createRequire } from "node:module";
+import type { FormState } from "../src/components/ExternalCatchMemoSection";
 import { normalizeCatchItems } from "../src/lib/externalCatchMemoStorage";
 import { mapExternalCatchMemoRow, mapExternalCatchMemoToUpsertPayload, type ExternalCatchMemoRow } from "../src/lib/externalCatchMemoMapper";
+const require = createRequire(import.meta.url); require.extensions[".css"] = () => undefined;
+const { createMemo, formFromMemo } = await import("../src/components/ExternalCatchMemoSection");
 
 const section = readFileSync("src/components/ExternalCatchMemoSection.tsx", "utf8");
 const dashboard = readFileSync("src/components/FishingDashboard.tsx", "utf8");
