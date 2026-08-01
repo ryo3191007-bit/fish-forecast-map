@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import type { PreparedRecordPhoto } from "@/domain/recordPhoto";
+import { uploadRecordPhotos } from "@/lib/recordPhotoRepository";
 import { fishingDetailItems, terrainDetailItems } from "@/domain/spotDetailUiPresentation";
 import { buildSaveSpotFieldObservationInput, createSpotFieldObservationDraft, formatSpotFieldObservationDate, formatSpotFieldObservationValue, getTodayInJapan, spotFieldObservationConfigs, type SpotFieldObservationDraft } from "@/domain/spotFieldObservation";
 import { userFishingSpotDetailItemKeys } from "@/domain/userFishingSpot";
 import type { SpotFieldReportState } from "@/hooks/useSpotFieldObservations";
 import { ObservationValueInput } from "./SpotFieldObservationCard";
+import { RecordPhotoEditor } from "./RecordPhotoEditor";
 import styles from "./UserSpotFieldReportSection.module.css";
 
 const labels = new Map<string, string>([...fishingDetailItems, ...terrainDetailItems]);
@@ -17,6 +20,7 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
   const [summaryNote, setSummaryNote] = useState("");
   const [drafts, setDrafts] = useState<Record<string, SpotFieldObservationDraft>>({});
   const [error, setError] = useState<string | null>(null);
+  const [photos, setPhotos] = useState<PreparedRecordPhoto[]>([]);
   const selected = Object.keys(drafts);
   const toggle = (key: string, checked: boolean) => setDrafts((current) => {
     if (checked) return { ...current, [key]: createSpotFieldObservationDraft() };
@@ -25,8 +29,14 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
   const submit = async () => {
     const values = selected.map((key) => buildSaveSpotFieldObservationInput(spotId, key, spotFieldObservationConfigs[key], { ...drafts[key], checkedAt: observedOn })).filter((value) => value !== null);
     if (values.length !== selected.length || !values.length) { setError("1項目以上の確認内容を入力してください。"); return; }
-    if (await state.saveReport(observedOn, summaryNote.trim() || null, values)) {
-      setOpen(false); setDrafts({}); setSummaryNote(""); setObservedOn(getTodayInJapan()); setError(null);
+    const reportId = await state.saveReport(observedOn, summaryNote.trim() || null, values);
+    if (reportId) {
+      if (photos.length) {
+        try { await uploadRecordPhotos("field_report", reportId, photos, 0); }
+        catch { setError("本文は保存しましたが、写真を保存できませんでした。履歴から写真だけ再試行できます。"); return; }
+      }
+      photos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
+      setOpen(false); setDrafts({}); setPhotos([]); setSummaryNote(""); setObservedOn(getTodayInJapan()); setError(null);
     } else setError("保存できませんでした。入力内容と通信状態を確認してください。");
   };
   const unavailable = state.reportStatus !== "ready";
@@ -37,6 +47,7 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
       <header><h3 id="field-report-form-heading">実地調査をまとめて登録</h3><button type="button" aria-label="閉じる" disabled={state.isMutating} onClick={() => setOpen(false)}>×</button></header>
       <label>調査日<input type="date" required max={getTodayInJapan()} value={observedOn} onChange={(event) => setObservedOn(event.target.value)} /></label>
       <label>調査全体メモ（任意）<textarea maxLength={1000} value={summaryNote} onChange={(event) => setSummaryNote(event.target.value)} /></label>
+      <RecordPhotoEditor targetType="field_report" enabled pending={photos} onPendingChange={setPhotos} />
       <fieldset><legend>確認した項目（1項目以上）</legend>{items.map(({ itemKey, label }) => <div className={styles.item} key={itemKey}>
         <label className={styles.itemToggle}><input type="checkbox" checked={Boolean(drafts[itemKey])} onChange={(event) => toggle(itemKey, event.target.checked)} />{label}</label>
         {drafts[itemKey] ? <><ObservationValueInput config={spotFieldObservationConfigs[itemKey]} options={spotFieldObservationConfigs[itemKey].options ?? []} draft={drafts[itemKey]} onChange={(update) => setDrafts((current) => ({ ...current, [itemKey]: typeof update === "function" ? update(current[itemKey]) : update }))} /><label>項目メモ（任意）<textarea maxLength={1000} value={drafts[itemKey].note} onChange={(event) => setDrafts((current) => ({ ...current, [itemKey]: { ...current[itemKey], note: event.target.value } }))} /></label></> : null}
@@ -46,6 +57,7 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
         <header><strong>{formatSpotFieldObservationDate(report.observedOn)}</strong><small>{report.origin === "snapshot_backfill" ? "既存の現在値から移行" : report.origin === "initial_details" ? "地点登録時" : "実地調査"}</small></header>
         {report.summaryNote ? <p>{report.summaryNote}</p> : null}
         <dl>{report.values.map((value) => <div key={value.id}><dt>{labels.get(value.itemKey) ?? value.itemKey}</dt><dd>{formatSpotFieldObservationValue(value)}{value.note ? <small>{value.note}</small> : null}</dd></div>)}</dl>
+        <RecordPhotoEditor targetType="field_report" targetId={report.id} enabled />
       </article>)}</div>
     </section></div> : null}
   </>;

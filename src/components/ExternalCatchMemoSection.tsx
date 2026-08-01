@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import type { PreparedRecordPhoto } from "@/domain/recordPhoto";
+import { uploadRecordPhotos } from "@/lib/recordPhotoRepository";
 import type {
   ExternalCatchMemoMigrationResult,
   ExternalCatchMemoStorageStatus,
@@ -18,6 +20,7 @@ import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
 import { UserFishingSpotRegistrationModal } from "./UserFishingSpotRegistrationModal";
 import type { UserFishingSpot } from "@/domain/userFishingSpot";
+import { RecordPhotoEditor } from "./RecordPhotoEditor";
 
 export const NEW_USER_SPOT_SENTINEL = "__new-user-spot__";
 
@@ -176,6 +179,8 @@ export function ExternalCatchMemoSection({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSpotRegistrationOpen, setIsSpotRegistrationOpen] = useState(false);
+  const [pendingPhotos, setPendingPhotos] = useState<PreparedRecordPhoto[]>([]);
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const editingMemo = useMemo(
     () => memos.find((memo) => memo.id === editingId),
     [editingId, memos],
@@ -198,6 +203,7 @@ export function ExternalCatchMemoSection({
     if (isSpotRegistrationOpen) return;
     setIsModalOpen(false);
     setErrors({});
+    setPendingPhotos([]); setPhotoError(null);
   }, [isSpotRegistrationOpen]);
 
   useEffect(() => {
@@ -228,6 +234,7 @@ export function ExternalCatchMemoSection({
     setEditingId(null);
     setForm(initialFormState());
     setErrors({});
+    setPendingPhotos([]); setPhotoError(null);
     setIsModalOpen(true);
   };
   useEffect(() => {
@@ -249,7 +256,14 @@ export function ExternalCatchMemoSection({
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
     const nextMemo = createMemo(form, spots, editingMemo);
-    if (await onMemoSave(nextMemo)) closeModal();
+    if (await onMemoSave(nextMemo)) {
+      if (pendingPhotos.length) {
+        try { await uploadRecordPhotos("catch_memo", nextMemo.id, pendingPhotos, 0); }
+        catch { setPhotoError("釣果本文は保存しましたが、写真を保存できませんでした。編集画面から写真だけ再試行してください。"); return; }
+      }
+      pendingPhotos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
+      setPendingPhotos([]); closeModal();
+    }
   };
 
   const deleteEditingMemo = async () => {
@@ -317,6 +331,7 @@ export function ExternalCatchMemoSection({
               onEdit={openEdit}
               onDelete={onMemoDelete}
               isMutating={storageStatus.isMutating}
+              photoEnabled={storageStatus.isDbAvailable && !localMemoIds.has(memo.id)}
             />
           ))
         )}
@@ -425,6 +440,10 @@ export function ExternalCatchMemoSection({
                   />
                   </label>
                 </section>
+                <section className="externalMemoFormSection">
+                  <RecordPhotoEditor targetType="catch_memo" targetId={editingMemo && !localMemoIds.has(editingMemo.id) ? editingMemo.id : undefined} enabled={storageStatus.isDbAvailable && (!editingMemo || !localMemoIds.has(editingMemo.id))} pending={editingMemo ? undefined : pendingPhotos} onPendingChange={editingMemo ? undefined : setPendingPhotos} />
+                  {photoError ? <p className="fieldError" role="alert">{photoError}</p> : null}
+                </section>
               </div>
               {Object.keys(errors).length > 0 ? (
                 <p className="fieldError" role="alert">
@@ -466,12 +485,14 @@ function ExternalMemoCard({
   onEdit,
   onDelete,
   isMutating,
+  photoEnabled,
 }: {
   memo: ExternalCatchMemo;
   spots: FishingSpot[];
   onEdit: (memo: ExternalCatchMemo) => void;
   onDelete: (memoId: string) => Promise<boolean>;
   isMutating: boolean;
+  photoEnabled: boolean;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -583,6 +604,7 @@ function ExternalMemoCard({
           </ul>
         </div>
       ) : null}
+      <RecordPhotoEditor targetType="catch_memo" targetId={memo.id} enabled={photoEnabled} editable={false} />
     </article>
   );
 }

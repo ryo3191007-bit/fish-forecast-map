@@ -15,7 +15,7 @@ function persistedSpotId(runtimeId: string): string {
 export type UserFishingSpotDetailState = SpotFieldObservationState & {
   reports: SpotFieldReport[];
   reportStatus: "loading" | "ready" | "unavailable" | "failed";
-  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => Promise<boolean>;
+  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => Promise<string | null>;
 };
 
 export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolean): UserFishingSpotDetailState {
@@ -81,10 +81,10 @@ export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolea
   const saveReport = useCallback(async (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => {
     const targetRuntimeId = currentId.current;
     const spotId = persistedSpotId(targetRuntimeId);
-    if (status !== "ready" || reportStatus !== "ready" || !spotId || !values.length) return false;
+    if (status !== "ready" || reportStatus !== "ready" || !spotId || !values.length) return null;
     setIsMutating(true); setError(null);
-    try { await saveMySpotFieldReport("user", spotId, observedOn, summaryNote, values); await load(targetRuntimeId); return currentId.current === targetRuntimeId; }
-    catch { if (currentId.current === targetRuntimeId) setError("実地調査を保存できませんでした。"); return false; }
+    try { const reportId = await saveMySpotFieldReport("user", spotId, observedOn, summaryNote, values); await load(targetRuntimeId); return currentId.current === targetRuntimeId ? reportId : null; }
+    catch { if (currentId.current === targetRuntimeId) setError("実地調査を保存できませんでした。"); return null; }
     finally { setIsMutating(false); }
   }, [load, reportStatus, status]);
 

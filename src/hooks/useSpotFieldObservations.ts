@@ -21,7 +21,7 @@ export type SpotFieldObservationState = {
 export type SpotFieldReportState = SpotFieldObservationState & {
   reports: SpotFieldReport[];
   reportStatus: "loading" | "ready" | "unavailable" | "failed";
-  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => Promise<boolean>;
+  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => Promise<string | null>;
 };
 
 export function useSpotFieldObservations(spotId: string): SpotFieldReportState {
@@ -147,15 +147,15 @@ export function useSpotFieldObservations(spotId: string): SpotFieldReportState {
 
   const saveReport = useCallback(async (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => {
     const targetSpotId = currentSpotIdRef.current;
-    if (status !== "ready" || reportStatus !== "ready" || !values.length) return false;
+    if (status !== "ready" || reportStatus !== "ready" || !values.length) return null;
     setIsMutating(true); setError(null);
     try {
-      await saveMySpotFieldReport("master", targetSpotId, observedOn, summaryNote, values);
+      const reportId = await saveMySpotFieldReport("master", targetSpotId, observedOn, summaryNote, values);
       await load(targetSpotId);
-      return currentSpotIdRef.current === targetSpotId;
+      return currentSpotIdRef.current === targetSpotId ? reportId : null;
     } catch {
       if (currentSpotIdRef.current === targetSpotId) setError("実地調査を保存できませんでした。");
-      return false;
+      return null;
     } finally { setIsMutating(false); }
   }, [load, reportStatus, status]);
 
