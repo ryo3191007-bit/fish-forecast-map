@@ -29,6 +29,7 @@ import { getRegisteredCatchSpeciesForSpot } from "@/domain/spotSpeciesPresentati
 import { useSpotFieldObservations, type SpotFieldObservationState } from "@/hooks/useSpotFieldObservations";
 import { useUserFishingSpotDetails } from "@/hooks/useUserFishingSpotDetails";
 import { SpotFieldObservationCard } from "./SpotFieldObservationCard";
+import { UserSpotFieldReportSection } from "./UserSpotFieldReportSection";
 
 export type SpotEvaluationTab = "環境" | "釣場" | "地形" | "魚種";
 
@@ -118,6 +119,7 @@ export function SpotEvaluationCard(props: Props) {
         {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} spotId={props.selectedSpotId} fieldObservations={props.isUserSpot ? ownerDetails : fieldObservations} ownerOnly={props.isUserSpot} />}
         {props.activeTab === "魚種" && <SpeciesTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} catches={props.catches} spotId={props.selectedSpotId} fieldObservations={fieldObservations} isUserSpot={props.isUserSpot} />}
       </div>
+      {props.isUserSpot && (props.activeTab === "釣場" || props.activeTab === "地形") ? <UserSpotFieldReportSection spotId={props.selectedSpotId} state={ownerDetails} /> : null}
     </section>
   );
 }

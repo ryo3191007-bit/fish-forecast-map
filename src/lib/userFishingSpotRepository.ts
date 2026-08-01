@@ -8,11 +8,13 @@ import {
   type UserFishingSpot,
   type UserFishingSpotDetailItemKey,
   type UserFishingSpotDetailValue,
+  type UserFishingSpotFieldReport,
 } from "@/domain/userFishingSpot";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 
 type UserSpotRow = { id: string; name: string; latitude: number | string; longitude: number | string; area_name: string | null; spot_type: string | null; created_at: string; updated_at: string };
 type UserDetailRow = { id: string; user_spot_id: string; item_key: UserFishingSpotDetailItemKey; value_text: string | null; value_text_list: string[] | null; value_number: number | string | null; unit: string | null; checked_at: string; note: string | null; updated_at: string };
+type ReportRow = { id: string; user_spot_id: string; observed_on: string; summary_note: string | null; origin: UserFishingSpotFieldReport["origin"]; created_at: string; user_fishing_spot_field_report_values: Array<Omit<UserDetailRow, "user_spot_id" | "checked_at" | "updated_at"> & { created_at: string }> };
 type PostgrestErrorLike = { code?: string; message?: string; details?: string; hint?: string };
 
 function client() {
@@ -140,9 +142,32 @@ export async function fetchMyUserFishingSpotDetails(spotId: string): Promise<Use
 
 export async function saveMyUserFishingSpotDetail(spotId: string, input: SaveSpotFieldObservationInput): Promise<UserFishingSpotDetailValue> {
   if (!userFishingSpotDetailItemKeys.includes(input.itemKey as UserFishingSpotDetailItemKey) || input.informationState !== "weak_evidence") throw new Error("invalid-user-fishing-spot-detail");
-  const { data, error } = await client().from("user_fishing_spot_detail_values").upsert({ user_spot_id: spotId, item_key: input.itemKey, value_text: input.valueText, value_text_list: input.valueTextList, value_number: input.valueNumber, unit: input.unit, checked_at: input.checkedAt, note: input.note }, { onConflict: "user_spot_id,item_key" }).select("id,user_spot_id,item_key,value_text,value_text_list,value_number,unit,checked_at,note,updated_at").single();
-  if (error || !data) throw new Error("user-fishing-spot-detail-save-failed");
-  return mapDetail(data as UserDetailRow);
+  await saveMyUserFishingSpotFieldReport(spotId, input.checkedAt, null, [input]);
+  const values = await fetchMyUserFishingSpotDetails(spotId);
+  const saved = values.find((value) => value.itemKey === input.itemKey);
+  if (!saved) throw new Error("user-fishing-spot-detail-save-failed");
+  return saved;
+}
+
+export async function saveMyUserFishingSpotFieldReport(spotId: string, observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]): Promise<string> {
+  if (!values.length || new Set(values.map((value) => value.itemKey)).size !== values.length || values.some((value) => value.checkedAt !== observedOn || value.informationState !== "weak_evidence")) throw new Error("invalid-user-fishing-spot-field-report");
+  const { data, error } = await client().rpc("save_my_user_fishing_spot_field_report", {
+    p_user_spot_id: spotId, p_observed_on: observedOn, p_summary_note: summaryNote, p_origin: "user",
+    p_values: values.map((value) => ({ item_key: value.itemKey, value_text: value.valueText, value_text_list: value.valueTextList, value_number: value.valueNumber, unit: value.unit, note: value.note })),
+  });
+  if (error || !data) throw new Error("user-fishing-spot-field-report-save-failed");
+  return data as string;
+}
+
+export async function fetchMyUserFishingSpotFieldReports(spotId: string): Promise<UserFishingSpotFieldReport[]> {
+  const { data, error } = await client().from("user_fishing_spot_field_reports")
+    .select("id,user_spot_id,observed_on,summary_note,origin,created_at,user_fishing_spot_field_report_values(id,item_key,value_text,value_text_list,value_number,unit,note,created_at)")
+    .eq("user_spot_id", spotId).order("observed_on", { ascending: false }).order("created_at", { ascending: false });
+  if (error) throw new Error("user-fishing-spot-field-reports-fetch-failed");
+  return ((data ?? []) as ReportRow[]).map((report) => ({
+    id: report.id, spotId: report.user_spot_id, observedOn: report.observed_on, summaryNote: report.summary_note, origin: report.origin, createdAt: report.created_at,
+    values: report.user_fishing_spot_field_report_values.map((value) => mapDetail({ ...value, user_spot_id: report.user_spot_id, checked_at: report.observed_on, updated_at: value.created_at })),
+  }));
 }
 
 export async function deleteMyUserFishingSpotDetail(spotId: string, itemKey: UserFishingSpotDetailItemKey): Promise<void> {

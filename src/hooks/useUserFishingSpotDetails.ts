@@ -2,16 +2,22 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SaveSpotFieldObservationInput, SpotFieldObservation } from "@/domain/spotFieldObservation";
-import { USER_SPOT_ID_PREFIX, type UserFishingSpotDetailItemKey } from "@/domain/userFishingSpot";
-import { deleteMyUserFishingSpotDetail, fetchMyUserFishingSpotDetails, saveMyUserFishingSpotDetail } from "@/lib/userFishingSpotRepository";
+import { USER_SPOT_ID_PREFIX, type UserFishingSpotDetailItemKey, type UserFishingSpotFieldReport } from "@/domain/userFishingSpot";
+import { deleteMyUserFishingSpotDetail, fetchMyUserFishingSpotDetails, fetchMyUserFishingSpotFieldReports, saveMyUserFishingSpotDetail, saveMyUserFishingSpotFieldReport } from "@/lib/userFishingSpotRepository";
 import type { SpotFieldObservationState } from "./useSpotFieldObservations";
 
 function persistedSpotId(runtimeId: string): string {
   return runtimeId.startsWith(USER_SPOT_ID_PREFIX) ? runtimeId.slice(USER_SPOT_ID_PREFIX.length) : "";
 }
 
-export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolean): SpotFieldObservationState {
+export type UserFishingSpotDetailState = SpotFieldObservationState & {
+  reports: UserFishingSpotFieldReport[];
+  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => Promise<boolean>;
+};
+
+export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolean): UserFishingSpotDetailState {
   const [observations, setObservations] = useState<SpotFieldObservation[]>([]);
+  const [reports, setReports] = useState<UserFishingSpotFieldReport[]>([]);
   const [status, setStatus] = useState<SpotFieldObservationState["status"]>("loading");
   const [isMutating, setIsMutating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,18 +25,19 @@ export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolea
   currentId.current = runtimeSpotId;
 
   const load = useCallback(async (targetRuntimeId: string) => {
-    if (!enabled) { setObservations([]); setStatus("ready"); return; }
+    if (!enabled) { setObservations([]); setReports([]); setStatus("ready"); return; }
     const spotId = persistedSpotId(targetRuntimeId);
     if (!spotId) { setObservations([]); setStatus("failed"); return; }
     setStatus("loading");
     try {
-      const values = await fetchMyUserFishingSpotDetails(spotId);
+      const [values, history] = await Promise.all([fetchMyUserFishingSpotDetails(spotId), fetchMyUserFishingSpotFieldReports(spotId)]);
       if (currentId.current !== targetRuntimeId) return;
       setObservations(values.map((value) => ({ ...value, spotId: targetRuntimeId, informationState: "weak_evidence" })));
+      setReports(history);
       setStatus("ready"); setError(null);
     } catch {
       if (currentId.current !== targetRuntimeId) return;
-      setObservations([]); setStatus("failed"); setError("地点情報を取得できませんでした。");
+      setObservations([]); setReports([]); setStatus("failed"); setError("地点情報を取得できませんでした。");
     }
   }, [enabled]);
 
@@ -57,5 +64,15 @@ export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolea
     finally { setIsMutating(false); }
   }, [load, observations, status]);
 
-  return useMemo(() => ({ observations, status, isMutating, error, saveObservation, deleteObservation }), [deleteObservation, error, isMutating, observations, saveObservation, status]);
+  const saveReport = useCallback(async (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => {
+    const targetRuntimeId = currentId.current;
+    const spotId = persistedSpotId(targetRuntimeId);
+    if (status !== "ready" || !spotId || !values.length) return false;
+    setIsMutating(true); setError(null);
+    try { await saveMyUserFishingSpotFieldReport(spotId, observedOn, summaryNote, values); await load(targetRuntimeId); return currentId.current === targetRuntimeId; }
+    catch { if (currentId.current === targetRuntimeId) setError("現地調査を保存できませんでした。"); return false; }
+    finally { setIsMutating(false); }
+  }, [load, status]);
+
+  return useMemo(() => ({ observations, reports, status, isMutating, error, saveObservation, saveReport, deleteObservation }), [deleteObservation, error, isMutating, observations, reports, saveObservation, saveReport, status]);
 }
