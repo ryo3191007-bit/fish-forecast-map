@@ -52,7 +52,7 @@ export async function saveMySpotFieldObservation(input: SaveSpotFieldObservation
   try {
     return await saveMySpotFieldReport("master", input.spotId, input.checkedAt, null, [input]);
   } catch (error) {
-    if (!isMissingSupabaseObject(error)) throw error;
+    if (!isMissingSupabaseObject(error, "save_my_spot_field_report")) throw error;
   }
   const { data, error } = await client.rpc("save_my_spot_observation", {
     p_spot_id: input.spotId,

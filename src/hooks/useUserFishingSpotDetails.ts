@@ -51,7 +51,7 @@ export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolea
     } catch (historyError) {
       if (currentId.current !== targetRuntimeId) return;
       setReports([]);
-      setReportStatus(isMissingSupabaseObject(historyError) ? "unavailable" : "failed");
+      setReportStatus(isMissingSupabaseObject(historyError, "spot_field_reports") ? "unavailable" : "failed");
     }
   }, [enabled]);
 
@@ -84,7 +84,7 @@ export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolea
     if (status !== "ready" || reportStatus !== "ready" || !spotId || !values.length) return false;
     setIsMutating(true); setError(null);
     try { await saveMySpotFieldReport("user", spotId, observedOn, summaryNote, values); await load(targetRuntimeId); return currentId.current === targetRuntimeId; }
-    catch { if (currentId.current === targetRuntimeId) setError("現地調査を保存できませんでした。"); return false; }
+    catch { if (currentId.current === targetRuntimeId) setError("実地調査を保存できませんでした。"); return false; }
     finally { setIsMutating(false); }
   }, [load, reportStatus, status]);
 

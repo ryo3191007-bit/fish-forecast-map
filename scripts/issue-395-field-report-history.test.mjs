@@ -35,16 +35,26 @@ assert.deepEqual(snapshot, reports[0]);
 assert.match(migration, /contribution_origin = 'user_contribution'[\s\S]+moderation_status = 'pending'[\s\S]+review_status = 'pending_review'[\s\S]+adoption_status = 'candidate'/);
 assert.doesNotMatch(migration, /(?:update|delete from) public\.fishing_spot_detail_values[\s\S]+(?:curated_research|adopted)/);
 
-// Initial details preserve date groups and use creationId-derived idempotency keys.
+// Every value is validated before any report row is inserted, even when its date is old.
+assert.match(migration, /for v_value[\s\S]+validate_spot_field_report_value\(p_target_type, v_value\)[\s\S]+insert into public\.spot_field_reports/);
+for (const rule of ["invalid target species", "invalid shore access observation", "invalid depth observation", "user spot details require a value"]) assert.ok(migration.includes(rule));
+
+// Initial details preserve date groups, use payload-specific retry keys, and fully replace snapshots.
 assert.match(migration, /for v_observed_on in select distinct \(value->>'checked_at'\)::date/);
-assert.match(migration, /initial_details:' \|\| v_spot_id::text \|\| ':' \|\| v_observed_on::text/);
+assert.match(migration, /initial_details:' \|\| v_spot_id::text[\s\S]+md5\(v_initial_values::text\)/);
 assert.match(migration, /unique \(owner_id, idempotency_key\)/);
 assert.match(migration, /on conflict \(owner_id, idempotency_key\) do nothing/);
+assert.match(migration, /delete from public\.user_fishing_spot_detail_values where user_spot_id = v_spot_id/);
+assert.match(migration, /An identical retry finds existing reports[\s\S]+insert into public\.user_fishing_spot_detail_values/);
 
 // Both existing single-item paths first create one-value history and fall back only for missing backend objects.
 assert.match(userRepository, /saveMyUserFishingSpotDetail[\s\S]+saveMySpotFieldReport\("user"[\s\S]+isMissingSupabaseObject[\s\S]+user_fishing_spot_detail_values[\s\S]+upsert/);
 assert.match(masterRepository, /saveMySpotFieldObservation[\s\S]+saveMySpotFieldReport\("master"[\s\S]+isMissingSupabaseObject[\s\S]+save_my_spot_observation/);
 for (const code of ["PGRST202", "PGRST205", "42P01"]) assert.ok(missingObject.includes(code));
+assert.match(missingObject, /expectedObject[\s\S]+message\.includes\(name\.toLowerCase\(\)\)[\s\S]+if \(!namesExpectedByCaller\) return false/);
+assert.ok(userRepository.includes('isMissingSupabaseObject(error, "create_my_user_fishing_spot_with_details")'));
+assert.ok(userRepository.includes('isMissingSupabaseObject(error, "save_my_spot_field_report")'));
+assert.ok(masterRepository.includes('isMissingSupabaseObject(error, "save_my_spot_field_report")'));
 assert.ok(reportRepository.includes('p_target_type: targetType') && reportRepository.includes('from("spot_field_reports")'));
 
 // Snapshot and history loads are independent on both target types.
@@ -53,10 +63,10 @@ assert.ok(userHook.includes('fetchMyUserFishingSpotDetails') && userHook.include
 assert.ok(masterHook.includes('fetchMySpotFieldObservations') && masterHook.includes('fetchMySpotFieldReports("master"'));
 
 // Main screen renders exactly the standalone trigger for master and user spots; history is modal-only.
-assert.equal(ui.match(/\+現地調査をまとめて登録/g)?.length, 1);
+assert.equal(ui.match(/\+実地調査をまとめて登録/g)?.length, 1);
 assert.ok(card.includes("props.isUserSpot ? ownerDetails : fieldObservations"));
-assert.ok(!ui.includes("現在値とは別に") && !ui.includes("現地調査履歴はまだありません"));
-assert.match(ui, /open \? <div[\s\S]+過去の現地調査履歴/);
+assert.ok(!ui.includes("現在値とは別に") && !ui.includes("実地調査履歴はまだありません"));
+assert.match(ui, /open \? <div[\s\S]+過去の実地調査履歴/);
 assert.match(ui, /disabled=\{state\.status !== "ready" \|\| unavailable \|\| state\.isMutating\}/);
 assert.ok(ui.includes("title={unavailable ? unavailableReason"));
 assert.match(css, /\.trigger:disabled/);

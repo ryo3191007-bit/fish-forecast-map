@@ -88,7 +88,7 @@ export function useSpotFieldObservations(spotId: string): SpotFieldReportState {
       setReports(nextReports); setReportStatus("ready");
     } catch (reportError) {
       if (currentSpotIdRef.current !== targetSpotId) return;
-      setReports([]); setReportStatus(isMissingSupabaseObject(reportError) ? "unavailable" : "failed");
+      setReports([]); setReportStatus(isMissingSupabaseObject(reportError, "spot_field_reports") ? "unavailable" : "failed");
     }
   }, [enabled]);
 
@@ -154,7 +154,7 @@ export function useSpotFieldObservations(spotId: string): SpotFieldReportState {
       await load(targetSpotId);
       return currentSpotIdRef.current === targetSpotId;
     } catch {
-      if (currentSpotIdRef.current === targetSpotId) setError("現地調査を保存できませんでした。");
+      if (currentSpotIdRef.current === targetSpotId) setError("実地調査を保存できませんでした。");
       return false;
     } finally { setIsMutating(false); }
   }, [load, reportStatus, status]);

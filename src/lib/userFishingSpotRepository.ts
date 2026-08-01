@@ -67,7 +67,7 @@ export async function createMyUserFishingSpotWithDetails(creationId: string, inp
 }
 
 export function isCreateSpotRpcMissing(error: PostgrestErrorLike): boolean {
-  return isMissingSupabaseObject(error);
+  return isMissingSupabaseObject(error, "create_my_user_fishing_spot_with_details");
 }
 
 async function createMyUserFishingSpotWithLegacyTables(creationId: string, input: SaveUserFishingSpotInput, details: SaveSpotFieldObservationInput[]): Promise<UserFishingSpot> {
@@ -142,7 +142,7 @@ export async function saveMyUserFishingSpotDetail(spotId: string, input: SaveSpo
   try {
     await saveMySpotFieldReport("user", spotId, input.checkedAt, null, [input]);
   } catch (error) {
-    if (!isMissingSupabaseObject(error)) throw new Error("user-fishing-spot-detail-save-failed");
+    if (!isMissingSupabaseObject(error, "save_my_spot_field_report")) throw new Error("user-fishing-spot-detail-save-failed");
     const { error: fallbackError } = await client().from("user_fishing_spot_detail_values").upsert({
       user_spot_id: spotId, item_key: input.itemKey, value_text: input.valueText,
       value_text_list: input.valueTextList, value_number: input.valueNumber, unit: input.unit,
