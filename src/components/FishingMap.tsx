@@ -108,7 +108,7 @@ import {
   type BathymetryPointResult,
 } from "@/domain/bathymetryPoint";
 import { MapLayerToggle } from "./MapLayerToggle";
-import { formatLocationAccuracy, requestCurrentLocation, type CurrentLocation } from "@/domain/geolocation";
+import { requestCurrentLocation, type CurrentLocation } from "@/domain/geolocation";
 
 type FishingMapProps = {
   externalMemos: ExternalCatchMemo[];
@@ -350,7 +350,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
     try {
       const location = await requestCurrentLocation();
       onCurrentLocationChange(location);
-      setLocationMessage(formatLocationAccuracy(location.accuracy));
       const map = mapRef.current;
       map?.easeTo({ center: [location.longitude, location.latitude], zoom: Math.max(map.getZoom(), 14), duration: 700 });
     } catch (error) { setLocationMessage(error instanceof Error ? error.message : "現在地を取得できませんでした。"); }
@@ -1056,9 +1055,9 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
         className={`mapViewport${markersVisible ? "" : " markersHidden"} ${MAP_MARKER_LEGEND.filter(({ kind }) => !markerFilters[kind]).map(({ kind }) => `markerKindHidden--${kind}`).join(" ")}`}
       >
         <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
-        {(locationPending || locationMessage || currentLocation) && (
+        {(locationPending || locationMessage) && (
           <p className="currentLocationStatus" role="status">
-            {locationPending ? "現在地を取得中です" : locationMessage ?? formatLocationAccuracy(currentLocation!.accuracy)}
+            {locationPending ? "現在地を取得中です" : locationMessage}
           </p>
         )}
         {markersVisible ? (

@@ -1,16 +1,19 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { formatLocationAccuracy, geolocationErrorMessage } from "../src/domain/geolocation.ts";
+import { geolocationErrorMessage } from "../src/domain/geolocation.ts";
 
 const map = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
 const modal = fs.readFileSync("src/components/UserFishingSpotRegistrationModal.tsx", "utf8");
 const mapStyles = fs.readFileSync("src/app/globals.css", "utf8");
 const modalStyles = fs.readFileSync("src/components/UserFishingSpotRegistrationModal.module.css", "utf8");
 const dashboard = fs.readFileSync("src/components/FishingDashboard.tsx", "utf8");
+const geolocation = fs.readFileSync("src/domain/geolocation.ts", "utf8");
 assert.match(map, /aria-label\", \"現在地を表示\"/, "the map location control has an accessible icon label");
 assert.match(map, /currentLocationMapControl/, "the location icon is added to the existing MapLibre control column");
 assert.match(map, /button\.title = "現在地を表示"/);
-assert.match(mapStyles, /currentLocationMapControl[^}]*width: 44px; height: 44px;/, "the location icon has a touch-sized target");
+assert.match(mapStyles, /markerVisibilityControl \.markerVisibilityButton, \.currentLocationMapControl \.currentLocationMapButton \{[^}]*display: grid; place-items: center;/, "location and marker visibility controls share their button sizing rules");
+assert.match(mapStyles, /markerVisibilityButton svg, \.currentLocationMapButton svg \{ width: 20px; height: 20px;/, "location and marker visibility icons have the same visual size");
+assert.doesNotMatch(mapStyles, /currentLocationMap(Control|Button)[^}]*\b(?:width|height): 44px/, "the location control does not override the standard control size");
 assert.doesNotMatch(map, /className="currentLocationControl"/, "the standalone location row is removed");
 assert.match(map, /currentLocationMarker/, "current location uses a dedicated marker");
 assert.match(map, /easeTo\(\{ center: \[location\.longitude, location\.latitude\]/);
@@ -29,7 +32,9 @@ assert.match(dashboard, /initialLongitude=\{environmentSpot\?\.longitude/, "regi
 assert.match(modal, /\},\[initialLatitude,initialLongitude\]\);/, "registration map initialization uses stable numeric dependencies");
 assert.doesNotMatch(dashboard, /initialPosition=\{\[/, "the dashboard does not pass a new position array on every render");
 assert.doesNotMatch(map + modal, /localStorage|supabase/i, "displaying a location does not persist it");
-assert.equal(formatLocationAccuracy(18.6), "推定精度 約19m");
+assert.doesNotMatch(map, /推定精度|formatLocationAccuracy/, "the regular map does not display location accuracy");
+assert.doesNotMatch(modal, /推定精度|formatLocationAccuracy/, "the registration modal does not display location accuracy");
+assert.doesNotMatch(geolocation, /推定精度|formatLocationAccuracy/, "unused accuracy formatting code is removed");
 assert.match(geolocationErrorMessage({ code: 1 }), /手動/);
 assert.match(geolocationErrorMessage({ code: 3 }), /タイムアウト/);
 console.log("Issue #394 current location checks passed");

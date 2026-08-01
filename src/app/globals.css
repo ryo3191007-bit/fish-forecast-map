@@ -561,13 +561,11 @@ p {
 .mapViewport:not(.markersHidden) .maplibregl-ctrl-bottom-right { bottom: var(--map-marker-legend-offset, 50px); right: 16px; }
 .mapViewport.markersHidden .maplibregl-ctrl-bottom-right { bottom: 8px; right: 8px; }
 .mapViewport .maplibregl-ctrl-attrib { margin: 0; }
-.markerVisibilityControl .markerVisibilityButton { display: grid; place-items: center; }
-.markerVisibilityButton svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.markerVisibilityControl .markerVisibilityButton, .currentLocationMapControl .currentLocationMapButton { position: relative; display: grid; place-items: center; }
+.markerVisibilityButton svg, .currentLocationMapButton svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .markerVisibilitySlash { opacity: 0; }
 .markerVisibilityButton.markersAreHidden .markerVisibilitySlash { opacity: 1; }
 .markerVisibilityButton[aria-pressed="false"] { background: #e2e8f0; color: #475569; }
-.currentLocationMapControl .currentLocationMapButton { position: relative; display: grid; place-items: center; width: 44px; height: 44px; }
-.currentLocationMapButton svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .currentLocationMapButton .currentLocationSpinner { display: none; position: absolute; inset: 4px; border: 2px solid rgba(14,116,144,.2); border-top-color: #0e7490; border-radius: 50%; animation: currentLocationSpin .8s linear infinite; }
 .currentLocationMapButton.isPending .currentLocationSpinner { display: block; }
 .currentLocationStatus { position: absolute; z-index: 3; top: 132px; right: 58px; max-width: min(220px, calc(100% - 82px)); margin: 0; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; padding: 5px 8px; background: rgba(15,23,42,.88); color: #fff; font-size: .68rem; font-weight: 800; line-height: 1.35; pointer-events: none; }

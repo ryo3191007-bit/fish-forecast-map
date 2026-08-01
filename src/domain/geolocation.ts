@@ -17,7 +17,3 @@ export function requestCurrentLocation(): Promise<CurrentLocation> {
     );
   });
 }
-
-export function formatLocationAccuracy(accuracy: number): string {
-  return `推定精度 約${Math.max(1, Math.round(accuracy))}m`;
-}
