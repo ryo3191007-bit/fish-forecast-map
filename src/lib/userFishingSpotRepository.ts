@@ -9,7 +9,9 @@ import {
   type UserFishingSpotDetailItemKey,
   type UserFishingSpotDetailValue,
 } from "@/domain/userFishingSpot";
+import { saveMySpotFieldReport } from "@/lib/spotFieldReportRepository";
 import { getSupabaseClient } from "@/lib/supabaseClient";
+import { isMissingSupabaseObject } from "@/lib/supabaseObjectError";
 
 type UserSpotRow = { id: string; name: string; latitude: number | string; longitude: number | string; area_name: string | null; spot_type: string | null; created_at: string; updated_at: string };
 type UserDetailRow = { id: string; user_spot_id: string; item_key: UserFishingSpotDetailItemKey; value_text: string | null; value_text_list: string[] | null; value_number: number | string | null; unit: string | null; checked_at: string; note: string | null; updated_at: string };
@@ -65,10 +67,7 @@ export async function createMyUserFishingSpotWithDetails(creationId: string, inp
 }
 
 export function isCreateSpotRpcMissing(error: PostgrestErrorLike): boolean {
-  if (error.code === "PGRST202") return true;
-  const message = `${error.message ?? ""} ${error.details ?? ""} ${error.hint ?? ""}`.toLowerCase();
-  return message.includes("create_my_user_fishing_spot_with_details")
-    && (message.includes("schema cache") || message.includes("could not find the function"));
+  return isMissingSupabaseObject(error, "create_my_user_fishing_spot_with_details");
 }
 
 async function createMyUserFishingSpotWithLegacyTables(creationId: string, input: SaveUserFishingSpotInput, details: SaveSpotFieldObservationInput[]): Promise<UserFishingSpot> {
@@ -140,9 +139,21 @@ export async function fetchMyUserFishingSpotDetails(spotId: string): Promise<Use
 
 export async function saveMyUserFishingSpotDetail(spotId: string, input: SaveSpotFieldObservationInput): Promise<UserFishingSpotDetailValue> {
   if (!userFishingSpotDetailItemKeys.includes(input.itemKey as UserFishingSpotDetailItemKey) || input.informationState !== "weak_evidence") throw new Error("invalid-user-fishing-spot-detail");
-  const { data, error } = await client().from("user_fishing_spot_detail_values").upsert({ user_spot_id: spotId, item_key: input.itemKey, value_text: input.valueText, value_text_list: input.valueTextList, value_number: input.valueNumber, unit: input.unit, checked_at: input.checkedAt, note: input.note }, { onConflict: "user_spot_id,item_key" }).select("id,user_spot_id,item_key,value_text,value_text_list,value_number,unit,checked_at,note,updated_at").single();
-  if (error || !data) throw new Error("user-fishing-spot-detail-save-failed");
-  return mapDetail(data as UserDetailRow);
+  try {
+    await saveMySpotFieldReport("user", spotId, input.checkedAt, null, [input]);
+  } catch (error) {
+    if (!isMissingSupabaseObject(error, "save_my_spot_field_report")) throw new Error("user-fishing-spot-detail-save-failed");
+    const { error: fallbackError } = await client().from("user_fishing_spot_detail_values").upsert({
+      user_spot_id: spotId, item_key: input.itemKey, value_text: input.valueText,
+      value_text_list: input.valueTextList, value_number: input.valueNumber, unit: input.unit,
+      checked_at: input.checkedAt, note: input.note,
+    }, { onConflict: "user_spot_id,item_key" });
+    if (fallbackError) throw new Error("user-fishing-spot-detail-save-failed");
+  }
+  const values = await fetchMyUserFishingSpotDetails(spotId);
+  const saved = values.find((value) => value.itemKey === input.itemKey);
+  if (!saved) throw new Error("user-fishing-spot-detail-save-failed");
+  return saved;
 }
 
 export async function deleteMyUserFishingSpotDetail(spotId: string, itemKey: UserFishingSpotDetailItemKey): Promise<void> {

@@ -153,7 +153,7 @@ function FieldObservationDisplay({ status, observation, ownerMode }: { status: S
   </>;
 }
 
-function ObservationValueInput({
+export function ObservationValueInput({
   config,
   options,
   draft,
