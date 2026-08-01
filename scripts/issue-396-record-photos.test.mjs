@@ -34,6 +34,7 @@ assert.match(repository, /return photos;/); // stale metadata is retained withou
 assert.doesNotMatch(repository, /return photos\.filter/);
 assert.match(repository, /private-record-photos\|bucket not found/);
 assert.match(migration, /can_access_my_record_photo_object/);
+assert.match(migration, /can_insert_my_record_photo_object/);
 assert.match(migration, /array_length\(v_parts, 1\) <> 3/);
 assert.match(migration, /\.webp\$'/);
 assert.match(migration, /storage object size mismatch/);
@@ -68,3 +69,19 @@ assert.doesNotMatch(softDeleteFunction, /join storage\.objects/, "orphan detecti
 for (const slot of [0, 1, 2]) assert.ok(softDeleteFunction.includes(`/${slot}.webp`));
 assert.match(softDeleteFunction, /object\.name = any \(array\[/);
 assert.doesNotMatch(softDeleteFunction, /delete from storage\.objects/i, "objects remain Storage API managed");
+
+// Catch uploads and soft-deletes must serialize on the same owner-scoped row.
+const insertAuthorizationFunction = migration.slice(
+  migration.indexOf("create or replace function public.can_insert_my_record_photo_object"),
+  migration.indexOf("create policy private_record_photos_owner_insert"),
+);
+assert.match(insertAuthorizationFunction, /language plpgsql volatile security definer/);
+assert.match(insertAuthorizationFunction, /owner_id = v_user_id[\s\S]*created_by = 'authenticated_user'[\s\S]*not is_deleted[\s\S]*for key share;/);
+assert.match(migration, /private_record_photos_owner_insert[\s\S]*can_insert_my_record_photo_object\(name\)/);
+assert.doesNotMatch(migration, /private_record_photos_owner_(?:select|delete)[\s\S]{0,180}can_insert_my_record_photo_object/);
+assert.match(softDeleteFunction, /owner_id = v_user_id[\s\S]*created_by = 'authenticated_user'[\s\S]*not is_deleted[\s\S]*for update;/);
+assert.ok(
+  softDeleteFunction.indexOf("for update;") < softDeleteFunction.indexOf("select 1 from storage.objects"),
+  "soft-delete locks the active owner row before inspecting fixed Storage slots",
+);
+assert.match(softDeleteFunction, /if not found then return false; end if;/);

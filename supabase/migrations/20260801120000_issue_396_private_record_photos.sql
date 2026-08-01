@@ -63,8 +63,35 @@ $$;
 revoke all on function public.can_access_my_record_photo_object(text) from public;
 grant execute on function public.can_access_my_record_photo_object(text) to authenticated;
 
+-- Storage inserts and catch soft-deletes lock the same catch row. Whichever
+-- transaction obtains the lock first commits its state before the other one
+-- re-evaluates whether the catch is still active or has an object to remove.
+create or replace function public.can_insert_my_record_photo_object(p_name text)
+returns boolean language plpgsql volatile security definer set search_path = '' as $$
+declare v_user_id uuid := auth.uid(); v_parts text[] := storage.foldername(p_name); v_target_id text;
+begin
+  if v_user_id is null or array_length(v_parts, 1) <> 3 or v_parts[1] <> v_user_id::text or
+     v_parts[2] not in ('catch_memo', 'field_report') or
+     p_name !~ '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/(catch_memo|field_report)/[^/]+/[012]\.webp$' then return false; end if;
+  v_target_id := v_parts[3];
+  if v_parts[2] = 'catch_memo' then
+    perform 1 from public.external_catch_memos
+      where id = v_target_id and owner_id = v_user_id
+        and created_by = 'authenticated_user' and not is_deleted
+      for key share;
+    return found;
+  end if;
+  begin
+    return exists (select 1 from public.spot_field_reports where id = v_target_id::uuid and owner_id = v_user_id);
+  exception when invalid_text_representation then return false;
+  end;
+end;
+$$;
+revoke all on function public.can_insert_my_record_photo_object(text) from public;
+grant execute on function public.can_insert_my_record_photo_object(text) to authenticated;
+
 create policy private_record_photos_owner_insert on storage.objects for insert to authenticated
-  with check (bucket_id = 'private-record-photos' and public.can_access_my_record_photo_object(name));
+  with check (bucket_id = 'private-record-photos' and public.can_insert_my_record_photo_object(name));
 create policy private_record_photos_owner_select on storage.objects for select to authenticated
   using (bucket_id = 'private-record-photos' and public.can_access_my_record_photo_object(name));
 create policy private_record_photos_owner_delete on storage.objects for delete to authenticated
@@ -129,6 +156,13 @@ returns boolean language plpgsql security definer set search_path = '' as $$
 declare v_user_id uuid := auth.uid();
 begin
   if v_user_id is null then raise exception 'authentication required'; end if;
+  -- Lock before inspecting Storage so an upload cannot authorize against an
+  -- active snapshot and commit an object after this deletion check.
+  perform 1 from public.external_catch_memos
+    where id = p_memo_id and owner_id = v_user_id
+      and created_by = 'authenticated_user' and not is_deleted
+    for update;
+  if not found then return false; end if;
   -- Check the three deterministic Storage paths directly. Metadata may be absent
   -- when an upload is interrupted before add_my_record_photo is called.
   if exists (
@@ -142,8 +176,8 @@ begin
   ) then raise exception 'delete linked storage objects first'; end if;
   delete from public.record_photos where catch_memo_id = p_memo_id and owner_id = v_user_id;
   update public.external_catch_memos set is_deleted = true, updated_at = now()
-    where id = p_memo_id and owner_id = v_user_id and created_by = 'authenticated_user' and not is_deleted;
-  return found;
+    where id = p_memo_id and owner_id = v_user_id;
+  return true;
 end;
 $$;
 revoke all on function public.soft_delete_external_catch_memo(text) from public;
