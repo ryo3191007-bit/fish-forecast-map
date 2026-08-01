@@ -253,13 +253,13 @@ export function ExternalCatchMemoSection({
   const submitMemo = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (storageStatus.isMutating) return;
-    const nextErrors = validateForm(form, editingMemo);
+    const nextErrors = savedMemoId ? {} : validateForm(form, editingMemo);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
-    const nextMemo = createMemo(form, spots, editingMemo);
-    const targetId = savedMemoId ?? nextMemo.id;
-    const bodySaved = savedMemoId !== null || await onMemoSave(nextMemo);
-    if (bodySaved) {
+    const nextMemo = savedMemoId ? null : createMemo(form, spots, editingMemo);
+    const targetId = savedMemoId ?? nextMemo?.id;
+    const bodySaved = savedMemoId !== null || (nextMemo !== null && await onMemoSave(nextMemo));
+    if (bodySaved && targetId) {
       if (!savedMemoId) setSavedMemoId(targetId);
       if (pendingPhotos.length) {
         try { await uploadRecordPhotos("catch_memo", targetId, pendingPhotos); }
@@ -372,7 +372,8 @@ export function ExternalCatchMemoSection({
             ) : null}
             <form className="externalMemoForm" onSubmit={submitMemo} noValidate>
               <div className="externalMemoSections">
-                <fieldset className="externalMemoFormSection externalMemoBasicInfo">
+                {savedMemoId ? <p role="status">釣果本文は保存済みです。本文は変更せず、未完了の写真だけを再試行します。</p> : null}
+                <fieldset className="externalMemoFormSection externalMemoBasicInfo" disabled={Boolean(savedMemoId)}>
                   <legend>基本情報</legend>
                   <label>
                     地図上の釣り場 <span className="requiredBadge">必須</span>
@@ -409,7 +410,7 @@ export function ExternalCatchMemoSection({
                     ) : null}
                   </label>
                 </fieldset>
-                <fieldset className="externalMemoFormSection externalMemoFishItems">
+                <fieldset className="externalMemoFormSection externalMemoFishItems" disabled={Boolean(savedMemoId)}>
                   <legend>釣れた魚 <span className="requiredBadge">必須</span></legend>
                   {form.catchItems.map((item, index) => (
                     <div className="externalMemoFishItem" key={index}>
@@ -441,6 +442,7 @@ export function ExternalCatchMemoSection({
                   <label>
                   メモ <span className="optionalBadge">任意</span>
                   <textarea
+                    disabled={Boolean(savedMemoId)}
                     value={form.userMemo}
                     onChange={(e) => updateForm("userMemo", e.target.value)}
                     maxLength={240}
@@ -449,7 +451,7 @@ export function ExternalCatchMemoSection({
                   </label>
                 </section>
                 <section className="externalMemoFormSection">
-                  <RecordPhotoEditor targetType="catch_memo" targetId={editingMemo && !localMemoIds.has(editingMemo.id) ? editingMemo.id : undefined} enabled={storageStatus.isDbAvailable && (!editingMemo || !localMemoIds.has(editingMemo.id))} pending={editingMemo ? undefined : pendingPhotos} onPendingChange={editingMemo ? undefined : setPendingPhotos} />
+                  <RecordPhotoEditor targetType="catch_memo" targetId={savedMemoId ?? (editingMemo && !localMemoIds.has(editingMemo.id) ? editingMemo.id : undefined)} enabled={storageStatus.isDbAvailable && (!editingMemo || !localMemoIds.has(editingMemo.id))} pending={editingMemo ? undefined : pendingPhotos} onPendingChange={editingMemo ? undefined : setPendingPhotos} />
                   {photoError ? <p className="fieldError" role="alert">{photoError}</p> : null}
                 </section>
               </div>
@@ -468,7 +470,9 @@ export function ExternalCatchMemoSection({
                     ? "保存中..."
                     : editingMemo
                       ? "更新する"
-                      : "登録する"}
+                      : savedMemoId
+                        ? "未完了の写真を再試行"
+                        : "登録する"}
                 </button>
                 <button type="button" className="clearSearchButton" onClick={closeModal} disabled={storageStatus.isMutating} aria-label="釣果入力をキャンセル">キャンセル</button>
               </div>

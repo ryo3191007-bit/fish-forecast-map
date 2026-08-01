@@ -48,29 +48,27 @@ create policy record_photos_owner_select on public.record_photos for select to a
 revoke all on public.record_photos from anon, authenticated;
 grant select on public.record_photos to authenticated;
 
-create or replace function public.can_write_my_record_photo_object(p_name text)
+create or replace function public.can_access_my_record_photo_object(p_name text)
 returns boolean language plpgsql stable security definer set search_path = '' as $$
-declare v_user_id uuid := auth.uid(); v_parts text[] := storage.foldername(p_name); v_target_id text; v_prefix text;
+declare v_user_id uuid := auth.uid(); v_parts text[] := storage.foldername(p_name); v_target_id text;
 begin
   if v_user_id is null or array_length(v_parts, 1) <> 3 or v_parts[1] <> v_user_id::text or
      v_parts[2] not in ('catch_memo', 'field_report') or
-     p_name !~ '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/(catch_memo|field_report)/[^/]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.webp$' then return false; end if;
+     p_name !~ '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/(catch_memo|field_report)/[^/]+/[012]\.webp$' then return false; end if;
   v_target_id := v_parts[3];
-  v_prefix := v_user_id::text || '/' || v_parts[2] || '/' || v_target_id || '/';
-  if (select count(*) from storage.objects where bucket_id = 'private-record-photos' and name like v_prefix || '%') >= 3 then return false; end if;
   if v_parts[2] = 'catch_memo' then return exists (select 1 from public.external_catch_memos where id = v_target_id and owner_id = v_user_id and created_by = 'authenticated_user' and not is_deleted); end if;
   begin return exists (select 1 from public.spot_field_reports where id = v_target_id::uuid and owner_id = v_user_id); exception when invalid_text_representation then return false; end;
 end;
 $$;
-revoke all on function public.can_write_my_record_photo_object(text) from public;
-grant execute on function public.can_write_my_record_photo_object(text) to authenticated;
+revoke all on function public.can_access_my_record_photo_object(text) from public;
+grant execute on function public.can_access_my_record_photo_object(text) to authenticated;
 
 create policy private_record_photos_owner_insert on storage.objects for insert to authenticated
-  with check (bucket_id = 'private-record-photos' and owner_id = auth.uid()::text and public.can_write_my_record_photo_object(name));
+  with check (bucket_id = 'private-record-photos' and public.can_access_my_record_photo_object(name));
 create policy private_record_photos_owner_select on storage.objects for select to authenticated
-  using (bucket_id = 'private-record-photos' and owner_id = auth.uid()::text and (storage.foldername(name))[1] = auth.uid()::text);
+  using (bucket_id = 'private-record-photos' and public.can_access_my_record_photo_object(name));
 create policy private_record_photos_owner_delete on storage.objects for delete to authenticated
-  using (bucket_id = 'private-record-photos' and owner_id = auth.uid()::text and (storage.foldername(name))[1] = auth.uid()::text);
+  using (bucket_id = 'private-record-photos' and public.can_access_my_record_photo_object(name));
 
 create or replace function public.add_my_record_photo(
   p_photo_id uuid, p_target_type text, p_target_id text, p_storage_path text,
@@ -81,7 +79,7 @@ begin
   if v_user_id is null then raise exception 'authentication required'; end if;
   if p_target_type not in ('catch_memo', 'field_report') then raise exception 'invalid target type'; end if;
   if p_photo_id is null or p_target_id is null or p_target_id = '' then raise exception 'invalid identifier'; end if;
-  v_expected_path := v_user_id::text || '/' || p_target_type || '/' || p_target_id || '/' || p_photo_id::text || '.webp';
+  v_expected_path := v_user_id::text || '/' || p_target_type || '/' || p_target_id || '/' || p_sort_order::text || '.webp';
   if p_storage_path <> v_expected_path then raise exception 'invalid storage path'; end if;
   if p_sort_order not between 0 and 2 then raise exception 'photo limit exceeded'; end if;
   if p_mime_type <> 'image/webp' or p_byte_size not between 1 and 460800 or
@@ -92,7 +90,7 @@ begin
   if p_target_type = 'field_report' and not exists (
     select 1 from public.spot_field_reports where id = p_target_id::uuid and owner_id = v_user_id
   ) then raise exception 'report owner mismatch'; end if;
-  select (metadata->>'size')::bigint into v_object_size from storage.objects where bucket_id = 'private-record-photos' and name = p_storage_path and owner_id = v_user_id::text and metadata->>'mimetype' = 'image/webp';
+  select (metadata->>'size')::bigint into v_object_size from storage.objects where bucket_id = 'private-record-photos' and name = p_storage_path and metadata->>'mimetype' = 'image/webp';
   if v_object_size is null then
     raise exception 'storage object not found';
   end if;
@@ -104,6 +102,8 @@ begin
 exception when invalid_text_representation then raise exception 'invalid target identifier';
 end;
 $$;
+comment on function public.add_my_record_photo(uuid, text, text, text, smallint, text, integer, integer, integer) is
+  'Validates owner, exact slot path, object MIME and actual byte size. Width and height are client-reported after browser re-encoding and are only range-checked; Storage image dimensions are not inspected.';
 revoke all on function public.add_my_record_photo(uuid, text, text, text, smallint, text, integer, integer, integer) from public;
 grant execute on function public.add_my_record_photo(uuid, text, text, text, smallint, text, integer, integer, integer) to authenticated;
 

@@ -30,8 +30,8 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
     const next = { ...current }; delete next[key]; return next;
   });
   const submit = async () => {
-    const values = selected.map((key) => buildSaveSpotFieldObservationInput(spotId, key, spotFieldObservationConfigs[key], { ...drafts[key], checkedAt: observedOn })).filter((value) => value !== null);
-    if (values.length !== selected.length || !values.length) { setError("1項目以上の確認内容を入力してください。"); return; }
+    const values = savedReportId ? [] : selected.map((key) => buildSaveSpotFieldObservationInput(spotId, key, spotFieldObservationConfigs[key], { ...drafts[key], checkedAt: observedOn })).filter((value) => value !== null);
+    if (!savedReportId && (values.length !== selected.length || !values.length)) { setError("1項目以上の確認内容を入力してください。"); return; }
     const reportId = await resolveRecordPhotoTargetId(savedReportId, () => state.saveReport(observedOn, summaryNote.trim() || null, values));
     if (reportId) {
       if (!savedReportId) setSavedReportId(reportId);
@@ -52,14 +52,14 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
     <button className={styles.trigger} type="button" disabled={state.status !== "ready" || unavailable || state.isMutating} title={unavailable ? unavailableReason : undefined} onClick={() => setOpen(true)}>+実地調査をまとめて登録</button>
     {open ? <div className={styles.backdrop} onMouseDown={(event) => { if (event.target === event.currentTarget && !state.isMutating) closeForm(); }}><section className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="field-report-form-heading">
       <header><h3 id="field-report-form-heading">実地調査をまとめて登録</h3><button type="button" aria-label="閉じる" disabled={state.isMutating} onClick={closeForm}>×</button></header>
-      <label>調査日<input type="date" required max={getTodayInJapan()} value={observedOn} onChange={(event) => setObservedOn(event.target.value)} /></label>
+      {savedReportId ? <p role="status">実地調査本文は保存済みです。本文は変更せず、未完了の写真だけを再試行します。</p> : <><label>調査日<input type="date" required max={getTodayInJapan()} value={observedOn} onChange={(event) => setObservedOn(event.target.value)} /></label>
       <label>調査全体メモ（任意）<textarea maxLength={1000} value={summaryNote} onChange={(event) => setSummaryNote(event.target.value)} /></label>
-      <RecordPhotoEditor targetType="field_report" enabled pending={photos} onPendingChange={setPhotos} />
       <fieldset><legend>確認した項目（1項目以上）</legend>{items.map(({ itemKey, label }) => <div className={styles.item} key={itemKey}>
         <label className={styles.itemToggle}><input type="checkbox" checked={Boolean(drafts[itemKey])} onChange={(event) => toggle(itemKey, event.target.checked)} />{label}</label>
         {drafts[itemKey] ? <><ObservationValueInput config={spotFieldObservationConfigs[itemKey]} options={spotFieldObservationConfigs[itemKey].options ?? []} draft={drafts[itemKey]} onChange={(update) => setDrafts((current) => ({ ...current, [itemKey]: typeof update === "function" ? update(current[itemKey]) : update }))} /><label>項目メモ（任意）<textarea maxLength={1000} value={drafts[itemKey].note} onChange={(event) => setDrafts((current) => ({ ...current, [itemKey]: { ...current[itemKey], note: event.target.value } }))} /></label></> : null}
-      </div>)}</fieldset>
-      {error ? <p className={styles.error} role="alert">{error}</p> : null}<div className={styles.actions}><button type="button" disabled={state.isMutating} onClick={closeForm}>キャンセル</button><button type="button" disabled={state.isMutating || selected.length === 0} onClick={() => void submit()}>{state.isMutating ? "保存中…" : "保存"}</button></div>
+      </div>)}</fieldset></>}
+      <RecordPhotoEditor targetType="field_report" targetId={savedReportId ?? undefined} enabled pending={photos} onPendingChange={setPhotos} />
+      {error ? <p className={styles.error} role="alert">{error}</p> : null}<div className={styles.actions}><button type="button" disabled={state.isMutating} onClick={closeForm}>キャンセル</button><button type="button" disabled={state.isMutating || (!savedReportId && selected.length === 0)} onClick={() => void submit()}>{state.isMutating ? "保存中…" : savedReportId ? "未完了の写真を再試行" : "保存"}</button></div>
       <div className={styles.history} aria-label="過去の実地調査履歴">{state.reports.length === 0 ? <p className={styles.empty}>履歴はまだありません。</p> : state.reports.map((report) => <article key={report.id}>
         <header><strong>{formatSpotFieldObservationDate(report.observedOn)}</strong><small>{report.origin === "snapshot_backfill" ? "既存の現在値から移行" : report.origin === "initial_details" ? "地点登録時" : "実地調査"}</small></header>
         {report.summaryNote ? <p>{report.summaryNote}</p> : null}

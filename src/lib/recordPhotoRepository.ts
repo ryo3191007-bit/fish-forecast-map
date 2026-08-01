@@ -1,6 +1,6 @@
 import type { PreparedRecordPhoto, RecordPhoto, RecordPhotoTargetType } from "@/domain/recordPhoto";
 import { getSupabaseClient } from "@/lib/supabaseClient";
-import { allocateRecordPhotoSlots } from "@/domain/recordPhotoUpload";
+import { allocateRecordPhotoSlots, buildRecordPhotoStoragePath } from "@/domain/recordPhotoUpload";
 
 const BUCKET = "private-record-photos";
 type Row = { id: string; target_type: RecordPhotoTargetType; catch_memo_id: string | null; field_report_id: string | null; storage_path: string; sort_order: number; mime_type: "image/webp"; byte_size: number; width: number; height: number };
@@ -84,7 +84,9 @@ export async function uploadRecordPhotos(targetType: RecordPhotoTargetType, targ
   const slots = allocateRecordPhotoSlots(existing.map((photo) => photo.sortOrder), photos.length);
   const completed: string[] = [];
   for (const [index, photo] of photos.entries()) {
-    const path = `${folder}/${photo.id}.webp`;
+    // The three deterministic paths are the Storage-layer uniqueness guard. Even
+    // concurrent clients that selected the same free slot cannot create a fourth object.
+    const path = buildRecordPhotoStoragePath(folder, slots[index]);
     const { error: uploadError } = await client.storage.from(BUCKET).upload(path, photo.blob, { contentType: "image/webp", upsert: false });
     if (uploadError) throw new RecordPhotoBatchError(uploadError.message, completed, uploadError);
     const { error: metadataError } = await client.rpc("add_my_record_photo", { p_photo_id: photo.id, p_target_type: targetType, p_target_id: targetId, p_storage_path: path, p_sort_order: slots[index], p_mime_type: "image/webp", p_byte_size: photo.blob.size, p_width: photo.width, p_height: photo.height });
