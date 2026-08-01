@@ -4,11 +4,20 @@ import { formatLocationAccuracy, geolocationErrorMessage } from "../src/domain/g
 
 const map = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
 const modal = fs.readFileSync("src/components/UserFishingSpotRegistrationModal.tsx", "utf8");
+const mapStyles = fs.readFileSync("src/app/globals.css", "utf8");
+const modalStyles = fs.readFileSync("src/components/UserFishingSpotRegistrationModal.module.css", "utf8");
 const dashboard = fs.readFileSync("src/components/FishingDashboard.tsx", "utf8");
-assert.match(map, /onClick=\{\(\) => void locateUser\(\)\}/, "geolocation starts only from the location button");
+assert.match(map, /aria-label\", \"現在地を表示\"/, "the map location control has an accessible icon label");
+assert.match(map, /currentLocationMapControl/, "the location icon is added to the existing MapLibre control column");
+assert.match(map, /button\.title = "現在地を表示"/);
+assert.match(mapStyles, /currentLocationMapControl[^}]*width: 44px; height: 44px;/, "the location icon has a touch-sized target");
+assert.doesNotMatch(map, /className="currentLocationControl"/, "the standalone location row is removed");
 assert.match(map, /currentLocationMarker/, "current location uses a dedicated marker");
 assert.match(map, /easeTo\(\{ center: \[location\.longitude, location\.latitude\]/);
-assert.match(modal, /現在地を使う/);
+assert.match(modal, /現在地から登録<\/button>/, "registration button text stays fixed");
+assert.doesNotMatch(modal, /現在地を再取得|現在地を使う|\?"取得中…"/, "registration button text does not change with state");
+assert.match(modal, /styles\.locationRow/, "registration location actions remain in their position section");
+assert.match(modalStyles, /locationRow\{[^}]*justify-content:flex-end/, "registration location actions are right aligned");
 assert.match(modal, /const location=await requestCurrentLocation\(\)/, "registration always requests a fresh location");
 assert.doesNotMatch(modal, /currentLocation\?\?await requestCurrentLocation/, "registration does not reuse a stale session location");
 assert.match(modal, /setLatitude\(String\(location\.latitude\)\)/);
