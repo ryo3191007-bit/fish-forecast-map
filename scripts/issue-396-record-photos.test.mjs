@@ -20,3 +20,22 @@ assert.match(repository, /isRecordPhotoBackendMissing/);
 assert.match(catchUi, /targetType="catch_memo"/);
 assert.match(reportUi, /targetType="field_report"/);
 console.log("Issue #396 record photo checks passed.");
+
+// Review regression contract: retry keeps the saved target and removes completed batch items.
+assert.match(catchUi, /savedMemoId !== null \|\| await onMemoSave/);
+assert.match(reportUi, /savedReportId \?\? await state\.saveReport/);
+assert.match(repository, /class RecordPhotoBatchError/);
+assert.match(repository, /completedPhotoIds/);
+assert.match(repository, /reconcileRecordPhotoObjects/);
+assert.match(repository, /孤立写真を回収できませんでした/);
+assert.match(repository, /cleanupError/);
+assert.match(repository, /return photos;/); // stale metadata is retained without a signed URL
+assert.doesNotMatch(repository, /return photos\.filter/);
+assert.match(repository, /private-record-photos\|bucket not found/);
+assert.match(migration, /can_write_my_record_photo_object/);
+assert.match(migration, /array_length\(v_parts, 1\) <> 3/);
+assert.match(migration, /\.webp\$'/);
+assert.match(migration, /storage object size mismatch/);
+assert.match(migration, /v_object_size <> p_byte_size/);
+assert.match(migration, /created_by = 'authenticated_user'/);
+assert.doesNotMatch(migration, /storage\.buckets \(id, name, public,/);

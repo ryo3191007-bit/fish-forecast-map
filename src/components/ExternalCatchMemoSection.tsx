@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import type { PreparedRecordPhoto } from "@/domain/recordPhoto";
-import { uploadRecordPhotos } from "@/lib/recordPhotoRepository";
+import { RecordPhotoBatchError, uploadRecordPhotos } from "@/lib/recordPhotoRepository";
 import type {
   ExternalCatchMemoMigrationResult,
   ExternalCatchMemoStorageStatus,
@@ -181,6 +181,7 @@ export function ExternalCatchMemoSection({
   const [isSpotRegistrationOpen, setIsSpotRegistrationOpen] = useState(false);
   const [pendingPhotos, setPendingPhotos] = useState<PreparedRecordPhoto[]>([]);
   const [photoError, setPhotoError] = useState<string | null>(null);
+  const [savedMemoId, setSavedMemoId] = useState<string | null>(null);
   const editingMemo = useMemo(
     () => memos.find((memo) => memo.id === editingId),
     [editingId, memos],
@@ -203,7 +204,7 @@ export function ExternalCatchMemoSection({
     if (isSpotRegistrationOpen) return;
     setIsModalOpen(false);
     setErrors({});
-    setPendingPhotos([]); setPhotoError(null);
+    setPendingPhotos([]); setPhotoError(null); setSavedMemoId(null);
   }, [isSpotRegistrationOpen]);
 
   useEffect(() => {
@@ -234,7 +235,7 @@ export function ExternalCatchMemoSection({
     setEditingId(null);
     setForm(initialFormState());
     setErrors({});
-    setPendingPhotos([]); setPhotoError(null);
+    setPendingPhotos([]); setPhotoError(null); setSavedMemoId(null);
     setIsModalOpen(true);
   };
   useEffect(() => {
@@ -256,10 +257,17 @@ export function ExternalCatchMemoSection({
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
     const nextMemo = createMemo(form, spots, editingMemo);
-    if (await onMemoSave(nextMemo)) {
+    const targetId = savedMemoId ?? nextMemo.id;
+    const bodySaved = savedMemoId !== null || await onMemoSave(nextMemo);
+    if (bodySaved) {
+      if (!savedMemoId) setSavedMemoId(targetId);
       if (pendingPhotos.length) {
-        try { await uploadRecordPhotos("catch_memo", nextMemo.id, pendingPhotos, 0); }
-        catch { setPhotoError("釣果本文は保存しましたが、写真を保存できませんでした。編集画面から写真だけ再試行してください。"); return; }
+        try { await uploadRecordPhotos("catch_memo", targetId, pendingPhotos, 0); }
+        catch (value) {
+          const completed = value instanceof RecordPhotoBatchError ? new Set(value.completedPhotoIds) : new Set<string>();
+          setPendingPhotos((current) => current.filter((photo) => !completed.has(photo.id)));
+          setPhotoError("釣果本文は保存済みです。同じ釣果へ未完了の写真だけ再試行できます。"); return;
+        }
       }
       pendingPhotos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
       setPendingPhotos([]); closeModal();

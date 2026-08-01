@@ -1,7 +1,9 @@
 -- Issue #396: private, owner-scoped photos for catches and field reports.
-insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('private-record-photos', 'private-record-photos', false, 512000, array['image/webp'])
-on conflict (id) do update set public = false, file_size_limit = 512000, allowed_mime_types = array['image/webp'];
+-- `public` was added to Storage at a different point in its schema history.  A
+-- private bucket is the default, so do not make a fresh database depend on it.
+insert into storage.buckets (id, name, file_size_limit, allowed_mime_types)
+values ('private-record-photos', 'private-record-photos', 512000, array['image/webp'])
+on conflict (id) do update set file_size_limit = 512000, allowed_mime_types = array['image/webp'];
 
 alter table public.external_catch_memos
   add constraint external_catch_memos_id_owner_unique unique (id, owner_id);
@@ -35,8 +37,22 @@ create policy record_photos_owner_select on public.record_photos for select to a
 revoke all on public.record_photos from anon, authenticated;
 grant select on public.record_photos to authenticated;
 
+create or replace function public.can_write_my_record_photo_object(p_name text)
+returns boolean language plpgsql stable security definer set search_path = '' as $$
+declare v_user_id uuid := auth.uid(); v_parts text[] := storage.foldername(p_name); v_target_id text;
+begin
+  if v_user_id is null or array_length(v_parts, 1) <> 3 or v_parts[1] <> v_user_id::text or
+     v_parts[2] not in ('catch_memo', 'field_report') or p_name !~ '^[0-9a-f-]+/(catch_memo|field_report)/[^/]+/[0-9a-f-]+\.webp$' then return false; end if;
+  v_target_id := v_parts[3];
+  if v_parts[2] = 'catch_memo' then return exists (select 1 from public.external_catch_memos where id = v_target_id and owner_id = v_user_id and created_by = 'authenticated_user' and not is_deleted); end if;
+  begin return exists (select 1 from public.spot_field_reports where id = v_target_id::uuid and owner_id = v_user_id); exception when invalid_text_representation then return false; end;
+end;
+$$;
+revoke all on function public.can_write_my_record_photo_object(text) from public;
+grant execute on function public.can_write_my_record_photo_object(text) to authenticated;
+
 create policy private_record_photos_owner_insert on storage.objects for insert to authenticated
-  with check (bucket_id = 'private-record-photos' and owner_id = auth.uid()::text and (storage.foldername(name))[1] = auth.uid()::text);
+  with check (bucket_id = 'private-record-photos' and owner_id = auth.uid()::text and public.can_write_my_record_photo_object(name));
 create policy private_record_photos_owner_select on storage.objects for select to authenticated
   using (bucket_id = 'private-record-photos' and owner_id = auth.uid()::text and (storage.foldername(name))[1] = auth.uid()::text);
 create policy private_record_photos_owner_delete on storage.objects for delete to authenticated
@@ -46,7 +62,7 @@ create or replace function public.add_my_record_photo(
   p_photo_id uuid, p_target_type text, p_target_id text, p_storage_path text,
   p_sort_order smallint, p_mime_type text, p_byte_size integer, p_width integer, p_height integer
 ) returns uuid language plpgsql security definer set search_path = '' as $$
-declare v_user_id uuid := auth.uid(); v_expected_path text;
+declare v_user_id uuid := auth.uid(); v_expected_path text; v_object_size bigint;
 begin
   if v_user_id is null then raise exception 'authentication required'; end if;
   if p_target_type not in ('catch_memo', 'field_report') then raise exception 'invalid target type'; end if;
@@ -62,9 +78,11 @@ begin
   if p_target_type = 'field_report' and not exists (
     select 1 from public.spot_field_reports where id = p_target_id::uuid and owner_id = v_user_id
   ) then raise exception 'report owner mismatch'; end if;
-  if not exists (select 1 from storage.objects where bucket_id = 'private-record-photos' and name = p_storage_path and owner_id = v_user_id::text and metadata->>'mimetype' = 'image/webp') then
+  select (metadata->>'size')::bigint into v_object_size from storage.objects where bucket_id = 'private-record-photos' and name = p_storage_path and owner_id = v_user_id::text and metadata->>'mimetype' = 'image/webp';
+  if v_object_size is null then
     raise exception 'storage object not found';
   end if;
+  if v_object_size <> p_byte_size or v_object_size not between 1 and 460800 then raise exception 'storage object size mismatch'; end if;
   insert into public.record_photos (id, owner_id, target_type, catch_memo_id, field_report_id, storage_path, sort_order, mime_type, byte_size, width, height)
   values (p_photo_id, v_user_id, p_target_type, case when p_target_type = 'catch_memo' then p_target_id end,
     case when p_target_type = 'field_report' then p_target_id::uuid end, p_storage_path, p_sort_order, p_mime_type, p_byte_size, p_width, p_height);
@@ -104,7 +122,7 @@ begin
   ) then raise exception 'delete linked storage objects first'; end if;
   delete from public.record_photos where catch_memo_id = p_memo_id and owner_id = v_user_id;
   update public.external_catch_memos set is_deleted = true, updated_at = now()
-    where id = p_memo_id and owner_id = v_user_id and not is_deleted;
+    where id = p_memo_id and owner_id = v_user_id and created_by = 'authenticated_user' and not is_deleted;
   return found;
 end;
 $$;
