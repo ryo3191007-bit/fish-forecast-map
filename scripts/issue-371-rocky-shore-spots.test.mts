@@ -64,7 +64,7 @@ const mapSource = readFileSync(new URL("../src/components/FishingMap.tsx", impor
 const spotPopup = mapSource.slice(mapSource.indexOf("function createSpotPopupContent"), mapSource.indexOf("async function loadBathymetryTileImageData"));
 assert.match(spotPopup, /getFishingSpotPopupCaution\(spot\)/);
 assert.match(spotPopup, /if \(cautionText\) popup\.append\(caution\)/);
-assert.match(spotPopup, /evaluationButton\.textContent = "地点評価"/);
+assert.match(spotPopup, /evaluationButton\.textContent = "地点情報"/);
 const historicalBroadSpotIds = ["yobuko-area", "fukushima-area", "takashima-area", "hirado-seto", "ikitsuki-area"];
 for (const id of historicalBroadSpotIds) {
   assert.ok(hiddenBroadFishingSpotIds.includes(id), `${id} remains hidden after the additive master update`);

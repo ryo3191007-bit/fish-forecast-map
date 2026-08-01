@@ -64,10 +64,6 @@ assert.match(
 );
 assert.match(dashboard, /catches=\{scoreCatchRecords\}/);
 
-const evaluationTab = card.slice(card.indexOf("function EvaluationTab"), card.indexOf("function JmaWarningPanel"));
-assert.match(evaluationTab, /calculateProductionScoreV2\(/, "SCORE v2 calculation must remain unchanged");
-assert.match(evaluationTab, /result\.speciesResults/);
-assert.match(evaluationTab, /result\.methodResults/);
-assert.doesNotMatch(evaluationTab, /fieldObservations|SpotFieldObservation/, "field observations do not affect SCORE v2");
+assert.doesNotMatch(card, /function EvaluationTab\(|calculateProductionScoreV2/, "the score evaluation route is removed from the user-facing card");
 
 console.log("Issue #304 user catch species tab tests passed");

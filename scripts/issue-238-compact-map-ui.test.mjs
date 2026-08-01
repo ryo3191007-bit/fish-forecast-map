@@ -64,14 +64,6 @@ assert.match(detailUi, /return \{ text: "未確定", confidence: null, state: "u
 assert.match(detailUi, /informationState === "unresearched"[\s\S]*?informationState === "researched_unknown"/, "unresearched and researched-unknown values share the user-facing 未確定 state");
 assert.doesNotMatch(detailUi, /confidence === "low"[\s\S]*?return uncertain/, "low confidence is not hidden as uncertain");
 assert.match(card, /function EmptyState\(\) \{ return <p className="spotEvaluationState empty" role="status">情報なし<\/p>; \}/);
-const evaluationTab = card.slice(card.indexOf("function EvaluationTab"), card.indexOf("function JmaWarningPanel"));
-assert.match(evaluationTab, /className="scoreCards"[\s\S]*?\{!species\.length && <EmptyState \/>\}[\s\S]*?<h3>釣法評価<\/h3>/, "the species section owns its empty state");
-assert.match(evaluationTab, /className="methodScores"[\s\S]*?\{!methods\.length && <EmptyState \/>\}/, "the method section owns its empty state");
-assert.doesNotMatch(evaluationTab, /!species\.length && !methods\.length/, "empty sections are not coupled");
-const emptyStateCount = ({ species, methods }) => Number(species === 0) + Number(methods === 0);
-assert.equal(emptyStateCount({ species: 0, methods: 0 }), 2, "both empty sections render an empty state");
-assert.equal(emptyStateCount({ species: 1, methods: 0 }), 1, "only an empty method section renders an empty state");
-assert.equal(emptyStateCount({ species: 0, methods: 1 }), 1, "only an empty species section renders an empty state");
 assert.match(css, /\.spotEvaluationState\.empty[\s\S]*?display:inline-block/);
 
 console.log("Issue 238 compact map UI checks passed");

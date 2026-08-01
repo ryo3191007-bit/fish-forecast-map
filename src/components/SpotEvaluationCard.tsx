@@ -16,10 +16,9 @@ import type {
   FishingSpotDetailSet,
   SpotDetailConfidence,
 } from "@/domain/fishingSpotDetail";
-import { calculateProductionScoreV2 } from "@/domain/scoreV2Production";
 import type { JmaWarningDecision } from "@/domain/jmaWarning";
 import { getJmaWarningDisplay } from "@/domain/jmaWarningPresentation";
-import { findOwnerUserSpotDetail, formatOwnerUserSpotTerrainDetail, formatSpotDetailValue, getAvailableForecastDates, getEnvironmentStatusLabel, getEvaluationReferenceTime, getFirstForecastTimeForDate, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
+import { findOwnerUserSpotDetail, formatOwnerUserSpotTerrainDetail, formatSpotDetailValue, getAvailableForecastDates, getEnvironmentStatusLabel, getFirstForecastTimeForDate, resolveSelectedForecastTime, scopeSpotDetails, type SpotDetailLoadStatus } from "@/domain/spotEvaluationPresentation";
 import {
   fishingDetailItems,
   resolveSpotDetailUiPresentation,
@@ -31,7 +30,7 @@ import { useSpotFieldObservations, type SpotFieldObservationState } from "@/hook
 import { useUserFishingSpotDetails } from "@/hooks/useUserFishingSpotDetails";
 import { SpotFieldObservationCard } from "./SpotFieldObservationCard";
 
-export type SpotEvaluationTab = "評価" | "環境" | "釣場" | "地形" | "魚種";
+export type SpotEvaluationTab = "環境" | "釣場" | "地形" | "魚種";
 
 type Props = {
   spots: FishingSpot[];
@@ -49,15 +48,12 @@ type Props = {
   isLoading: boolean;
   error: string | null;
   jmaWarning: JmaWarningDecision | null;
-  onShowAllSpecies: () => void;
   onFocusMap: () => void;
   onOpenSpotRegistration: () => void;
   isUserSpot?: boolean;
 };
 
-const tabs: SpotEvaluationTab[] = ["環境", "釣場", "地形", "評価"];
-const orderedTabs: SpotEvaluationTab[] = [...tabs.slice(0, 3), "魚種", ...tabs.slice(3)];
-const visibleTabs = orderedTabs.filter((tab) => tab !== "評価");
+const visibleTabs: SpotEvaluationTab[] = ["環境", "釣場", "地形", "魚種"];
 const confidenceLabel: Record<SpotDetailConfidence, string> = { high: "高", medium: "中", low: "低" };
 const detailIcons: Record<string, string> = {
   target_species: "🐟", recommended_methods: "⌁", shore_access: "↝",
@@ -88,7 +84,7 @@ export function SpotEvaluationCard(props: Props) {
   return (
     <section className="spotEvaluationCard" aria-live="polite">
       <header className="spotEvaluationHeader">
-        <div><p className="eyebrow">Spot evaluation</p><h2>地点評価</h2></div>
+        <div><p className="eyebrow">Spot information</p><h2>地点情報</h2></div>
         <button type="button" className="button catchReportRegisterButton userSpotRegisterButton" onClick={props.onOpenSpotRegistration}>＋ 地点登録</button>
       </header>
       <div className="spotSelectionRow">
@@ -98,7 +94,7 @@ export function SpotEvaluationCard(props: Props) {
         </button>
       </div>
 
-      <div className="sharedTimeControls" aria-label="評価・環境の共通日時">
+      <div className="sharedTimeControls" aria-label="環境情報の日時">
         <div className="sharedTimeInputs">
           <label>日付<input type="date" value={selectedDate} min={availableDates[0]} max={availableDates.at(-1)} disabled={!availableDates.length} onChange={(event) => {
             const forecastTime = getFirstForecastTimeForDate(rows, event.target.value);
@@ -113,12 +109,11 @@ export function SpotEvaluationCard(props: Props) {
         </div>
       </div>
 
-      <div className="spotInternalTabs" role="tablist" aria-label="地点評価の表示内容">
+      <div className="spotInternalTabs" role="tablist" aria-label="地点情報の表示内容">
         {visibleTabs.map((tab) => <button type="button" role="tab" id={`spot-tab-${tab}`} aria-selected={props.activeTab === tab} aria-controls={`spot-panel-${tab}`} tabIndex={props.activeTab === tab ? 0 : -1} key={tab} onClick={() => props.onActiveTabChange(tab)}>{tab}</button>)}
       </div>
       <div role="tabpanel" id={`spot-panel-${props.activeTab}`} aria-labelledby={`spot-tab-${props.activeTab}`}>
-        {props.activeTab === "評価" && <EvaluationTab {...props} selectedTime={props.selectedTime} />}
-        {props.activeTab === "環境" && <EnvironmentTab environment={selectedEnvironment} row={selectedRow} loading={props.isLoading} error={props.error} />}
+        {props.activeTab === "環境" && <EnvironmentTab environment={selectedEnvironment} row={selectedRow} loading={props.isLoading} error={props.error} jmaWarning={props.jmaWarning} />}
         {props.activeTab === "釣場" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={fishingDetailItems} hiddenKeys={["target_species", "recommended_methods"]} spotId={props.selectedSpotId} fieldObservations={props.isUserSpot ? ownerDetails : fieldObservations} ownerOnly={props.isUserSpot} />}
         {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} spotId={props.selectedSpotId} fieldObservations={props.isUserSpot ? ownerDetails : fieldObservations} ownerOnly={props.isUserSpot} />}
         {props.activeTab === "魚種" && <SpeciesTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} catches={props.catches} spotId={props.selectedSpotId} fieldObservations={fieldObservations} isUserSpot={props.isUserSpot} />}
@@ -149,24 +144,6 @@ function SpotCombobox({ spots, selected, onSelect }: { spots: FishingSpot[]; sel
   </div>;
 }
 
-function EvaluationTab(props: Props & { selectedTime: string | null }) {
-  if (!props.selectedSpot) return <StateMessage>地点が未選択のため、総合評価未算出です。</StateMessage>;
-  const details = props.detailStatus === "ready" ? scopeSpotDetails(props.details, props.selectedSpot.id) : null;
-  const result = calculateProductionScoreV2({ spot: props.selectedSpot, details, catches: props.catches, environment: props.environment, selectedDateTime: getEvaluationReferenceTime(props.selectedTime), jmaWarning: props.jmaWarning });
-  const jmaWarningDisplay = getJmaWarningDisplay(props.jmaWarning);
-  const species = result.speciesResults.filter((item) => item.informationStatus !== "no_information").sort((a, b) => (b.overallScore ?? b.spotCompatibilityScore ?? -1) - (a.overallScore ?? a.spotCompatibilityScore ?? -1)).slice(0, 5);
-  const methods = result.methodResults.filter((item) => item.informationStatus !== "no_information").sort((a, b) => (b.overallScore ?? -1) - (a.overallScore ?? -1) || (b.spotSuitabilityScore ?? -1) - (a.spotSuitabilityScore ?? -1));
-  return <div className="evaluationContent">
-    <JmaWarningPanel decision={props.jmaWarning} display={jmaWarningDisplay} />
-    {result.status !== "available" && jmaWarningDisplay.kind !== "unknown" && jmaWarningDisplay.kind !== "loading" && <StateMessage>{result.displayMessage}。地点相性のみ参考点として表示します。</StateMessage>}
-    <div className="evaluationTitle"><h3>魚種評価</h3><button type="button" onClick={props.onShowAllSpecies}>すべて表示</button></div>
-    <div className="scoreCards">{species.map((item) => <article key={item.species} className="scoreCard"><header><h4>{item.species}</h4><strong>{item.overallScore === null ? "総合点未算出" : `総合点 ${item.overallScore}点`}</strong></header><p>地点相性 参考点: {item.spotCompatibilityScore === null ? "情報なし" : `${item.spotCompatibilityScore}点`}</p><ConfidenceSummary spot={item.confidence.spot} environment={item.confidence.environment} /><p>{item.partialData ? "一部情報未反映" : "必要情報を反映"}</p><ul>{item.reasons.slice(0, 2).map((reason, index) => <li key={`${reason.label}-${index}`}>{reason.label}{reason.confidence ? `（信憑性: ${confidenceLabel[reason.confidence]}）` : ""}: {reason.displayNote}</li>)}</ul></article>)}</div>
-    {!species.length && <EmptyState />}
-    <h3>釣法評価</h3><div className="methodScores">{methods.map((item) => <article key={item.method}><h4>{item.method}</h4><strong>{item.overallScore === null ? "総合点未算出" : `総合点 ${item.overallScore}点`}</strong><span>釣り場適性 参考点: {item.spotSuitabilityScore === null ? "情報なし" : `${item.spotSuitabilityScore}点`}</span><span>対応魚種数: {item.contributingSpeciesCount}</span></article>)}</div>
-    {!methods.length && <EmptyState />}
-  </div>;
-}
-
 function JmaWarningPanel({ decision, display }: { decision: JmaWarningDecision | null; display: ReturnType<typeof getJmaWarningDisplay> }) {
   if (display.kind === "loading" || display.kind === "hidden") return null;
   if (display.kind === "unknown") return <p className="jmaWarningUnavailable" role="status">{display.message}</p>;
@@ -181,11 +158,7 @@ function JmaWarningPanel({ decision, display }: { decision: JmaWarningDecision |
   </aside>;
 }
 
-function ConfidenceSummary({ spot, environment }: { spot: { high: number; medium: number; low: number }; environment: { high: number; medium: number; low: number } }) {
-  return <div className="confidenceSummary"><span>地点相性: 高{spot.high}・中{spot.medium}・低{spot.low}</span><span>環境評価: 高{environment.high}・中{environment.medium}・低{environment.low}</span></div>;
-}
-
-function EnvironmentTab({ environment, row, loading, error }: { environment: FishingEnvironment | null; row: FishingEnvironment["hourly"][number] | null; loading: boolean; error: string | null }) {
+function EnvironmentTab({ environment, row, loading, error, jmaWarning }: { environment: FishingEnvironment | null; row: FishingEnvironment["hourly"][number] | null; loading: boolean; error: string | null; jmaWarning: JmaWarningDecision | null }) {
   if (loading && !environment) return <StateMessage>環境データを取得中です…</StateMessage>;
   if (error && !environment) return <StateMessage>APIエラー: 環境データを取得できませんでした。</StateMessage>;
   if (!environment) return <EmptyState />;
@@ -208,6 +181,7 @@ function EnvironmentTab({ environment, row, loading, error }: { environment: Fis
     ["データ状態", getEnvironmentStatusLabel(environment, error)],
   ];
   return <div className="environmentTabContent">
+    <JmaWarningPanel decision={jmaWarning} display={getJmaWarningDisplay(jmaWarning)} />
     <section className="dailyTimeSummary" aria-labelledby="daily-time-heading">
       <h3 id="daily-time-heading">選択日の時刻情報</h3>
       <dl>{timeItems.map((item) => <div className={`dailyTimeItem ${item.tone}`} key={item.label}><dt><span aria-hidden="true">{item.icon}</span>{item.label}</dt><dd>{item.value}</dd></div>)}</dl>

@@ -33,12 +33,13 @@ const evaluationHeader = card.slice(card.indexOf('<header className="spotEvaluat
 assert.ok(!evaluationHeader.includes("selectedSpot?.areaName"), "the evaluation header does not repeat the selected spot area");
 assert.ok(card.includes("filterFishingSpotOptions(spots, query)") && card.includes("<span>{spot.areaName}</span>"), "area names remain available to combobox search and options");
 
-assert.match(card, /const tabs: SpotEvaluationTab\[\] = \["環境", "釣場", "地形", "評価"\]/, "tabs are ordered environment, fishing spot, terrain, evaluation");
+assert.match(card, /const visibleTabs: SpotEvaluationTab\[\] = \["環境", "釣場", "地形", "魚種"\]/, "the four FishTrace information tabs are ordered");
 assert.match(dashboard, /useState<SpotEvaluationTab>\("環境"\)/, "the first spot evaluation visit starts on the environment tab");
 assert.doesNotMatch(dashboard, /environmentSpot[^\n]*setSpotEvaluationTab\("環境"\)|setSpotEvaluationTab\("環境"\)[^\n]*environmentSpot/, "spot changes do not reset the user's active tab");
 assert.match(card, /role="tablist"[\s\S]*?role="tab"[\s\S]*?aria-selected=\{props\.activeTab === tab\}[\s\S]*?aria-controls=\{`spot-panel-\$\{tab\}`\}[\s\S]*?tabIndex=\{props\.activeTab === tab \? 0 : -1\}/, "the reordered tabs retain tablist, selection, panel-control, and keyboard semantics");
 assert.match(card, /role="tabpanel"[\s\S]*?id=\{`spot-panel-\$\{props\.activeTab\}`\}[\s\S]*?aria-labelledby=\{`spot-tab-\$\{props\.activeTab\}`\}/, "the active panel remains labelled by its corresponding tab");
-for (const tab of ["評価", "環境", "釣場", "地形"]) assert.ok(card.includes(`props.activeTab === "${tab}"`), `${tab} retains its conditional panel`);
+for (const tab of ["環境", "釣場", "地形", "魚種"]) assert.ok(card.includes(`props.activeTab === "${tab}"`), `${tab} retains its conditional panel`);
+assert.doesNotMatch(card, /function EvaluationTab\(|calculateProductionScoreV2/, "score recommendations are removed from the user-facing card");
 const internalTabsRule = css.match(/\.spotInternalTabs\s*\{[^}]+\}/)?.[0] ?? "";
 assert.match(internalTabsRule, /display:grid/, "the four compact tabs remain in one grid row on mobile");
 assert.match(internalTabsRule, /grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/, "the visible tabs have equal widths");
@@ -166,18 +167,14 @@ const renderedValues = [presentation.formatSpotDetailValue({ ...value("new", "op
 assert.ok(!JSON.stringify(renderedValues).includes("secret") && !JSON.stringify(renderedValues).includes("internal"), "source URL and internal note are excluded from display values");
 assert.ok(dashboard.includes("setSpotDetails(null)"), "spot changes clear previous details immediately");
 assert.ok(dashboard.includes('setSpotDetailStatus("loading")') && dashboard.includes('setSpotDetailStatus("failed")'), "detail loading and failure are explicit");
-assert.ok(card.includes("getEvaluationReferenceTime(props.selectedTime)"), "spot scoring remains available without a UI forecast selection");
 assert.ok(card.includes('display.kind === "loading" || display.kind === "hidden"'), "loading, clear, and out-of-range do not render a JMA panel");
 assert.ok(card.includes('className="jmaWarningUnavailable"') && card.includes("{display.message}"), "unknown renders only the presentation policy's compact message");
-assert.ok(card.includes('jmaWarningDisplay.kind !== "unknown"'), "JMA unknown suppresses the second score-state safety message");
-assert.ok(card.includes('jmaWarningDisplay.kind !== "loading"'), "JMA loading suppresses score-state failure messages while the overall score remains unavailable");
 assert.ok(!card.includes("unknownReason") && !card.includes("lastSuccessfulFetchAt"), "internal unknown details are absent from the normal UI");
 for (const label of ["対象区域", "現象", "電文", "発表時刻", "対象時間帯", "出典:"]) assert.ok(card.includes(label), `blocked detail retains ${label}`);
 const unavailableRule = css.match(/\.jmaWarningUnavailable\s*\{[^}]+\}/)?.[0] ?? "";
 assert.match(unavailableRule, /padding:\.35rem 0/);
 assert.match(unavailableRule, /line-height:1\.4/);
 assert.ok(!/min-height|(?:^|[;{])\s*height:/.test(unavailableRule), "the mobile unknown message has no forced excessive height");
-assert.ok(card.includes('props.detailStatus === "ready" ? scopeSpotDetails'), "only ready, matching details enter scoring");
 
 const result = (species, informationStatus, overallScore, spotCompatibilityScore) => ({ species, informationStatus, overallScore, spotCompatibilityScore });
 const original = [
@@ -236,9 +233,6 @@ assert.deepEqual(
 const browserBack = presentation.resolveAllSpeciesReturnState(hashState, ["spot-1", "spot-2"], timesBySpot, "spot-2", null);
 assert.equal(browserBack.spotId, "spot-1");
 assert.equal(browserBack.selectedTime, "2026-07-20T12:00", "normal browser back retains the origin spot and time");
-assert.ok(card.includes("onShowAllSpecies"), "the all-species button opens the full-screen view through dashboard state");
-assert.ok(dashboard.includes('window.addEventListener("popstate"') && dashboard.includes("resolveAllSpeciesReturnState"), "the tested transition function handles browser history events");
-assert.ok(dashboard.includes("isValidAllSpeciesHistoryState"), "runtime history reads use the tested validator");
 assert.ok(allSpeciesScreen.includes('useState("")') && !dashboard.includes("setAllSpeciesQuery"), "search state is new and empty for every mounted full-screen view");
 assert.ok(allSpeciesScreen.includes("検索条件に一致する魚種はありません"), "the zero-result state is visible");
 assert.ok(!allSpeciesScreen.includes("sourceUrl") && !allSpeciesScreen.includes("internalNote") && !allSpeciesScreen.includes("sourceName") && !presentation.getAllSpeciesStatusMessage({ status: "available", safetyStatus: "safe", sourceName: "secret", note: "internal" })?.includes("secret"), "source metadata and internal notes cannot enter status or card rendering");

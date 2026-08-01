@@ -4,8 +4,8 @@ import "./bathymetry-mobile.css";
 import "./filter-counts.css";
 
 export const metadata: Metadata = {
-  title: "Fish Forecast Map",
-  description: "糸島西岸から平戸方面までの陸っぱり釣果予測マップMVP",
+  title: "FishTrace",
+  description: "釣り場を探す・現地調査する・釣果を記録する・共有するための陸っぱり釣りマップ",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

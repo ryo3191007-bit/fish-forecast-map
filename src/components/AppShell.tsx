@@ -26,7 +26,7 @@ export function AppShell() {
     <main>
       <section className="hero">
         <div className="heroHeader">
-          <h1>Fish Forecast Map</h1>
+          <h1>FishTrace</h1>
           <button
             type="button"
             className="authNavButton"
@@ -84,7 +84,7 @@ export function AppShell() {
         </ul>
       </footer>
       <section className="appNotice" aria-label="注意事項">
-        本サービスの予報・SCORE・潮位・水深は参考情報です。実際の釣果を保証するものではなく、航海・安全判断には使用できません。現地の状況と公式情報を確認し、利用者自身の判断で行動してください。高さ誇張と水深モードの半透明海面表現は表示上の演出であり、データ精度は変わらず、実潮位・実海面高度を示すものではありません。
+        本サービスの風・波・潮位・水深などの環境情報は参考情報です。公式情報と現地の状況を確認し、航海・安全判断には使用せず、利用者自身の判断で行動してください。高さ誇張と水深モードの半透明海面表現は表示上の演出であり、データ精度は変わらず、実潮位・実海面高度を示すものではありません。
       </section>
       {isAuthOpen ? (
         <div className="authModalBackdrop" onClick={() => setIsAuthOpen(false)}>
