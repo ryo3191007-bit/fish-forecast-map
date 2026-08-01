@@ -1,0 +1,87 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+const migration = await readFile("supabase/migrations/20260801120000_issue_396_private_record_photos.sql", "utf8");
+const domain = await readFile("src/domain/recordPhoto.ts", "utf8");
+const repository = await readFile("src/lib/recordPhotoRepository.ts", "utf8");
+const catchUi = await readFile("src/components/ExternalCatchMemoSection.tsx", "utf8");
+const reportUi = await readFile("src/components/UserSpotFieldReportSection.tsx", "utf8");
+for (const value of ["private-record-photos", "create table public.record_photos", "record_photos_owner_select", "add_my_record_photo", "remove_my_record_photo", "delete linked storage objects first"]) assert.ok(migration.includes(value));
+assert.match(migration, /sort_order between 0 and 2/);
+assert.match(migration, /byte_size between 1 and 460800/);
+assert.match(migration, /width between 1 and 1280/);
+assert.doesNotMatch(migration, /owner_id = auth\.uid\(\)::text/);
+assert.doesNotMatch(migration, /name = p_storage_path and (?:owner_id|owner)\b/);
+assert.doesNotMatch(migration, /insert into storage\.objects|delete from storage\.objects/i);
+assert.match(domain, /20 \* 1024 \* 1024/);
+assert.match(domain, /450 \* 1024/);
+assert.match(domain, /canvasToWebp/);
+assert.match(repository, /upsert: false/);
+assert.match(repository, /storage\.from\(BUCKET\)\.remove/);
+assert.match(repository, /isRecordPhotoBackendMissing/);
+assert.match(catchUi, /targetType="catch_memo"/);
+assert.match(reportUi, /targetType="field_report"/);
+console.log("Issue #396 record photo checks passed.");
+
+// Review regression contract: retry keeps the saved target and removes completed batch items.
+assert.match(catchUi, /savedMemoId !== null \|\| \(nextMemo !== null && await onMemoSave/);
+assert.match(reportUi, /resolveRecordPhotoTargetId\(savedReportId/);
+assert.match(repository, /class RecordPhotoBatchError/);
+assert.match(repository, /completedPhotoIds/);
+assert.match(repository, /reconcileRecordPhotoObjects/);
+assert.match(repository, /孤立写真を回収できませんでした/);
+assert.match(repository, /cleanupError/);
+assert.match(repository, /return photos;/); // stale metadata is retained without a signed URL
+assert.doesNotMatch(repository, /return photos\.filter/);
+assert.match(repository, /private-record-photos\|bucket not found/);
+assert.match(migration, /can_access_my_record_photo_object/);
+assert.match(migration, /can_insert_my_record_photo_object/);
+assert.match(migration, /array_length\(v_parts, 1\) <> 3/);
+assert.match(migration, /\.webp\$'/);
+assert.match(migration, /storage object size mismatch/);
+assert.match(migration, /v_object_size <> p_byte_size/);
+assert.match(migration, /created_by = 'authenticated_user'/);
+assert.doesNotMatch(migration, /storage\.buckets \(id, name, public,/);
+assert.match(migration, /information_schema\.columns/);
+assert.doesNotMatch(migration, /select count\(\*\) from storage\.objects/);
+assert.match(migration, /\[012\]\\\.webp/);
+assert.match(migration, /Width and height are client-reported/);
+assert.match(repository, /buildRecordPhotoStoragePath/);
+assert.match(repository, /deterministic paths are the Storage-layer uniqueness guard/);
+assert.match(catchUi, /disabled=\{Boolean\(savedMemoId\)\}/);
+assert.match(catchUi, /未完了の写真を再試行/);
+assert.match(reportUi, /savedReportId \? "未完了の写真を再試行"/);
+assert.match(repository, /storageError[\s\S]*remove_my_record_photo/);
+
+// A catch cannot be soft-deleted while any deterministic slot exists, even if
+// an interrupted upload never created its record_photos metadata row.
+const orphanSlot = "11111111-1111-4111-8111-111111111111/catch_memo/memo-1/0.webp";
+const expectedSlots = [0, 1, 2].map(
+  (slot) => `11111111-1111-4111-8111-111111111111/catch_memo/memo-1/${slot}.webp`,
+);
+const canSoftDelete = (objectNames) => !expectedSlots.some((path) => objectNames.has(path));
+const storageObjects = new Set([orphanSlot]);
+assert.equal(canSoftDelete(storageObjects), false, "metadata-free Storage object blocks soft-delete");
+storageObjects.delete(orphanSlot); // Storage API removal is completed before retrying the RPC.
+assert.equal(canSoftDelete(storageObjects), true, "soft-delete can proceed after Storage removal");
+
+const softDeleteFunction = migration.slice(migration.indexOf("create or replace function public.soft_delete_external_catch_memo"));
+assert.doesNotMatch(softDeleteFunction, /join storage\.objects/, "orphan detection must not depend on metadata");
+for (const slot of [0, 1, 2]) assert.ok(softDeleteFunction.includes(`/${slot}.webp`));
+assert.match(softDeleteFunction, /object\.name = any \(array\[/);
+assert.doesNotMatch(softDeleteFunction, /delete from storage\.objects/i, "objects remain Storage API managed");
+
+// Catch uploads and soft-deletes must serialize on the same owner-scoped row.
+const insertAuthorizationFunction = migration.slice(
+  migration.indexOf("create or replace function public.can_insert_my_record_photo_object"),
+  migration.indexOf("create policy private_record_photos_owner_insert"),
+);
+assert.match(insertAuthorizationFunction, /language plpgsql volatile security definer/);
+assert.match(insertAuthorizationFunction, /owner_id = v_user_id[\s\S]*created_by = 'authenticated_user'[\s\S]*not is_deleted[\s\S]*for key share;/);
+assert.match(migration, /private_record_photos_owner_insert[\s\S]*can_insert_my_record_photo_object\(name\)/);
+assert.doesNotMatch(migration, /private_record_photos_owner_(?:select|delete)[\s\S]{0,180}can_insert_my_record_photo_object/);
+assert.match(softDeleteFunction, /owner_id = v_user_id[\s\S]*created_by = 'authenticated_user'[\s\S]*not is_deleted[\s\S]*for update;/);
+assert.ok(
+  softDeleteFunction.indexOf("for update;") < softDeleteFunction.indexOf("select 1 from storage.objects"),
+  "soft-delete locks the active owner row before inspecting fixed Storage slots",
+);
+assert.match(softDeleteFunction, /if not found then return false; end if;/);

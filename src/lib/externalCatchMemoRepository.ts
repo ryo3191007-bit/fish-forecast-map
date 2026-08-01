@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 import { mapExternalCatchMemoRow, mapExternalCatchMemoToUpsertPayload, type ExternalCatchMemoRow } from "@/lib/externalCatchMemoMapper";
+import { isRecordPhotoBackendMissing, removeCatchPhotoObjectsBeforeDelete } from "@/lib/recordPhotoRepository";
 
 export type ExternalCatchMemoDbSource = "supabase" | "local-storage-fallback";
 export type ExternalCatchMemoDbFallbackReason = "not-authenticated" | "supabase-not-configured" | "supabase-error" | "integrity-error" | "local-data-not-migrated";
@@ -149,6 +150,10 @@ export async function deleteExternalCatchMemoFromSupabase(userId: string | null,
   const clientStatus = getClientForUser(userId, null);
   if (!clientStatus.ok) return clientStatus.result;
 
+  try { await removeCatchPhotoObjectsBeforeDelete(memoId); }
+  catch (photoError) {
+    if (!isRecordPhotoBackendMissing(photoError)) return fallback(null, "supabase-error", "Linked photos could not be removed; catch deletion was cancelled.");
+  }
   const { data, error } = await clientStatus.client.rpc("soft_delete_external_catch_memo", { p_memo_id: memoId });
 
   if (error) {

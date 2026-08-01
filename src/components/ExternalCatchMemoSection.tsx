@@ -1,6 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import type { PreparedRecordPhoto } from "@/domain/recordPhoto";
+import { RecordPhotoBatchError, uploadRecordPhotos } from "@/lib/recordPhotoRepository";
 import type {
   ExternalCatchMemoMigrationResult,
   ExternalCatchMemoStorageStatus,
@@ -18,6 +20,7 @@ import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
 import { UserFishingSpotRegistrationModal } from "./UserFishingSpotRegistrationModal";
 import type { UserFishingSpot } from "@/domain/userFishingSpot";
+import { RecordPhotoEditor } from "./RecordPhotoEditor";
 
 export const NEW_USER_SPOT_SENTINEL = "__new-user-spot__";
 
@@ -176,6 +179,9 @@ export function ExternalCatchMemoSection({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSpotRegistrationOpen, setIsSpotRegistrationOpen] = useState(false);
+  const [pendingPhotos, setPendingPhotos] = useState<PreparedRecordPhoto[]>([]);
+  const [photoError, setPhotoError] = useState<string | null>(null);
+  const [savedMemoId, setSavedMemoId] = useState<string | null>(null);
   const editingMemo = useMemo(
     () => memos.find((memo) => memo.id === editingId),
     [editingId, memos],
@@ -198,6 +204,7 @@ export function ExternalCatchMemoSection({
     if (isSpotRegistrationOpen) return;
     setIsModalOpen(false);
     setErrors({});
+    setPendingPhotos([]); setPhotoError(null); setSavedMemoId(null);
   }, [isSpotRegistrationOpen]);
 
   useEffect(() => {
@@ -228,6 +235,7 @@ export function ExternalCatchMemoSection({
     setEditingId(null);
     setForm(initialFormState());
     setErrors({});
+    setPendingPhotos([]); setPhotoError(null); setSavedMemoId(null);
     setIsModalOpen(true);
   };
   useEffect(() => {
@@ -245,11 +253,25 @@ export function ExternalCatchMemoSection({
   const submitMemo = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (storageStatus.isMutating) return;
-    const nextErrors = validateForm(form, editingMemo);
+    const nextErrors = savedMemoId ? {} : validateForm(form, editingMemo);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
-    const nextMemo = createMemo(form, spots, editingMemo);
-    if (await onMemoSave(nextMemo)) closeModal();
+    const nextMemo = savedMemoId ? null : createMemo(form, spots, editingMemo);
+    const targetId = savedMemoId ?? nextMemo?.id;
+    const bodySaved = savedMemoId !== null || (nextMemo !== null && await onMemoSave(nextMemo));
+    if (bodySaved && targetId) {
+      if (!savedMemoId) setSavedMemoId(targetId);
+      if (pendingPhotos.length) {
+        try { await uploadRecordPhotos("catch_memo", targetId, pendingPhotos); }
+        catch (value) {
+          const completed = value instanceof RecordPhotoBatchError ? new Set(value.completedPhotoIds) : new Set<string>();
+          setPendingPhotos((current) => current.filter((photo) => !completed.has(photo.id)));
+          setPhotoError("釣果本文は保存済みです。同じ釣果へ未完了の写真だけ再試行できます。"); return;
+        }
+      }
+      pendingPhotos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl));
+      setPendingPhotos([]); closeModal();
+    }
   };
 
   const deleteEditingMemo = async () => {
@@ -317,6 +339,7 @@ export function ExternalCatchMemoSection({
               onEdit={openEdit}
               onDelete={onMemoDelete}
               isMutating={storageStatus.isMutating}
+              photoEnabled={storageStatus.isDbAvailable && !localMemoIds.has(memo.id)}
             />
           ))
         )}
@@ -349,7 +372,8 @@ export function ExternalCatchMemoSection({
             ) : null}
             <form className="externalMemoForm" onSubmit={submitMemo} noValidate>
               <div className="externalMemoSections">
-                <fieldset className="externalMemoFormSection externalMemoBasicInfo">
+                {savedMemoId ? <p role="status">釣果本文は保存済みです。本文は変更せず、未完了の写真だけを再試行します。</p> : null}
+                <fieldset className="externalMemoFormSection externalMemoBasicInfo" disabled={Boolean(savedMemoId)}>
                   <legend>基本情報</legend>
                   <label>
                     地図上の釣り場 <span className="requiredBadge">必須</span>
@@ -386,7 +410,7 @@ export function ExternalCatchMemoSection({
                     ) : null}
                   </label>
                 </fieldset>
-                <fieldset className="externalMemoFormSection externalMemoFishItems">
+                <fieldset className="externalMemoFormSection externalMemoFishItems" disabled={Boolean(savedMemoId)}>
                   <legend>釣れた魚 <span className="requiredBadge">必須</span></legend>
                   {form.catchItems.map((item, index) => (
                     <div className="externalMemoFishItem" key={index}>
@@ -418,12 +442,17 @@ export function ExternalCatchMemoSection({
                   <label>
                   メモ <span className="optionalBadge">任意</span>
                   <textarea
+                    disabled={Boolean(savedMemoId)}
                     value={form.userMemo}
                     onChange={(e) => updateForm("userMemo", e.target.value)}
                     maxLength={240}
                     placeholder="釣れた状況や次回のための短いメモ"
                   />
                   </label>
+                </section>
+                <section className="externalMemoFormSection">
+                  <RecordPhotoEditor targetType="catch_memo" targetId={savedMemoId ?? (editingMemo && !localMemoIds.has(editingMemo.id) ? editingMemo.id : undefined)} enabled={storageStatus.isDbAvailable && (!editingMemo || !localMemoIds.has(editingMemo.id))} pending={editingMemo ? undefined : pendingPhotos} onPendingChange={editingMemo ? undefined : setPendingPhotos} />
+                  {photoError ? <p className="fieldError" role="alert">{photoError}</p> : null}
                 </section>
               </div>
               {Object.keys(errors).length > 0 ? (
@@ -441,7 +470,9 @@ export function ExternalCatchMemoSection({
                     ? "保存中..."
                     : editingMemo
                       ? "更新する"
-                      : "登録する"}
+                      : savedMemoId
+                        ? "未完了の写真を再試行"
+                        : "登録する"}
                 </button>
                 <button type="button" className="clearSearchButton" onClick={closeModal} disabled={storageStatus.isMutating} aria-label="釣果入力をキャンセル">キャンセル</button>
               </div>
@@ -466,12 +497,14 @@ function ExternalMemoCard({
   onEdit,
   onDelete,
   isMutating,
+  photoEnabled,
 }: {
   memo: ExternalCatchMemo;
   spots: FishingSpot[];
   onEdit: (memo: ExternalCatchMemo) => void;
   onDelete: (memoId: string) => Promise<boolean>;
   isMutating: boolean;
+  photoEnabled: boolean;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -583,6 +616,7 @@ function ExternalMemoCard({
           </ul>
         </div>
       ) : null}
+      <RecordPhotoEditor targetType="catch_memo" targetId={memo.id} enabled={photoEnabled} editable={false} />
     </article>
   );
 }
