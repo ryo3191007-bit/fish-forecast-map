@@ -9,11 +9,16 @@ assert.match(map, /onClick=\{\(\) => void locateUser\(\)\}/, "geolocation starts
 assert.match(map, /currentLocationMarker/, "current location uses a dedicated marker");
 assert.match(map, /easeTo\(\{ center: \[location\.longitude, location\.latitude\]/);
 assert.match(modal, /現在地を使う/);
+assert.match(modal, /const location=await requestCurrentLocation\(\)/, "registration always requests a fresh location");
+assert.doesNotMatch(modal, /currentLocation\?\?await requestCurrentLocation/, "registration does not reuse a stale session location");
 assert.match(modal, /setLatitude\(String\(location\.latitude\)\)/);
 assert.match(modal, /setLongitude\(String\(location\.longitude\)\)/);
 assert.match(modal, /draggable:true/);
 assert.match(modal, /instance\.on\("click"/);
 assert.match(dashboard, /currentLocation=\{currentLocation\}/, "session location is shared with registration");
+assert.match(dashboard, /initialLongitude=\{environmentSpot\?\.longitude/, "registration receives a numeric initial longitude");
+assert.match(modal, /\},\[initialLatitude,initialLongitude\]\);/, "registration map initialization uses stable numeric dependencies");
+assert.doesNotMatch(dashboard, /initialPosition=\{\[/, "the dashboard does not pass a new position array on every render");
 assert.doesNotMatch(map + modal, /localStorage|supabase/i, "displaying a location does not persist it");
 assert.equal(formatLocationAccuracy(18.6), "推定精度 約19m");
 assert.match(geolocationErrorMessage({ code: 1 }), /手動/);

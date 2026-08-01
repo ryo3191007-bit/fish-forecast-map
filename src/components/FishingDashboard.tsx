@@ -623,7 +623,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
         </div>
       )}
       {isSpotRegistrationOpen && (auth.status === "signed-in" ? <UserFishingSpotRegistrationModal
-        initialPosition={[environmentSpot?.longitude ?? 130.1, environmentSpot?.latitude ?? 33.5]}
+        initialLongitude={environmentSpot?.longitude ?? 130.1}
+        initialLatitude={environmentSpot?.latitude ?? 33.5}
         currentLocation={currentLocation}
         onCurrentLocationChange={setCurrentLocation}
         onClose={() => setIsSpotRegistrationOpen(false)}
