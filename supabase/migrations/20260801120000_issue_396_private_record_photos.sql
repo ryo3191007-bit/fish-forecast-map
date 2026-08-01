@@ -129,10 +129,16 @@ returns boolean language plpgsql security definer set search_path = '' as $$
 declare v_user_id uuid := auth.uid();
 begin
   if v_user_id is null then raise exception 'authentication required'; end if;
+  -- Check the three deterministic Storage paths directly. Metadata may be absent
+  -- when an upload is interrupted before add_my_record_photo is called.
   if exists (
-    select 1 from public.record_photos photo join storage.objects object
-      on object.bucket_id = 'private-record-photos' and object.name = photo.storage_path
-    where photo.catch_memo_id = p_memo_id and photo.owner_id = v_user_id
+    select 1 from storage.objects object
+    where object.bucket_id = 'private-record-photos'
+      and object.name = any (array[
+        v_user_id::text || '/catch_memo/' || p_memo_id || '/0.webp',
+        v_user_id::text || '/catch_memo/' || p_memo_id || '/1.webp',
+        v_user_id::text || '/catch_memo/' || p_memo_id || '/2.webp'
+      ])
   ) then raise exception 'delete linked storage objects first'; end if;
   delete from public.record_photos where catch_memo_id = p_memo_id and owner_id = v_user_id;
   update public.external_catch_memos set is_deleted = true, updated_at = now()

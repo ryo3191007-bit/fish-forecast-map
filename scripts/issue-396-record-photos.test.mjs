@@ -50,3 +50,21 @@ assert.match(catchUi, /disabled=\{Boolean\(savedMemoId\)\}/);
 assert.match(catchUi, /未完了の写真を再試行/);
 assert.match(reportUi, /savedReportId \? "未完了の写真を再試行"/);
 assert.match(repository, /storageError[\s\S]*remove_my_record_photo/);
+
+// A catch cannot be soft-deleted while any deterministic slot exists, even if
+// an interrupted upload never created its record_photos metadata row.
+const orphanSlot = "11111111-1111-4111-8111-111111111111/catch_memo/memo-1/0.webp";
+const expectedSlots = [0, 1, 2].map(
+  (slot) => `11111111-1111-4111-8111-111111111111/catch_memo/memo-1/${slot}.webp`,
+);
+const canSoftDelete = (objectNames) => !expectedSlots.some((path) => objectNames.has(path));
+const storageObjects = new Set([orphanSlot]);
+assert.equal(canSoftDelete(storageObjects), false, "metadata-free Storage object blocks soft-delete");
+storageObjects.delete(orphanSlot); // Storage API removal is completed before retrying the RPC.
+assert.equal(canSoftDelete(storageObjects), true, "soft-delete can proceed after Storage removal");
+
+const softDeleteFunction = migration.slice(migration.indexOf("create or replace function public.soft_delete_external_catch_memo"));
+assert.doesNotMatch(softDeleteFunction, /join storage\.objects/, "orphan detection must not depend on metadata");
+for (const slot of [0, 1, 2]) assert.ok(softDeleteFunction.includes(`/${slot}.webp`));
+assert.match(softDeleteFunction, /object\.name = any \(array\[/);
+assert.doesNotMatch(softDeleteFunction, /delete from storage\.objects/i, "objects remain Storage API managed");
