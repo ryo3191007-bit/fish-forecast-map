@@ -119,7 +119,7 @@ export function SpotEvaluationCard(props: Props) {
         {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} spotId={props.selectedSpotId} fieldObservations={props.isUserSpot ? ownerDetails : fieldObservations} ownerOnly={props.isUserSpot} />}
         {props.activeTab === "魚種" && <SpeciesTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} catches={props.catches} spotId={props.selectedSpotId} fieldObservations={fieldObservations} isUserSpot={props.isUserSpot} />}
       </div>
-      {props.isUserSpot && (props.activeTab === "釣場" || props.activeTab === "地形") ? <UserSpotFieldReportSection spotId={props.selectedSpotId} state={ownerDetails} /> : null}
+      {(props.activeTab === "釣場" || props.activeTab === "地形") ? <UserSpotFieldReportSection spotId={props.selectedSpotId} state={props.isUserSpot ? ownerDetails : fieldObservations} /> : null}
     </section>
   );
 }

@@ -46,6 +46,19 @@ export type SaveSpotFieldObservationInput = {
   note: string | null;
 };
 
+export type SpotFieldReportTargetType = "master" | "user";
+
+export type SpotFieldReport = {
+  id: string;
+  spotId: string;
+  targetType: SpotFieldReportTargetType;
+  observedOn: string;
+  summaryNote: string | null;
+  origin: "user" | "initial_details" | "snapshot_backfill";
+  createdAt: string;
+  values: SpotFieldObservation[];
+};
+
 export const spotFieldObservationConfigs: Readonly<Record<string, SpotFieldObservationConfig>> = {
   target_species: { kind: "multi" },
   shore_access: {

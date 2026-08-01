@@ -44,16 +44,6 @@ export type UserFishingSpotDetailValue = {
   updatedAt: string;
 };
 
-export type UserFishingSpotFieldReport = {
-  id: string;
-  spotId: string;
-  observedOn: string;
-  summaryNote: string | null;
-  origin: "user" | "initial_details" | "snapshot_backfill";
-  createdAt: string;
-  values: UserFishingSpotDetailValue[];
-};
-
 export type RuntimeFishingSpot =
   | { source: "master"; id: string; masterSpot: FishingSpot; name: string; latitude: number; longitude: number; areaName: string; spotType: string }
   | { source: "user"; id: `${typeof USER_SPOT_ID_PREFIX}${string}`; userSpot: UserFishingSpot; name: string; latitude: number; longitude: number; areaName: string | null; spotType: FishingSpotType | null };

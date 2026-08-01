@@ -1,9 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { SaveSpotFieldObservationInput, SpotFieldObservation } from "@/domain/spotFieldObservation";
+import type { SaveSpotFieldObservationInput, SpotFieldObservation, SpotFieldReport } from "@/domain/spotFieldObservation";
 import { deleteMySpotFieldObservation, fetchMySpotFieldObservations, saveMySpotFieldObservation } from "@/lib/spotFieldObservationRepository";
+import { fetchMySpotFieldReports, saveMySpotFieldReport } from "@/lib/spotFieldReportRepository";
 import { getSupabaseClient } from "@/lib/supabaseClient";
+import { isMissingSupabaseObject } from "@/lib/supabaseObjectError";
 
 export type SpotFieldObservationStatus = "loading" | "ready" | "signed-out" | "unavailable" | "failed";
 
@@ -16,9 +18,17 @@ export type SpotFieldObservationState = {
   deleteObservation: (observationId: string) => Promise<boolean>;
 };
 
-export function useSpotFieldObservations(spotId: string): SpotFieldObservationState {
+export type SpotFieldReportState = SpotFieldObservationState & {
+  reports: SpotFieldReport[];
+  reportStatus: "loading" | "ready" | "unavailable" | "failed";
+  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => Promise<boolean>;
+};
+
+export function useSpotFieldObservations(spotId: string): SpotFieldReportState {
   const enabled = !spotId.startsWith("user:");
   const [observations, setObservations] = useState<SpotFieldObservation[]>([]);
+  const [reports, setReports] = useState<SpotFieldReport[]>([]);
+  const [reportStatus, setReportStatus] = useState<SpotFieldReportState["reportStatus"]>("loading");
   const [status, setStatus] = useState<SpotFieldObservationStatus>("loading");
   const [isMutating, setIsMutating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,17 +39,20 @@ export function useSpotFieldObservations(spotId: string): SpotFieldObservationSt
     if (!enabled) {
       setObservations([]);
       setStatus("ready");
+      setReports([]); setReportStatus("unavailable");
       return;
     }
     if (!targetSpotId) {
       setObservations([]);
       setStatus("ready");
+      setReports([]); setReportStatus("unavailable");
       return;
     }
     const clientStatus = getSupabaseClient();
     if (!clientStatus.isConfigured) {
       setObservations([]);
       setStatus("unavailable");
+      setReports([]); setReportStatus("unavailable");
       return;
     }
     setStatus("loading");
@@ -48,6 +61,7 @@ export function useSpotFieldObservations(spotId: string): SpotFieldObservationSt
     if (userError || !userData.user) {
       setObservations([]);
       setStatus("signed-out");
+      setReports([]); setReportStatus("unavailable");
       setError(null);
       return;
     }
@@ -67,12 +81,22 @@ export function useSpotFieldObservations(spotId: string): SpotFieldObservationSt
       setStatus("failed");
       setError("実地調査情報を取得できませんでした。");
     }
+    setReportStatus("loading");
+    try {
+      const nextReports = await fetchMySpotFieldReports("master", targetSpotId);
+      if (currentSpotIdRef.current !== targetSpotId) return;
+      setReports(nextReports); setReportStatus("ready");
+    } catch (reportError) {
+      if (currentSpotIdRef.current !== targetSpotId) return;
+      setReports([]); setReportStatus(isMissingSupabaseObject(reportError) ? "unavailable" : "failed");
+    }
   }, [enabled]);
 
   useEffect(() => {
     let active = true;
     currentSpotIdRef.current = spotId;
     setObservations([]);
+    setReports([]);
     setError(null);
     void load(spotId);
 
@@ -121,5 +145,19 @@ export function useSpotFieldObservations(spotId: string): SpotFieldObservationSt
     }
   }, [load, status]);
 
-  return useMemo(() => ({ observations, status, isMutating, error, saveObservation, deleteObservation }), [deleteObservation, error, isMutating, observations, saveObservation, status]);
+  const saveReport = useCallback(async (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => {
+    const targetSpotId = currentSpotIdRef.current;
+    if (status !== "ready" || reportStatus !== "ready" || !values.length) return false;
+    setIsMutating(true); setError(null);
+    try {
+      await saveMySpotFieldReport("master", targetSpotId, observedOn, summaryNote, values);
+      await load(targetSpotId);
+      return currentSpotIdRef.current === targetSpotId;
+    } catch {
+      if (currentSpotIdRef.current === targetSpotId) setError("現地調査を保存できませんでした。");
+      return false;
+    } finally { setIsMutating(false); }
+  }, [load, reportStatus, status]);
+
+  return useMemo(() => ({ observations, reports, reportStatus, status, isMutating, error, saveObservation, saveReport, deleteObservation }), [deleteObservation, error, isMutating, observations, reportStatus, reports, saveObservation, saveReport, status]);
 }

@@ -1,5 +1,7 @@
 import type { SaveSpotFieldObservationInput, SpotFieldObservation } from "@/domain/spotFieldObservation";
 import { getSupabaseClient } from "@/lib/supabaseClient";
+import { saveMySpotFieldReport } from "@/lib/spotFieldReportRepository";
+import { isMissingSupabaseObject } from "@/lib/supabaseObjectError";
 
 type SpotFieldObservationRow = {
   id: string;
@@ -47,6 +49,11 @@ export async function fetchMySpotFieldObservations(spotId: string): Promise<Spot
 
 export async function saveMySpotFieldObservation(input: SaveSpotFieldObservationInput): Promise<string> {
   const client = configuredClient();
+  try {
+    return await saveMySpotFieldReport("master", input.spotId, input.checkedAt, null, [input]);
+  } catch (error) {
+    if (!isMissingSupabaseObject(error)) throw error;
+  }
   const { data, error } = await client.rpc("save_my_spot_observation", {
     p_spot_id: input.spotId,
     p_item_key: input.itemKey,
