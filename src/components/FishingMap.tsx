@@ -108,12 +108,15 @@ import {
   type BathymetryPointResult,
 } from "@/domain/bathymetryPoint";
 import { MapLayerToggle } from "./MapLayerToggle";
+import { requestCurrentLocation, type CurrentLocation } from "@/domain/geolocation";
 
 type FishingMapProps = {
   externalMemos: ExternalCatchMemo[];
   spots: FishingSpot[];
   focusRequest: MapFocusRequest | null;
   onOpenSpotEvaluation: (spotId: string) => void;
+  currentLocation: CurrentLocation | null;
+  onCurrentLocationChange: (location: CurrentLocation) => void;
 };
 
 export type MapFocusRequest = { spotId: string; requestId: number };
@@ -166,7 +169,7 @@ const FALLBACK_LAYER_IDS = [
   BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
 ] as const;
 
-export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvaluation }: FishingMapProps) {
+export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvaluation, currentLocation, onCurrentLocationChange }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
@@ -181,10 +184,13 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   );
   const bathymetryGestureRef = useRef(createBathymetryPointGestureState());
   const bathymetryMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const currentLocationMarkerRef = useRef<maplibregl.Marker | null>(null);
   const spotMarkersRef = useRef(new Map<string, maplibregl.Marker>());
   const activePopupRef = useRef<maplibregl.Popup | null>(null);
   const focusedSpotIdRef = useRef<string | null>(null);
   const markerVisibilityButtonRef = useRef<HTMLButtonElement | null>(null);
+  const currentLocationButtonRef = useRef<HTMLButtonElement | null>(null);
+  const locateUserRef = useRef<() => void>(() => undefined);
   const mapViewportRef = useRef<HTMLDivElement | null>(null);
   const markerLegendRef = useRef<HTMLFieldSetElement | null>(null);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
@@ -212,6 +218,8 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   const [tidStatus, setTidStatus] = useState("TID正本を読み込み中です");
   const [bathymetrySelection, setBathymetrySelection] =
     useState<BathymetrySelection | null>(null);
+  const [locationPending, setLocationPending] = useState(false);
+  const [locationMessage, setLocationMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -289,6 +297,27 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       },
     };
     map.addControl(markerVisibilityControl);
+    const currentLocationControl: maplibregl.IControl = {
+      onAdd() {
+        const control = document.createElement("div");
+        control.className = "maplibregl-ctrl maplibregl-ctrl-group currentLocationMapControl";
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "currentLocationMapButton";
+        button.setAttribute("aria-label", "現在地を表示");
+        button.title = "現在地を表示";
+        button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg><span class="currentLocationSpinner" aria-hidden="true" />';
+        button.addEventListener("click", () => locateUserRef.current());
+        control.append(button);
+        currentLocationButtonRef.current = button;
+        return control;
+      },
+      onRemove() {
+        currentLocationButtonRef.current?.parentElement?.remove();
+        currentLocationButtonRef.current = null;
+      },
+    };
+    map.addControl(currentLocationControl);
     map.addControl(new maplibregl.AttributionControl({ compact: true }));
 
     return () => {
@@ -296,10 +325,45 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       map.off("error", onError);
       activePopupRef.current?.remove();
       activePopupRef.current = null;
+      currentLocationMarkerRef.current?.remove();
+      currentLocationMarkerRef.current = null;
       map.remove();
       mapRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !currentLocation) return;
+    const point: [number, number] = [currentLocation.longitude, currentLocation.latitude];
+    if (!currentLocationMarkerRef.current) {
+      const element = document.createElement("div");
+      element.className = "currentLocationMarker";
+      element.setAttribute("aria-label", "現在地");
+      currentLocationMarkerRef.current = new maplibregl.Marker({ element }).setLngLat(point).addTo(map);
+    } else currentLocationMarkerRef.current.setLngLat(point);
+  }, [currentLocation]);
+
+  const locateUser = async () => {
+    if (locationPending) return;
+    setLocationPending(true); setLocationMessage(null);
+    try {
+      const location = await requestCurrentLocation();
+      onCurrentLocationChange(location);
+      const map = mapRef.current;
+      map?.easeTo({ center: [location.longitude, location.latitude], zoom: Math.max(map.getZoom(), 14), duration: 700 });
+    } catch (error) { setLocationMessage(error instanceof Error ? error.message : "現在地を取得できませんでした。"); }
+    finally { setLocationPending(false); }
+  };
+  locateUserRef.current = () => void locateUser();
+
+  useEffect(() => {
+    const button = currentLocationButtonRef.current;
+    if (!button) return;
+    button.disabled = locationPending;
+    button.classList.toggle("isPending", locationPending);
+    button.setAttribute("aria-busy", String(locationPending));
+  }, [locationPending]);
 
   useEffect(() => {
     const button = markerVisibilityButtonRef.current;
@@ -991,6 +1055,11 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
         className={`mapViewport${markersVisible ? "" : " markersHidden"} ${MAP_MARKER_LEGEND.filter(({ kind }) => !markerFilters[kind]).map(({ kind }) => `markerKindHidden--${kind}`).join(" ")}`}
       >
         <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
+        {(locationPending || locationMessage) && (
+          <p className="currentLocationStatus" role="status">
+            {locationPending ? "現在地を取得中です" : locationMessage}
+          </p>
+        )}
         {markersVisible ? (
           <fieldset
             ref={markerLegendRef}

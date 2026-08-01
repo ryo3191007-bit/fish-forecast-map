@@ -561,11 +561,15 @@ p {
 .mapViewport:not(.markersHidden) .maplibregl-ctrl-bottom-right { bottom: var(--map-marker-legend-offset, 50px); right: 16px; }
 .mapViewport.markersHidden .maplibregl-ctrl-bottom-right { bottom: 8px; right: 8px; }
 .mapViewport .maplibregl-ctrl-attrib { margin: 0; }
-.markerVisibilityControl .markerVisibilityButton { display: grid; place-items: center; }
-.markerVisibilityButton svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.markerVisibilityControl .markerVisibilityButton, .currentLocationMapControl .currentLocationMapButton { position: relative; display: grid; place-items: center; }
+.markerVisibilityButton svg, .currentLocationMapButton svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .markerVisibilitySlash { opacity: 0; }
 .markerVisibilityButton.markersAreHidden .markerVisibilitySlash { opacity: 1; }
 .markerVisibilityButton[aria-pressed="false"] { background: #e2e8f0; color: #475569; }
+.currentLocationMapButton .currentLocationSpinner { display: none; position: absolute; inset: 4px; border: 2px solid rgba(14,116,144,.2); border-top-color: #0e7490; border-radius: 50%; animation: currentLocationSpin .8s linear infinite; }
+.currentLocationMapButton.isPending .currentLocationSpinner { display: block; }
+.currentLocationStatus { position: absolute; z-index: 3; top: 132px; right: 58px; max-width: min(220px, calc(100% - 82px)); margin: 0; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; padding: 5px 8px; background: rgba(15,23,42,.88); color: #fff; font-size: .68rem; font-weight: 800; line-height: 1.35; pointer-events: none; }
+@keyframes currentLocationSpin { to { transform: rotate(360deg); } }
 @media (max-width: 520px) { .mapMarkerLegend { right: 8px; bottom: 6px; max-width: calc(100% - 16px); gap: 3px 6px; padding: 5px 6px; font-size: .61rem; } .mapMarkerLegend input { width: 12px; height: 12px; } .mapLegendIcon { width: 15px; height: 15px; } .mapViewport:not(.markersHidden) .maplibregl-ctrl-bottom-right { right: 8px; } }
 .mapPopupTitle {
   color: #075985;
@@ -2280,3 +2284,4 @@ dd {
 .allSpeciesCard h2 { margin:0; font-size:1.1rem; }.allSpeciesCard p,.allSpeciesCard ul { font-size:.84rem; line-height:1.6; }
 .allSpeciesEmpty { grid-column:1/-1; padding:2rem 1rem; border:1px dashed rgba(125,211,252,.4); border-radius:14px; text-align:center; }
 @media (max-width:520px) { .allSpeciesHeaderTop { align-items:flex-start; flex-direction:column; }.allSpeciesBack { width:100%; }.allSpeciesCard header { align-items:flex-start; flex-direction:column; } }
+.currentLocationControl{display:flex;align-items:center;gap:8px;margin:8px 0}.currentLocationControl button{border:1px solid #67e8f9;border-radius:9px;padding:7px 12px;background:#083b50;color:#ecfeff;font-weight:800;cursor:pointer}.currentLocationControl button:disabled{opacity:.6}.currentLocationControl p{margin:0;color:#bae6fd;font-size:.78rem}.currentLocationMarker{width:22px;height:22px;box-sizing:border-box;border:4px solid #fff;border-radius:50%;background:#2563eb;box-shadow:0 0 0 8px rgba(37,99,235,.25),0 2px 8px #020617}

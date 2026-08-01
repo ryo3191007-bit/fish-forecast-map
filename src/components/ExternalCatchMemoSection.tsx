@@ -451,7 +451,8 @@ export function ExternalCatchMemoSection({
         </div>
       ) : null}
       {isSpotRegistrationOpen ? <UserFishingSpotRegistrationModal
-        initialPosition={[spots[0]?.longitude ?? 130.1, spots[0]?.latitude ?? 33.5]}
+        initialLongitude={spots[0]?.longitude ?? 130.1}
+        initialLatitude={spots[0]?.latitude ?? 33.5}
         onClose={() => setIsSpotRegistrationOpen(false)}
         onCreated={handleSpotCreated}
       /> : null}
