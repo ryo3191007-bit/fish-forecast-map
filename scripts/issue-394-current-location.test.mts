@@ -1,0 +1,21 @@
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import { formatLocationAccuracy, geolocationErrorMessage } from "../src/domain/geolocation.ts";
+
+const map = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
+const modal = fs.readFileSync("src/components/UserFishingSpotRegistrationModal.tsx", "utf8");
+const dashboard = fs.readFileSync("src/components/FishingDashboard.tsx", "utf8");
+assert.match(map, /onClick=\{\(\) => void locateUser\(\)\}/, "geolocation starts only from the location button");
+assert.match(map, /currentLocationMarker/, "current location uses a dedicated marker");
+assert.match(map, /easeTo\(\{ center: \[location\.longitude, location\.latitude\]/);
+assert.match(modal, /現在地を使う/);
+assert.match(modal, /setLatitude\(String\(location\.latitude\)\)/);
+assert.match(modal, /setLongitude\(String\(location\.longitude\)\)/);
+assert.match(modal, /draggable:true/);
+assert.match(modal, /instance\.on\("click"/);
+assert.match(dashboard, /currentLocation=\{currentLocation\}/, "session location is shared with registration");
+assert.doesNotMatch(map + modal, /localStorage|supabase/i, "displaying a location does not persist it");
+assert.equal(formatLocationAccuracy(18.6), "推定精度 約19m");
+assert.match(geolocationErrorMessage({ code: 1 }), /手動/);
+assert.match(geolocationErrorMessage({ code: 3 }), /タイムアウト/);
+console.log("Issue #394 current location checks passed");

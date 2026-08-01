@@ -31,6 +31,7 @@ import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
 import { selectFishingSpot, toEnvironmentPoint } from "@/domain/fishingSpotPresentation";
 import { fetchMyUserFishingSpotDetails, fetchMyUserFishingSpots } from "@/lib/userFishingSpotRepository";
 import { mapUserSpotDetailsForDisplay, userFishingSpotToFishingSpot, type UserFishingSpot } from "@/domain/userFishingSpot";
+import type { CurrentLocation } from "@/domain/geolocation";
 import { UserFishingSpotRegistrationModal } from "./UserFishingSpotRegistrationModal";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
@@ -94,6 +95,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   );
   const [userFishingSpots, setUserFishingSpots] = useState<UserFishingSpot[]>([]);
   const [isSpotRegistrationOpen, setIsSpotRegistrationOpen] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
   const manualCatchMemos = useMemo(
     () => getManualCatchMemos(externalMemos),
     [externalMemos],
@@ -350,6 +352,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             spots={fishingSpots}
             focusRequest={mapFocusRequest}
             onOpenSpotEvaluation={openSpotEvaluationFromMap}
+            currentLocation={currentLocation}
+            onCurrentLocationChange={setCurrentLocation}
           />
         </div>
       </div>
@@ -620,6 +624,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
       )}
       {isSpotRegistrationOpen && (auth.status === "signed-in" ? <UserFishingSpotRegistrationModal
         initialPosition={[environmentSpot?.longitude ?? 130.1, environmentSpot?.latitude ?? 33.5]}
+        currentLocation={currentLocation}
+        onCurrentLocationChange={setCurrentLocation}
         onClose={() => setIsSpotRegistrationOpen(false)}
         onCreated={handleUserSpotCreated}
       /> : <div className="userSpotAuthNotice" role="dialog" aria-modal="true" aria-label="地点登録にはログインが必要"><p>地点を登録するには、ヘッダーからログインしてください。</p><button type="button" onClick={() => setIsSpotRegistrationOpen(false)}>閉じる</button></div>)}

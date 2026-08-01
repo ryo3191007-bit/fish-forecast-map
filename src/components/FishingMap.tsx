@@ -108,12 +108,15 @@ import {
   type BathymetryPointResult,
 } from "@/domain/bathymetryPoint";
 import { MapLayerToggle } from "./MapLayerToggle";
+import { formatLocationAccuracy, requestCurrentLocation, type CurrentLocation } from "@/domain/geolocation";
 
 type FishingMapProps = {
   externalMemos: ExternalCatchMemo[];
   spots: FishingSpot[];
   focusRequest: MapFocusRequest | null;
   onOpenSpotEvaluation: (spotId: string) => void;
+  currentLocation: CurrentLocation | null;
+  onCurrentLocationChange: (location: CurrentLocation) => void;
 };
 
 export type MapFocusRequest = { spotId: string; requestId: number };
@@ -166,7 +169,7 @@ const FALLBACK_LAYER_IDS = [
   BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
 ] as const;
 
-export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvaluation }: FishingMapProps) {
+export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvaluation, currentLocation, onCurrentLocationChange }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
@@ -181,6 +184,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   );
   const bathymetryGestureRef = useRef(createBathymetryPointGestureState());
   const bathymetryMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const currentLocationMarkerRef = useRef<maplibregl.Marker | null>(null);
   const spotMarkersRef = useRef(new Map<string, maplibregl.Marker>());
   const activePopupRef = useRef<maplibregl.Popup | null>(null);
   const focusedSpotIdRef = useRef<string | null>(null);
@@ -212,6 +216,8 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   const [tidStatus, setTidStatus] = useState("TID正本を読み込み中です");
   const [bathymetrySelection, setBathymetrySelection] =
     useState<BathymetrySelection | null>(null);
+  const [locationPending, setLocationPending] = useState(false);
+  const [locationMessage, setLocationMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -296,10 +302,37 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       map.off("error", onError);
       activePopupRef.current?.remove();
       activePopupRef.current = null;
+      currentLocationMarkerRef.current?.remove();
+      currentLocationMarkerRef.current = null;
       map.remove();
       mapRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !currentLocation) return;
+    const point: [number, number] = [currentLocation.longitude, currentLocation.latitude];
+    if (!currentLocationMarkerRef.current) {
+      const element = document.createElement("div");
+      element.className = "currentLocationMarker";
+      element.setAttribute("aria-label", "現在地");
+      currentLocationMarkerRef.current = new maplibregl.Marker({ element }).setLngLat(point).addTo(map);
+    } else currentLocationMarkerRef.current.setLngLat(point);
+  }, [currentLocation]);
+
+  const locateUser = async () => {
+    if (locationPending) return;
+    setLocationPending(true); setLocationMessage(null);
+    try {
+      const location = await requestCurrentLocation();
+      onCurrentLocationChange(location);
+      setLocationMessage(formatLocationAccuracy(location.accuracy));
+      const map = mapRef.current;
+      map?.easeTo({ center: [location.longitude, location.latitude], zoom: Math.max(map.getZoom(), 14), duration: 700 });
+    } catch (error) { setLocationMessage(error instanceof Error ? error.message : "現在地を取得できませんでした。"); }
+    finally { setLocationPending(false); }
+  };
 
   useEffect(() => {
     const button = markerVisibilityButtonRef.current;
@@ -985,6 +1018,10 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   return (
     <div className="mapFrame">
       <MapLayerToggle value={mapLayerMode} onChange={handleLayerModeChange} />
+      <div className="currentLocationControl">
+        <button type="button" disabled={locationPending} onClick={() => void locateUser()}>{locationPending ? "取得中…" : currentLocation ? "現在地を再取得" : "現在地"}</button>
+        {(locationMessage || currentLocation) && <p role="status">{locationMessage ?? formatLocationAccuracy(currentLocation!.accuracy)}</p>}
+      </div>
       <div className="mapShell">
       <div
         ref={mapViewportRef}
