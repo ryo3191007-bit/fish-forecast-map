@@ -243,7 +243,7 @@ assert.match(
 );
 assert.match(
   dashboard,
-  /className="dashboardModeSwitch"[\s\S]*?role="group"[\s\S]*?aria-label="メイン表示モードを選択"[\s\S]*?釣果情報[\s\S]*?地点評価/,
+  /className="dashboardModeSwitch"[\s\S]*?role="group"[\s\S]*?aria-label="メイン表示モードを選択"[\s\S]*?釣果情報[\s\S]*?地点情報/,
   "large catch report / spot evaluation button group exists",
 );
 assert.match(
@@ -258,7 +258,7 @@ assert.doesNotMatch(
 );
 assert.doesNotMatch(
   dashboard,
-  /釣果一覧[\s\S]*?地点評価一覧/,
+  /釣果一覧[\s\S]*?地点情報一覧/,
   "legacy small report / area list switch is removed",
 );
 assert.match(

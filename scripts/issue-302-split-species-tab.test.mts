@@ -5,15 +5,10 @@ const card = fs.readFileSync("src/components/SpotEvaluationCard.tsx", "utf8");
 
 assert.match(
   card,
-  /export type SpotEvaluationTab = "評価" \| "環境" \| "釣場" \| "地形" \| "魚種";/,
+  /export type SpotEvaluationTab = "環境" \| "釣場" \| "地形" \| "魚種";/,
   "the species tab is part of the spot evaluation tab type",
 );
-assert.match(
-  card,
-  /const orderedTabs: SpotEvaluationTab\[\] = \[\.\.\.tabs\.slice\(0, 3\), "魚種", \.\.\.tabs\.slice\(3\)\];/,
-  "the species tab is inserted immediately after terrain and before evaluation",
-);
-assert.match(card, /const visibleTabs = orderedTabs\.filter\(\(tab\) => tab !== "評価"\);/, "evaluation remains in the full tab order but is hidden from the visible tabs");
+assert.match(card, /const visibleTabs: SpotEvaluationTab\[\] = \["環境", "釣場", "地形", "魚種"\];/, "the four information tabs are visible in order");
 assert.match(card, /\{visibleTabs\.map\(\(tab\) =>/, "the visible tab order drives the rendered tab list");
 
 const fishingPanel = card.match(/props\.activeTab === "釣場"[^\n]+/)?.[0] ?? "";
@@ -32,9 +27,6 @@ assert.match(speciesTab, /itemKey="target_species"/);
 assert.match(speciesTab, /researchPresentation\(details, status, "target_species"\)/, "target species still uses the shared pre-research presentation policy");
 assert.doesNotMatch(speciesTab, /recommended_methods/);
 
-const evaluationTab = card.slice(card.indexOf("function EvaluationTab"), card.indexOf("function JmaWarningPanel"));
-assert.match(evaluationTab, /calculateProductionScoreV2\(/, "SCORE v2 calculation remains in the evaluation tab");
-assert.match(evaluationTab, /result\.speciesResults/, "species evaluation remains unchanged");
-assert.match(evaluationTab, /result\.methodResults/, "method evaluation remains unchanged");
+assert.doesNotMatch(card, /function EvaluationTab\(|calculateProductionScoreV2/, "the former score evaluation path is not rendered");
 
 console.log("Issue #302 split species tab tests passed");

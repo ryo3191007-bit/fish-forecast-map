@@ -9,7 +9,7 @@ const spotCard = read("src/components/SpotEvaluationCard.tsx");
 const css = read("src/app/globals.css");
 
 assert.doesNotMatch(appShell, /<a href="#map">地図<\/a>|<a href="#reports">一覧<\/a>/);
-assert.match(appShell, /className="heroHeader"[\s\S]*?<h1>Fish Forecast Map<\/h1>[\s\S]*?className="authNavButton"/);
+assert.match(appShell, /className="heroHeader"[\s\S]*?<h1>FishTrace<\/h1>[\s\S]*?className="authNavButton"/);
 assert.match(appShell, /className="authNavButton"[\s\S]*?title=\{loginLabel\}[\s\S]*?aria-label=\{loginLabel\}[\s\S]*?setIsAuthOpen\(true\)/);
 assert.match(css, /\.heroHeader\s*\{[^}]*display: flex;[^}]*flex-wrap: nowrap;[^}]*min-width: 0;/);
 assert.match(css, /\.heroHeader h1\s*\{[^}]*min-width: 0;[^}]*text-overflow: ellipsis;[^}]*white-space: nowrap;/);
@@ -25,10 +25,8 @@ assert.match(css, /\.reportFilters\s*\{[^}]*padding-bottom:[^}]*border-bottom:/)
 assert.match(css, /@media \(max-width: 620px\)\s*\{[\s\S]*?\.mapSection\s*\{\s*margin-inline: -16px;[\s\S]*?\.map\s*\{\s*height: 466px;/);
 assert.match(css, /@media \(max-width: 420px\)\s*\{[\s\S]*?\.mapSection\s*\{\s*margin-inline: -12px;[\s\S]*?\.map\s*\{\s*height: 416px;/);
 
-assert.match(spotCard, /const orderedTabs: SpotEvaluationTab\[\] = \[\.\.\.tabs\.slice\(0, 3\), "魚種", \.\.\.tabs\.slice\(3\)\]/);
-assert.match(spotCard, /const visibleTabs = orderedTabs\.filter\(\(tab\) => tab !== "評価"\)/);
-assert.match(spotCard, /props\.activeTab === "評価" && <EvaluationTab/);
-assert.match(spotCard, /function EvaluationTab\(/);
+assert.match(spotCard, /const visibleTabs: SpotEvaluationTab\[\] = \["環境", "釣場", "地形", "魚種"\]/);
+assert.doesNotMatch(spotCard, /function EvaluationTab\(|calculateProductionScoreV2/);
 assert.match(spotCard, /className="button catchReportRegisterButton userSpotRegisterButton"/);
 assert.match(css, /\.spotInternalTabs\s*\{[^}]*display:grid;[^}]*grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
 assert.doesNotMatch(css, /\.spotInternalTabs\s*\{[^}]*overflow-x:/);

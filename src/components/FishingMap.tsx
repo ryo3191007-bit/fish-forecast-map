@@ -1210,7 +1210,7 @@ function createSpotPopupContent(spot: FishingSpot, onOpenSpotEvaluation: () => v
   const evaluationButton = document.createElement("button");
   evaluationButton.type = "button";
   evaluationButton.className = "mapSpotEvaluationButton";
-  evaluationButton.textContent = "地点評価";
+  evaluationButton.textContent = "地点情報";
   evaluationButton.addEventListener("click", onOpenSpotEvaluation);
   popup.append(title);
   if (cautionText) popup.append(caution);

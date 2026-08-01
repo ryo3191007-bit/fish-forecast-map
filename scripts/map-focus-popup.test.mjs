@@ -21,7 +21,7 @@ assert.equal((map.match(/const activePopupRef\b/g) ?? []).length, 1, "single pop
 assert.ok(map.includes('popup.on("open"') && map.includes("activePopupRef.current?.remove()"), "all popup types close the previously active popup");
 assert.ok(map.includes("spotMarkerRegistry.clear()") && map.includes("activePopupRef.current = null"), "marker cleanup clears stale marker and popup references");
 assert.ok(map.includes("onOpenSpotEvaluation: (spotId: string) => void"), "FishingMap accepts a spot evaluation navigation callback");
-assert.equal((map.match(/evaluationButton\.textContent = "地点評価"/g) ?? []).length, 1, "the regular spot popup has one compact evaluation action");
+assert.equal((map.match(/evaluationButton\.textContent = "地点情報"/g) ?? []).length, 1, "the regular spot popup has one compact evaluation action");
 assert.match(map, /createSpotPopupContent\(spot,[\s\S]*?onOpenSpotEvaluation\(spot\.id\);[\s\S]*?popup\.remove\(\)/, "the popup action sends its spot id and closes the active popup");
 const openEvaluationHandler = dashboard.slice(dashboard.indexOf("const openSpotEvaluationFromMap"), dashboard.indexOf("const openSpotEvaluationFromMap") + 700);
 for (const expected of ['setEnvironmentSpotId(spotId)', 'setDashboardMode("spotEvaluation")', 'setSpotEvaluationTab("環境")', "setSpotEvaluationScrollRequest"]) {

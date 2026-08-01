@@ -87,9 +87,7 @@ assert.match(evaluationCard, /props\.activeTab === "釣場"[\s\S]*?fieldObservat
 assert.match(evaluationCard, /props\.activeTab === "地形"[\s\S]*?fieldObservations=\{fieldObservations\}/);
 assert.match(evaluationCard, /props\.activeTab === "魚種"[\s\S]*?fieldObservations=\{fieldObservations\}/);
 assert.match(evaluationCard, /<SpotFieldObservationCard[\s\S]*?itemKey="target_species"/);
-const evaluationTab = evaluationCard.slice(evaluationCard.indexOf("function EvaluationTab"), evaluationCard.indexOf("function JmaWarningPanel"));
-assert.match(evaluationTab, /calculateProductionScoreV2\(/, "SCORE v2 remains isolated to the evaluation path");
-assert.doesNotMatch(evaluationTab, /fieldObservations|SpotFieldObservation/, "field observations never enter SCORE v2");
+assert.doesNotMatch(evaluationCard, /function EvaluationTab\(|calculateProductionScoreV2/, "the score evaluation route is removed from the user-facing card");
 
 const repository = fs.readFileSync("src/lib/spotFieldObservationRepository.ts", "utf8");
 assert.match(repository, /rpc\("get_my_spot_observations"/);
