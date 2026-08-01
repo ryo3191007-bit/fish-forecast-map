@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { prepareRecordPhoto, RECORD_PHOTO_LIMIT, type PreparedRecordPhoto, type RecordPhoto, type RecordPhotoTargetType } from "@/domain/recordPhoto";
+import { remainingRecordPhotos } from "@/domain/recordPhotoUpload";
 import { checkRecordPhotoBackend, deleteRecordPhoto, fetchRecordPhotos, isRecordPhotoBackendMissing, reconcileRecordPhotoObjects, RecordPhotoBatchError, uploadRecordPhotos } from "@/lib/recordPhotoRepository";
 import styles from "./RecordPhotoEditor.module.css";
 
@@ -36,9 +37,16 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
     try {
       const prepared = await Promise.all([...files].map(prepareRecordPhoto));
       if (targetId) {
-        const availableOrders = [0, 1, 2].filter((order) => !saved.some((photo) => photo.sortOrder === order));
-        for (const [index, photo] of prepared.entries()) await uploadRecordPhotos(targetType, targetId, [photo], availableOrders[index]);
-        prepared.forEach((photo) => URL.revokeObjectURL(photo.previewUrl)); await load();
+        try {
+          await uploadRecordPhotos(targetType, targetId, prepared);
+          prepared.forEach((photo) => URL.revokeObjectURL(photo.previewUrl)); await load();
+        } catch (value) {
+          const completed = value instanceof RecordPhotoBatchError ? value.completedPhotoIds : [];
+          completed.forEach((id) => URL.revokeObjectURL(prepared.find((photo) => photo.id === id)?.previewUrl ?? ""));
+          setSelected(remainingRecordPhotos(prepared, completed));
+          if (completed.length) await load();
+          throw value;
+        }
       }
       else setSelected([...selected, ...prepared]);
     } catch (value) {
@@ -46,6 +54,20 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
       setError(value instanceof Error ? value.message : "写真を準備できませんでした。");
     }
     finally { setBusy(false); if (input.current) input.current.value = ""; }
+  };
+  const retryPending = async () => {
+    if (!targetId || !selected.length) return;
+    setBusy(true); setError(null);
+    try {
+      const completed = await uploadRecordPhotos(targetType, targetId, selected);
+      completed.forEach((id) => URL.revokeObjectURL(selected.find((photo) => photo.id === id)?.previewUrl ?? ""));
+      setSelected([]); await load();
+    } catch (value) {
+      const completed = value instanceof RecordPhotoBatchError ? value.completedPhotoIds : [];
+      setSelected(remainingRecordPhotos(selected, completed));
+      if (completed.length) await load();
+      setError(value instanceof Error ? value.message : "写真を保存できませんでした。");
+    } finally { setBusy(false); }
   };
   const removeSaved = async (photo: RecordPhoto) => {
     if (!confirm("この写真を削除しますか？")) return;
@@ -60,6 +82,7 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
   return <div className={styles.editor}>
     <div className={styles.heading}><strong>写真</strong><span>{saved.length + selected.length}/3枚</span></div>
     <div className={styles.grid}>{saved.map((photo) => <figure key={photo.id}>{photo.signedUrl ? <button type="button" onClick={() => setLightbox(photo.signedUrl ?? null)}><img src={photo.signedUrl} alt="記録写真" loading="lazy" /></button> : <div className={styles.stale}>画像を取得できません<br />削除して再追加できます</div>}{editable ? <button className={styles.remove} type="button" disabled={busy || photoDisabled} onClick={() => void removeSaved(photo)}>削除</button> : null}</figure>)}{selected.map((photo) => <figure key={photo.id}><button type="button" onClick={() => setLightbox(photo.previewUrl)}><img src={photo.previewUrl} alt="追加予定の写真" /></button><span className={styles.pending}>保存前</span><button className={styles.remove} type="button" disabled={busy} onClick={() => removePending(photo)}>削除</button></figure>)}</div>
+    {targetId && selected.length ? <button type="button" disabled={busy || photoDisabled} onClick={() => void retryPending()}>未完了の写真を再試行</button> : null}
     {editable && saved.length + selected.length < RECORD_PHOTO_LIMIT ? <><input ref={input} className={styles.input} type="file" accept="image/*" multiple disabled={photoDisabled} onChange={(event) => void choose(event.target.files)} /><button type="button" disabled={busy || photoDisabled} onClick={() => input.current?.click()}>{!backendChecked ? "写真機能を確認中…" : busy ? "圧縮・アップロード中…" : "写真を追加"}</button></> : null}
     <small>長辺1280px以下・WebP・450KiB以下へ端末内で変換し、EXIF/GPS情報は保持しません。</small>
     {error ? <p className={styles.error} role="alert">{error}</p> : null}

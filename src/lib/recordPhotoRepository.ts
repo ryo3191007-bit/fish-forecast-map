@@ -1,5 +1,6 @@
 import type { PreparedRecordPhoto, RecordPhoto, RecordPhotoTargetType } from "@/domain/recordPhoto";
 import { getSupabaseClient } from "@/lib/supabaseClient";
+import { allocateRecordPhotoSlots } from "@/domain/recordPhotoUpload";
 
 const BUCKET = "private-record-photos";
 type Row = { id: string; target_type: RecordPhotoTargetType; catch_memo_id: string | null; field_report_id: string | null; storage_path: string; sort_order: number; mime_type: "image/webp"; byte_size: number; width: number; height: number };
@@ -75,16 +76,18 @@ export async function reconcileRecordPhotoObjects(targetType: RecordPhotoTargetT
   }
 }
 
-export async function uploadRecordPhotos(targetType: RecordPhotoTargetType, targetId: string, photos: PreparedRecordPhoto[], startingOrder: number): Promise<string[]> {
+export async function uploadRecordPhotos(targetType: RecordPhotoTargetType, targetId: string, photos: PreparedRecordPhoto[]): Promise<string[]> {
   const client = configuredClient();
   const folder = await targetFolder(targetType, targetId);
   await reconcileRecordPhotoObjects(targetType, targetId);
+  const existing = await listRecordPhotos(targetType, targetId);
+  const slots = allocateRecordPhotoSlots(existing.map((photo) => photo.sortOrder), photos.length);
   const completed: string[] = [];
   for (const [index, photo] of photos.entries()) {
     const path = `${folder}/${photo.id}.webp`;
     const { error: uploadError } = await client.storage.from(BUCKET).upload(path, photo.blob, { contentType: "image/webp", upsert: false });
     if (uploadError) throw new RecordPhotoBatchError(uploadError.message, completed, uploadError);
-    const { error: metadataError } = await client.rpc("add_my_record_photo", { p_photo_id: photo.id, p_target_type: targetType, p_target_id: targetId, p_storage_path: path, p_sort_order: startingOrder + index, p_mime_type: "image/webp", p_byte_size: photo.blob.size, p_width: photo.width, p_height: photo.height });
+    const { error: metadataError } = await client.rpc("add_my_record_photo", { p_photo_id: photo.id, p_target_type: targetType, p_target_id: targetId, p_storage_path: path, p_sort_order: slots[index], p_mime_type: "image/webp", p_byte_size: photo.blob.size, p_width: photo.width, p_height: photo.height });
     if (metadataError) {
       const { error: cleanupError } = await client.storage.from(BUCKET).remove([path]);
       const message = cleanupError ? `写真情報の保存と補償削除に失敗しました: ${cleanupError.message}` : metadataError.message;
@@ -97,10 +100,8 @@ export async function uploadRecordPhotos(targetType: RecordPhotoTargetType, targ
 
 export async function deleteRecordPhoto(photo: RecordPhoto): Promise<void> {
   const client = configuredClient();
-  if (photo.signedUrl) {
-    const { error } = await client.storage.from(BUCKET).remove([photo.storagePath]);
-    if (error) throw error;
-  }
+  const { error: storageError } = await client.storage.from(BUCKET).remove([photo.storagePath]);
+  if (storageError) throw storageError;
   const { error } = await client.rpc("remove_my_record_photo", { p_photo_id: photo.id });
   if (error) throw error;
 }

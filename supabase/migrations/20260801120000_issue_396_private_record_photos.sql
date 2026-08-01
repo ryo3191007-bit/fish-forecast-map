@@ -1,9 +1,20 @@
 -- Issue #396: private, owner-scoped photos for catches and field reports.
--- `public` was added to Storage at a different point in its schema history.  A
--- private bucket is the default, so do not make a fresh database depend on it.
-insert into storage.buckets (id, name, file_size_limit, allowed_mime_types)
-values ('private-record-photos', 'private-record-photos', 512000, array['image/webp'])
-on conflict (id) do update set file_size_limit = 512000, allowed_mime_types = array['image/webp'];
+-- Storage releases have added bucket configuration columns at different times.
+-- Create through the common columns first, then configure only columns present.
+insert into storage.buckets (id, name)
+values ('private-record-photos', 'private-record-photos')
+on conflict (id) do nothing;
+do $$ begin
+  if exists (select 1 from information_schema.columns where table_schema = 'storage' and table_name = 'buckets' and column_name = 'file_size_limit') then
+    execute 'update storage.buckets set file_size_limit = 512000 where id = ''private-record-photos''';
+  end if;
+  if exists (select 1 from information_schema.columns where table_schema = 'storage' and table_name = 'buckets' and column_name = 'allowed_mime_types') then
+    execute 'update storage.buckets set allowed_mime_types = array[''image/webp''] where id = ''private-record-photos''';
+  end if;
+  if exists (select 1 from information_schema.columns where table_schema = 'storage' and table_name = 'buckets' and column_name = 'public') then
+    execute 'update storage.buckets set public = false where id = ''private-record-photos''';
+  end if;
+end $$;
 
 alter table public.external_catch_memos
   add constraint external_catch_memos_id_owner_unique unique (id, owner_id);
@@ -39,11 +50,14 @@ grant select on public.record_photos to authenticated;
 
 create or replace function public.can_write_my_record_photo_object(p_name text)
 returns boolean language plpgsql stable security definer set search_path = '' as $$
-declare v_user_id uuid := auth.uid(); v_parts text[] := storage.foldername(p_name); v_target_id text;
+declare v_user_id uuid := auth.uid(); v_parts text[] := storage.foldername(p_name); v_target_id text; v_prefix text;
 begin
   if v_user_id is null or array_length(v_parts, 1) <> 3 or v_parts[1] <> v_user_id::text or
-     v_parts[2] not in ('catch_memo', 'field_report') or p_name !~ '^[0-9a-f-]+/(catch_memo|field_report)/[^/]+/[0-9a-f-]+\.webp$' then return false; end if;
+     v_parts[2] not in ('catch_memo', 'field_report') or
+     p_name !~ '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/(catch_memo|field_report)/[^/]+/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.webp$' then return false; end if;
   v_target_id := v_parts[3];
+  v_prefix := v_user_id::text || '/' || v_parts[2] || '/' || v_target_id || '/';
+  if (select count(*) from storage.objects where bucket_id = 'private-record-photos' and name like v_prefix || '%') >= 3 then return false; end if;
   if v_parts[2] = 'catch_memo' then return exists (select 1 from public.external_catch_memos where id = v_target_id and owner_id = v_user_id and created_by = 'authenticated_user' and not is_deleted); end if;
   begin return exists (select 1 from public.spot_field_reports where id = v_target_id::uuid and owner_id = v_user_id); exception when invalid_text_representation then return false; end;
 end;

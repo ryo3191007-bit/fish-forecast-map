@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { PreparedRecordPhoto } from "@/domain/recordPhoto";
 import { RecordPhotoBatchError, uploadRecordPhotos } from "@/lib/recordPhotoRepository";
+import { resolveRecordPhotoTargetId } from "@/domain/recordPhotoUpload";
 import { fishingDetailItems, terrainDetailItems } from "@/domain/spotDetailUiPresentation";
 import { buildSaveSpotFieldObservationInput, createSpotFieldObservationDraft, formatSpotFieldObservationDate, formatSpotFieldObservationValue, getTodayInJapan, spotFieldObservationConfigs, type SpotFieldObservationDraft } from "@/domain/spotFieldObservation";
 import { userFishingSpotDetailItemKeys } from "@/domain/userFishingSpot";
@@ -31,11 +32,11 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
   const submit = async () => {
     const values = selected.map((key) => buildSaveSpotFieldObservationInput(spotId, key, spotFieldObservationConfigs[key], { ...drafts[key], checkedAt: observedOn })).filter((value) => value !== null);
     if (values.length !== selected.length || !values.length) { setError("1項目以上の確認内容を入力してください。"); return; }
-    const reportId = savedReportId ?? await state.saveReport(observedOn, summaryNote.trim() || null, values);
+    const reportId = await resolveRecordPhotoTargetId(savedReportId, () => state.saveReport(observedOn, summaryNote.trim() || null, values));
     if (reportId) {
       if (!savedReportId) setSavedReportId(reportId);
       if (photos.length) {
-        try { await uploadRecordPhotos("field_report", reportId, photos, 0); }
+        try { await uploadRecordPhotos("field_report", reportId, photos); }
         catch (value) {
           const completed = value instanceof RecordPhotoBatchError ? new Set(value.completedPhotoIds) : new Set<string>();
           setPhotos((current) => current.filter((photo) => !completed.has(photo.id)));

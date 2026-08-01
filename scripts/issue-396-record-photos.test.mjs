@@ -23,7 +23,7 @@ console.log("Issue #396 record photo checks passed.");
 
 // Review regression contract: retry keeps the saved target and removes completed batch items.
 assert.match(catchUi, /savedMemoId !== null \|\| await onMemoSave/);
-assert.match(reportUi, /savedReportId \?\? await state\.saveReport/);
+assert.match(reportUi, /resolveRecordPhotoTargetId\(savedReportId/);
 assert.match(repository, /class RecordPhotoBatchError/);
 assert.match(repository, /completedPhotoIds/);
 assert.match(repository, /reconcileRecordPhotoObjects/);
@@ -39,3 +39,7 @@ assert.match(migration, /storage object size mismatch/);
 assert.match(migration, /v_object_size <> p_byte_size/);
 assert.match(migration, /created_by = 'authenticated_user'/);
 assert.doesNotMatch(migration, /storage\.buckets \(id, name, public,/);
+assert.match(migration, /information_schema\.columns/);
+assert.match(migration, /select count\(\*\) from storage\.objects/);
+assert.match(migration, /\[0-9a-f\]\{8\}-\[0-9a-f\]\{4\}/);
+assert.match(repository, /storageError[\s\S]*remove_my_record_photo/);

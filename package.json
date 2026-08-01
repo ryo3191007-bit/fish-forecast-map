@@ -99,7 +99,7 @@
     "test:issue-393-fishtrace-rebrand": "node scripts/issue-393-fishtrace-rebrand.test.mjs",
     "test:issue-394-current-location": "tsx scripts/issue-394-current-location.test.mts",
     "test:issue-395-field-report-history": "node scripts/issue-395-field-report-history.test.mjs",
-    "test:issue-396-record-photos": "node scripts/issue-396-record-photos.test.mjs"
+    "test:issue-396-record-photos": "node scripts/issue-396-record-photos.test.mjs && tsx scripts/issue-396-record-photo-behavior.test.mts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.109.0",

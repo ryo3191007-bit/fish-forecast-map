@@ -262,7 +262,7 @@ export function ExternalCatchMemoSection({
     if (bodySaved) {
       if (!savedMemoId) setSavedMemoId(targetId);
       if (pendingPhotos.length) {
-        try { await uploadRecordPhotos("catch_memo", targetId, pendingPhotos, 0); }
+        try { await uploadRecordPhotos("catch_memo", targetId, pendingPhotos); }
         catch (value) {
           const completed = value instanceof RecordPhotoBatchError ? new Set(value.completedPhotoIds) : new Set<string>();
           setPendingPhotos((current) => current.filter((photo) => !completed.has(photo.id)));
