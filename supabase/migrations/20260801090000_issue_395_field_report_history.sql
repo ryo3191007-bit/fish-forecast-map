@@ -112,7 +112,8 @@ begin
       nullif(v_value->>'value_number', '')::numeric, nullif(v_value->>'unit', ''), p_observed_on, nullif(v_value->>'note', ''))
     on conflict (user_spot_id, item_key) do update set value_text = excluded.value_text,
       value_text_list = excluded.value_text_list, value_number = excluded.value_number, unit = excluded.unit,
-      checked_at = excluded.checked_at, note = excluded.note;
+      checked_at = excluded.checked_at, note = excluded.note
+    where excluded.checked_at >= user_fishing_spot_detail_values.checked_at;
   end loop;
   return v_report_id;
 end;
@@ -125,7 +126,7 @@ create or replace function public.create_my_user_fishing_spot_with_details(
   p_spot_id uuid, p_name text, p_latitude numeric, p_longitude numeric, p_area_name text default null,
   p_spot_type text default null, p_details jsonb default '[]'::jsonb
 ) returns uuid language plpgsql security definer set search_path = '' as $$
-declare v_user_id uuid := auth.uid(); v_spot_id uuid; v_observed_on date;
+declare v_user_id uuid := auth.uid(); v_spot_id uuid; v_observed_on date; v_initial_values jsonb;
 begin
   if v_user_id is null then raise exception 'authentication required'; end if;
   if jsonb_typeof(p_details) <> 'array' then raise exception 'details must be an array'; end if;
@@ -138,8 +139,13 @@ begin
   if v_spot_id is null then raise exception 'spot owner mismatch'; end if;
   delete from public.user_fishing_spot_detail_values where user_spot_id = v_spot_id and owner_id = v_user_id;
   if jsonb_array_length(p_details) > 0 then
-    select (value->>'checked_at')::date into v_observed_on from jsonb_array_elements(p_details) limit 1;
-    perform public.save_my_user_fishing_spot_field_report(v_spot_id, v_observed_on, null, p_details, 'initial_details');
+    for v_observed_on in
+      select distinct (value->>'checked_at')::date from jsonb_array_elements(p_details) order by 1
+    loop
+      select jsonb_agg(value) into v_initial_values
+      from jsonb_array_elements(p_details) where (value->>'checked_at')::date = v_observed_on;
+      perform public.save_my_user_fishing_spot_field_report(v_spot_id, v_observed_on, null, v_initial_values, 'initial_details');
+    end loop;
   end if;
   return v_spot_id;
 end;

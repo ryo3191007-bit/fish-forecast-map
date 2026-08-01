@@ -30,8 +30,8 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
     } else setError("保存できませんでした。入力内容と通信状態を確認してください。");
   };
   return <section className={styles.section} aria-labelledby="field-report-history-heading">
-    <div className={styles.heading}><div><p>現在値とは別に、過去の調査を残します。</p><h3 id="field-report-history-heading">現地調査履歴</h3></div><button type="button" disabled={state.status !== "ready" || state.isMutating} onClick={() => setOpen(true)}>＋ 現地調査を記録</button></div>
-    {state.status === "loading" ? <p>履歴を取得中…</p> : state.reports.length === 0 ? <p className={styles.empty}>現地調査履歴はまだありません。</p> : <div className={styles.history}>{state.reports.map((report) => <article key={report.id}>
+    <div className={styles.heading}><div><p>現在値とは別に、過去の調査を残します。</p><h3 id="field-report-history-heading">現地調査履歴</h3></div><button type="button" disabled={state.status !== "ready" || state.reportStatus !== "ready" || state.isMutating} onClick={() => setOpen(true)}>＋ 現地調査を記録</button></div>
+    {state.reportStatus === "loading" ? <p>履歴を取得中…</p> : state.reportStatus === "unavailable" ? <p className={styles.empty}>現地調査履歴は現在利用できません。現在値の閲覧・編集は引き続き利用できます。</p> : state.reportStatus === "failed" ? <p className={styles.empty}>現地調査履歴を取得できませんでした。</p> : state.reports.length === 0 ? <p className={styles.empty}>現地調査履歴はまだありません。</p> : <div className={styles.history}>{state.reports.map((report) => <article key={report.id}>
       <header><strong>{formatSpotFieldObservationDate(report.observedOn)}</strong><small>{report.origin === "snapshot_backfill" ? "既存の現在値から移行" : report.origin === "initial_details" ? "地点登録時" : "現地調査"}</small></header>
       {report.summaryNote ? <p>{report.summaryNote}</p> : null}
       <dl>{report.values.map((value) => <div key={value.id}><dt>{labels.get(value.itemKey) ?? value.itemKey}</dt><dd>{formatSpotFieldObservationValue({ ...value, informationState: "weak_evidence" })}{value.note ? <small>{value.note}</small> : null}</dd></div>)}</dl>
