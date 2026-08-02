@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { detectImageFormat, prepareRecordPhoto, RecordPhotoDecodeError } from "../src/domain/recordPhoto";
-import { copyDiagnosticText } from "../src/domain/diagnosticClipboard";
+import { copyDiagnosticText, initialDiagnosticCopyState, transitionDiagnosticCopyState } from "../src/domain/diagnosticClipboard";
 import { readFile } from "node:fs/promises";
 
 assert.equal(detectImageFormat(Uint8Array.from([0xff, 0xd8, 0xff])), "jpeg");
@@ -12,8 +12,8 @@ const source = (type = "image/jpeg", signature = [0xff, 0xd8, 0xff]) => {
   const blob = new Blob([Uint8Array.from(signature), new Uint8Array(100)], { type }) as File;
   Object.defineProperty(blob, "name", { value: "android-photo.jpg" }); return blob;
 };
-const unreadableHeaderSource = () => {
-  const file = source();
+const unreadableHeaderSource = (type = "image/jpeg") => {
+  const file = source(type);
   Object.defineProperty(file, "slice", { value: () => ({ arrayBuffer: async () => { throw new DOMException("picker stream unavailable", "NotReadableError"); } }) });
   return file;
 };
@@ -38,8 +38,8 @@ await prepareRecordPhoto(source());
 assert.equal(bitmapCalls, 2, "option-less bitmap is tried independently"); assert.equal(closed, 1);
 
 bitmapCalls = 0; bitmapSuccessAt = 1;
-await prepareRecordPhoto(unreadableHeaderSource());
-assert.equal(bitmapCalls, 1, "decode continues after a failed header read");
+await prepareRecordPhoto(unreadableHeaderSource(""));
+assert.equal(bitmapCalls, 1, "decode continues after a failed header read with an empty MIME type");
 
 bitmapCalls = 0; bitmapSuccessAt = -1; objectSucceeds = true;
 await prepareRecordPhoto(source());
@@ -57,10 +57,11 @@ assert.equal(failure.diagnostic.mimeMismatch, true);
 assert.deepEqual(failure.diagnostic.attempts.map((attempt) => attempt.route), ["bitmap-oriented", "bitmap", "object-url", "data-url"]);
 assert.ok(failure.diagnostic.attempts.every((attempt) => attempt.result === "failed"));
 
-const headerFailure = await prepareRecordPhoto(unreadableHeaderSource()).then(() => null, (error: unknown) => error);
+const headerFailure = await prepareRecordPhoto(unreadableHeaderSource("")).then(() => null, (error: unknown) => error);
 assert.ok(headerFailure instanceof RecordPhotoDecodeError);
 assert.equal(headerFailure.diagnostic.detectedFormat, "unknown");
 assert.equal(headerFailure.diagnostic.headerRead.result, "failed");
+assert.equal(headerFailure.diagnostic.declaredMimeType, "");
 assert.match(headerFailure.diagnostic.headerRead.reason ?? "", /NotReadableError.*picker stream unavailable/);
 assert.equal(headerFailure.diagnostic.attempts.length, 4);
 
@@ -71,9 +72,15 @@ assert.equal(await copyDiagnosticText("diagnostic", { writeText: async (text) =>
 assert.equal(copied, "diagnostic");
 assert.equal(await copyDiagnosticText("diagnostic"), "fallback");
 assert.equal(await copyDiagnosticText("diagnostic", { writeText: async () => { throw new Error("denied"); } }), "fallback");
+let copyState = transitionDiagnosticCopyState(initialDiagnosticCopyState, "fallback");
+copyState = transitionDiagnosticCopyState(copyState, "selection-failed");
+assert.deepEqual(copyState, { result: "fallback", selectionFailed: true }, "selection failure keeps the manual-copy view open");
+copyState = transitionDiagnosticCopyState(copyState, "selection-success");
+assert.deepEqual(copyState, { result: "fallback", selectionFailed: false }, "retrying selection clears only the selection error");
 const editorSource = await readFile(new URL("../src/components/RecordPhotoEditor.tsx", import.meta.url), "utf8");
 assert.match(editorSource, /診断情報をコピーしました/);
 assert.match(editorSource, /自動コピーを利用できません/);
 assert.match(editorSource, /診断情報を選択できませんでした/);
 assert.match(editorSource, /<textarea[^>]+readOnly/);
+assert.match(editorSource, /copyState\.result === "fallback"[\s\S]+<textarea[\s\S]+copyState\.selectionFailed/, "selection feedback is rendered inside the persistent fallback region");
 console.log("Issue #408 staged photo decode, diagnostics, magic bytes, and cleanup checks passed.");

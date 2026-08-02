@@ -78,7 +78,7 @@ export async function prepareRecordPhoto(file: File): Promise<PreparedRecordPhot
   catch (error) { headerRead = { result: "failed", reason: failureReason(error) }; }
   const declaredMimeType = file.type.toLowerCase();
   const diagnostic: RecordPhotoDiagnostic = { fileName: file.name, declaredMimeType, byteSize: file.size, detectedFormat, mimeMismatch: Boolean(expectedMime(detectedFormat) && declaredMimeType && expectedMime(detectedFormat) !== declaredMimeType && !(detectedFormat === "heif" && declaredMimeType === "image/heic")), headerRead, apiAvailability: { createImageBitmap: typeof createImageBitmap === "function", objectUrl: typeof URL.createObjectURL === "function", fileReader: typeof FileReader === "function", image: typeof Image === "function" }, attempts: [] };
-  if (detectedFormat === "unknown" && !declaredMimeType.startsWith("image/")) throw new RecordPhotoDecodeError("画像ファイルを選択してください。", diagnostic);
+  if (headerRead.result === "success" && detectedFormat === "unknown" && !declaredMimeType.startsWith("image/")) throw new RecordPhotoDecodeError("画像ファイルを選択してください。", diagnostic);
   const image = await loadImage(file, diagnostic);
   try {
     const scale = Math.min(1, RECORD_PHOTO_MAX_EDGE / Math.max(image.width, image.height)); const width = Math.max(1, Math.round(image.width * scale)), height = Math.max(1, Math.round(image.height * scale));
