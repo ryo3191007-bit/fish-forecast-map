@@ -3,7 +3,7 @@ export type RecordPhoto = { id: string; targetType: RecordPhotoTargetType; targe
 export type PreparedRecordPhoto = { id: string; blob: Blob; previewUrl: string; width: number; height: number };
 export type ImageFileFormat = "jpeg" | "png" | "webp" | "heif" | "unknown";
 export type DecodeAttempt = { route: "bitmap-oriented" | "bitmap" | "object-url" | "data-url"; result: "success" | "failed" | "unavailable"; reason?: string };
-export type HeaderReadDiagnostic = { result: "success" | "failed"; reason?: string };
+export type HeaderReadDiagnostic = { result: "not-attempted" | "success" | "failed"; reason?: string };
 export type RecordPhotoDiagnostic = { fileName: string; declaredMimeType: string; byteSize: number; detectedFormat: ImageFileFormat; mimeMismatch: boolean; headerRead: HeaderReadDiagnostic; apiAvailability: { createImageBitmap: boolean; objectUrl: boolean; fileReader: boolean; image: boolean }; attempts: DecodeAttempt[] };
 
 export class RecordPhotoDecodeError extends Error {
@@ -16,6 +16,7 @@ export const RECORD_PHOTO_MAX_EDGE = 1280;
 type DecodedImage = { source: CanvasImageSource; width: number; height: number; cleanup: () => void };
 const unsupportedImageMessage = "画像形式を読み込めませんでした。JPEG、PNG、WebPのいずれかへ変換して再選択してください。";
 const heifMessage = "HEIF/HEIC画像には対応していません。端末の写真アプリでJPEGまたはPNGとして書き出して再選択してください。";
+const unreadableImageMessage = "ブラウザが写真を読み取れませんでした。Chromeで開くか、端末へ保存し直して再選択してください。";
 
 export function detectImageFormat(bytes: Uint8Array): ImageFileFormat {
   if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return "jpeg";
@@ -47,7 +48,7 @@ function readAsDataUrl(file: File): Promise<string> {
     reader.onabort = () => { cleanup(); reject(new Error("FileReader aborted")); }; reader.readAsDataURL(file);
   });
 }
-async function loadImage(file: File, diagnostic: RecordPhotoDiagnostic): Promise<DecodedImage> {
+async function loadImage(file: File, diagnostic: RecordPhotoDiagnostic): Promise<DecodedImage | null> {
   const attempt = async (route: DecodeAttempt["route"], available: boolean, load: () => Promise<DecodedImage>) => {
     if (!available) { diagnostic.attempts.push({ route, result: "unavailable" }); return null; }
     try { const image = await load(); diagnostic.attempts.push({ route, result: "success" }); return image; }
@@ -62,7 +63,6 @@ async function loadImage(file: File, diagnostic: RecordPhotoDiagnostic): Promise
     finally { if (!handedOff) URL.revokeObjectURL(url); }
   });
   image ??= await attempt("data-url", diagnostic.apiAvailability.fileReader && diagnostic.apiAvailability.image, async () => loadHtmlImage(await readAsDataUrl(file), () => {}));
-  if (!image) throw new RecordPhotoDecodeError(diagnostic.detectedFormat === "heif" ? heifMessage : unsupportedImageMessage, diagnostic);
   return image;
 }
 function canvasToWebp(canvas: HTMLCanvasElement, quality: number): Promise<Blob> {
@@ -72,14 +72,25 @@ export function formatRecordPhotoDiagnostic(diagnostic: RecordPhotoDiagnostic): 
 
 export async function prepareRecordPhoto(file: File): Promise<PreparedRecordPhoto> {
   if (file.size > RECORD_PHOTO_MAX_SOURCE_BYTES) throw new Error("元画像は1枚20MB以下にしてください。");
-  let detectedFormat: ImageFileFormat = "unknown";
-  let headerRead: HeaderReadDiagnostic = { result: "success" };
-  try { detectedFormat = detectImageFormat(new Uint8Array(await file.slice(0, 16).arrayBuffer())); }
-  catch (error) { headerRead = { result: "failed", reason: failureReason(error) }; }
   const declaredMimeType = file.type.toLowerCase();
-  const diagnostic: RecordPhotoDiagnostic = { fileName: file.name, declaredMimeType, byteSize: file.size, detectedFormat, mimeMismatch: Boolean(expectedMime(detectedFormat) && declaredMimeType && expectedMime(detectedFormat) !== declaredMimeType && !(detectedFormat === "heif" && declaredMimeType === "image/heic")), headerRead, apiAvailability: { createImageBitmap: typeof createImageBitmap === "function", objectUrl: typeof URL.createObjectURL === "function", fileReader: typeof FileReader === "function", image: typeof Image === "function" }, attempts: [] };
-  if (headerRead.result === "success" && detectedFormat === "unknown" && !declaredMimeType.startsWith("image/")) throw new RecordPhotoDecodeError("画像ファイルを選択してください。", diagnostic);
+  const diagnostic: RecordPhotoDiagnostic = { fileName: file.name, declaredMimeType, byteSize: file.size, detectedFormat: "unknown", mimeMismatch: false, headerRead: { result: "not-attempted" }, apiAvailability: { createImageBitmap: typeof createImageBitmap === "function", objectUrl: typeof URL.createObjectURL === "function", fileReader: typeof FileReader === "function", image: typeof Image === "function" }, attempts: [] };
   const image = await loadImage(file, diagnostic);
+  if (!image) {
+    try {
+      diagnostic.detectedFormat = detectImageFormat(new Uint8Array(await file.slice(0, 16).arrayBuffer()));
+      diagnostic.headerRead = { result: "success" };
+      const detectedMime = expectedMime(diagnostic.detectedFormat);
+      diagnostic.mimeMismatch = Boolean(detectedMime && declaredMimeType && detectedMime !== declaredMimeType && !(diagnostic.detectedFormat === "heif" && declaredMimeType === "image/heic"));
+    } catch (error) {
+      diagnostic.headerRead = { result: "failed", reason: failureReason(error) };
+    }
+    const headerNotReadable = diagnostic.headerRead.result === "failed" && diagnostic.headerRead.reason?.startsWith("NotReadableError:");
+    const message = headerNotReadable ? unreadableImageMessage
+      : diagnostic.detectedFormat === "heif" ? heifMessage
+      : diagnostic.headerRead.result === "success" && diagnostic.detectedFormat === "unknown" && !declaredMimeType.startsWith("image/") ? "画像ファイルを選択してください。"
+      : unsupportedImageMessage;
+    throw new RecordPhotoDecodeError(message, diagnostic);
+  }
   try {
     const scale = Math.min(1, RECORD_PHOTO_MAX_EDGE / Math.max(image.width, image.height)); const width = Math.max(1, Math.round(image.width * scale)), height = Math.max(1, Math.round(image.height * scale));
     const canvas = document.createElement("canvas"); canvas.width = width; canvas.height = height; const context = canvas.getContext("2d", { alpha: false });
