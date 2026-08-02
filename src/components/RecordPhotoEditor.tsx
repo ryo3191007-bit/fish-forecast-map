@@ -2,10 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { copyDiagnosticText, initialDiagnosticCopyState, transitionDiagnosticCopyState } from "@/domain/diagnosticClipboard";
-import { formatRecordPhotoDiagnostic, prepareRecordPhoto, RECORD_PHOTO_LIMIT, RecordPhotoDecodeError, type PreparedRecordPhoto, type RecordPhoto, type RecordPhotoTargetType } from "@/domain/recordPhoto";
+import { formatRecordPhotoDiagnostic, isRecordPhotoNotReadableDiagnostic, prepareRecordPhoto, RECORD_PHOTO_LIMIT, RecordPhotoDecodeError, type PreparedRecordPhoto, type RecordPhoto, type RecordPhotoTargetType } from "@/domain/recordPhoto";
 import { mergePendingRecordPhotos, remainingRecordPhotos } from "@/domain/recordPhotoUpload";
 import { checkRecordPhotoBackend, deleteRecordPhoto, fetchRecordPhotos, isRecordPhotoBackendMissing, reconcileRecordPhotoObjects, RecordPhotoBatchError, uploadRecordPhotos } from "@/lib/recordPhotoRepository";
 import styles from "./RecordPhotoEditor.module.css";
+
+export const RECORD_PHOTO_FILES_FALLBACK_ACCEPT = "image/jpeg,image/png,image/webp,application/x-fishtrace-file-picker";
 
 export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPendingChange, editable = true }: { targetType: RecordPhotoTargetType; targetId?: string; enabled: boolean; pending?: PreparedRecordPhoto[]; onPendingChange?: (photos: PreparedRecordPhoto[]) => void; editable?: boolean }) {
   const [saved, setSaved] = useState<RecordPhoto[]>([]);
@@ -15,11 +17,13 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [diagnostic, setDiagnostic] = useState<string | null>(null);
+  const [filesFallbackAvailable, setFilesFallbackAvailable] = useState(false);
   const [copyState, setCopyState] = useState(initialDiagnosticCopyState);
   const [lightbox, setLightbox] = useState<string | null>(null);
   const [backendReady, setBackendReady] = useState(false);
   const [backendChecked, setBackendChecked] = useState(false);
   const input = useRef<HTMLInputElement>(null);
+  const filesFallbackInput = useRef<HTMLInputElement>(null);
   const diagnosticText = useRef<HTMLTextAreaElement>(null);
   const ownedPreviewUrls = useRef(new Set<string>());
   const revokePreview = useCallback((url: string | undefined) => {
@@ -47,7 +51,7 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
   const choose = async (files: FileList | null) => {
     if (!files) return;
     if (saved.length + selected.length + files.length > RECORD_PHOTO_LIMIT) { setError("写真は1記録につき最大3枚です。"); return; }
-    setBusy(true); setError(null); setDiagnostic(null); setCopyState(initialDiagnosticCopyState);
+    setBusy(true); setError(null); setDiagnostic(null); setFilesFallbackAvailable(false); setCopyState(initialDiagnosticCopyState);
     const prepared: PreparedRecordPhoto[] = [];
     let retainedForRetry = false;
     try {
@@ -74,9 +78,16 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
       if (!retainedForRetry) prepared.forEach((photo) => revokePreview(photo.previewUrl));
       if (value instanceof RecordPhotoBatchError && value.completedPhotoIds.length) await load();
       setError(value instanceof Error ? value.message : "写真を準備できませんでした。");
-      if (value instanceof RecordPhotoDecodeError) setDiagnostic(formatRecordPhotoDiagnostic(value.diagnostic));
+      if (value instanceof RecordPhotoDecodeError) {
+        setDiagnostic(formatRecordPhotoDiagnostic(value.diagnostic));
+        setFilesFallbackAvailable(isRecordPhotoNotReadableDiagnostic(value.diagnostic));
+      }
     }
-    finally { setBusy(false); if (input.current) input.current.value = ""; }
+    finally {
+      setBusy(false);
+      if (input.current) input.current.value = "";
+      if (filesFallbackInput.current) filesFallbackInput.current.value = "";
+    }
   };
   const retryPending = async () => {
     if (!targetId || !selected.length) return;
@@ -116,8 +127,9 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
     <div className={styles.heading}><strong>写真</strong><span>{saved.length + selected.length}/3枚</span></div>
     <div className={styles.grid}>{saved.map((photo) => <figure key={photo.id}>{photo.signedUrl ? <button type="button" onClick={() => setLightbox(photo.signedUrl ?? null)}><img src={photo.signedUrl} alt="記録写真" loading="lazy" /></button> : <div className={styles.stale}>画像を取得できません<br />削除して再追加できます</div>}{editable ? <button className={styles.remove} type="button" disabled={busy || photoDisabled} onClick={() => void removeSaved(photo)}>削除</button> : null}</figure>)}{selected.map((photo) => <figure key={photo.id}><button type="button" onClick={() => setLightbox(photo.previewUrl)}><img src={photo.previewUrl} alt="追加予定の写真" /></button><span className={styles.pending}>保存前</span><button className={styles.remove} type="button" disabled={busy} onClick={() => removePending(photo)}>削除</button></figure>)}</div>
     {targetId && selected.length ? <button type="button" disabled={busy || photoDisabled} onClick={() => void retryPending()}>未完了の写真を再試行</button> : null}
-    {editable && saved.length + selected.length < RECORD_PHOTO_LIMIT ? <><input ref={input} className={styles.input} type="file" accept="image/*" multiple disabled={photoDisabled || selected.length > 0} onChange={(event) => void choose(event.target.files)} /><button type="button" disabled={busy || photoDisabled || selected.length > 0} onClick={() => input.current?.click()}>{!backendChecked ? "写真機能を確認中…" : selected.length ? "未完了の写真を先に再試行" : busy ? "圧縮・アップロード中…" : "写真を追加"}</button></> : null}
+    {editable && saved.length + selected.length < RECORD_PHOTO_LIMIT ? <><input ref={input} className={styles.input} type="file" accept="image/*" multiple disabled={photoDisabled || selected.length > 0} onChange={(event) => void choose(event.target.files)} /><input ref={filesFallbackInput} className={styles.input} type="file" accept={RECORD_PHOTO_FILES_FALLBACK_ACCEPT} disabled={photoDisabled || selected.length > 0} onChange={(event) => void choose(event.target.files)} /><button type="button" disabled={busy || photoDisabled || selected.length > 0} onClick={() => input.current?.click()}>{!backendChecked ? "写真機能を確認中…" : selected.length ? "未完了の写真を先に再試行" : busy ? "圧縮・アップロード中…" : "写真を追加"}</button></> : null}
     {error ? <p className={styles.error} role="alert">{error}</p> : null}
+    {filesFallbackAvailable ? <button type="button" disabled={busy || photoDisabled || selected.length > 0} onClick={() => filesFallbackInput.current?.click()}>ファイルから選び直す</button> : null}
     {diagnostic ? <div className={styles.diagnostic}>
       <button type="button" onClick={() => void copyDiagnostic()}>診断情報をコピー</button>
       {copyState.result === "success" ? <p role="status">診断情報をコピーしました。</p> : null}

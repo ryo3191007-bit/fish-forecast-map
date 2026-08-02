@@ -16,7 +16,7 @@ export const RECORD_PHOTO_MAX_EDGE = 1280;
 type DecodedImage = { source: CanvasImageSource; width: number; height: number; cleanup: () => void };
 const unsupportedImageMessage = "画像形式を読み込めませんでした。JPEG、PNG、WebPのいずれかへ変換して再選択してください。";
 const heifMessage = "HEIF/HEIC画像には対応していません。端末の写真アプリでJPEGまたはPNGとして書き出して再選択してください。";
-const unreadableImageMessage = "ブラウザが写真を読み取れませんでした。Chromeで開くか、端末へ保存し直して再選択してください。";
+const unreadableImageMessage = "ブラウザが写真を読み取れませんでした。「ファイルから選び直す」をお試しください。なお失敗する場合は、端末へ保存し直して再選択してください。";
 
 export function detectImageFormat(bytes: Uint8Array): ImageFileFormat {
   if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return "jpeg";
@@ -30,6 +30,7 @@ export function detectImageFormat(bytes: Uint8Array): ImageFileFormat {
 }
 const expectedMime = (format: ImageFileFormat) => format === "jpeg" ? "image/jpeg" : format === "png" ? "image/png" : format === "webp" ? "image/webp" : format === "heif" ? "image/heif" : "";
 const failureReason = (value: unknown) => value instanceof Error ? `${value.name}: ${value.message}` : String(value);
+export const isRecordPhotoNotReadableDiagnostic = (diagnostic: RecordPhotoDiagnostic) => diagnostic.headerRead.result === "failed" && diagnostic.headerRead.reason?.startsWith("NotReadableError:") === true;
 
 function loadHtmlImage(src: string, release: () => void): Promise<DecodedImage> {
   return new Promise((resolve, reject) => {
@@ -84,7 +85,7 @@ export async function prepareRecordPhoto(file: File): Promise<PreparedRecordPhot
     } catch (error) {
       diagnostic.headerRead = { result: "failed", reason: failureReason(error) };
     }
-    const headerNotReadable = diagnostic.headerRead.result === "failed" && diagnostic.headerRead.reason?.startsWith("NotReadableError:");
+    const headerNotReadable = isRecordPhotoNotReadableDiagnostic(diagnostic);
     const message = headerNotReadable ? unreadableImageMessage
       : diagnostic.detectedFormat === "heif" ? heifMessage
       : diagnostic.headerRead.result === "success" && diagnostic.detectedFormat === "unknown" && !declaredMimeType.startsWith("image/") ? "画像ファイルを選択してください。"
