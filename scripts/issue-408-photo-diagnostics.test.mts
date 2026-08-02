@@ -102,7 +102,7 @@ assert.match(editorSource, /<textarea[^>]+readOnly/);
 assert.match(editorSource, /copyState\.result === "fallback"[\s\S]+<textarea[\s\S]+copyState\.selectionFailed/, "selection feedback is rendered inside the persistent fallback region");
 assert.match(editorSource, /accept=\{RECORD_PHOTO_FILES_FALLBACK_ACCEPT\}/);
 assert.match(editorSource, /image\/jpeg,image\/png,image\/webp,application\/x-fishtrace-file-picker/, "the fallback accept includes a non-media MIME to request the generic Files chooser");
-assert.match(editorSource, /ref=\{filesFallbackInput\}[\s\S]+onChange=\{\(event\) => void choose\(event\.target\.files\)\}/, "fallback selection rejoins the existing prepare and upload flow");
+assert.match(editorSource, /ref=\{filesFallbackInput\}[^\n]+multiple[^\n]+onChange=\{\(event\) => void choose\(event\.target\.files\)\}/, "the generic Files input supports selecting multiple photos and rejoins the existing choose pipeline");
 assert.match(editorSource, /shouldUseGenericPhotoFilePicker\(navigator\)[\s\S]+useGenericPicker \? filesFallbackInput : input/, "Android opens the generic Files input on the first photo action while other platforms keep the image input");
 assert.doesNotMatch(editorSource, /ファイルから選び直す/, "only one user-facing photo-add action is rendered");
 assert.match(editorSource, /<details className=\{styles\.diagnostic\}><summary>エラー詳細<\/summary>[\s\S]+診断情報をコピー[\s\S]+<\/details>/, "diagnostic copy controls stay hidden in collapsed error details by default");
