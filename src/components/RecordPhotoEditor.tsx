@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { copyDiagnosticText } from "@/domain/diagnosticClipboard";
 import { formatRecordPhotoDiagnostic, prepareRecordPhoto, RECORD_PHOTO_LIMIT, RecordPhotoDecodeError, type PreparedRecordPhoto, type RecordPhoto, type RecordPhotoTargetType } from "@/domain/recordPhoto";
 import { mergePendingRecordPhotos, remainingRecordPhotos } from "@/domain/recordPhotoUpload";
 import { checkRecordPhotoBackend, deleteRecordPhoto, fetchRecordPhotos, isRecordPhotoBackendMissing, reconcileRecordPhotoObjects, RecordPhotoBatchError, uploadRecordPhotos } from "@/lib/recordPhotoRepository";
@@ -14,10 +15,12 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [diagnostic, setDiagnostic] = useState<string | null>(null);
+  const [copyStatus, setCopyStatus] = useState<"success" | "fallback" | "failed" | null>(null);
   const [lightbox, setLightbox] = useState<string | null>(null);
   const [backendReady, setBackendReady] = useState(false);
   const [backendChecked, setBackendChecked] = useState(false);
   const input = useRef<HTMLInputElement>(null);
+  const diagnosticText = useRef<HTMLTextAreaElement>(null);
   const ownedPreviewUrls = useRef(new Set<string>());
   const revokePreview = useCallback((url: string | undefined) => {
     if (!url) return;
@@ -44,7 +47,7 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
   const choose = async (files: FileList | null) => {
     if (!files) return;
     if (saved.length + selected.length + files.length > RECORD_PHOTO_LIMIT) { setError("写真は1記録につき最大3枚です。"); return; }
-    setBusy(true); setError(null); setDiagnostic(null);
+    setBusy(true); setError(null); setDiagnostic(null); setCopyStatus(null);
     const prepared: PreparedRecordPhoto[] = [];
     let retainedForRetry = false;
     try {
@@ -98,6 +101,15 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
     finally { setBusy(false); }
   };
   const removePending = (photo: PreparedRecordPhoto) => { revokePreview(photo.previewUrl); setSelected(selected.filter((item) => item.id !== photo.id)); };
+  const copyDiagnostic = async () => {
+    if (!diagnostic) return;
+    const result = await copyDiagnosticText(diagnostic, typeof navigator === "undefined" ? undefined : navigator.clipboard);
+    setCopyStatus(result);
+  };
+  const selectDiagnostic = () => {
+    try { diagnosticText.current?.focus(); diagnosticText.current?.select(); setCopyStatus("fallback"); }
+    catch { setCopyStatus("failed"); }
+  };
   if (!enabled) return <p className={styles.notice}>写真はログインしてSupabaseへ保存した記録で利用できます。ブラウザ保存の本文は引き続き編集できます。</p>;
   const photoDisabled = !backendChecked || !backendReady;
   return <div className={styles.editor}>
@@ -106,7 +118,12 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
     {targetId && selected.length ? <button type="button" disabled={busy || photoDisabled} onClick={() => void retryPending()}>未完了の写真を再試行</button> : null}
     {editable && saved.length + selected.length < RECORD_PHOTO_LIMIT ? <><input ref={input} className={styles.input} type="file" accept="image/*" multiple disabled={photoDisabled || selected.length > 0} onChange={(event) => void choose(event.target.files)} /><button type="button" disabled={busy || photoDisabled || selected.length > 0} onClick={() => input.current?.click()}>{!backendChecked ? "写真機能を確認中…" : selected.length ? "未完了の写真を先に再試行" : busy ? "圧縮・アップロード中…" : "写真を追加"}</button></> : null}
     {error ? <p className={styles.error} role="alert">{error}</p> : null}
-    {diagnostic ? <button type="button" onClick={() => void navigator.clipboard.writeText(diagnostic)}>診断情報をコピー</button> : null}
+    {diagnostic ? <div className={styles.diagnostic}>
+      <button type="button" onClick={() => void copyDiagnostic()}>診断情報をコピー</button>
+      {copyStatus === "success" ? <p role="status">診断情報をコピーしました。</p> : null}
+      {copyStatus === "fallback" ? <div role="dialog" aria-modal="false" aria-label="診断情報を手動コピー"><p role="status">自動コピーを利用できません。下の診断情報を選択して手動でコピーしてください。</p><textarea ref={diagnosticText} readOnly value={diagnostic} aria-label="コピーする診断情報" /><button type="button" onClick={selectDiagnostic}>診断情報をすべて選択</button></div> : null}
+      {copyStatus === "failed" ? <p className={styles.error} role="alert">診断情報を選択できませんでした。長押しして手動で選択してください。</p> : null}
+    </div> : null}
     {lightbox ? <div className={styles.lightbox} role="dialog" aria-modal="true" aria-label="写真を拡大表示" onClick={() => setLightbox(null)}><button type="button" aria-label="拡大表示を閉じる">×</button><img src={lightbox} alt="拡大した記録写真" /></div> : null}
   </div>;
 }

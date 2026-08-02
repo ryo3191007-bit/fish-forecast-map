@@ -3,7 +3,8 @@ export type RecordPhoto = { id: string; targetType: RecordPhotoTargetType; targe
 export type PreparedRecordPhoto = { id: string; blob: Blob; previewUrl: string; width: number; height: number };
 export type ImageFileFormat = "jpeg" | "png" | "webp" | "heif" | "unknown";
 export type DecodeAttempt = { route: "bitmap-oriented" | "bitmap" | "object-url" | "data-url"; result: "success" | "failed" | "unavailable"; reason?: string };
-export type RecordPhotoDiagnostic = { fileName: string; declaredMimeType: string; byteSize: number; detectedFormat: ImageFileFormat; mimeMismatch: boolean; apiAvailability: { createImageBitmap: boolean; objectUrl: boolean; fileReader: boolean; image: boolean }; attempts: DecodeAttempt[] };
+export type HeaderReadDiagnostic = { result: "success" | "failed"; reason?: string };
+export type RecordPhotoDiagnostic = { fileName: string; declaredMimeType: string; byteSize: number; detectedFormat: ImageFileFormat; mimeMismatch: boolean; headerRead: HeaderReadDiagnostic; apiAvailability: { createImageBitmap: boolean; objectUrl: boolean; fileReader: boolean; image: boolean }; attempts: DecodeAttempt[] };
 
 export class RecordPhotoDecodeError extends Error {
   constructor(message: string, public readonly diagnostic: RecordPhotoDiagnostic) { super(message); this.name = "RecordPhotoDecodeError"; }
@@ -71,8 +72,12 @@ export function formatRecordPhotoDiagnostic(diagnostic: RecordPhotoDiagnostic): 
 
 export async function prepareRecordPhoto(file: File): Promise<PreparedRecordPhoto> {
   if (file.size > RECORD_PHOTO_MAX_SOURCE_BYTES) throw new Error("元画像は1枚20MB以下にしてください。");
-  const detectedFormat = detectImageFormat(new Uint8Array(await file.slice(0, 16).arrayBuffer())); const declaredMimeType = file.type.toLowerCase();
-  const diagnostic: RecordPhotoDiagnostic = { fileName: file.name, declaredMimeType, byteSize: file.size, detectedFormat, mimeMismatch: Boolean(expectedMime(detectedFormat) && declaredMimeType && expectedMime(detectedFormat) !== declaredMimeType && !(detectedFormat === "heif" && declaredMimeType === "image/heic")), apiAvailability: { createImageBitmap: typeof createImageBitmap === "function", objectUrl: typeof URL.createObjectURL === "function", fileReader: typeof FileReader === "function", image: typeof Image === "function" }, attempts: [] };
+  let detectedFormat: ImageFileFormat = "unknown";
+  let headerRead: HeaderReadDiagnostic = { result: "success" };
+  try { detectedFormat = detectImageFormat(new Uint8Array(await file.slice(0, 16).arrayBuffer())); }
+  catch (error) { headerRead = { result: "failed", reason: failureReason(error) }; }
+  const declaredMimeType = file.type.toLowerCase();
+  const diagnostic: RecordPhotoDiagnostic = { fileName: file.name, declaredMimeType, byteSize: file.size, detectedFormat, mimeMismatch: Boolean(expectedMime(detectedFormat) && declaredMimeType && expectedMime(detectedFormat) !== declaredMimeType && !(detectedFormat === "heif" && declaredMimeType === "image/heic")), headerRead, apiAvailability: { createImageBitmap: typeof createImageBitmap === "function", objectUrl: typeof URL.createObjectURL === "function", fileReader: typeof FileReader === "function", image: typeof Image === "function" }, attempts: [] };
   if (detectedFormat === "unknown" && !declaredMimeType.startsWith("image/")) throw new RecordPhotoDecodeError("画像ファイルを選択してください。", diagnostic);
   const image = await loadImage(file, diagnostic);
   try {
