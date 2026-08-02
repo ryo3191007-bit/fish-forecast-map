@@ -16,7 +16,7 @@ export const RECORD_PHOTO_MAX_EDGE = 1280;
 type DecodedImage = { source: CanvasImageSource; width: number; height: number; cleanup: () => void };
 const unsupportedImageMessage = "画像形式を読み込めませんでした。JPEG、PNG、WebPのいずれかへ変換して再選択してください。";
 const heifMessage = "HEIF/HEIC画像には対応していません。端末の写真アプリでJPEGまたはPNGとして書き出して再選択してください。";
-const unreadableImageMessage = "ブラウザが写真を読み取れませんでした。「ファイルから選び直す」をお試しください。なお失敗する場合は、端末へ保存し直して再選択してください。";
+const unreadableImageMessage = "ブラウザが写真を読み取れませんでした。端末へ保存し直して再選択してください。";
 
 export function detectImageFormat(bytes: Uint8Array): ImageFileFormat {
   if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return "jpeg";

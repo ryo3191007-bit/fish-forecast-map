@@ -1,12 +1,16 @@
 import assert from "node:assert/strict";
 import { detectImageFormat, prepareRecordPhoto, RecordPhotoDecodeError } from "../src/domain/recordPhoto";
 import { copyDiagnosticText, initialDiagnosticCopyState, transitionDiagnosticCopyState } from "../src/domain/diagnosticClipboard";
+import { shouldUseGenericPhotoFilePicker } from "../src/domain/photoFilePicker";
 import { readFile } from "node:fs/promises";
 
 assert.equal(detectImageFormat(Uint8Array.from([0xff, 0xd8, 0xff])), "jpeg");
 assert.equal(detectImageFormat(Uint8Array.from([0x89, 0x50, 0x4e, 0x47, 13, 10, 26, 10])), "png");
 assert.equal(detectImageFormat(new TextEncoder().encode("RIFFxxxxWEBP")), "webp");
 assert.equal(detectImageFormat(new TextEncoder().encode("xxxxftypheic")), "heif");
+assert.equal(shouldUseGenericPhotoFilePicker({ userAgent: "Mozilla/5.0", platform: "Linux", userAgentData: { platform: "Android" } }), true);
+assert.equal(shouldUseGenericPhotoFilePicker({ userAgent: "Mozilla/5.0 (Linux; Android 15)", platform: "Linux" }), true);
+assert.equal(shouldUseGenericPhotoFilePicker({ userAgent: "Mozilla/5.0 (iPhone)", platform: "iPhone" }), false);
 
 const source = (type = "image/jpeg", signature = [0xff, 0xd8, 0xff]) => {
   const blob = new Blob([Uint8Array.from(signature), new Uint8Array(100)], { type }) as File;
@@ -76,7 +80,6 @@ assert.equal(headerFailure.diagnostic.headerRead.result, "failed");
 assert.equal(headerFailure.diagnostic.declaredMimeType, "");
 assert.match(headerFailure.diagnostic.headerRead.reason ?? "", /NotReadableError.*picker stream unavailable/);
 assert.equal(headerFailure.diagnostic.attempts.length, 4);
-assert.match(headerFailure.message, /「ファイルから選び直す」をお試しください/);
 assert.match(headerFailure.message, /端末へ保存し直して再選択/);
 
 const heif = source("image/heic", [...new TextEncoder().encode("xxxxftypheic")]);
@@ -99,7 +102,8 @@ assert.match(editorSource, /<textarea[^>]+readOnly/);
 assert.match(editorSource, /copyState\.result === "fallback"[\s\S]+<textarea[\s\S]+copyState\.selectionFailed/, "selection feedback is rendered inside the persistent fallback region");
 assert.match(editorSource, /accept=\{RECORD_PHOTO_FILES_FALLBACK_ACCEPT\}/);
 assert.match(editorSource, /image\/jpeg,image\/png,image\/webp,application\/x-fishtrace-file-picker/, "the fallback accept includes a non-media MIME to request the generic Files chooser");
-assert.match(editorSource, /setFilesFallbackAvailable\(isRecordPhotoNotReadableDiagnostic\(value\.diagnostic\)\)/, "the Files fallback is offered only for the unreadable diagnostic path");
 assert.match(editorSource, /ref=\{filesFallbackInput\}[\s\S]+onChange=\{\(event\) => void choose\(event\.target\.files\)\}/, "fallback selection rejoins the existing prepare and upload flow");
-assert.match(editorSource, /filesFallbackAvailable \? <button[^>]+[\s\S]+ファイルから選び直す/, "the fallback action is conditional on unreadable File data");
+assert.match(editorSource, /shouldUseGenericPhotoFilePicker\(navigator\)[\s\S]+useGenericPicker \? filesFallbackInput : input/, "Android opens the generic Files input on the first photo action while other platforms keep the image input");
+assert.doesNotMatch(editorSource, /ファイルから選び直す/, "only one user-facing photo-add action is rendered");
+assert.match(editorSource, /<details className=\{styles\.diagnostic\}><summary>エラー詳細<\/summary>[\s\S]+診断情報をコピー[\s\S]+<\/details>/, "diagnostic copy controls stay hidden in collapsed error details by default");
 console.log("Issue #408 staged photo decode, diagnostics, magic bytes, and cleanup checks passed.");
