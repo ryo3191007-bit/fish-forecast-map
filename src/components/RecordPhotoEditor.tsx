@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { prepareRecordPhoto, RECORD_PHOTO_LIMIT, type PreparedRecordPhoto, type RecordPhoto, type RecordPhotoTargetType } from "@/domain/recordPhoto";
+import { formatRecordPhotoDiagnostic, prepareRecordPhoto, RECORD_PHOTO_LIMIT, RecordPhotoDecodeError, type PreparedRecordPhoto, type RecordPhoto, type RecordPhotoTargetType } from "@/domain/recordPhoto";
 import { mergePendingRecordPhotos, remainingRecordPhotos } from "@/domain/recordPhotoUpload";
 import { checkRecordPhotoBackend, deleteRecordPhoto, fetchRecordPhotos, isRecordPhotoBackendMissing, reconcileRecordPhotoObjects, RecordPhotoBatchError, uploadRecordPhotos } from "@/lib/recordPhotoRepository";
 import styles from "./RecordPhotoEditor.module.css";
@@ -13,6 +13,7 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
   const setSelected = onPendingChange ?? setLocalPending;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [diagnostic, setDiagnostic] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<string | null>(null);
   const [backendReady, setBackendReady] = useState(false);
   const [backendChecked, setBackendChecked] = useState(false);
@@ -43,7 +44,7 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
   const choose = async (files: FileList | null) => {
     if (!files) return;
     if (saved.length + selected.length + files.length > RECORD_PHOTO_LIMIT) { setError("写真は1記録につき最大3枚です。"); return; }
-    setBusy(true); setError(null);
+    setBusy(true); setError(null); setDiagnostic(null);
     const prepared: PreparedRecordPhoto[] = [];
     let retainedForRetry = false;
     try {
@@ -70,6 +71,7 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
       if (!retainedForRetry) prepared.forEach((photo) => revokePreview(photo.previewUrl));
       if (value instanceof RecordPhotoBatchError && value.completedPhotoIds.length) await load();
       setError(value instanceof Error ? value.message : "写真を準備できませんでした。");
+      if (value instanceof RecordPhotoDecodeError) setDiagnostic(formatRecordPhotoDiagnostic(value.diagnostic));
     }
     finally { setBusy(false); if (input.current) input.current.value = ""; }
   };
@@ -104,6 +106,7 @@ export function RecordPhotoEditor({ targetType, targetId, enabled, pending, onPe
     {targetId && selected.length ? <button type="button" disabled={busy || photoDisabled} onClick={() => void retryPending()}>未完了の写真を再試行</button> : null}
     {editable && saved.length + selected.length < RECORD_PHOTO_LIMIT ? <><input ref={input} className={styles.input} type="file" accept="image/*" multiple disabled={photoDisabled || selected.length > 0} onChange={(event) => void choose(event.target.files)} /><button type="button" disabled={busy || photoDisabled || selected.length > 0} onClick={() => input.current?.click()}>{!backendChecked ? "写真機能を確認中…" : selected.length ? "未完了の写真を先に再試行" : busy ? "圧縮・アップロード中…" : "写真を追加"}</button></> : null}
     {error ? <p className={styles.error} role="alert">{error}</p> : null}
+    {diagnostic ? <button type="button" onClick={() => void navigator.clipboard.writeText(diagnostic)}>診断情報をコピー</button> : null}
     {lightbox ? <div className={styles.lightbox} role="dialog" aria-modal="true" aria-label="写真を拡大表示" onClick={() => setLightbox(null)}><button type="button" aria-label="拡大表示を閉じる">×</button><img src={lightbox} alt="拡大した記録写真" /></div> : null}
   </div>;
 }

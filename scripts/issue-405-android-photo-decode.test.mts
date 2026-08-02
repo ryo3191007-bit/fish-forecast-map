@@ -32,8 +32,8 @@ assert.equal(drawnSource, bitmap); assert.equal(bitmapClosed, 1); assert.equal(f
 Object.assign(globalThis, { createImageBitmap: async () => { throw new Error("Android bitmap decode failed"); } });
 const fallback = await prepareRecordPhoto(jpeg);
 assert.deepEqual({ width: fallback.width, height: fallback.height }, { width: 577, height: 1280 });
-assert.equal(fallbackReads, 1); assert.ok(drawnSource instanceof WorkingImage);
-assert.equal((drawnSource as WorkingImage).src, "", "fallback image releases its data URL reference");
+assert.equal(fallbackReads, 0); assert.ok(drawnSource instanceof WorkingImage);
+assert.equal((drawnSource as WorkingImage).src, "", "fallback image releases its object URL reference");
 
 class FailingImage extends WorkingImage { override set src(value: string) { if (value) queueMicrotask(() => this.onerror?.()); } }
 Object.assign(globalThis, { Image: FailingImage });
