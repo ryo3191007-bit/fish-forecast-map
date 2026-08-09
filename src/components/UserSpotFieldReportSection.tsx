@@ -27,6 +27,8 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
   const [savedReportId, setSavedReportId] = useState<string | null>(null);
   const [visibility, setVisibility] = useState<RecordVisibility>("private");
   const [visibilityOverrides, setVisibilityOverrides] = useState<Record<string, RecordVisibility>>({});
+  const [visibilityPending, setVisibilityPending] = useState<Set<string>>(new Set());
+  const visibilityPendingRef = useRef(new Set<string>());
   const idempotencyKey = useRef(crypto.randomUUID());
   const selected = Object.keys(drafts);
   const closeForm = () => { photos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl)); setOpen(false); setDrafts({}); setPhotos([]); setSavedReportId(null); setSummaryNote(""); setObservedOn(getTodayInJapan()); setVisibility("private"); idempotencyKey.current = crypto.randomUUID(); setError(null); };
@@ -34,6 +36,20 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
     if (checked) return { ...current, [key]: createSpotFieldObservationDraft() };
     const next = { ...current }; delete next[key]; return next;
   });
+  const changeReportVisibility = async (reportId: string, next: RecordVisibility) => {
+    if (visibilityPendingRef.current.has(reportId)) return;
+    visibilityPendingRef.current.add(reportId);
+    setVisibilityPending(new Set(visibilityPendingRef.current));
+    try {
+      await updateMySpotFieldReportVisibility(reportId, next);
+      setVisibilityOverrides((current) => ({ ...current, [reportId]: next }));
+    } catch {
+      setError("公開範囲を変更できませんでした。");
+    } finally {
+      visibilityPendingRef.current.delete(reportId);
+      setVisibilityPending(new Set(visibilityPendingRef.current));
+    }
+  };
   const submit = async () => {
     const values = savedReportId ? [] : selected.map((key) => buildSaveSpotFieldObservationInput(spotId, key, spotFieldObservationConfigs[key], { ...drafts[key], checkedAt: observedOn })).filter((value) => value !== null);
     if (!savedReportId && (values.length !== selected.length || !values.length)) { setError("1項目以上の確認内容を入力してください。"); return; }
@@ -67,7 +83,7 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
       <RecordPhotoEditor targetType="field_report" targetId={savedReportId ?? undefined} enabled pending={photos} onPendingChange={setPhotos} />
       {error ? <p className={styles.error} role="alert">{error}</p> : null}<div className={styles.actions}><button type="button" disabled={state.isMutating} onClick={closeForm}>キャンセル</button><button type="button" disabled={state.isMutating || (!savedReportId && selected.length === 0)} onClick={() => void submit()}>{state.isMutating ? "保存中…" : savedReportId ? "未完了の写真を再試行" : "保存"}</button></div>
       <div className={styles.history} aria-label="過去の実地調査履歴">{state.reports.length === 0 ? <p className={styles.empty}>履歴はまだありません。</p> : state.reports.map((report) => <article key={report.id}>
-        <header><strong>{formatSpotFieldObservationDate(report.observedOn)}</strong><small>{report.origin === "snapshot_backfill" ? "既存の現在値から移行" : report.origin === "initial_details" ? "地点登録時" : "実地調査"}</small><label>公開範囲<select value={visibilityOverrides[report.id] ?? report.visibility} disabled={state.isMutating} onChange={async (event) => { const next = event.target.value as RecordVisibility; try { await updateMySpotFieldReportVisibility(report.id, next); setVisibilityOverrides((current) => ({ ...current, [report.id]: next })); } catch { setError("公開範囲を変更できませんでした。"); } }}><option value="private">自分のみ</option><option value="public">公開</option></select></label></header>
+        <header><strong>{formatSpotFieldObservationDate(report.observedOn)}</strong><small>{report.origin === "snapshot_backfill" ? "既存の現在値から移行" : report.origin === "initial_details" ? "地点登録時" : "実地調査"}</small><label>公開範囲<select value={visibilityOverrides[report.id] ?? report.visibility} disabled={state.isMutating || visibilityPending.has(report.id)} onChange={(event) => void changeReportVisibility(report.id, event.target.value as RecordVisibility)}><option value="private">自分のみ</option><option value="public">公開</option></select></label></header>
         {report.summaryNote ? <p>{report.summaryNote}</p> : null}
         <dl>{report.values.map((value) => <div key={value.id}><dt>{labels.get(value.itemKey) ?? value.itemKey}</dt><dd>{formatSpotFieldObservationValue(value)}{value.note ? <small>{value.note}</small> : null}</dd></div>)}</dl>
         <RecordPhotoEditor targetType="field_report" targetId={report.id} enabled />

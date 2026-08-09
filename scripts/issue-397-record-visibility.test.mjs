@@ -37,6 +37,15 @@ assert.match(spotEvaluationUi, /useState<RecordVisibility \| null>\(null\)/);
 assert.match(spotEvaluationUi, /let active = true;[\s\S]*if \(active\) setSpotVisibility/);
 assert.match(spotEvaluationUi, /return \(\) => \{ active = false; \}/);
 assert.match(spotEvaluationUi, /spotVisibility === null && !spotVisibilityError \? <p role="status">地点の公開範囲を取得中です…<\/p>/);
+assert.match(spotEvaluationUi, /disabled=\{spotVisibilityPending\}/);
+assert.match(spotEvaluationUi, /spotVisibilityPendingRef\.current\) return/);
+assert.match(spotEvaluationUi, /const targetSpotId = props\.selectedSpotId/);
+assert.match(spotEvaluationUi, /selectedSpotIdRef\.current === targetSpotId\) setSpotVisibility\(next\)/);
+assert.match(spotEvaluationUi, /selectedSpotIdRef\.current === targetSpotId\) setSpotVisibilityError/);
+assert.doesNotMatch(spotEvaluationUi, /await updateMyUserFishingSpotVisibility\([^;]+;\s*setSpotVisibility\(next\)/);
+assert.match(reportUi, /visibilityPendingRef\.current\.has\(reportId\)/);
+assert.match(reportUi, /disabled=\{state\.isMutating \|\| visibilityPending\.has\(report\.id\)\}/);
+assert.match(reportUi, /changeReportVisibility\(report\.id, event\.target\.value as RecordVisibility\)/);
 
 const columnErrors = readFileSync('src/lib/supabaseObjectError.ts', 'utf8');
 assert.match(columnErrors, /\["42703", "PGRST204"\]/);
