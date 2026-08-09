@@ -34,9 +34,9 @@ where report.visibility = 'public';
 create view public.public_catch_records with (security_barrier = true) as
 select memo.id, memo.species, memo.caught_date, memo.caught_time, memo.area_name, memo.estimated_spot_name,
   memo.spot_id, memo.user_spot_id,
-  case when memo.user_spot_id is null or user_spot.visibility = 'public' then memo.latitude end as latitude,
-  case when memo.user_spot_id is null or user_spot.visibility = 'public' then memo.longitude end as longitude,
-  case when memo.user_spot_id is null or user_spot.visibility = 'public' then memo.coordinate_precision end as coordinate_precision,
+  case when memo.user_spot_id is null or (user_spot.visibility = 'public' and not user_spot.is_deleted) then memo.latitude end as latitude,
+  case when memo.user_spot_id is null or (user_spot.visibility = 'public' and not user_spot.is_deleted) then memo.longitude end as longitude,
+  case when memo.user_spot_id is null or (user_spot.visibility = 'public' and not user_spot.is_deleted) then memo.coordinate_precision end as coordinate_precision,
   memo.method, memo.catch_count, memo.size_cm, memo.catch_items, memo.acquisition_method, memo.confidence,
   memo.environment_match_notes, memo.user_memo, memo.created_at, memo.updated_at
 from public.external_catch_memos memo

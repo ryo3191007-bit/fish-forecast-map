@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { PreparedRecordPhoto } from "@/domain/recordPhoto";
 import { RecordPhotoBatchError, uploadRecordPhotos } from "@/lib/recordPhotoRepository";
 import { resolveRecordPhotoTargetId } from "@/domain/recordPhotoUpload";
@@ -27,8 +27,9 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
   const [savedReportId, setSavedReportId] = useState<string | null>(null);
   const [visibility, setVisibility] = useState<RecordVisibility>("private");
   const [visibilityOverrides, setVisibilityOverrides] = useState<Record<string, RecordVisibility>>({});
+  const idempotencyKey = useRef(crypto.randomUUID());
   const selected = Object.keys(drafts);
-  const closeForm = () => { photos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl)); setOpen(false); setDrafts({}); setPhotos([]); setSavedReportId(null); setSummaryNote(""); setObservedOn(getTodayInJapan()); setVisibility("private"); setError(null); };
+  const closeForm = () => { photos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl)); setOpen(false); setDrafts({}); setPhotos([]); setSavedReportId(null); setSummaryNote(""); setObservedOn(getTodayInJapan()); setVisibility("private"); idempotencyKey.current = crypto.randomUUID(); setError(null); };
   const toggle = (key: string, checked: boolean) => setDrafts((current) => {
     if (checked) return { ...current, [key]: createSpotFieldObservationDraft() };
     const next = { ...current }; delete next[key]; return next;
@@ -36,7 +37,7 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
   const submit = async () => {
     const values = savedReportId ? [] : selected.map((key) => buildSaveSpotFieldObservationInput(spotId, key, spotFieldObservationConfigs[key], { ...drafts[key], checkedAt: observedOn })).filter((value) => value !== null);
     if (!savedReportId && (values.length !== selected.length || !values.length)) { setError("1項目以上の確認内容を入力してください。"); return; }
-    const reportId = await resolveRecordPhotoTargetId(savedReportId, () => state.saveReport(observedOn, summaryNote.trim() || null, values, visibility));
+    const reportId = await resolveRecordPhotoTargetId(savedReportId, () => state.saveReport(observedOn, summaryNote.trim() || null, values, visibility, `${spotId}:${idempotencyKey.current}`));
     if (reportId) {
       if (!savedReportId) setSavedReportId(reportId);
       if (photos.length) {

@@ -16,7 +16,7 @@ function persistedSpotId(runtimeId: string): string {
 export type UserFishingSpotDetailState = SpotFieldObservationState & {
   reports: SpotFieldReport[];
   reportStatus: "loading" | "ready" | "unavailable" | "failed";
-  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[], visibility?: RecordVisibility) => Promise<string | null>;
+  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[], visibility?: RecordVisibility, idempotencyKey?: string | null) => Promise<string | null>;
 };
 
 export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolean): UserFishingSpotDetailState {
@@ -79,12 +79,12 @@ export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolea
     finally { setIsMutating(false); }
   }, [load, observations, status]);
 
-  const saveReport = useCallback(async (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[], visibility: RecordVisibility = "private") => {
+  const saveReport = useCallback(async (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[], visibility: RecordVisibility = "private", idempotencyKey: string | null = null) => {
     const targetRuntimeId = currentId.current;
     const spotId = persistedSpotId(targetRuntimeId);
     if (status !== "ready" || reportStatus !== "ready" || !spotId || !values.length) return null;
     setIsMutating(true); setError(null);
-    try { const reportId = await saveMySpotFieldReport("user", spotId, observedOn, summaryNote, values, visibility); await load(targetRuntimeId); return currentId.current === targetRuntimeId ? reportId : null; }
+    try { const reportId = await saveMySpotFieldReport("user", spotId, observedOn, summaryNote, values, visibility, idempotencyKey); await load(targetRuntimeId); return currentId.current === targetRuntimeId ? reportId : null; }
     catch { if (currentId.current === targetRuntimeId) setError("実地調査を保存できませんでした。"); return null; }
     finally { setIsMutating(false); }
   }, [load, reportStatus, status]);

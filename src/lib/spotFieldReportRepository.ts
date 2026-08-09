@@ -14,7 +14,7 @@ function client() {
 
 const payload = (value: SaveSpotFieldObservationInput) => ({ item_key: value.itemKey, information_state: value.informationState, value_text: value.valueText, value_text_list: value.valueTextList, value_number: value.valueNumber, unit: value.unit, note: value.note });
 
-export async function saveMySpotFieldReport(targetType: SpotFieldReportTargetType, spotId: string, observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[], visibility: RecordVisibility = "private"): Promise<string> {
+export async function saveMySpotFieldReport(targetType: SpotFieldReportTargetType, spotId: string, observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[], visibility: RecordVisibility = "private", idempotencyKey: string | null = null): Promise<string> {
   const { data, error } = await client().rpc("save_my_spot_field_report", {
     p_target_type: targetType,
     p_spot_id: targetType === "master" ? spotId : null,
@@ -23,7 +23,7 @@ export async function saveMySpotFieldReport(targetType: SpotFieldReportTargetTyp
     p_summary_note: summaryNote,
     p_values: values.map(payload),
     p_origin: "user",
-    p_idempotency_key: null,
+    p_idempotency_key: idempotencyKey,
   });
   if (error) throw error;
   if (typeof data !== "string") throw new Error("field-report-save-invalid-response");

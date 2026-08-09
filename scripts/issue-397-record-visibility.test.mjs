@@ -14,7 +14,7 @@ assert.doesNotMatch(migration.match(/create view public\.public_catch_records[\s
 const publicCatchView = migration.match(/create view public\.public_catch_records[\s\S]*?;/)?.[0] ?? '';
 assert.match(publicCatchView, /left join public\.user_fishing_spots user_spot on user_spot\.id = memo\.user_spot_id/);
 for (const coordinate of ['latitude', 'longitude', 'coordinate_precision']) {
-  assert.match(publicCatchView, new RegExp(`case when memo\\.user_spot_id is null or user_spot\\.visibility = 'public' then memo\\.${coordinate} end as ${coordinate}`));
+  assert.match(publicCatchView, new RegExp(`case when memo\\.user_spot_id is null or \\(user_spot\\.visibility = 'public' and not user_spot\\.is_deleted\\) then memo\\.${coordinate} end as ${coordinate}`));
 }
 assert.match(migration, /comment on view public\.public_catch_records/);
 assert.doesNotMatch(migration, /comment on table public\.public_catch_records/);
@@ -29,6 +29,14 @@ assert.match(catchUi, /visibility: "private"/);
 const reportUi = readFileSync('src/components/UserSpotFieldReportSection.tsx', 'utf8');
 assert.match(reportUi, /useState<RecordVisibility>\("private"\)/);
 assert.match(reportUi, /const closeForm[^\n]+setVisibility\("private"\)/);
+assert.match(reportUi, /useRef\(crypto\.randomUUID\(\)\)/);
+assert.match(reportUi, /state\.saveReport\([^\n]+`\$\{spotId\}:\$\{idempotencyKey\.current\}`/);
+
+const spotEvaluationUi = readFileSync('src/components/SpotEvaluationCard.tsx', 'utf8');
+assert.match(spotEvaluationUi, /useState<RecordVisibility \| null>\(null\)/);
+assert.match(spotEvaluationUi, /let active = true;[\s\S]*if \(active\) setSpotVisibility/);
+assert.match(spotEvaluationUi, /return \(\) => \{ active = false; \}/);
+assert.match(spotEvaluationUi, /spotVisibility === null && !spotVisibilityError \? <p role="status">地点の公開範囲を取得中です…<\/p>/);
 
 const columnErrors = readFileSync('src/lib/supabaseObjectError.ts', 'utf8');
 assert.match(columnErrors, /\["42703", "PGRST204"\]/);
@@ -43,6 +51,7 @@ assert.match(spotRepository, /insert\(basePayload\)\.select\(legacySpotColumns\)
 assert.match(spotRepository, /update\(basePayload\)[\s\S]*?select\(legacySpotColumns\)/);
 const reportRepository = readFileSync('src/lib/spotFieldReportRepository.ts', 'utf8');
 assert.match(reportRepository, /runQuery\(`id,target_type,spot_id,user_spot_id,observed_on,summary_note,origin,created_at,/);
+assert.match(reportRepository, /p_idempotency_key: idempotencyKey/);
 const catchRepository = readFileSync('src/lib/externalCatchMemoRepository.ts', 'utf8');
 assert.match(catchRepository, /visibility: _omitted,[\s\S]*?compatibleMutation/);
 console.log('Issue #397 private defaults, pre-migration compatibility, coordinate isolation, reset, and projection checks passed.');
