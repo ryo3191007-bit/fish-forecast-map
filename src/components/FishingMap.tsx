@@ -174,7 +174,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   const currentLocationButtonRef = useRef<HTMLButtonElement | null>(null);
   const locateUserRef = useRef<() => void>(() => undefined);
   const mapViewportRef = useRef<HTMLDivElement | null>(null);
-  const markerLegendRef = useRef<HTMLFieldSetElement | null>(null);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
   const [markersVisible, setMarkersVisible] = useState(true);
   const [markerFilters, setMarkerFilters] = useState(INITIAL_MARKER_FILTERS);
@@ -352,23 +351,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
     button.setAttribute("aria-pressed", String(markersVisible));
     button.title = label;
     button.classList.toggle("markersAreHidden", !markersVisible);
-  }, [markersVisible]);
-
-  useEffect(() => {
-    const viewport = mapViewportRef.current;
-    const legend = markerLegendRef.current;
-    if (!viewport || !legend || !markersVisible) return;
-
-    const updateLegendOffset = () => {
-      viewport.style.setProperty(
-        "--map-marker-legend-offset",
-        `${legend.offsetHeight + 14}px`,
-      );
-    };
-    updateLegendOffset();
-    const observer = new ResizeObserver(updateLegendOffset);
-    observer.observe(legend);
-    return () => observer.disconnect();
   }, [markersVisible]);
 
   const mappableExternalMemos = useMemo(
@@ -929,6 +911,28 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
 
   return (
     <div className="mapFrame">
+      {mapLayerMode === "bathymetry" || markersVisible ? (
+        <aside className="mapLegendCard" aria-label="マップ凡例">
+          {mapLayerMode === "bathymetry" ? (
+            <div className="bathymetryLegend" aria-label="水深凡例">
+              {BATHYMETRY_DEPTH_STOPS.map((stop) => (
+                <span key={stop.label}><i style={{ background: stop.color }} />{stop.label}</span>
+              ))}
+            </div>
+          ) : null}
+          {markersVisible ? (
+            <fieldset className="mapMarkerLegend" aria-label="マーカー表示フィルタ">
+              {MAP_MARKER_LEGEND.map(({ kind, label }) => (
+                <label key={kind}>
+                  <input type="checkbox" checked={markerFilters[kind]} onChange={(event) => setMarkerFilters((current) => ({ ...current, [kind]: event.target.checked }))} />
+                  <i className={`mapLegendIcon mapIconMarker--${kind}`} dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }} />
+                  {label}
+                </label>
+              ))}
+            </fieldset>
+          ) : null}
+        </aside>
+      ) : null}
       <MapLayerToggle value={mapLayerMode} onChange={handleLayerModeChange} />
       <div className="mapShell">
       <div
@@ -1006,28 +1010,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
         </div>
       ) : null}
       </div>
-      {mapLayerMode === "bathymetry" || markersVisible ? (
-        <aside className="mapLegendCard" aria-label="マップ凡例">
-          {mapLayerMode === "bathymetry" ? (
-            <div className="bathymetryLegend" aria-label="水深凡例">
-              {BATHYMETRY_DEPTH_STOPS.map((stop) => (
-                <span key={stop.label}><i style={{ background: stop.color }} />{stop.label}</span>
-              ))}
-            </div>
-          ) : null}
-          {markersVisible ? (
-            <fieldset ref={markerLegendRef} className="mapMarkerLegend" aria-label="マーカー表示フィルタ">
-              {MAP_MARKER_LEGEND.map(({ kind, label }) => (
-                <label key={kind}>
-                  <input type="checkbox" checked={markerFilters[kind]} onChange={(event) => setMarkerFilters((current) => ({ ...current, [kind]: event.target.checked }))} />
-                  <i className={`mapLegendIcon mapIconMarker--${kind}`} dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }} />
-                  {label}
-                </label>
-              ))}
-            </fieldset>
-          ) : null}
-        </aside>
-      ) : null}
     </div>
   );
 }
