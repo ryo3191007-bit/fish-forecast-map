@@ -8,3 +8,11 @@ export function isMissingSupabaseObject(error: unknown, expectedObject: string |
   return ["PGRST202", "PGRST205", "42P01"].includes(String(candidate.code ?? ""))
     || /(schema cache|could not find (?:the )?(?:table|function)|relation .+ does not exist)/.test(message);
 }
+
+export function isMissingSupabaseColumn(error: unknown, expectedColumn: string): boolean {
+  if (!error || typeof error !== "object") return false;
+  const candidate = error as { code?: unknown; message?: unknown; details?: unknown; hint?: unknown };
+  const message = [candidate.message, candidate.details, candidate.hint].filter((value): value is string => typeof value === "string").join(" ").toLowerCase();
+  return ["42703", "PGRST204"].includes(String(candidate.code ?? ""))
+    && message.includes(expectedColumn.toLowerCase());
+}

@@ -28,7 +28,7 @@ export function UserSpotFieldReportSection({ spotId, state }: { spotId: string; 
   const [visibility, setVisibility] = useState<RecordVisibility>("private");
   const [visibilityOverrides, setVisibilityOverrides] = useState<Record<string, RecordVisibility>>({});
   const selected = Object.keys(drafts);
-  const closeForm = () => { photos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl)); setOpen(false); setDrafts({}); setPhotos([]); setSavedReportId(null); setSummaryNote(""); setObservedOn(getTodayInJapan()); setError(null); };
+  const closeForm = () => { photos.forEach((photo) => URL.revokeObjectURL(photo.previewUrl)); setOpen(false); setDrafts({}); setPhotos([]); setSavedReportId(null); setSummaryNote(""); setObservedOn(getTodayInJapan()); setVisibility("private"); setError(null); };
   const toggle = (key: string, checked: boolean) => setDrafts((current) => {
     if (checked) return { ...current, [key]: createSpotFieldObservationDraft() };
     const next = { ...current }; delete next[key]; return next;

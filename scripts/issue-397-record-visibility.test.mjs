@@ -11,6 +11,13 @@ for (const view of ['public_user_fishing_spots', 'public_spot_field_reports', 'p
 assert.match(migration, /select id, name, latitude, longitude, area_name/);
 assert.doesNotMatch(migration.match(/create view public\.public_user_fishing_spots[\s\S]*?;/)?.[0] ?? '', /owner_id|email/);
 assert.doesNotMatch(migration.match(/create view public\.public_catch_records[\s\S]*?;/)?.[0] ?? '', /owner_id|email|record_photos|storage_path/);
+const publicCatchView = migration.match(/create view public\.public_catch_records[\s\S]*?;/)?.[0] ?? '';
+assert.match(publicCatchView, /left join public\.user_fishing_spots user_spot on user_spot\.id = memo\.user_spot_id/);
+for (const coordinate of ['latitude', 'longitude', 'coordinate_precision']) {
+  assert.match(publicCatchView, new RegExp(`case when memo\\.user_spot_id is null or user_spot\\.visibility = 'public' then memo\\.${coordinate} end as ${coordinate}`));
+}
+assert.match(migration, /comment on view public\.public_catch_records/);
+assert.doesNotMatch(migration, /comment on table public\.public_catch_records/);
 assert.match(migration, /where visibility = 'public' and not is_deleted/);
 assert.match(migration, /private Storage bucket,[\s\S]*photos stay owner-only/);
 
@@ -21,4 +28,21 @@ const catchUi = readFileSync('src/components/ExternalCatchMemoSection.tsx', 'utf
 assert.match(catchUi, /visibility: "private"/);
 const reportUi = readFileSync('src/components/UserSpotFieldReportSection.tsx', 'utf8');
 assert.match(reportUi, /useState<RecordVisibility>\("private"\)/);
-console.log('Issue #397 private defaults, public projections, warning, and photo isolation checks passed.');
+assert.match(reportUi, /const closeForm[^\n]+setVisibility\("private"\)/);
+
+const columnErrors = readFileSync('src/lib/supabaseObjectError.ts', 'utf8');
+assert.match(columnErrors, /\["42703", "PGRST204"\]/);
+assert.match(columnErrors, /message\.includes\(expectedColumn\.toLowerCase\(\)\)/);
+for (const repository of ['src/lib/userFishingSpotRepository.ts', 'src/lib/spotFieldReportRepository.ts', 'src/lib/externalCatchMemoRepository.ts']) {
+  const source = readFileSync(repository, 'utf8');
+  assert.match(source, /isMissingSupabaseColumn\([^\n]+"visibility"\)/, `${repository} must limit compatibility fallback to a missing visibility column`);
+}
+const spotRepository = readFileSync('src/lib/userFishingSpotRepository.ts', 'utf8');
+assert.match(spotRepository, /select\(legacySpotColumns\)/);
+assert.match(spotRepository, /insert\(basePayload\)\.select\(legacySpotColumns\)/);
+assert.match(spotRepository, /update\(basePayload\)[\s\S]*?select\(legacySpotColumns\)/);
+const reportRepository = readFileSync('src/lib/spotFieldReportRepository.ts', 'utf8');
+assert.match(reportRepository, /runQuery\(`id,target_type,spot_id,user_spot_id,observed_on,summary_note,origin,created_at,/);
+const catchRepository = readFileSync('src/lib/externalCatchMemoRepository.ts', 'utf8');
+assert.match(catchRepository, /visibility: _omitted,[\s\S]*?compatibleMutation/);
+console.log('Issue #397 private defaults, pre-migration compatibility, coordinate isolation, reset, and projection checks passed.');

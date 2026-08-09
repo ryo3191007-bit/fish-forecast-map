@@ -11,11 +11,12 @@ import {
 } from "@/domain/userFishingSpot";
 import { saveMySpotFieldReport } from "@/lib/spotFieldReportRepository";
 import { getSupabaseClient } from "@/lib/supabaseClient";
-import { isMissingSupabaseObject } from "@/lib/supabaseObjectError";
+import { isMissingSupabaseColumn, isMissingSupabaseObject } from "@/lib/supabaseObjectError";
 import type { RecordVisibility } from "@/domain/recordVisibility";
 
 type UserSpotRow = { id: string; name: string; latitude: number | string; longitude: number | string; area_name: string | null; spot_type: string | null; visibility?: string; created_at: string; updated_at: string };
 const spotColumns = "id,name,latitude,longitude,area_name,spot_type,visibility,created_at,updated_at";
+const legacySpotColumns = "id,name,latitude,longitude,area_name,spot_type,created_at,updated_at";
 type UserDetailRow = { id: string; user_spot_id: string; item_key: UserFishingSpotDetailItemKey; value_text: string | null; value_text_list: string[] | null; value_number: number | string | null; unit: string | null; checked_at: string; note: string | null; updated_at: string };
 type PostgrestErrorLike = { code?: string; message?: string; details?: string; hint?: string };
 
@@ -36,7 +37,15 @@ function mapDetail(row: UserDetailRow): UserFishingSpotDetailValue {
 }
 
 export async function fetchMyUserFishingSpots(): Promise<UserFishingSpot[]> {
-  const { data, error } = await client().from("user_fishing_spots").select(spotColumns).eq("is_deleted", false).order("created_at");
+  const supabase = client();
+  const result = await supabase.from("user_fishing_spots").select(spotColumns).eq("is_deleted", false).order("created_at");
+  let data: unknown = result.data;
+  let error = result.error;
+  if (error && isMissingSupabaseColumn(error, "visibility")) {
+    const compatibleResult = await supabase.from("user_fishing_spots").select(legacySpotColumns).eq("is_deleted", false).order("created_at");
+    data = compatibleResult.data;
+    error = compatibleResult.error;
+  }
   if (error) throw new Error("user-fishing-spots-fetch-failed");
   return ((data ?? []) as UserSpotRow[]).map(mapSpot);
 }
@@ -44,7 +53,10 @@ export async function fetchMyUserFishingSpots(): Promise<UserFishingSpot[]> {
 export async function createMyUserFishingSpot(input: SaveUserFishingSpotInput): Promise<UserFishingSpot> {
   const valid = validateUserFishingSpotInput(input);
   if (!valid) throw new Error("invalid-user-fishing-spot");
-  const { data, error } = await client().from("user_fishing_spots").insert({ name: valid.name, latitude: valid.latitude, longitude: valid.longitude, area_name: valid.areaName, spot_type: valid.spotType, visibility: valid.visibility ?? "private" }).select(spotColumns).single();
+  const supabase = client();
+  const basePayload = { name: valid.name, latitude: valid.latitude, longitude: valid.longitude, area_name: valid.areaName, spot_type: valid.spotType };
+  let { data, error } = await supabase.from("user_fishing_spots").insert({ ...basePayload, visibility: valid.visibility ?? "private" }).select(spotColumns).single();
+  if (error && isMissingSupabaseColumn(error, "visibility")) ({ data, error } = await supabase.from("user_fishing_spots").insert(basePayload).select(legacySpotColumns).single());
   if (error || !data) throw new Error("user-fishing-spot-create-failed");
   return mapSpot(data as UserSpotRow);
 }
@@ -64,7 +76,9 @@ export async function createMyUserFishingSpotWithDetails(creationId: string, inp
   }
   if (!data) throw new Error("user-fishing-spot-create-failed");
   if (valid.visibility === "public") await updateMyUserFishingSpotVisibility(data as string, "public");
-  const { data: row, error: fetchError } = await client().from("user_fishing_spots").select(spotColumns).eq("id", data as string).single();
+  const supabase = client();
+  let { data: row, error: fetchError } = await supabase.from("user_fishing_spots").select(spotColumns).eq("id", data as string).single();
+  if (fetchError && isMissingSupabaseColumn(fetchError, "visibility")) ({ data: row, error: fetchError } = await supabase.from("user_fishing_spots").select(legacySpotColumns).eq("id", data as string).single());
   if (fetchError || !row) throw new Error("user-fishing-spot-create-result-failed");
   return mapSpot(row as UserSpotRow);
 }
@@ -75,7 +89,7 @@ export function isCreateSpotRpcMissing(error: PostgrestErrorLike): boolean {
 
 async function createMyUserFishingSpotWithLegacyTables(creationId: string, input: SaveUserFishingSpotInput, details: SaveSpotFieldObservationInput[]): Promise<UserFishingSpot> {
   const supabase = client();
-  const spotPayload = {
+  let spotPayload = {
     id: creationId,
     name: input.name,
     latitude: input.latitude,
@@ -86,7 +100,13 @@ async function createMyUserFishingSpotWithLegacyTables(creationId: string, input
     is_deleted: true,
   };
   try {
-    const { error: stageError } = await supabase.from("user_fishing_spots").upsert(spotPayload, { onConflict: "id" });
+    let { error: stageError } = await supabase.from("user_fishing_spots").upsert(spotPayload, { onConflict: "id" });
+    if (stageError && isMissingSupabaseColumn(stageError, "visibility")) {
+      const { visibility: _omitted, ...compatiblePayload } = spotPayload;
+      void _omitted;
+      spotPayload = compatiblePayload as typeof spotPayload;
+      ({ error: stageError } = await supabase.from("user_fishing_spots").upsert(compatiblePayload, { onConflict: "id" }));
+    }
     if (stageError) throw stageError;
 
     const { error: clearError } = await supabase.from("user_fishing_spot_detail_values").delete().eq("user_spot_id", creationId);
@@ -105,12 +125,13 @@ async function createMyUserFishingSpotWithLegacyTables(creationId: string, input
       if (detailError) throw detailError;
     }
 
-    const { data, error: publishError } = await supabase.from("user_fishing_spots")
+    let { data, error: publishError } = await supabase.from("user_fishing_spots")
       .update({ is_deleted: false })
       .eq("id", creationId)
       .eq("is_deleted", true)
       .select(spotColumns)
       .single();
+    if (publishError && isMissingSupabaseColumn(publishError, "visibility")) ({ data, error: publishError } = await supabase.from("user_fishing_spots").update({ is_deleted: false }).eq("id", creationId).eq("is_deleted", true).select(legacySpotColumns).single());
     if (publishError || !data) throw publishError ?? new Error("legacy-user-fishing-spot-publish-failed");
     return mapSpot(data as UserSpotRow);
   } catch (error) {
@@ -125,13 +146,17 @@ async function createMyUserFishingSpotWithLegacyTables(creationId: string, input
 export async function updateMyUserFishingSpot(id: string, input: SaveUserFishingSpotInput): Promise<UserFishingSpot> {
   const valid = validateUserFishingSpotInput(input);
   if (!valid) throw new Error("invalid-user-fishing-spot");
-  const { data, error } = await client().from("user_fishing_spots").update({ name: valid.name, latitude: valid.latitude, longitude: valid.longitude, area_name: valid.areaName, spot_type: valid.spotType, visibility: valid.visibility ?? "private" }).eq("id", id).eq("is_deleted", false).select(spotColumns).single();
+  const supabase = client();
+  const basePayload = { name: valid.name, latitude: valid.latitude, longitude: valid.longitude, area_name: valid.areaName, spot_type: valid.spotType };
+  let { data, error } = await supabase.from("user_fishing_spots").update({ ...basePayload, visibility: valid.visibility ?? "private" }).eq("id", id).eq("is_deleted", false).select(spotColumns).single();
+  if (error && isMissingSupabaseColumn(error, "visibility")) ({ data, error } = await supabase.from("user_fishing_spots").update(basePayload).eq("id", id).eq("is_deleted", false).select(legacySpotColumns).single());
   if (error || !data) throw new Error("user-fishing-spot-update-failed");
   return mapSpot(data as UserSpotRow);
 }
 
 export async function updateMyUserFishingSpotVisibility(id: string, visibility: RecordVisibility): Promise<void> {
   const { data, error } = await client().from("user_fishing_spots").update({ visibility }).eq("id", id).eq("is_deleted", false).select("id").maybeSingle();
+  if (error && isMissingSupabaseColumn(error, "visibility")) return;
   if (error || !data) throw new Error("user-fishing-spot-visibility-update-failed");
 }
 

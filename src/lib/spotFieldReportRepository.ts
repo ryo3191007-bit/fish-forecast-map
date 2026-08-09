@@ -1,6 +1,7 @@
 import type { SaveSpotFieldObservationInput, SpotFieldObservation, SpotFieldReport, SpotFieldReportTargetType } from "@/domain/spotFieldObservation";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 import type { RecordVisibility } from "@/domain/recordVisibility";
+import { isMissingSupabaseColumn } from "@/lib/supabaseObjectError";
 
 type ReportValueRow = { id: string; item_key: string; information_state: SpotFieldObservation["informationState"]; value_text: string | null; value_text_list: string[] | null; value_number: number | string | null; unit: string | null; note: string | null; created_at: string };
 type ReportRow = { id: string; target_type: SpotFieldReportTargetType; spot_id: string | null; user_spot_id: string | null; observed_on: string; summary_note: string | null; origin: SpotFieldReport["origin"]; visibility?: string; created_at: string; spot_field_report_values: ReportValueRow[] };
@@ -32,15 +33,26 @@ export async function saveMySpotFieldReport(targetType: SpotFieldReportTargetTyp
 
 export async function updateMySpotFieldReportVisibility(id: string, visibility: RecordVisibility): Promise<void> {
   const { data, error } = await client().from("spot_field_reports").update({ visibility }).eq("id", id).select("id").maybeSingle();
+  if (error && isMissingSupabaseColumn(error, "visibility")) return;
   if (error || !data) throw new Error("field-report-visibility-update-failed");
 }
 
 export async function fetchMySpotFieldReports(targetType: SpotFieldReportTargetType, spotId: string): Promise<SpotFieldReport[]> {
-  let query = client().from("spot_field_reports")
-    .select("id,target_type,spot_id,user_spot_id,observed_on,summary_note,origin,visibility,created_at,spot_field_report_values(id,item_key,information_state,value_text,value_text_list,value_number,unit,note,created_at)")
-    .eq("target_type", targetType);
-  query = targetType === "master" ? query.eq("spot_id", spotId) : query.eq("user_spot_id", spotId);
-  const { data, error } = await query.order("observed_on", { ascending: false }).order("created_at", { ascending: false });
+  const supabase = client();
+  const values = "spot_field_report_values(id,item_key,information_state,value_text,value_text_list,value_number,unit,note,created_at)";
+  const runQuery = (columns: string) => {
+    let query = supabase.from("spot_field_reports").select(columns).eq("target_type", targetType);
+    query = targetType === "master" ? query.eq("spot_id", spotId) : query.eq("user_spot_id", spotId);
+    return query.order("observed_on", { ascending: false }).order("created_at", { ascending: false });
+  };
+  const result = await runQuery(`id,target_type,spot_id,user_spot_id,observed_on,summary_note,origin,visibility,created_at,${values}`);
+  let data: unknown = result.data;
+  let error = result.error;
+  if (error && isMissingSupabaseColumn(error, "visibility")) {
+    const compatibleResult = await runQuery(`id,target_type,spot_id,user_spot_id,observed_on,summary_note,origin,created_at,${values}`);
+    data = compatibleResult.data;
+    error = compatibleResult.error;
+  }
   if (error) throw error;
   return ((data ?? []) as ReportRow[]).map((report) => ({
     id: report.id,

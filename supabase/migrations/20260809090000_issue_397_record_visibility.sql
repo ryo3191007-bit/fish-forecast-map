@@ -32,11 +32,16 @@ join public.spot_field_reports report on report.id = value.report_id
 where report.visibility = 'public';
 
 create view public.public_catch_records with (security_barrier = true) as
-select id, species, caught_date, caught_time, area_name, estimated_spot_name, spot_id, user_spot_id,
-  latitude, longitude, coordinate_precision, method, catch_count, size_cm, catch_items,
-  acquisition_method, confidence, environment_match_notes, user_memo, created_at, updated_at
-from public.external_catch_memos
-where visibility = 'public' and not is_deleted and acquisition_method = 'manual';
+select memo.id, memo.species, memo.caught_date, memo.caught_time, memo.area_name, memo.estimated_spot_name,
+  memo.spot_id, memo.user_spot_id,
+  case when memo.user_spot_id is null or user_spot.visibility = 'public' then memo.latitude end as latitude,
+  case when memo.user_spot_id is null or user_spot.visibility = 'public' then memo.longitude end as longitude,
+  case when memo.user_spot_id is null or user_spot.visibility = 'public' then memo.coordinate_precision end as coordinate_precision,
+  memo.method, memo.catch_count, memo.size_cm, memo.catch_items, memo.acquisition_method, memo.confidence,
+  memo.environment_match_notes, memo.user_memo, memo.created_at, memo.updated_at
+from public.external_catch_memos memo
+left join public.user_fishing_spots user_spot on user_spot.id = memo.user_spot_id
+where memo.visibility = 'public' and not memo.is_deleted and memo.acquisition_method = 'manual';
 
 revoke all on public.public_user_fishing_spots, public.public_spot_field_reports,
   public.public_spot_field_report_values, public.public_catch_records from public;
@@ -45,7 +50,7 @@ grant select on public.public_user_fishing_spots, public.public_spot_field_repor
 
 comment on column public.user_fishing_spots.visibility is
   'private by default; public explicitly exposes the exact stored latitude/longitude through public_user_fishing_spots.';
-comment on table public.public_catch_records is
+comment on view public.public_catch_records is
   'Public manual catch projection. Owner identifiers, source URLs, and private record photo metadata are intentionally excluded.';
 
 -- Recovery: set affected rows back to private and revoke the read views. Columns can remain

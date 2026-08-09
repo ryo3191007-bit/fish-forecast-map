@@ -3,6 +3,7 @@ import type { ExternalCatchMemo } from "@/lib/externalCatchMemoStorage";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 import { mapExternalCatchMemoRow, mapExternalCatchMemoToUpsertPayload, type ExternalCatchMemoRow } from "@/lib/externalCatchMemoMapper";
 import { isRecordPhotoBackendMissing, removeCatchPhotoObjectsBeforeDelete } from "@/lib/recordPhotoRepository";
+import { isMissingSupabaseColumn } from "@/lib/supabaseObjectError";
 
 export type ExternalCatchMemoDbSource = "supabase" | "local-storage-fallback";
 export type ExternalCatchMemoDbFallbackReason = "not-authenticated" | "supabase-not-configured" | "supabase-error" | "integrity-error" | "local-data-not-migrated";
@@ -36,10 +37,7 @@ function getSupabaseErrorCode(error: unknown): string | undefined {
 }
 
 export function isUserSpotColumnMissing(error: unknown): boolean {
-  const code = getSupabaseErrorCode(error);
-  if (code !== "42703" && code !== "PGRST204") return false;
-  const message = error && typeof error === "object" ? String((error as { message?: unknown }).message ?? "") : "";
-  return /user_spot_id/i.test(message);
+  return isMissingSupabaseColumn(error, "user_spot_id");
 }
 
 export function isUserSpotIntegrityError(error: unknown): boolean {
@@ -84,8 +82,9 @@ export async function fetchExternalCatchMemosFromSupabase(userId: string | null)
   let data: unknown = primaryResult.data;
   let error = primaryResult.error;
 
-  if (error && isUserSpotColumnMissing(error)) {
-    const legacyResult = await clientStatus.client.from("external_catch_memos").select(legacyExternalCatchMemoColumns).eq("owner_id", clientStatus.userId).eq("is_deleted", false).order("updated_at", { ascending: false });
+  if (error && (isUserSpotColumnMissing(error) || isMissingSupabaseColumn(error, "visibility"))) {
+    const fallbackColumns = isUserSpotColumnMissing(error) ? legacyExternalCatchMemoColumns : `${legacyExternalCatchMemoColumns},user_spot_id`;
+    const legacyResult = await clientStatus.client.from("external_catch_memos").select(fallbackColumns).eq("owner_id", clientStatus.userId).eq("is_deleted", false).order("updated_at", { ascending: false });
     data = legacyResult.data;
     error = legacyResult.error;
   }
@@ -127,11 +126,18 @@ export async function saveExternalCatchMemoToSupabase(userId: string | null, mem
   const primaryMutation = await buildMutation(payload, externalCatchMemoColumns);
   let data: unknown = primaryMutation.data;
   let error = primaryMutation.error;
+  if (error && isMissingSupabaseColumn(error, "visibility")) {
+    const { visibility: _omitted, ...compatiblePayload } = payload;
+    void _omitted;
+    const compatibleMutation = await buildMutation(compatiblePayload as typeof payload, `${legacyExternalCatchMemoColumns},user_spot_id`);
+    data = compatibleMutation.data;
+    error = compatibleMutation.error;
+  }
   if (error && isUserSpotColumnMissing(error)) {
     if (payload.user_spot_id) return fallback(null, "supabase-error", "user_spot_id column is not available yet.");
-    const { user_spot_id: _omitted, ...legacyPayload } = payload;
-    void _omitted;
-    const legacyMutation = await buildMutation(legacyPayload, legacyExternalCatchMemoColumns);
+    const { user_spot_id: _userSpotId, visibility: _visibility, ...legacyPayload } = payload;
+    void _userSpotId; void _visibility;
+    const legacyMutation = await buildMutation(legacyPayload as typeof payload, legacyExternalCatchMemoColumns);
     data = legacyMutation.data;
     error = legacyMutation.error;
   }
