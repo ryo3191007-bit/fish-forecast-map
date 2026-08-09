@@ -13,11 +13,11 @@ assert.match(map, /setMarkersVisible\(\(current\) => !current\)/, "one control t
 assert.match(map, /markerKindHidden--\$\{kind\}/, "individual filter state is represented without destroying marker DOM");
 assert.match(map, /\{markersVisible \? \([\s\S]*?className="mapMarkerLegend"/, "filter UI follows overall visibility");
 assert.match(map, /type="checkbox"[\s\S]*?checked=\{markerFilters\[kind\]\}[\s\S]*?setMarkerFilters/, "legend entries are keyboard-operable controlled checkboxes");
-assert.match(css, /\.mapViewport\s*\{\s*position: relative;/, "legend is anchored to the map viewport, not the expanding 3D panel shell");
-assert.match(css, /\.mapMarkerLegend\s*\{[^}]*right: 16px;[^}]*bottom: 8px;/, "legend is fixed at the bottom of the map viewport");
-assert.match(css, /\.mapViewport:not\(\.markersHidden\) \.maplibregl-ctrl-bottom-right\s*\{[^}]*bottom: var\(--map-marker-legend-offset/, "standard attribution is positioned immediately above the measured legend");
+assert.match(map, /className="mapLegendCard"/, "legend is rendered in an independent card below the map shell");
+assert.doesNotMatch(css.match(/\.mapMarkerLegend\s*\{[^}]*\}/)?.[0] ?? "", /position: absolute/, "legend uses normal flow inside its card");
+assert.match(css, /\.mapViewport:not\(\.markersHidden\) \.maplibregl-ctrl-bottom-right\s*\{[^}]*bottom: 8px/, "standard attribution remains at the map bottom");
 assert.match(css, /\.mapViewport\.markersHidden \.maplibregl-ctrl-bottom-right\s*\{[^}]*bottom: 8px;/, "attribution returns naturally to the map bottom when the legend is hidden");
-assert.match(css, /@media \(max-width: 520px\)\s*\{\s*\.mapMarkerLegend\s*\{[^}]*right: 8px;[^}]*bottom: 6px;[^}]*max-width: calc\(100% - 16px\)/, "mobile filter stays compact and on-screen");
+assert.match(css, /@media \(max-width: 520px\)\s*\{[^}]*\.mapLegendCard\s*\{[^}]*padding:10px/, "mobile legend card stays compact and on-screen");
 assert.match(css, /markerKindHidden--port[\s\S]*?markerKindHidden--rock[\s\S]*?markerKindHidden--surf[\s\S]*?markerKindHidden--place[\s\S]*?markerKindHidden--catch[\s\S]*?markerKindHidden--shop/, "each category can hide independently");
 assert.match(css, /\.mapViewport\.markersHidden \.mapIconMarker\s*\{\s*display: none;/, "spot, catch, and shop marker elements hide without being destroyed");
 assert.doesNotMatch(css, /\.mapViewport\.markersHidden \.bathymetryPointMarker/, "bathymetry selection remains independent");

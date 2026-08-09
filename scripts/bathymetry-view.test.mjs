@@ -230,9 +230,9 @@ assert.equal(mock.map.getTerrain().exaggeration, 3.5, "newer effect overwrites o
 const mapSource = fs.readFileSync("src/components/FishingMap.tsx", "utf8");
 assert.match(mapSource, /setSelectedViewPreset\(null\)/, "3D OFF clears selected preset");
 assert.match(mapSource, /shouldApplyBathymetryObliqueView/);
-assert.match(mapSource, /bathymetryControlsDisabled\(terrainStatus\)/, "unsupported state disables controls");
+assert.doesNotMatch(mapSource, /bathymetryControlsDisabled\(terrainStatus\)/, "removed terrain controls are not rendered");
 assert.doesNotMatch(mapSource, /BATHYMETRY_EXAGGERATION_NOTE/, "FishingMap does not render the removed exaggeration note constant");
-assert.match(mapSource, /!isTerrainEnabled && terrainStatus !== "unsupported"[\s\S]*3D OFF中の変更は次回3D表示時に適用されます。/, "3D OFF helper text is hidden for no-WebGL unsupported devices");
+assert.doesNotMatch(mapSource, /3D OFF中の変更/, "removed terrain controls do not render helper text");
 assert.match(mapSource, /let terrainApplyFailed = false;[\s\S]*terrainApplyFailed = true;[\s\S]*!terrainApplyFailed &&[\s\S]*shouldApplyBathymetryObliqueView/, "3D apply rollback blocks automatic camera movement in the same effect cycle");
 
 // Post-MVP-052 device capability classification and terrain rollback invariants.

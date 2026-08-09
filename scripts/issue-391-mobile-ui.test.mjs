@@ -22,8 +22,8 @@ assert.match(memoSection, /const title = editingMemo \? "釣果を編集" : "釣
 assert.match(css, /\.reportSectionHeading\s*\{[^}]*border-bottom:/);
 assert.match(css, /\.reportFilters\s*\{[^}]*padding-bottom:[^}]*border-bottom:/);
 
-assert.match(css, /@media \(max-width: 620px\)\s*\{[\s\S]*?\.mapSection\s*\{\s*margin-inline: -16px;[\s\S]*?\.map\s*\{\s*height: 466px;/);
-assert.match(css, /@media \(max-width: 420px\)\s*\{[\s\S]*?\.mapSection\s*\{\s*margin-inline: -12px;[\s\S]*?\.map\s*\{\s*height: 416px;/);
+assert.match(css, /@media \(max-width: 620px\)\s*\{[\s\S]*?\.mapSection\s*\{\s*margin-inline: -16px;[\s\S]*?\.map\s*\{\s*height: 542px;/);
+assert.match(css, /@media \(max-width: 420px\)\s*\{[\s\S]*?\.mapSection\s*\{\s*margin-inline: -12px;[\s\S]*?\.map\s*\{\s*height: 492px;/);
 
 assert.match(spotCard, /const visibleTabs: SpotEvaluationTab\[\] = \["環境", "釣場", "地形", "魚種"\]/);
 assert.doesNotMatch(spotCard, /function EvaluationTab\(|calculateProductionScoreV2/);

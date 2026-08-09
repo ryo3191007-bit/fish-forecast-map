@@ -58,6 +58,11 @@ assert.equal(datedLegacyMemo.caughtTime, "19:30");
 assert.match(form, /const displayLocationName = linkedSpot\?\.name \?\? memo\.estimatedSpotName \?\? memo\.areaName/);
 assert.match(form, /speciesLabels\.join\("・"\)/);
 assert.match(form, /aria-label=\{`\$\{speciesLabels\.join\("・"\)\}の操作メニュー`\}/);
+assert.match(
+  form,
+  /<div className="externalMemoActions">\s*<button[^>]*className="externalMemoCancel"[\s\S]*?キャンセル<\/button>\s*<button\s+className="externalMemoSave"\s+type="submit"/,
+  "catch dialog actions keep cancel on the left and the primary action on the right",
+);
 
 const row: ExternalCatchMemoRow = {
   id: "memo-1", species: "アジ", caught_date: "2026-07-23", caught_time: "18:45:00",
