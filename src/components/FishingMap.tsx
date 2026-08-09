@@ -1006,7 +1006,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
         </div>
       ) : null}
       </div>
-      {markersVisible ? (
+      {mapLayerMode === "bathymetry" || markersVisible ? (
         <aside className="mapLegendCard" aria-label="マップ凡例">
           {mapLayerMode === "bathymetry" ? (
             <div className="bathymetryLegend" aria-label="水深凡例">
@@ -1015,15 +1015,17 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
               ))}
             </div>
           ) : null}
-          <fieldset ref={markerLegendRef} className="mapMarkerLegend" aria-label="マーカー表示フィルタ">
-            {MAP_MARKER_LEGEND.map(({ kind, label }) => (
-              <label key={kind}>
-                <input type="checkbox" checked={markerFilters[kind]} onChange={(event) => setMarkerFilters((current) => ({ ...current, [kind]: event.target.checked }))} />
-                <i className={`mapLegendIcon mapIconMarker--${kind}`} dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }} />
-                {label}
-              </label>
-            ))}
-          </fieldset>
+          {markersVisible ? (
+            <fieldset ref={markerLegendRef} className="mapMarkerLegend" aria-label="マーカー表示フィルタ">
+              {MAP_MARKER_LEGEND.map(({ kind, label }) => (
+                <label key={kind}>
+                  <input type="checkbox" checked={markerFilters[kind]} onChange={(event) => setMarkerFilters((current) => ({ ...current, [kind]: event.target.checked }))} />
+                  <i className={`mapLegendIcon mapIconMarker--${kind}`} dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }} />
+                  {label}
+                </label>
+              ))}
+            </fieldset>
+          ) : null}
         </aside>
       ) : null}
     </div>

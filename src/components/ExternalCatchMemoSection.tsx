@@ -465,8 +465,9 @@ export function ExternalCatchMemoSection({
                 </p>
               ) : null}
               <div className="externalMemoActions">
+                <button type="button" className="externalMemoCancel" onClick={closeModal} disabled={storageStatus.isMutating} aria-label="釣果入力をキャンセル">キャンセル</button>
                 <button
-                  className="button"
+                  className="externalMemoSave"
                   type="submit"
                   disabled={storageStatus.isMutating}
                 >
@@ -478,7 +479,6 @@ export function ExternalCatchMemoSection({
                         ? "未完了の写真を再試行"
                         : "登録する"}
                 </button>
-                <button type="button" className="clearSearchButton" onClick={closeModal} disabled={storageStatus.isMutating} aria-label="釣果入力をキャンセル">キャンセル</button>
               </div>
               {editingMemo ? <div className="externalMemoDangerActions"><button type="button" className="dangerButton" onClick={deleteEditingMemo} disabled={storageStatus.isMutating}>{storageStatus.isMutating ? "削除中..." : "この釣果を削除"}</button></div> : null}
             </form>

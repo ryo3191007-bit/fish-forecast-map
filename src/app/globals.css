@@ -1091,11 +1091,18 @@ dd {
   align-items: center;
 }
 .externalMemoActions > button { width: 100%; min-height: 44px; justify-content: center; }
-.externalMemoActions .button {
-  border: 0;
+.externalMemoActions .externalMemoCancel,
+.externalMemoActions .externalMemoSave {
+  border-radius: 12px;
+  font: inherit;
+  font-size: .84rem;
+  font-weight: 900;
   cursor: pointer;
   margin-top: 0;
 }
+.externalMemoActions .externalMemoCancel { border: 1px solid rgba(148,163,184,.28); background: rgba(30,41,59,.76); color: #e2e8f0; }
+.externalMemoActions .externalMemoSave { border: 1px solid rgba(103,232,249,.38); background: rgba(8,145,178,.8); color: #ecfeff; }
+.externalMemoActions button:disabled { cursor: not-allowed; opacity: .5; }
 .externalMemoList {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

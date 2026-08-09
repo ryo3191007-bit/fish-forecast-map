@@ -71,6 +71,11 @@ assert.match(map, /const contoursEnabled = true/);
 assert.doesNotMatch(map, /setHillshadeEnabled\(event\.target\.checked\)/);
 assert.doesNotMatch(map, /setContoursEnabled\(event\.target\.checked\)/);
 assert.match(map, /className="mapLegendCard"[\s\S]*className="bathymetryLegend"[\s\S]*className="mapMarkerLegend"/);
+assert.match(
+  map,
+  /\{mapLayerMode === "bathymetry" \|\| markersVisible \? \([\s\S]*className="mapLegendCard"[\s\S]*\{mapLayerMode === "bathymetry" \? \([\s\S]*className="bathymetryLegend"[\s\S]*\{markersVisible \? \([\s\S]*className="mapMarkerLegend"/,
+  "the bathymetry legend remains visible independently while only the marker legend follows marker visibility",
+);
 assert.match(bathyView, /buildBathymetryLayerVisibility/);
 assert.match(map, /applyBathymetryMode/);
 assert.match(metadata.license, /GEBCO/);
