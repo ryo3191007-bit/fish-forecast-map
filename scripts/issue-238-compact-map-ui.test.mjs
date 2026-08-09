@@ -35,7 +35,7 @@ assert.match(bathymetry, /BATHYMETRY_ATTRIBUTION|BATHYMETRY_FALLBACK_ATTRIBUTION
 assert.match(map, /attribution: GSI_TILE_ATTRIBUTION/);
 assert.match(map, /attribution: BATHYMETRY_ATTRIBUTION/);
 
-for (const label of ["通常地図", "航空写真", "水深・3D地形"]) assert.match(layer, new RegExp(label));
+for (const label of ["通常地図", "航空写真", "水深"]) assert.match(layer, new RegExp(label));
 assert.match(toggle, /aria-pressed=\{value === option\.id\}/);
 assert.match(css, /\.mapLayerToggle[\s\S]*?position: relative[\s\S]*?grid-template-columns: repeat\(3, minmax\(0, 1fr\)\)/);
 assert.match(css, /@media \(max-width: 620px\)[\s\S]*?\.mapLayerButton[\s\S]*?white-space: nowrap/);

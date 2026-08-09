@@ -27,7 +27,7 @@ const contours = JSON.parse(
 );
 
 assert.match(mapLayer, /"bathymetry"/);
-for (const label of ["通常地図", "航空写真", "水深・3D地形"])
+for (const label of ["通常地図", "航空写真", "水深"])
   assert.match(mapLayer, new RegExp(label));
 for (const token of [
   "bathymetry-color-relief",
@@ -52,11 +52,7 @@ assert.doesNotMatch(
   /BATHYMETRY_EXAGGERATION_NOTE/,
   "FishingMap must not render the consolidated exaggeration note",
 );
-assert.match(
-  map,
-  /!isTerrainEnabled[\s\S]*<small>3D OFF中の変更は次回3D表示時に適用されます。<\/small>/,
-  "3D OFF operation helper remains in the height slider control",
-);
+assert.doesNotMatch(map, /3D OFF中の変更/, "the obsolete bathymetry settings helper is not rendered");
 const appNoticeSections = appShell.match(/<section className="appNotice"/g) ?? [];
 assert.equal(appNoticeSections.length, 1, "AppShell renders a single appNotice section");
 assert.match(
@@ -70,10 +66,11 @@ assert.doesNotMatch(map, /hasBeigeYellowOrangeColor/);
 assert.doesNotMatch(map, /HIDDEN_BASE_LAND_LAYER_VISIBILITY/);
 assert.doesNotMatch(bathy, /xyz\/(?:std|blank)\//);
 assert.match(generator, /elevationMeters >= 0\) return \[0, 0, 0, 0\]/);
-assert.match(map, /陰影/);
-assert.match(map, /等深線/);
-assert.match(map, /setHillshadeEnabled\(event\.target\.checked\)/);
-assert.match(map, /setContoursEnabled\(event\.target\.checked\)/);
+assert.match(map, /const hillshadeEnabled = true/);
+assert.match(map, /const contoursEnabled = true/);
+assert.doesNotMatch(map, /setHillshadeEnabled\(event\.target\.checked\)/);
+assert.doesNotMatch(map, /setContoursEnabled\(event\.target\.checked\)/);
+assert.match(map, /className="mapLegendCard"[\s\S]*className="bathymetryLegend"[\s\S]*className="mapMarkerLegend"/);
 assert.match(bathyView, /buildBathymetryLayerVisibility/);
 assert.match(map, /applyBathymetryMode/);
 assert.match(metadata.license, /GEBCO/);

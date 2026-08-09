@@ -183,7 +183,7 @@ function SpotCombobox({ spots, selected, onSelect }: { spots: FishingSpot[]; sel
 
 function JmaWarningPanel({ decision, display }: { decision: JmaWarningDecision | null; display: ReturnType<typeof getJmaWarningDisplay> }) {
   if (display.kind === "loading" || display.kind === "hidden") return null;
-  if (display.kind === "unknown") return <p className="jmaWarningUnavailable" role="status">{display.message}</p>;
+  if (display.kind === "unknown") return null;
   if (!decision) return null;
   const format = (value: string | null) => value ? new Intl.DateTimeFormat("ja-JP", { dateStyle: "short", timeStyle: "short" }).format(new Date(value)) : "該当なし";
   return <aside className="jmaWarningPanel blocked" aria-label="気象庁警報・注意報の加工判定">

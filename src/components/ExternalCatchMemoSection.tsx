@@ -453,7 +453,7 @@ export function ExternalCatchMemoSection({
                   />
                   </label>
                 </section>
-                <fieldset className="externalMemoFormSection" disabled={Boolean(savedMemoId)}><legend>公開範囲</legend><label><input type="radio" checked={form.visibility === "private"} onChange={() => setForm((current) => ({ ...current, visibility: "private" }))} />自分のみ</label><label><input type="radio" checked={form.visibility === "public"} onChange={() => setForm((current) => ({ ...current, visibility: "public" }))} />公開</label></fieldset>
+                <fieldset className="externalMemoFormSection" disabled={Boolean(savedMemoId)}><legend>公開範囲</legend><div className="visibilitySegment"><label><input type="radio" checked={form.visibility === "private"} onChange={() => setForm((current) => ({ ...current, visibility: "private" }))} /><span>自分のみ</span></label><label><input type="radio" checked={form.visibility === "public"} onChange={() => setForm((current) => ({ ...current, visibility: "public" }))} /><span>公開</span></label></div></fieldset>
                 <section className="externalMemoFormSection">
                   <RecordPhotoEditor targetType="catch_memo" targetId={savedMemoId ?? (editingMemo && !localMemoIds.has(editingMemo.id) ? editingMemo.id : undefined)} enabled={storageStatus.isDbAvailable && (!editingMemo || !localMemoIds.has(editingMemo.id))} pending={editingMemo ? undefined : pendingPhotos} onPendingChange={editingMemo ? undefined : setPendingPhotos} />
                   {photoError ? <p className="fieldError" role="alert">{photoError}</p> : null}

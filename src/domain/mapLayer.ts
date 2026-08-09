@@ -19,7 +19,7 @@ export const mapLayerOptions: MapLayerOption[] = [
   },
   {
     id: "bathymetry",
-    label: "水深・3D地形",
+    label: "水深",
     description:
       "GEBCO_2026 15秒を第一source、ETOPO 2022 60秒をfallbackにした参考水深色分け・等深線・MapLibre terrain",
   },

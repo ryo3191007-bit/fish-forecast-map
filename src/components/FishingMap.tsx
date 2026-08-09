@@ -53,21 +53,10 @@ import {
   BATHYMETRY_SOURCE_ID,
   BATHYMETRY_TILE_URL,
   BATHYMETRY_EXAGGERATION_DEFAULT,
-  BATHYMETRY_EXAGGERATION_MAX,
-  BATHYMETRY_EXAGGERATION_MIN,
-  BATHYMETRY_EXAGGERATION_STEP,
   BATHYMETRY_VIEW_PRESETS,
-  bathymetryControlsDisabled,
   classifyDeviceCapability,
-  formatBathymetryExaggeration,
-  normalizeBathymetryExaggeration,
-  resetBathymetryExaggeration,
-  lonLatToTidCell,
-  terrainStatusLabel,
-  summarizeTidAround,
   type DeviceCapabilityClass,
   type TerrainStatus,
-  type TidSummary,
 } from "@/domain/bathymetry";
 import {
   classifyBathymetryError,
@@ -82,7 +71,6 @@ import {
   clearBathymetryCameraTransition,
   createBathymetryCameraTransitionManager,
   getDefaultBathymetryViewPreset,
-  getTerrainToggleCameraPreset,
   runBathymetryCameraTransition,
   shouldApplyBathymetryObliqueView,
   shouldClearPresetForCameraInteraction,
@@ -129,12 +117,6 @@ type MappableExternalMemo = ExternalCatchMemo & {
 
 type BathymetryViewPresetId = (typeof BATHYMETRY_VIEW_PRESETS)[number]["id"];
 
-type TidGrid = {
-  values: number[];
-  width: number;
-  height: number;
-  nodata: number;
-};
 
 type BathymetrySelection = {
   id: number;
@@ -197,14 +179,13 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   const [markersVisible, setMarkersVisible] = useState(true);
   const [markerFilters, setMarkerFilters] = useState(INITIAL_MARKER_FILTERS);
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
-  const [terrainExaggeration, setTerrainExaggeration] = useState(
+  const [terrainExaggeration] = useState(
     BATHYMETRY_EXAGGERATION_DEFAULT,
   );
-  const [hillshadeEnabled, setHillshadeEnabled] = useState(true);
-  const [contoursEnabled, setContoursEnabled] = useState(true);
-  const [selectedViewPreset, setSelectedViewPreset] =
-    useState<BathymetryViewPresetId | null>(null);
-  const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>("2d");
+  const hillshadeEnabled = true;
+  const contoursEnabled = true;
+  const [, setSelectedViewPreset] = useState<BathymetryViewPresetId | null>(null);
+  const [, setTerrainStatus] = useState<TerrainStatus>("2d");
   const [deviceCapability, setDeviceCapability] =
     useState<DeviceCapabilityClass | null>(null);
   const [bathymetryRuntime, setBathymetryRuntime] = useState(
@@ -212,10 +193,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   );
   const previousBathymetryPointModeRef = useRef(mapLayerMode);
   const previousBathymetryPointDisplayRef = useRef(bathymetryRuntime.display);
-  const [tidExpanded, setTidExpanded] = useState(false);
-  const [tidGrid, setTidGrid] = useState<TidGrid | null>(null);
-  const [tidSummary, setTidSummary] = useState<TidSummary | null>(null);
-  const [tidStatus, setTidStatus] = useState("TID正本を読み込み中です");
   const [bathymetrySelection, setBathymetrySelection] =
     useState<BathymetrySelection | null>(null);
   const [locationPending, setLocationPending] = useState(false);
@@ -393,75 +370,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
     observer.observe(legend);
     return () => observer.disconnect();
   }, [markersVisible]);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch("/bathymetry/gebco-2026/tid-crop.json")
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`TID fetch failed: ${response.status}`);
-        return response.json();
-      })
-      .then((data: TidGrid) => {
-        if (
-          data.width !== 552 ||
-          data.height !== 360 ||
-          data.nodata !== 127 ||
-          !Array.isArray(data.values) ||
-          data.values.length !== data.width * data.height
-        ) {
-          throw new Error("TID metadata or value shape is invalid");
-        }
-        if (!cancelled) setTidGrid(data);
-      })
-      .catch(() => {
-        if (!cancelled) setTidStatus("データ由来を表示できません");
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !tidGrid) return;
-
-    const update = () => {
-      const center = map.getCenter();
-      const cell = lonLatToTidCell(
-        center.lng,
-        center.lat,
-        tidGrid.width,
-        tidGrid.height,
-      );
-      if (!cell) {
-        setTidSummary(null);
-        setTidStatus("対象範囲外のためデータ由来を表示できません");
-        return;
-      }
-      const summary = summarizeTidAround(
-        tidGrid.values,
-        tidGrid.width,
-        tidGrid.height,
-        cell.col,
-        cell.row,
-        8,
-      );
-      if (!summary.sampleCells) {
-        setTidSummary(null);
-        setTidStatus("有効なTIDセルがないためデータ由来を表示できません");
-        return;
-      }
-      setTidSummary(summary);
-      setTidStatus("");
-    };
-
-    update();
-    map.on("moveend", update);
-    return () => {
-      map.off("moveend", update);
-    };
-  }, [tidGrid]);
 
   const mappableExternalMemos = useMemo(
     () =>
@@ -996,9 +904,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
     setMapLayerMode(nextMode);
   };
 
-  const controlsDisabled = bathymetryControlsDisabled(terrainStatus);
-  const exaggerationLabel = formatBathymetryExaggeration(terrainExaggeration);
-
   const moveCameraTo = (
     preset: (typeof BATHYMETRY_VIEW_PRESETS)[number],
     duration = 260,
@@ -1015,30 +920,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       reducedMotion: prefersReducedMotion,
       duration,
     });
-  };
-
-  const handleTerrainToggle = (nextEnabled: boolean) => {
-    setIsTerrainEnabled(nextEnabled);
-    const cameraPreset = getTerrainToggleCameraPreset({ nextEnabled });
-    if (cameraPreset) {
-      moveCameraTo(cameraPreset, 180);
-    }
-    if (!nextEnabled) {
-      setSelectedViewPreset(null);
-    }
-  };
-
-  const applyViewPreset = (
-    preset: (typeof BATHYMETRY_VIEW_PRESETS)[number],
-  ) => {
-    const map = mapRef.current;
-    if (!map || controlsDisabled) return;
-    if (!isTerrainEnabled) {
-      suppressNextAutoObliqueRef.current = true;
-      setIsTerrainEnabled(true);
-    }
-    moveCameraTo(preset);
-    setSelectedViewPreset(preset.id);
   };
 
   const fallbackActive = bathymetryRuntime.display === "etopo";
@@ -1060,146 +941,9 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
             {locationPending ? "現在地を取得中です" : locationMessage}
           </p>
         )}
-        {markersVisible ? (
-          <fieldset
-            ref={markerLegendRef}
-            className="mapMarkerLegend"
-            aria-label="マーカー表示フィルタ"
-          >
-            {MAP_MARKER_LEGEND.map(({ kind, label }) => (
-              <label key={kind}>
-                <input
-                  type="checkbox"
-                  checked={markerFilters[kind]}
-                  onChange={(event) =>
-                    setMarkerFilters((current) => ({
-                      ...current,
-                      [kind]: event.target.checked,
-                    }))
-                  }
-                />
-                <i
-                  className={`mapLegendIcon mapIconMarker--${kind}`}
-                  dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }}
-                />
-                {label}
-              </label>
-            ))}
-          </fieldset>
-        ) : null}
       </div>
       {mapLayerMode === "bathymetry" ? (
         <>
-          <div
-            className="bathymetryPanel"
-            aria-label="水深・3D地形の操作と凡例"
-          >
-            <label className="terrainToggle">
-              <input
-                type="checkbox"
-                checked={isTerrainEnabled}
-                disabled={controlsDisabled}
-                onChange={(event) => handleTerrainToggle(event.target.checked)}
-              />
-              3D表示
-            </label>
-            <button
-              className="terrainToggleButton"
-              type="button"
-              aria-expanded={tidExpanded}
-              title="GEBCO TID Gridのデータ由来を表示"
-              onClick={() => setTidExpanded((value) => !value)}
-            >
-              データ由来
-            </button>
-            <label className="terrainToggle compactToggle">
-              <input
-                type="checkbox"
-                checked={hillshadeEnabled}
-                onChange={(event) => setHillshadeEnabled(event.target.checked)}
-              />
-              陰影
-            </label>
-            <label className="terrainToggle compactToggle">
-              <input
-                type="checkbox"
-                checked={contoursEnabled}
-                onChange={(event) => setContoursEnabled(event.target.checked)}
-              />
-              等深線
-            </label>
-            <span className="terrainStatus">
-              {terrainStatusLabel(terrainStatus, deviceCapability)}
-            </span>
-            <div className="terrainExaggerationControl">
-              <div className="terrainControlHeader">
-                <span>高さ {exaggerationLabel}</span>
-                <button
-                  className="terrainMiniButton"
-                  type="button"
-                  disabled={controlsDisabled}
-                  onClick={() =>
-                    setTerrainExaggeration(resetBathymetryExaggeration())
-                  }
-                >
-                  1.0×リセット
-                </button>
-              </div>
-              <input
-                aria-label={`高さ誇張 ${exaggerationLabel}`}
-                type="range"
-                min={BATHYMETRY_EXAGGERATION_MIN}
-                max={BATHYMETRY_EXAGGERATION_MAX}
-                step={BATHYMETRY_EXAGGERATION_STEP}
-                value={terrainExaggeration}
-                disabled={controlsDisabled}
-                onChange={(event) =>
-                  setTerrainExaggeration(
-                    normalizeBathymetryExaggeration(Number(event.target.value)),
-                  )
-                }
-              />
-              {!isTerrainEnabled && terrainStatus !== "unsupported" ? (
-                <small>3D OFF中の変更は次回3D表示時に適用されます。</small>
-              ) : null}
-            </div>
-            <div className="terrainPresetControl" aria-label="3D視点プリセット">
-              {BATHYMETRY_VIEW_PRESETS.map((preset) => (
-                <button
-                  key={preset.id}
-                  className="terrainToggleButton"
-                  type="button"
-                  aria-pressed={selectedViewPreset === preset.id}
-                  disabled={controlsDisabled}
-                  onClick={() => applyViewPreset(preset)}
-                >
-                  {preset.label}
-                </button>
-              ))}
-            </div>
-            {tidExpanded ? (
-              <div
-                className="tidSummary"
-                aria-label="GEBCO TID Gridによるデータ由来"
-              >
-                {tidSummary
-                  ? `この周辺の水深データ: 実測 ${tidSummary.direct}% / 補間 ${tidSummary.predictedInterpolated}% / 混在・陸域 ${tidSummary.mixedUnknownLand}%${tidSummary.nodata ? ` / nodata ${tidSummary.nodata}セル` : ""}`
-                  : tidStatus}
-                <small>
-                  GEBCO TID Gridによる中心周辺17×17セル（nodata
-                  127は割合の分母から除外）の目安。沿岸では陸セル混在により比率が変動します。
-                </small>
-              </div>
-            ) : null}
-            <div className="bathymetryLegend" aria-label="水深凡例">
-              {BATHYMETRY_DEPTH_STOPS.map((stop) => (
-                <span key={stop.label}>
-                  <i style={{ background: stop.color }} />
-                  {stop.label}
-                </span>
-              ))}
-            </div>
-          </div>
           {bathymetrySelection && bathymetrySelectionConfig ? (
             <div
               className="bathymetryPointCard"
@@ -1262,6 +1006,26 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
         </div>
       ) : null}
       </div>
+      {markersVisible ? (
+        <aside className="mapLegendCard" aria-label="マップ凡例">
+          {mapLayerMode === "bathymetry" ? (
+            <div className="bathymetryLegend" aria-label="水深凡例">
+              {BATHYMETRY_DEPTH_STOPS.map((stop) => (
+                <span key={stop.label}><i style={{ background: stop.color }} />{stop.label}</span>
+              ))}
+            </div>
+          ) : null}
+          <fieldset ref={markerLegendRef} className="mapMarkerLegend" aria-label="マーカー表示フィルタ">
+            {MAP_MARKER_LEGEND.map(({ kind, label }) => (
+              <label key={kind}>
+                <input type="checkbox" checked={markerFilters[kind]} onChange={(event) => setMarkerFilters((current) => ({ ...current, [kind]: event.target.checked }))} />
+                <i className={`mapLegendIcon mapIconMarker--${kind}`} dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }} />
+                {label}
+              </label>
+            ))}
+          </fieldset>
+        </aside>
+      ) : null}
     </div>
   );
 }

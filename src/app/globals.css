@@ -547,7 +547,8 @@ p {
   border-color: #fef08a;
   box-shadow: 0 0 0 7px rgba(254, 240, 138, 0.38), 0 3px 12px rgba(2, 8, 23, 0.8);
 }
-.mapMarkerLegend { position: absolute; z-index: 2; right: 16px; bottom: 8px; display: flex; flex-wrap: wrap; gap: 5px 9px; max-width: min(470px, calc(100% - 32px)); min-width: 0; margin: 0; padding: 6px 9px; border: 1px solid rgba(255,255,255,.55); border-radius: 10px; background: rgba(15,23,42,.9); color: #fff; font-size: .68rem; font-weight: 800; }
+.mapLegendCard { display:grid; gap:10px; margin-top:10px; padding:12px 14px; border:1px solid rgba(125,211,252,.26); border-radius:18px; background:linear-gradient(145deg,rgba(8,47,73,.62),rgba(15,23,42,.78)); color:#e0faff; box-shadow:0 12px 30px rgba(0,0,0,.22); }
+.mapMarkerLegend { display: flex; flex-wrap: wrap; gap: 6px 12px; min-width: 0; margin: 0; padding: 0; border: 0; background: transparent; color: #fff; font-size: .72rem; font-weight: 800; }
 .mapMarkerLegend label { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; cursor: pointer; }
 .mapMarkerLegend input { width: 13px; height: 13px; margin: 0; accent-color: #22d3ee; }
 .mapLegendIcon { display: inline-grid; place-items: center; width: 18px; height: 18px; padding: 3px; border-radius: 50%; color: #fff; }
@@ -558,7 +559,7 @@ p {
 .mapViewport.markerKindHidden--place .mapIconMarker[data-marker-kind="place"],
 .mapViewport.markerKindHidden--catch .mapIconMarker[data-marker-kind="catch"],
 .mapViewport.markerKindHidden--shop .mapIconMarker[data-marker-kind="shop"] { display: none; }
-.mapViewport:not(.markersHidden) .maplibregl-ctrl-bottom-right { bottom: var(--map-marker-legend-offset, 50px); right: 16px; }
+.mapViewport:not(.markersHidden) .maplibregl-ctrl-bottom-right { bottom: 8px; right: 8px; }
 .mapViewport.markersHidden .maplibregl-ctrl-bottom-right { bottom: 8px; right: 8px; }
 .mapViewport .maplibregl-ctrl-attrib { margin: 0; }
 .markerVisibilityControl .markerVisibilityButton, .currentLocationMapControl .currentLocationMapButton { position: relative; display: grid; place-items: center; }
@@ -570,7 +571,7 @@ p {
 .currentLocationMapButton.isPending .currentLocationSpinner { display: block; }
 .currentLocationStatus { position: absolute; z-index: 3; top: 132px; right: 58px; max-width: min(220px, calc(100% - 82px)); margin: 0; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; padding: 5px 8px; background: rgba(15,23,42,.88); color: #fff; font-size: .68rem; font-weight: 800; line-height: 1.35; pointer-events: none; }
 @keyframes currentLocationSpin { to { transform: rotate(360deg); } }
-@media (max-width: 520px) { .mapMarkerLegend { right: 8px; bottom: 6px; max-width: calc(100% - 16px); gap: 3px 6px; padding: 5px 6px; font-size: .61rem; } .mapMarkerLegend input { width: 12px; height: 12px; } .mapLegendIcon { width: 15px; height: 15px; } .mapViewport:not(.markersHidden) .maplibregl-ctrl-bottom-right { right: 8px; } }
+@media (max-width: 520px) { .mapLegendCard { margin-inline:5px; padding:10px; border-radius:14px; } .mapMarkerLegend { gap: 5px 9px; font-size: .66rem; } .mapMarkerLegend input { width: 13px; height: 13px; } .mapLegendIcon { width: 16px; height: 16px; } }
 .mapPopupTitle {
   color: #075985;
   font-size: 1rem;
@@ -796,7 +797,7 @@ dd {
     margin-inline: -16px;
   }
   .map {
-    height: 466px;
+    height: 542px;
   }
   .sortResetGrid {
     grid-template-columns: minmax(0, 1fr) auto;
@@ -1029,6 +1030,20 @@ dd {
   background: #082f49;
   color: #e0faff;
 }
+.visibilitySegment {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  border-radius: 13px;
+  background: rgba(2, 8, 23, 0.56);
+}
+.externalMemoForm .visibilitySegment label { position: relative; display: block; cursor: pointer; }
+.visibilitySegment input { position: absolute; opacity: 0; pointer-events: none; }
+.visibilitySegment span { display: grid; place-items: center; min-height: 42px; border: 1px solid transparent; border-radius: 9px; color: #bae6fd; font-size: .84rem; font-weight: 900; }
+.visibilitySegment input:checked + span { border-color: rgba(224,250,255,.9); background: linear-gradient(135deg,#e0faff,#7dd3fc); color: #083344; box-shadow: 0 0 18px rgba(34,211,238,.2); }
+.visibilitySegment input:focus-visible + span { outline: 3px solid rgba(125,211,252,.45); outline-offset: 2px; }
 .externalMemoGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1104,9 +1119,9 @@ dd {
 .dashboardModeSwitch {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin: 0 0 22px;
-  padding: 8px;
+  gap: 6px;
+  margin: 0 0 16px;
+  padding: 4px;
   border: 1px solid rgba(125, 211, 252, 0.3);
   border-radius: 24px;
   background: rgba(2, 8, 23, 0.62);
@@ -1117,10 +1132,10 @@ dd {
 .dashboardModeButton {
   display: grid;
   place-items: center;
-  min-height: 60px;
+  min-height: 34px;
   border: 1px solid transparent;
   border-radius: 18px;
-  padding: 16px clamp(14px, 3vw, 22px);
+  padding: 6px clamp(10px, 2vw, 16px);
   background: rgba(15, 23, 42, 0.66);
   color: #dffbff;
   font: inherit;
@@ -1134,7 +1149,7 @@ dd {
     color 0.15s ease;
 }
 .dashboardModeButton span {
-  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+  font-size: clamp(.86rem, 2vw, 1rem);
 }
 .dashboardModeButton:hover,
 .dashboardModeButton:focus-visible {
@@ -1155,7 +1170,7 @@ dd {
     border-radius: 20px;
   }
   .dashboardModeButton {
-    padding: 13px 10px;
+    padding: 6px 8px;
     border-radius: 14px;
   }
   .dashboardModeButton small {
@@ -1232,23 +1247,21 @@ dd {
   z-index: 50;
   display: grid;
   place-items: center;
-  padding: clamp(12px, 3vw, 28px);
+  padding: 18px;
   background: rgba(2, 8, 23, 0.78);
   backdrop-filter: blur(8px);
 }
 .externalMemoModal {
   position: relative;
-  width: min(1080px, 100%);
-  max-height: min(92vh, 980px);
-  overflow: auto;
-  padding: clamp(16px, 3vw, 24px);
+  display: flex;
+  flex-direction: column;
+  width: min(760px, 100%);
+  max-height: calc(100dvh - 36px);
+  overflow: hidden;
+  padding: 0;
   border: 1px solid rgba(125, 211, 252, 0.35);
-  border-radius: 28px;
-  background: linear-gradient(
-    145deg,
-    rgba(8, 47, 73, 0.96),
-    rgba(15, 23, 42, 0.98)
-  );
+  border-radius: 20px;
+  background: rgba(8, 24, 44, .98);
   box-shadow:
     0 28px 90px rgba(0, 0, 0, 0.56),
     0 0 34px rgba(14, 165, 233, 0.16),
@@ -1258,10 +1271,11 @@ dd {
 .externalMemoModalHeader {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
-  margin-bottom: 18px;
-  padding-right: 52px;
+  margin: 0;
+  padding: 18px 64px 14px 20px;
+  border-bottom: 1px solid rgba(125,211,252,.18);
 }
 .externalMemoModalHeader h2 {
   margin-bottom: 8px;
@@ -1272,11 +1286,11 @@ dd {
   top: 16px;
   right: 16px;
   z-index: 1;
-  width: 44px;
-  height: 44px;
-  border: 1px solid rgba(125, 211, 252, 0.38);
-  border-radius: 999px;
-  background: rgba(8, 47, 73, 0.72);
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(148,163,184,.28);
+  border-radius: 10px;
+  background: rgba(15,23,42,.65);
   color: #dffbff;
   font: inherit;
   font-size: 1.35rem;
@@ -1333,8 +1347,20 @@ dd {
   outline: none;
 }
 .externalMemoModal .externalMemoForm {
-  margin-bottom: 20px;
+  gap: 16px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 18px 20px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
+.externalMemoModal .externalMemoFormSection { padding: 12px 14px; border-radius: 14px; background: rgba(15,23,42,.42); }
+.externalMemoModal .externalMemoForm input,
+.externalMemoModal .externalMemoForm select,
+.externalMemoModal .externalMemoForm textarea { min-height: 42px; border-radius: 11px; background: rgba(15,23,42,.78); }
+.externalMemoModal .externalMemoActions { position: sticky; bottom: 0; z-index: 2; margin: 0 -20px; padding: 14px 20px 18px; border-top: 1px solid rgba(125,211,252,.18); background: rgba(8,24,44,.98); }
 @media (max-width: 760px) {
   .externalMemoLaunch,
   .externalMemoModalHeader {
@@ -1360,10 +1386,13 @@ dd {
     align-items: stretch;
   }
   .externalMemoModal {
-    max-height: calc(100vh - 16px);
-    border-radius: 22px;
+    height: calc(100dvh - 16px);
+    max-height: none;
+    border-radius: 16px;
   }
-  .externalMemoForm { padding: 12px; }
+  .externalMemoModalHeader { padding: 14px 56px 12px 16px; }
+  .externalMemoModal .externalMemoForm { padding: 14px 16px 0; }
+  .externalMemoModal .externalMemoActions { margin-inline: -16px; padding: 12px 16px 14px; }
   .externalMemoFormSection { padding: 12px; }
   .externalMemoActions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .externalMemoActions > button { min-width: 0; padding-inline: 8px; }
