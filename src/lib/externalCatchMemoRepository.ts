@@ -12,7 +12,7 @@ export type ExternalCatchMemoDbResult<T> = {
 };
 
 const legacyExternalCatchMemoColumns = "id,species,caught_date,caught_time,area_name,estimated_spot_name,spot_id,latitude,longitude,coordinate_precision,method,catch_count,size_cm,catch_items,source_id,source_name,source_url,acquisition_method,confidence,environment_match_notes,user_memo,owner_id,created_by,is_deleted,created_at,updated_at";
-const externalCatchMemoColumns = `${legacyExternalCatchMemoColumns},user_spot_id`;
+const externalCatchMemoColumns = `${legacyExternalCatchMemoColumns},user_spot_id,visibility`;
 const diagnosticMaxLength = 180;
 
 function sanitizeDiagnosticMessage(message: string | undefined): string | undefined {

@@ -30,6 +30,7 @@ export type ExternalCatchMemoRow = {
   is_deleted: boolean;
   created_at: string;
   updated_at: string;
+  visibility?: string;
 };
 
 export type ExternalCatchMemoUpsertPayload = Omit<
@@ -96,6 +97,7 @@ export function mapExternalCatchMemoRow(row: ExternalCatchMemoRow): ExternalCatc
     userMemo: optionalString(row.user_memo),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    visibility: row.visibility === "public" ? "public" : "private",
   };
 }
 
@@ -128,5 +130,6 @@ export function mapExternalCatchMemoToUpsertPayload(memo: ExternalCatchMemo): Ex
     is_deleted: false,
     created_at: memo.createdAt,
     updated_at: memo.updatedAt,
+    visibility: memo.visibility,
   };
 }

@@ -7,6 +7,7 @@ import { deleteMyUserFishingSpotDetail, fetchMyUserFishingSpotDetails, saveMyUse
 import { fetchMySpotFieldReports, saveMySpotFieldReport } from "@/lib/spotFieldReportRepository";
 import { isMissingSupabaseObject } from "@/lib/supabaseObjectError";
 import type { SpotFieldObservationState } from "./useSpotFieldObservations";
+import type { RecordVisibility } from "@/domain/recordVisibility";
 
 function persistedSpotId(runtimeId: string): string {
   return runtimeId.startsWith(USER_SPOT_ID_PREFIX) ? runtimeId.slice(USER_SPOT_ID_PREFIX.length) : "";
@@ -15,7 +16,7 @@ function persistedSpotId(runtimeId: string): string {
 export type UserFishingSpotDetailState = SpotFieldObservationState & {
   reports: SpotFieldReport[];
   reportStatus: "loading" | "ready" | "unavailable" | "failed";
-  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => Promise<string | null>;
+  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[], visibility?: RecordVisibility) => Promise<string | null>;
 };
 
 export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolean): UserFishingSpotDetailState {
@@ -78,12 +79,12 @@ export function useUserFishingSpotDetails(runtimeSpotId: string, enabled: boolea
     finally { setIsMutating(false); }
   }, [load, observations, status]);
 
-  const saveReport = useCallback(async (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => {
+  const saveReport = useCallback(async (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[], visibility: RecordVisibility = "private") => {
     const targetRuntimeId = currentId.current;
     const spotId = persistedSpotId(targetRuntimeId);
     if (status !== "ready" || reportStatus !== "ready" || !spotId || !values.length) return null;
     setIsMutating(true); setError(null);
-    try { const reportId = await saveMySpotFieldReport("user", spotId, observedOn, summaryNote, values); await load(targetRuntimeId); return currentId.current === targetRuntimeId ? reportId : null; }
+    try { const reportId = await saveMySpotFieldReport("user", spotId, observedOn, summaryNote, values, visibility); await load(targetRuntimeId); return currentId.current === targetRuntimeId ? reportId : null; }
     catch { if (currentId.current === targetRuntimeId) setError("実地調査を保存できませんでした。"); return null; }
     finally { setIsMutating(false); }
   }, [load, reportStatus, status]);

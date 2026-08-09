@@ -12,8 +12,10 @@ import {
 import { saveMySpotFieldReport } from "@/lib/spotFieldReportRepository";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 import { isMissingSupabaseObject } from "@/lib/supabaseObjectError";
+import type { RecordVisibility } from "@/domain/recordVisibility";
 
-type UserSpotRow = { id: string; name: string; latitude: number | string; longitude: number | string; area_name: string | null; spot_type: string | null; created_at: string; updated_at: string };
+type UserSpotRow = { id: string; name: string; latitude: number | string; longitude: number | string; area_name: string | null; spot_type: string | null; visibility?: string; created_at: string; updated_at: string };
+const spotColumns = "id,name,latitude,longitude,area_name,spot_type,visibility,created_at,updated_at";
 type UserDetailRow = { id: string; user_spot_id: string; item_key: UserFishingSpotDetailItemKey; value_text: string | null; value_text_list: string[] | null; value_number: number | string | null; unit: string | null; checked_at: string; note: string | null; updated_at: string };
 type PostgrestErrorLike = { code?: string; message?: string; details?: string; hint?: string };
 
@@ -25,7 +27,7 @@ function client() {
 
 function mapSpot(row: UserSpotRow): UserFishingSpot {
   if (row.spot_type !== null && !isUserFishingSpotType(row.spot_type)) throw new Error("invalid-user-fishing-spot-type");
-  return { id: row.id, runtimeId: userSpotRuntimeId(row.id), name: row.name, latitude: Number(row.latitude), longitude: Number(row.longitude), areaName: row.area_name, spotType: row.spot_type, createdAt: row.created_at, updatedAt: row.updated_at };
+  return { id: row.id, runtimeId: userSpotRuntimeId(row.id), name: row.name, latitude: Number(row.latitude), longitude: Number(row.longitude), areaName: row.area_name, spotType: row.spot_type, visibility: row.visibility === "public" ? "public" : "private", createdAt: row.created_at, updatedAt: row.updated_at };
 }
 
 function mapDetail(row: UserDetailRow): UserFishingSpotDetailValue {
@@ -34,7 +36,7 @@ function mapDetail(row: UserDetailRow): UserFishingSpotDetailValue {
 }
 
 export async function fetchMyUserFishingSpots(): Promise<UserFishingSpot[]> {
-  const { data, error } = await client().from("user_fishing_spots").select("id,name,latitude,longitude,area_name,spot_type,created_at,updated_at").eq("is_deleted", false).order("created_at");
+  const { data, error } = await client().from("user_fishing_spots").select(spotColumns).eq("is_deleted", false).order("created_at");
   if (error) throw new Error("user-fishing-spots-fetch-failed");
   return ((data ?? []) as UserSpotRow[]).map(mapSpot);
 }
@@ -42,7 +44,7 @@ export async function fetchMyUserFishingSpots(): Promise<UserFishingSpot[]> {
 export async function createMyUserFishingSpot(input: SaveUserFishingSpotInput): Promise<UserFishingSpot> {
   const valid = validateUserFishingSpotInput(input);
   if (!valid) throw new Error("invalid-user-fishing-spot");
-  const { data, error } = await client().from("user_fishing_spots").insert({ name: valid.name, latitude: valid.latitude, longitude: valid.longitude, area_name: valid.areaName, spot_type: valid.spotType }).select("id,name,latitude,longitude,area_name,spot_type,created_at,updated_at").single();
+  const { data, error } = await client().from("user_fishing_spots").insert({ name: valid.name, latitude: valid.latitude, longitude: valid.longitude, area_name: valid.areaName, spot_type: valid.spotType, visibility: valid.visibility ?? "private" }).select(spotColumns).single();
   if (error || !data) throw new Error("user-fishing-spot-create-failed");
   return mapSpot(data as UserSpotRow);
 }
@@ -61,7 +63,8 @@ export async function createMyUserFishingSpotWithDetails(creationId: string, inp
     return createMyUserFishingSpotWithLegacyTables(creationId, valid, details);
   }
   if (!data) throw new Error("user-fishing-spot-create-failed");
-  const { data: row, error: fetchError } = await client().from("user_fishing_spots").select("id,name,latitude,longitude,area_name,spot_type,created_at,updated_at").eq("id", data as string).single();
+  if (valid.visibility === "public") await updateMyUserFishingSpotVisibility(data as string, "public");
+  const { data: row, error: fetchError } = await client().from("user_fishing_spots").select(spotColumns).eq("id", data as string).single();
   if (fetchError || !row) throw new Error("user-fishing-spot-create-result-failed");
   return mapSpot(row as UserSpotRow);
 }
@@ -79,6 +82,7 @@ async function createMyUserFishingSpotWithLegacyTables(creationId: string, input
     longitude: input.longitude,
     area_name: input.areaName,
     spot_type: input.spotType,
+    visibility: input.visibility ?? "private",
     is_deleted: true,
   };
   try {
@@ -105,7 +109,7 @@ async function createMyUserFishingSpotWithLegacyTables(creationId: string, input
       .update({ is_deleted: false })
       .eq("id", creationId)
       .eq("is_deleted", true)
-      .select("id,name,latitude,longitude,area_name,spot_type,created_at,updated_at")
+      .select(spotColumns)
       .single();
     if (publishError || !data) throw publishError ?? new Error("legacy-user-fishing-spot-publish-failed");
     return mapSpot(data as UserSpotRow);
@@ -121,9 +125,14 @@ async function createMyUserFishingSpotWithLegacyTables(creationId: string, input
 export async function updateMyUserFishingSpot(id: string, input: SaveUserFishingSpotInput): Promise<UserFishingSpot> {
   const valid = validateUserFishingSpotInput(input);
   if (!valid) throw new Error("invalid-user-fishing-spot");
-  const { data, error } = await client().from("user_fishing_spots").update({ name: valid.name, latitude: valid.latitude, longitude: valid.longitude, area_name: valid.areaName, spot_type: valid.spotType }).eq("id", id).eq("is_deleted", false).select("id,name,latitude,longitude,area_name,spot_type,created_at,updated_at").single();
+  const { data, error } = await client().from("user_fishing_spots").update({ name: valid.name, latitude: valid.latitude, longitude: valid.longitude, area_name: valid.areaName, spot_type: valid.spotType, visibility: valid.visibility ?? "private" }).eq("id", id).eq("is_deleted", false).select(spotColumns).single();
   if (error || !data) throw new Error("user-fishing-spot-update-failed");
   return mapSpot(data as UserSpotRow);
+}
+
+export async function updateMyUserFishingSpotVisibility(id: string, visibility: RecordVisibility): Promise<void> {
+  const { data, error } = await client().from("user_fishing_spots").update({ visibility }).eq("id", id).eq("is_deleted", false).select("id").maybeSingle();
+  if (error || !data) throw new Error("user-fishing-spot-visibility-update-failed");
 }
 
 export async function softDeleteMyUserFishingSpot(id: string): Promise<void> {

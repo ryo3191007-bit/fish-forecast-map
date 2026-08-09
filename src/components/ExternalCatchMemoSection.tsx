@@ -21,6 +21,7 @@ import { groupSelectableFishSpecies } from "@/lib/fishSpeciesUiGroups";
 import { UserFishingSpotRegistrationModal } from "./UserFishingSpotRegistrationModal";
 import type { UserFishingSpot } from "@/domain/userFishingSpot";
 import { RecordPhotoEditor } from "./RecordPhotoEditor";
+import type { RecordVisibility } from "@/domain/recordVisibility";
 
 export const NEW_USER_SPOT_SENTINEL = "__new-user-spot__";
 
@@ -43,13 +44,14 @@ export type FormState = {
   caughtDateTime: string;
   spotId: string;
   userMemo: string;
+  visibility: RecordVisibility;
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
 const emptyCatchItem = (): CatchItemFormState => ({ species: "", method: "", catchCount: "", sizeCm: "" });
 const initialFormState = (): FormState => ({
-  catchItems: [emptyCatchItem()], caughtDateTime: "", spotId: "", userMemo: "",
+  catchItems: [emptyCatchItem()], caughtDateTime: "", spotId: "", userMemo: "", visibility: "private",
 });
 
 export function validateForm(form: FormState, editingMemo?: ExternalCatchMemo): FormErrors {
@@ -121,6 +123,7 @@ export function createMemo(
     userMemo: form.userMemo.trim() || undefined,
     createdAt: editingMemo?.createdAt ?? now,
     updatedAt: now,
+    visibility: form.visibility,
   };
 }
 
@@ -133,7 +136,7 @@ export function formFromMemo(memo: ExternalCatchMemo): FormState {
       sizeCm: item.sizeCm?.toString() ?? "",
     })),
     caughtDateTime: memo.caughtTime ? `${memo.caughtDate}T${memo.caughtTime.slice(0, 5)}` : "",
-    spotId: memo.spotId ?? "", userMemo: memo.userMemo ?? "",
+    spotId: memo.spotId ?? "", userMemo: memo.userMemo ?? "", visibility: memo.visibility,
   };
 }
 
@@ -450,6 +453,7 @@ export function ExternalCatchMemoSection({
                   />
                   </label>
                 </section>
+                <fieldset className="externalMemoFormSection" disabled={Boolean(savedMemoId)}><legend>公開範囲</legend><label><input type="radio" checked={form.visibility === "private"} onChange={() => setForm((current) => ({ ...current, visibility: "private" }))} />自分のみ</label><label><input type="radio" checked={form.visibility === "public"} onChange={() => setForm((current) => ({ ...current, visibility: "public" }))} />公開</label></fieldset>
                 <section className="externalMemoFormSection">
                   <RecordPhotoEditor targetType="catch_memo" targetId={savedMemoId ?? (editingMemo && !localMemoIds.has(editingMemo.id) ? editingMemo.id : undefined)} enabled={storageStatus.isDbAvailable && (!editingMemo || !localMemoIds.has(editingMemo.id))} pending={editingMemo ? undefined : pendingPhotos} onPendingChange={editingMemo ? undefined : setPendingPhotos} />
                   {photoError ? <p className="fieldError" role="alert">{photoError}</p> : null}

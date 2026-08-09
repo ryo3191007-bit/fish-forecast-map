@@ -6,6 +6,7 @@ import {
   spotFieldObservationConfigs,
   type SpotFieldObservationDraft,
 } from "@/domain/spotFieldObservation";
+import type { RecordVisibility } from "@/domain/recordVisibility";
 
 export const USER_SPOT_ID_PREFIX = "user:";
 
@@ -25,11 +26,12 @@ export type UserFishingSpot = {
   longitude: number;
   areaName: string | null;
   spotType: FishingSpotType | null;
+  visibility: RecordVisibility;
   createdAt: string;
   updatedAt: string;
 };
 
-export type SaveUserFishingSpotInput = Pick<UserFishingSpot, "name" | "latitude" | "longitude" | "areaName" | "spotType">;
+export type SaveUserFishingSpotInput = Pick<UserFishingSpot, "name" | "latitude" | "longitude" | "areaName" | "spotType"> & { visibility?: RecordVisibility };
 
 export type UserFishingSpotDetailValue = {
   id: string;
@@ -69,8 +71,9 @@ export function validateUserFishingSpotInput(input: SaveUserFishingSpotInput): S
   const optional = (value: string | null) => value === null ? null : value.trim() || null;
   const areaName = optional(input.areaName);
   const spotType = optional(input.spotType);
-  if ((areaName?.length ?? 0) > 120 || (spotType !== null && !isUserFishingSpotType(spotType))) return null;
-  return { name, latitude: input.latitude, longitude: input.longitude, areaName, spotType };
+  const visibility = input.visibility ?? "private";
+  if ((areaName?.length ?? 0) > 120 || (spotType !== null && !isUserFishingSpotType(spotType)) || !["private", "public"].includes(visibility)) return null;
+  return { name, latitude: input.latitude, longitude: input.longitude, areaName, spotType, ...(input.visibility ? { visibility } : {}) };
 }
 
 export function mergeRuntimeFishingSpots(masterSpots: readonly FishingSpot[], userSpots: readonly UserFishingSpot[]): RuntimeFishingSpot[] {
