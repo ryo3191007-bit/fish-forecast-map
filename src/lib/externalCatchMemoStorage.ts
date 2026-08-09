@@ -1,9 +1,10 @@
 import type { CatchItem, ExternalCatchRecord } from "@/domain/externalCatch";
 import type { FishingMethod } from "@/domain/fishing";
+import type { RecordVisibility } from "@/domain/recordVisibility";
 
 export const EXTERNAL_CATCH_MEMO_STORAGE_KEY = "fish-forecast-map.external-catch-memos";
 
-export type ExternalCatchMemo = ExternalCatchRecord & { userMemo?: string };
+export type ExternalCatchMemo = ExternalCatchRecord & { userMemo?: string; visibility: RecordVisibility };
 
 function optionalNonNegativeNumber(value: unknown): number | undefined {
   if (value === undefined || value === null || value === "") return undefined;
@@ -66,6 +67,7 @@ export function loadExternalCatchMemos(storage: Storage | undefined): ExternalCa
     const parsedValue: unknown = JSON.parse(rawValue);
     return Array.isArray(parsedValue) ? parsedValue.filter(isExternalCatchMemo).map((memo) => ({
       ...memo,
+      visibility: memo.visibility === "public" ? "public" : "private",
       catchItems: normalizeCatchItems(memo.catchItems, memo),
     })) : [];
   } catch {

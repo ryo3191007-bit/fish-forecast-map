@@ -30,6 +30,8 @@ import { useSpotFieldObservations, type SpotFieldObservationState } from "@/hook
 import { useUserFishingSpotDetails } from "@/hooks/useUserFishingSpotDetails";
 import { SpotFieldObservationCard } from "./SpotFieldObservationCard";
 import { UserSpotFieldReportSection } from "./UserSpotFieldReportSection";
+import { fetchMyUserFishingSpots, updateMyUserFishingSpotVisibility } from "@/lib/userFishingSpotRepository";
+import type { RecordVisibility } from "@/domain/recordVisibility";
 
 export type SpotEvaluationTab = "環境" | "釣場" | "地形" | "魚種";
 
@@ -76,6 +78,38 @@ export function SpotEvaluationCard(props: Props) {
   const dayRows = rows.filter((row) => row.forecastTime.startsWith(selectedDate));
   const fieldObservations = useSpotFieldObservations(props.selectedSpotId);
   const ownerDetails = useUserFishingSpotDetails(props.selectedSpotId, Boolean(props.isUserSpot));
+  const [spotVisibility, setSpotVisibility] = useState<RecordVisibility | null>(null);
+  const [spotVisibilityError, setSpotVisibilityError] = useState<string | null>(null);
+  const [spotVisibilityPending, setSpotVisibilityPending] = useState(false);
+  const spotVisibilityPendingRef = useRef(false);
+  const selectedSpotIdRef = useRef(props.selectedSpotId);
+  selectedSpotIdRef.current = props.selectedSpotId;
+  useEffect(() => {
+    let active = true;
+    setSpotVisibility(null);
+    setSpotVisibilityError(null);
+    if (!props.isUserSpot) return () => { active = false; };
+    void fetchMyUserFishingSpots()
+      .then((spots) => { if (active) setSpotVisibility(spots.find((spot) => spot.runtimeId === props.selectedSpotId)?.visibility ?? null); })
+      .catch(() => { if (active) setSpotVisibilityError("公開範囲を取得できませんでした。"); });
+    return () => { active = false; };
+  }, [props.isUserSpot, props.selectedSpotId]);
+  const changeSpotVisibility = async (next: RecordVisibility) => {
+    if (spotVisibilityPendingRef.current) return;
+    const targetSpotId = props.selectedSpotId;
+    spotVisibilityPendingRef.current = true;
+    setSpotVisibilityPending(true);
+    setSpotVisibilityError(null);
+    try {
+      await updateMyUserFishingSpotVisibility(targetSpotId.slice("user:".length), next);
+      if (selectedSpotIdRef.current === targetSpotId) setSpotVisibility(next);
+    } catch {
+      if (selectedSpotIdRef.current === targetSpotId) setSpotVisibilityError("公開範囲を変更できませんでした。");
+    } finally {
+      spotVisibilityPendingRef.current = false;
+      setSpotVisibilityPending(false);
+    }
+  };
 
   useEffect(() => {
     const resolvedTime = resolveSelectedForecastTime(rows, selectedTime);
@@ -94,6 +128,7 @@ export function SpotEvaluationCard(props: Props) {
           Map
         </button>
       </div>
+      {props.isUserSpot ? <div className="spotSelectionRow">{spotVisibility === null && !spotVisibilityError ? <p role="status">地点の公開範囲を取得中です…</p> : spotVisibility !== null ? <label>地点の公開範囲<select value={spotVisibility} disabled={spotVisibilityPending} onChange={(event) => void changeSpotVisibility(event.target.value as RecordVisibility)}><option value="private">自分のみ</option><option value="public">公開</option></select></label> : null}{spotVisibility === "public" ? <p role="status">正確な位置情報（緯度・経度）が他ユーザーに公開されます。</p> : null}{spotVisibilityError ? <p role="alert">{spotVisibilityError}</p> : null}</div> : null}
 
       <div className="sharedTimeControls" aria-label="環境情報の日時">
         <div className="sharedTimeInputs">

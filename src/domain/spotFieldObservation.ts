@@ -1,3 +1,5 @@
+import type { RecordVisibility } from "@/domain/recordVisibility";
+
 export type SpotFieldObservationInformationState = "weak_evidence" | "researched_unknown";
 
 export type SpotFieldObservation = {
@@ -56,6 +58,7 @@ export type SpotFieldReport = {
   summaryNote: string | null;
   origin: "user" | "initial_details" | "snapshot_backfill";
   createdAt: string;
+  visibility: RecordVisibility;
   values: SpotFieldObservation[];
 };
 

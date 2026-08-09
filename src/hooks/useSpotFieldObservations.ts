@@ -6,6 +6,7 @@ import { deleteMySpotFieldObservation, fetchMySpotFieldObservations, saveMySpotF
 import { fetchMySpotFieldReports, saveMySpotFieldReport } from "@/lib/spotFieldReportRepository";
 import { getSupabaseClient } from "@/lib/supabaseClient";
 import { isMissingSupabaseObject } from "@/lib/supabaseObjectError";
+import type { RecordVisibility } from "@/domain/recordVisibility";
 
 export type SpotFieldObservationStatus = "loading" | "ready" | "signed-out" | "unavailable" | "failed";
 
@@ -21,7 +22,7 @@ export type SpotFieldObservationState = {
 export type SpotFieldReportState = SpotFieldObservationState & {
   reports: SpotFieldReport[];
   reportStatus: "loading" | "ready" | "unavailable" | "failed";
-  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => Promise<string | null>;
+  saveReport: (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[], visibility?: RecordVisibility, idempotencyKey?: string | null) => Promise<string | null>;
 };
 
 export function useSpotFieldObservations(spotId: string): SpotFieldReportState {
@@ -145,12 +146,12 @@ export function useSpotFieldObservations(spotId: string): SpotFieldReportState {
     }
   }, [load, status]);
 
-  const saveReport = useCallback(async (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[]) => {
+  const saveReport = useCallback(async (observedOn: string, summaryNote: string | null, values: SaveSpotFieldObservationInput[], visibility: RecordVisibility = "private", idempotencyKey: string | null = null) => {
     const targetSpotId = currentSpotIdRef.current;
     if (status !== "ready" || reportStatus !== "ready" || !values.length) return null;
     setIsMutating(true); setError(null);
     try {
-      const reportId = await saveMySpotFieldReport("master", targetSpotId, observedOn, summaryNote, values);
+      const reportId = await saveMySpotFieldReport("master", targetSpotId, observedOn, summaryNote, values, visibility, idempotencyKey);
       await load(targetSpotId);
       return currentSpotIdRef.current === targetSpotId ? reportId : null;
     } catch {
