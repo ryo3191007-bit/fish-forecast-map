@@ -364,7 +364,6 @@ export function ExternalCatchMemoSection({
             <button type="button" className="externalMemoClose" onClick={closeModal} aria-label={`${title}を閉じる`}>×</button>
             <div className="externalMemoModalHeader">
               <div>
-                <p className="eyebrow">My catch log</p>
                 <h2 id="external-memos-heading">{title}</h2>
               </div>
             </div>

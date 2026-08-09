@@ -26,7 +26,12 @@ assert.ok(closeWidth >= 26 && closeWidth <= 28 && closeWidth < 34, "popup close 
 assert.ok(closeFontSize < 24, "popup close glyph is smaller than the former 24px size");
 assert.ok(contentRightPadding > closeWidth + closeRight, "popup content reserves space to the right of a name such as 伊万里湾奥");
 
-assert.match(map, /<div className="mapFrame">\s*<MapLayerToggle[\s\S]*?<div className="mapShell">\s*<div\s+ref=\{mapViewportRef\}\s+className=\{`mapViewport[\s\S]*?<div ref=\{containerRef\} className="map"/, "toggle precedes and is adjacent to the map viewport");
+assert.match(map, /<div className="mapFrame">[\s\S]*?<aside className="mapLegendCard"[\s\S]*?<MapLayerToggle[\s\S]*?<div className="mapShell">\s*<div\s+ref=\{mapViewportRef\}\s+className=\{`mapViewport[\s\S]*?<div ref=\{containerRef\} className="map"/, "legend and toggle precede the map viewport in normal flow");
+const mobileLegendRules = css.slice(css.indexOf("@media (max-width: 520px)"), css.indexOf(".mapPopupTitle"));
+const mobileBathymetryFontSize = mobileLegendRules.match(/\.mapLegendCard \.bathymetryLegend\s*\{[^}]*font-size:\s*([\d.]+rem)/)?.[1];
+const mobileMarkerFontSize = mobileLegendRules.match(/\.mapMarkerLegend\s*\{[^}]*font-size:\s*([\d.]+rem)/)?.[1];
+assert.ok(mobileBathymetryFontSize, "mobile bathymetry legend has an explicit font size in the active legend card");
+assert.equal(mobileBathymetryFontSize, mobileMarkerFontSize, "bathymetry and marker legends use the same font size at max-width 520px");
 assert.doesNotMatch(map, /className="mapAttribution/, "large custom attribution cards are not rendered");
 assert.match(map, /attributionControl: false/);
 assert.match(map, /new maplibregl\.AttributionControl\(\{ compact: true \}\)/, "one compact standard attribution control is explicit");
