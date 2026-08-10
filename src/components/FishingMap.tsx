@@ -31,7 +31,6 @@ import {
   BATHYMETRY_CONTOUR_LABEL_LAYER_ID,
   BATHYMETRY_CONTOUR_LAYER_ID,
   BATHYMETRY_CONTOUR_SOURCE_ID,
-  BATHYMETRY_DEPTH_STOPS,
   BATHYMETRY_FALLBACK_ATTRIBUTION,
   BATHYMETRY_FALLBACK_COLOR_LAYER_ID,
   BATHYMETRY_FALLBACK_COLOR_SOURCE_ID,
@@ -170,12 +169,10 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   const spotMarkersRef = useRef(new Map<string, maplibregl.Marker>());
   const activePopupRef = useRef<maplibregl.Popup | null>(null);
   const focusedSpotIdRef = useRef<string | null>(null);
-  const markerVisibilityButtonRef = useRef<HTMLButtonElement | null>(null);
-  const currentLocationButtonRef = useRef<HTMLButtonElement | null>(null);
-  const locateUserRef = useRef<() => void>(() => undefined);
   const mapViewportRef = useRef<HTMLDivElement | null>(null);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
-  const [markersVisible, setMarkersVisible] = useState(true);
+  const [isMapMenuOpen, setIsMapMenuOpen] = useState(false);
+  const [isMarkerLegendVisible, setIsMarkerLegendVisible] = useState(true);
   const [markerFilters, setMarkerFilters] = useState(INITIAL_MARKER_FILTERS);
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
   const [terrainExaggeration] = useState(
@@ -246,54 +243,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
 
     map.on("load", onLoad);
     map.on("error", onError);
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
-    const markerVisibilityControl: maplibregl.IControl = {
-      onAdd() {
-        const control = document.createElement("div");
-        control.className =
-          "maplibregl-ctrl maplibregl-ctrl-group markerVisibilityControl";
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "markerVisibilityButton";
-        button.setAttribute("aria-label", "マーカーと凡例を非表示にする");
-        button.setAttribute("aria-pressed", "true");
-        button.title = "マーカーと凡例を非表示にする";
-        button.innerHTML =
-          '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/><path class="markerVisibilitySlash" d="M4 4l16 16"/></svg>';
-        button.addEventListener("click", () =>
-          setMarkersVisible((current) => !current),
-        );
-        control.append(button);
-        markerVisibilityButtonRef.current = button;
-        return control;
-      },
-      onRemove() {
-        markerVisibilityButtonRef.current?.parentElement?.remove();
-        markerVisibilityButtonRef.current = null;
-      },
-    };
-    map.addControl(markerVisibilityControl);
-    const currentLocationControl: maplibregl.IControl = {
-      onAdd() {
-        const control = document.createElement("div");
-        control.className = "maplibregl-ctrl maplibregl-ctrl-group currentLocationMapControl";
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "currentLocationMapButton";
-        button.setAttribute("aria-label", "現在地を表示");
-        button.title = "現在地を表示";
-        button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg><span class="currentLocationSpinner" aria-hidden="true" />';
-        button.addEventListener("click", () => locateUserRef.current());
-        control.append(button);
-        currentLocationButtonRef.current = button;
-        return control;
-      },
-      onRemove() {
-        currentLocationButtonRef.current?.parentElement?.remove();
-        currentLocationButtonRef.current = null;
-      },
-    };
-    map.addControl(currentLocationControl);
     map.addControl(new maplibregl.AttributionControl({ compact: true }));
 
     return () => {
@@ -331,27 +280,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
     } catch (error) { setLocationMessage(error instanceof Error ? error.message : "現在地を取得できませんでした。"); }
     finally { setLocationPending(false); }
   };
-  locateUserRef.current = () => void locateUser();
-
-  useEffect(() => {
-    const button = currentLocationButtonRef.current;
-    if (!button) return;
-    button.disabled = locationPending;
-    button.classList.toggle("isPending", locationPending);
-    button.setAttribute("aria-busy", String(locationPending));
-  }, [locationPending]);
-
-  useEffect(() => {
-    const button = markerVisibilityButtonRef.current;
-    if (!button) return;
-    const label = markersVisible
-      ? "マーカーと凡例を非表示にする"
-      : "マーカーと凡例を表示する";
-    button.setAttribute("aria-label", label);
-    button.setAttribute("aria-pressed", String(markersVisible));
-    button.title = label;
-    button.classList.toggle("markersAreHidden", !markersVisible);
-  }, [markersVisible]);
 
   const mappableExternalMemos = useMemo(
     () =>
@@ -911,16 +839,33 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
 
   return (
     <div className="mapFrame">
-      {mapLayerMode === "bathymetry" || markersVisible ? (
-        <aside className="mapLegendCard" aria-label="マップ凡例">
-          {mapLayerMode === "bathymetry" ? (
-            <div className="bathymetryLegend" aria-label="水深凡例">
-              {BATHYMETRY_DEPTH_STOPS.map((stop) => (
-                <span key={stop.label}><i style={{ background: stop.color }} />{stop.label}</span>
-              ))}
+      <MapLayerToggle value={mapLayerMode} onChange={handleLayerModeChange} />
+      <div className="mapShell">
+      <div
+        ref={mapViewportRef}
+        className={`mapViewport ${MAP_MARKER_LEGEND.filter(({ kind }) => !markerFilters[kind]).map(({ kind }) => `markerKindHidden--${kind}`).join(" ")}`}
+      >
+        <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
+        <div className="mapActionControls">
+          <button type="button" className="mapMenuButton" aria-label="マップ操作メニュー" aria-expanded={isMapMenuOpen} onClick={() => setIsMapMenuOpen((current) => !current)}>
+            <span aria-hidden="true">☰</span>
+          </button>
+          {isMapMenuOpen ? (
+            <div className="mapMenuItems" aria-label="マップ操作">
+              <button type="button" aria-label="ズームイン" onClick={() => mapRef.current?.zoomIn()}>＋</button>
+              <button type="button" aria-label="ズームアウト" onClick={() => mapRef.current?.zoomOut()}>－</button>
+              <button type="button" className="mapLegendToggle" aria-pressed={isMarkerLegendVisible} onClick={() => setIsMarkerLegendVisible((current) => !current)}>
+                凡例 {isMarkerLegendVisible ? "OFF" : "ON"}
+              </button>
             </div>
           ) : null}
-          {markersVisible ? (
+          <button type="button" className={`currentLocationMapButton${locationPending ? " isPending" : ""}`} aria-label="現在地を表示" title="現在地を表示" aria-busy={locationPending} disabled={locationPending} onClick={() => void locateUser()}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            <span className="currentLocationSpinner" aria-hidden="true" />
+          </button>
+        </div>
+        {isMarkerLegendVisible ? (
+          <aside className="mapLegendOverlay" aria-label="ピン凡例">
             <fieldset className="mapMarkerLegend" aria-label="マーカー表示フィルタ">
               {MAP_MARKER_LEGEND.map(({ kind, label }) => (
                 <label key={kind}>
@@ -930,16 +875,8 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
                 </label>
               ))}
             </fieldset>
-          ) : null}
-        </aside>
-      ) : null}
-      <MapLayerToggle value={mapLayerMode} onChange={handleLayerModeChange} />
-      <div className="mapShell">
-      <div
-        ref={mapViewportRef}
-        className={`mapViewport${markersVisible ? "" : " markersHidden"} ${MAP_MARKER_LEGEND.filter(({ kind }) => !markerFilters[kind]).map(({ kind }) => `markerKindHidden--${kind}`).join(" ")}`}
-      >
-        <div ref={containerRef} className="map" aria-label="釣果地点マップ" />
+          </aside>
+        ) : null}
         {(locationPending || locationMessage) && (
           <p className="currentLocationStatus" role="status">
             {locationPending ? "現在地を取得中です" : locationMessage}
