@@ -558,7 +558,8 @@ p {
   border-color: #fef08a;
   box-shadow: 0 0 0 7px rgba(254, 240, 138, 0.38), 0 3px 12px rgba(2, 8, 23, 0.8);
 }
-.mapLegendOverlay { position:absolute; z-index:3; right:8px; bottom:36px; left:8px; padding:8px 10px; border:1px solid rgba(125,211,252,.3); border-radius:14px; background:linear-gradient(145deg,rgba(8,47,73,.88),rgba(15,23,42,.92)); color:#e0faff; box-shadow:0 10px 26px rgba(0,0,0,.3); backdrop-filter:blur(8px); }
+.mapBottomOverlays { position:absolute; z-index:3; right:8px; bottom:36px; left:8px; display:flex; flex-direction:column; align-items:stretch; gap:8px; pointer-events:none; }
+.mapLegendOverlay { padding:8px 10px; border:1px solid rgba(125,211,252,.3); border-radius:14px; background:linear-gradient(145deg,rgba(8,47,73,.88),rgba(15,23,42,.92)); color:#e0faff; box-shadow:0 10px 26px rgba(0,0,0,.3); backdrop-filter:blur(8px); pointer-events:auto; }
 .mapMarkerLegend { display: flex; flex-wrap: wrap; gap: 6px 12px; min-width: 0; margin: 0; padding: 0; border: 0; background: transparent; color: #fff; font-size: .72rem; font-weight: 800; }
 .mapMarkerLegend label { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; cursor: pointer; }
 .mapMarkerLegend input { width: 13px; height: 13px; margin: 0; accent-color: #22d3ee; }
@@ -582,9 +583,9 @@ p {
 .currentLocationMapButton svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .currentLocationMapButton .currentLocationSpinner { display: none; position: absolute; inset: 4px; border: 2px solid rgba(14,116,144,.2); border-top-color: #0e7490; border-radius: 50%; animation: currentLocationSpin .8s linear infinite; }
 .currentLocationMapButton.isPending .currentLocationSpinner { display: block; }
-.currentLocationStatus { position: absolute; z-index: 4; top: 112px; right: 64px; max-width: min(220px, calc(100% - 82px)); margin: 0; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; padding: 5px 8px; background: rgba(15,23,42,.88); color: #fff; font-size: .68rem; font-weight: 800; line-height: 1.35; pointer-events: none; }
+.currentLocationStatus { max-width: min(220px, calc(100vw - 82px)); margin: 0; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; padding: 5px 8px; background: rgba(15,23,42,.88); color: #fff; font-size: .68rem; font-weight: 800; line-height: 1.35; text-align:right; pointer-events: none; }
 @keyframes currentLocationSpin { to { transform: rotate(360deg); } }
-@media (max-width: 520px) { .mapLegendOverlay { right:5px; bottom:34px; left:5px; padding:7px 8px; border-radius:12px; } .mapMarkerLegend { gap: 5px 9px; font-size: .66rem; } .mapMarkerLegend input { width: 13px; height: 13px; } .mapLegendIcon { width: 16px; height: 16px; } .mapActionControls { top:7px; right:7px; gap:6px; } }
+@media (max-width: 520px) { .mapBottomOverlays { right:5px; bottom:34px; left:5px; gap:6px; } .mapLegendOverlay { padding:7px 8px; border-radius:12px; } .mapMarkerLegend { gap: 5px 9px; font-size: .66rem; } .mapMarkerLegend input { width: 13px; height: 13px; } .mapLegendIcon { width: 16px; height: 16px; } .mapActionControls { top:7px; right:7px; gap:6px; } }
 .mapPopupTitle {
   color: #67e8f9;
   font-size: 1rem;
@@ -2156,10 +2157,7 @@ dd {
   height: 22px;
 }
 .bathymetryPointCard {
-  position: absolute;
-  right: 18px;
-  bottom: 18px;
-  z-index: 3;
+  align-self: flex-end;
   width: min(420px, calc(100% - 36px));
   display: grid;
   gap: 6px;
@@ -2223,9 +2221,7 @@ dd {
 }
 @media (max-width: 520px) {
   .bathymetryPointCard {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
+    align-self: stretch;
     width: auto;
   }
 }

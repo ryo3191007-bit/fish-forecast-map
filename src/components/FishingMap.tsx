@@ -863,7 +863,14 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
             <span className="currentLocationSpinner" aria-hidden="true" />
           </button>
+          {(locationPending || locationMessage) && (
+            <p className="currentLocationStatus" role="status">
+              {locationPending ? "現在地を取得中です" : locationMessage}
+            </p>
+          )}
         </div>
+      </div>
+      <div className="mapBottomOverlays">
         {isMarkerLegendVisible ? (
           <aside className="mapLegendOverlay" aria-label="ピン凡例">
             <fieldset className="mapMarkerLegend" aria-label="マーカー表示フィルタ">
@@ -877,14 +884,8 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
             </fieldset>
           </aside>
         ) : null}
-        {(locationPending || locationMessage) && (
-          <p className="currentLocationStatus" role="status">
-            {locationPending ? "現在地を取得中です" : locationMessage}
-          </p>
-        )}
-      </div>
-      {mapLayerMode === "bathymetry" ? (
-        <>
+        {mapLayerMode === "bathymetry" ? (
+          <>
           {bathymetrySelection && bathymetrySelectionConfig ? (
             <div
               className="bathymetryPointCard"
@@ -928,8 +929,9 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
               </span>
             </div>
           ) : null}
-        </>
-      ) : null}
+          </>
+        ) : null}
+      </div>
       {fallbackActive && mapLayerMode === "bathymetry" ? (
         <div className="mapNotice" role="status">
           高解像度水深を読み込めなかったため、広域水深へ切り替えました

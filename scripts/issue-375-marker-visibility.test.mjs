@@ -13,9 +13,9 @@ assert.match(map, /markerKindHidden--\$\{kind\}/, "individual filter state is re
 assert.match(map, /\{isMarkerLegendVisible \? \([\s\S]*?className="mapMarkerLegend"/, "filter UI follows legend visibility");
 assert.match(map, /type="checkbox"[\s\S]*?checked=\{markerFilters\[kind\]\}[\s\S]*?setMarkerFilters/, "legend entries are keyboard-operable controlled checkboxes");
 assert.match(map, /className="mapLegendOverlay"/, "legend is rendered over the map");
-assert.match(css, /\.mapLegendOverlay \{ position:absolute;/, "legend is an overlay");
+assert.match(css, /\.mapBottomOverlays \{ position:absolute;/, "legend stack is an overlay");
 assert.match(css, /\.mapViewport \.maplibregl-ctrl-bottom-right \{[^}]*bottom: 4px/, "standard attribution retains a separate bottom offset");
-assert.match(css, /@media \(max-width: 520px\)\s*\{[^}]*\.mapLegendOverlay\s*\{[^}]*padding:7px 8px/, "mobile legend stays compact and on-screen");
+assert.match(css, /@media \(max-width: 520px\)\s*\{[\s\S]*?\.mapLegendOverlay\s*\{[^}]*padding:7px 8px/, "mobile legend stays compact and on-screen");
 assert.match(css, /markerKindHidden--port[\s\S]*?markerKindHidden--rock[\s\S]*?markerKindHidden--surf[\s\S]*?markerKindHidden--place[\s\S]*?markerKindHidden--catch[\s\S]*?markerKindHidden--shop/, "each category can hide independently");
 assert.doesNotMatch(map + css, /markersHidden/, "legend visibility never hides every marker");
 assert.match(map, /spotMarkersRef\.current\.get\(focusRequest\.spotId\)/, "existing focus registry remains wired");
