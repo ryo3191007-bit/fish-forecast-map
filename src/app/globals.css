@@ -2158,6 +2158,7 @@ dd {
 }
 .bathymetryPointCard {
   align-self: flex-end;
+  pointer-events: auto;
   width: min(420px, calc(100% - 36px));
   display: grid;
   gap: 6px;
