@@ -16,7 +16,7 @@ assert.match(css, /\.heroHeader h1\s*\{[^}]*min-width: 0;[^}]*text-overflow: ell
 assert.match(css, /\.authNavButton\s*\{[^}]*flex: 0 0 180px;[^}]*width: 180px;[^}]*text-overflow: ellipsis;[^}]*white-space: nowrap;/);
 
 assert.doesNotMatch(dashboard, /登録・編集・一覧|環境データ・地点別SCORE/);
-assert.match(dashboard, /className="sectionHeading reportSectionHeading"[\s\S]*?<h2>釣果情報一覧<\/h2>/);
+assert.match(dashboard, /className="sectionHeading reportSectionHeading"[\s\S]*?<h2>釣果情報<\/h2>/);
 assert.match(dashboard, />\+釣果登録<\/button>/);
 assert.match(memoSection, /const title = editingMemo \? "釣果を編集" : "釣果登録";/);
 assert.match(css, /\.reportSectionHeading\s*\{[^}]*border-bottom:/);

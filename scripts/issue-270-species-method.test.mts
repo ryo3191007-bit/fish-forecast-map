@@ -11,7 +11,7 @@ const section = readFileSync("src/components/ExternalCatchMemoSection.tsx", "utf
 const dashboard = readFileSync("src/components/FishingDashboard.tsx", "utf8");
 assert.doesNotMatch(section, /externalMemoLaunch/);
 assert.doesNotMatch(section, /自分の釣果を記録/);
-assert.match(dashboard, /sectionHeading[\s\S]*?釣果情報一覧[\s\S]*?catchReportRegisterButton[\s\S]*?\+釣果登録/);
+assert.match(dashboard, /sectionHeading[\s\S]*?釣果情報[\s\S]*?catchReportRegisterButton[\s\S]*?\+釣果登録/);
 assert.match(dashboard, /handleRegistrationRequest = useCallback\(\(\) => setIsRegistrationRequested\(true\)/);
 assert.match(dashboard, /handleRegistrationRequestHandled = useCallback\(\(\) => setIsRegistrationRequested\(false\)/);
 assert.match(dashboard, /onClick=\{handleRegistrationRequest\}>\+釣果登録/);

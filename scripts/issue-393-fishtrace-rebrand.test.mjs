@@ -12,9 +12,9 @@ const readme = read("README.md");
 assert.match(appShell, /<h1>FishTrace<\/h1>/);
 assert.match(layout, /title: "FishTrace"/);
 assert.match(layout, /釣り場を探す・実地調査する・釣果を記録する・共有する/);
-assert.match(dashboard, /<span>地点情報<\/span>/);
+assert.match(dashboard, /<span>地点<\/span>/);
 assert.match(map, /evaluationButton\.textContent = "地点情報"/);
-assert.match(spotInformation, /Spot information[\s\S]*?<h2>地点情報<\/h2>/);
+assert.match(spotInformation, /SPOT INFOMATION[\s\S]*?<h2>地点情報<\/h2>/);
 assert.deepEqual(
   [...spotInformation.matchAll(/const visibleTabs: SpotEvaluationTab\[\] = \[([^\]]+)\]/g)].map((match) => match[1]),
   ['"環境", "釣場", "地形", "魚種"'],

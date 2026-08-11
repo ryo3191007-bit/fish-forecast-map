@@ -29,7 +29,7 @@ assert.equal((dashboard.match(/<SpotEvaluationCard\b/g) ?? []).length, 1, "spot 
 assert.ok(!dashboard.includes("legacySpotEvaluations") && !dashboard.includes("areaEvaluations"), "legacy aggregate evaluation cards and their calculation are removed");
 assert.ok(!dashboard.includes("EnvironmentPanel"), "the standalone environment card is not rendered");
 assert.equal(existsSync(new URL("../src/components/EnvironmentPanel.tsx", import.meta.url)), false, "the unused standalone environment component is removed");
-const evaluationHeader = card.slice(card.indexOf('<header className="spotEvaluationHeader">'), card.indexOf('</header>', card.indexOf('<header className="spotEvaluationHeader">')));
+const evaluationHeader = card.slice(card.indexOf('<header className="spotEvaluationHeader sectionHeading reportSectionHeading">'), card.indexOf('</header>', card.indexOf('<header className="spotEvaluationHeader sectionHeading reportSectionHeading">')));
 assert.ok(!evaluationHeader.includes("selectedSpot?.areaName"), "the evaluation header does not repeat the selected spot area");
 assert.ok(card.includes("filterFishingSpotOptions(spots, query)") && card.includes("<span>{spot.areaName}</span>"), "area names remain available to combobox search and options");
 

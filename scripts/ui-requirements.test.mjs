@@ -238,18 +238,18 @@ assert.equal(
 
 assert.match(
   dashboard,
-  /useState<DashboardMode>\("catchReports"\)/,
-  "initial dashboard mode is catch reports",
+  /useState<DashboardMode>\("map"\)/,
+  "initial dashboard mode is map",
 );
 assert.match(
   dashboard,
-  /className="dashboardModeSwitch"[\s\S]*?role="group"[\s\S]*?aria-label="メイン表示モードを選択"[\s\S]*?釣果情報[\s\S]*?地点情報/,
-  "large catch report / spot evaluation button group exists",
+  /className="appFooterNav"[\s\S]*?aria-label="アプリ内メインナビゲーション"[\s\S]*?>マップ<[\s\S]*?>釣果<[\s\S]*?>地点</,
+  "three-item application footer navigation exists",
 );
 assert.match(
   dashboard,
-  /aria-pressed=\{dashboardMode === "catchReports"\}[\s\S]*?aria-pressed=\{dashboardMode === "spotEvaluation"\}/,
-  "mode switch buttons expose selected state with aria-pressed",
+  /aria-current=\{dashboardMode === "map" \? "page" : undefined\}[\s\S]*?aria-current=\{dashboardMode === "catchReports" \? "page" : undefined\}[\s\S]*?aria-current=\{dashboardMode === "spotEvaluation" \? "page" : undefined\}/,
+  "footer navigation exposes its current page",
 );
 assert.doesNotMatch(
   dashboard,
@@ -273,7 +273,7 @@ assert.doesNotMatch(
 );
 assert.match(
   dashboard,
-  /dashboardMode === "catchReports"[\s\S]*?aria-label="釣果フィルタ"[\s\S]*?ExternalCatchMemoSection[\s\S]*?dashboardMode === "spotEvaluation"|dashboardMode === "catchReports"[\s\S]*?aria-label="釣果フィルタ"[\s\S]*?ExternalCatchMemoSection[\s\S]*?\) : \(/,
+  /className="dashboardView" hidden=\{dashboardMode !== "catchReports"\}[\s\S]*?aria-label="釣果フィルタ"[\s\S]*?ExternalCatchMemoSection[\s\S]*?className="dashboardView" hidden=\{dashboardMode !== "spotEvaluation"\}/,
   "catch filters and catch memo CRUD remain inside catch report mode",
 );
 assert.match(
