@@ -33,6 +33,7 @@ import { fetchMyUserFishingSpotDetails, fetchMyUserFishingSpots } from "@/lib/us
 import { mapUserSpotDetailsForDisplay, userFishingSpotToFishingSpot, type UserFishingSpot } from "@/domain/userFishingSpot";
 import type { CurrentLocation } from "@/domain/geolocation";
 import { UserFishingSpotRegistrationModal } from "./UserFishingSpotRegistrationModal";
+import { fetchPublicUserFishingSpots, mergeOwnerAndPublicSpots } from "@/lib/publicReadRepository";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "map" | "catchReports" | "spotEvaluation";
@@ -94,6 +95,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     getStaticMasterData(),
   );
   const [userFishingSpots, setUserFishingSpots] = useState<UserFishingSpot[]>([]);
+  const [publicFishingSpots, setPublicFishingSpots] = useState<UserFishingSpot[]>([]);
   const [isSpotRegistrationOpen, setIsSpotRegistrationOpen] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
   const manualCatchMemos = useMemo(
@@ -110,7 +112,14 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     }))),
     [externalMemos],
   );
-  const fishingSpots = useMemo(() => [...masterData.fishingSpots, ...userFishingSpots.map(userFishingSpotToFishingSpot)], [masterData.fishingSpots, userFishingSpots]);
+  const visibleUserSpots = useMemo(() => mergeOwnerAndPublicSpots(userFishingSpots, publicFishingSpots), [publicFishingSpots, userFishingSpots]);
+  const publicUserSpotIds = useMemo<Set<string>>(() => new Set(publicFishingSpots.filter((spot) => !userFishingSpots.some((owner) => owner.id === spot.id)).map((spot) => spot.runtimeId)), [publicFishingSpots, userFishingSpots]);
+  const fishingSpots = useMemo(() => [...masterData.fishingSpots, ...visibleUserSpots.map(userFishingSpotToFishingSpot)], [masterData.fishingSpots, visibleUserSpots]);
+  useEffect(() => {
+    let active = true;
+    fetchPublicUserFishingSpots().then((spots) => { if (active) setPublicFishingSpots(spots); }).catch(() => { if (active) setPublicFishingSpots([]); });
+    return () => { active = false; };
+  }, [auth.status, auth.user?.id]);
   useEffect(() => {
     let active = true;
     if (auth.status !== "signed-in") { setUserFishingSpots([]); return; }
@@ -594,6 +603,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             onFocusMap={focusSelectedSpotOnMap}
             onOpenSpotRegistration={() => setIsSpotRegistrationOpen(true)}
             isUserSpot={Boolean(userFishingSpots.some(spot => spot.runtimeId === environmentSpotId))}
+            isPublicUserSpot={publicUserSpotIds.has(environmentSpotId)}
           />
       </div>
       <nav className="appFooterNav" aria-label="アプリ内メインナビゲーション">
