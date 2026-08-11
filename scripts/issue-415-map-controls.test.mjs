@@ -16,7 +16,7 @@ assert.doesNotMatch(map + css, /markersHidden/, "legend toggle cannot hide map p
 assert.match(map, /markerKindHidden--\$\{kind\}/, "existing per-kind pin filters remain wired");
 assert.match(css, /\.mapActionControls \{ position:absolute;[^}]*top:10px; right:10px;/, "map actions occupy the upper-right overlay");
 assert.match(map, /className="mapBottomOverlays"[\s\S]*?isMarkerLegendVisible[\s\S]*?className="mapLegendOverlay"[\s\S]*?mapLayerMode === "bathymetry"[\s\S]*?className="bathymetryPointCard"/, "legend and depth card share one ordered bottom stack");
-assert.match(css, /\.mapBottomOverlays \{ position:absolute;[^}]*bottom:36px;[^}]*flex-direction:column;[^}]*gap:8px;/, "bottom stack follows wrapped legend height and stays above attribution");
+assert.match(css, /\.mapBottomOverlays \{ position:absolute;[^}]*bottom:50px;[^}]*flex-direction:column;[^}]*gap:8px;/, "bottom stack follows wrapped legend height and stays above attribution");
 assert.match(css, /\.mapBottomOverlays \{[^}]*pointer-events:\s*none;/, "bottom stack lets unused overlay space pass interactions through to the map");
 assert.match(css, /\.bathymetryPointCard \{[^}]*align-self: flex-end;/, "desktop depth card aligns within the non-overlapping stack");
 assert.match(css, /\.bathymetryPointCard \{[^}]*pointer-events:\s*auto;/, "depth card remains interactive inside the pointer-transparent bottom stack");

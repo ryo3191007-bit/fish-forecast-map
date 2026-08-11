@@ -455,7 +455,7 @@ p {
     rgba(14, 165, 233, 0.22),
     rgba(8, 47, 73, 0.52)
   );
-  padding: 8px;
+  padding: 0 8px 8px;
   box-shadow:
     0 24px 80px rgba(0, 0, 0, 0.4),
     0 0 42px rgba(14, 165, 233, 0.16);
@@ -558,7 +558,7 @@ p {
   border-color: #fef08a;
   box-shadow: 0 0 0 7px rgba(254, 240, 138, 0.38), 0 3px 12px rgba(2, 8, 23, 0.8);
 }
-.mapBottomOverlays { position:absolute; z-index:3; right:8px; bottom:36px; left:8px; display:flex; flex-direction:column; align-items:stretch; gap:8px; pointer-events:none; }
+.mapBottomOverlays { position:absolute; z-index:3; right:8px; bottom:50px; left:8px; display:flex; flex-direction:column; align-items:stretch; gap:8px; pointer-events:none; }
 .mapLegendOverlay { padding:8px 10px; border:1px solid rgba(125,211,252,.3); border-radius:14px; background:linear-gradient(145deg,rgba(8,47,73,.88),rgba(15,23,42,.92)); color:#e0faff; box-shadow:0 10px 26px rgba(0,0,0,.3); backdrop-filter:blur(8px); pointer-events:auto; }
 .mapMarkerLegend { display: flex; flex-wrap: wrap; gap: 6px 12px; min-width: 0; margin: 0; padding: 0; border: 0; background: transparent; color: #fff; font-size: .72rem; font-weight: 800; }
 .mapMarkerLegend label { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; cursor: pointer; }
@@ -578,14 +578,15 @@ p {
 .mapActionControls button:disabled { cursor:wait; opacity:.75; }
 .mapMenuButton span { font-size:1.35rem; line-height:1; transform:scaleX(1.12); }
 .mapMenuItems { display:grid; gap:6px; justify-items:end; }
-.mapActionControls .mapLegendToggle { min-width:76px; padding:5px 8px; font-size:.7rem; line-height:1.2; }
+.mapActionControls .mapLegendToggle { min-width:44px; padding:8px; }
+.mapLegendToggle svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .currentLocationMapButton { position:relative; }
 .currentLocationMapButton svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .currentLocationMapButton .currentLocationSpinner { display: none; position: absolute; inset: 4px; border: 2px solid rgba(14,116,144,.2); border-top-color: #0e7490; border-radius: 50%; animation: currentLocationSpin .8s linear infinite; }
 .currentLocationMapButton.isPending .currentLocationSpinner { display: block; }
 .currentLocationStatus { max-width: min(220px, calc(100vw - 82px)); margin: 0; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; padding: 5px 8px; background: rgba(15,23,42,.88); color: #fff; font-size: .68rem; font-weight: 800; line-height: 1.35; text-align:right; pointer-events: none; }
 @keyframes currentLocationSpin { to { transform: rotate(360deg); } }
-@media (max-width: 520px) { .mapBottomOverlays { right:5px; bottom:34px; left:5px; gap:6px; } .mapLegendOverlay { padding:7px 8px; border-radius:12px; } .mapMarkerLegend { gap: 5px 9px; font-size: .66rem; } .mapMarkerLegend input { width: 13px; height: 13px; } .mapLegendIcon { width: 16px; height: 16px; } .mapActionControls { top:7px; right:7px; gap:6px; } }
+@media (max-width: 520px) { .mapBottomOverlays { right:5px; bottom:48px; left:5px; gap:6px; } .mapLegendOverlay { padding:7px 8px; border-radius:12px; } .mapMarkerLegend { gap: 5px 9px; font-size: .66rem; } .mapMarkerLegend input { width: 13px; height: 13px; } .mapLegendIcon { width: 16px; height: 16px; } .mapActionControls { top:7px; right:7px; gap:6px; } }
 .mapPopupTitle {
   color: #67e8f9;
   font-size: 1rem;
@@ -813,7 +814,7 @@ dd {
     margin-inline: -16px;
   }
   .map {
-    height: 542px;
+    height: 580px;
   }
   .sortResetGrid {
     grid-template-columns: minmax(0, 1fr) auto;
@@ -852,11 +853,11 @@ dd {
     padding: 16px;
   }
   .mapShell {
-    padding: 5px;
+    padding: 0 5px 5px;
     border-radius: 0 0 23px 23px;
   }
   .map {
-    height: 492px;
+    height: 580px;
     border-radius: 0 0 18px 18px;
   }
   .mapEmpty {
