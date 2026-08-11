@@ -854,8 +854,19 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
             <div className="mapMenuItems" aria-label="マップ操作">
               <button type="button" aria-label="ズームイン" onClick={() => mapRef.current?.zoomIn()}>＋</button>
               <button type="button" aria-label="ズームアウト" onClick={() => mapRef.current?.zoomOut()}>－</button>
-              <button type="button" className="mapLegendToggle" aria-pressed={isMarkerLegendVisible} onClick={() => setIsMarkerLegendVisible((current) => !current)}>
-                凡例 {isMarkerLegendVisible ? "OFF" : "ON"}
+              <button
+                type="button"
+                className="mapLegendToggle"
+                aria-label={isMarkerLegendVisible ? "ピン凡例を非表示" : "ピン凡例を表示"}
+                aria-pressed={isMarkerLegendVisible}
+                title={isMarkerLegendVisible ? "ピン凡例を非表示" : "ピン凡例を表示"}
+                onClick={() => setIsMarkerLegendVisible((current) => !current)}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                  <circle cx="12" cy="12" r="2.5" />
+                  {!isMarkerLegendVisible ? <path d="m4 4 16 16" /> : null}
+                </svg>
               </button>
             </div>
           ) : null}
