@@ -21,6 +21,9 @@ main {
   min-height: 100vh;
   overflow-x: clip;
 }
+.appShell {
+  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+}
 .hero {
   padding: 10px clamp(12px, 4vw, 56px) 12px;
   background:
@@ -124,7 +127,7 @@ p {
   color: #67e8f9;
 }
 .dashboard {
-  padding: 32px clamp(16px, 4vw, 56px) calc(88px + env(safe-area-inset-bottom));
+  padding: 32px clamp(16px, 4vw, 56px);
 }
 .dashboardView[hidden] { display: none; }
 .panel {
@@ -2177,7 +2180,7 @@ dd {
 
 .appNotice {
   max-width: 1180px;
-  margin: 0 auto 2rem;
+  margin: 0 auto;
   padding: 0.9rem 1rem;
   border: 1px solid rgba(125, 211, 252, 0.24);
   border-radius: 16px;

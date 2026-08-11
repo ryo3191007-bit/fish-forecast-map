@@ -23,7 +23,7 @@ export function AppShell() {
   }, [isAuthOpen]);
 
   return (
-    <main>
+    <main className="appShell">
       <section className="hero">
         <div className="heroHeader">
           <h1>FishTrace</h1>

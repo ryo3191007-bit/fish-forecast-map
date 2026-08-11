@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const dashboard = read("src/components/FishingDashboard.tsx");
+const appShell = read("src/components/AppShell.tsx");
 const spotCard = read("src/components/SpotEvaluationCard.tsx");
 const css = read("src/app/globals.css");
 
@@ -17,7 +18,9 @@ assert.equal((dashboard.match(/aria-current=\{/g) ?? []).length, 3);
 assert.match(dashboard, /openSpotEvaluationFromMap[\s\S]*?setEnvironmentSpotId\(spotId\);[\s\S]*?setDashboardMode\("spotEvaluation"\)/);
 assert.match(dashboard, /focusSelectedSpotOnMap[\s\S]*?setDashboardMode\("map"\);[\s\S]*?setMapFocusRequest/);
 assert.match(css, /\.appFooterNav \{[^}]*position:fixed;[^}]*env\(safe-area-inset-bottom\)/);
-assert.match(css, /\.dashboard \{[^}]*padding:[^}]*env\(safe-area-inset-bottom\)/);
+assert.match(appShell, /<main className="appShell">[\s\S]*className="externalLinksFooter"[\s\S]*className="appNotice"/);
+assert.match(css, /\.appShell \{[^}]*padding-bottom:\s*calc\(88px \+ env\(safe-area-inset-bottom\)\)/, "content outside the dashboard clears the fixed footer and safe area");
+assert.doesNotMatch(css, /\.dashboard \{[^}]*env\(safe-area-inset-bottom\)/, "footer clearance is not limited to the dashboard");
 assert.match(css, /\.appFooterNav button\.active[^}]*color:/);
 
 console.log("Issue 419 footer navigation checks passed");
