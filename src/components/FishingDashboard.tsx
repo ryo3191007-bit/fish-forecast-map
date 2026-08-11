@@ -35,7 +35,7 @@ import type { CurrentLocation } from "@/domain/geolocation";
 import { UserFishingSpotRegistrationModal } from "./UserFishingSpotRegistrationModal";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
-type DashboardMode = "catchReports" | "spotEvaluation";
+type DashboardMode = "map" | "catchReports" | "spotEvaluation";
 const reportSortOptions: { value: SortOption; label: string }[] = [
   { value: "dateDesc", label: "新着順（新しい順）" },
   { value: "dateAsc", label: "日付が古い順" },
@@ -69,7 +69,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const handleRegistrationRequest = useCallback(() => setIsRegistrationRequested(true), []);
   const handleRegistrationRequestHandled = useCallback(() => setIsRegistrationRequested(false), []);
   const [dashboardMode, setDashboardMode] =
-    useState<DashboardMode>("catchReports");
+    useState<DashboardMode>("map");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [spotEvaluationTab, setSpotEvaluationTab] = useState<SpotEvaluationTab>("環境");
@@ -135,9 +135,10 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const changeSelectedEnvironmentTime = useCallback((time: string | null) => setSelectedEnvironmentTime(time), []);
   const focusSelectedSpotOnMap = useCallback(() => {
     if (!environmentSpotId) return;
-    mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setDashboardMode("map");
     mapFocusRequestIdRef.current += 1;
     setMapFocusRequest({ spotId: environmentSpotId, requestId: mapFocusRequestIdRef.current });
+    requestAnimationFrame(() => mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   }, [environmentSpotId]);
   const openSpotEvaluationFromMap = useCallback((spotId: string) => {
     setEnvironmentSpotId(spotId);
@@ -319,7 +320,6 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     setIsSpotRegistrationOpen(false);
     mapFocusRequestIdRef.current += 1;
     setMapFocusRequest({ spotId: spot.runtimeId, requestId: mapFocusRequestIdRef.current });
-    mapSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
   const activeSortOptions = reportSortOptions;
@@ -345,7 +345,14 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
 
   return (
     <section className="dashboard" id="map">
-      <div className="mapEnvironmentGrid">
+      <div className="dashboardView" hidden={dashboardMode !== "map"}>
+        <div className="sectionHeading reportSectionHeading">
+          <div>
+            <p className="eyebrow">MAP</p>
+            <h2>地図</h2>
+          </div>
+        </div>
+        <div className="mapEnvironmentGrid">
         <div className="mapSection" ref={mapSectionRef}>
           <FishingMap
             externalMemos={externalMemos}
@@ -357,46 +364,15 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
           />
         </div>
       </div>
-
-      <div
-        className="dashboardModeSwitch"
-        role="group"
-        aria-label="メイン表示モードを選択"
-      >
-        <button
-          type="button"
-          aria-pressed={dashboardMode === "catchReports"}
-          className={
-            dashboardMode === "catchReports"
-              ? "dashboardModeButton active"
-              : "dashboardModeButton"
-          }
-          onClick={() => setDashboardMode("catchReports")}
-        >
-          <span>釣果情報</span>
-        </button>
-        <button
-          type="button"
-          aria-pressed={dashboardMode === "spotEvaluation"}
-          className={
-            dashboardMode === "spotEvaluation"
-              ? "dashboardModeButton active"
-              : "dashboardModeButton"
-          }
-          onClick={() => setDashboardMode("spotEvaluation")}
-        >
-          <span>地点情報</span>
-        </button>
       </div>
 
-      {dashboardMode === "catchReports" ? (
-        <div>
-          <div className="sectionHeading reportSectionHeading">
+      <div className="dashboardView" hidden={dashboardMode !== "catchReports"}>
+          <div className="sectionHeading reportSectionHeading dashboardScreenHeader">
             <div>
-              <p className="eyebrow">Catch reports</p>
-              <h2>釣果情報一覧</h2>
+              <p className="eyebrow">CATCH REPORTS</p>
+              <h2>釣果情報</h2>
             </div>
-            <button type="button" className="button catchReportRegisterButton" onClick={handleRegistrationRequest}>+釣果登録</button>
+            <button type="button" className="button catchReportRegisterButton" onClick={handleRegistrationRequest}>＋釣果登録</button>
           </div>
 
           <div
@@ -597,9 +573,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             isRegistrationRequested={isRegistrationRequested}
             onRegistrationRequestHandled={handleRegistrationRequestHandled}
           />
-        </div>
-      ) : (
-        <div ref={spotEvaluationSectionRef}>
+      </div>
+      <div className="dashboardView" hidden={dashboardMode !== "spotEvaluation"} ref={spotEvaluationSectionRef}>
           <SpotEvaluationCard
             selectedSpot={environmentSpot}
             spots={fishingSpots}
@@ -620,8 +595,18 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             onOpenSpotRegistration={() => setIsSpotRegistrationOpen(true)}
             isUserSpot={Boolean(userFishingSpots.some(spot => spot.runtimeId === environmentSpotId))}
           />
-        </div>
-      )}
+      </div>
+      <nav className="appFooterNav" aria-label="アプリ内メインナビゲーション">
+        <button type="button" className={dashboardMode === "map" ? "active" : ""} aria-label="マップ画面を表示" aria-current={dashboardMode === "map" ? "page" : undefined} onClick={() => setDashboardMode("map")}>
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3Z"/><path d="M9 3v15M15 6v15"/></svg><span>マップ</span>
+        </button>
+        <button type="button" className={dashboardMode === "catchReports" ? "active" : ""} aria-label="釣果画面を表示" aria-current={dashboardMode === "catchReports" ? "page" : undefined} onClick={() => setDashboardMode("catchReports")}>
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg><span>釣果</span>
+        </button>
+        <button type="button" className={dashboardMode === "spotEvaluation" ? "active" : ""} aria-label="地点画面を表示" aria-current={dashboardMode === "spotEvaluation" ? "page" : undefined} onClick={() => setDashboardMode("spotEvaluation")}>
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>地点</span>
+        </button>
+      </nav>
       {isSpotRegistrationOpen && (auth.status === "signed-in" ? <UserFishingSpotRegistrationModal
         initialLongitude={environmentSpot?.longitude ?? 130.1}
         initialLatitude={environmentSpot?.latitude ?? 33.5}

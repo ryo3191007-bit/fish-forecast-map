@@ -118,8 +118,8 @@ export function SpotEvaluationCard(props: Props) {
 
   return (
     <section className="spotEvaluationCard" aria-live="polite">
-      <header className="spotEvaluationHeader">
-        <div><p className="eyebrow">Spot information</p><h2>地点情報</h2></div>
+      <header className="spotEvaluationHeader sectionHeading reportSectionHeading dashboardScreenHeader">
+        <div><p className="eyebrow">SPOT INFOMATION</p><h2>地点情報</h2></div>
         <button type="button" className="button catchReportRegisterButton userSpotRegisterButton" onClick={props.onOpenSpotRegistration}>＋ 地点登録</button>
       </header>
       <div className="spotSelectionRow">
