@@ -70,12 +70,8 @@ assert.match(map, /const hillshadeEnabled = true/);
 assert.match(map, /const contoursEnabled = true/);
 assert.doesNotMatch(map, /setHillshadeEnabled\(event\.target\.checked\)/);
 assert.doesNotMatch(map, /setContoursEnabled\(event\.target\.checked\)/);
-assert.match(map, /className="mapLegendCard"[\s\S]*className="bathymetryLegend"[\s\S]*className="mapMarkerLegend"/);
-assert.match(
-  map,
-  /\{mapLayerMode === "bathymetry" \|\| markersVisible \? \([\s\S]*className="mapLegendCard"[\s\S]*\{mapLayerMode === "bathymetry" \? \([\s\S]*className="bathymetryLegend"[\s\S]*\{markersVisible \? \([\s\S]*className="mapMarkerLegend"/,
-  "the bathymetry legend remains visible independently while only the marker legend follows marker visibility",
-);
+assert.doesNotMatch(map, /bathymetryLegend|水深凡例/, "the depth color legend is not rendered");
+assert.match(map, /className="mapLegendOverlay"[\s\S]*className="mapMarkerLegend"/);
 assert.match(bathyView, /buildBathymetryLayerVisibility/);
 assert.match(map, /applyBathymetryMode/);
 assert.match(metadata.license, /GEBCO/);
@@ -258,7 +254,7 @@ for (const f of contours.features)
     );
   }
 assert.doesNotMatch(map, /外部メモ \/ 手動メモ|信頼度:|出典URLを開く/);
-assert.match(css, /bathymetryLegend/);
+assert.doesNotMatch(css, /bathymetryLegend/);
 assert.match(css, /@media \(max-width: 620px\).*mapLayerToggle/s);
 assert.doesNotMatch(
   fs.readFileSync("README.md", "utf8"),

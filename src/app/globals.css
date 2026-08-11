@@ -558,32 +558,34 @@ p {
   border-color: #fef08a;
   box-shadow: 0 0 0 7px rgba(254, 240, 138, 0.38), 0 3px 12px rgba(2, 8, 23, 0.8);
 }
-.mapLegendCard { display:grid; gap:10px; margin-bottom:10px; padding:12px 14px; border:1px solid rgba(125,211,252,.26); border-radius:18px; background:linear-gradient(145deg,rgba(8,47,73,.62),rgba(15,23,42,.78)); color:#e0faff; box-shadow:0 12px 30px rgba(0,0,0,.22); }
-.mapLegendCard .bathymetryLegend + .mapMarkerLegend { padding-top:10px; border-top:1px solid rgba(125,211,252,.22); }
+.mapBottomOverlays { position:absolute; z-index:3; right:8px; bottom:36px; left:8px; display:flex; flex-direction:column; align-items:stretch; gap:8px; pointer-events:none; }
+.mapLegendOverlay { padding:8px 10px; border:1px solid rgba(125,211,252,.3); border-radius:14px; background:linear-gradient(145deg,rgba(8,47,73,.88),rgba(15,23,42,.92)); color:#e0faff; box-shadow:0 10px 26px rgba(0,0,0,.3); backdrop-filter:blur(8px); pointer-events:auto; }
 .mapMarkerLegend { display: flex; flex-wrap: wrap; gap: 6px 12px; min-width: 0; margin: 0; padding: 0; border: 0; background: transparent; color: #fff; font-size: .72rem; font-weight: 800; }
 .mapMarkerLegend label { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; cursor: pointer; }
 .mapMarkerLegend input { width: 13px; height: 13px; margin: 0; accent-color: #22d3ee; }
 .mapLegendIcon { display: inline-grid; place-items: center; width: 18px; height: 18px; padding: 3px; border-radius: 50%; color: #fff; }
-.mapViewport.markersHidden .mapIconMarker { display: none; }
 .mapViewport.markerKindHidden--port .mapIconMarker[data-marker-kind="port"],
 .mapViewport.markerKindHidden--rock .mapIconMarker[data-marker-kind="rock"],
 .mapViewport.markerKindHidden--surf .mapIconMarker[data-marker-kind="surf"],
 .mapViewport.markerKindHidden--place .mapIconMarker[data-marker-kind="place"],
 .mapViewport.markerKindHidden--catch .mapIconMarker[data-marker-kind="catch"],
 .mapViewport.markerKindHidden--shop .mapIconMarker[data-marker-kind="shop"] { display: none; }
-.mapViewport:not(.markersHidden) .maplibregl-ctrl-bottom-right { bottom: 8px; right: 8px; }
-.mapViewport.markersHidden .maplibregl-ctrl-bottom-right { bottom: 8px; right: 8px; }
+.mapViewport .maplibregl-ctrl-bottom-right { bottom: 4px; right: 4px; z-index:4; }
 .mapViewport .maplibregl-ctrl-attrib { margin: 0; }
-.markerVisibilityControl .markerVisibilityButton, .currentLocationMapControl .currentLocationMapButton { position: relative; display: grid; place-items: center; }
-.markerVisibilityButton svg, .currentLocationMapButton svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.markerVisibilitySlash { opacity: 0; }
-.markerVisibilityButton.markersAreHidden .markerVisibilitySlash { opacity: 1; }
-.markerVisibilityButton[aria-pressed="false"] { background: #e2e8f0; color: #475569; }
+.mapActionControls { position:absolute; z-index:5; top:10px; right:10px; display:grid; justify-items:end; gap:7px; }
+.mapActionControls button { display:grid; place-items:center; min-width:44px; min-height:44px; border:1px solid rgba(103,232,249,.6); border-radius:12px; background:linear-gradient(145deg,#082f49,#0f172a); color:#e0faff; box-shadow:0 5px 16px rgba(2,8,23,.42); font:inherit; font-size:1.25rem; font-weight:900; cursor:pointer; }
+.mapActionControls button:hover, .mapActionControls button:focus-visible { border-color:#67e8f9; background:#0e7490; outline:2px solid rgba(103,232,249,.45); outline-offset:2px; }
+.mapActionControls button:disabled { cursor:wait; opacity:.75; }
+.mapMenuButton span { font-size:1.35rem; line-height:1; transform:scaleX(1.12); }
+.mapMenuItems { display:grid; gap:6px; justify-items:end; }
+.mapActionControls .mapLegendToggle { min-width:76px; padding:5px 8px; font-size:.7rem; line-height:1.2; }
+.currentLocationMapButton { position:relative; }
+.currentLocationMapButton svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .currentLocationMapButton .currentLocationSpinner { display: none; position: absolute; inset: 4px; border: 2px solid rgba(14,116,144,.2); border-top-color: #0e7490; border-radius: 50%; animation: currentLocationSpin .8s linear infinite; }
 .currentLocationMapButton.isPending .currentLocationSpinner { display: block; }
-.currentLocationStatus { position: absolute; z-index: 3; top: 132px; right: 58px; max-width: min(220px, calc(100% - 82px)); margin: 0; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; padding: 5px 8px; background: rgba(15,23,42,.88); color: #fff; font-size: .68rem; font-weight: 800; line-height: 1.35; pointer-events: none; }
+.currentLocationStatus { max-width: min(220px, calc(100vw - 82px)); margin: 0; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; padding: 5px 8px; background: rgba(15,23,42,.88); color: #fff; font-size: .68rem; font-weight: 800; line-height: 1.35; text-align:right; pointer-events: none; }
 @keyframes currentLocationSpin { to { transform: rotate(360deg); } }
-@media (max-width: 520px) { .mapLegendCard { margin-inline:5px; padding:10px; border-radius:14px; } .mapLegendCard .bathymetryLegend { font-size: .66rem; } .mapMarkerLegend { gap: 5px 9px; font-size: .66rem; } .mapMarkerLegend input { width: 13px; height: 13px; } .mapLegendIcon { width: 16px; height: 16px; } }
+@media (max-width: 520px) { .mapBottomOverlays { right:5px; bottom:34px; left:5px; gap:6px; } .mapLegendOverlay { padding:7px 8px; border-radius:12px; } .mapMarkerLegend { gap: 5px 9px; font-size: .66rem; } .mapMarkerLegend input { width: 13px; height: 13px; } .mapLegendIcon { width: 16px; height: 16px; } .mapActionControls { top:7px; right:7px; gap:6px; } }
 .mapPopupTitle {
   color: #67e8f9;
   font-size: 1rem;
@@ -1994,25 +1996,6 @@ dd {
 .terrainStatus {
   color: #bae6fd;
 }
-.bathymetryLegend {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
-  gap: 5px;
-  font-size: .72rem;
-  font-weight: 800;
-}
-.bathymetryLegend span {
-  display: inline-flex;
-  gap: 5px;
-  align-items: center;
-  min-width: 0;
-}
-.bathymetryLegend i {
-  width: 16px;
-  height: 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-}
 .bathymetryAttribution {
   bottom: auto;
   top: 68px;
@@ -2033,9 +2016,6 @@ dd {
     left: 12px;
     bottom: 12px;
     width: min(300px, calc(100% - 24px));
-  }
-  .bathymetryLegend {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 .mapNotice {
@@ -2177,10 +2157,8 @@ dd {
   height: 22px;
 }
 .bathymetryPointCard {
-  position: absolute;
-  right: 18px;
-  bottom: 18px;
-  z-index: 3;
+  align-self: flex-end;
+  pointer-events: auto;
   width: min(420px, calc(100% - 36px));
   display: grid;
   gap: 6px;
@@ -2244,9 +2222,7 @@ dd {
 }
 @media (max-width: 520px) {
   .bathymetryPointCard {
-    left: 12px;
-    right: 12px;
-    bottom: 12px;
+    align-self: stretch;
     width: auto;
   }
 }
