@@ -367,12 +367,12 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
       </div>
 
       <div className="dashboardView" hidden={dashboardMode !== "catchReports"}>
-          <div className="sectionHeading reportSectionHeading">
+          <div className="sectionHeading reportSectionHeading dashboardScreenHeader">
             <div>
               <p className="eyebrow">CATCH REPORTS</p>
               <h2>釣果情報</h2>
             </div>
-            <button type="button" className="button catchReportRegisterButton" onClick={handleRegistrationRequest}>+釣果登録</button>
+            <button type="button" className="button catchReportRegisterButton" onClick={handleRegistrationRequest}>＋釣果登録</button>
           </div>
 
           <div

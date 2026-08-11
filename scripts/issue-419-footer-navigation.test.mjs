@@ -11,8 +11,11 @@ assert.match(dashboard, /type DashboardMode = "map" \| "catchReports" \| "spotEv
 assert.match(dashboard, /useState<DashboardMode>\("map"\)/, "MAP is the initial screen");
 assert.doesNotMatch(dashboard, /dashboardModeSwitch|dashboardModeButton/);
 assert.match(dashboard, /<p className="eyebrow">MAP<\/p>[\s\S]*?<h2>地図<\/h2>/);
-assert.match(dashboard, /<p className="eyebrow">CATCH REPORTS<\/p>[\s\S]*?<h2>釣果情報<\/h2>[\s\S]*?\+釣果登録/);
+assert.match(dashboard, /className="sectionHeading reportSectionHeading dashboardScreenHeader"[\s\S]*?<p className="eyebrow">CATCH REPORTS<\/p>[\s\S]*?<h2>釣果情報<\/h2>[\s\S]*?＋釣果登録/);
 assert.match(spotCard, /<p className="eyebrow">SPOT INFOMATION<\/p>[\s\S]*?<h2>地点情報<\/h2>[\s\S]*?＋ 地点登録/);
+assert.match(spotCard, /spotEvaluationHeader sectionHeading reportSectionHeading dashboardScreenHeader/);
+assert.match(css, /\.spotEvaluationCard \{[^}]*padding:0;[^}]*border:0;[^}]*background:transparent/);
+assert.match(css, /\.spotInternalTabs, \.spotSelectionRow, \.sharedTimeControls \{[^}]*var\(--control-border\)[^}]*var\(--control-radius\)[^}]*var\(--control-background\)/);
 assert.match(dashboard, /<nav className="appFooterNav" aria-label="アプリ内メインナビゲーション">[\s\S]*?<span>マップ<\/span>[\s\S]*?<span>釣果<\/span>[\s\S]*?<span>地点<\/span>[\s\S]*?<\/nav>/);
 assert.equal((dashboard.match(/aria-current=\{/g) ?? []).length, 3);
 assert.match(dashboard, /openSpotEvaluationFromMap[\s\S]*?setEnvironmentSpotId\(spotId\);[\s\S]*?setDashboardMode\("spotEvaluation"\)/);
