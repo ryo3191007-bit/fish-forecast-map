@@ -24,12 +24,21 @@ export function shouldApplyEnvironmentSearchResponse(requestId: number, latestRe
   return requestId === latestRequestId;
 }
 
+export function invalidateEnvironmentSearchRequest(requestId: number, controller: AbortController | null) {
+  controller?.abort();
+  return requestId + 1;
+}
+
 export function evaluateEnvironmentSearch(
   environment: FishingEnvironment,
   criteria: EnvironmentSearchCriteria,
 ): EnvironmentSearchResult {
   const row = environment.hourly.find((candidate) => candidate.forecastTime === criteria.forecastTime);
   if (!row) return insufficient(environment, criteria.forecastTime, null, "指定時刻の予報データがありません");
+
+  if (environment.cacheStatus === "cache-stale") {
+    return insufficient(environment, row.forecastTime, row, "古いキャッシュのため条件一致判定には使用していません");
+  }
 
   const wind = row.weather?.windSpeedKmh ?? null;
   const wave = row.marine?.waveHeightMeters ?? null;

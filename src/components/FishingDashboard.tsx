@@ -37,7 +37,7 @@ import { fetchPublicUserFishingSpots, mergeOwnerAndPublicSpots } from "@/lib/pub
 import { EnvironmentSearchPanel } from "./EnvironmentSearchPanel";
 import { searchFishingSpotEnvironments } from "@/services/environmentSearch";
 import type { EnvironmentSearchResult } from "@/domain/environmentSearch";
-import { shouldApplyEnvironmentSearchResponse } from "@/domain/environmentSearch";
+import { invalidateEnvironmentSearchRequest, shouldApplyEnvironmentSearchResponse } from "@/domain/environmentSearch";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "map" | "catchReports" | "spotEvaluation";
@@ -199,11 +199,19 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
       if (shouldApplyEnvironmentSearchResponse(requestId, environmentSearchRequestRef.current)) setIsEnvironmentSearchLoading(false);
     });
   }, [environmentSearchDate, environmentSearchMaxWave, environmentSearchMaxWind, environmentSearchTime, viewingFishingSpots]);
-  const resetEnvironmentSearch = useCallback(() => {
-    environmentSearchRequestRef.current += 1;
-    environmentSearchAbortRef.current?.abort();
-    setEnvironmentSearchMaxWind(""); setEnvironmentSearchMaxWave(""); setEnvironmentSearchResults(null); setIsEnvironmentSearchLoading(false);
+  const invalidateEnvironmentSearch = useCallback(() => {
+    environmentSearchRequestRef.current = invalidateEnvironmentSearchRequest(
+      environmentSearchRequestRef.current,
+      environmentSearchAbortRef.current,
+    );
+    environmentSearchAbortRef.current = null;
+    setEnvironmentSearchResults(null);
+    setIsEnvironmentSearchLoading(false);
   }, []);
+  const resetEnvironmentSearch = useCallback(() => {
+    invalidateEnvironmentSearch();
+    setEnvironmentSearchMaxWind(""); setEnvironmentSearchMaxWave("");
+  }, [invalidateEnvironmentSearch]);
   const selectEnvironmentSearchSpot = useCallback((spotId: string) => {
     setEnvironmentSpotId(spotId);
     mapFocusRequestIdRef.current += 1;
@@ -430,8 +438,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
         <EnvironmentSearchPanel
           date={environmentSearchDate} time={environmentSearchTime} minDate={tokyoDate()} maxDate={tokyoDate(6)}
           maxWind={environmentSearchMaxWind} maxWave={environmentSearchMaxWave} loading={isEnvironmentSearchLoading} results={environmentSearchResults}
-          onDateChange={(value) => { setEnvironmentSearchDate(value); setEnvironmentSearchResults(null); }} onTimeChange={(value) => { setEnvironmentSearchTime(value); setEnvironmentSearchResults(null); }}
-          onMaxWindChange={(value) => { setEnvironmentSearchMaxWind(value); setEnvironmentSearchResults(null); }} onMaxWaveChange={(value) => { setEnvironmentSearchMaxWave(value); setEnvironmentSearchResults(null); }}
+          onDateChange={(value) => { invalidateEnvironmentSearch(); setEnvironmentSearchDate(value); }} onTimeChange={(value) => { invalidateEnvironmentSearch(); setEnvironmentSearchTime(value); }}
+          onMaxWindChange={(value) => { invalidateEnvironmentSearch(); setEnvironmentSearchMaxWind(value); }} onMaxWaveChange={(value) => { invalidateEnvironmentSearch(); setEnvironmentSearchMaxWave(value); }}
           onSearch={runEnvironmentSearch} onReset={resetEnvironmentSearch} onSelectSpot={selectEnvironmentSearchSpot}
         />
       </div>
