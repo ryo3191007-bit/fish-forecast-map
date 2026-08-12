@@ -10,7 +10,7 @@ assert.match(dashboard, /placeholder="魚種名で検索"/, "species candidates 
 assert.match(dashboard, /placeholder="地点名で検索"/, "spot candidates are searchable");
 assert.match(dashboard, /groupSelectableFishSpecies[\s\S]*?\.flatMap\(\(group\) => group\.items\.map\(\(item\) => item\.nameJa\)\)[\s\S]*?\.filter\(\(species\)/, "species groups are flattened before candidate search filters one chip list");
 assert.doesNotMatch(dashboard, /speciesFilterGroup|speciesFilterGroupLabel|speciesFilterGroupChips/, "species chips have no nested group DOM");
-assert.match(dashboard, /fishingSpots[\s\S]*?\.filter\(\(spot\) => `\$\{spot\.name\} \$\{spot\.id\}`/, "spot candidates come from and are searched from the master");
+assert.match(dashboard, /viewingFishingSpots[\s\S]*?\.filter\(\(spot\) => `\$\{spot\.name\} \$\{spot\.id\}`/, "spot candidates come from and are searched from all viewable spots");
 assert.match(dashboard, /selectedSpotId === "all" \|\| memo\.spotId === selectedSpotId/, "catch records are filtered by spotId");
 assert.doesNotMatch(dashboard, /memo\.areaName === selected/, "catch records are not filtered by area name");
 assert.match(dashboard, /selectedSpotId === "all" \|\|/, "unresolved records remain when no spot is selected");

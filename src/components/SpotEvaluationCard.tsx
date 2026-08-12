@@ -32,6 +32,7 @@ import { SpotFieldObservationCard } from "./SpotFieldObservationCard";
 import { UserSpotFieldReportSection } from "./UserSpotFieldReportSection";
 import { fetchMyUserFishingSpots, updateMyUserFishingSpotVisibility } from "@/lib/userFishingSpotRepository";
 import type { RecordVisibility } from "@/domain/recordVisibility";
+import { PublicSpotActivity } from "./PublicSpotActivity";
 
 export type SpotEvaluationTab = "環境" | "釣場" | "地形" | "魚種";
 
@@ -48,12 +49,14 @@ type Props = {
   details: FishingSpotDetailSet | null;
   detailStatus: SpotDetailLoadStatus;
   catches: ExternalCatchRecord[];
+  excludedPublicCatchIds?: string[];
   isLoading: boolean;
   error: string | null;
   jmaWarning: JmaWarningDecision | null;
   onFocusMap: () => void;
   onOpenSpotRegistration: () => void;
   isUserSpot?: boolean;
+  isPublicUserSpot?: boolean;
 };
 
 const visibleTabs: SpotEvaluationTab[] = ["環境", "釣場", "地形", "魚種"];
@@ -124,6 +127,7 @@ export function SpotEvaluationCard(props: Props) {
       </header>
       <div className="spotSelectionRow">
         <SpotCombobox spots={props.spots} selected={props.selectedSpot} onSelect={props.onSelectedSpotIdChange} />
+        {props.isUserSpot ? <span className="spotOwnershipBadge owner">自分</span> : props.isPublicUserSpot ? <span className="spotOwnershipBadge public">公開</span> : null}
         <button type="button" className="focusMapButton" aria-label="選択地点をマップで確認" disabled={!props.selectedSpot} onClick={props.onFocusMap}>
           Map
         </button>
@@ -154,7 +158,8 @@ export function SpotEvaluationCard(props: Props) {
         {props.activeTab === "地形" && <DetailTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} items={terrainDetailItems} spotId={props.selectedSpotId} fieldObservations={props.isUserSpot ? ownerDetails : fieldObservations} ownerOnly={props.isUserSpot} />}
         {props.activeTab === "魚種" && <SpeciesTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} catches={props.catches} spotId={props.selectedSpotId} fieldObservations={fieldObservations} isUserSpot={props.isUserSpot} />}
       </div>
-      {(props.activeTab === "釣場" || props.activeTab === "地形") ? <UserSpotFieldReportSection spotId={props.selectedSpotId} state={props.isUserSpot ? ownerDetails : fieldObservations} /> : null}
+      {(props.activeTab === "釣場" || props.activeTab === "地形") && !props.isPublicUserSpot ? <UserSpotFieldReportSection spotId={props.selectedSpotId} state={props.isUserSpot ? ownerDetails : fieldObservations} /> : null}
+      {(props.activeTab === "釣場" || props.activeTab === "地形") && !props.isUserSpot ? <PublicSpotActivity targetType={props.isPublicUserSpot ? "user" : "master"} spotId={props.isPublicUserSpot ? props.selectedSpotId.slice("user:".length) : props.selectedSpotId} excludedReportIds={fieldObservations.reports.map(({ id }) => id)} excludedCatchIds={props.excludedPublicCatchIds} /> : null}
     </section>
   );
 }

@@ -44,7 +44,7 @@ assert.match(modal, /disabled=\{submitting\}/);
 assert.match(dashboard, /setEnvironmentSpotId\(spot\.runtimeId\)/);
 assert.match(dashboard, /setMapFocusRequest\(\{ spotId: spot\.runtimeId/);
 assert.match(dashboard, /mapUserSpotDetailsForDisplay/);
-assert.match(dashboard, /<ExternalCatchMemoSection[\s\S]*?spots=\{fishingSpots\}/, "Issue #382 supplies owner spots to catch registration");
+assert.match(dashboard, /<ExternalCatchMemoSection[\s\S]*?spots=\{ownerWritableFishingSpots\}/, "Issue #382 supplies only master and owner spots to catch registration");
 
 const minimal = validateUserFishingSpotInput({ name: "登録地点", latitude: 33.123456789, longitude: 129.987654321, areaName: null, spotType: null });
 assert.equal(minimal?.latitude, 33.123456789, "coordinates are not rounded");

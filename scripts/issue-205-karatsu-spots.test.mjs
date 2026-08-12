@@ -77,5 +77,5 @@ assert.ok(migration.includes("on conflict (id) do nothing"), "migration must pre
 const dashboard = fs.readFileSync("src/components/FishingDashboard.tsx", "utf8");
 for (const id of activeIds) assert.ok(!dashboard.includes(id), "UI must not hard-code Issue #205 IDs");
 for (const usage of ["<FishingMap", "<SpotEvaluationCard", "<ExternalCatchMemoSection"]) assert.ok(dashboard.includes(usage));
-assert.ok(dashboard.includes("spots={fishingSpots}"), "runtime consumers use repository spots");
+assert.ok(dashboard.includes("spots={viewingFishingSpots}") && dashboard.includes("spots={ownerWritableFishingSpots}"), "runtime consumers use purpose-scoped repository spots");
 console.log("Issue #205 Karatsu spot expansion checks passed.");
