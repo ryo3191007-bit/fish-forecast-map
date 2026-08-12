@@ -114,7 +114,14 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   );
   const visibleUserSpots = useMemo(() => mergeOwnerAndPublicSpots(userFishingSpots, publicFishingSpots), [publicFishingSpots, userFishingSpots]);
   const publicUserSpotIds = useMemo<Set<string>>(() => new Set(publicFishingSpots.filter((spot) => !userFishingSpots.some((owner) => owner.id === spot.id)).map((spot) => spot.runtimeId)), [publicFishingSpots, userFishingSpots]);
-  const fishingSpots = useMemo(() => [...masterData.fishingSpots, ...visibleUserSpots.map(userFishingSpotToFishingSpot)], [masterData.fishingSpots, visibleUserSpots]);
+  const viewingFishingSpots = useMemo(
+    () => [...masterData.fishingSpots, ...visibleUserSpots.map(userFishingSpotToFishingSpot)],
+    [masterData.fishingSpots, visibleUserSpots],
+  );
+  const ownerWritableFishingSpots = useMemo(
+    () => [...masterData.fishingSpots, ...userFishingSpots.map(userFishingSpotToFishingSpot)],
+    [masterData.fishingSpots, userFishingSpots],
+  );
   useEffect(() => {
     let active = true;
     fetchPublicUserFishingSpots().then((spots) => { if (active) setPublicFishingSpots(spots); }).catch(() => { if (active) setPublicFishingSpots([]); });
@@ -177,14 +184,14 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   }, []);
 
   useEffect(() => {
-    if (fishingSpots.length === 0) {
+    if (viewingFishingSpots.length === 0) {
       setEnvironmentSpotId("");
       return;
     }
-    if (!fishingSpots.some((spot) => spot.id === environmentSpotId)) {
-      setEnvironmentSpotId(fishingSpots[0].id);
+    if (!viewingFishingSpots.some((spot) => spot.id === environmentSpotId)) {
+      setEnvironmentSpotId(viewingFishingSpots[0].id);
     }
-  }, [environmentSpotId, fishingSpots]);
+  }, [environmentSpotId, viewingFishingSpots]);
 
   const speciesFilterOptions = useMemo(() => {
     const activeSpecies = masterData.fishSpecies.filter((item) => fishSpeciesFilterNames.includes(item.nameJa));
@@ -195,9 +202,9 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   }, [fishSpeciesFilterNames, masterData.fishSpecies, speciesCandidateQuery]);
   const spotFilterOptions = useMemo(() => {
     const normalizedQuery = spotCandidateQuery.trim().toLowerCase();
-    return fishingSpots
+    return viewingFishingSpots
       .filter((spot) => `${spot.name} ${spot.id}`.toLowerCase().includes(normalizedQuery));
-  }, [fishingSpots, spotCandidateQuery]);
+  }, [spotCandidateQuery, viewingFishingSpots]);
 
   const normalizedKeyword = searchKeyword.trim().toLowerCase();
 
@@ -243,8 +250,8 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   ]);
 
   const environmentSpot = useMemo(() => {
-    return selectFishingSpot(fishingSpots, environmentSpotId);
-  }, [environmentSpotId, fishingSpots]);
+    return selectFishingSpot(viewingFishingSpots, environmentSpotId);
+  }, [environmentSpotId, viewingFishingSpots]);
 
   useEffect(() => {
     if (!environmentSpot) {
@@ -365,7 +372,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
         <div className="mapSection" ref={mapSectionRef}>
           <FishingMap
             externalMemos={externalMemos}
-            spots={fishingSpots}
+            spots={viewingFishingSpots}
             focusRequest={mapFocusRequest}
             onOpenSpotEvaluation={openSpotEvaluationFromMap}
             currentLocation={currentLocation}
@@ -574,7 +581,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             localMemoIds={localMemoIds}
             storageError={storageError}
             storageStatus={memoStorageStatus}
-            spots={fishingSpots}
+            spots={ownerWritableFishingSpots}
             masterSpotIds={new Set(masterData.fishingSpots.map((spot) => spot.id))}
             canCreateUserSpot={auth.status === "signed-in"}
             onUserSpotCreated={(spot) => setUserFishingSpots(current => [...current.filter(item => item.id !== spot.id), spot])}
@@ -586,7 +593,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
       <div className="dashboardView" hidden={dashboardMode !== "spotEvaluation"} ref={spotEvaluationSectionRef}>
           <SpotEvaluationCard
             selectedSpot={environmentSpot}
-            spots={fishingSpots}
+            spots={viewingFishingSpots}
             selectedSpotId={environmentSpotId}
             onSelectedSpotIdChange={setEnvironmentSpotId}
             environment={environment}
@@ -600,6 +607,7 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             details={spotDetails}
             detailStatus={spotDetailStatus}
             catches={scoreCatchRecords}
+            excludedPublicCatchIds={externalMemos.map(({ id }) => id)}
             onFocusMap={focusSelectedSpotOnMap}
             onOpenSpotRegistration={() => setIsSpotRegistrationOpen(true)}
             isUserSpot={Boolean(userFishingSpots.some(spot => spot.runtimeId === environmentSpotId))}

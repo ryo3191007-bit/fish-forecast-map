@@ -9,18 +9,19 @@ import styles from "./UserSpotFieldReportSection.module.css";
 
 const labels = new Map<string, string>([...fishingDetailItems, ...terrainDetailItems]);
 
-export function PublicSpotActivity({ targetType, spotId, excludedReportIds = [] }: { targetType: SpotFieldReportTargetType; spotId: string; excludedReportIds?: string[] }) {
+export function PublicSpotActivity({ targetType, spotId, excludedReportIds = [], excludedCatchIds = [] }: { targetType: SpotFieldReportTargetType; spotId: string; excludedReportIds?: string[]; excludedCatchIds?: string[] }) {
   const [reports, setReports] = useState<SpotFieldReport[]>([]);
   const [catches, setCatches] = useState<ExternalCatchRecord[]>([]);
   const [failed, setFailed] = useState(false);
   const excludedKey = excludedReportIds.join(",");
+  const excludedCatchKey = excludedCatchIds.join(",");
   useEffect(() => {
     let active = true; setFailed(false); setReports([]); setCatches([]);
     Promise.all([fetchPublicSpotFieldReports(targetType, spotId), fetchPublicCatchesForSpot(targetType, spotId)])
-      .then(([nextReports, nextCatches]) => { if (active) { const excluded = new Set(excludedKey ? excludedKey.split(",") : []); setReports(nextReports.filter(({ id }) => !excluded.has(id))); setCatches(nextCatches); } })
+      .then(([nextReports, nextCatches]) => { if (active) { const excluded = new Set(excludedKey ? excludedKey.split(",") : []); const excludedCatches = new Set(excludedCatchKey ? excludedCatchKey.split(",") : []); setReports(nextReports.filter(({ id }) => !excluded.has(id))); setCatches(nextCatches.filter(({ id }) => !excludedCatches.has(id))); } })
       .catch(() => { if (active) setFailed(true); });
     return () => { active = false; };
-  }, [excludedKey, spotId, targetType]);
+  }, [excludedCatchKey, excludedKey, spotId, targetType]);
   return <section className={styles.history} aria-label="公開された地点投稿">
     <h3>公開された現地情報</h3>
     {failed ? <p role="alert">公開情報を取得できませんでした。本人向け・基本地点情報は引き続き利用できます。</p> : null}

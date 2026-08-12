@@ -49,6 +49,7 @@ type Props = {
   details: FishingSpotDetailSet | null;
   detailStatus: SpotDetailLoadStatus;
   catches: ExternalCatchRecord[];
+  excludedPublicCatchIds?: string[];
   isLoading: boolean;
   error: string | null;
   jmaWarning: JmaWarningDecision | null;
@@ -158,7 +159,7 @@ export function SpotEvaluationCard(props: Props) {
         {props.activeTab === "魚種" && <SpeciesTab details={scopeSpotDetails(props.details, props.selectedSpotId)} status={props.detailStatus} catches={props.catches} spotId={props.selectedSpotId} fieldObservations={fieldObservations} isUserSpot={props.isUserSpot} />}
       </div>
       {(props.activeTab === "釣場" || props.activeTab === "地形") && !props.isPublicUserSpot ? <UserSpotFieldReportSection spotId={props.selectedSpotId} state={props.isUserSpot ? ownerDetails : fieldObservations} /> : null}
-      {(props.activeTab === "釣場" || props.activeTab === "地形") && !props.isUserSpot ? <PublicSpotActivity targetType={props.isPublicUserSpot ? "user" : "master"} spotId={props.isPublicUserSpot ? props.selectedSpotId.slice("user:".length) : props.selectedSpotId} excludedReportIds={fieldObservations.reports.map(({ id }) => id)} /> : null}
+      {(props.activeTab === "釣場" || props.activeTab === "地形") && !props.isUserSpot ? <PublicSpotActivity targetType={props.isPublicUserSpot ? "user" : "master"} spotId={props.isPublicUserSpot ? props.selectedSpotId.slice("user:".length) : props.selectedSpotId} excludedReportIds={fieldObservations.reports.map(({ id }) => id)} excludedCatchIds={props.excludedPublicCatchIds} /> : null}
     </section>
   );
 }

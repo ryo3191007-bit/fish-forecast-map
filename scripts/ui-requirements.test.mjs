@@ -263,7 +263,7 @@ assert.doesNotMatch(
 );
 assert.match(
   dashboard,
-  /<FishingMap[\s\S]*?externalMemos=\{externalMemos\}[\s\S]*?spots=\{fishingSpots\}/,
+  /<FishingMap[\s\S]*?externalMemos=\{externalMemos\}[\s\S]*?spots=\{viewingFishingSpots\}/,
   "map receives unfiltered memos and spots",
 );
 assert.doesNotMatch(
