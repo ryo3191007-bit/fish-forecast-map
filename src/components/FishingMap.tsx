@@ -104,6 +104,7 @@ type FishingMapProps = {
   onOpenSpotEvaluation: (spotId: string) => void;
   currentLocation: CurrentLocation | null;
   onCurrentLocationChange: (location: CurrentLocation) => void;
+  environmentMatchSpotIds: Set<string> | null;
 };
 
 export type MapFocusRequest = { spotId: string; requestId: number };
@@ -150,7 +151,7 @@ const FALLBACK_LAYER_IDS = [
   BATHYMETRY_FALLBACK_SEA_SURFACE_LAYER_ID,
 ] as const;
 
-export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvaluation, currentLocation, onCurrentLocationChange }: FishingMapProps) {
+export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvaluation, currentLocation, onCurrentLocationChange, environmentMatchSpotIds }: FishingMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const hasAdjustedBoundsRef = useRef(false);
@@ -729,6 +730,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       element.type = "button";
       const markerKind = markerKindForSpot(spot);
       element.className = "mapIconMarker fishingSpotMarker";
+      if (environmentMatchSpotIds) element.classList.add(environmentMatchSpotIds.has(spot.id) ? "environmentMatch" : "environmentNonMatch");
       element.dataset.markerKind = markerKind;
       element.setAttribute("aria-label", `${spot.name}（${spot.spotType}）の地点`);
       element.innerHTML = `<span class="mapIconMarkerPin mapIconMarker--${markerKind}">${mapMarkerIconSvg(markerKind)}</span>`;
@@ -785,7 +787,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
       spotMarkerRegistry.clear();
       [...spotMarkers, ...memoMarkers, ...shopMarkers].forEach((marker) => marker.remove());
     };
-  }, [mappableExternalMemos, onOpenSpotEvaluation, spots]);
+  }, [environmentMatchSpotIds, mappableExternalMemos, onOpenSpotEvaluation, spots]);
 
   useEffect(() => {
     if (!focusRequest) return;

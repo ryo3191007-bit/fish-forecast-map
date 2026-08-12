@@ -34,6 +34,10 @@ import { mapUserSpotDetailsForDisplay, userFishingSpotToFishingSpot, type UserFi
 import type { CurrentLocation } from "@/domain/geolocation";
 import { UserFishingSpotRegistrationModal } from "./UserFishingSpotRegistrationModal";
 import { fetchPublicUserFishingSpots, mergeOwnerAndPublicSpots } from "@/lib/publicReadRepository";
+import { EnvironmentSearchPanel } from "./EnvironmentSearchPanel";
+import { searchFishingSpotEnvironments } from "@/services/environmentSearch";
+import type { EnvironmentSearchResult } from "@/domain/environmentSearch";
+import { shouldApplyEnvironmentSearchResponse } from "@/domain/environmentSearch";
 
 type SortOption = "scoreDesc" | "dateDesc" | "dateAsc";
 type DashboardMode = "map" | "catchReports" | "spotEvaluation";
@@ -53,6 +57,11 @@ function getFishSpeciesFilterNames(
 
 export function memoMatchesFishSpecies(memoSpecies: string, selectedSpecies: FishSpeciesName | "all", masterData: MasterDataSet) {
   return selectedSpecies === "all" || filterByFishSpecies([memoSpecies], selectedSpecies, (value) => value, masterData.fishSpecies, masterData.fishSpeciesAliases).length === 1;
+}
+
+function tokyoDate(offsetDays = 0) {
+  const date = new Date(Date.now() + offsetDays * 86_400_000);
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tokyo", year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
 }
 
 type FishingDashboardProps = { auth: ReturnType<typeof useSupabaseAuth> };
@@ -98,6 +107,14 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
   const [publicFishingSpots, setPublicFishingSpots] = useState<UserFishingSpot[]>([]);
   const [isSpotRegistrationOpen, setIsSpotRegistrationOpen] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
+  const [environmentSearchDate, setEnvironmentSearchDate] = useState(() => tokyoDate());
+  const [environmentSearchTime, setEnvironmentSearchTime] = useState("12:00");
+  const [environmentSearchMaxWind, setEnvironmentSearchMaxWind] = useState("");
+  const [environmentSearchMaxWave, setEnvironmentSearchMaxWave] = useState("");
+  const [environmentSearchResults, setEnvironmentSearchResults] = useState<EnvironmentSearchResult[] | null>(null);
+  const [isEnvironmentSearchLoading, setIsEnvironmentSearchLoading] = useState(false);
+  const environmentSearchRequestRef = useRef(0);
+  const environmentSearchAbortRef = useRef<AbortController | null>(null);
   const manualCatchMemos = useMemo(
     () => getManualCatchMemos(externalMemos),
     [externalMemos],
@@ -161,6 +178,36 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
     setDashboardMode("spotEvaluation");
     setSpotEvaluationTab("環境");
     setSpotEvaluationScrollRequest((request) => request + 1);
+  }, []);
+  const runEnvironmentSearch = useCallback(() => {
+    const maxWindSpeedKmh = environmentSearchMaxWind === "" ? null : Number(environmentSearchMaxWind);
+    const maxWaveHeightMeters = environmentSearchMaxWave === "" ? null : Number(environmentSearchMaxWave);
+    const requestId = ++environmentSearchRequestRef.current;
+    environmentSearchAbortRef.current?.abort();
+    const controller = new AbortController();
+    environmentSearchAbortRef.current = controller;
+    setIsEnvironmentSearchLoading(true);
+    searchFishingSpotEnvironments(viewingFishingSpots, {
+      forecastTime: `${environmentSearchDate}T${environmentSearchTime}`,
+      maxWindSpeedKmh,
+      maxWaveHeightMeters,
+    }, controller.signal).then((results) => {
+      if (shouldApplyEnvironmentSearchResponse(requestId, environmentSearchRequestRef.current)) setEnvironmentSearchResults(results);
+    }).catch((error: unknown) => {
+      if (!(error instanceof DOMException && error.name === "AbortError") && shouldApplyEnvironmentSearchResponse(requestId, environmentSearchRequestRef.current)) setEnvironmentSearchResults([]);
+    }).finally(() => {
+      if (shouldApplyEnvironmentSearchResponse(requestId, environmentSearchRequestRef.current)) setIsEnvironmentSearchLoading(false);
+    });
+  }, [environmentSearchDate, environmentSearchMaxWave, environmentSearchMaxWind, environmentSearchTime, viewingFishingSpots]);
+  const resetEnvironmentSearch = useCallback(() => {
+    environmentSearchRequestRef.current += 1;
+    environmentSearchAbortRef.current?.abort();
+    setEnvironmentSearchMaxWind(""); setEnvironmentSearchMaxWave(""); setEnvironmentSearchResults(null); setIsEnvironmentSearchLoading(false);
+  }, []);
+  const selectEnvironmentSearchSpot = useCallback((spotId: string) => {
+    setEnvironmentSpotId(spotId);
+    mapFocusRequestIdRef.current += 1;
+    setMapFocusRequest({ spotId, requestId: mapFocusRequestIdRef.current });
   }, []);
   useEffect(() => {
     if (!spotEvaluationScrollRequest || dashboardMode !== "spotEvaluation") return;
@@ -377,8 +424,16 @@ export function FishingDashboard({ auth }: FishingDashboardProps) {
             onOpenSpotEvaluation={openSpotEvaluationFromMap}
             currentLocation={currentLocation}
             onCurrentLocationChange={setCurrentLocation}
+            environmentMatchSpotIds={environmentSearchResults ? new Set(environmentSearchResults.filter((result) => result.status === "match").map((result) => result.spotId)) : null}
           />
         </div>
+        <EnvironmentSearchPanel
+          date={environmentSearchDate} time={environmentSearchTime} minDate={tokyoDate()} maxDate={tokyoDate(6)}
+          maxWind={environmentSearchMaxWind} maxWave={environmentSearchMaxWave} loading={isEnvironmentSearchLoading} results={environmentSearchResults}
+          onDateChange={(value) => { setEnvironmentSearchDate(value); setEnvironmentSearchResults(null); }} onTimeChange={(value) => { setEnvironmentSearchTime(value); setEnvironmentSearchResults(null); }}
+          onMaxWindChange={(value) => { setEnvironmentSearchMaxWind(value); setEnvironmentSearchResults(null); }} onMaxWaveChange={(value) => { setEnvironmentSearchMaxWave(value); setEnvironmentSearchResults(null); }}
+          onSearch={runEnvironmentSearch} onReset={resetEnvironmentSearch} onSelectSpot={selectEnvironmentSearchSpot}
+        />
       </div>
       </div>
 
