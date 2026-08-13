@@ -173,7 +173,7 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   const mapViewportRef = useRef<HTMLDivElement | null>(null);
   const [mapLayerMode, setMapLayerMode] = useState<MapLayerMode>("standard");
   const [isMapMenuOpen, setIsMapMenuOpen] = useState(false);
-  const [isMarkerLegendVisible, setIsMarkerLegendVisible] = useState(true);
+  const [isMarkerFilterSheetOpen, setIsMarkerFilterSheetOpen] = useState(false);
   const [markerFilters, setMarkerFilters] = useState(INITIAL_MARKER_FILTERS);
   const [isTerrainEnabled, setIsTerrainEnabled] = useState(false);
   const [terrainExaggeration] = useState(
@@ -858,24 +858,26 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
               <button type="button" aria-label="ズームアウト" onClick={() => mapRef.current?.zoomOut()}>－</button>
               <button
                 type="button"
-                className="mapLegendToggle"
-                aria-label={isMarkerLegendVisible ? "ピン凡例を非表示" : "ピン凡例を表示"}
-                aria-pressed={isMarkerLegendVisible}
-                title={isMarkerLegendVisible ? "ピン凡例を非表示" : "ピン凡例を表示"}
-                onClick={() => setIsMarkerLegendVisible((current) => !current)}
+                className="mapMenuFilterButton"
+                aria-label="表示フィルター"
+                title="表示フィルター"
+                aria-expanded={isMarkerFilterSheetOpen}
+                aria-controls="map-filter-sheet"
+                onClick={() => setIsMarkerFilterSheetOpen(true)}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
-                  <circle cx="12" cy="12" r="2.5" />
-                  {!isMarkerLegendVisible ? <path d="m4 4 16 16" /> : null}
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M3 5h4m4 0h6M3 10h8m4 0h2M3 15h2m4 0h8" />
+                  <circle cx="9" cy="5" r="2" />
+                  <circle cx="13" cy="10" r="2" />
+                  <circle cx="7" cy="15" r="2" />
                 </svg>
+              </button>
+              <button type="button" className={`currentLocationMapButton${locationPending ? " isPending" : ""}`} aria-label="現在地を表示" title="現在地を表示" aria-busy={locationPending} disabled={locationPending} onClick={() => void locateUser()}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                <span className="currentLocationSpinner" aria-hidden="true" />
               </button>
             </div>
           ) : null}
-          <button type="button" className={`currentLocationMapButton${locationPending ? " isPending" : ""}`} aria-label="現在地を表示" title="現在地を表示" aria-busy={locationPending} disabled={locationPending} onClick={() => void locateUser()}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-            <span className="currentLocationSpinner" aria-hidden="true" />
-          </button>
           {(locationPending || locationMessage) && (
             <p className="currentLocationStatus" role="status">
               {locationPending ? "現在地を取得中です" : locationMessage}
@@ -884,19 +886,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
         </div>
       </div>
       <div className="mapBottomOverlays">
-        {isMarkerLegendVisible ? (
-          <aside className="mapLegendOverlay" aria-label="ピン凡例">
-            <fieldset className="mapMarkerLegend" aria-label="マーカー表示フィルタ">
-              {MAP_MARKER_LEGEND.map(({ kind, label }) => (
-                <label key={kind}>
-                  <input type="checkbox" checked={markerFilters[kind]} onChange={(event) => setMarkerFilters((current) => ({ ...current, [kind]: event.target.checked }))} />
-                  <i className={`mapLegendIcon mapIconMarker--${kind}`} dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }} />
-                  {label}
-                </label>
-              ))}
-            </fieldset>
-          </aside>
-        ) : null}
         {mapLayerMode === "bathymetry" ? (
           <>
           {bathymetrySelection && bathymetrySelectionConfig ? (
@@ -945,6 +934,50 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
           </>
         ) : null}
       </div>
+      {isMarkerFilterSheetOpen ? (
+        <section
+          id="map-filter-sheet"
+          className="mapFilterSheet"
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby="map-filter-sheet-title"
+          aria-describedby="map-filter-sheet-description"
+          onKeyDown={(event) => {
+            if (event.key === "Escape") setIsMarkerFilterSheetOpen(false);
+          }}
+        >
+          <header className="mapFilterSheetHeader">
+            <div className="mapFilterSheetHandle" aria-hidden="true" />
+            <div className="mapFilterSheetHeading">
+              <h3 id="map-filter-sheet-title">表示フィルター</h3>
+              <p id="map-filter-sheet-description">地図に表示する項目を選択</p>
+            </div>
+          </header>
+          <div className="mapFilterOptions">
+            {MAP_MARKER_LEGEND.map(({ kind, label }) => (
+              <label key={kind} className="mapFilterOption">
+                <i className={`mapLegendIcon mapIconMarker--${kind}`} dangerouslySetInnerHTML={{ __html: mapMarkerIconSvg(kind) }} />
+                <span>{label}</span>
+                <input
+                  type="checkbox"
+                  role="switch"
+                  aria-label={`${label}を表示`}
+                  checked={markerFilters[kind]}
+                  onChange={(event) => setMarkerFilters((current) => ({ ...current, [kind]: event.target.checked }))}
+                />
+              </label>
+            ))}
+          </div>
+          <div className="mapFilterActions">
+            <button type="button" className="mapFilterShowAll" onClick={() => setMarkerFilters(INITIAL_MARKER_FILTERS)}>
+              すべて表示
+            </button>
+            <button type="button" className="mapFilterClose" onClick={() => setIsMarkerFilterSheetOpen(false)} autoFocus>
+              閉じる
+            </button>
+          </div>
+        </section>
+      ) : null}
       {fallbackActive && mapLayerMode === "bathymetry" ? (
         <div className="mapNotice" role="status">
           高解像度水深を読み込めなかったため、広域水深へ切り替えました

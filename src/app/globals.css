@@ -589,11 +589,24 @@ p {
 .environmentSearchResult.is-match b { color:#fef08a; }
 @media(max-width:700px){.environmentSearchHeading{display:grid}.environmentSearchFields{grid-template-columns:repeat(2,minmax(0,1fr))}.environmentSearchResults{grid-template-columns:1fr;max-height:320px}.environmentSearchPanel{margin-inline:0;padding:12px}.environmentSearchActions button{flex:1}}
 .mapBottomOverlays { position:absolute; z-index:3; right:8px; bottom:50px; left:8px; display:flex; flex-direction:column; align-items:stretch; gap:8px; pointer-events:none; }
-.mapLegendOverlay { padding:8px 10px; border:1px solid rgba(125,211,252,.3); border-radius:14px; background:linear-gradient(145deg,rgba(8,47,73,.88),rgba(15,23,42,.92)); color:#e0faff; box-shadow:0 10px 26px rgba(0,0,0,.3); backdrop-filter:blur(8px); pointer-events:auto; }
-.mapMarkerLegend { display: flex; flex-wrap: wrap; gap: 6px 12px; min-width: 0; margin: 0; padding: 0; border: 0; background: transparent; color: #fff; font-size: .72rem; font-weight: 800; }
-.mapMarkerLegend label { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; cursor: pointer; }
-.mapMarkerLegend input { width: 13px; height: 13px; margin: 0; accent-color: #22d3ee; }
 .mapLegendIcon { display: inline-grid; place-items: center; width: 18px; height: 18px; padding: 3px; border-radius: 50%; color: #fff; }
+.mapFilterSheet { position:absolute; z-index:8; right:8px; bottom:8px; left:8px; display:grid; grid-template-rows:auto minmax(0,1fr) auto; height:min(72%,520px); padding:8px 14px 14px; overflow:hidden; border:1px solid rgba(103,232,249,.45); border-radius:20px 20px 14px 14px; background:linear-gradient(155deg,rgba(8,47,73,.96),rgba(15,23,42,.98)); color:#e0faff; box-shadow:0 -12px 34px rgba(2,8,23,.55); backdrop-filter:blur(12px); }
+.mapFilterSheetHeader { min-width:0; }
+.mapFilterSheetHandle { width:42px; height:4px; margin:0 auto 10px; border-radius:999px; background:rgba(165,243,252,.6); }
+.mapFilterSheetHeading { display:flex; align-items:start; justify-content:space-between; gap:12px; }
+.mapFilterSheetHeading h3 { margin:0; font-size:1rem; }
+.mapFilterSheetHeading p { margin:3px 0 0; color:#bae6fd; font-size:.72rem; }
+.mapFilterShowAll { border:1px solid rgba(103,232,249,.5); background:rgba(14,116,144,.35); color:#cffafe; }
+.mapFilterOptions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-content:start; gap:7px 10px; min-height:0; margin:12px 0; overflow:auto; overscroll-behavior:contain; }
+.mapFilterOption { display:grid; grid-template-columns:24px 1fr auto; align-items:center; gap:8px; min-width:0; padding:8px 9px; border:1px solid rgba(148,163,184,.25); border-radius:11px; background:rgba(15,23,42,.52); font-size:.78rem; font-weight:800; cursor:pointer; }
+.mapFilterOption input { appearance:none; position:relative; width:38px; height:22px; margin:0; border:1px solid #64748b; border-radius:999px; background:#334155; cursor:pointer; transition:background .15s,border-color .15s; }
+.mapFilterOption input::after { content:""; position:absolute; top:3px; left:3px; width:14px; height:14px; border-radius:50%; background:#e2e8f0; transition:transform .15s; }
+.mapFilterOption input:checked { border-color:#22d3ee; background:#0e7490; }
+.mapFilterOption input:checked::after { transform:translateX(16px); background:#ecfeff; }
+.mapFilterOption input:focus-visible { outline:2px solid #67e8f9; outline-offset:2px; }
+.mapFilterActions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; padding-top:8px; border-top:1px solid rgba(103,232,249,.2); background:rgba(15,23,42,.98); }
+.mapFilterActions button { min-width:0; min-height:40px; padding:7px 8px; border-radius:10px; font:inherit; font-size:.78rem; font-weight:900; cursor:pointer; }
+.mapFilterClose { border:1px solid rgba(103,232,249,.55); background:#0e7490; color:#fff; }
 .mapViewport.markerKindHidden--port .mapIconMarker[data-marker-kind="port"],
 .mapViewport.markerKindHidden--rock .mapIconMarker[data-marker-kind="rock"],
 .mapViewport.markerKindHidden--surf .mapIconMarker[data-marker-kind="surf"],
@@ -608,15 +621,14 @@ p {
 .mapActionControls button:disabled { cursor:wait; opacity:.75; }
 .mapMenuButton span { font-size:1.35rem; line-height:1; transform:scaleX(1.12); }
 .mapMenuItems { display:grid; gap:6px; justify-items:end; }
-.mapActionControls .mapLegendToggle { min-width:44px; padding:8px; }
-.mapLegendToggle svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.mapMenuFilterButton svg { width:20px; height:20px; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
 .currentLocationMapButton { position:relative; }
 .currentLocationMapButton svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 .currentLocationMapButton .currentLocationSpinner { display: none; position: absolute; inset: 4px; border: 2px solid rgba(14,116,144,.2); border-top-color: #0e7490; border-radius: 50%; animation: currentLocationSpin .8s linear infinite; }
 .currentLocationMapButton.isPending .currentLocationSpinner { display: block; }
 .currentLocationStatus { max-width: min(220px, calc(100vw - 82px)); margin: 0; border: 1px solid rgba(255,255,255,.65); border-radius: 8px; padding: 5px 8px; background: rgba(15,23,42,.88); color: #fff; font-size: .68rem; font-weight: 800; line-height: 1.35; text-align:right; pointer-events: none; }
 @keyframes currentLocationSpin { to { transform: rotate(360deg); } }
-@media (max-width: 520px) { .mapBottomOverlays { right:5px; bottom:48px; left:5px; gap:6px; } .mapLegendOverlay { padding:7px 8px; border-radius:12px; } .mapMarkerLegend { gap: 5px 9px; font-size: .66rem; } .mapMarkerLegend input { width: 13px; height: 13px; } .mapLegendIcon { width: 16px; height: 16px; } .mapActionControls { top:7px; right:7px; gap:6px; } }
+@media (max-width: 520px) { .mapBottomOverlays { right:5px; bottom:48px; left:5px; gap:6px; } .mapLegendIcon { width: 18px; height: 18px; } .mapActionControls { top:7px; right:7px; gap:6px; } .mapFilterSheet { right:5px; bottom:5px; left:5px; height:68%; padding-inline:11px; } .mapFilterOptions { grid-template-columns:1fr; } }
 .mapPopupTitle {
   color: #67e8f9;
   font-size: 1rem;

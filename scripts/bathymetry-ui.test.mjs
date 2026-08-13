@@ -71,7 +71,7 @@ assert.match(map, /const contoursEnabled = true/);
 assert.doesNotMatch(map, /setHillshadeEnabled\(event\.target\.checked\)/);
 assert.doesNotMatch(map, /setContoursEnabled\(event\.target\.checked\)/);
 assert.doesNotMatch(map, /bathymetryLegend|水深凡例/, "the depth color legend is not rendered");
-assert.match(map, /className="mapLegendOverlay"[\s\S]*className="mapMarkerLegend"/);
+assert.match(map, /className="mapMenuFilterButton"[\s\S]*className="mapFilterSheet"/);
 assert.match(bathyView, /buildBathymetryLayerVisibility/);
 assert.match(map, /applyBathymetryMode/);
 assert.match(metadata.license, /GEBCO/);
