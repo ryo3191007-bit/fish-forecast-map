@@ -880,6 +880,12 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
         aria-controls="map-filter-sheet"
         onClick={() => setIsMarkerFilterSheetOpen(true)}
       >
+        <svg className="mapFilterButtonIcon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path d="M3 5h4m4 0h6M3 10h8m4 0h2M3 15h2m4 0h8" />
+          <circle cx="9" cy="5" r="2" />
+          <circle cx="13" cy="10" r="2" />
+          <circle cx="7" cy="15" r="2" />
+        </svg>
         表示 {enabledMarkerFilterCount}/{MAP_MARKER_LEGEND.length}
       </button>
       <div className="mapBottomOverlays">
@@ -949,9 +955,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
               <h3 id="map-filter-sheet-title">表示フィルター</h3>
               <p id="map-filter-sheet-description">地図に表示する項目を選択</p>
             </div>
-            <button type="button" className="mapFilterShowAll" onClick={() => setMarkerFilters(INITIAL_MARKER_FILTERS)}>
-              すべて表示
-            </button>
           </div>
           <div className="mapFilterOptions">
             {MAP_MARKER_LEGEND.map(({ kind, label }) => (
@@ -968,9 +971,14 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
               </label>
             ))}
           </div>
-          <button type="button" className="mapFilterClose" onClick={() => setIsMarkerFilterSheetOpen(false)} autoFocus>
-            閉じる
-          </button>
+          <div className="mapFilterActions">
+            <button type="button" className="mapFilterShowAll" onClick={() => setMarkerFilters(INITIAL_MARKER_FILTERS)}>
+              すべて表示
+            </button>
+            <button type="button" className="mapFilterClose" onClick={() => setIsMarkerFilterSheetOpen(false)} autoFocus>
+              閉じる
+            </button>
+          </div>
         </section>
       ) : null}
       {fallbackActive && mapLayerMode === "bathymetry" ? (
