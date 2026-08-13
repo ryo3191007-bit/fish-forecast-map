@@ -567,6 +567,27 @@ p {
   border-color: #fef08a;
   box-shadow: 0 0 0 7px rgba(254, 240, 138, 0.38), 0 3px 12px rgba(2, 8, 23, 0.8);
 }
+.fishingSpotMarker.environmentNonMatch { opacity:.25; }
+.fishingSpotMarker.environmentMatch { width:40px; height:40px; z-index:2; }
+.fishingSpotMarker.environmentMatch .mapIconMarkerPin { border-color:#fef08a; box-shadow:0 0 0 6px rgba(254,240,138,.4),0 3px 12px rgba(2,8,23,.8); }
+.environmentSearchPanel { margin:0 8px 18px; padding:16px; border:1px solid rgba(103,232,249,.35); border-radius:18px; background:linear-gradient(145deg,rgba(8,47,73,.94),rgba(15,23,42,.96)); color:#e0faff; }
+.environmentSearchHeading { display:flex; justify-content:space-between; gap:16px; align-items:start; }
+.environmentSearchHeading h3 { margin:0; }
+.environmentSearchHeading>p { max-width:520px; margin:0; color:#bae6fd; font-size:.82rem; }
+.environmentSearchFields { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:14px; }
+.environmentSearchFields label { display:grid; gap:5px; font-size:.78rem; font-weight:800; }
+.environmentSearchFields input { min-width:0; padding:10px; border:1px solid rgba(103,232,249,.42); border-radius:9px; background:#082f49; color:#fff; color-scheme:dark; font:inherit; }
+.environmentSearchActions { display:flex; gap:8px; margin-top:12px; }
+.environmentSearchActions button { min-height:42px; }
+.environmentSearchSummary { margin:12px 0 0; color:#cffafe; font-size:.82rem; font-weight:800; }
+.environmentSearchResults { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; max-height:360px; margin-top:12px; overflow:auto; }
+.environmentSearchResult { display:grid; gap:3px; padding:10px; border:1px solid rgba(148,163,184,.35); border-radius:10px; background:rgba(15,23,42,.8); color:#e2e8f0; text-align:left; cursor:pointer; }
+.environmentSearchResult>span { display:flex; justify-content:space-between; gap:8px; }
+.environmentSearchResult b { color:#cbd5e1; font-size:.72rem; }
+.environmentSearchResult small { color:#bae6fd; }
+.environmentSearchResult.is-match { border-color:#fde047; box-shadow:inset 3px 0 #fde047; }
+.environmentSearchResult.is-match b { color:#fef08a; }
+@media(max-width:700px){.environmentSearchHeading{display:grid}.environmentSearchFields{grid-template-columns:repeat(2,minmax(0,1fr))}.environmentSearchResults{grid-template-columns:1fr;max-height:320px}.environmentSearchPanel{margin-inline:0;padding:12px}.environmentSearchActions button{flex:1}}
 .mapBottomOverlays { position:absolute; z-index:3; right:8px; bottom:50px; left:8px; display:flex; flex-direction:column; align-items:stretch; gap:8px; pointer-events:none; }
 .mapLegendOverlay { padding:8px 10px; border:1px solid rgba(125,211,252,.3); border-radius:14px; background:linear-gradient(145deg,rgba(8,47,73,.88),rgba(15,23,42,.92)); color:#e0faff; box-shadow:0 10px 26px rgba(0,0,0,.3); backdrop-filter:blur(8px); pointer-events:auto; }
 .mapMarkerLegend { display: flex; flex-wrap: wrap; gap: 6px 12px; min-width: 0; margin: 0; padding: 0; border: 0; background: transparent; color: #fff; font-size: .72rem; font-weight: 800; }
