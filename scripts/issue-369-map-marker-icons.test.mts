@@ -22,7 +22,7 @@ assert.match(map, /<span class="mapIconMarkerPin mapIconMarker--\$\{markerKind\}
 assert.match(map, /<span class="mapIconMarkerPin mapIconMarker--catch">/);
 assert.match(map, /setAttribute\("aria-label", `\$\{memo\.spotName\}の登録済み釣果`\)/);
 assert.match(map, /createExternalMemoPopupContent\(memo\)/, "catch popup remains wired");
-assert.match(map, /className="mapMarkerLegend"[\s\S]*?aria-label="マーカー表示フィルタ"/);
+assert.match(map, /className="mapFilterOptions"[\s\S]*?MAP_MARKER_LEGEND\.map[\s\S]*?aria-label=\{`\$\{label\}を表示`\}/);
 const markerRootRule = styles.match(/\.mapIconMarker\s*\{([^}]*)\}/)?.[1] ?? "";
 const markerPinRule = styles.match(/\.mapIconMarkerPin\s*\{([^}]*)\}/)?.[1] ?? "";
 assert.doesNotMatch(markerRootRule, /transform\s*:/, "MapLibre-managed marker root must not define a visual transform");
