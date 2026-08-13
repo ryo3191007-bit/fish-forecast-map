@@ -835,9 +835,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
   };
 
   const fallbackActive = bathymetryRuntime.display === "etopo";
-  const enabledMarkerFilterCount = MAP_MARKER_LEGEND.filter(
-    ({ kind }) => markerFilters[kind],
-  ).length;
   const bathymetrySelectionConfig = bathymetrySelection
     ? getBathymetryPointTileConfig(bathymetrySelection.source)
     : null;
@@ -859,12 +856,28 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
             <div className="mapMenuItems" aria-label="マップ操作">
               <button type="button" aria-label="ズームイン" onClick={() => mapRef.current?.zoomIn()}>＋</button>
               <button type="button" aria-label="ズームアウト" onClick={() => mapRef.current?.zoomOut()}>－</button>
+              <button
+                type="button"
+                className="mapMenuFilterButton"
+                aria-label="表示フィルター"
+                title="表示フィルター"
+                aria-expanded={isMarkerFilterSheetOpen}
+                aria-controls="map-filter-sheet"
+                onClick={() => setIsMarkerFilterSheetOpen(true)}
+              >
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M3 5h4m4 0h6M3 10h8m4 0h2M3 15h2m4 0h8" />
+                  <circle cx="9" cy="5" r="2" />
+                  <circle cx="13" cy="10" r="2" />
+                  <circle cx="7" cy="15" r="2" />
+                </svg>
+              </button>
+              <button type="button" className={`currentLocationMapButton${locationPending ? " isPending" : ""}`} aria-label="現在地を表示" title="現在地を表示" aria-busy={locationPending} disabled={locationPending} onClick={() => void locateUser()}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                <span className="currentLocationSpinner" aria-hidden="true" />
+              </button>
             </div>
           ) : null}
-          <button type="button" className={`currentLocationMapButton${locationPending ? " isPending" : ""}`} aria-label="現在地を表示" title="現在地を表示" aria-busy={locationPending} disabled={locationPending} onClick={() => void locateUser()}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-            <span className="currentLocationSpinner" aria-hidden="true" />
-          </button>
           {(locationPending || locationMessage) && (
             <p className="currentLocationStatus" role="status">
               {locationPending ? "現在地を取得中です" : locationMessage}
@@ -872,22 +885,6 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
           )}
         </div>
       </div>
-      <button
-        type="button"
-        className="mapFilterButton"
-        aria-label={`表示フィルター ${enabledMarkerFilterCount}/${MAP_MARKER_LEGEND.length}`}
-        aria-expanded={isMarkerFilterSheetOpen}
-        aria-controls="map-filter-sheet"
-        onClick={() => setIsMarkerFilterSheetOpen(true)}
-      >
-        <svg className="mapFilterButtonIcon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="M3 5h4m4 0h6M3 10h8m4 0h2M3 15h2m4 0h8" />
-          <circle cx="9" cy="5" r="2" />
-          <circle cx="13" cy="10" r="2" />
-          <circle cx="7" cy="15" r="2" />
-        </svg>
-        表示 {enabledMarkerFilterCount}/{MAP_MARKER_LEGEND.length}
-      </button>
       <div className="mapBottomOverlays">
         {mapLayerMode === "bathymetry" ? (
           <>

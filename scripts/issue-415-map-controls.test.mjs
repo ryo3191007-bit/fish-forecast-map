@@ -10,8 +10,9 @@ assert.match(map, /className="mapMenuButton"[\s\S]*aria-expanded=\{isMapMenuOpen
 assert.match(map, /\{isMapMenuOpen \? \([\s\S]*className="mapMenuItems"[\s\S]*aria-label="ズームイン"[\s\S]*aria-label="ズームアウト"/, "zoom actions only render in the open menu");
 assert.match(map, /mapRef\.current\?\.zoomIn\(\)/);
 assert.match(map, /mapRef\.current\?\.zoomOut\(\)/);
-assert.match(map, /className="mapMenuItems"[\s\S]*?\) : null\}[\s\S]*?<button type="button" className=\{`currentLocationMapButton[\s\S]*?className="currentLocationStatus"/, "current location status follows the button inside the dynamically sized action column");
-assert.match(map, /className="mapFilterButton"[\s\S]*aria-controls="map-filter-sheet"/, "marker filters have a dedicated compact map control");
+assert.match(map, /className="mapMenuItems"[\s\S]*className="mapMenuFilterButton"[\s\S]*className=\{`currentLocationMapButton/, "filter and current location actions are grouped in the open menu");
+assert.match(map, /\) : null\}[\s\S]*?\{\(locationPending \|\| locationMessage\)[\s\S]*className="currentLocationStatus"/, "current location status remains visible beside the menu when needed");
+assert.doesNotMatch(map + css, /mapFilterButton/, "marker filters no longer have a standalone map control");
 assert.doesNotMatch(map + css, /markersHidden/, "legend toggle cannot hide map pins");
 assert.match(map, /markerKindHidden--\$\{kind\}/, "existing per-kind pin filters remain wired");
 assert.match(css, /\.mapActionControls \{ position:absolute;[^}]*top:10px; right:10px;/, "map actions occupy the upper-right overlay");

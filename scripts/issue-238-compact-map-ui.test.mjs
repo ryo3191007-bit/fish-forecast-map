@@ -26,7 +26,7 @@ assert.ok(closeWidth >= 26 && closeWidth <= 28 && closeWidth < 34, "popup close 
 assert.ok(closeFontSize < 24, "popup close glyph is smaller than the former 24px size");
 assert.ok(contentRightPadding > closeWidth + closeRight, "popup content reserves space to the right of a name such as 伊万里湾奥");
 
-assert.match(map, /<MapLayerToggle[\s\S]*?<div className="mapShell">[\s\S]*className="mapFilterButton"[\s\S]*className="mapFilterSheet"/, "the compact filter control and on-demand sheet are inside the map shell");
+assert.match(map, /<MapLayerToggle[\s\S]*?<div className="mapShell">[\s\S]*className="mapMenuFilterButton"[\s\S]*className="mapFilterSheet"/, "the menu filter control and on-demand sheet are inside the map shell");
 const mobileLegendRules = css.slice(css.indexOf("@media (max-width: 520px)"), css.indexOf(".mapPopupTitle"));
 assert.match(mobileLegendRules, /\.mapFilterSheet \{[^}]*max-height:68%/, "mobile filter sheet is bounded to preserve map context");
 assert.doesNotMatch(map, /className="mapAttribution/, "large custom attribution cards are not rendered");
