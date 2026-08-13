@@ -1,4 +1,4 @@
-import type { EnvironmentSearchResult } from "@/domain/environmentSearch";
+import { prioritizeEnvironmentSearchMatches, type EnvironmentSearchResult } from "@/domain/environmentSearch";
 
 type Props = {
   date: string; time: string; minDate: string; maxDate: string;
@@ -12,6 +12,7 @@ const labels = { match: "条件一致", outside: "条件外", insufficient: "デ
 
 export function EnvironmentSearchPanel(props: Props) {
   const counts = props.results?.reduce((value, result) => ({ ...value, [result.status]: value[result.status] + 1 }), { match: 0, outside: 0, insufficient: 0, failed: 0 }) ?? null;
+  const displayResults = props.results ? prioritizeEnvironmentSearchMatches(props.results) : null;
   return <section className="environmentSearchPanel" aria-label="環境条件で絞り込み">
     <div className="environmentSearchHeading"><div><p className="eyebrow">CONDITION SEARCH</p><h3>環境条件で絞り込み</h3></div><p>Open-Meteoの客観値との一致を表示します。安全や釣果を保証しません。</p></div>
     <div className="environmentSearchFields">
@@ -23,7 +24,7 @@ export function EnvironmentSearchPanel(props: Props) {
     <div className="environmentSearchActions"><button type="button" className="button" disabled={props.loading || (!props.maxWind && !props.maxWave) || !props.date || !props.time} onClick={props.onSearch}>{props.loading ? "検索中…" : "検索実行"}</button><button type="button" className="resetFiltersButton" disabled={props.loading && !props.results} onClick={props.onReset}>条件リセット</button></div>
     {counts && <p className="environmentSearchSummary" role="status">完了: 条件一致 {counts.match}件 / 条件外 {counts.outside}件 / データ不足・取得失敗 {counts.insufficient + counts.failed}件</p>}
     {props.loading && <p className="environmentSearchSummary" role="status">各地点の予報を取得しています（同時取得数を制限しています）</p>}
-    {props.results && <div className="environmentSearchResults">{props.results.map((result) => <button type="button" className={`environmentSearchResult is-${result.status}`} key={result.spotId} onClick={() => props.onSelectSpot(result.spotId)}>
+    {displayResults && <div className="environmentSearchResults">{displayResults.map((result) => <button type="button" className={`environmentSearchResult is-${result.status}`} key={result.spotId} onClick={() => props.onSelectSpot(result.spotId)}>
       <span><strong>{result.spotName}</strong><b>{labels[result.status]}</b></span>
       <small>予報日時: {result.forecastTime.replace("T", " ")}（Asia/Tokyo）</small>
       <small>風速 {result.windSpeedKmh === null ? "データなし" : `${result.windSpeedKmh.toFixed(1)} km/h`} / 風向 {result.windDirectionLabel ?? "データなし"}</small>

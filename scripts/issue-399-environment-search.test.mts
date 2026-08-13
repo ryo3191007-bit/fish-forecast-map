@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { evaluateEnvironmentSearch, failedEnvironmentSearchResult, invalidateEnvironmentSearchRequest, shouldApplyEnvironmentSearchResponse } from "../src/domain/environmentSearch.ts";
+import { evaluateEnvironmentSearch, failedEnvironmentSearchResult, invalidateEnvironmentSearchRequest, prioritizeEnvironmentSearchMatches, shouldApplyEnvironmentSearchResponse } from "../src/domain/environmentSearch.ts";
 import type { FishingEnvironment } from "../src/domain/environment.ts";
 
 const environment = (wind: number | null, wave: number | null, cacheStatus: FishingEnvironment["cacheStatus"] = "fresh", warning: string | null = null): FishingEnvironment => ({
@@ -35,4 +35,15 @@ const invalidatedRequestId = invalidateEnvironmentSearchRequest(2, controller);
 assert.equal(invalidatedRequestId, 3, "条件変更時にrequest IDを進める");
 assert.equal(controller.signal.aborted, true, "条件変更時に実行中通信をabortする");
 assert.equal(shouldApplyEnvironmentSearchResponse(2, invalidatedRequestId), false, "条件変更前のレスポンスは適用しない");
+
+const inputOrder = ["outside", "match", "insufficient", "match", "failed"] as const;
+const unorderedResults = inputOrder.map((status, index) => ({
+  ...failedEnvironmentSearchResult(`spot-${index}`, `地点${index}`, criteria(1, 1).forecastTime),
+  status,
+}));
+const prioritizedResults = prioritizeEnvironmentSearchMatches(unorderedResults);
+assert.deepEqual(prioritizedResults.map((result) => result.status), ["match", "match", "outside", "insufficient", "failed"], "条件一致を先頭へ表示する");
+assert.deepEqual(prioritizedResults.slice(0, 2).map((result) => result.spotId), ["spot-1", "spot-3"], "match同士の入力順を維持する");
+assert.deepEqual(prioritizedResults.slice(2).map((result) => result.spotId), ["spot-0", "spot-2", "spot-4"], "非match同士の入力順を維持する");
+assert.deepEqual(unorderedResults.map((result) => result.status), inputOrder, "元の検索結果配列を変更しない");
 console.log("Issue #399 environment search tests passed.");

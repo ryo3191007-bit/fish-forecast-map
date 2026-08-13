@@ -29,6 +29,13 @@ export function invalidateEnvironmentSearchRequest(requestId: number, controller
   return requestId + 1;
 }
 
+export function prioritizeEnvironmentSearchMatches(results: readonly EnvironmentSearchResult[]) {
+  return [
+    ...results.filter((result) => result.status === "match"),
+    ...results.filter((result) => result.status !== "match"),
+  ];
+}
+
 export function evaluateEnvironmentSearch(
   environment: FishingEnvironment,
   criteria: EnvironmentSearchCriteria,
