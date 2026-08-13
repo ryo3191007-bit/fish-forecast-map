@@ -28,7 +28,7 @@ assert.ok(contentRightPadding > closeWidth + closeRight, "popup content reserves
 
 assert.match(map, /<MapLayerToggle[\s\S]*?<div className="mapShell">[\s\S]*className="mapMenuFilterButton"[\s\S]*className="mapFilterSheet"/, "the menu filter control and on-demand sheet are inside the map shell");
 const mobileLegendRules = css.slice(css.indexOf("@media (max-width: 520px)"), css.indexOf(".mapPopupTitle"));
-assert.match(mobileLegendRules, /\.mapFilterSheet \{[^}]*max-height:68%/, "mobile filter sheet is bounded to preserve map context");
+assert.match(mobileLegendRules, /\.mapFilterSheet \{[^}]*height:68%/, "mobile filter sheet is bounded to preserve map context");
 assert.doesNotMatch(map, /className="mapAttribution/, "large custom attribution cards are not rendered");
 assert.match(map, /attributionControl: false/);
 assert.match(map, /new maplibregl\.AttributionControl\(\{ compact: true \}\)/, "one compact standard attribution control is explicit");

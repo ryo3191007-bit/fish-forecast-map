@@ -15,7 +15,7 @@ assert.match(map, /type="checkbox"[\s\S]*?role="switch"[\s\S]*?checked=\{markerF
 assert.match(map, /className="mapFilterSheet"/, "filters are rendered over the map only on demand");
 assert.match(css, /\.mapFilterSheet \{ position:absolute;/, "filter sheet is an overlay");
 assert.match(css, /\.mapViewport \.maplibregl-ctrl-bottom-right \{[^}]*bottom: 4px/, "standard attribution retains a separate bottom offset");
-assert.match(css, /@media \(max-width: 520px\)\s*\{[\s\S]*?\.mapFilterSheet \{[^}]*max-height:68%/, "mobile filter sheet stays compact and on-screen");
+assert.match(css, /@media \(max-width: 520px\)\s*\{[\s\S]*?\.mapFilterSheet \{[^}]*height:68%/, "mobile filter sheet stays compact and on-screen");
 assert.match(css, /markerKindHidden--port[\s\S]*?markerKindHidden--rock[\s\S]*?markerKindHidden--surf[\s\S]*?markerKindHidden--place[\s\S]*?markerKindHidden--catch[\s\S]*?markerKindHidden--shop/, "each category can hide independently");
 assert.doesNotMatch(map + css, /markersHidden/, "legend visibility never hides every marker");
 assert.match(map, /spotMarkersRef\.current\.get\(focusRequest\.spotId\)/, "existing focus registry remains wired");

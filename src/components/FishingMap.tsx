@@ -946,13 +946,13 @@ export function FishingMap({ externalMemos, spots, focusRequest, onOpenSpotEvalu
             if (event.key === "Escape") setIsMarkerFilterSheetOpen(false);
           }}
         >
-          <div className="mapFilterSheetHandle" aria-hidden="true" />
-          <div className="mapFilterSheetHeading">
-            <div>
+          <header className="mapFilterSheetHeader">
+            <div className="mapFilterSheetHandle" aria-hidden="true" />
+            <div className="mapFilterSheetHeading">
               <h3 id="map-filter-sheet-title">表示フィルター</h3>
               <p id="map-filter-sheet-description">地図に表示する項目を選択</p>
             </div>
-          </div>
+          </header>
           <div className="mapFilterOptions">
             {MAP_MARKER_LEGEND.map(({ kind, label }) => (
               <label key={kind} className="mapFilterOption">
